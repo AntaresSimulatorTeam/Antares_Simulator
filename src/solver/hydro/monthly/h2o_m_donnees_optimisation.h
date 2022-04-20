@@ -39,7 +39,6 @@ typedef struct
 {
     int NombreDeVariables;
     double* CoutLineaire;
-    double* CoutLineaireBruite; /* Ajout de bruit pour forcer l'unicité des solutions */
     int* TypeDeVariable; /* Indicateur du type de variable, il ne doit prendre que les suivantes
                            (voir le fichier spx_constantes_externes.h mais ne jamais utiliser les
                            valeurs explicites des constantes): VARIABLE_FIXE                  ,
@@ -119,7 +118,6 @@ typedef struct
     void* Probleme;     /* Le probleme en cours passe au simplexe */
 
     double CoutDeLaSolution;
-    double CoutDeLaSolutionBruite;
 
 } PROBLEME_HYDRAULIQUE;
 

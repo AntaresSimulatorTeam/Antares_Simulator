@@ -61,7 +61,7 @@ Variables::~Variables()
 
 void Variables::search(Spotlight::IItem::Vector& out,
                        const Spotlight::SearchToken::Vector& tokens,
-                       const Yuni::String& /* text */)
+                       const Yuni::String& text)
 {
     if (!pComponent)
         return;

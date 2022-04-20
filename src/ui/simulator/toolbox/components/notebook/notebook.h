@@ -276,7 +276,7 @@ public:
     /*!
     ** \brief Find a page by its name
     */
-    Page* find(const wxString& name);
+    Page* find(const wxString& name, bool warn = true);
 
     void set_page_visibility(const wxString& name, bool visible);
 

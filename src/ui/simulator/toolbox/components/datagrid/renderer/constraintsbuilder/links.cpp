@@ -117,7 +117,7 @@ wxString Links::columnCaption(int colIndx) const
 
 wxString Links::rowCaption(int rowIndx) const
 {
-    if ((uint)rowIndx < pCBuilder->linkCount())
+    if (rowIndx < pCBuilder->linkCount())
         return pCBuilder->getLink(rowIndx)->getName().to<std::string>();
     return wxEmptyString;
 }
@@ -209,7 +209,7 @@ double Links::cellNumericValue(int x, int y) const
     return 0.;
 }
 
-bool Links::cellValue(int /*x*/, int /*y*/, const String& /*value*/)
+bool Links::cellValue(int x, int y, const String& value)
 {
     return false;
 }

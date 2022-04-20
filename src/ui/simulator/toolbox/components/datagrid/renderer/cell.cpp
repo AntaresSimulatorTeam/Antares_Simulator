@@ -67,7 +67,7 @@ double blankCell::cellNumericValue() const
 {
     return 0.;
 }
-bool blankCell::setCellValue(const String& /* value */)
+bool blankCell::setCellValue(const String& value)
 {
     return false;
 }
@@ -92,7 +92,7 @@ double inactiveCell::cellNumericValue() const
 {
     return 0.;
 }
-bool inactiveCell::setCellValue(const String& /* value */)
+bool inactiveCell::setCellValue(const String& value)
 {
     return false;
 }

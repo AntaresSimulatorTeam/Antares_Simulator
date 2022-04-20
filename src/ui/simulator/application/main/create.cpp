@@ -390,7 +390,8 @@ void ApplWnd::internalInitialize()
     pMainMap->onDblClick.connect(this, &ApplWnd::onMapDblClick);
 
     // The first page
-    layersNotebook->add(pMainMap, wxT("map"), wxT("Set Content"));
+    Component::Notebook::Page* MapPage
+      = layersNotebook->add(pMainMap, wxT("map"), wxT("Set Content"));
 
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> layersUIPage

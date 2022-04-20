@@ -603,6 +603,16 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
 bool Study::checkHydroHotStart()
 {
+    // Error messages possibly used in this method.
+    std::string parallelParametersErrMsg1
+      = "Hot Start Hydro option : conflict with parallelization parameters.";
+    std::string parallelParametersErrMsg2
+      = "Please update relevant simulation parameters or use Cold Start option.    ";
+
+    std::string calendarErrMsg1
+      = "Hot Start Hydro option : conflict with Hydro Local Data and/or Simulation Calendar.    ";
+    std::string calendarErrMsg2 = "Please update data or use Cold Start option.";
+
     bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
 
     // No need to check further if hydro hot start is not required
@@ -613,8 +623,8 @@ bool Study::checkHydroHotStart()
     // run, do all sets of parallel years have the same size ?
     if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
     {
-        logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
-        logs.error() << "Please update relevant simulation parameters or use Cold Start option.    ";
+        logs.error() << parallelParametersErrMsg1;
+        logs.error() << parallelParametersErrMsg2;
         return false;
     }
 
@@ -623,8 +633,8 @@ bool Study::checkHydroHotStart()
     uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
     if (nbDaysInSimulation < 364)
     {
-        logs.error() << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
-        logs.error() << "Please update data or use Cold Start option.";
+        logs.error() << calendarErrMsg1;
+        logs.error() << calendarErrMsg2;
         return false;
     }
 
@@ -636,11 +646,6 @@ bool Study::checkHydroHotStart()
     {
         // Reference to the area
         Area* area = i->second;
-
-        // No need to make a check on level initialization when reservoir management 
-        // is not activated for the current area
-        if (!area->hydro.reservoirManagement)
-            continue;
 
         // Month the reservoir level is initialized according to.
         // This month number is given in the civil calendar, from january to december (0 is
@@ -656,9 +661,8 @@ bool Study::checkHydroHotStart()
         // Check the day of level initialization is the first day of simulation
         if (initLevelOnSimDay != parameters.simulationDays.first)
         {
-            logs.error() << "Hot Start Hydro option : area '" << area->name 
-                         << "' - hydro level must be initialized on the first simulation month.    ";
-            logs.error() << "Please update data or use Cold Start option.";
+            logs.error() << calendarErrMsg1;
+            logs.error() << calendarErrMsg2;
             return false;
         }
     } // End loop over areas
@@ -1079,9 +1083,8 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     enum
     {
         kThermal,
-        kRenewable,
-        kUnknown
-    } type = kUnknown;
+        kRenewable
+    } type;
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
@@ -1128,9 +1131,6 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
         area.thermal.prepareAreaWideIndexes();
-        break;
-    case kUnknown:
-        logs.error() << "Unknown cluster type";
         break;
     }
 

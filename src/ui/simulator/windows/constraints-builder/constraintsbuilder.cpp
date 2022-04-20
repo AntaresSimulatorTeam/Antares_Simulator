@@ -434,7 +434,7 @@ ConstraintsBuilderWizard::~ConstraintsBuilderWizard()
     delete pCBuilder;
 }
 
-void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& /* evt */)
+void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& evt)
 {
     auto value = pCheckNodalLoopFlow->GetValue();
 
@@ -444,7 +444,7 @@ void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& /* evt */)
     pCBuilder->saveCBuilderToFile();
 }
 
-void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& /* evt */)
+void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& evt)
 {
     // Validate();
     auto value = pInfiniteValue->GetValue();
@@ -468,7 +468,7 @@ void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& /* evt */)
     pCBuilder->saveCBuilderToFile();
 }
 
-void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& /* evt */)
+void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
 {
     auto value = pIncludeLoopFlow->GetValue();
 
@@ -480,7 +480,7 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& /* evt */)
     pGrid->forceRefresh();
 }
 
-void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& /* evt */)
+void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
 {
     auto value = pIncludePhaseShifts->GetValue();
 
@@ -710,7 +710,7 @@ void ConstraintsBuilderWizard::gridAppend(wxFlexGridSizer& sizer,
     sizer.Add(value, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 }
 
-void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& /* evt */)
+void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& evt)
 {
     wxString texValue = startingHourCtrl->GetValue();
     int num;
@@ -732,7 +732,7 @@ void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& /* evt */)
     pFlexSizer->Layout();
 }
 
-void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& /* evt */)
+void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& evt)
 {
     wxString texValue = endHourCtrl->GetValue();
     int num;

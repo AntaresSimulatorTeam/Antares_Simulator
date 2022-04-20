@@ -277,11 +277,13 @@ wxMenuItem* Menu::CreateItem(wxMenu* parent,
     (void)bold;
 #endif
 
+    if (&bitmap != nullptr)
+    {
 #ifdef YUNI_OS_WINDOWS
         m->SetMarginWidth(bitmap.GetWidth());
 #endif
         m->SetBitmap(bitmap);
-
+    }
     parent->Append(m);
 
     return m;
@@ -289,7 +291,7 @@ wxMenuItem* Menu::CreateItem(wxMenu* parent,
 
 void Menu::Clear(wxMenu& menu)
 {
-    if (menu.GetMenuItemCount() > 0)
+    if (&menu && menu.GetMenuItemCount() > 0)
     {
         wxMenuItemList list = menu.GetMenuItems();
         auto end = list.end();

@@ -197,3 +197,212 @@ RESOLUTION:
 
     return;
 }
+
+char H2O_J_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_MENSUELLES* DonneesMensuelles, FILE* Flot)
+{
+    int Cnt;
+    int Var;
+    int il;
+    int ilk;
+    int ilMax;
+    char* Nombre;
+    int* Cder;
+    int* Cdeb;
+    int* NumeroDeContrainte;
+    int* Csui;
+    PROBLEME_SIMPLEXE* Probleme;
+
+    int NombreDeVariables;
+    int* TypeDeBorneDeLaVariable;
+    double* Xmax;
+    double* Xmin;
+    double* CoutLineaire;
+    int NombreDeContraintes;
+    double* SecondMembre;
+    char* Sens;
+    int* IndicesDebutDeLigne;
+    int* NombreDeTermesDesLignes;
+    double* CoefficientsDeLaMatriceDesContraintes;
+    int* IndicesColonnes;
+
+    Probleme = (PROBLEME_SIMPLEXE*)(DonneesMensuelles->ProblemeHydraulique)->Probleme;
+
+    NombreDeVariables = Probleme->NombreDeVariables;
+    TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
+    Xmax = Probleme->Xmax;
+    Xmin = Probleme->Xmin;
+    CoutLineaire = Probleme->CoutLineaire;
+    NombreDeContraintes = Probleme->NombreDeContraintes;
+    SecondMembre = Probleme->SecondMembre;
+    Sens = Probleme->Sens;
+    IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
+    NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
+    CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
+    IndicesColonnes = Probleme->IndicesColonnes;
+
+    for (ilMax = -1, Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
+    {
+        if ((IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
+        {
+            ilMax = IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1;
+        }
+    }
+    ilMax += NombreDeContraintes;
+
+    Cder = (int*)malloc(NombreDeVariables * sizeof(int));
+    Cdeb = (int*)malloc(NombreDeVariables * sizeof(int));
+    NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
+    Csui = (int*)malloc(ilMax * sizeof(int));
+    Nombre = (char*)malloc(1024);
+    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL
+        || Nombre == NULL)
+    {
+        return (0);
+    }
+
+    for (Var = 0; Var < NombreDeVariables; Var++)
+        Cdeb[Var] = -1;
+    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
+    {
+        il = IndicesDebutDeLigne[Cnt];
+        ilMax = il + NombreDeTermesDesLignes[Cnt];
+        while (il < ilMax)
+        {
+            Var = IndicesColonnes[il];
+            if (Cdeb[Var] < 0)
+            {
+                Cdeb[Var] = il;
+                NumeroDeContrainte[il] = Cnt;
+                Csui[il] = -1;
+                Cder[Var] = il;
+            }
+            else
+            {
+                ilk = Cder[Var];
+                Csui[ilk] = il;
+                NumeroDeContrainte[il] = Cnt;
+                Csui[il] = -1;
+                Cder[Var] = il;
+            }
+            il++;
+        }
+    }
+    free(Cder);
+
+    fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
+    fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
+
+    fprintf(Flot, "NAME          Pb Solve\n");
+
+    fprintf(Flot, "ROWS\n");
+
+    fprintf(Flot, " N  OBJECTIF\n");
+
+    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
+    {
+        if (Sens[Cnt] == '=')
+        {
+            fprintf(Flot, " E  R%07d\n", Cnt);
+        }
+        else if (Sens[Cnt] == '<')
+        {
+            fprintf(Flot, " L  R%07d\n", Cnt);
+        }
+        else if (Sens[Cnt] == '>')
+        {
+            fprintf(Flot, " G  R%07d\n", Cnt);
+        }
+        else
+        {
+            fprintf(Flot,
+                    "H2O_J_EcrireJeuDeDonneesMPS : le sens de la contrainte %d: %c ne fait pas "
+                    "partie des sens reconnus\n",
+                    Cnt,
+                    Sens[Cnt]);
+            fprintf(Flot, "Nombre de contraintes %d\n", NombreDeContraintes);
+            return (0);
+        }
+    }
+
+    fprintf(Flot, "COLUMNS\n");
+    for (Var = 0; Var < NombreDeVariables; Var++)
+    {
+        if (CoutLineaire[Var] != 0.0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
+            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, Nombre);
+        }
+        il = Cdeb[Var];
+        while (il >= 0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
+            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], Nombre);
+            il = Csui[il];
+        }
+    }
+
+    fprintf(Flot, "RHS\n");
+    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
+    {
+        if (SecondMembre[Cnt] != 0.0)
+        {
+            SNPRINTF(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
+            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, Nombre);
+        }
+    }
+
+    fprintf(Flot, "BOUNDS\n");
+
+    for (Var = 0; Var < NombreDeVariables; Var++)
+    {
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
+        {
+            SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, Nombre);
+            continue;
+        }
+
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
+        {
+            if (Xmin[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+            SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+        }
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
+        {
+            if (Xmin[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+        }
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
+        {
+            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+            if (Xmax[Var] != 0.0)
+            {
+                SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
+                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, Nombre);
+            }
+        }
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
+        {
+            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+        }
+    }
+
+    fprintf(Flot, "ENDATA\n");
+
+    free(Cdeb);
+    free(NumeroDeContrainte);
+    free(Csui);
+    free(Nombre);
+
+    fclose(Flot);
+
+    return (1);
+}

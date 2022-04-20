@@ -46,6 +46,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     int NombreDeVariables;
     int Index;
     int NombreDePasDeTempsPourUneOptimisation;
+    char ContrainteDeReserveJMoins1ParZone;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -53,6 +54,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
+
     NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)

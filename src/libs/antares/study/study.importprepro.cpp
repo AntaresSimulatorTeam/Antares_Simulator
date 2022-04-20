@@ -42,7 +42,7 @@ bool Study::importTimeseriesIntoInput()
     const bool importThermal
       = parameters.haveToImport(timeSeriesThermal) && runtime->thermalTSRefresh;
     // Something to import ?
-    if ((parameters.timeSeriesToImport && parameters.timeSeriesToGenerate) || importThermal)
+    if (parameters.timeSeriesToImport && parameters.timeSeriesToGenerate || importThermal)
     {
         // Return status
         bool ret = true;

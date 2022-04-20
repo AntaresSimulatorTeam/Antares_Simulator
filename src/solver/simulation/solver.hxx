@@ -361,6 +361,8 @@ void ISimulation<Impl>::run()
         if (parameters.useCustomScenario)
             ApplyCustomScenario(study);
 
+        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
+
         // Launching the simulation for all years
         logs.info() << "MC-Years : [" << (study.runtime->rangeLimits.year[Data::rangeBegin] + 1)
                     << " .. " << (1 + study.runtime->rangeLimits.year[Data::rangeEnd])
@@ -385,9 +387,6 @@ void ISimulation<Impl>::run()
         ImplementationType::simulationEnd();
 
         ImplementationType::variables.simulationEnd();
-
-        // Export ts-numbers into output
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
@@ -639,7 +638,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
 
         requiredMemoryForWeeklyPb += 10 * NombreDePasDeTemps * sizeof(double);
         requiredMemoryForWeeklyPb += NombreDePasDeTemps * sizeof(void*);
@@ -676,7 +675,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);

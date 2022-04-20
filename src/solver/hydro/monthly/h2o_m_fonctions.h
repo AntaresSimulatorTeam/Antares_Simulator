@@ -34,6 +34,7 @@ extern "C"
 
     DONNEES_ANNUELLES* H2O_M_Instanciation(int);
     void H2O_M_OptimiserUneAnnee(DONNEES_ANNUELLES*, int);
+    char H2O_M_EcrireJeuDeDonneesLineaireAuFormatMPS(DONNEES_ANNUELLES*, FILE*);
     void H2O_M_Free(DONNEES_ANNUELLES*);
 
     void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES*);
@@ -41,7 +42,7 @@ extern "C"
     void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES*);
     void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES*);
     void H2O_M_ResoudreLeProblemeLineaire(DONNEES_ANNUELLES*, int);
-    void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES*);
+
 #ifdef __cplusplus
 }
 #endif

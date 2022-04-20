@@ -36,10 +36,12 @@ Here is a list of available CMake configure option :
 |:-------|-------|
 |`CMAKE_BUILD_TYPE` | Define build type. Available values are `release` and `debug`  |
 |`BUILD_UI`|Enable or disable Antares Simulator UI compilation (default `ON`)|
+|`BUILD_not_system`|Enable build of external libraries not available on system package manager (default `ON`)|
 |`BUILD_ALL`|Enable build of ALL external libraries (default `OFF`)|
 |`DEPS_INSTALL_DIR`|Define dependencies libraries install directory|
 |`USE_PRECOMPILED_EXT`| This option must be set if you use wxWidget as precompiled external library (default `OFF`)|
 |`BUILD_TESTING`| Enable test build (default `OFF`)|
+|`BUILD_OUTPUT_TEST`| Enable test with output compare build (default `OFF`)|
 
 Additionnal options for windows
 

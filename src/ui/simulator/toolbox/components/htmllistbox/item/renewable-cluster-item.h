@@ -67,8 +67,6 @@ public:
     //! Get the attached cluster
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
-    void addAdditionalIcons(wxString& out) const override;
-
 private:
     wxString htmlContentTail() override;
 

@@ -40,6 +40,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
 {
     uint nCount = alreadyExistingNetworkConstraints(CB_PREFIX) + 1;
     uint nSubCount = 1;
+    uint nLoops = (uint)mesh.size();
     bool ret = false;
 
     uint columnImpedance = (uint)Antares::Data::fhlImpedances;

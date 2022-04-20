@@ -183,6 +183,8 @@ void Component::displayMiniFrame(wxWindow* parent,
 
 void Component::emptyCache()
 {
+    typedef Antares::Private::OutputViewerData::ContentMap Map;
+
     pMutex.lock();
     auto end = pAlreadyPreparedContents.cend();
     for (auto i = pAlreadyPreparedContents.cbegin(); i != end; ++i)
@@ -200,6 +202,9 @@ void Component::updateFromExternalEvent(const Data::Output::List& list,
 
 void Component::createAllControlsIfNeeded()
 {
+    // alias
+    typedef Antares::Component::Notebook Notebook;
+
     if (pControlsAlreadyCreated)
         return;
 
@@ -1770,6 +1775,7 @@ bool Component::checkAreaIsCommonToAllOutputs(const Data::AreaName& name)
         const String& path = (layer->selection)->path;
 
         typedef Antares::Private::OutputViewerData::Content Content;
+        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
@@ -1804,6 +1810,7 @@ void Component::checkYearByYearMode()
         const String& path = (layer->selection)->path;
 
         typedef Antares::Private::OutputViewerData::Content Content;
+        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())

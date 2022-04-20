@@ -72,7 +72,7 @@ public:
     /*!
     ** \brief Get the visivility for a layerId
     */
-    bool isVisibleOnLayer(const size_t& layerID) const;
+    const bool isVisibleOnLayer(const size_t& layerID) const;
     //@}
 
     virtual Type type() const

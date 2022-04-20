@@ -377,7 +377,7 @@ wxString LayersVisibility::cellValue(int x, int y) const
     return wxEmptyString;
 }
 
-IRenderer::CellStyle LayersVisibility::cellStyle(int x, int /* y */) const
+IRenderer::CellStyle LayersVisibility::cellStyle(int x, int y) const
 {
     if (x == 0)
         return cellStyleLayerDisabled;

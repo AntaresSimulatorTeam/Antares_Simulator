@@ -114,8 +114,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+    solver = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
 
     auto& study = *Data::Study::Current::Get();
     bool ortoolsUsed = study.parameters.ortoolsUsed;
@@ -139,7 +139,7 @@ RESOLUTION:
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
+            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = NULL;
 
             ProbSpx = NULL;
             solver = NULL;
@@ -244,7 +244,7 @@ RESOLUTION:
         solver = ORTOOLS_Simplexe(&Probleme, solver);
         if (solver != NULL)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
+            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
         }
     }
     else
@@ -252,7 +252,7 @@ RESOLUTION:
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
         if (ProbSpx != NULL)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
     measure.tick();
@@ -267,7 +267,7 @@ RESOLUTION:
         }
         else
         {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
+            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
         }
     }
 
@@ -376,7 +376,8 @@ RESOLUTION:
             }
             else
             {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
+                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
+                  (void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
             }
         }
 
@@ -414,7 +415,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     return;
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
 {
     FILE* Flot;
     int Cnt;

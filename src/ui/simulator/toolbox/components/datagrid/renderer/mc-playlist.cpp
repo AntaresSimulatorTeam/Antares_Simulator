@@ -134,7 +134,7 @@ double MCPlaylist::cellNumericValue(int x, int y) const
         case MCPlaylistCol::WEIGHT:
         {
             std::vector<float> yearsWeight = study->parameters.getYearsWeight();
-            assert((uint)y < yearsWeight.size());
+            assert(y < yearsWeight.size());
             return yearsWeight[y];
         }
         }
@@ -156,7 +156,7 @@ wxString MCPlaylist::cellValue(int x, int y) const
         case MCPlaylistCol::WEIGHT:
         {
             std::vector<float> yearsWeight = study->parameters.getYearsWeight();
-            assert((uint)y < yearsWeight.size());
+            assert(y < yearsWeight.size());
 
             std::ostringstream stream;
             stream << std::setprecision(3);

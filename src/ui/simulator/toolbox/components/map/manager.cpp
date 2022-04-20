@@ -523,6 +523,8 @@ void Manager::changeItemSelectionState(Item* item)
         else
             Window::Inspector::RemoveLink(cnnx->attachedAreaLink());
 
+        NodeByZPosition::const_iterator end = pAllNodes.end();
+
         if (mouseSelectionConstraints)
         {
             // building list of selected links

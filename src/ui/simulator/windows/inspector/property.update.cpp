@@ -669,6 +669,8 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                 (*i)->minUpTime = d;
             else if (name == "cluster.mindowntime")
                 (*i)->minDownTime = d;
+            else
+                ;
         }
         return true;
     }

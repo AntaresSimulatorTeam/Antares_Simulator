@@ -203,13 +203,14 @@ bool Grid<NodeT>::buildMesh()
             linksToBeAdded.push_back(*i);
     }
 
+    uint nCount(0);
     std::vector<EdgeIncidence> incidenceMatrix(linksToBeAdded.size());
-    for (uint i = 0; i < linksToBeAdded.size(); i++)
+    for (int i = 0; i < linksToBeAdded.size(); i++)
     {
         incidenceMatrix[i] = getIncidenceVector(linksToBeAdded[i]);
     }
 
-    for (uint i = 0; i < linksToBeAdded.size(); i++)
+    for (int i = 0; i < linksToBeAdded.size(); i++)
     {
         logs.info() << "Searching basis (loop " << i << "/" << linksToBeAdded.size() << ")";
         // build the graph with two copies (+/-) for each node and edge
@@ -221,7 +222,7 @@ bool Grid<NodeT>::buildMesh()
         VectorNodeP adjacentNodes;
         // retrait des arêtes (u,v) qui sont dan Ei et remplacement dans le graphe duliqué
         // par(u+,v-) et (u-,v+)
-        for (uint j = 0; j < v.size(); j++)
+        for (int j = 0; j < v.size(); j++)
         {
             if (std::find(adjacentNodes.begin(), adjacentNodes.end(), v[j]->getOrigin())
                 == adjacentNodes.end())
@@ -274,7 +275,7 @@ bool Grid<NodeT>::buildMesh()
         EdgeIncidence I = getIncidenceVector(Ci);
         meshIndexMatrix.push_back(edgeIndices);
         // remplacement par la différence symétrique des des jeux d'arêtes
-        for (uint j = i + 1; j < linksToBeAdded.size(); j++)
+        for (int j = i + 1; j < linksToBeAdded.size(); j++)
         {
             if (incidenceInnerProduct(I, incidenceMatrix[j]) == 1)
             {

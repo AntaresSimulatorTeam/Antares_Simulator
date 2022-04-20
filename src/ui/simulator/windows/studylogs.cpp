@@ -58,11 +58,6 @@ namespace Antares
 {
 namespace Window
 {
-bool CompareDesc::operator()(const wxString& s1, const wxString& s2) const
-{
-    return s2 < s1;
-}
-
 BEGIN_EVENT_TABLE(StudyLogs, wxFrame)
 EVT_CLOSE(StudyLogs::onClose)
 END_EVENT_TABLE()
@@ -157,7 +152,7 @@ FileListProvider::~FileListProvider()
 
 void FileListProvider::search(Spotlight::IItem::Vector& out,
                               const Spotlight::SearchToken::Vector& tokens,
-                              const Yuni::String& /* text */)
+                              const Yuni::String& text)
 {
     bool hasAtLeastOneStudyLogEntry = false;
     {

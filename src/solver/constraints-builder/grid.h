@@ -49,8 +49,6 @@ public:
         nodeProperties = data;
     }
 
-    virtual ~Node() = default;
-
     virtual std::string getName()
     {
         return name;
@@ -283,7 +281,7 @@ public:
     EdgeIncidence getIncidenceVector(VectorEdgeP vE)
     {
         EdgeIncidence Ei(pEdgesList.size(), false);
-        for (uint i = 0; i < pEdgesList.size(); i++)
+        for (int i = 0; i < pEdgesList.size(); i++)
         {
             if (std::find(vE.begin(), vE.end(), pEdgesList[i]) != vE.end())
                 Ei[i] = true;
@@ -294,7 +292,7 @@ public:
     EdgeIncidence getIncidenceVector(EdgeP vE)
     {
         EdgeIncidence Ei(pEdgesList.size(), false);
-        for (uint i = 0; i < pEdgesList.size(); i++)
+        for (int i = 0; i < pEdgesList.size(); i++)
         {
             if (vE == pEdgesList[i])
             {
@@ -308,7 +306,7 @@ public:
     VectorEdgeP getEdgeVectorFromIncidence(EdgeIncidence vI)
     {
         VectorEdgeP vE;
-        for (uint i = 0; i < pEdgesList.size(); i++)
+        for (int i = 0; i < pEdgesList.size(); i++)
         {
             if (vI[i] == true)
                 vE.push_back(pEdgesList[i]);

@@ -1,22 +1,5 @@
 Antares Changelog
 =================
-
-v8.2.1 (03/2022)
---------------------
-### Bug fixes
-- Fix scenario builder data loss when renaming area #610
-- Write 1 in the ts-numbers when series.width == 1 #609
-- Add noise to the cost vector in the allocation problems to enforce uniqueness #622
-- Linux only : fix segfault occurring when an INI file does not exist #606
-
-### GUI
-- Place "Dataset > Resize columns to..." in first position #607
-- Allow that all NTC be 0 in one direction #595
-- Fix occasional crash when opening the links panel #594
-- Linux only : fix frozen window occurring after a "Save as..." #586
-- Linux only : fix impossibility to save a study #600
-- Developer version only : fix assertion errors in the GUI #584
-
 v8.2.0 (03/2022)
 --------------------
 ### New features

@@ -68,6 +68,15 @@ public:
         mnIDGridUpdate,
         mnIDCanRunAnalyzer,
     };
+    /*
+
+    public:
+            /*!
+            ** \brief Reset the address of the last used folder
+            **
+            ** The variable will be reset to <current study>/user.
+            */
+    // static void ResetLastFolderToCurrentStudyUser();
 
 public:
     //! \name Constructor & Destructor

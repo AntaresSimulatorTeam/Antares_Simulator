@@ -201,12 +201,6 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     {
         return (0);
     }
-    ProblemeLineairePartieFixe->CoutLineaireBruite
-      = (double*)malloc((unsigned int)NombreDeVariables * sizeof(double));
-    if (ProblemeLineairePartieFixe->CoutLineaireBruite == NULL)
-    {
-        return (0);
-    }
     ProblemeLineairePartieFixe->TypeDeVariable
       = (int*)malloc((unsigned int)NombreDeVariables * sizeof(int));
     if (ProblemeLineairePartieFixe->TypeDeVariable == NULL)

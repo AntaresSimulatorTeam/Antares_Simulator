@@ -38,12 +38,19 @@
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    char CalculerLesPmin;
+    char CalculerLesPmax;
+    char FaireDerniereOptimisation;
+
+    int Pays;
+
     if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
         if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
             ProblemeHebdo->NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDePays;
-            for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+            for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
             {
                 ProblemeHebdo->NumeroDeZoneDeReserveJMoins1[Pays] = Pays;
                 ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
@@ -74,6 +81,8 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
 
         ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
     }
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     OPT_VerifierPresenceReserveJmoins1(ProblemeHebdo);
 

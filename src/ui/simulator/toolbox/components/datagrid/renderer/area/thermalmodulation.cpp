@@ -121,7 +121,7 @@ double ThermalClusterCommonModulation::cellNumericValue(int x, int y) const
 {
     if (pMatrix && (uint)y < pMatrix->height && pCluster)
     {
-        assert(x < width());
+        assert((uint)x < static_cast<int>(width()));
         switch (x)
         {
         case Data::thermalModulationCost:

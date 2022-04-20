@@ -313,6 +313,7 @@ bool ATSP::preflight(const uint areaIndex)
         {
             Mtrx_abs(SERIE_P, SERIE_N, durmois[j], NBS);
             Colonne_moyenne(buffer_p, SERIE_P, durmois[j], NBS);
+            const double expect = Moyenne_generale(buffer_p, durmois[j]);
             double ratios[24];
             for (uint n = 0; n < 24; ++n)
             {

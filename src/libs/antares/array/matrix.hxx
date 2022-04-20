@@ -718,6 +718,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 
 #ifndef NDEBUG
     logs.debug() << "  :: loading `" << filename << "'";
+    assert(&data != NULL and "Invalid buffer");
 #endif
 
     // Detecting BOM

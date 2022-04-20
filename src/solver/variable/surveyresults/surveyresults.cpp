@@ -159,7 +159,7 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
         {
             auto end = area.links.end();
             for (auto i = area.links.begin(); i != end; ++i)
-                outLinks << area.id << '\t' << i->second->with->id << '\n';
+                outLinks << area.id << '\t' << (i->second)->with->id << '\n';
         }
 
         // Thermal clusters

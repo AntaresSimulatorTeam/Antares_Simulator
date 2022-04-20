@@ -146,7 +146,7 @@ void Panel::update()
     if (not Data::Study::Current::Valid()) // should never happen here
         return;
     auto& study = *Data::Study::Current::Get();
-    if (!study.scenarioRules)
+    if (!&study or !study.scenarioRules)
     {
         // This may happen sometimes, especially at the creation of the component
         // for example (but this has been disabled)

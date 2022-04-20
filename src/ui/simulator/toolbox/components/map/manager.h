@@ -291,6 +291,8 @@ public:
 
     void drawExternalDrawer(DrawingContext& dc);
 
+    void drawerVisible(bool v);
+
     bool hasChanges() const
     {
         return pHasChanges;

@@ -136,6 +136,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
         {
             assert((unsigned int)Pays < study.areas.size());
+            auto& scratchpad = *study.areas[Pays]->scratchpad[numSpace];
 
             PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
             for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)

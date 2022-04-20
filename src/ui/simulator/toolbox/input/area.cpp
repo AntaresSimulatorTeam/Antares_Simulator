@@ -87,6 +87,11 @@ public:
         if (study.areas.empty())
             return;
 
+        uint currentEquipment = 0;
+        auto* mainFrm = Forms::ApplWnd::Instance();
+        if (mainFrm)
+            currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
+
         std::vector<Antares::Data::Area*> layerFilteredItems;
         if (!text.empty())
         {
@@ -135,6 +140,7 @@ public:
         if (mainFrm)
             currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
 
+        auto end = study.areas.end();
         if (tokens.empty())
         {
             for (auto i = in.begin(); i != in.end(); ++i)

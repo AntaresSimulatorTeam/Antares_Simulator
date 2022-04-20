@@ -101,7 +101,7 @@ Outputs::~Outputs()
 
 void Outputs::search(Spotlight::IItem::Vector& out,
                      const Spotlight::SearchToken::Vector& tokens,
-                     const Yuni::String& /* text */)
+                     const Yuni::String& text)
 {
     // More than one tab: we would like to be able to close the current one
     if (pLayer && pComponent.pTabs.size() > 1)
@@ -184,7 +184,6 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                 item->addTag("Draft", 230, 230, 245);
                 break;
             case Data::stdmUnknown:
-            case Data::stdmExpansion:
             case Data::stdmMax:
                 item->addTag("...", 213, 213, 213);
             }

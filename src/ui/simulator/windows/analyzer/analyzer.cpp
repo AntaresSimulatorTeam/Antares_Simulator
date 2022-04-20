@@ -468,7 +468,7 @@ private:
 
 void FileSearchProvider::search(Spotlight::IItem::Vector& out,
                                 const Spotlight::SearchToken::Vector& tokens,
-                                const Yuni::String& /* text */)
+                                const Yuni::String& text)
 {
     if (tokens.empty())
     {
@@ -1275,7 +1275,7 @@ void AnalyzerWizard::evtUpdateFileMapping(wxCommandEvent&)
     // clear the filesearch component
     onFileSearchClear();
 
-    if (map.empty())
+    if (!(&map) or map.empty())
     {
         enableAll(false);
     }

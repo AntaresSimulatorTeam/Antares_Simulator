@@ -545,7 +545,7 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             {
                 ThermalClusterList::SharedPtr cluster = i->second;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -561,7 +561,7 @@ void storeTSnumbersForIntraModal(const array<uint32, timeSeriesCount>& intramoda
             {
                 RenewableClusterList::SharedPtr cluster = j->second;
                 if (cluster->enabled)
-                    cluster->series->timeseriesNumbers[0][year] = intramodal_draws[indexTS];
+                    cluster->series->timeseriesNumbers.entry[0][year] = intramodal_draws[indexTS];
             }
         }
 
@@ -657,7 +657,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
                                                                : cluster->series->series.width;
-                    cluster->series->timeseriesNumbers[0][year] = (uint32)(
+                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
@@ -678,9 +678,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             {
                 if (!isTSintramodal[indexTS])
                 {
-                    // There is no TS generation for renewable clusters
                     uint nbTimeSeries = cluster->series->series.width;
-                    cluster->series->timeseriesNumbers[0][year] = (uint32)(
+                    cluster->series->timeseriesNumbers.entry[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
             }
@@ -696,7 +695,8 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             for (auto it = area.links.begin(); it != area.links.end(); ++it)
             {
                 auto& link = *(it->second);
-                const uint nbTimeSeries = link.directCapacities.width;
+
+                uint nbTimeSeries = link.directCapacities.width;
                 if (nbTimeSeries == 1)
                 {
                     // Random generator (mersenne-twister) must not be called here
@@ -753,19 +753,19 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
 
         assert(year < area.load.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesLoad)])
-            area.load.series->timeseriesNumbers[0][year] = draw;
+            area.load.series->timeseriesNumbers.entry[0][year] = draw;
 
         assert(year < area.solar.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesSolar)])
-            area.solar.series->timeseriesNumbers[0][year] = draw;
+            area.solar.series->timeseriesNumbers.entry[0][year] = draw;
 
         assert(year < area.wind.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesWind)])
-            area.wind.series->timeseriesNumbers[0][year] = draw;
+            area.wind.series->timeseriesNumbers.entry[0][year] = draw;
 
         assert(year < area.hydro.series->timeseriesNumbers.height);
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesHydro)])
-            area.hydro.series->timeseriesNumbers[0][year] = draw;
+            area.hydro.series->timeseriesNumbers.entry[0][year] = draw;
 
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesThermal)])
         {
@@ -774,7 +774,7 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             {
                 auto& cluster = *(area.thermal.clusters[i]);
                 assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers[0][year] = draw;
+                cluster.series->timeseriesNumbers.entry[0][year] = draw;
             }
         }
         if (isTSintermodal[ts_to_tsIndex.at(timeSeriesRenewable)])
@@ -784,71 +784,10 @@ void applyMatrixDrawsToInterModalModesInArea(Matrix<uint32>* tsNumbersMtx,
             {
                 auto& cluster = *(area.renewable.clusters[i]);
                 assert(year < cluster.series->timeseriesNumbers.height);
-                cluster.series->timeseriesNumbers[0][year] = draw;
+                cluster.series->timeseriesNumbers.entry[0][year] = draw;
             }
         }
     }
-}
-
-// Set tsNumbers to 1 for all years if only one TS is present
-static void fixTSNumbersSingleAreaSingleMode(Matrix<uint32>& tsNumbers, uint width, uint years)
-{
-    if (width == 1)
-    {
-        for (uint year = 0; year < years; year++)
-        {
-            tsNumbers[0][year] = 0;
-        }
-    }
-}
-
-static void fixTSNumbersWhenWidthIsOne(Study& study)
-{
-    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
-
-    study.areas.each([&years](Area& area) {
-        // Load
-        fixTSNumbersSingleAreaSingleMode(
-          area.load.series->timeseriesNumbers, area.load.series->series.width, years);
-        // Solar
-        fixTSNumbersSingleAreaSingleMode(
-          area.solar.series->timeseriesNumbers, area.solar.series->series.width, years);
-        // Wind
-        fixTSNumbersSingleAreaSingleMode(
-          area.wind.series->timeseriesNumbers, area.wind.series->series.width, years);
-        // Hydro
-        fixTSNumbersSingleAreaSingleMode(
-          area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
-
-        // Thermal
-        std::for_each(area.thermal.clusters.cbegin(),
-                      area.thermal.clusters.cend(),
-                      [&years](const Data::ThermalCluster* cluster) {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->series.width,
-                                                           years);
-                      });
-
-        // Renewables
-        std::for_each(area.renewable.clusters.cbegin(),
-                      area.renewable.clusters.cend(),
-                      [&years](const Data::RenewableCluster* cluster)
-
-                      {
-                          fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->series.width,
-                                                           years);
-                      });
-
-        // NTC
-        std::for_each(area.links.cbegin(),
-                      area.links.cend(),
-                      [&years](const std::pair<Data::AreaName, Data::AreaLink*>& it) {
-                          auto link = it.second;
-                          fixTSNumbersSingleAreaSingleMode(
-                            link->timeseriesNumbers, link->directCapacities.width, years);
-                      });
-    });
 }
 
 bool TimeSeriesNumbers::compareWidth(uint a, uint b)
@@ -946,6 +885,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
             applyMatrixDrawsToInterModalModesInArea(tsNumbersMtx, area, isTSintermodal, years);
         }
     }
+
     return true;
 }
 
@@ -955,7 +895,6 @@ void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study)
 
     if (study.parameters.storeTimeseriesNumbers)
     {
-        fixTSNumbersWhenWidthIsOne(study);
         study.storeTimeSeriesNumbers<timeSeriesLoad>();
         study.storeTimeSeriesNumbers<timeSeriesSolar>();
         study.storeTimeSeriesNumbers<timeSeriesHydro>();

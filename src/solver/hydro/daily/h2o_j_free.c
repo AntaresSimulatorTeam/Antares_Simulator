@@ -53,32 +53,33 @@ void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        free(ProblemeHydraulique->CorrespondanceDesVariables[i]->NumeroDeVariableTurbine);
+        free((ProblemeHydraulique->CorrespondanceDesVariables[i])->NumeroDeVariableTurbine);
         free(ProblemeHydraulique->CorrespondanceDesVariables[i]);
 
-        free(ProblemeHydraulique->CorrespondanceDesContraintes[i]->NumeroDeContrainteSurXi);
+        free((ProblemeHydraulique->CorrespondanceDesContraintes[i])->NumeroDeContrainteSurXi);
         free(ProblemeHydraulique->CorrespondanceDesContraintes[i]);
 
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->CoutLineaire);
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->TypeDeVariable);
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->Sens);
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->IndicesDebutDeLigne);
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->NombreDeTermesDesLignes);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->CoutLineaire);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->TypeDeVariable);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->Sens);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->IndicesDebutDeLigne);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->NombreDeTermesDesLignes);
         free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])
                ->CoefficientsDeLaMatriceDesContraintes);
-        free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]->IndicesColonnes);
+        free((ProblemeHydraulique->ProblemeLineairePartieFixe[i])->IndicesColonnes);
         free(ProblemeHydraulique->ProblemeLineairePartieFixe[i]);
 
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->Xmin);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->Xmax);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->SecondMembre);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->Xmin);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->Xmax);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->SecondMembre);
         free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])
                ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->X);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->PositionDeLaVariable);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->ComplementDeLaBase);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->CoutsReduits);
-        free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]->CoutsMarginauxDesContraintes);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->X);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->PositionDeLaVariable);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->ComplementDeLaBase);
+        free((ProblemeHydraulique->ProblemeLineairePartieVariable[i])->CoutsReduits);
+        free(
+          (ProblemeHydraulique->ProblemeLineairePartieVariable[i])->CoutsMarginauxDesContraintes);
         free(ProblemeHydraulique->ProblemeLineairePartieVariable[i]);
 
         ProbSpx = (PROBLEME_SPX*)ProblemeHydraulique->ProblemeSpx[i];

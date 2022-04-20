@@ -112,7 +112,7 @@ Notebook::~Notebook()
 }
 
 Notebook::Tabs::Tabs(wxWindow* parent, Notebook& notebook) :
- Panel(parent), pNotebook(notebook), pCachedSize(0, 0), pMaxFound(0)
+ Panel(parent), pCachedSize(0, 0), pNotebook(notebook), pRect(), pMaxFound(0)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // Needed by Windows
     pCachedSize.x = 150;
@@ -535,6 +535,7 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
 
         size_t size = page->subPages.size();
         size_t subTabSize = h / (size + 1);
+        int subPos = subTabSize >> 1;
         if (size == 0)
         {
             dc.DrawText(page->caption(),
@@ -552,7 +553,7 @@ void Notebook::Tabs::drawItemOnCanvasSelected(Page* page,
         {
             dc.DrawText(
               page->caption(), 15, pos + (subTabSize >> 1) - (textExtent.GetHeight() >> 1));
-            for (size_t i = 0; i < size; i++)
+            for (int i = 0; i < size; i++)
             {
                 wxSize subpageTextExtent = dc.GetTextExtent(page->subPages[i]->caption());
 
@@ -1003,13 +1004,22 @@ bool Notebook::select(const wxString& name, bool triggerEvents)
     return false;
 }
 
-Notebook::Page* Notebook::find(const wxString& name)
+Notebook::Page* Notebook::find(const wxString& name, bool warn)
 {
     foreach (auto* page, pPages)
     {
         if (page->name() == name)
             return page;
     }
+
+#ifndef NDEBUG
+    if (warn)
+    {
+        String sname;
+        wxStringToString(name, sname);
+        logs.warning() << "notebook: impossible to find '" << sname << "'";
+    }
+#endif
     return nullptr;
 }
 

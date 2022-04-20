@@ -60,6 +60,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     double* Xmin;
     double* Xmax;
     int t1;
+    char ContrainteDeReserveJMoins1ParZone;
     int NombreDePasDeTempsPourUneOptimisation;
     int t1moins1;
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
@@ -71,6 +72,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     AdresseOuPlacerLaValeurDesVariablesOptimisees

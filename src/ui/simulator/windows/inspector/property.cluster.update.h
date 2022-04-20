@@ -12,7 +12,7 @@ namespace Inspector
 class ClusterUpdater
 {
 public:
-    explicit ClusterUpdater(Frame& frame);
+    ClusterUpdater(InspectorData::Ptr data, Frame& frame);
     bool changeName(const wxVariant& value);
     bool changeGroup(const wxVariant& value);
     bool changeUnit(const wxVariant& value);

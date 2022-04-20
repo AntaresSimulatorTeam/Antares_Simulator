@@ -58,6 +58,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     double PminDUnGroupeDuPalierThermique;
     double PmaxDUnGroupeDuPalierThermique;
     int NbTermesContraintesPourLesCoutsDeDemarrage;
+    char ContrainteDeReserveJMoins1ParZone;
     int Var;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
@@ -74,6 +75,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
 
     Pi = ProblemeAResoudre->Pi;
     Colonne = ProblemeAResoudre->Colonne;

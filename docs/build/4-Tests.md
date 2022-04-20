@@ -8,6 +8,8 @@ After build, tests can be run with ``ctest`` :
 cd _build
 ctest -C Release --output-on-failure
 ```
+Note:
+> Tests with output comparison must be enabled using the option `-DBUILD_OUTPUT_TEST=ON` (`OFF` by default)
 
 All tests are associated to a label and multiple labels can be defined. You can choose which tests will be executed at ctest run.
 

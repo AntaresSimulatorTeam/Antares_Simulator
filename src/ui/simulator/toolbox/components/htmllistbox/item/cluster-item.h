@@ -65,7 +65,7 @@ public:
     // Get the HTML Content for the item
     wxString htmlContent(const wxString& searchString);
 
-    virtual void addAdditionalIcons(wxString& out) const = 0;
+    virtual void addAdditionalIcons(wxString& out) const;
 
 protected:
     /*!

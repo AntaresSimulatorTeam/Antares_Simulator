@@ -390,6 +390,8 @@ void Spotlight::IItem::draw(wxDC& dc,
     {
         // Sub caption, wx format
         wxString subCaption = wxStringFromUTF8(pSubCaption);
+        bool b = pCaption.equals("W2");
+        int length = subCaption.Length();
         uint bounds_width = bounds.width;
 
         // display the main label

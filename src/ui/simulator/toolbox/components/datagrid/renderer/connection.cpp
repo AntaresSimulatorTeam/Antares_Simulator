@@ -146,7 +146,7 @@ static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
     if (!useLoopFlow)
         return true;
 
-    for (uint ts = 0; ts < direct_ntc->width; ts++)
+    for (int ts = 0; ts < direct_ntc->width; ts++)
     {
         const double ntcDirect = direct_ntc->entry[ts][row];
         const double ntcIndirect = indirect_ntc->entry[ts][row];

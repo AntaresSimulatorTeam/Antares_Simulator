@@ -392,7 +392,7 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
         size_t numberOffset = 0;
 
         while (
-          pNoteBook->find(wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset)
+          pNoteBook->find(wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset, false)
           != nullptr)
             numberOffset++;
 
@@ -458,7 +458,7 @@ void Component::removeLayer(Antares::Component::MapNotebook::Page& page)
     }
 }
 
-void Component::drawerVisible()
+void Component::drawerVisible(bool v)
 {
     wxSizer* sizer = GetSizer();
     if (sizer)
@@ -548,6 +548,8 @@ Data::Study::Ptr Component::attachedStudy()
 
 bool Component::loadFromStudy(Data::Study& study)
 {
+    assert(&study != NULL && "invalid study");
+
     if (!pMapActiveLayer)
         return false;
 
@@ -649,8 +651,6 @@ bool Component::saveToImageFile(const AnyString& filePath,
         return svgDC.IsOk();
         // break;
     }
-    case mfFormatCount:
-        return false;
     }
 
     return true; // all was fine
