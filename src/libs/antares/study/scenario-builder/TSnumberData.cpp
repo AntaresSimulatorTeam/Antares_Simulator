@@ -41,8 +41,6 @@ enum
 
 bool TSNumberData::reset(const Study& study)
 {
-    assert(&study != nullptr);
-
     const uint nbYears = study.parameters.nbYears;
 
     // Standard timeseries (load, wind, ...)
@@ -106,7 +104,7 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
 }
 
 template<>
-inline bool CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data, uint tsGenMax)
+inline bool CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data, uint /* tsGenMax */)
 {
     return value < data.directCapacities.width;
 }
@@ -321,8 +319,6 @@ bool hydroTSNumberData::apply(Study& study)
 
 bool thermalTSNumberData::reset(const Study& study)
 {
-    assert(&study != nullptr);
-
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
@@ -340,7 +336,7 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-void thermalTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void thermalTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -473,7 +469,7 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
-void renewableTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void renewableTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -507,8 +503,6 @@ void renewableTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::St
 
 bool renewableTSNumberData::reset(const Study& study)
 {
-    assert(&study != nullptr);
-
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
@@ -529,8 +523,6 @@ bool renewableTSNumberData::reset(const Study& study)
 // ================================
 bool ntcTSNumberData::reset(const Study& study)
 {
-    assert(&study != nullptr);
-
     const uint nbYears = study.parameters.nbYears;
     assert(pArea != nullptr);
 
@@ -541,7 +533,7 @@ bool ntcTSNumberData::reset(const Study& study)
     return true;
 }
 
-void ntcTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void ntcTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
 {
     if (!pArea)
         return;
@@ -612,7 +604,7 @@ bool ntcTSNumberData::apply(Study& study)
     return ret;
 }
 
-uint ntcTSNumberData::get_tsGenCount(const Study& study) const
+uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
 {
     return 0;
 }

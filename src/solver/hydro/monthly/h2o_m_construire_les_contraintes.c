@@ -51,7 +51,6 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
     CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
     ChgmtSens = -1.0;
 
@@ -60,7 +59,6 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
     ProblemeHydraulique = DonneesAnnuelles->ProblemeHydraulique;
     CorrespondanceDesVariables = ProblemeHydraulique->CorrespondanceDesVariables;
     ProblemeLineairePartieFixe = ProblemeHydraulique->ProblemeLineairePartieFixe;
-    ProblemeLineairePartieVariable = ProblemeHydraulique->ProblemeLineairePartieVariable;
 
     CoefficientsDeLaMatriceDesContraintes
       = ProblemeLineairePartieFixe->CoefficientsDeLaMatriceDesContraintes;

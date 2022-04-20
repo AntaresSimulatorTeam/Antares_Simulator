@@ -17,8 +17,6 @@ if(Boost_VERSION VERSION_GREATER 106000)
     add_subdirectory(end-to-end)
 endif()
 
-option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
-
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
@@ -31,7 +29,7 @@ if(Python3_Interpreter_FOUND)
       #Initialize test repository
       find_package(Git QUIET)
 
-        set(ANTARES_TEST_TAG "multiple-ntc")
+        set(ANTARES_TEST_TAG "v8.2")
 
         message(STATUS "Submodule test update with ${ANTARES_TEST_TAG} tag")
 
@@ -51,7 +49,7 @@ if(Python3_Interpreter_FOUND)
             message(FATAL_ERROR "git checkout ${ANTARES_TEST_TAG} failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
         endif()
         
-        macro(examples_tests use_ortools ortools_solver)
+        macro(run_examples_tests use_ortools ortools_solver)
         
             if(${use_ortools})
                 SET(SHORT_EXAMPLES_NAME short-examples-ortools-${ortools_solver})
@@ -98,7 +96,7 @@ if(Python3_Interpreter_FOUND)
         
         endmacro()
         
-        macro(output_tests use_ortools ortools_solver)
+        macro(add_output_tests use_ortools ortools_solver)
         
             if(${use_ortools})
                 SET(SHORT_NAME short-output-ortools-${ortools_solver})                
@@ -116,20 +114,18 @@ if(Python3_Interpreter_FOUND)
             # Short tests
             add_test(
                 NAME ${SHORT_NAME}
-                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} output_compare_test.py
+                COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver> ${use_ortools_option} --ortools-solver=${ortools_solver} output_compare_test.py --tb=line -v -s
                 WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/examples"
             )
             set_property(TEST ${SHORT_NAME} PROPERTY LABELS short-output ${ADDITIONNAL_LABELS})            
         
         endmacro()
                 
-        examples_tests(false "sirius")
-        examples_tests(true "sirius")
-        examples_tests(true "coin")
+        run_examples_tests(false "sirius")
+        run_examples_tests(true "sirius")
+        run_examples_tests(true "coin")
         
-        if (BUILD_OUTPUT_TEST)
-            output_tests(false, "sirius")
-        endif()
+        add_output_tests(false, "sirius")
         
         # Specific tests
         add_test(

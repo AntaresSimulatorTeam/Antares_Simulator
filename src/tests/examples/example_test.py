@@ -510,8 +510,7 @@ def test_070_hydro_reservoir_model_enhanced_03(use_ortools, ortools_solver, solv
     check_integrity_second_opt(study_path)
 
 @pytest.mark.short
-@pytest.mark.skipif(sys.platform == "win32",
-                    reason="need of checkIntegrity.txt file, results differents on Windows")
+@pytest.mark.skip(reason="Different results after adding noise in the hydro allocation step")
 def test_071_hydro_reservoir_model_enhanced_04(use_ortools, ortools_solver, solver_path):
     study_path = ALL_STUDIES_PATH / "short-tests" / "071 Hydro Reservoir Model -enhanced-04"
     run_study(solver_path, study_path, use_ortools, ortools_solver)

@@ -45,25 +45,7 @@ namespace Window
 namespace Hydro
 {
 Management::Management(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
- wxScrolledWindow(parent),
- pInputAreaSelector(notifier),
- pArea(nullptr),
- pComponentsAreReady(false),
- pSupport(nullptr),
- pIntermonthlyBreakdown(nullptr),
- pInterdailyBreakdown(nullptr),
- pIntradailyModulation(nullptr),
- pReservoirCapacity(nullptr),
- pLabelReservoirCapacity(nullptr),
- pLabelUseWaterValues(nullptr),
- pLabelHardBounds(nullptr),
- pLabelUseHeuristicTarget(nullptr),
- pLabelLeewayLow(nullptr),
- pLabelLeewayUp(nullptr),
- pReservoirManagement(nullptr),
- pFollowLoad(nullptr),
- pPumpingEfficiency(nullptr),
- pPowerToLevel(nullptr)
+ wxScrolledWindow(parent), pInputAreaSelector(notifier)
 {
     OnStudyClosed.connect(this, &Management::onStudyClosed);
     if (notifier)

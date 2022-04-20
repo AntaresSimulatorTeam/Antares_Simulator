@@ -4,6 +4,8 @@ SET(SRC_WINDOW_INSPECTOR
 	windows/inspector.h
 	windows/inspector/inspector.h
 	windows/inspector/accumulator.hxx
+    windows/inspector/constants.h
+    windows/inspector/constants.cpp
 	windows/inspector/inspector.cpp
 	windows/inspector/frame.cpp
 	windows/inspector/frame.h

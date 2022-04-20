@@ -1175,19 +1175,19 @@ void Parameters::fixRefreshIntervals()
 
 void Parameters::fixGenRefreshForNTC()
 {
-    if (timeSeriesTransmissionCapacities & timeSeriesToGenerate != 0)
+    if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
     {
         timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series generation is not available for transmission capacities. It "
                         "will be automatically disabled.";
     }
-    if (timeSeriesTransmissionCapacities & timeSeriesToRefresh != 0)
+    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series refresh is not available for transmission capacities. It will "
                         "be automatically disabled.";
     }
-    if (timeSeriesTransmissionCapacities & interModal != 0)
+    if ((timeSeriesTransmissionCapacities & interModal) != 0)
     {
         interModal &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
@@ -1300,7 +1300,7 @@ float Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(int year, float weight)
+void Parameters::setYearWeight(uint year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
@@ -1426,6 +1426,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info()
           << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
         break;
+    case rgUnknown:
+        logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
     const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
