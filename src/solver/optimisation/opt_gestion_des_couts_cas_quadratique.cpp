@@ -58,8 +58,32 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
     }
 }
 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
+                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    //CSR todo initialize the cost for variables in objective function of hourly CSR quadratic problem.
+    // CSR todo initialize the cost for variables in objective function of hourly CSR quadratic
+    // problem.
+
+    int Var;
+    int hour;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+
+    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    memset((char*)ProblemeAResoudre->CoutLineaire,
+           0,
+           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            ProblemeAResoudre->CoutQuadratique[Var]
+              = 2.0;
+    }
+
     return;
 }
