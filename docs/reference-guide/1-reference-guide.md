@@ -384,6 +384,9 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
+    - _Adequacy patch (false/true)_
+    - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
+    - _NTC between physical areas outside adequacy patch (set to null / local values)_
     - _Simplex optimization range # 4_ _(day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
 

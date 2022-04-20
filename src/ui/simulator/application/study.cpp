@@ -90,6 +90,7 @@ Event<void(Data::AreaLink*)> OnStudyLinkDelete;
 
 Event<void()> OnStudySimulationSettingsChanged;
 Event<void()> OnStudyNodalOptimizationChanged;
+Event<void()> OnStudyAreaUseAdequacyPatchChanged;
 
 Event<void()> OnStudyThermalClusterCommonSettingsChanged;
 Event<void(Data::ThermalCluster*)> OnStudyThermalClusterRenamed;

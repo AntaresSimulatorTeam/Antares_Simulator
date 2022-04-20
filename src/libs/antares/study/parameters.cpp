@@ -305,6 +305,9 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
+    include.adequacyPatch = false;
+    setToZero12LinksForAdequacyPatch = true;
+    setToZero11LinksForAdequacyPatch = true;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -552,6 +555,12 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
+    if (key == "include-adequacypatch")
+        return value.to<bool>(d.include.adequacyPatch);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
+        return value.to<bool>(d.setToZero12LinksForAdequacyPatch);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
+        return value.to<bool>(d.setToZero11LinksForAdequacyPatch);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -1546,6 +1555,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (!include.exportMPS)
         logs.info() << "  :: ignoring export mps";
+    if (!include.adequacyPatch)
+        logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
@@ -1707,6 +1718,11 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
+        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
+                     setToZero12LinksForAdequacyPatch);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
+                     setToZero11LinksForAdequacyPatch);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior

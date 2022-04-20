@@ -172,6 +172,29 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
         OnStudyNodalOptimizationChanged();
         return true;
     }
+    if (name == "area.adequacy_patch_mode")
+    {
+        for (; i != end; ++i)
+        {
+            auto* area = *i;
+            if (area)
+            {
+                String s;
+                wxStringToString(value.GetString(), s);
+                s.toLower();
+                s.trim();
+
+                if (s == "virtual area" || s == "0")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
+                else if (s == "physical area outside patch" || s == "1")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+                else if (s == "physical area inside patch" || s == "2")
+                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+            }
+        }
+        OnStudyAreaUseAdequacyPatchChanged();
+        return true;
+    }
     if (name == "area.links_count")
         return false;
     if (name == "area.cluster_count")

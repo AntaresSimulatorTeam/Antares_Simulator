@@ -203,6 +203,11 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                    << "optimization.ini";
     ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
+    // Adequacy ini
+    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
+                   << "adequacy_patch.ini";
+    ret = saveAreaAdequacyPatchIniFile(area, buffer) and ret;
+
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
     ret = area.reserves.saveToCSVFile(buffer) and ret;
@@ -323,6 +328,30 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
     section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
 
+    return ini.save(buffer);
+}
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
+{
+    IniFile ini;
+    IniFile::Section* section = ini.addSection("adequacy-patch");
+    int value;
+    switch (area.adequacyPatchMode)
+    {
+    case Data::AdequacyPatch::adqmVirtualArea:
+        value = 0;
+        break;
+    case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+        value = 1;
+        break;
+    case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+        value = 2;
+        break;
+    default:
+        value = 1; //default adqmPhysicalAreaOutsideAdqPatch
+        break;
+    }
+    section->add("adequacy-patch-mode", value);
     return ini.save(buffer);
 }
 
@@ -1038,6 +1067,44 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
         area.renewable.list.flush();
+    }
+
+    // Adequacy patch
+    if (study.header.version >= 820)
+    {
+        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
+                       << "adequacy_patch.ini";
+        IniFile ini;
+        if (ini.open(buffer))
+        {
+            auto* section = ini.find("adequacy-patch");
+            for (auto* p = section->firstProperty; p; p = p->next)
+            {
+                CString<30, false> tmp;
+                tmp = p->key;
+                tmp.toLower();
+                if (tmp == "adequacy-patch-mode")
+                {
+                    auto value = p->value.to<int>();
+                    switch (value)
+                    {
+                    case 0:
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
+                        break;
+                    case 1:
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+                        break;
+                    case 2:
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+                        break;
+                    default:
+                        area.adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+                        break;
+                    }
+                    continue;
+                }
+            }
+        }
     }
 
     // Nodal Optimization

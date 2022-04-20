@@ -416,6 +416,9 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
+        //! a flag to use Adequacy patch
+        bool adequacyPatch;
+
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -501,6 +504,14 @@ public:
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
+
+    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to physical
+    //! areas inside adequacy patch (area type 2). NTC is set to null (if true) only in the first
+    //! step of adequacy patch local matching rule.
+    bool setToZero12LinksForAdequacyPatch;
+    //! Transmission capacities between physical areas outside adequacy patch (area type 1). NTC is
+    //! set to null (if true) only in the first step of adequacy patch local matching rule.
+    bool setToZero11LinksForAdequacyPatch;
 
     //! \name Scenariio Builder - Rules
     //@{

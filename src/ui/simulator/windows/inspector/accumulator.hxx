@@ -322,6 +322,9 @@ static const wxChar* studyMode[] = {wxT("Economy"),
 #endif
                                     nullptr};
 
+static const wxChar* adequacyPatchMode[]
+  = {wxT("virtual area"), wxT("physical area outside patch"), wxT("physical area inside patch"), nullptr};
+
 struct Unique
 {
     template<class T>
@@ -903,6 +906,28 @@ struct PAreaUnsuppliedEnergyCost
     static wxString ConvertToString(const Type v)
     {
         return DoubleToWxString(v);
+    }
+};
+
+struct PAdequacyPatchMode
+{
+    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
+    static Type Value(const Data::Area* area)
+    {
+        return area->adequacyPatchMode;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        switch (v)
+        {
+        case Data::AdequacyPatch::adqmVirtualArea:
+            return wxT("virtual area");
+        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+            return wxT("physical area outside patch");
+        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+            return wxT("physical area inside patch");
+        }
+        return wxEmptyString;
     }
 };
 

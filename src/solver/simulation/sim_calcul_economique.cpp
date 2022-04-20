@@ -63,6 +63,21 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
+    if (parameters.include.adequacyPatch)
+    {
+        problem.adqPatch = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        // AdequacyFirstStep will be initialized during the economy solve
+        // AdqBehaviorMap will be initialized during the economy solve
+        problem.adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq
+          = parameters.setToZero12LinksForAdequacyPatch;
+        problem.adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq
+          = parameters.setToZero11LinksForAdequacyPatch;
+    }
+
+    if (parameters.include.adequacyPatch){
+      problem.adequacyPatchRuntimeData.initialize(study);
+    }
+
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP)
           ? OUI_ANTARES

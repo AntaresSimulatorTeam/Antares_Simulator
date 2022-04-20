@@ -225,6 +225,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    Data::AdequacyPatch::AdequacyPatchMode adequacyPatchMode;
     /*@}*/
 
     //! \name Associate data */
@@ -346,6 +348,8 @@ private:
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas

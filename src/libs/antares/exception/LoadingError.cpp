@@ -123,5 +123,15 @@ CommandLineArguments::CommandLineArguments(uint errors) :
 {
 }
 
+IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
+ LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
+{
+}
+
+NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
+ LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
+{
+}
+
 } // namespace Error
 } // namespace Antares

@@ -31,11 +31,15 @@
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
+#include "../../libs/antares/study/study.h"
 
 #define GROSSES_VARIABLES NON_ANTARES
 #define COEFF_GROSSES_VARIABLES 100
 
+#include <memory>
 #include <yuni/core/math.h>
+
+using namespace Antares::Data::AdequacyPatch;
 
 typedef struct
 {
@@ -317,6 +321,28 @@ typedef struct
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
+class AdequacyPatchRuntimeData
+{
+public:
+    std::vector<AdequacyPatchMode> areaMode;
+    std::vector<AdequacyPatchMode> originAreaType;
+    std::vector<AdequacyPatchMode> extremityAreaType; 
+    void initialize(Antares::Data::Study& study)
+    {
+        for (uint i = 0; i != study.areas.size(); ++i)
+        {
+            auto& area = *(study.areas[i]);
+            areaMode.push_back(area.adequacyPatchMode);
+        }
+        for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+        {
+            auto& link = *(study.runtime->areaLink[i]);
+            originAreaType.push_back(link.from->adequacyPatchMode);
+            extremityAreaType.push_back(link.with->adequacyPatchMode);
+        }
+    }
+};
+
 class computeTimeStepLevel
 {
 private:
@@ -423,6 +449,7 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
+    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -468,6 +495,13 @@ typedef struct
 {
     double* CoutsMarginauxHorairesDeLaReserveParZone;
 } COUTS_MARGINAUX_ZONES_DE_RESERVE;
+
+struct AdequacyPatchParameters
+{
+    bool AdequacyFirstStep;
+    bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+    bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+};
 
 struct PROBLEME_HEBDO
 {
@@ -572,6 +606,10 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
+    /* Adequacy Patch */
+    std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
+    AdequacyPatchRuntimeData adequacyPatchRuntimeData;
+    
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
@@ -587,7 +625,6 @@ struct PROBLEME_HEBDO
     double* coutOptimalSolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
-
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;

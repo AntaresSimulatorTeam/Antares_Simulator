@@ -34,6 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "adequacy_patch.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
@@ -140,7 +141,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-
+    
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
@@ -177,9 +178,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+                setBoundsAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
+            else
+                setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -401,9 +403,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 else
                     Xmax[Var] = 0.;
 
+                // adq patch: update ENS <= DENS in 2nd run
+                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false
+                    && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
+                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                    Xmax[Var]
+                      = min(Xmax[Var],
+                            ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;
+
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
