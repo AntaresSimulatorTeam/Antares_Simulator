@@ -501,7 +501,7 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     free(Cder);
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("fixed-part", "mps", numSpace);
+    Flot = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
@@ -569,7 +569,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("variable-part", "mps", numSpace);
+    Flot = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
