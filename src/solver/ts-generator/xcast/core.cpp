@@ -155,7 +155,6 @@ bool XCast::generateValuesForTheCurrentDay()
                 for (uint t = 0; t < s; ++t)
                 {
                     x = T[s] * T[t] * STDE[s] * STDE[t];
-                    float z = D_COPIE[t] * STDE[s];
                     if (Math::Zero(x))
                         CORR[s][t] = 0.f;
                     else

@@ -414,7 +414,7 @@ void Connections::onMapLayerRenamed(const wxString* text)
     Dispatcher::GUI::Post(this, &Connections::update);
 }
 
-void Connections::layerFilterChanged(wxCommandEvent& evt)
+void Connections::layerFilterChanged(wxCommandEvent& /* evt */)
 {
     if (IsGUIAboutToQuit())
         return;

@@ -17,8 +17,6 @@ if(Boost_VERSION VERSION_GREATER 106000)
     add_subdirectory(end-to-end)
 endif()
 
-option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
-
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 
@@ -98,7 +96,7 @@ if(Python3_Interpreter_FOUND)
         
         endmacro()
         
-        macro(run_output_tests use_ortools ortools_solver)
+        macro(add_output_tests use_ortools ortools_solver)
         
             if(${use_ortools})
                 SET(SHORT_NAME short-output-ortools-${ortools_solver})                
@@ -127,9 +125,7 @@ if(Python3_Interpreter_FOUND)
         run_examples_tests(true "sirius")
         run_examples_tests(true "coin")
         
-        if (BUILD_OUTPUT_TEST)
-            run_output_tests(false, "sirius")
-        endif()
+        add_output_tests(false, "sirius")
         
         # Specific tests
         add_test(

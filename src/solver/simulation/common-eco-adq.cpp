@@ -205,6 +205,10 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
+    const bool flowQuadEnabled = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+    if (!flowQuadEnabled)
+        return false;
+
     uint maxHours = study.runtime->nbHoursPerYear;
     for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
     {

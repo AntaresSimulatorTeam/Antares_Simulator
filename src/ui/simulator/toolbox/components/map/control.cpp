@@ -74,30 +74,15 @@ Control::Control(wxWindow* parent, Component& component) :
  wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
  nodes(*Manager::Instance()),
  pComponent(component),
- pInvalidated(true),
- pInvalidatedInnerCacheSize(true),
- pZoom(1.),
- pBackgroundColor(Settings::background),
  pCachedBoxSize(0, 0),
  pCachedOrigin(0, 0),
  pOffsetForSelectedNodes(0, 0),
- pKeyShift(false),
- pKeyCtrl(false),
  pCurrentScroll(0, 0),
  pCurrentMousePosition(INT_MAX, INT_MAX),
  pCurrentMousePositionGraph(INT_MAX, INT_MAX),
  pCurrentClientSize(0, 0),
  pLastMousePosition(INT_MAX, INT_MAX),
- pLastSelectedTool(nullptr),
- pMouseAction(mouseActionNone),
- pSelectionBox(),
- pTools(),
- previousMaxSizeX(-1),
- previousMaxSizeY(-1),
- uid(newUID++),
- pInfosAreaCount(nullptr),
- pInfosConnxCount(nullptr),
- wasDrawn(false)
+ uid(newUID++)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // GTK
     SetBackgroundColour(pBackgroundColor);
@@ -114,30 +99,15 @@ Control::Control(wxWindow* parent, Component& component, size_t uID) :
  wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
  nodes(*Manager::Instance()),
  pComponent(component),
- pInvalidated(true),
- pInvalidatedInnerCacheSize(true),
- pZoom(1.),
- pBackgroundColor(Settings::background),
  pCachedBoxSize(0, 0),
  pCachedOrigin(0, 0),
  pOffsetForSelectedNodes(0, 0),
- pKeyShift(false),
- pKeyCtrl(false),
  pCurrentScroll(0, 0),
  pCurrentMousePosition(INT_MAX, INT_MAX),
  pCurrentMousePositionGraph(INT_MAX, INT_MAX),
  pCurrentClientSize(0, 0),
  pLastMousePosition(INT_MAX, INT_MAX),
- pLastSelectedTool(nullptr),
- pMouseAction(mouseActionNone),
- pSelectionBox(),
- pTools(),
- previousMaxSizeX(-1),
- previousMaxSizeY(-1),
- uid(uID),
- pInfosAreaCount(nullptr),
- pInfosConnxCount(nullptr),
- wasDrawn(false)
+ uid(newUID++)
 {
     while (newUID <= uID)
         newUID++;
