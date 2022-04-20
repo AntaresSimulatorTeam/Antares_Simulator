@@ -13,6 +13,8 @@
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
+#include <algorithm>
+
 namespace
 {
 void checkStudyVersion(const AnyString& optStudyFolder)
@@ -96,19 +98,14 @@ void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
 // When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
 void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
 {
+    using namespace Antares::Data;
     if (adqPatchOn)
     {
-        bool containsAdqArea = false;
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            const auto& area = *(areas.byIndex[i]);
-            if (area.adequacyPatchMode
-                == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-            {
-                containsAdqArea = true;
-                break;
-            }
-        }
+        const bool containsAdqArea
+          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode
+                       == AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+            });
         if (!containsAdqArea)
             throw Error::NoAreaInsideAdqPatchMode();
     }
