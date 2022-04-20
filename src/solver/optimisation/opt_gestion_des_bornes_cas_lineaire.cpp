@@ -119,7 +119,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    
+
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
