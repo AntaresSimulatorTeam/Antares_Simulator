@@ -63,7 +63,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = PREMIERE_OPTIMISATION;
+    ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation = PREMIERE_OPTIMISATION;
 
     OPT_NumeroDeJourDuPasDeTemps(ProblemeHebdo);
 
@@ -105,7 +105,7 @@ OptimisationHebdo:
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
 
-    if ((ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
     {
         if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         {
@@ -119,7 +119,7 @@ OptimisationHebdo:
             printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
                    "initialise a OUI_ANTARES ou NON_ANTARES\n");
 
-        (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
+        ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
 
         if (ProblemeHebdo->Expansion == NON_ANTARES)
             goto OptimisationHebdo;

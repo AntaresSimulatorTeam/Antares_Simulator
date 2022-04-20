@@ -639,7 +639,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         requiredMemoryForWeeklyPb += 10 * NombreDePasDeTemps * sizeof(double);
         requiredMemoryForWeeklyPb += NombreDePasDeTemps * sizeof(void*);
@@ -676,7 +676,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
