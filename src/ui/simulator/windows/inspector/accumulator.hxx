@@ -322,8 +322,10 @@ static const wxChar* studyMode[] = {wxT("Economy"),
 #endif
                                     nullptr};
 
-static const wxChar* adequacyPatchMode[]
-  = {wxT("virtual area"), wxT("physical area outside patch"), wxT("physical area inside patch"), nullptr};
+static const wxChar* adequacyPatchMode[] = {wxT("virtual area"),
+                                            wxT("physical area outside patch"),
+                                            wxT("physical area inside patch"),
+                                            nullptr};
 
 struct Unique
 {

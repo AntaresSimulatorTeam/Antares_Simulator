@@ -348,7 +348,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
         value = 2;
         break;
     default:
-        value = 1; //default adqmPhysicalAreaOutsideAdqPatch
+        value = 1; // default adqmPhysicalAreaOutsideAdqPatch
         break;
     }
     section->add("adequacy-patch-mode", value);
@@ -1088,7 +1088,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                     auto value = p->value.to<int>();
                     switch (value)
                     {
-                    using namespace Data::AdequacyPatch;
+                        using namespace Data::AdequacyPatch;
                     case 0:
                         area.adequacyPatchMode = adqmVirtualArea;
                         break;

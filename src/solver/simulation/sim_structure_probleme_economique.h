@@ -326,7 +326,7 @@ class AdequacyPatchRuntimeData
 public:
     std::vector<AdequacyPatchMode> areaMode;
     std::vector<AdequacyPatchMode> originAreaType;
-    std::vector<AdequacyPatchMode> extremityAreaType; 
+    std::vector<AdequacyPatchMode> extremityAreaType;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -609,7 +609,7 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    
+
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
