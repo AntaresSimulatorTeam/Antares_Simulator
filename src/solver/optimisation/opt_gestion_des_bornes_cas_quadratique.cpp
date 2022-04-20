@@ -94,3 +94,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* P
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
     }
 }
+
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    //CSR todo initialize uppper bound and lower bound of variables in hourly CSR quadratic problem
+    return;
+}

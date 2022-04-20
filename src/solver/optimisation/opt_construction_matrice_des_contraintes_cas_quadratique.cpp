@@ -91,3 +91,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
     MemFree(Pi);
     MemFree(Colonne);
 }
+
+
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    //CSR todo build matrix of constraint of hourly CSR quadratic problem
+}

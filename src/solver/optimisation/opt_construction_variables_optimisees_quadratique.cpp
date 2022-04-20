@@ -57,3 +57,9 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     }
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 }
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+  //CSR todo :build list of variable to be optimized in hourly CSR quadratic problem.
+  return;
+}

@@ -57,3 +57,9 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
               = ValeursDeResistances->ResistanceApparente[Interco];
     }
 }
+
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    //CSR todo initialize the cost for variables in objective function of hourly CSR quadratic problem.
+    return;
+}

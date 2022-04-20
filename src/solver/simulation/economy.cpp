@@ -173,9 +173,14 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
     int hourInWeek = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblem = hourlyCsrProblem.pWeeklyProblemBelongedTo;
     //CSR todo
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblem->ProblemeAResoudre, hourlyCsrProblem);
 
-
-
+    //example to build an optim problem can be found in OPT_PilotageOptimisationQuadratique
     return;
 }
 

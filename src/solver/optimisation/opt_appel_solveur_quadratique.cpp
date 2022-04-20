@@ -183,3 +183,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         return false;
     }
 }
+
+
+void OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    //CSR todo call solver for quadratic houly CSR 
+}
