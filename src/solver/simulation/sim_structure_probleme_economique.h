@@ -736,7 +736,6 @@ public:
         pWeeklyProblemBelongedTo = pProblemeHebdo;
     };
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     /* variables */
     std::vector<double> ENS;
     /* Results */
