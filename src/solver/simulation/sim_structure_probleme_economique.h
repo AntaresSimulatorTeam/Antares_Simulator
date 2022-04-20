@@ -506,7 +506,7 @@ struct AdequacyPatchParameters
     float ThresholdInitiateCurtailmentSharingRule;
     float ThresholdDisplayLocalMatchingRuleViolations;
 };
-
+class HOURLY_CSR_PROBLEM;
 struct PROBLEME_HEBDO
 {
     /* Business problem */
@@ -613,7 +613,8 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    
+    std::vector<HOURLY_CSR_PROBLEM> houlyCsrProblems; //CSR: this should be an array for the hours triggered CSR
+
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
@@ -714,6 +715,34 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+};
+
+class HOURLY_CSR_RESULT
+{
+    //CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside RESULTATS_HORAIRES?
+};
+
+// hourly CSR problem structure
+class HOURLY_CSR_PROBLEM
+{
+public:
+    int hourInWeekTriggeredCsr;
+    PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
+    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    {
+        hourInWeekTriggeredCsr = hourInWeek;
+        pWeeklyProblemBelongedTo = pProblemeHebdo;
+    };
+
+
+    /* variables */
+    std::vector<double> ENS;
+    /* Results */
+    HOURLY_CSR_RESULT hourlyResult; //CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside RESULTATS_HORAIRES?
+
+    //CSR todo: there should be structures for building the optimization problem like:
+    // CORRESPONDANCES_DES_VARIABLES*
+    // CORRESPONDANCES_DES_CONTRAINTES*
 };
 
 #endif
