@@ -431,6 +431,39 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     return;
 }
 
+static void printColumnsObjective(FILE* Flot,
+                                  int NombreDeVariables,
+                                  const int* NumeroDeContrainte,
+                                  const double* CoefficientsDeLaMatriceDesContraintes,
+                                  const int* Cdeb,
+                                  const int* Csui,
+                                  const double* CoutLineaire)
+{
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    int il;
+
+    fprintf(Flot, "COLUMNS\n");
+    for (int Var = 0; Var < NombreDeVariables; Var++)
+    {
+        if (CoutLineaire && CoutLineaire[Var] != 0.0)
+        {
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
+            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
+        }
+
+        il = Cdeb[Var];
+        while (il >= 0)
+        {
+            SNPRINTF(buffer,
+                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
+                     "%-.10lf",
+                     CoefficientsDeLaMatriceDesContraintes[il]);
+            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
+            il = Csui[il];
+        }
+    }
+}
+
 void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
     FILE* Flot;
@@ -464,8 +497,6 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     Cdeb = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
     NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
     Csui = (int*)malloc(ilMax * sizeof(int));
-
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     if (Cder == nullptr || Cdeb == nullptr || NumeroDeContrainte == nullptr || Csui == nullptr)
     {
@@ -541,20 +572,13 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
         }
     }
 
-    fprintf(Flot, "COLUMNS\n");
-    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
-    {
-        il = Cdeb[Var];
-        while (il >= 0)
-        {
-            SNPRINTF(buffer,
-                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
-                     "%-.10lf",
-                     Pb->CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
-            il = Csui[il];
-        }
-    }
+    printColumnsObjective(Flot,
+                          Pb->NombreDeVariables,
+                          NumeroDeContrainte,
+                          Pb->CoefficientsDeLaMatriceDesContraintes,
+                          Cdeb,
+                          Csui,
+                          nullptr);
 
     fprintf(Flot, "ENDATA\n");
 
@@ -695,12 +719,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     char* Sens;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
     int* IndicesColonnes;
     int ExistenceDUneSolution;
     double* X;
-
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     Probleme = (PROBLEME_SIMPLEXE*)Prob;
 
@@ -715,7 +736,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     Sens = Probleme->Sens;
     IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
     NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
-    CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
     IndicesColonnes = Probleme->IndicesColonnes;
 
     if (ExistenceDUneSolution == OUI_ANTARES)
@@ -812,26 +832,13 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
         }
     }
 
-    fprintf(Flot, "COLUMNS\n");
-    for (Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (CoutLineaire[Var] != 0.0)
-        {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
-        }
-
-        il = Cdeb[Var];
-        while (il >= 0)
-        {
-            SNPRINTF(buffer,
-                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
-                     "%-.10lf",
-                     CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
-            il = Csui[il];
-        }
-    }
+    printColumnsObjective(Flot,
+                          Probleme->NombreDeVariables,
+                          NumeroDeContrainte,
+                          Probleme->CoefficientsDeLaMatriceDesContraintes,
+                          Cdeb,
+                          Csui,
+                          Probleme->CoutLineaire);
 
     printRHS(Flot, Probleme->NombreDeContraintes, Probleme->SecondMembre);
 
