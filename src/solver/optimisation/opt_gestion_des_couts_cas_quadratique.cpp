@@ -33,6 +33,11 @@
 
 #include "opt_fonctions.h"
 
+#include <math.h>
+//#include <yuni/core/math.h>
+
+using namespace Yuni;
+
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
 {
     int Interco;
@@ -64,10 +69,14 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     // CSR todo initialize the cost for variables in objective function of hourly CSR quadratic
     // problem.
 
+    int Interco;
     int Var;
     int hour;
+    double pto;
+    double coeff;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    COUTS_DE_TRANSPORT* TransportCost;
 
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -76,14 +85,60 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: ??? this should be 0 not hour
+    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR
+    // todo: ??? this should be 0 not hour
 
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
-        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            ProblemeAResoudre->CoutQuadratique[Var]
-              = 2.0;
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            // if (ProblemeHebdo->adqPatch->PriceTakingOrder ==Data::AdequacyPatch::adqPatchPTOIsLoad) 
+                //todo !! I cannot find load values per area in ProblemeHebdo!!!!!!!!!!!!!!!!!!
+            // else
+                pto = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+                // todo !!what if pto = 0.0 e.g. dens for one area is zero!?
+
+            coeff = 1 / Math::Power(pto, 2);
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                ProblemeAResoudre->CoutQuadratique[Var] = coeff;
+        }
+    }
+
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                ProblemeAResoudre->CoutLineaire[Var] = 0.0;
+            }
+
+            if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            {
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+                }
+            }
+        }
     }
 
     return;
