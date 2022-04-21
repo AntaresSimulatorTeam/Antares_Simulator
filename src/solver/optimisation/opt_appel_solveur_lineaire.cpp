@@ -431,6 +431,13 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     return;
 }
 
+static void printHeader(FILE* Flot, int NombreDeVariables, int NombreDeContraintes)
+{
+    fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
+    fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
+    fprintf(Flot, "NAME          Pb Solve\n");
+}
+
 static void printColumnsObjective(FILE* Flot,
                                   int NombreDeVariables,
                                   const int* NumeroDeContrainte,
@@ -542,9 +549,8 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
 
-    fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
-    fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
-    fprintf(Flot, "NAME          Pb Solve\n");
+    printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
+
     fprintf(Flot, "ROWS\n");
     fprintf(Flot, " N  OBJECTIF\n");
 
@@ -675,9 +681,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
 
-    fprintf(Flot, "* Number of variables:   %d\n", Pb->NombreDeVariables);
-    fprintf(Flot, "* Number of constraints: %d\n", Pb->NombreDeContraintes);
-    fprintf(Flot, "NAME          Pb Solve\n");
+    printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
     fprintf(Flot, "COLUMNS\n");
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
@@ -804,9 +808,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
 
-    fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
-    fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
-    fprintf(Flot, "NAME          Pb Solve\n");
+    printHeader(Flot, NombreDeVariables, NombreDeContraintes);
+
     fprintf(Flot, "ROWS\n");
     fprintf(Flot, " N  OBJECTIF\n");
 
