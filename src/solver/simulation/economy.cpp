@@ -174,7 +174,9 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
     PROBLEME_HEBDO* pWeeklyProblem = hourlyCsrProblem.pWeeklyProblemBelongedTo;
 
     OPT_LiberationProblemesSimplexe(pWeeklyProblem); //CSR todo !!! do we do this here ???? or do we create another PROBLEME_ANTARES_A_RESOUDRE inside HOURLY_CSR_PROBLEM ???? 
-    //CSR todo
+    //CSR todo 
+    // todo!! by using OPT_LiberationProblemesSimplexe are we deleting weekly results in pWeeklyProblem->RESULTATS_HORAIRES, calculated after LMR optimization?
+    // apparently not cause i'm using RESULTATS_HORAIRES to calculate pto value in opt_gestion_des_couts_cas_quadratique and getting good values!
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
@@ -250,7 +252,7 @@ bool Economy::year(Progression::Task& progression,
                         pProblemesHebdo[numSpace]->houlyCsrProblems.push_back(hourlyCsrProblem);
                         OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem); //CSR todo
                     }
-                    UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]); //CSR todo
+                    UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]); //CSR todo // result change in csr triggered hours are visible on output when i run tests?  
                     pProblemesHebdo[numSpace]->houlyCsrProblems.clear(); // we clear houlyCsrProblems of current week after CSR
                 }
             }
