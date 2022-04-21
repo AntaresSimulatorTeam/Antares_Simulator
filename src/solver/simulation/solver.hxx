@@ -1104,8 +1104,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
             if (refreshing)
             {
                 set->regenerateTS = true;
-                set->yearForTSgeneration = y; // year number to be given to function
-                                              // "regenerateTimeSeries(y /* year */)"
+                set->yearForTSgeneration = y;
             }
         }
 

@@ -100,8 +100,8 @@ private:
     clock::time_point end_;
 };
 
-void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE*, uint);
-void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE*, uint);
+static void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE*, uint);
+static void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE*, uint);
 
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
@@ -431,7 +431,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     return;
 }
 
-void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
     FILE* Flot;
     int Cnt;
@@ -559,10 +559,9 @@ void OPT_dump_spx_fixed_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     fclose(Flot);
 }
 
-void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
     FILE* Flot;
-    int Cnt;
     int Var;
 
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
@@ -588,7 +587,7 @@ void OPT_dump_spx_variable_part(PROBLEME_SIMPLEXE* Pb, uint numSpace)
     }
 
     fprintf(Flot, "RHS\n");
-    for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
+    for (int Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
         if (Pb->SecondMembre[Cnt] != 0.0)
         {
