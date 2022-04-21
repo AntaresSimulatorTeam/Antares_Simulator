@@ -65,7 +65,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
   //CSR todo: let us first to create an optim problem like this:
   // variables: ENS of each area
   // objective function: Sum (2 * (ENS)^2) of all area
-  // upper bound and lower bound: for each ENS: 0 <= ENS <= 3000
+  // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
   // constraint: No constraint
   //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
 
