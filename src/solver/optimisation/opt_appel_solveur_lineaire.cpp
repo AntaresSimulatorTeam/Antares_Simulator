@@ -565,6 +565,79 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     fclose(Flot);
 }
 
+static void printBounds(FILE* Flot,
+                        int NombreDeVariables,
+                        const int* TypeDeBorneDeLaVariable,
+                        const double* Xmin,
+                        const double* Xmax)
+{
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+
+    fprintf(Flot, "BOUNDS\n");
+
+    for (int Var = 0; Var < NombreDeVariables; Var++)
+    {
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
+        {
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+
+            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
+            continue;
+        }
+
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
+        {
+            if (Xmin[Var] != 0.0)
+            {
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
+            }
+
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
+        }
+
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
+        {
+            if (Xmin[Var] != 0.0)
+            {
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
+            }
+        }
+
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
+        {
+            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+            if (Xmax[Var] != 0.0)
+            {
+                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
+            }
+        }
+
+        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
+        {
+            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+        }
+    }
+}
+
+static void printRHS(FILE* Flot, int NombreDeContraintes, const double* SecondMembre)
+{
+    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+
+    fprintf(Flot, "RHS\n");
+    for (int Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
+    {
+        if (SecondMembre[Cnt] != 0.0)
+        {
+            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
+            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
+        }
+    }
+}
+
 void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
     FILE* Flot;
@@ -592,64 +665,9 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
         }
     }
 
-    fprintf(Flot, "RHS\n");
-    for (int Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
-    {
-        if (Pb->SecondMembre[Cnt] != 0.0)
-        {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
-        }
-    }
+    printRHS(Flot, Pb->NombreDeContraintes, Pb->SecondMembre);
 
-    fprintf(Flot, "BOUNDS\n");
-
-    for (Var = 0; Var < Pb->NombreDeVariables; Var++)
-    {
-        if (Pb->TypeDeVariable[Var] == VARIABLE_FIXE)
-        {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
-
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
-            continue;
-        }
-
-        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
-        {
-            if (Pb->Xmin[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
-        }
-
-        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
-        {
-            if (Pb->Xmin[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-        }
-
-        if (Pb->TypeDeVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
-        {
-            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
-            if (Pb->Xmax[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Pb->Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-        }
-
-        if (Pb->TypeDeVariable[Var] == VARIABLE_NON_BORNEE)
-        {
-            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
-        }
-    }
+    printBounds(Flot, Pb->NombreDeVariables, Pb->TypeDeVariable, Pb->Xmin, Pb->Xmax);
 
     fprintf(Flot, "ENDATA\n");
 
@@ -672,12 +690,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     PROBLEME_SIMPLEXE* Probleme;
 
     int NombreDeVariables;
-    int* TypeDeBorneDeLaVariable;
-    double* Xmax;
-    double* Xmin;
     double* CoutLineaire;
     int NombreDeContraintes;
-    double* SecondMembre;
     char* Sens;
     int* IndicesDebutDeLigne;
     int* NombreDeTermesDesLignes;
@@ -695,13 +709,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
         ExistenceDUneSolution = OUI_ANTARES;
 
     NombreDeVariables = Probleme->NombreDeVariables;
-    TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
-    Xmax = Probleme->Xmax;
-    Xmin = Probleme->Xmin;
     X = Probleme->X;
     CoutLineaire = Probleme->CoutLineaire;
     NombreDeContraintes = Probleme->NombreDeContraintes;
-    SecondMembre = Probleme->SecondMembre;
     Sens = Probleme->Sens;
     IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
     NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
@@ -823,64 +833,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
         }
     }
 
-    fprintf(Flot, "RHS\n");
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if (SecondMembre[Cnt] != 0.0)
-        {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
-        }
-    }
+    printRHS(Flot, Probleme->NombreDeContraintes, Probleme->SecondMembre);
 
-    fprintf(Flot, "BOUNDS\n");
-
-    for (Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
-        {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
-            continue;
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
-        {
-            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
-            if (Xmax[Var] != 0.0)
-            {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
-        {
-            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
-        }
-    }
+    printBounds(
+      Flot, Probleme->NombreDeVariables, Probleme->TypeDeVariable, Probleme->Xmin, Probleme->Xmax);
 
     fprintf(Flot, "ENDATA\n");
 
