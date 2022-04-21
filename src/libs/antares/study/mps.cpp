@@ -28,7 +28,6 @@
 #include "study.h"
 #include "../files/files.h"
 #include "../logs.h"
-#include <yuni/datetime/timestamp.h>
 
 using namespace Yuni;
 
@@ -63,12 +62,9 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
     String outputFile;
     outputFile << prefix << "-"; // problem ou criterion
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
-               << (runtime->weekInTheYear[numSpace] + 1) << "-";
-    Yuni::DateTime::TimestampToString(outputFile, "%Y%m%d-%H%M%S", 0, false);
-    String tempOutputFile;
-    tempOutputFile << outputFile << "." << extension;
+               << (runtime->weekInTheYear[numSpace] + 1);
 
-    buffer.clear() << this->folderOutput << SEP << tempOutputFile;
+    buffer.clear() << this->folderOutput << SEP << outputFile;
 
     // tester si le fichier existe deja
     FILE* fd_test = FileOpen(buffer.c_str(), "rb");
