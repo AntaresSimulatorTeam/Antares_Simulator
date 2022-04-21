@@ -171,17 +171,6 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
 
             iOpt = -1;
 
-            PetitDelta = NombreDePasDeTemps
-                         - (MUTetMDT * ((int)floor((double)(NombreDePasDeTemps / MUTetMDT))));
-            Mediane = NombreDePasDeTemps >> 1;
-
-            if (MUTetMDT > Mediane)
-                IntervalleDAjustement = NombreDePasDeTemps - PetitDelta;
-            else
-                IntervalleDAjustement = MUTetMDT + PetitDelta;
-
-            IntervalleDAjustement = PetitDelta;
-
             IntervalleDAjustement = MUTetMDT;
             if (NombreDePasDeTemps - MUTetMDT < IntervalleDAjustement)
                 IntervalleDAjustement = NombreDePasDeTemps - MUTetMDT;
