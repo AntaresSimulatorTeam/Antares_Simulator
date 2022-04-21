@@ -103,12 +103,48 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     // constraint: No constraint
     //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
 
+    // CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    // PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    // ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    // ProblemeAResoudre->NombreDeContraintes = 0;
+    // ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    // int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    // // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
+    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    // constraint: 2 * ENS > 1000
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Area;
+    int Var;
+    int NombreDeTermes;
+    double* Pi;
+    int* Colonne;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    {
+        NombreDeTermes = 0;
+        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+        Pi[NombreDeTermes] = 2.0;
+        Colonne[NombreDeTermes] = Var;
+        NombreDeTermes++;
+
+        hourlyCsrProblem.numberOfConstraintCsr.push_back(ProblemeAResoudre->NombreDeContraintes);
+
+        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+    }
+
+    MemFree(Pi);
+    MemFree(Colonne);
 }
