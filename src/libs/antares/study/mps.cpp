@@ -58,7 +58,6 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
         return nullptr;
     }
 
-    // Date/time
     String outputFile;
     outputFile << prefix << "-"; // problem ou criterion
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
@@ -66,24 +65,21 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
 
     buffer.clear() << this->folderOutput << SEP << outputFile;
 
-    // tester si le fichier existe deja
+    // test if file already exists
     FILE* fd_test = FileOpen(buffer.c_str(), "rb");
-    // logs.debug() << " !fd_test = " << (!fd_test) << " : FOR " << buffer.c_str();
     if (fd_test)
     {
         count[prefix]++;
         outputFile << "-" << count[prefix] << "." << extension;
-
-        buffer.clear() << this->folderOutput << SEP << outputFile;
         fclose(fd_test);
     }
     else
     {
-        count.clear();
-
+        count[prefix] = 0;
         outputFile << "." << extension;
-        buffer.clear() << this->folderOutput << SEP << outputFile;
     }
+
+    buffer.clear() << this->folderOutput << SEP << outputFile;
 
     logs.info() << "Solver output File: `" << buffer << "'";
 
