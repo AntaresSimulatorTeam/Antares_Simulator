@@ -55,7 +55,7 @@ extern "C"
 
 #include <chrono>
 
-#define OPT_APPEL_SOLVEUR_BUFFER_SIZE 256
+constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
 using namespace operations_research;
 
@@ -127,7 +127,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
 RESOLUTION:
 
-    if (ProbSpx == NULL && solver == NULL)
+    if (ProbSpx == nullptr && solver == nullptr)
     {
         Probleme.Contexte = SIMPLEXE_SEUL;
         Probleme.BaseDeDepartFournie = NON_SPX;
@@ -136,18 +136,18 @@ RESOLUTION:
     {
         if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES)
         {
-            if (ortoolsUsed && solver != NULL)
+            if (ortoolsUsed && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx != nullptr)
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
 
-            ProbSpx = NULL;
-            solver = NULL;
+            ProbSpx = nullptr;
+            solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
         }
@@ -259,7 +259,7 @@ RESOLUTION:
     if (ortoolsUsed)
     {
         solver = ORTOOLS_Simplexe(&Probleme, solver);
-        if (solver != NULL)
+        if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
         }
@@ -267,7 +267,7 @@ RESOLUTION:
     else
     {
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-        if (ProbSpx != NULL)
+        if (ProbSpx != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
@@ -294,11 +294,11 @@ RESOLUTION:
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (ortoolsUsed && solver != NULL)
+            if (ortoolsUsed && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx != nullptr)
             {
                 SPX_LibererProbleme(ProbSpx);
             }
@@ -310,8 +310,8 @@ RESOLUTION:
             {
                 logs.info() << " solver: resetting";
             }
-            ProbSpx = NULL;
-            solver = NULL;
+            ProbSpx = nullptr;
+            solver = nullptr;
             PremierPassage = NON_ANTARES;
             goto RESOLUTION;
         }
@@ -339,10 +339,10 @@ RESOLUTION:
             CoutOpt += ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->X[Var];
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
@@ -354,7 +354,7 @@ RESOLUTION:
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
         }
     }
@@ -454,6 +454,12 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     ilMax += Pb->NombreDeContraintes;
 
+    if (ilMax < 0)
+    {
+        logs.fatal() << "Invalid size detected";
+        return;
+    }
+
     Cder = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
     Cdeb = (int*)malloc(Pb->NombreDeVariables * sizeof(int));
     NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
@@ -461,7 +467,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL)
+    if (Cder == nullptr || Cdeb == nullptr || NumeroDeContrainte == nullptr || Csui == nullptr)
     {
         logs.fatal() << "Not enough memory";
         AntaresSolverEmergencyShutdown(2);
@@ -724,7 +730,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
     Csui = (int*)malloc(ilMax * sizeof(int));
 
-    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL)
+    if (Cder == nullptr || Cdeb == nullptr || NumeroDeContrainte == nullptr || Csui == nullptr)
     {
         logs.fatal() << "Not enough memory";
         AntaresSolverEmergencyShutdown();
@@ -791,7 +797,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
         else
         {
             logs.error() << "OPT_EcrireJeuDeDonneesMPS : Wrong direction for constraint no. "
-                << Sens[Cnt];
+                         << Sens[Cnt];
             AntaresSolverEmergencyShutdown();
         }
     }
