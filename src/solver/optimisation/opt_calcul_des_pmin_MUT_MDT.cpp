@@ -155,10 +155,6 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
             Yuni::String filename = folder;
             filename << "_" << Palier << ".txt";
             Yuni::IO::File::Stream file;
-            if (file.open(filename, Yuni::IO::OpenMode::append))
-            {
-              file << 1;
-            }
 
             PuissanceDispoEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
             PuissanceMinDuPalierThermique = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
@@ -237,7 +233,19 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
 
                 if (PuissanceMinDuPalierThermique[Pdt] > PuissanceDisponibleDuPalierThermique[Pdt])
                     PuissanceMinDuPalierThermique[Pdt] = PuissanceDisponibleDuPalierThermique[Pdt];
+            }    
+
+            if (file.open(filename, Yuni::IO::OpenMode::append))
+            {
+                file << MUTetMDT << "\n";
+                for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++) 
+                {   
+                    file << NbGrpCourbeGuide[Pdt] << "; ";
+                    file << NbGrpOpt[Pdt] << "; ";
+                    file << PuissanceMinDuPalierThermique[Pdt] << "\n";
+                }
             }
+
         }
     }
 

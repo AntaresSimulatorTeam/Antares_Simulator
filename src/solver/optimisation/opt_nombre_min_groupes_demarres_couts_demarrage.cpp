@@ -34,6 +34,8 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include <yuni/io/file.h>
+#include <yuni/io/io.h>
+#include <yuni/string.h>
 #include "opt_fonctions.h"
 
 extern "C"
@@ -45,6 +47,8 @@ extern "C"
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/emergency.h>
+
+#define SEP Yuni::IO::Separator
 
 using namespace Antares;
 using namespace Antares::Data;
@@ -97,6 +101,10 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
     {
+
+        Yuni::String folder = ProblemeHebdo->debugFolder;
+        folder << SEP << ProblemeHebdo->NomsDesPays[Pays];
+
         ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
         ProductionThermique = ResultatsHoraires->ProductionThermique;
 
@@ -143,6 +151,11 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
             }
             else
             {
+
+                Yuni::String filename = folder;
+                filename << "_" << Index << ".txt";
+                Yuni::IO::File::Stream file;
+
                 NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[Index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
                 NombreMaxDeGroupesEnMarcheDuPalierThermique
@@ -222,6 +235,17 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                         PuissanceDisponibleDuPalierThermique[PdtHebdo]
                           = PminDUnGroupeDuPalierThermique
                             * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                }
+
+                if (file.open(filename, Yuni::IO::OpenMode::append))
+                {   
+                    file << DureeMinimaleDeMarcheDUnGroupeDuPalierThermique << "; " << DureeMinimaleDArretDUnGroupeDuPalierThermique << "\n"
+                    for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++) 
+                    {   
+                        file << ProductionThermique[PdtHebdo]->NombreDeGroupesEnMarcheDuPalier[Index] << "; ";
+                        file << NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] << "; ";
+                        file << NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo] << "\n";
+                    }
                 }
             }
         }
