@@ -78,7 +78,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
   assert(ProblemeAResoudre != NULL);
 
   CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-  // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
 
   for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
   {

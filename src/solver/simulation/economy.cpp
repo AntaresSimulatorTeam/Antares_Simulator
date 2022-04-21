@@ -183,8 +183,6 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
     OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblem->ProblemeAResoudre, hourlyCsrProblem);
-
-    //example to build an optim problem can be found in OPT_PilotageOptimisationQuadratique
     return;
 }
 
@@ -239,21 +237,19 @@ bool Economy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
                 
-                //CSR todo: shall we start the CSR here, or shall we start the CSR after updatingWeeklyFinalHydroLevel? 
                 std::set<int> hoursInWeekTriggerCsrSet;
                 InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace], hoursInWeekTriggerCsrSet);
                 if( hoursInWeekTriggerCsrSet.size() > 0)
                 {
-                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear(); // we clear houlyCsrProblems from previous week in case there is any
+                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
                     for(int hourInWeek : hoursInWeekTriggerCsrSet)
                     {
-                        //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
                         pProblemesHebdo[numSpace]->houlyCsrProblems.push_back(hourlyCsrProblem);
-                        OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem); //CSR todo
+                        OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
                     }
                     UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]); //CSR todo // result change in csr triggered hours are visible on output when i run tests?  
-                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear(); // we clear houlyCsrProblems of current week after CSR
+                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
                 }
             }
             else

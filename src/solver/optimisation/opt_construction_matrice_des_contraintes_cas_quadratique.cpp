@@ -109,7 +109,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     // ProblemeAResoudre->NombreDeContraintes = 0;
     // ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     // int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    // // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
     // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: 2 * ENS > 1000

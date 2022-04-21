@@ -76,7 +76,6 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: ??? this should be 0 not hour
 
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
