@@ -33,7 +33,6 @@
 #include <antares/timeelapsed.h>
 #include <antares/logs.h>
 #include <antares/emergency.h>
-#include <antares/string-to-double.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
