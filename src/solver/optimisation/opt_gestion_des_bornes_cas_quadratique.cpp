@@ -111,18 +111,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     int Var;
     double* AdresseDuResultat;
     int hour;
-    double* Xmin;
-    double* Xmax;
-    int* TypeDeVariable;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    COUTS_DE_TRANSPORT* TransportCost;
 
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    Xmin = ProblemeAResoudre->Xmin;
-    Xmax = ProblemeAResoudre->Xmax;
 
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
@@ -157,79 +150,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
           = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
 
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
-    }
-
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour]; // check if it is hour
-
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)
-    {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-
-        Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-
-        if (Math::Infinite(Xmax[Var]) == 1)
-        {
-            if (Math::Infinite(Xmin[Var]) == -1)
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
-            else
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-        }
-        else
-        {
-            if (Math::Infinite(Xmin[Var]) == -1)
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
-            else
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        }
-
-        AdresseDuResultat = &(ProblemeHebdo->VariablesDualesDesContraintesDeNTC[hour]
-                                ->VariableDualeParInterconnexion[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = AdresseDuResultat;
-
-        AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
-
-        if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-        {
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-
-            if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
-                            - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            else
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-
-            Xmax[Var] += 0.01;
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            if (Math::Infinite(Xmax[Var]) == 1)
-            {
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            }
-            Xmin[Var] = 0.0;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
-
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
-                            + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            else
-                Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
-
-            Xmax[Var] += 0.01;
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            if (Math::Infinite(Xmax[Var]) == 1)
-            {
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            }
-            Xmin[Var] = 0.0;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
-        }
     }
 
     return;

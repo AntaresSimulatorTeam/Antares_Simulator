@@ -58,64 +58,34 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 }
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    // CSR todo :build list of variable to be optimized in hourly CSR quadratic problem.
+  //CSR todo :build list of variable to be optimized in hourly CSR quadratic problem.
 
-    // CSR todo: let us first to create an optim problem like this:
-    //  variables: ENS of each area
-    //  objective function: Sum (2 * (ENS)^2) of all area
-    //  upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-    //  constraint: No constraint
-    // CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new
-    // one created inside HOURLY_CSR_PROBLEM?
+  //CSR todo: let us first to create an optim problem like this:
+  // variables: ENS of each area
+  // objective function: Sum (2 * (ENS)^2) of all area
+  // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
+  // constraint: No constraint
+  //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    int NumberOfVariables = 0;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    COUTS_DE_TRANSPORT* TransportCost;
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+  int NumberOfVariables = 0;
+  int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+  CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+  
+  ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre; 
+  assert(ProblemeAResoudre != NULL);
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != NULL);
+  CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+  // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
 
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR
-    // todo: this should be 0 or hour???
-
-    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
-    {
-        CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
-          = NumberOfVariables;
-        ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        NumberOfVariables++;
-    }
-
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
-    {
-        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
-          = NumberOfVariables;
-        ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        NumberOfVariables++;
-
-        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-        if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-        {
-            CorrespondanceVarNativesVarOptim
-              ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
-              = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            NumberOfVariables++;
-            CorrespondanceVarNativesVarOptim
-              ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
-              = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            NumberOfVariables++;
-        }
-    }
-
-    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
-    return;
+  for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+  {
+      CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area] = NumberOfVariables;
+      ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      NumberOfVariables++;
+  }
+  ProblemeAResoudre->NombreDeVariables = NumberOfVariables;  
+  return;
 }
