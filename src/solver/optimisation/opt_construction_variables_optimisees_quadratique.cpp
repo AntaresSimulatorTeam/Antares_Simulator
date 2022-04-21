@@ -67,17 +67,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
   // objective function: Sum (2 * (ENS)^2) of all area
   // upper bound and lower bound: for each ENS: 0 <= ENS <= 3000
   // constraint: No constraint
+  //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
 
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
   int NumberOfVariables = 0;
-
+  int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
   CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
   
-  //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
   ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre; 
   assert(ProblemeAResoudre != NULL);
-
-  CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+  CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+  // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo: this should be 0 or hour???
 
   for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
   {

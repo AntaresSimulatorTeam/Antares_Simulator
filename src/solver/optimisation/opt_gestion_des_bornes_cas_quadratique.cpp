@@ -121,6 +121,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0]; //CSR todo; this should be 0 not hour ???
 
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
