@@ -95,21 +95,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    //CSR todo build matrix of constraint of hourly CSR quadratic problem
-    //CSR todo: let us first to create an optim problem like this:
-    // variables: ENS of each area
-    // objective function: Sum (2 * (ENS)^2) of areas inside adq patch
-    // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-    // constraint: 2 * ENS > 1000
-
-    // CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    // PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    // ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    // ProblemeAResoudre->NombreDeContraintes = 0;
-    // ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    // int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Area;
     int Var;
@@ -128,6 +113,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
+    // constraint: 2 * ENS > 1000
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)

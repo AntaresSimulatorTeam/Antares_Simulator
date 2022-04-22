@@ -71,6 +71,13 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
+    // variables: ENS for each area inside adq patch
+    // obj function term is: 1 / (PTO * PTO) * ENS * ENS
+    //  => quadratic cost: 1 / (PTO * PTO)
+    //  => linear cost: 0
+    // PTO can take two different values according to option:
+    //  1. from DENS
+    //  2. from load
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
@@ -110,7 +117,7 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     }
 
 
-
+    //CSR todo comments
     int Interco;
     COUTS_DE_TRANSPORT* TransportCost;
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)

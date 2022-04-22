@@ -99,13 +99,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
   HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    // CSR todo initialize uppper bound and lower bound of variables in hourly CSR quadratic
-    // CSR todo: let us first to create an optim problem like this:
-    //  variables: ENS of each area
-    //  objective function: Sum (2 * (ENS)^2) of areas inside adq patch
-    //  upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-    //  constraint: 2 * ENS > 1000 
-
     int Var;
     double* AdresseDuResultat;
     int hour;
@@ -120,6 +113,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
+
+    // variables: ENS for each area inside adq patch
+    // one dummy constraint for testing : 100 <= ENS <= 3000 //todo remove
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
@@ -152,6 +148,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     }
 
 
+    //CSR todo comments
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;    
@@ -159,7 +156,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     COUTS_DE_TRANSPORT* TransportCost;
     Xmin = ProblemeAResoudre->Xmin;
     Xmax = ProblemeAResoudre->Xmax;
-    
+
     ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour]; // check if it is hour
 
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)

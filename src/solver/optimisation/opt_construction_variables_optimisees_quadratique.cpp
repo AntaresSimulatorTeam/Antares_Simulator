@@ -60,14 +60,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-  //CSR todo :build list of variable to be optimized in hourly CSR quadratic problem.
-
-  //CSR todo: let us first to create an optim problem like this:
-  // variables: ENS of each area
-  // objective function: Sum (2 * (ENS)^2) of all area for for areas inside adq patch 
-  // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-  // constraint: 2 * ENS > 1000
-
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
   int NumberOfVariables = 0;
   int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
@@ -78,9 +70,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
 
   CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
+  // variables: ENS of each area insie adq patch
   for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
   {
-    //!!! Only ENS for areas inside adq patch are considered as variables
+    // Only ENS for areas inside adq patch are considered as variables
     if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
     {
       CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area] = NumberOfVariables;
@@ -89,6 +82,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
     }
   }
 
+  //CSR todo comments
   COUTS_DE_TRANSPORT* TransportCost;
   for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
   {
