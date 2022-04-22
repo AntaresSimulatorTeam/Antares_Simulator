@@ -88,6 +88,31 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
       NumberOfVariables++;
     }
   }
+
+  COUTS_DE_TRANSPORT* TransportCost;
+  for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+  {
+      CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
+        = NumberOfVariables;
+      ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      NumberOfVariables++;
+
+      TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+      if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+      {
+          CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+            = NumberOfVariables;
+          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+          NumberOfVariables++;
+          CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+            = NumberOfVariables;
+          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+          NumberOfVariables++;
+      }
+  }
+
   ProblemeAResoudre->NombreDeVariables = NumberOfVariables;  
   return;
 }

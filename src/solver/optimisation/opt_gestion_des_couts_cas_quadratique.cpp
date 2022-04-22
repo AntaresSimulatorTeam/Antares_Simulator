@@ -109,5 +109,46 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
         }
     }
 
+
+
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                ProblemeAResoudre->CoutLineaire[Var] = 0.0;
+            }
+
+            if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            {
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+                }
+            }
+        }
+    }
+
+
+
     return;
 }
