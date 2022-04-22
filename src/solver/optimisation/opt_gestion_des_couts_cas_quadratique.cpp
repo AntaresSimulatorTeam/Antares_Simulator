@@ -79,10 +79,12 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
 
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
-        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            ProblemeAResoudre->CoutQuadratique[Var]
-              = 2.0;
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                ProblemeAResoudre->CoutQuadratique[Var] = 2.0;
+        }
     }
 
     return;

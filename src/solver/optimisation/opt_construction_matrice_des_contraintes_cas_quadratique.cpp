@@ -98,10 +98,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     //CSR todo build matrix of constraint of hourly CSR quadratic problem
     //CSR todo: let us first to create an optim problem like this:
     // variables: ENS of each area
-    // objective function: Sum (2 * (ENS)^2) of all area
+    // objective function: Sum (2 * (ENS)^2) of areas inside adq patch
     // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-    // constraint: No constraint
-    //CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new one created inside HOURLY_CSR_PROBLEM?
+    // constraint: 2 * ENS > 1000
 
     // CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     // PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -111,7 +110,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     // int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     // CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-    // constraint: 2 * ENS > 1000
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Area;
     int Var;
@@ -132,16 +130,18 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
 
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
-        NombreDeTermes = 0;
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
-        Pi[NombreDeTermes] = 2.0;
-        Colonne[NombreDeTermes] = Var;
-        NombreDeTermes++;
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+            Pi[NombreDeTermes] = 2.0;
+            Colonne[NombreDeTermes] = Var;
+            NombreDeTermes++;
 
-        hourlyCsrProblem.numberOfConstraintCsr.push_back(ProblemeAResoudre->NombreDeContraintes);
+            hourlyCsrProblem.numberOfConstraintCsr.push_back(ProblemeAResoudre->NombreDeContraintes);
 
-        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+        }
     }
 
     MemFree(Pi);

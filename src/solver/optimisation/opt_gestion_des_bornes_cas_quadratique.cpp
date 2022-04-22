@@ -102,11 +102,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     // CSR todo initialize uppper bound and lower bound of variables in hourly CSR quadratic
     // CSR todo: let us first to create an optim problem like this:
     //  variables: ENS of each area
-    //  objective function: Sum (2 * (ENS)^2) of all area
+    //  objective function: Sum (2 * (ENS)^2) of areas inside adq patch
     //  upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-    //  constraint: No constraint
-    // CSR todo, we re-use ProblemeAResoudre from weekly ProblemeHebdo, shall we instead use a new
-    // one created inside HOURLY_CSR_PROBLEM?
+    //  constraint: 2 * ENS > 1000 
 
     int Var;
     double* AdresseDuResultat;
@@ -124,31 +122,33 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
-
-        ProblemeAResoudre->Xmin[Var] = 100;
-        ProblemeAResoudre->Xmax[Var] = 3000;
-
-        if (Math::Infinite(ProblemeAResoudre->Xmax[Var]) == 1)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
-            if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
-            else
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-        }
-        else
-        {
-            if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
-            else
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        }
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
-        ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
-        AdresseDuResultat
-          = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
+            ProblemeAResoudre->Xmin[Var] = 100;
+            ProblemeAResoudre->Xmax[Var] = 3000;
 
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+            if (Math::Infinite(ProblemeAResoudre->Xmax[Var]) == 1)
+            {
+                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                else
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
+            else
+            {
+                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                else
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            }
+
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
+            AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
+
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+        }
     }
 
     return;

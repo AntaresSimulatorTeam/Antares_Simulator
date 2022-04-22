@@ -51,7 +51,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* Probleme
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     //CSR todo initialize RHS right hand side of constraints for hourly CSR quadratic problem.
-    //constraint for each area: 2 * ENS > 1000
+    //constraint for each area inside adq patch: 2 * ENS > 1000
     int Cnt;
     int Area;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -60,9 +60,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
-        Cnt = hourlyCsrProblem.numberOfConstraintCsr[Area];
-        ProblemeAResoudre->SecondMembre[Cnt] = 1000;
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Cnt = hourlyCsrProblem.numberOfConstraintCsr[Area];
+            ProblemeAResoudre->SecondMembre[Cnt] = 1000;
+        }
     }
-
-    return;
 }
