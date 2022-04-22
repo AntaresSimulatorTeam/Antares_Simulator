@@ -61,11 +61,10 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
 void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
                                              HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    // CSR todo initialize the cost for variables in objective function of hourly CSR quadratic
-    // problem.
-
     int Var;
     int hour;
+    double priceTakingOrders; //PTO
+    double quadraticCost;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
@@ -83,7 +82,30 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                ProblemeAResoudre->CoutQuadratique[Var] = 2.0;
+            {
+                // if (ProblemeHebdo->adqPatch->PriceTakingOrder ==Data::AdequacyPatch::adqPatchPTOIsLoad)
+                // {
+                //      // todo !! I cannot find load values per area in ProblemeHebdo!!!!!!!!!!!!!!!!!!
+                // }
+                // else
+                // {
+                    priceTakingOrders = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+                // }
+
+                if (priceTakingOrders <= 0.0)
+                {
+                    //CSR todo a warning that DENS is negative and it is considered for CSR, there was a check for positive threshold
+                    quadraticCost = 0.0;
+                }
+                else
+                {
+                    quadraticCost = 1 / (priceTakingOrders * priceTakingOrders);
+                }
+                // quadraticCost = 2.0; //todo to remove. for debug
+                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                    ProblemeAResoudre->CoutQuadratique[Var] = quadraticCost;
+            }
         }
     }
 

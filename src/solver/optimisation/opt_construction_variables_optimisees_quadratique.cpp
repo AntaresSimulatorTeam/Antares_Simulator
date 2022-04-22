@@ -66,7 +66,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
   // variables: ENS of each area
   // objective function: Sum (2 * (ENS)^2) of all area for for areas inside adq patch 
   // upper bound and lower bound: for each ENS: 100 <= ENS <= 3000
-  // constraint: 2 * ENS < 1000
+  // constraint: 2 * ENS > 1000
 
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
   int NumberOfVariables = 0;
