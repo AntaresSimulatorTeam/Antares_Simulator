@@ -42,8 +42,8 @@ extern "C"
 
 void H2O_J_Free(DONNEES_MENSUELLES* DonneesMensuelles)
 {
-    int i;
-    int NombreDeProblemes;
+    unsigned int i;
+    unsigned int NombreDeProblemes;
     PROBLEME_SPX* ProbSpx;
 
     PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
