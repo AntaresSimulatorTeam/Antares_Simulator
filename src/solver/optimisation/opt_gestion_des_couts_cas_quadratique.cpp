@@ -109,8 +109,8 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
                     quadraticCost = 1 / (priceTakingOrders * priceTakingOrders);
                 }
                 // quadraticCost = 2.0; //todo to remove. for debug
-                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                // Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]; // double checking? no need.
+                // if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
                     ProblemeAResoudre->CoutQuadratique[Var] = quadraticCost;
             }
         }
