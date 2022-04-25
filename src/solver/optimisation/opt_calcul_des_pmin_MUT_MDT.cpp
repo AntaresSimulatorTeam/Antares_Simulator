@@ -113,8 +113,6 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
     int iOpt;
     int i;
     double Ecart;
-    int Mediane;
-    int PetitDelta;
     int PremierPdt;
     int IntervalleDAjustement;
     int DernierPdt;
