@@ -217,13 +217,22 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     String filename;
     bool success = true;
 
+    bool enabledModeIsChanged = false;
+    if (JIT::enabled)
+    {
+        JIT::enabled = false; // Allowing to read the area's daily max power
+        enabledModeIsChanged = true;
+    }
+
     // Read link's parameters times series
     filename.clear() << folder << SEP << with->id << "_parameters.txt";
-    const uint matrixWidth = 6;
     success
       = parameters.loadFromCSVFile(
-          filename, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
+          filename, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
         && success;
+
+    if (enabledModeIsChanged)
+        JIT::enabled = true; // Back to the previous loading mode.
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";

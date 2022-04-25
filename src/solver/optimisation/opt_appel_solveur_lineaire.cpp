@@ -49,6 +49,8 @@ extern "C"
 #include <antares/study.h>
 #include <antares/emergency.h>
 
+#include "../utils/mps_utils.h"
+
 #include "../utils/ortools_utils.h"
 #include "../infeasible-problem-analysis/problem.h"
 #include "../infeasible-problem-analysis/exceptions.h"
@@ -60,12 +62,6 @@ using namespace operations_research;
 using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
 
 class TimeMeasurement
 {
@@ -114,15 +110,15 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    ProbSpx = (PROBLEME_SPX*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
-    solver = (MPSolver*)((ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[(int)NumIntervalle]);
+    ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
-    auto& study = *Data::Study::Current::Get();
-    bool ortoolsUsed = study.parameters.ortoolsUsed;
+    auto study = Data::Study::Current::Get();
+    bool ortoolsUsed = study->parameters.ortoolsUsed;
 
 RESOLUTION:
 
-    if (ProbSpx == NULL && solver == NULL)
+    if (ProbSpx == nullptr && solver == nullptr)
     {
         Probleme.Contexte = SIMPLEXE_SEUL;
         Probleme.BaseDeDepartFournie = NON_SPX;
@@ -131,18 +127,18 @@ RESOLUTION:
     {
         if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES)
         {
-            if (ortoolsUsed && solver != NULL)
+            if (ortoolsUsed && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx != nullptr)
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = NULL;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
 
-            ProbSpx = NULL;
-            solver = NULL;
+            ProbSpx = nullptr;
+            solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
         }
@@ -238,21 +234,33 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
+    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
+    // - Only for first optimization week
+    // - If mode Xpansion is asked
+    // - For time beeing, only for simplex, without use of ortools
+    if (ProblemeHebdo->Expansion)
+    {
+        if (ProblemeHebdo->firstWeekOfSimulation)
+            OPT_dump_spx_fixed_part(Probleme, numSpace, true);
+
+        OPT_dump_spx_variable_part(Probleme, numSpace, true);
+    }
+
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
         solver = ORTOOLS_Simplexe(&Probleme, solver);
-        if (solver != NULL)
+        if (solver != nullptr)
         {
-            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)solver;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
         }
     }
     else
     {
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-        if (ProbSpx != NULL)
+        if (ProbSpx != nullptr)
         {
-            (ProblemeAResoudre->ProblemesSpx)->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
     measure.tick();
@@ -267,7 +275,7 @@ RESOLUTION:
         }
         else
         {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, true);
         }
     }
 
@@ -277,11 +285,11 @@ RESOLUTION:
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
-            if (ortoolsUsed && solver != NULL)
+            if (ortoolsUsed && solver != nullptr)
             {
                 ORTOOLS_LibererProbleme(solver);
             }
-            else if (ProbSpx != NULL)
+            else if (ProbSpx != nullptr)
             {
                 SPX_LibererProbleme(ProbSpx);
             }
@@ -293,8 +301,8 @@ RESOLUTION:
             {
                 logs.info() << " solver: resetting";
             }
-            ProbSpx = NULL;
-            solver = NULL;
+            ProbSpx = nullptr;
+            solver = nullptr;
             PremierPassage = NON_ANTARES;
             goto RESOLUTION;
         }
@@ -322,10 +330,10 @@ RESOLUTION:
             CoutOpt += ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->X[Var];
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
@@ -337,7 +345,7 @@ RESOLUTION:
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
-            if (pt != NULL)
+            if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsMarginauxDesContraintes[Cnt];
         }
     }
@@ -376,8 +384,7 @@ RESOLUTION:
             }
             else
             {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-                  (void*)&Probleme, numSpace, ANTARES_SIMPLEXE);
+                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, true);
             }
         }
 
@@ -403,8 +410,8 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createCriterionFileIntoOutput(numSpace);
+    auto study = Data::Study::Current::Get();
+    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
 
@@ -413,245 +420,4 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     fclose(Flot);
 
     return;
-}
-
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, char Type)
-{
-    using PSN = Antares::Optimization::PROBLEME_SIMPLEXE_NOMME;
-    FILE* Flot;
-    int Cnt;
-    int Var;
-    int il;
-    int ilk;
-    int ilMax;
-    char* Nombre;
-    int* Cder;
-    int* Cdeb;
-    int* NumeroDeContrainte;
-    int* Csui;
-    double CoutOpt;
-    PSN* Probleme;
-
-    int NombreDeVariables;
-    int* TypeDeBorneDeLaVariable;
-    double* Xmax;
-    double* Xmin;
-    double* CoutLineaire;
-    int NombreDeContraintes;
-    double* SecondMembre;
-    char* Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
-    int ExistenceDUneSolution;
-    double* X;
-
-    Probleme = static_cast<PSN*>(Prob);
-    const std::vector<std::string>& NomDesVariables = Probleme->NomDesVariables;
-    const std::vector<std::string>& NomDesContraintes = Probleme->NomDesContraintes;
-
-    ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
-    if (ExistenceDUneSolution == OUI_SPX)
-        ExistenceDUneSolution = OUI_ANTARES;
-
-    NombreDeVariables = Probleme->NombreDeVariables;
-    TypeDeBorneDeLaVariable = Probleme->TypeDeVariable;
-    Xmax = Probleme->Xmax;
-    Xmin = Probleme->Xmin;
-    X = Probleme->X;
-    CoutLineaire = Probleme->CoutLineaire;
-    NombreDeContraintes = Probleme->NombreDeContraintes;
-    SecondMembre = Probleme->SecondMembre;
-    Sens = Probleme->Sens;
-    IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
-    NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
-    CoefficientsDeLaMatriceDesContraintes = Probleme->CoefficientsDeLaMatriceDesContraintes;
-    IndicesColonnes = Probleme->IndicesColonnes;
-
-    if (ExistenceDUneSolution == OUI_ANTARES)
-    {
-        CoutOpt = 0;
-        for (Var = 0; Var < NombreDeVariables; Var++)
-            CoutOpt += CoutLineaire[Var] * X[Var];
-    }
-
-    for (ilMax = -1, Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if ((IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
-        {
-            ilMax = IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1;
-        }
-    }
-
-    ilMax += NombreDeContraintes;
-
-    Cder = (int*)malloc(NombreDeVariables * sizeof(int));
-    Cdeb = (int*)malloc(NombreDeVariables * sizeof(int));
-    NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
-    Csui = (int*)malloc(ilMax * sizeof(int));
-    Nombre = (char*)malloc(1024);
-
-    if (Cder == NULL || Cdeb == NULL || NumeroDeContrainte == NULL || Csui == NULL
-        || Nombre == NULL)
-    {
-        logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
-    }
-
-    for (Var = 0; Var < NombreDeVariables; Var++)
-        Cdeb[Var] = -1;
-
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        il = IndicesDebutDeLigne[Cnt];
-        ilMax = il + NombreDeTermesDesLignes[Cnt];
-        while (il < ilMax)
-        {
-            Var = IndicesColonnes[il];
-            if (Cdeb[Var] < 0)
-            {
-                Cdeb[Var] = il;
-                NumeroDeContrainte[il] = Cnt;
-                Csui[il] = -1;
-                Cder[Var] = il;
-            }
-            else
-            {
-                ilk = Cder[Var];
-                Csui[ilk] = il;
-                NumeroDeContrainte[il] = Cnt;
-                Csui[il] = -1;
-                Cder[Var] = il;
-            }
-
-            il++;
-        }
-    }
-
-    free(Cder);
-
-    auto& study = *Data::Study::Current::Get();
-    Flot = study.createMPSFileIntoOutput(numSpace);
-
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
-
-    fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
-    fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
-    fprintf(Flot, "NAME          Pb Solve\n");
-    fprintf(Flot, "ROWS\n");
-    fprintf(Flot, " N  OBJECTIF\n");
-
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if (Sens[Cnt] == '=')
-        {
-            fprintf(Flot, " E  %s\n", NomDesContraintes[Cnt].c_str());
-        }
-        else if (Sens[Cnt] == '<')
-        {
-            fprintf(Flot, " L  %s\n", NomDesContraintes[Cnt].c_str());
-        }
-        else if (Sens[Cnt] == '>')
-        {
-            fprintf(Flot, " G  %s\n", NomDesContraintes[Cnt].c_str());
-        }
-        else
-        {
-            fprintf(Flot,
-                    "%s : le sens de la contrainte %c ne fait pas partie "
-                    "des sens reconnus\n",
-                    __FUNCTION__,
-                    Sens[Cnt]);
-            AntaresSolverEmergencyShutdown(2);
-        }
-    }
-
-    fprintf(Flot, "COLUMNS\n");
-    for (Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (CoutLineaire[Var] != 0.0)
-        {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoutLineaire[Var]);
-            fprintf(Flot, "    %s  OBJECTIF  %s\n", NomDesVariables[Var].c_str(), Nombre);
-        }
-
-        il = Cdeb[Var];
-        while (il >= 0)
-        {
-            SNPRINTF(Nombre, 1024, "%-.10lf", CoefficientsDeLaMatriceDesContraintes[il]);
-            Cnt = NumeroDeContrainte[il];
-            fprintf(Flot, "    %s  %s  %s\n", NomDesVariables[Var].c_str(), NomDesContraintes[Cnt].c_str(), Nombre);
-            il = Csui[il];
-        }
-    }
-
-    fprintf(Flot, "RHS\n");
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if (SecondMembre[Cnt] != 0.0)
-        {
-            SNPRINTF(Nombre, 1024, "%-.9lf", SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    %s  %s\n", NomDesContraintes[Cnt].c_str(), Nombre);
-        }
-    }
-
-    fprintf(Flot, "BOUNDS\n");
-
-    for (Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
-        {
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-
-            fprintf(Flot, " FX BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
-            continue;
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
-            }
-
-            SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
-        {
-            fprintf(Flot, " MI BNDVALUE  %s\n", NomDesVariables[Var].c_str());
-            if (Xmax[Var] != 0.0)
-            {
-                SNPRINTF(Nombre, 1024, "%-.9lf", Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  %s  %s\n", NomDesVariables[Var].c_str(), Nombre);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
-        {
-            fprintf(Flot, " FR BNDVALUE  %s\n", NomDesVariables[Var].c_str());
-        }
-    }
-
-    fprintf(Flot, "ENDATA\n");
-
-    free(Cdeb);
-    free(NumeroDeContrainte);
-    free(Csui);
-    free(Nombre);
-
-    fclose(Flot);
 }

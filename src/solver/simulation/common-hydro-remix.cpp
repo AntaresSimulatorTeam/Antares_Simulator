@@ -71,7 +71,7 @@ static bool Remix(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpa
         auto& H = weeklyResults.TurbinageHoraire;
 
         memset(remix, 0, sizeof(remix));
-        memset(G, 0, sizeof(remix));
+        memset(G, 0, sizeof(G));
 
         uint endHour = step;
         uint offset = 0;

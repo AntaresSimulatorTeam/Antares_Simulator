@@ -38,8 +38,6 @@ namespace ScenarioBuilder
 {
 bool hydroLevelsData::reset(const Study& study)
 {
-    assert(&study != nullptr);
-
     const uint nbYears = study.parameters.nbYears;
 
     pHydroLevelsRules.reset(study.areas.size(), nbYears);
