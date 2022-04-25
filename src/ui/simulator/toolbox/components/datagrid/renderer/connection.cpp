@@ -65,10 +65,9 @@ void Connection::onConnectionChanged(Data::AreaLink* link)
         return;
 
     link->invalidate(true);
-
     setMatrix(link);
-    if (link)
-        mUseLoopFlow = link->useLoopFlow;
+    mUseLoopFlow = link->useLoopFlow;
+
     if (pControl)
     {
         pControl->InvalidateBestSize();
