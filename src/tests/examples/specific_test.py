@@ -56,7 +56,7 @@ def find_mps_path(output_dir, mps_file):
 def check_mps_availability(output_path: Path, yearsError):
     for year in yearsError.keys():
         for week in yearsError[year]:
-            find_mps_path(output_path, "problem-"+ str(year) +"-"+str(week)+"-*-*.mps")
+            find_mps_path(output_path, "problem-"+ str(year) +"-"+str(week)+".mps")
 
 def check_no_mps_available(output_path):
     op = []

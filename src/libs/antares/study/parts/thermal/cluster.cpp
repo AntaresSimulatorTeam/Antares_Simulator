@@ -43,26 +43,6 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
-{
-bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
-{
-    switch (tsGenBehavior)
-    {
-    // Generate if global tells us to
-    case LocalTSGenerationBehavior::useGlobalParameter:
-        return (global == GlobalTSGenerationBehavior::generate) && refresh;
-    case LocalTSGenerationBehavior::forceGen:
-        return refresh;
-    default:
-        return false;
-    }
-}
-} // namespace Data
-} // namespace Antares
-
 namespace Yuni
 {
 namespace Extension
@@ -751,6 +731,20 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     }
 
     return checkMinStablePower();
+}
+
+bool ThermalCluster::doWeGenerateTS(bool globalThermalTSgeneration) const
+{
+    switch (tsGenBehavior)
+    {
+        // Generate if global tells us to
+    case LocalTSGenerationBehavior::useGlobalParameter:
+        return globalThermalTSgeneration;
+    case LocalTSGenerationBehavior::forceGen:
+        return true;
+    default:
+        return false;
+    }
 }
 
 unsigned int ThermalCluster::precision() const
