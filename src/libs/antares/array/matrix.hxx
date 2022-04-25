@@ -415,7 +415,7 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
 {
     assert(not filename.empty() and "Matrix<>:: loadFromCSVFile: empty filename");
     // As the loading might be expensive, especially when dealing with
-    // numerous matriceis, we may want to delay this loading (a `lazy` mode)
+    // numerous matrices, we may want to delay this loading (a `lazy` mode)
     return (JIT::enabled and not(options & optImmediate))
              ? internalLoadJITData(filename, minWidth, maxHeight, options)
              // Reading data from file

@@ -61,6 +61,11 @@ wxString Connection::rowCaption(int row) const
 
 void Connection::onConnectionChanged(Data::AreaLink* link)
 {
+    if (!link)
+        return;
+
+    link->invalidate(true);
+
     setMatrix(link);
     if (link)
         mUseLoopFlow = link->useLoopFlow;
