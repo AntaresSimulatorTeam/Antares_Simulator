@@ -66,4 +66,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
             ProblemeAResoudre->SecondMembre[Cnt] = 1000;
         }
     }
+
+    // CSR todo. Add RHS I Kirchhoff's law contstraint for all links.
+    // CSR todo. Add RHS, only hourly, user defined Binding constraints for all links.
 }

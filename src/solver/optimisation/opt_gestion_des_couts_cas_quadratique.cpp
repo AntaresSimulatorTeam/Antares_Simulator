@@ -117,7 +117,12 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     }
 
 
-    //CSR todo comments
+    // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
+    // obj function term is: ∑( hurdle_cost_direct x flow_direct )+ ∑( hurdle_cost_indirect x flow_indirect )
+    //  => quadratic cost: 0
+    //  => linear cost: hurdle_cost_direct / hurdle_cost_indirect
+    // these members of objective functions are considered only if IntercoGereeAvecDesCouts = OUI_ANTARES (use hurdle cost option is true).
+    // otherwise these members are zero.
     int Interco;
     COUTS_DE_TRANSPORT* TransportCost;
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)

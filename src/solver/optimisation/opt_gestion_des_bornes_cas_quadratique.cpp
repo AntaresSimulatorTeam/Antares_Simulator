@@ -148,7 +148,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     }
 
 
-    //CSR todo comments
+    // variables: NTC (direct and indirect transmissin flow). 
+    // Set hourly bounds for ALL links depending on the user input (max direct and indirect flow).
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;    

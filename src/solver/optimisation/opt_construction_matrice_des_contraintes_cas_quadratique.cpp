@@ -130,6 +130,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         }
     }
 
+    // CSR todo. Add I Kirchhoff's law contstraint for all links.
+    // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
+    // and/or power generated from generating units.
+
     MemFree(Pi);
     MemFree(Colonne);
 }
