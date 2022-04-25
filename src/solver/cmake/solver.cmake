@@ -57,6 +57,9 @@ set(RTESOLVER_OPT
         
         utils/named_problem.h
         utils/named_problem.cpp
+
+        utils/mps_utils.h
+        utils/mps_utils.cpp
 	)
 
 

@@ -84,7 +84,6 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void*, uint, int);
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint);
 
 /*------------------------------*/
 

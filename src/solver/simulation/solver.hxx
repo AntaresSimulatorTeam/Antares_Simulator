@@ -329,7 +329,7 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info();
         logs.info() << " Only the preprocessors are enabled.";
-        regenerateTimeSeries<true>(0);
+        regenerateTimeSeries(0);
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -1019,7 +1019,6 @@ void ISimulation<Impl>::estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage&
 }
 
 template<class Impl>
-template<bool PreproOnly>
 void ISimulation<Impl>::regenerateTimeSeries(uint year)
 {
     // A preprocessor can be launched for several reasons:
@@ -1029,33 +1028,20 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
 
     using namespace Solver::TSGenerator;
     // Load
-    if (pData.haveToRefreshTSLoad
-        && (PreproOnly || !year || ((year % pData.refreshIntervalLoad) == 0)))
+    if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
     // Solar
-    if (pData.haveToRefreshTSSolar
-        && (PreproOnly || !year || ((year % pData.refreshIntervalSolar) == 0)))
+    if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
     // Wind
-    if (pData.haveToRefreshTSWind
-        && (PreproOnly || !year || ((year % pData.refreshIntervalWind) == 0)))
+    if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
     // Hydro
-    if (pData.haveToRefreshTSHydro
-        && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
+    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
     // Thermal
-    Data::GlobalTSGenerationBehavior globalBehavior;
-    if (pData.haveToRefreshTSThermal)
-    {
-        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
-    }
-    else
-    {
-        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
-    }
-    const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
-    GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
+    const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
+    GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
 }
 
 template<class Impl>
@@ -1083,23 +1069,15 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         // Do we refresh just before this year ? If yes a new set of parallel years has to be
         // created
         bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (!y || ((y % pData.refreshIntervalLoad) == 0));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSSolar && (!y || ((y % pData.refreshIntervalSolar) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSWind && (!y || ((y % pData.refreshIntervalWind) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSHydro && (!y || ((y % pData.refreshIntervalHydro) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
+        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
+        refreshing = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
+        refreshing = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
+        refreshing = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
 
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        refreshing = refreshing || study.runtime->thermalTSRefresh;
+        bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
+        refreshing = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
@@ -1126,8 +1104,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
             if (refreshing)
             {
                 set->regenerateTS = true;
-                set->yearForTSgeneration = y; // year number to be given to function
-                                              // "regenerateTimeSeries<false>(y /* year */)"
+                set->yearForTSgeneration = y;
             }
         }
 
@@ -1518,7 +1495,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
         if (set_it->regenerateTS)
-            regenerateTimeSeries<false>(set_it->yearForTSgeneration);
+            regenerateTimeSeries(set_it->yearForTSgeneration);
 
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
 
