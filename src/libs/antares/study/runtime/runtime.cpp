@@ -488,11 +488,17 @@ static void checkMiscGenUsed(const AreaList& areas)
     });
     if (!areasWithMiscGen.empty())
     {
-        logs.info() << "Misc. gen is deprecated, "
-                       "consider using renewable clusters instead. Found "
-                    << areasWithMiscGen.size() << " areas with misc. gen :";
+        std::string miscGenAreas;
         for (const auto& areaName : areasWithMiscGen)
-            logs.info() << areaName;
+        {
+            miscGenAreas += areaName.c_str();
+            if (&areaName != &areasWithMiscGen.back())
+                miscGenAreas += ", ";
+        }
+
+        logs.warning() << "Misc. gen is deprecated, "
+                          "consider using renewable clusters instead. Found "
+                       << areasWithMiscGen.size() << " areas with misc. gen : " << miscGenAreas;
     }
 }
 
