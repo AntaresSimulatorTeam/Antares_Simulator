@@ -90,9 +90,11 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                // if (ProblemeHebdo->adqPatch->PriceTakingOrder ==Data::AdequacyPatch::adqPatchPTOIsLoad)
+                // if (ProblemeHebdo->adqPatch->PriceTakingOrder == Data::AdequacyPatch::adqPatchPTOIsLoad)
                 // {
-                //      // todo !! I cannot find load values per area in ProblemeHebdo!!!!!!!!!!!!!!!!!!
+                    priceTakingOrders
+                    = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+                        + ProblemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
                 // }
                 // else
                 // {
