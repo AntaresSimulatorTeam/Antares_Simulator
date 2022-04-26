@@ -184,8 +184,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         }
 
         AdresseDuResultat = &(ProblemeHebdo->VariablesDualesDesContraintesDeNTC[hour]
-                                ->VariableDualeParInterconnexion[Interco]); // dual variable for links
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = AdresseDuResultat; // reduced cost
+                                ->VariableDualeParInterconnexion[Interco]); // dual variable for links // todo: remove
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = AdresseDuResultat; // reduced cost // todo: remove
 
         AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
@@ -209,7 +209,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             }
             Xmin[Var] = 0.0;
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL; // not adding AdresseDuResultat!
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL; // not adding AdresseDuResultat! // todo: remove
 
             Var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
@@ -230,6 +230,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
         }
     }
+    // todo: remove 
     // Loop flow: amount of power flowing circularly though the grid
     // when all "nodes" are perfectly balanced (no import and no
     // export). Such loop flows may be expected on any "simplified" grid
