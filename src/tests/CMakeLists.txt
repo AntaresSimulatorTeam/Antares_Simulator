@@ -27,12 +27,12 @@ if(Python3_Interpreter_FOUND)
   if (PYTHON_MODULE_pytest_FOUND AND PYTHON_MODULE_numpy_FOUND)
       # TODO : add more study batches
       add_test(
-        NAME short
-        COMMAND Python3::Interpreter -m pytest -m short --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        NAME unfeasible
+        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
-      set_property(TEST short PROPERTY LABELS study sirius)
+      set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests")
   endif()

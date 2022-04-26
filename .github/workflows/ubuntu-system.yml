@@ -87,10 +87,10 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
 
-    - name: Run simtest
+    - name: Run unfeasibility-related tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -L "short"
+           ctest -C Release --output-on-failure -R unfeasible
 
     - name: Installer .deb creation
       run: |
