@@ -12,7 +12,6 @@ set(SRC_MATRIX_LIB
 	
 	# Necessary cpp files
 	${src_libs_antares}/jit/jit.cpp
-	${src_libs_antares}/string-to-double.cpp
 	logs/logs.cpp
 	)
 

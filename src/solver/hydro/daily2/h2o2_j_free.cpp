@@ -53,35 +53,35 @@ void H2O2_J_Free(DONNEES_MENSUELLES_ETENDUES* DonneesMensuelles)
 
     for (i = 0; i < NombreDeProblemes; i++)
     {
-        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_Turbine);
-        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_niveauxFinJours);
-        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_overflow);
-        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_deviations);
-        free((ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i])->NumeroVar_violations);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_Turbine);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_niveauxFinJours);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_overflow);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_deviations);
+        free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]->NumeroVar_violations);
         free(ProblemeHydrauliqueEtendu->CorrespondanceDesVariables[i]);
 
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->CoutLineaire);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->TypeDeVariable);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->Sens);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesDebutDeLigne);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->CoutLineaire);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->TypeDeVariable);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->Sens);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->IndicesDebutDeLigne);
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])
                ->NombreDeTermesDesLignes);
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])
                ->CoefficientsDeLaMatriceDesContraintes);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i])->IndicesColonnes);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]->IndicesColonnes);
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieFixe[i]);
 
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmin);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->Xmax);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->SecondMembre);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->Xmin);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->Xmax);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->SecondMembre);
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
                ->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->X);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->X);
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
                ->PositionDeLaVariable);
         free(
-          (ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->ComplementDeLaBase);
-        free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])->CoutsReduits);
+          ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->ComplementDeLaBase);
+        free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]->CoutsReduits);
         free((ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i])
                ->CoutsMarginauxDesContraintes);
         free(ProblemeHydrauliqueEtendu->ProblemeLineaireEtenduPartieVariable[i]);

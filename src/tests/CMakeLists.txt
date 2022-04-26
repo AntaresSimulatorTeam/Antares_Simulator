@@ -17,8 +17,6 @@ if(Boost_VERSION VERSION_GREATER 106000)
     add_subdirectory(end-to-end)
 endif()
 
-option(BUILD_OUTPUT_TEST "Activates output values comparison test building" OFF)
-
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)
 

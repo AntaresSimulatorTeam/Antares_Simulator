@@ -18,7 +18,7 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES* donnesMensuelles)
     noiseGenerator.reset(Constants::seed); // Arbitrary seed, hard-coded since we don't really want
                                            // the user to change it
 
-    for (int i = 0; i < NombreDeProblemes; i++)
+    for (unsigned int i = 0; i < NombreDeProblemes; i++)
     {
         for (int j = 0; j < ProblemeLineairePartieFixe[i]->NombreDeVariables; j++)
         {

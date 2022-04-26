@@ -1079,8 +1079,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     enum
     {
         kThermal,
-        kRenewable
-    } type;
+        kRenewable,
+        kUnknown
+    } type = kUnknown;
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
@@ -1127,6 +1128,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
         area.thermal.prepareAreaWideIndexes();
+        break;
+    case kUnknown:
+        logs.error() << "Unknown cluster type";
         break;
     }
 
