@@ -130,7 +130,85 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         }
     }
 
-    // CSR todo. Add I Kirchhoff's law contstraint for all links.
+    // I Kirchhoff's law contstraint for all areas.
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
+
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++)
+    {
+        NombreDeTermes = 0;
+
+        Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+        while (Interco >= 0)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+        }
+        Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
+        while (Interco >= 0)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+        }
+
+        hourlyCsrProblem.numberOfConstraintCsrAreaBalance.push_back(
+          ProblemeAResoudre->NombreDeContraintes);
+
+        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+    }
+
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+        if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+        {
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.push_back(
+              ProblemeAResoudre->NombreDeContraintes);
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+        }
+    }
+
     // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
 

@@ -67,6 +67,35 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
         }
     }
 
-    // CSR todo. Add RHS I Kirchhoff's law contstraint for all links.
-    // CSR todo. Add RHS, only hourly, user defined Binding constraints for all links.
+    // I Kirchhoff's law contstraint for all areas.
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    COUTS_DE_TRANSPORT* TransportCost;
+    double test;
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++)
+    {
+        Cnt = hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area];
+        ProblemeAResoudre->SecondMembre[Cnt]
+          = ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // todo what to use: 
+
+        // ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // average hourly balance per area! OR
+        // -ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[Area]; // = Reduced consumption per area
+    }
+
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+        if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+        {
+            Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
+            if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
+                                      ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+            else
+                ProblemeAResoudre->SecondMembre[Cnt] = 0.;   
+        }
+    }
+
+    // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
+    // and/or power generated from generating units.
 }

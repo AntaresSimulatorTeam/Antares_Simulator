@@ -82,7 +82,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
     }
   }
 
-  // variables: NTC (direct and indirect transmissin flow). For ALL links.
+  // variables: transmissin flows (flow, direct_direct and flow_indirect). For ALL links.
   COUTS_DE_TRANSPORT* TransportCost;
   for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
   {

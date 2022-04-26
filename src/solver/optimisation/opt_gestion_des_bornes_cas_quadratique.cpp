@@ -148,7 +148,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     }
 
 
-    // variables: NTC (direct and indirect transmissin flow). 
+    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For ALL links. 
     // Set hourly bounds for ALL links depending on the user input (max direct and indirect flow).
     double* Xmin;
     double* Xmax;
@@ -158,7 +158,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     Xmin = ProblemeAResoudre->Xmin;
     Xmax = ProblemeAResoudre->Xmax;
 
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour]; // check if it is hour
+    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
 
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)
     {
@@ -184,8 +184,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         }
 
         AdresseDuResultat = &(ProblemeHebdo->VariablesDualesDesContraintesDeNTC[hour]
-                                ->VariableDualeParInterconnexion[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = AdresseDuResultat;
+                                ->VariableDualeParInterconnexion[Interco]); // dual variable for links
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = AdresseDuResultat; // reduced cost
 
         AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
@@ -209,7 +209,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             }
             Xmin[Var] = 0.0;
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL; // not adding AdresseDuResultat!
 
             Var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
@@ -230,7 +230,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
         }
     }
-
+    // Loop flow: amount of power flowing circularly though the grid
+    // when all "nodes" are perfectly balanced (no import and no
+    // export). Such loop flows may be expected on any "simplified" grid
+    // in which large regions (or even countries) are modeled by a small
+    // number of "macro" nodes, and should accordingly be accounted for.
+    // Flow circulating through the grid when all areas have a zero
+    // import/export balance. This flow, to be put down to the
+    // simplification of the real grid, is not subject to hurdle costs
+    // in the course of the optimization
+    // if (FLOW.LIN –LOOP FLOW) > 0
+    // HURD. COST = (hourly direct hurdle cost) * (FLOW LIN.)
+    // else HURD.COST = (hourly indirect hurdle cost) * (-1) * (FLOW LIN.)
 
     return;
 }

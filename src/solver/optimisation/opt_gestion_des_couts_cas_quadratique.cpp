@@ -162,7 +162,5 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
         }
     }
 
-
-
     return;
 }
