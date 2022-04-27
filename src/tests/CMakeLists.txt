@@ -32,6 +32,12 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
+      add_test(
+        NAME json
+        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
+        )
+
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()   
       message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests")

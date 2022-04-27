@@ -45,21 +45,6 @@ jobs:
         os: ${{matrix.os}}
         os-full-name: Ubuntu-20.04
 
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with: 
-        path: 'simtest.json'
-        prop_path: 'version'
-
-    - name: Download study batches
-      uses: ./.github/workflows/download-extract-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests # TODO : add more batches
-        os: ${{matrix.os}}
-
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
@@ -82,15 +67,26 @@ jobs:
       run: |
            cmake --build _build --config release -j2
 
-    - name: Run unit and end-to-end tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end" -LE ortools
-
     - name: Run unfeasibility-related tests
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Download study batches
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        solver-path: ${{steps.solver-path-version.outputs.prop}}
+        os: ${{matrix.os}}
 
     - name: Installer .deb creation
       run: |
