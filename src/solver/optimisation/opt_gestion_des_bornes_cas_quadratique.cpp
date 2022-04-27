@@ -106,76 +106,59 @@ void calculateDensNew(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
     bool includeFlowsOutsideAdqPatchToDensNew
       = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
 
-    logs.debug() << "========= [CSR]: Starting calculateDensNew for hour: "<< hour;
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
-        logs.debug() << "Area: " << Area;
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
             netPositionInit = 0;
             flowsNode1toNodeA = 0;
-            
+
             Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
-            logs.debug() << "First Interco Origine: " << Interco;
             while (Interco >= 0)
             {
-                logs.debug() << "Interco: " << Interco;
-                //logs.debug() << "extremityAreaType: " << ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco];
                 if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
                     == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
-                    
                     netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
-                    
-                    logs.debug() << "netPositionInit: " << netPositionInit;
                 }
                 else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
                          == Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch)
                 {
-                    flowsNode1toNodeA -= Math::Min(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
-                    logs.debug() << "flowsNode1toNodeA: " << flowsNode1toNodeA;
+                    flowsNode1toNodeA
+                      -= Math::Min(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
             }
             Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
-            logs.debug() << "First Interco Extremite: " << Interco;
             while (Interco >= 0)
             {
-                logs.debug() << "Interco: " << Interco;
-                //logs.debug() << "origineAreaType: " << ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco];
                 if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
                     == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
-                    
                     netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
-                    
-                    logs.debug() << "netPositionInit: " << netPositionInit;
                 }
                 else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
                          == Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch)
                 {
-                    flowsNode1toNodeA += Math::Max(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
-                    logs.debug() << "flowsNode1toNodeA: " << flowsNode1toNodeA;
+                    flowsNode1toNodeA
+                      += Math::Max(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
             }
-
             // calculate densNew per area
             ensInit
               = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-              logs.debug() << "ensInit: " << ensInit;
-            if (includeFlowsOutsideAdqPatchToDensNew){
+            if (includeFlowsOutsideAdqPatchToDensNew)
+            {
                 densNew = Math::Max(0, ensInit + netPositionInit + flowsNode1toNodeA);
-                logs.debug() << "densNew (with 1): " << densNew;
-                }
-            else{
-                densNew = Math::Max(0, ensInit + netPositionInit);
-                logs.debug() << "densNew (without 1): " << densNew;
             }
-            // place densNew in a key(area)-value
+            else
+            {
+                densNew = Math::Max(0, ensInit + netPositionInit);
+            }
             hourlyCsrProblem.densNewValues.push_back(densNew);
-            // todo can we use vector, is it going to be the same order when we pass it to Xmax! 
+            // todo can we use vector, is it going to be the same order when we pass it to Xmax!
             // or it's safer to go with the key(area)-value map?
         }
     }
@@ -202,7 +185,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-    calculateDensNew(ProblemeHebdo, hourlyCsrProblem);
     // variables: ENS for each area inside adq patch
     // one dummy constraint for testing : 0 <= ENS <= 10000 //todo remove
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
