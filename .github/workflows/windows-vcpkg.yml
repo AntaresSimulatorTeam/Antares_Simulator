@@ -111,7 +111,7 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Download study batches
+    - name: Run short-tests
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
