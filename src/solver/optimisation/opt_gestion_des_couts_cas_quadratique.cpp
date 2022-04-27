@@ -153,6 +153,10 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
                 {
                     ProblemeAResoudre->CoutLineaire[Var]
                       = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+
+                    if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                        ProblemeAResoudre->CoutLineaire[Var] = 0;
+
                     logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
 
                 }
@@ -162,6 +166,10 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
                 {
                     ProblemeAResoudre->CoutLineaire[Var]
                       = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+
+                    if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                        ProblemeAResoudre->CoutLineaire[Var] = 0;
+
                     logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];                
                 }
             }
