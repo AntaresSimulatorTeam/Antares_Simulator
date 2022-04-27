@@ -21,6 +21,7 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
+            testref: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -115,7 +116,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{matrix.os}}
+        os: ${{ matrix.testref }}
 
     - name: NSIS Installer creation
       shell: bash
