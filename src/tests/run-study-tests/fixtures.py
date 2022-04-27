@@ -42,7 +42,6 @@ def resutsRemover(study_path):
 def simulation(study_path, solver_path, use_ortools, ortools_solver):
     return study_run(study_path, solver_path, use_ortools, ortools_solver)
 
-
 @pytest.fixture(autouse=True)
 def check_runner(simulation, resutsRemover):
     # Actions done before the current test

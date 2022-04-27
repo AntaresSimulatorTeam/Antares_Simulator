@@ -4,7 +4,9 @@ from parse_studies.json_collector import jsonCollector
 from check_on_results.create_checks import create_checks
 
 
-ROOT_FOLDER = Path('../resources/short-tests').resolve()
+ROOT_FOLDER = Path('../resources/batches').resolve()
+
+
 
 study_paths = look_for_studies(ROOT_FOLDER)
 json_collector = jsonCollector(study_paths)
