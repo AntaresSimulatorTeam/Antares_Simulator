@@ -97,23 +97,25 @@ jobs:
       run: |
            cmake --build _build --config release -j2
 
-    - name: Running unit tests
+    - name: Run unfeasibility-related tests
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest -C Release --output-on-failure -R unfeasible
 
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
 
-    - name : Run non-regression tests
-      run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
-      shell: bash
+    - name: Download study batches
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{matrix.os}}
 
     - name: NSIS Installer creation
       shell: bash
