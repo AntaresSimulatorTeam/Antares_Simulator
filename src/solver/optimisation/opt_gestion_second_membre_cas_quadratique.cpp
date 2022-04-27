@@ -50,6 +50,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* Probleme
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
+    logs.debug() << "[CSR] RHS: ";
     //CSR todo initialize RHS right hand side of constraints for hourly CSR quadratic problem.
     int Cnt;
     int Area;
@@ -57,44 +58,54 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-    //constraint for each area inside adq patch: 2 * ENS > 1000
+    //constraint for each area inside adq patch: 2 * ENS > 10
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
             Cnt = hourlyCsrProblem.numberOfConstraintCsr[Area];
-            ProblemeAResoudre->SecondMembre[Cnt] = 1000;
+            ProblemeAResoudre->SecondMembre[Cnt] = 10;
+            logs.debug() << Cnt << ": dummy 2*ENS > 10: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
         }
     }
 
     // I Kirchhoff's law contstraint for all areas.
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     COUTS_DE_TRANSPORT* TransportCost;
-    double test;
-    for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++)
-    {
-        Cnt = hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area];
-        ProblemeAResoudre->SecondMembre[Cnt]
-          = ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // todo what to use: 
+    // double test;
+    // // for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++) //??? why not all area, but area - 1?
+    // for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    // {
+    //     Cnt = hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area];
 
-        // ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // average hourly balance per area! OR
-        // -ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[Area]; // = Reduced consumption per area
-    }
+    //     //CSR Todo: should not use SoldeMoyenDuPays[Area]
+    //     //should create a new function to calculate “net_position_init” parameter: 
+    //     // The “net_position_init (node A)” parameter value is the value of the “net_position” calculated from 
+    //     // the output of the Antares calculation for node A, considering results we get from the Antares calculation
+    //     // at the end of chapter 2.
 
-    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
-    {
-        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-        if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-        {
-            Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
-            if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
-                                      ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            else
-                ProblemeAResoudre->SecondMembre[Cnt] = 0.;   
-        }
-    }
+    //     ProblemeAResoudre->SecondMembre[Cnt]
+    //       = ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // todo what to use
+    //     // ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // average hourly balance per area! OR
+    //     // -ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[Area]; // = Reduced consumption per area
+    //     logs.debug() << Cnt << ": NTC=sum(flow): RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+
+    // }
+
+    // // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    // for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    // {
+    //     TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+    //     if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+    //     {
+    //         Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
+    //         if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+    //             ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
+    //                                   ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+    //         else
+    //             ProblemeAResoudre->SecondMembre[Cnt] = 0.;   
+    //     }
+    // }
 
     // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
     // and/or power generated from generating units.

@@ -60,6 +60,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
+  logs.debug() << "[CSR] variable list:";
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
   int NumberOfVariables = 0;
   int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
@@ -70,7 +71,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
 
   CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-  // variables: ENS of each area insie adq patch
+  // variables: ENS of each area inside adq patch
+  logs.debug() << " ENS of each area inside adq patch: ";
   for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
   {
     // Only ENS for areas inside adq patch are considered as variables
@@ -78,33 +80,47 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
     {
       CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area] = NumberOfVariables;
       ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      logs.debug() << NumberOfVariables << " ENS[" << area <<"]. ";
+
       NumberOfVariables++;
     }
   }
 
-  // variables: transmissin flows (flow, direct_direct and flow_indirect). For ALL links.
+  // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2 and 2.
+  logs.debug() << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 and 2:";
   COUTS_DE_TRANSPORT* TransportCost;
   for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
   {
+    // only consider link between 2 and 2
+    if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+    {
       CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
         = NumberOfVariables;
       ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      logs.debug() << NumberOfVariables << " flow[" << Interco <<"]. ";
       NumberOfVariables++;
 
-      TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-      if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-      {
-          CorrespondanceVarNativesVarOptim
-            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
-            = NumberOfVariables;
-          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-          NumberOfVariables++;
-          CorrespondanceVarNativesVarOptim
-            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
-            = NumberOfVariables;
-          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-          NumberOfVariables++;
-      }
+      // TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+      // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES) //CSR todo ??? how can it be true? a test case ?
+      // {
+      //     CorrespondanceVarNativesVarOptim
+      //       ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+      //       = NumberOfVariables;
+      //     ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      //     logs.debug() << NumberOfVariables << " direct flow[" << Interco <<"]. ";
+      //     NumberOfVariables++;
+
+      //     CorrespondanceVarNativesVarOptim
+      //       ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+      //       = NumberOfVariables;
+      //     ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+      //     logs.debug() << NumberOfVariables << " indirect flow[" << Interco <<"]. ";
+      //     NumberOfVariables++;
+
+      // }
+    }
+
   }
 
   ProblemeAResoudre->NombreDeVariables = NumberOfVariables;  
