@@ -92,20 +92,26 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     // }
 
-    // // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
-    // for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
-    // {
-    //     TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-    //     if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-    //     {
-    //         Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
-    //         if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-    //             ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
-    //                                   ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-    //         else
-    //             ProblemeAResoudre->SecondMembre[Cnt] = 0.;   
-    //     }
-    // }
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+        && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+            // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            {
+                Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
+                // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                //     ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
+                //                           ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                // else
+                    ProblemeAResoudre->SecondMembre[Cnt] = 0.;  
+                    logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt]; 
+            }
+        }
+    }
 
     // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
     // and/or power generated from generating units.

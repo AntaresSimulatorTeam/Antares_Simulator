@@ -134,8 +134,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     }
 
     // // I Kirchhoff's law contstraint for all areas.
-    // int Interco;
-    // COUTS_DE_TRANSPORT* TransportCost;
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
 
     // // for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++) //??? why not all area, but area - 1?
     // for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++) 
@@ -179,44 +179,53 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
 
     // }
 
-    // // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
-    // for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
-    // {
-    //     TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-    //     if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-    //     {
-    //         NombreDeTermes = 0;
-    //         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-    //         if (Var >= 0)
-    //         {
-    //             Pi[NombreDeTermes] = 1.0;
-    //             Colonne[NombreDeTermes] = Var;
-    //             NombreDeTermes++;
-    //         }
-    //         Var = CorrespondanceVarNativesVarOptim
-    //                 ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-    //         if (Var >= 0)
-    //         {
-    //             Pi[NombreDeTermes] = -1.0;
-    //             Colonne[NombreDeTermes] = Var;
-    //             NombreDeTermes++;
-    //         }
-    //         Var = CorrespondanceVarNativesVarOptim
-    //                 ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-    //         if (Var >= 0)
-    //         {
-    //             Pi[NombreDeTermes] = 1.0;
-    //             Colonne[NombreDeTermes] = Var;
-    //             NombreDeTermes++;
-    //         }
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
 
-    //         hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.push_back(
-    //           ProblemeAResoudre->NombreDeContraintes);
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+        && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
 
-    //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-    //           ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
-    //     }
-    // }
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+            // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            {
+                NombreDeTermes = 0;
+                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = -1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                }
+
+                hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.push_back(
+                ProblemeAResoudre->NombreDeContraintes);
+
+                NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
+                logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
+
+                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+            }
+        }
+    }
 
     // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
