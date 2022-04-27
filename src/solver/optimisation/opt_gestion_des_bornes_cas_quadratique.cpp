@@ -174,8 +174,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
 
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            Xmax[Var] = 2000; //ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin[Var] = 0; //-(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -203,49 +203,52 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
 
             // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-            // {
-            //     Var = CorrespondanceVarNativesVarOptim
-            //             ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            {
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
 
-            //     if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-            //         Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
-            //                     - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            //     else
-            //         Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+                // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+                //                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                // else
+                //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
-            //     Xmax[Var] += 0.01;
-            //     ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            //     if (Math::Infinite(Xmax[Var]) == 1)
-            //     {
-            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            //     }
-            //     Xmin[Var] = 0.0;
-            //     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            //     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL; // not adding AdresseDuResultat! // todo: remove
+                Xmax[Var] = 3000; 
+                Xmax[Var] += 0.01;
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                if (Math::Infinite(Xmax[Var]) == 1)
+                {
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                }
 
-            //     logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+                Xmin[Var] = 0.0;
+                // ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
+                // ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL; // not adding AdresseDuResultat! // todo: remove
 
-            //     Var = CorrespondanceVarNativesVarOptim
-            //             ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            //     if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-            //         Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
-            //                     + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            //     else
-            //         Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+                logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
 
-            //     Xmax[Var] += 0.01;
-            //     ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            //     if (Math::Infinite(Xmax[Var]) == 1)
-            //     {
-            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            //     }
-            //     Xmin[Var] = 0.0;
-            //     ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
-            //     ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+                //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+                //                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+                // else
+                //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
-            //     logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+                Xmax[Var] = 4000; 
+                Xmax[Var] += 0.01;
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                if (Math::Infinite(Xmax[Var]) == 1)
+                {
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                }
+                Xmin[Var] = 0.0;
+                // ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var] = NULL;
+                // ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
-            // }
+                logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+
+            }
         }
     }
     // todo: remove 

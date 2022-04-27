@@ -257,6 +257,7 @@ bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeARes
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt)
                 *pt = ProblemeAResoudre->X[Var];
+            logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
         }
 
         return true;

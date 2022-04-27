@@ -101,24 +101,24 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
       logs.debug() << NumberOfVariables << " flow[" << Interco <<"]. ";
       NumberOfVariables++;
 
-      // TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+      TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
       // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES) //CSR todo ??? how can it be true? a test case ?
-      // {
-      //     CorrespondanceVarNativesVarOptim
-      //       ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
-      //       = NumberOfVariables;
-      //     ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-      //     logs.debug() << NumberOfVariables << " direct flow[" << Interco <<"]. ";
-      //     NumberOfVariables++;
+      {
+          CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+            = NumberOfVariables;
+          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+          logs.debug() << NumberOfVariables << " direct flow[" << Interco <<"]. ";
+          NumberOfVariables++;
 
-      //     CorrespondanceVarNativesVarOptim
-      //       ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
-      //       = NumberOfVariables;
-      //     ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-      //     logs.debug() << NumberOfVariables << " indirect flow[" << Interco <<"]. ";
-      //     NumberOfVariables++;
+          CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+            = NumberOfVariables;
+          ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+          logs.debug() << NumberOfVariables << " indirect flow[" << Interco <<"]. ";
+          NumberOfVariables++;
 
-      // }
+      }
     }
 
   }

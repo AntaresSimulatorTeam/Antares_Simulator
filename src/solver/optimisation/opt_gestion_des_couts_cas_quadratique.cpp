@@ -146,25 +146,25 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             }
 
             // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-            // {
-            //     Var = CorrespondanceVarNativesVarOptim
-            //             ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-            //     if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            //     {
-            //         ProblemeAResoudre->CoutLineaire[Var]
-            //           = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
-            //         logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+            {
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+                    logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
 
-            //     }
-            //     Var = CorrespondanceVarNativesVarOptim
-            //             ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            //     if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            //     {
-            //         ProblemeAResoudre->CoutLineaire[Var]
-            //           = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
-            //         logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];                
-            //     }
-            // }
+                }
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+                    logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];                
+                }
+            }
         }
     }
 
