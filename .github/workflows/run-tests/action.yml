@@ -22,7 +22,13 @@ runs:
            unzip batch.zip
            rm batch.zip
 
-  - name: Run test from json
+- name: Clean batches
+    shell: bash
+    run: |
+           cd _build
+           ctest -C Release --output-on-failure -R json
+
+  - name: Clean batches
     shell: bash
     run: |
            rm -rf src/tests/resources/batches/*

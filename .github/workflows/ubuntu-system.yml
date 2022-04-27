@@ -85,7 +85,6 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        solver-path: ${{steps.solver-path-version.outputs.prop}}
         os: ${{matrix.os}}
 
     - name: Installer .deb creation
