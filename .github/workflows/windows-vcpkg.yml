@@ -15,10 +15,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest]
+        os: [windows-2022]
         buildtype: [release]
         include:
-          - os: windows-latest
+          - os: windows-2022
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
     env:

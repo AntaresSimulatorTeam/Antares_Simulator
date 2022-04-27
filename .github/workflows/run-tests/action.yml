@@ -22,7 +22,7 @@ runs:
            unzip batch.zip
            rm batch.zip
 
-  - name: Clean batches
+  - name: Run tests
     shell: bash
     run: |
            cd _build
