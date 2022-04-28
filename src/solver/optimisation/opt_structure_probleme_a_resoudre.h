@@ -145,7 +145,7 @@ typedef struct
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
-    std::vector<bool> intVar; // true = int, false = continuous
+    std::vector<bool> VariablesEntieres; // true = int, false = continuous
   
 } PROBLEME_ANTARES_A_RESOUDRE;
 

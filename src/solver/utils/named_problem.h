@@ -13,11 +13,12 @@ namespace Optimization
 struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
-                            const std::vector<std::string>& NomDesContraintes);
+                            const std::vector<std::string>& NomDesContraintes,
+                            const std::vector<bool>& VariablesEntieres);
 
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
-    const std::vector<bool>& intVar;
+    const std::vector<bool>& VariablesEntieres;
 };
 } // namespace Optimization
 } // namespace Antares

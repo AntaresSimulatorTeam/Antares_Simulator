@@ -245,6 +245,11 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
         }
     }
 
+    for (int Var = 0; Var < NombreDeVariables; Var++)
+    {
+        ProblemeAResoudre->VariablesEntieres[Var] = false;
+    }
+
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
     if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
