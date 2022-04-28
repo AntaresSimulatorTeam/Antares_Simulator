@@ -36,7 +36,7 @@ static void transferVariables(MPSolver* solver,
             varName = NomDesVariables[idxVar];
         }
 
-        const MPVariable* var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);       
+        const MPVariable* var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
@@ -109,8 +109,20 @@ MPSolver* convert_to_MPSolver(
     auto& study = *Data::Study::Current::Get();
 
     // Define solver used depending on study option
-    MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+    const bool isMIP = std::any_of(problemeSimplexe->VariablesEntieres.cbegin(),
+                                   problemeSimplexe->VariablesEntieres.cend(),
+                                   [](bool x) { return x; });
+
+    MPSolver::OptimizationProblemType solverType;
+    if (isMIP)
+    {
+        solverType
+          = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
+    }
+    else
+    {
+        solverType = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+    }
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
@@ -313,7 +325,7 @@ OrtoolsUtils::OrtoolsUtils()
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::coin] = "cbc";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_lp";
-    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_mip";
+    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_scip] = "glop";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_scip] = "scip";
