@@ -144,6 +144,9 @@ typedef struct
     /* Nommage des variables & contraintes */
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
+
+    std::vector<bool> intVar; // true = int, false = continuous
+  
 } PROBLEME_ANTARES_A_RESOUDRE;
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

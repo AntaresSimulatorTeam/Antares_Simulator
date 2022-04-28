@@ -379,12 +379,6 @@ bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver)
 {
     bool result = false;
 
-    // GLOP solver fail for too many examples. For now support is disabled
-    if (ortoolsSolver == OrtoolsSolver::glop_scip || ortoolsSolver == OrtoolsSolver::glop_cbc)
-    {
-        return false;
-    }
-
     try
     {
         result = MPSolver::SupportsProblemType(getLinearOptimProblemType(ortoolsSolver));
