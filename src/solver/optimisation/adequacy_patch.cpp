@@ -28,8 +28,8 @@
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
 
-using namespace Antares::Data::AdequacyPatch;
-
+namespace Antares::Data::AdequacyPatch
+{
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
@@ -144,3 +144,4 @@ void setBoundsNoAdqPatch(double& Xmax,
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
+} // namespace Antares::Data::AdequacyPatch

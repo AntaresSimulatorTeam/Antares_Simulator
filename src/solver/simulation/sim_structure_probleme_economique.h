@@ -39,8 +39,6 @@
 #include <memory>
 #include <yuni/core/math.h>
 
-using namespace Antares::Data::AdequacyPatch;
-
 typedef struct
 {
     int* NumeroDeVariableDeLInterconnexion;
@@ -323,10 +321,13 @@ typedef struct
 
 class AdequacyPatchRuntimeData
 {
+private:
+    using adqPatchMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
 public:
-    std::vector<AdequacyPatchMode> areaMode;
-    std::vector<AdequacyPatchMode> originAreaType;
-    std::vector<AdequacyPatchMode> extremityAreaType;
+    std::vector<adqPatchMode> areaMode;
+    std::vector<adqPatchMode> originAreaType;
+    std::vector<adqPatchMode> extremityAreaType;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
