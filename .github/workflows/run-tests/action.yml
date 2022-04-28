@@ -21,8 +21,8 @@ runs:
     shell: bash
     run: |
            cd src/tests/resources/batches
-           wget https://github.com/AntaresSimulatorTeam/SimTest/releases/download/${{ inputs.simtest-tag }}/${{ inputs.batch-name }}-${{ inputs.os }}.zip -O batch.zip
-           unzip batch.zip
+           wget -q https://github.com/AntaresSimulatorTeam/SimTest/releases/download/${{ inputs.simtest-tag }}/${{ inputs.batch-name }}-${{ inputs.os }}.zip -O batch.zip
+           unzip -q batch.zip
            rm batch.zip
 
   - name: Run tests
