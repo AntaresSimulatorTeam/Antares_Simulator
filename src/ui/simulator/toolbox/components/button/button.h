@@ -41,11 +41,11 @@ class Button final : public Panel
 {
 public:
     //! Event: User click
-    typedef Yuni::Bind<void(void*)> OnClick;
+    using OnClick = Yuni::Bind<void(void*)>;
     //! Event: Popup menu
-    typedef Yuni::Bind<void(Button&, wxMenu&, void*)> OnPopupMenu;
+    using OnPopupMenu = Yuni::Bind<void(Button&, wxMenu&, void*)>;
     //! Vector
-    typedef std::vector<Button*> Vector;
+    using Vector = std::vector<Button*>;
 
     enum ClickBehavior
     {

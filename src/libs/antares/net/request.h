@@ -38,7 +38,7 @@ enum Method
 };
 
 //! Event
-typedef Yuni::Bind<void()> EventOnSuccess;
+using EventOnSuccess = Yuni::Bind<void()>;
 
 void Request(Method method,
              const AnyString& url,

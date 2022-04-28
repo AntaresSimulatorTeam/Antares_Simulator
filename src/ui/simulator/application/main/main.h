@@ -659,7 +659,7 @@ private:
 
 private:
     //! Pointer to a study
-    typedef Data::Study* StudyPtr;
+    using StudyPtr = Data::Study*;
 
 private:
     //! The main panel

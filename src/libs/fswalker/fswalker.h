@@ -55,7 +55,7 @@ typedef void (*OnFileEvent)(const YString& filename,
                             yuint64 size,
                             void* user);
 //! Event for dispatching a new job
-typedef Yuni::Bind<void(IJob::Ptr job)> DispatchJobEvent;
+using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;
 
 class IExtension
 {
@@ -63,7 +63,7 @@ public:
     //! Most suitable smart pointer
     using Ptr = std::shared_ptr<IExtension>;
     //! List
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
 
 public:
     /*!

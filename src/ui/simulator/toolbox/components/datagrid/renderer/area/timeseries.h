@@ -46,7 +46,7 @@ namespace Renderer
 class ATimeSeries : public Renderer::Matrix<double, Yuni::sint32>, public Renderer::ARendererArea
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     ATimeSeries(wxWindow* control, Toolbox::InputSelector::Area* notifier);
@@ -117,7 +117,7 @@ protected:
 class TimeSeriesLoad final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -155,7 +155,7 @@ protected:
 class TimeSeriesSolar final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -193,7 +193,7 @@ protected:
 class TimeSeriesWind final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -231,7 +231,7 @@ protected:
 class TimeSeriesHydroFatal final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -264,7 +264,7 @@ protected:
 class TimeSeriesHydroMod final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -310,7 +310,7 @@ protected:
 class TimeSeriesCluster : public Renderer::Matrix<double>
 {
 public:
-    typedef Renderer::Matrix<double> AncestorType;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesCluster(wxWindow* control);

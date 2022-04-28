@@ -56,7 +56,7 @@ static Data::Area* gLastArea = nullptr;
 class SpotlightProviderArea final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     SpotlightProviderArea() : pAutoTriggerSelection(true)

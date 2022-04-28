@@ -41,7 +41,7 @@ class Layer
 {
 public:
     //! Array
-    typedef std::vector<Layer*> Vector;
+    using Vector = std::vector<Layer*>;
 
 public:
     //! \name Constructor & Destructor

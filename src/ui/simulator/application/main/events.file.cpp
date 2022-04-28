@@ -79,7 +79,7 @@ public:
 class SpotlightProviderWindows : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     SpotlightProviderWindows()

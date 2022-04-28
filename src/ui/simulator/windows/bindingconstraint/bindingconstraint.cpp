@@ -71,7 +71,7 @@ public:
           new wxPanel(notebook, wxID_ANY, wxDefaultPosition, wxSize(2, 2)), wxT(" Weekly "));
         sizer->Add(notebook, 0, wxALL | wxEXPAND);
 
-        typedef Component::Datagrid::Renderer::BindingConstraint::Data RendererType;
+        using RendererType = Component::Datagrid::Renderer::BindingConstraint::Data;
         auto* renderer = new RendererType(this, pOperator);
         onBindingConstraintTypeChanged.connect(renderer,
                                                &RendererType::bindingConstraintTypeChanged);

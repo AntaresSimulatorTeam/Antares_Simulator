@@ -51,7 +51,7 @@ class IDatasource
 {
 public:
     //! List
-    typedef std::map<int, IDatasource*> Map;
+    using Map = std::map<int, IDatasource*>;
 
 public:
     //! \name Constructor & Destructor

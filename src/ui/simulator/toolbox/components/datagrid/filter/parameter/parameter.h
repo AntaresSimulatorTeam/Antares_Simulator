@@ -65,7 +65,7 @@ class Parameter : public wxEvtHandler
 {
 public:
     // List of parameters
-    typedef std::vector<Parameter> List;
+    using List = std::vector<Parameter>;
 
     /*!
     ** \brief Values in differents types

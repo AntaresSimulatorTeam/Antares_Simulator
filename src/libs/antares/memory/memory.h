@@ -62,12 +62,12 @@ class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
     //! Threading policy
-    typedef Yuni::Policy::ObjectLevelLockable<Memory> ThreadingPolicy;
+    using ThreadingPolicy = Yuni::Policy::ObjectLevelLockable<Memory>;
     //! Internal handle
-    typedef uint Handle;
+    using Handle = uint;
 
     //! Information about a single swap file
-    typedef Antares::Private::Memory::SwapFileInfo SwapFileInfo;
+    using SwapFileInfo = Antares::Private::Memory::SwapFileInfo;
 
     enum
     {
@@ -261,9 +261,9 @@ public:
     struct Stored final
     {
 #ifdef ANTARES_SWAP_SUPPORT
-        typedef Array<T> Type;
-        typedef Array<T>& ReturnType;
-        typedef const Array<T>& ConstReturnType;
+        using Type = Array<T>;
+        using ReturnType = Array<T>&;
+        using ConstReturnType = const Array<T>&;
 
         static const Type& NullValue()
         {
@@ -271,9 +271,9 @@ public:
             return value;
         }
 #else
-        typedef T* Type;
-        typedef T* ReturnType;
-        typedef const T* ConstReturnType;
+        using Type = T*;
+        using ReturnType = T*;
+        using ConstReturnType = const T*;
 
         static const T* NullValue()
         {
