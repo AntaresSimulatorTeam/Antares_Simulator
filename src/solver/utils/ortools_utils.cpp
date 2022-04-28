@@ -14,7 +14,8 @@ static void transferVariables(MPSolver* solver,
                               const double* bMax,
                               const double* costs,
                               int nbVar,
-                              const std::vector<std::string>& NomDesVariables)
+                              const std::vector<std::string>& NomDesVariables,
+                              const std::vector<bool>& VariablesEntieres)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -34,7 +35,16 @@ static void transferVariables(MPSolver* solver,
         {
             varName = NomDesVariables[idxVar];
         }
-        const MPVariable* var = solver->MakeNumVar(min_l, max_l, varName);
+
+        const MPVariable* var;
+        if (VariablesEntieres[idxVar])
+        {
+            var = solver->MakeIntVar(min_l, max_l, varName);
+        }
+        else 
+        {
+            var = solver->MakeNumVar(min_l, max_l, varName);
+        }
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
@@ -119,7 +129,8 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
-                      problemeSimplexe->NomDesVariables);
+                      problemeSimplexe->NomDesVariables,
+                      problemeSimplexe->VariablesEntieres);
 
     // Create constraints and set coefs
     transferRows(solver,
