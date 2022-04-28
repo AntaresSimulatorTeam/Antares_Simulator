@@ -143,11 +143,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays]
               = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+            ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = false;
             NombreDeVariables++;
 
             CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays]
               = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+            ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = false;
             NombreDeVariables++;
 
             if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
@@ -155,6 +157,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceEnReserve[Pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
+                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = false;
                 NombreDeVariables++;
             }
         }
