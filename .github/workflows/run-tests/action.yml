@@ -10,6 +10,9 @@ inputs:
   os:
     description: 'OS used for github action'
     required: true
+  ctest:
+    description: 'CTest command'
+    required: true
 
 runs:
   using: "composite"
