@@ -10,9 +10,6 @@ inputs:
   os:
     description: 'OS used for github action'
     required: true
-  ctest:
-    description: 'CTest command'
-    required: true
 
 runs:
   using: "composite"
@@ -29,7 +26,7 @@ runs:
     shell: bash
     run: |
            cd _build
-           ${{ inputs.ctest }} -C Release --output-on-failure -R json
+           ctest -C Release --output-on-failure -R json
 
   - name: Clean batches
     shell: bash

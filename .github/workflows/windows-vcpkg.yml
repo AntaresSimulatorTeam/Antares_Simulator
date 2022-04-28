@@ -111,13 +111,12 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Run short-tests
+    - name: Download study batches
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
         os: ${{ matrix.testref }}
-        ctest: ctest
 
     - name: NSIS Installer creation
       shell: bash
