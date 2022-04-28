@@ -738,6 +738,7 @@ public:
     std::vector<int> numberOfConstraintCsr;
     std::vector<int> numberOfConstraintCsrAreaBalance;
     std::vector<int> numberOfConstraintCsrFlowDissociation;
+    std::vector<double> densNewValues;
     /* variables */
     // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
 

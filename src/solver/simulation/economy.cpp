@@ -161,11 +161,16 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
             //   pProblemeHebdo->NombreDePasDeTemps);
               nbHoursInAWeek); //use nbHoursInAWeek seems more clear
     }
+    threshold = 500; //todo remove. for debug
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
         if ((int)sumENS[i] >= threshold)
+        {
+            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i] << "], threshold = " << threshold;
             triggerCsrSet.insert(i);
+        }
     }
+    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
 }
 
 void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -244,9 +249,12 @@ bool Economy::year(Progression::Task& progression,
                     pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
                     for(int hourInWeek : hoursInWeekTriggerCsrSet)
                     {
+                        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
                         pProblemesHebdo[numSpace]->houlyCsrProblems.push_back(hourlyCsrProblem);
                         OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
+                        logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
+
                     }
                     UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]); //CSR todo // result change in csr triggered hours are visible on output when i run tests?  
                     pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
