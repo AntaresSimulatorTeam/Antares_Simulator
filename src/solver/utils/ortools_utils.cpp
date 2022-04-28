@@ -36,15 +36,7 @@ static void transferVariables(MPSolver* solver,
             varName = NomDesVariables[idxVar];
         }
 
-        const MPVariable* var;
-        if (VariablesEntieres[idxVar])
-        {
-            var = solver->MakeIntVar(min_l, max_l, varName);
-        }
-        else 
-        {
-            var = solver->MakeNumVar(min_l, max_l, varName);
-        }
+        const MPVariable* var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);       
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
