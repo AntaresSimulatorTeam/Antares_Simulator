@@ -61,9 +61,13 @@ wxString Connection::rowCaption(int row) const
 
 void Connection::onConnectionChanged(Data::AreaLink* link)
 {
-    setMatrix(link);
     if (link)
+    {
+        link->invalidate(true); // Force the reload of parameters & capacities to avoid a crash.
+        setMatrix(link);
         mUseLoopFlow = link->useLoopFlow;
+    }
+
     if (pControl)
     {
         pControl->InvalidateBestSize();
