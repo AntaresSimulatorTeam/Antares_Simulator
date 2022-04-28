@@ -117,6 +117,7 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
         os: ${{ matrix.testref }}
+        ctest: ctest
 
     - name: NSIS Installer creation
       shell: bash

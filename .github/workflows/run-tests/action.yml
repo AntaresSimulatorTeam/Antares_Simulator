@@ -26,7 +26,7 @@ runs:
     shell: bash
     run: |
            cd _build
-           ctest -C Release --output-on-failure -R json
+           ${{ inputs.ctest }} -C Release --output-on-failure -R json
 
   - name: Clean batches
     shell: bash
