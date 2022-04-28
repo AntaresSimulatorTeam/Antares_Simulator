@@ -220,6 +220,39 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         }
     }
 
+    // variables: Spilled Energy for each area inside adq patch // todo after debugging transfer this into same loop as ENS
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
+
+            ProblemeAResoudre->Xmin[Var] = 0.0;
+            ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
+
+            // if (Math::Infinite(ProblemeAResoudre->Xmax[Var]) == 1)
+            // {
+            //     if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
+            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+            //     else
+            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            // }
+            // else
+            // {
+            //     if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
+            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+            //     else
+            //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            // } // no need for this check here!
+
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour] = 0.0;
+            AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
+
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+        }
+    }
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links between nodes of type 2. 
     // Set hourly bounds for links between nodes of type 2, depending on the user input (max direct and indirect flow).

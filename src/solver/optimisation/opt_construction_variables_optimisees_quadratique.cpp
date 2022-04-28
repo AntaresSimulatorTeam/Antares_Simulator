@@ -86,6 +86,21 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLE
     }
   }
 
+  // variables: Spilled Energy  of each area inside adq patch // todo after debugging transfer this into same loop as ENS
+  logs.debug() << " Spilled Energy  of each area inside adq patch: ";
+  for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+  {
+    // Only Spilled Energy  for areas inside adq patch are considered as variables
+    if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+    {
+      CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area] = NumberOfVariables;
+      ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+      logs.debug() << NumberOfVariables << " Spilled Energy[" << area <<"]. ";
+
+      NumberOfVariables++;
+    }
+  }
+
   // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2 and 2.
   logs.debug() << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 and 2:";
   COUTS_DE_TRANSPORT* TransportCost;
