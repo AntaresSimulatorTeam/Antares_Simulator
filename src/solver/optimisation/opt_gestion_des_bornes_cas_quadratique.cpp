@@ -221,8 +221,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     }
 
 
-    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For ALL links. 
-    // Set hourly bounds for ALL links depending on the user input (max direct and indirect flow).
+    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links between nodes of type 2. 
+    // Set hourly bounds for links between nodes of type 2, depending on the user input (max direct and indirect flow).
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;    

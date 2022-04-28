@@ -179,7 +179,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
 
     // }
 
-    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of type 2.
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
 

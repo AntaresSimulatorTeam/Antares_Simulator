@@ -92,7 +92,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     // }
 
-    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for all links.
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
