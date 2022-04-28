@@ -63,7 +63,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
-            Cnt = hourlyCsrProblem.numberOfConstraintCsr[Area];
+            Cnt = hourlyCsrProblem.numberOfConstraintCsr.find(Area)->second;
             ProblemeAResoudre->SecondMembre[Cnt] = 10;
             logs.debug() << Cnt << ": dummy 2*ENS > 10: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
         }
@@ -102,7 +102,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
             // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
-                Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco];
+                Cnt = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.find(Interco)->second;;
                 // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
                 //     ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
                 //                           ->ValeurDeLoopFlowOrigineVersExtremite[Interco];

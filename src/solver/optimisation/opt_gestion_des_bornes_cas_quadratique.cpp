@@ -157,7 +157,7 @@ void calculateDensNew(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             {
                 densNew = Math::Max(0, ensInit + netPositionInit);
             }
-            hourlyCsrProblem.densNewValues.push_back(densNew);
+            hourlyCsrProblem.densNewValues.insert(std::pair<int, double>(Area, densNew));
             // todo can we use vector, is it going to be the same order when we pass it to Xmax!
             // or it's safer to go with the key(area)-value map?
         }
