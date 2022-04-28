@@ -397,8 +397,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
           = (double*)MemAlloc(nbPaliers * sizeof(double));
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine
-          = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
           = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique
@@ -761,7 +759,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure);
-        MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine);
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour);
         MemFree(problem.PaliersThermiquesDuPays[k]->minUpDownTime);
         MemFree(problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique);
