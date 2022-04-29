@@ -125,7 +125,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
             Colonne[NombreDeTermes] = Var;
             NombreDeTermes++;
 
-            hourlyCsrProblem.numberOfConstraintCsr.insert(std::pair<int, int>(Area, ProblemeAResoudre->NombreDeContraintes));
+            hourlyCsrProblem.numberOfConstraintCsr[Area]= ProblemeAResoudre->NombreDeContraintes;
             NomDeLaContrainte = "dummy 2*ENS > 10. area:" + std::to_string(Area) + "; " + ProblemeHebdo->NomsDesPays[Area];
             logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>', NomDeLaContrainte);
@@ -215,8 +215,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                     NombreDeTermes++;
                 }
 
-                hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.insert(
-                  std::pair<int, int>(Interco, ProblemeAResoudre->NombreDeContraintes));
+                hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco]
+                  = ProblemeAResoudre->NombreDeContraintes;
 
                 NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
                 logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
