@@ -738,6 +738,7 @@ public:
     std::map<int, int> numberOfConstraintCsr;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
+    std::map<int, int> numberOfConstraintCsrHourlyBinding;
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
