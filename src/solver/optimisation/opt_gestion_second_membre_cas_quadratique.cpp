@@ -105,7 +105,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     // spillage(node A) = 
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
-    double netPositionInit;
+    double rhsAreaBalance;
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
@@ -115,18 +115,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
               = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
                 Cnt = it->second;
-            std::map<int, double>::iterator itt = hourlyCsrProblem.netPositionInitValues.find(Area);
-            if (itt != hourlyCsrProblem.netPositionInitValues.end())
-                netPositionInit = itt->second;
-            else
-                netPositionInit = 0.0;
+            std::map<int, double>::iterator itt = hourlyCsrProblem.rhsAreaBalanceValues.find(Area);
+            if (itt != hourlyCsrProblem.rhsAreaBalanceValues.end())
+                rhsAreaBalance = itt->second;
 
-            ProblemeAResoudre->SecondMembre[Cnt]
-              = netPositionInit
-                + ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour]
-                - ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
-            // todo : only can be used like this if we do not reset hourly results for ENS and spillage to zero (in set bounds function)!
-
+            ProblemeAResoudre->SecondMembre[Cnt] = rhsAreaBalance;
             logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
         }
     }

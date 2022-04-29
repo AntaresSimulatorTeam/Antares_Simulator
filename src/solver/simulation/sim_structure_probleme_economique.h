@@ -740,6 +740,7 @@ public:
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
+    std::map<int, double> rhsAreaBalanceValues;
     /* variables */
     // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
 
