@@ -56,7 +56,7 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
         }
     }
     ProblemeAResoudre->NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermesDeLaContrainte;
-    ProblemeAResoudre->NomDesContraintes[NombreDeContraintes] = NomDeLaContrainte;
+    (*ProblemeAResoudre->NomDesContraintes)[NombreDeContraintes] = NomDeLaContrainte;
 
     ProblemeAResoudre->Sens[NombreDeContraintes] = SensContrainte;
     NombreDeContraintes++;

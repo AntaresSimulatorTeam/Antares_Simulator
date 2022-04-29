@@ -104,11 +104,11 @@ namespace Optimization
 MPSolver* convert_to_MPSolver(
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
     // Define solver used depending on study option
     MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+      = OrtoolsUtils().getLinearOptimProblemType(study->parameters.ortoolsEnumUsed);
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
@@ -119,14 +119,14 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
-                      problemeSimplexe->NomDesVariables);
+                      *problemeSimplexe->NomDesVariables);
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
                  problemeSimplexe->NombreDeContraintes,
-                 problemeSimplexe->NomDesContraintes);
+                 *problemeSimplexe->NomDesContraintes);
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,

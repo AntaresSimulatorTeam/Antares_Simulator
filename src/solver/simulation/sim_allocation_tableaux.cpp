@@ -1,3 +1,4 @@
+
 /*
 ** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team
@@ -192,6 +193,8 @@ void SIM_DesallocationTableaux()
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]->RenouvelableParPalier);
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
                 MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
+                MemFree(ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier);
+
 
                 if (area.hydro.reservoirManagement)
                 {

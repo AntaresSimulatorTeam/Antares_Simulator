@@ -176,8 +176,8 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+    ProblemeAResoudre->NomDesVariables = new std::vector<std::string>(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes = new std::vector<std::string>(ProblemeAResoudre->NombreDeContraintes);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -261,8 +261,8 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
         MemFree(ProblemeAResoudre->Pi);
         MemFree(ProblemeAResoudre->Colonne);
 
-        ProblemeAResoudre->NomDesVariables.clear();
-        ProblemeAResoudre->NomDesContraintes.clear();
+        delete ProblemeAResoudre->NomDesVariables;
+        delete ProblemeAResoudre->NomDesContraintes;
 
         MemFree(ProblemeAResoudre);
 

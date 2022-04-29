@@ -158,7 +158,7 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 {
 	pStudy->parameters.userPlaylist = true;
 
-	for (int i = 0; i < yearsWeight.size(); i++)
+	for (std::size_t i = 0; i < yearsWeight.size(); i++)
 	{
 		pStudy->parameters.setYearWeight(i, yearsWeight[i]);
 	}

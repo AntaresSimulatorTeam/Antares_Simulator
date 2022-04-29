@@ -11,11 +11,7 @@ endif()
 
 
 add_subdirectory(src)
-
-#end to end test require boost 1.6.x because for boost::test_tools::tolerance 
-if(Boost_VERSION VERSION_GREATER 106000)
-    add_subdirectory(end-to-end)
-endif()
+add_subdirectory(end-to-end)
 
 find_package(Python3 COMPONENTS Interpreter)
 if(Python3_Interpreter_FOUND)

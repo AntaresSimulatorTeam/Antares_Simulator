@@ -727,6 +727,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < 7; k++)
     {
+        MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]
+                ->NumeroDeContrainteDesContraintesCouplantes);
         MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]);
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres);
@@ -735,6 +737,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
                   ->NumeroDeContrainteDesContraintesCouplantes);
+        MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]);
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires);
 
