@@ -133,51 +133,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         }
     }
 
-    // // I Kirchhoff's law contstraint for all areas.
     int Interco;
     COUTS_DE_TRANSPORT* TransportCost;
-
-    // // for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++) //??? why not all area, but area - 1?
-    // for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++) 
-    // {
-    //     NombreDeTermes = 0;
-
-    //     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
-    //     while (Interco >= 0)
-    //     {
-    //         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-    //         if (Var >= 0)
-    //         {
-    //             Pi[NombreDeTermes] = 1.0;
-    //             Colonne[NombreDeTermes] = Var;
-    //             NombreDeTermes++;
-    //         }
-    //         Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
-    //     }
-    //     Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
-    //     while (Interco >= 0)
-    //     {
-    //         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-    //         if (Var >= 0)
-    //         {
-    //             Pi[NombreDeTermes] = -1.0;
-    //             Colonne[NombreDeTermes] = Var;
-    //             NombreDeTermes++;
-    //         }
-    //         Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
-    //     }
-
-    //     hourlyCsrProblem.numberOfConstraintCsrAreaBalance.push_back(
-    //       ProblemeAResoudre->NombreDeContraintes);
-
-    //     NomDeLaContrainte = "NTC=sum(flow), area:" + std::to_string(Area) + "; " + ProblemeHebdo->NomsDesPays[Area];
-    //     logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
-
-    //     OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-    //       ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
-
-
-    // }
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of type 2.
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
@@ -224,6 +181,91 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                 ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
             }
+        }
+    }
+
+    // constraint: 
+    // ENS(node A) + 
+    // [ ∑flow_direct(node 2 upstream -> node A) + ∑flow_indirect(node A <- node 2 downstream) – 
+    // ∑flow_indirect(node 2 upstream <- node A) – ∑flow_direct(node A -> node 2 downstream) ] – 
+    // spillage(node A) = 
+    // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
+    // for all areas inside adequacy patch
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            // + ENS
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            
+            // - export flows
+            Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+            while (Interco >= 0)
+            {
+                if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDeLInterconnexion[Interco];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = -1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                    logs.debug() << "S-Interco number: [" << std::to_string(Interco)
+                                 << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                                 << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]] << "]";
+                }
+                Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            }
+            // + import flows
+            Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
+            while (Interco >= 0)
+            {
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDeLInterconnexion[Interco];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = 1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                    logs.debug() << "E-Interco number: [" << std::to_string(Interco)
+                                 << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                                 << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]] << "]";
+                }
+                Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            }
+
+            // - Spilled Energy
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Area];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area] = ProblemeAResoudre->NombreDeContraintes;
+
+            NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; " + ProblemeHebdo->NomsDesPays[Area];;
+            logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
+                         << NomDeLaContrainte;
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
         }
     }
 

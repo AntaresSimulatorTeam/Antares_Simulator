@@ -736,8 +736,9 @@ public:
         pWeeklyProblemBelongedTo = pProblemeHebdo;
     };
     std::map<int, int> numberOfConstraintCsr;
-    //std::vector<int> numberOfConstraintCsrAreaBalance;
+    std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
+    std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     /* variables */
     // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM

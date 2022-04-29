@@ -157,9 +157,9 @@ void calculateDensNew(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             {
                 densNew = Math::Max(0, ensInit + netPositionInit);
             }
+            hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
             hourlyCsrProblem.densNewValues[Area] = densNew;
-            // todo can we use vector, is it going to be the same order when we pass it to Xmax!
-            // or it's safer to go with the key(area)-value map?
+            //todo: maybe create two new maps to store Ens and spillage before them being reset to zero.
         }
     }
     return;
@@ -179,6 +179,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    calculateDensNew(ProblemeHebdo, hourlyCsrProblem); // todo remove - for debugging only. Place this function in adequacy_patch and call it from economy 
 
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
@@ -211,7 +212,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
                     ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
+            // ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
+            // todo uncomment: if i reset ENS to zero here, like in linear optim, I cannot re-use it any more as ens_init in RHS (for AreaBalance)
+            // so, do we skip this reset, if it's not mandatory. or save the original ENS results 
+            // in a new map, simillary to net_position_init and dens_new (cause this function can be triggered before ENS reset)!
             AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
@@ -245,7 +249,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             //         ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             // } // no need for this check here!
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour] = 0.0;
+            // ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour] = 0.0;
+            // todo uncomment: if i reset spillage to zero here, like in linear optim, I cannot re-use it any more as spillage_init in RHS (for AreaBalance)
+            // so, do we skip this reset, if it's not mandatory. or save the original spillage results 
+            // in a new map, simillary to net_position_init and dens_new (cause this function can be triggered before spillage reset)!
             AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;

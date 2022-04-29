@@ -72,29 +72,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
         }
     }
 
-    // I Kirchhoff's law contstraint for all areas.
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     COUTS_DE_TRANSPORT* TransportCost;
-    // double test;
-    // // for (Area = 0; Area < ProblemeHebdo->NombreDePays - 1; Area++) //??? why not all area, but area - 1?
-    // for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    // {
-    //     Cnt = hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area];
-
-    //     //CSR Todo: should not use SoldeMoyenDuPays[Area]
-    //     //should create a new function to calculate “net_position_init” parameter: 
-    //     // The “net_position_init (node A)” parameter value is the value of the “net_position” calculated from 
-    //     // the output of the Antares calculation for node A, considering results we get from the Antares calculation
-    //     // at the end of chapter 2.
-
-    //     ProblemeAResoudre->SecondMembre[Cnt]
-    //       = ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // todo what to use
-    //     // ProblemeHebdo->SoldeMoyenHoraire[hour]->SoldeMoyenDuPays[Area]; // average hourly balance per area! OR
-    //     // -ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[Area]; // = Reduced consumption per area
-    //     logs.debug() << Cnt << ": NTC=sum(flow): RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
-
-    // }
-
+    
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
@@ -115,6 +95,39 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                     ProblemeAResoudre->SecondMembre[Cnt] = 0.;  
                     logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt]; 
             }
+        }
+    }
+
+    // constraint: 
+    // ENS(node A) + 
+    // [ ∑flow_direct(node 2 upstream -> node A) + ∑flow_indirect(node A <- node 2 downstream) – 
+    // ∑flow_indirect(node 2 upstream <- node A) – ∑flow_direct(node A -> node 2 downstream) ] – 
+    // spillage(node A) = 
+    // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
+    // for all areas inside adequacy patch
+    double netPositionInit;
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it
+              = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
+            if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
+                Cnt = it->second;
+            std::map<int, double>::iterator itt = hourlyCsrProblem.netPositionInitValues.find(Area);
+            if (itt != hourlyCsrProblem.netPositionInitValues.end())
+                netPositionInit = itt->second;
+            else
+                netPositionInit = 0.0;
+
+            ProblemeAResoudre->SecondMembre[Cnt]
+              = netPositionInit
+                + ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour]
+                - ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
+            // todo : only can be used like this if we do not reset hourly results for ENS and spillage to zero (in set bounds function)!
+
+            logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
         }
     }
 
