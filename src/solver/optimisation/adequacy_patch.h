@@ -104,4 +104,9 @@ void setBoundsNoAdqPatch(double& Xmax,
                          VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                          const int Interco);
 
+/*!
+ * Calculate parameters for curtailment sharing rule inside adequacy patch.
+ */
+void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);
+
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

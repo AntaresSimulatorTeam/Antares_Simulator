@@ -95,79 +95,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* P
     }
 }
 
-void calculateDensNew(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
-{
-    double netPositionInit;
-    double flowsNode1toNodeA;
-    double densNew;
-    double ensInit;
-    double spillageInit;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    int Interco;
-    bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
-
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-        {
-            netPositionInit = 0;
-            flowsNode1toNodeA = 0;
-
-            Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
-            while (Interco >= 0)
-            {
-                if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-                {
-                    netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
-                }
-                else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                         == Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch)
-                {
-                    flowsNode1toNodeA
-                      -= Math::Min(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
-                }
-                Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
-            }
-            Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
-            while (Interco >= 0)
-            {
-                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-                {
-                    netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
-                }
-                else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                         == Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch)
-                {
-                    flowsNode1toNodeA
-                      += Math::Max(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
-                }
-                Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
-            }
-            // calculate densNew per area
-            ensInit
-              = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit
-              = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
-            if (includeFlowsOutsideAdqPatchToDensNew)
-            {
-                densNew = Math::Max(0, ensInit + netPositionInit + flowsNode1toNodeA);
-            }
-            else
-            {
-                densNew = Math::Max(0, ensInit + netPositionInit);
-            }
-            hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
-            hourlyCsrProblem.densNewValues[Area] = densNew;
-            hourlyCsrProblem.rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
-        }
-    }
-    return;
-}
-
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
   HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -182,8 +109,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    calculateDensNew(ProblemeHebdo, hourlyCsrProblem); // todo remove - for debugging only. Place this function in adequacy_patch and call it from economy 
-
+    
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 

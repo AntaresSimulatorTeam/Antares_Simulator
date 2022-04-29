@@ -36,6 +36,7 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 #include <set>
+#include "../optimisation/adequacy_patch.h"
 
 using namespace Yuni;
 
@@ -182,6 +183,7 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
     //CSR todo 
     // todo!! by using OPT_LiberationProblemesSimplexe are we deleting weekly results in pWeeklyProblem->RESULTATS_HORAIRES, calculated after LMR optimization?
     // apparently not cause i'm using RESULTATS_HORAIRES to calculate pto value in opt_gestion_des_couts_cas_quadratique and getting good values!
+    calculateCsrParameters(pWeeklyProblem, hourlyCsrProblem);
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
     OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
