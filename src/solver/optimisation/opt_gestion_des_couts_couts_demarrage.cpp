@@ -98,62 +98,12 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
                         ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
                 if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
                 {
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS != OUI_ANTARES
                     CoutLineaire[Var]
                       = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
-#else
-                    CoutLineaire[Var] = 0;
-#endif
                 }
             }
         }
     }
-
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
-    for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
-         PdtHebdo++, PdtJour++)
-    {
-        CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
-
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-        {
-            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-
-            for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
-            {
-                Palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                {
-                    CoutDeDemarrage
-                      = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
-
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-                    if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                        CoutLineaire[Var] += CoutDeDemarrage;
-
-                    PdtJourMoins1 = PdtJour - 1;
-                    if (PdtJourMoins1 < 0)
-                        PdtJourMoins1 = NombreDePasDeTempsPourUneOptimisation + PdtJourMoins1;
-                    Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJourMoins1]
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-                    if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                        CoutLineaire[Var] -= CoutDeDemarrage;
-
-                    Var
-                      = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
-                    if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                        CoutLineaire[Var] += CoutDeDemarrage;
-                }
-            }
-        }
-    }
-#endif
 
 #if GROSSES_VARIABLES == OUI_ANTARES
     for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;

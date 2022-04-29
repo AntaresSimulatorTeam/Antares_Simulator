@@ -111,11 +111,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
                 Xmax[Var] = LINFINI_ANTARES;
-
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
-                Xmax[Var] = 0;
-#endif
-
                 Xmin[Var] = 0;
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
