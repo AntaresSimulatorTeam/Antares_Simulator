@@ -116,44 +116,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
         }
     }
 
-#if GROSSES_VARIABLES == OUI_ANTARES
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-    {
-        for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
-        {
-            CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
-            if (Simulation == OUI_ANTARES)
-            {
-                NombreDeVariables++;
-                NombreDeVariables++;
-                if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-                {
-                    NombreDeVariables++;
-                }
-                continue;
-            }
-
-            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays]
-              = NombreDeVariables;
-            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-            NombreDeVariables++;
-
-            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays]
-              = NombreDeVariables;
-            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-            NombreDeVariables++;
-
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceEnReserve[Pays]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-                NombreDeVariables++;
-            }
-        }
-    }
-#endif
-
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
     return;

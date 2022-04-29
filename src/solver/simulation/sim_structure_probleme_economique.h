@@ -32,9 +32,6 @@
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
 
-#define GROSSES_VARIABLES NON_ANTARES
-#define COEFF_GROSSES_VARIABLES 100
-
 #include <yuni/core/math.h>
 
 typedef struct
@@ -65,10 +62,7 @@ typedef struct
     int* NumeroDeVariableDefaillanceNegativeDown;
     int* NumeroDeVariableDefaillanceNegativeAny;
 
-    int* NumeroDeGrosseVariableDefaillancePositive;
-    int* NumeroDeGrosseVariableDefaillanceNegative;
     int* NumeroDeVariableDefaillanceEnReserve;
-    int* NumeroDeGrosseVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
     int* NumeroDeVariablesVariationHydALaBaisseUp;
