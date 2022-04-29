@@ -52,9 +52,10 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
+#include "../utils/ortools_utils.h"
+
 extern "C"
 {
-#include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 }
 
@@ -265,10 +266,24 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
         if (ProblemeAResoudre->ProblemesSpx)
         {
-            for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+            const auto study = Data::Study::Current::Get();
+            const bool ortoolsUsed = study->parameters.ortoolsUsed;
+
+            if (ortoolsUsed)
             {
-                SPX_LibererProbleme(
-                  (PROBLEME_SPX*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+                for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+                {
+                    ORTOOLS_LibererProbleme(
+                      (MPSolver*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+                }
+            }
+            else
+            {
+                for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+                {
+                    SPX_LibererProbleme(
+                      (PROBLEME_SPX*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+                }
             }
 
             MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
