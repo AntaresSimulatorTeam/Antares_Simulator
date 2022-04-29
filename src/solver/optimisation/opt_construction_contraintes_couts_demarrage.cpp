@@ -463,7 +463,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     else
                         NbTermesContraintesPourLesCoutsDeDemarrage++;
                 }
-#else
                 NombreDeTermes = 0;
 
                 t1 = Pdt;
