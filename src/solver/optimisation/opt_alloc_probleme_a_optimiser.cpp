@@ -52,6 +52,12 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
+extern "C"
+{
+#include "spx_definition_arguments.h"
+#include "spx_fonctions.h"
+}
+
 static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int mxPaliers)
 {
     int NbTermes;
@@ -176,8 +182,10 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
-    ProblemeAResoudre->NomDesVariables = new std::vector<std::string>(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes = new std::vector<std::string>(ProblemeAResoudre->NombreDeContraintes);
+    ProblemeAResoudre->NomDesVariables
+      = new std::vector<std::string>(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes
+      = new std::vector<std::string>(ProblemeAResoudre->NombreDeContraintes);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -230,6 +238,11 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
+    const int NombreDePasDeTempsPourUneOptimisation
+      = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    const int NbIntervalles
+      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+
     if (ProblemeAResoudre)
     {
         MemFree(ProblemeAResoudre->Sens);
@@ -252,6 +265,12 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
         if (ProblemeAResoudre->ProblemesSpx)
         {
+            for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+            {
+                SPX_LibererProbleme(
+                  (PROBLEME_SPX*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+            }
+
             MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
             MemFree(ProblemeAResoudre->ProblemesSpx);
         }
@@ -261,6 +280,7 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
         MemFree(ProblemeAResoudre->Pi);
         MemFree(ProblemeAResoudre->Colonne);
 
+        // C++ structures : we must force the call of destructors
         delete ProblemeAResoudre->NomDesVariables;
         delete ProblemeAResoudre->NomDesContraintes;
 
