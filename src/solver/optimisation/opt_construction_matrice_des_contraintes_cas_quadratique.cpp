@@ -270,81 +270,92 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         }
     }
 
-    // int NbInterco;
-    // double Poids; // Weight ??
+    int NbInterco;
+    double Poids; // Weight
     // int Offset;
     // int hour1;
-    // CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
 
     // Study::Ptr study = Study::Current::Get();
     // uint numSpace = 0; // todo: not in problem hebdo, we need to pass it as function argument if we whant to use timeStepInYear.
     // int timeStepInYear = study->runtime->weekInTheYear[numSpace] * 168 + hour;
 
-    // // Special case of the binding constraints
-    // for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
-    //      CntCouplante++)
-    // {
-    //     MatriceDesContraintesCouplantes
-    //       = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+    // Special case of the binding constraints
+    for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+         CntCouplante++)
+    {
+        MatriceDesContraintesCouplantes
+          = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
 
-    //     if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
-    //     {
-    //         NbInterco
-    //           = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
-    //         NombreDeTermes = 0;
-    //         for (int Index = 0; Index < NbInterco; Index++)
-    //         {
-    //             Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
-    //             Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
-    //             Offset = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[Index];
+        hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = false; //init as false, if there is interco 2-2, then change to true
+        
+        if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+        {
+            NbInterco
+              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+            NombreDeTermes = 0;
+            for (int Index = 0; Index < NbInterco; Index++)
+            {
+                Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
+                Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+                // Offset = MatriceDesContraintesCouplantes->OffsetTemporelSurLInterco[Index];
 
-    //             if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-    //                   == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-    //                 && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-    //                      == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-    //             {
-    //                 if (Offset >= 0)
-    //                 {
-    //                     hour1
-    //                       = (hour + Offset) % ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    //                 }
-    //                 else
-    //                 {
-    //                     hour1 = (hour + Offset + ProblemeHebdo->NombreDePasDeTemps)
-    //                             % ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    //                 }
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                      == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+                    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    // if (Offset >= 0)
+                    // {
+                    //     hour1
+                    //       = (hour + Offset) % ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    // }
+                    // else
+                    // {
+                    //     hour1 = (hour + Offset + ProblemeHebdo->NombreDePasDeTemps)
+                    //             % ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+                    // }
 
-    //                 Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour1]
-    //                         ->NumeroDeVariableDeLInterconnexion[Interco];
+                    Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]
+                            ->NumeroDeVariableDeLInterconnexion[Interco];
 
-    //                 if (Var >= 0)
-    //                 {
-    //                     Pi[NombreDeTermes] = Poids;
-    //                     Colonne[NombreDeTermes] = Var;
-    //                     NombreDeTermes++;
-    //                 }
-    //             }
-    //         }
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = Poids;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                // CSR todo: cluster becomes RHS parameters
+            }
 
-    //         hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
-    //           = ProblemeAResoudre->NombreDeContraintes;
+            if (NombreDeTermes > 0) //current binding constraint contains an interco type 2<->2
+            {
+                hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = true;
 
-    //         NomDeLaContrainte = "bc::hourly::" + std::to_string(timeStepInYear + 1) // timeStepInYear not properly defined!
-    //                             + "::" 
-    //                             + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
+                = ProblemeAResoudre->NombreDeContraintes;
 
-    //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-    //           ProblemeAResoudre,
-    //           Pi,
-    //           Colonne,
-    //           NombreDeTermes,
-    //           MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
-    //           NomDeLaContrainte);
-    //     }
-    // }
+                // NomDeLaContrainte = "bc::hourly::" + std::to_string(timeStepInYear + 1) // timeStepInYear not properly defined!
+                //                     + "::" 
+                //                     + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+                NomDeLaContrainte = "bc::hourly::" + std::to_string(hour)
+                                    + "::" 
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante + ". Interco:" + std::to_string(Interco);
 
-    // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
-    // and/or power generated from generating units.
+                logs.debug() << "C (bc): " << ProblemeAResoudre->NombreDeContraintes << ": "
+                            << NomDeLaContrainte;
+
+                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                ProblemeAResoudre,
+                Pi,
+                Colonne,
+                NombreDeTermes,
+                MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+                NomDeLaContrainte);
+            }
+        }
+    }
 
     MemFree(Pi);
     MemFree(Colonne);

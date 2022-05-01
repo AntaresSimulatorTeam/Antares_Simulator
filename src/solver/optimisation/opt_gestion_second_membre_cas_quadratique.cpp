@@ -126,4 +126,79 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
+    int CntCouplante;
+    int Interco;
+    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
+    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    std::map<int, int> bingdingConstraintNumber = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
+    
+    int NbInterco;
+    double Poids;
+    double ValeurDuFlux; 
+    int Index;
+
+    for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+            CntCouplante++)
+    {
+        if(bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end())
+        // if(hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] == true)
+        {
+
+            MatriceDesContraintesCouplantes = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+
+            Cnt = bingdingConstraintNumber[CntCouplante];
+
+            //1. this is the original RHS of bingding constraint
+            SecondMembre[Cnt] = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
+            // SecondMembre[Cnt] = MatriceDesContraintesCouplantes
+            //                         ->SecondMembreDeLaContrainteCouplante[PdtHebdo];
+            // AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+
+            //2. CSR todo: RHS part 2: flow other than 2<->2
+            NbInterco = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+            for (Index = 0; Index < NbInterco; Index++)
+            {
+                Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
+                Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+                    || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco] != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    //we have an interco other than type 2-2
+                    // Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]->NumeroDeVariableDeLInterconnexion[Interco];
+                    ValeurDuFlux = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]; //todo check do we care about the export/import
+                    SecondMembre[Cnt] -= ValeurDuFlux * Poids;
+                }
+            }
+
+            //3. CSR todo: RHS part 3: - cluster
+            int NbClusters = MatriceDesContraintesCouplantes
+                            ->NombreDePaliersDispatchDansLaContrainteCouplante;
+            int Pays;
+            PALIERS_THERMIQUES* PaliersThermiquesDuPays;
+            int Palier;
+            int IndexNumeroDuPalierDispatch;
+            
+            for (Index = 0; Index < NbClusters; Index++)
+            {
+                Pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
+                PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+
+                IndexNumeroDuPalierDispatch = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
+
+                Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
+                        [IndexNumeroDuPalierDispatch];
+                Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
+
+                //CSR todo, value of Var "Cluster Output" check if this is correct?
+                // Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt1]->NumeroDeVariableDuPalierThermique[Palier];
+                double ValueOfVar = ProblemeHebdo->ResultatsHoraires[Pays]
+                                        ->ProductionThermique[hour]
+                                        ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
+
+                SecondMembre[Cnt] -= ValueOfVar * Poids;
+            }
+        }
+    }    
 }

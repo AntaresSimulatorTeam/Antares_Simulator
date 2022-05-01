@@ -738,10 +738,17 @@ public:
     std::map<int, int> numberOfConstraintCsr;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
-    std::map<int, int> numberOfConstraintCsrHourlyBinding;
+    std::map<int, int> numberOfConstraintCsrHourlyBinding; //length is number of binding constraint contains interco 2-2
+ 
+    //to remember if a bc contains an interco type 2<->2 
+    //this can be merged with numberOfConstraintCsrHourlyBinding, 
+    // with a check in map numberOfConstraintCsrHourlyBinding.find(..) != .end() 
+    std::map<int, bool> bindingConstraintContainsIntercoInsideAdqPatch; //lenght is number of total binding constraint
+
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
+
     /* variables */
     // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
 
