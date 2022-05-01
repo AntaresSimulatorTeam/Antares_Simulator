@@ -100,8 +100,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     // constraint: 
     // ENS(node A) + 
-    // [ ∑flow_direct(node 2 upstream -> node A) + ∑flow_indirect(node A <- node 2 downstream) – 
-    // ∑flow_indirect(node 2 upstream <- node A) – ∑flow_direct(node A -> node 2 downstream) ] – 
+    // [ Sum flow_direct(node 2 upstream -> node A) + Sum flow_indirect(node A <- node 2 downstream) – 
+    // Sum flow_indirect(node 2 upstream <- node A) – Sum flow_direct(node A -> node 2 downstream) ] – 
     // spillage(node A) = 
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
@@ -120,7 +120,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                 rhsAreaBalance = itt->second;
 
             ProblemeAResoudre->SecondMembre[Cnt] = rhsAreaBalance;
-            logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+            logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt] << " (Area = " << Area <<")";
         }
     }
 

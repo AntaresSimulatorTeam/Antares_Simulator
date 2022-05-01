@@ -188,9 +188,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
 
     // constraint: 
     // ENS(node A) + 
-    // [ ∑flow_direct(node 2 upstream -> node A) + ∑flow_indirect(node A <- node 2 downstream) – 
-    // ∑flow_indirect(node 2 upstream <- node A) – ∑flow_direct(node A -> node 2 downstream) ] – 
-    // spillage(node A) = 
+    // - flow (A -> 2) or (+ flow (2 -> A)) there should be only one of them, otherwise double-count
+    // - spillage(node A) = 
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
@@ -216,20 +215,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                     == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
                     Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDeLInterconnexion[Interco];
+                            ->NumeroDeVariableDeLInterconnexion[Interco]; //flow (A->2)
                     if (Var >= 0)
                     {
                         Pi[NombreDeTermes] = -1.0;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
+                        logs.debug() << "S-Interco number: [" << std::to_string(Interco)
+                                    << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                                    << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]] << "]";
                     }
-                    logs.debug() << "S-Interco number: [" << std::to_string(Interco)
-                                 << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
-                                 << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]] << "]";
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
             }
-            // + import flows
+            // or + import flows
             Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
             while (Interco >= 0)
             {
@@ -237,16 +236,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                     == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
                     Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDeLInterconnexion[Interco];
+                            ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
                     if (Var >= 0)
                     {
                         Pi[NombreDeTermes] = 1.0;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
+                        logs.debug() << "E-Interco number: [" << std::to_string(Interco)
+                                    << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                                    << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]] << "]";
                     }
-                    logs.debug() << "E-Interco number: [" << std::to_string(Interco)
-                                 << "] between: [" << ProblemeHebdo->NomsDesPays[Area] << "]-["
-                                 << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]] << "]";
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
             }

@@ -215,6 +215,8 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
             hourlyCsrProblem.densNewValues[Area] = densNew;
             hourlyCsrProblem.rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
+            logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << hourlyCsrProblem.rhsAreaBalanceValues[Area]
+                        << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit << ") - SpillageInit(" << spillageInit <<")";
         }
     }
     return;
