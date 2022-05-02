@@ -135,13 +135,13 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     
     int NbInterco;
     double Poids;
-    double ValeurDuFlux; 
+    double ValueOfFlow; 
     int Index;
 
     for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
             CntCouplante++)
     {
-        if(bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end())
+        if(bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end()) //ok
         // if(hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] == true)
         {
 
@@ -151,9 +151,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
             //1. this is the original RHS of bingding constraint
             SecondMembre[Cnt] = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
+            logs.debug() << Cnt << ": Hourly bc: Existing-RHS[" << Cnt
+                         << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante
+                         << ")";
             // SecondMembre[Cnt] = MatriceDesContraintesCouplantes
             //                         ->SecondMembreDeLaContrainteCouplante[PdtHebdo];
-            // AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+            // AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL; // ok. costs are not of interest to us here!
 
             //2. CSR todo: RHS part 2: flow other than 2<->2
             NbInterco = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
@@ -167,23 +170,34 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                 {
                     //we have an interco other than type 2-2
                     // Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]->NumeroDeVariableDeLInterconnexion[Interco];
-                    ValeurDuFlux = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]; //todo check do we care about the export/import
-                    SecondMembre[Cnt] -= ValeurDuFlux * Poids;
+                    ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]; //todo check do we care about the export/import
+                    SecondMembre[Cnt] -= ValueOfFlow * Poids;
+                    logs.debug()
+                      << Cnt << ": Hourly bc: IntercoFlow-RHS[" << Cnt
+                      << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante << ")"
+                      << ". Interco;" + std::to_string(Interco) << ". Between:["
+                      << ProblemeHebdo
+                           ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                      << "]-["
+                      << ProblemeHebdo
+                           ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+                      << "]" << ". ValueOfFlow: " <<ValueOfFlow << ". Poids: " << Poids;
                 }
             }
 
             //3. CSR todo: RHS part 3: - cluster
             int NbClusters = MatriceDesContraintesCouplantes
                             ->NombreDePaliersDispatchDansLaContrainteCouplante;
-            int Pays;
+            int Area;
             PALIERS_THERMIQUES* PaliersThermiquesDuPays;
             int Palier;
             int IndexNumeroDuPalierDispatch;
+            double ValueOfVar; // to be consistent code as above
             
             for (Index = 0; Index < NbClusters; Index++)
             {
-                Pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
-                PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+                Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
+                PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Area];
 
                 IndexNumeroDuPalierDispatch = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
 
@@ -193,11 +207,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
                 //CSR todo, value of Var "Cluster Output" check if this is correct?
                 // Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt1]->NumeroDeVariableDuPalierThermique[Palier];
-                double ValueOfVar = ProblemeHebdo->ResultatsHoraires[Pays]
+                ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]
                                         ->ProductionThermique[hour]
                                         ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
                 SecondMembre[Cnt] -= ValueOfVar * Poids;
+                logs.debug() << Cnt << ": Hourly bc: ThermalCluster-RHS[" << Cnt
+                             << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante
+                             << ")"
+                             << ". Area:" << Area
+                             << ", Palier:" << Palier << ", Poids" << Poids
+                             << ", ValueOfVar:" << ValueOfVar;
             }
         }
     }    

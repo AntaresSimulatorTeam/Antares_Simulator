@@ -287,8 +287,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         MatriceDesContraintesCouplantes
           = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
 
-        hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = false; //init as false, if there is interco 2-2, then change to true
-        
+        // hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = false; //init as false, if there is interco 2-2, then change to true
+        // not used.
         if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
         {
             NbInterco
@@ -324,6 +324,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                         Pi[NombreDeTermes] = Poids;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
+
+                        logs.debug()
+                          << "Interco:" + std::to_string(Interco) << ". Between:["
+                          << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                          << "]-["
+                          << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+                          << "], with Poids(coeff):" + std::to_string(Poids) + " inserted to LHS!";
                     }
                 }
                 // CSR todo: cluster becomes RHS parameters
@@ -331,7 +338,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
 
             if (NombreDeTermes > 0) //current binding constraint contains an interco type 2<->2
             {
-                hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = true;
+                // hourlyCsrProblem.bindingConstraintContainsIntercoInsideAdqPatch[CntCouplante] = true; // not used
 
                 hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
                 = ProblemeAResoudre->NombreDeContraintes;
@@ -341,7 +348,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
                 //                     + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
                 NomDeLaContrainte = "bc::hourly::" + std::to_string(hour)
                                     + "::" 
-                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante + ". Interco:" + std::to_string(Interco);
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;// + ". Interco:" + std::to_string(Interco);
 
                 logs.debug() << "C (bc): " << ProblemeAResoudre->NombreDeContraintes << ": "
                             << NomDeLaContrainte;
