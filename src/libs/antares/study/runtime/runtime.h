@@ -165,7 +165,7 @@ public:
     uint thermalPlantTotalCountMustRun;
 
     //! Override enable/disable TS generation per cluster
-    bool thermalTSRefresh;
+    bool thermalTSRefresh = false;
 
     //! The maximum number of clusters for each area
     uint maxThermalClustersForSingleArea;

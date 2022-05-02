@@ -65,6 +65,11 @@ Antares::Data::RenewableCluster* RenewableClusterItem::renewableAggregate() cons
     return pRenewableCluster;
 }
 
+void RenewableClusterItem::addAdditionalIcons(wxString& /* out */) const
+{
+    // No additional icons should be added for renewable clusters
+}
+
 } // namespace Item
 } // namespace HTMLListbox
 } // namespace Component

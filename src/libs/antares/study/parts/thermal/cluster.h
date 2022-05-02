@@ -65,12 +65,6 @@ enum class LocalTSGenerationBehavior
     forceNoGen
 };
 
-enum class GlobalTSGenerationBehavior
-{
-    generate = 0, // Stochastic
-    doNotGenerate // Ready-made
-};
-
 /*!
 ** \brief A single thermal cluster
 */
@@ -218,8 +212,6 @@ public:
     */
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
-
-    bool doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const;
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
 

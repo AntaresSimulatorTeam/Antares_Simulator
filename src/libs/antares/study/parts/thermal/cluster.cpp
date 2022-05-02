@@ -733,20 +733,6 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     return checkMinStablePower();
 }
 
-bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
-{
-    switch (tsGenBehavior)
-    {
-        // Generate if global tells us to
-    case LocalTSGenerationBehavior::useGlobalParameter:
-        return (global == GlobalTSGenerationBehavior::generate) && refresh;
-    case LocalTSGenerationBehavior::forceGen:
-        return refresh;
-    default:
-        return false;
-    }
-}
-
 bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 {
     switch (tsGenBehavior)

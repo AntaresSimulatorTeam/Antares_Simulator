@@ -46,21 +46,15 @@ namespace Antares
 {
 namespace Window
 {
-namespace
-{
 class CompareDesc final
 {
 public:
-    inline bool operator()(const wxString& s1, const wxString& s2) const
-    {
-        return s2 < s1;
-    }
+    bool operator()(const wxString& s1, const wxString& s2) const;
 };
+
 typedef std::map<wxString, YString, CompareDesc> MapFileList;
-} // namespace
 
 class StudyLogs;
-
 class FileListProvider final : public Component::Spotlight::IProvider
 {
 public:
