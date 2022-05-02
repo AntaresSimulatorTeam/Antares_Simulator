@@ -17,6 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
+        testref: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
