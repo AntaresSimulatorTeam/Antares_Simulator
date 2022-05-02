@@ -40,10 +40,10 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     double* CoutLineaire;
     double CoutDepassementVolume;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
-    PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    const PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    const PROBLEME_LINEAIRE_PARTIE_FIXE* ProblemeLineairePartieFixe;
+    const PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
+    const CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
 
     DonneesAnnuelles->Volume[0] = DonneesAnnuelles->VolumeInitial;
 
