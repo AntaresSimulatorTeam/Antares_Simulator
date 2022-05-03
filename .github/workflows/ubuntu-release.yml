@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        testref: [ubuntu-20.04]
+        test-platform: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2 
@@ -79,28 +79,28 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Installer .deb creation
       run: |

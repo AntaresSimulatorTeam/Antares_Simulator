@@ -19,7 +19,7 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
-            testref: windows-2022
+            test-platform: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
@@ -110,28 +110,28 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-3
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: .zip creation
       shell: bash

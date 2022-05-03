@@ -17,7 +17,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
-        testref: [ubuntu-20.04]
+        test-platform: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
@@ -86,7 +86,7 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
-        os: ${{ matrix.testref }}
+        os: ${{ matrix.test-platform }}
 
     - name: Installer .deb creation
       run: |

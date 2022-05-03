@@ -9,7 +9,7 @@ from fixtures import *
 ALL_STUDIES_PATH = Path('../resources/Antares_Simulator_Tests').resolve()
 
 # --------------------------------------------------------------
-# Example of a test with output AND check integrity comparisons
+# Test behavior when an infeasible problem occurs
 # --------------------------------------------------------------
 
 @pytest.mark.unfeasible
