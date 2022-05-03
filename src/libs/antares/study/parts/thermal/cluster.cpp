@@ -278,7 +278,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     if (not series)
         series = new DataSeriesCommon();
 
@@ -513,7 +513,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     prepro->reset();
 
     // Links
@@ -733,13 +733,12 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     return checkMinStablePower();
 }
 
-bool ThermalCluster::doWeGenerateTS(bool globalThermalTSgeneration) const
+bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 {
     switch (tsGenBehavior)
     {
-        // Generate if global tells us to
     case LocalTSGenerationBehavior::useGlobalParameter:
-        return globalThermalTSgeneration;
+        return globalTSgeneration;
     case LocalTSGenerationBehavior::forceGen:
         return true;
     default:
