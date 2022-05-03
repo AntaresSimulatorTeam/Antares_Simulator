@@ -147,42 +147,41 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
         {
 
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-            // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
+
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
             {
-                NombreDeTermes = 0;
-                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-                if (Var >= 0)
-                {
-                    Pi[NombreDeTermes] = 1.0;
-                    Colonne[NombreDeTermes] = Var;
-                    NombreDeTermes++;
-                }
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-                if (Var >= 0)
-                {
-                    Pi[NombreDeTermes] = -1.0;
-                    Colonne[NombreDeTermes] = Var;
-                    NombreDeTermes++;
-                }
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-                if (Var >= 0)
-                {
-                    Pi[NombreDeTermes] = 1.0;
-                    Colonne[NombreDeTermes] = Var;
-                    NombreDeTermes++;
-                }
-
-                hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco]
-                  = ProblemeAResoudre->NombreDeContraintes;
-
-                NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
-                logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
-
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
             }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco]
+                = ProblemeAResoudre->NombreDeContraintes;
+
+            NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
+            logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+            ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+
         }
     }
 
