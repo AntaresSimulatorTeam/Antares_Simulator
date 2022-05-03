@@ -116,24 +116,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEB
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-    // constraint: 2 * ENS > 10
-    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-        {
-            NombreDeTermes = 0;
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
-            Pi[NombreDeTermes] = 2.0;
-            Colonne[NombreDeTermes] = Var;
-            NombreDeTermes++;
+    // // constraint: 2 * ENS > 10
+    // for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    // {
+    //     if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+    //     {
+    //         NombreDeTermes = 0;
+    //         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+    //         Pi[NombreDeTermes] = 2.0;
+    //         Colonne[NombreDeTermes] = Var;
+    //         NombreDeTermes++;
 
-            hourlyCsrProblem.numberOfConstraintCsr[Area]= ProblemeAResoudre->NombreDeContraintes;
-            NomDeLaContrainte = "dummy 2*ENS > 10. area:" + std::to_string(Area) + "; " + ProblemeHebdo->NomsDesPays[Area];
-            logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
-            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>', NomDeLaContrainte);
+    //         hourlyCsrProblem.numberOfConstraintCsr[Area]= ProblemeAResoudre->NombreDeContraintes;
+    //         NomDeLaContrainte = "dummy 2*ENS > 10. area:" + std::to_string(Area) + "; " + ProblemeHebdo->NomsDesPays[Area];
+    //         logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": " << NomDeLaContrainte ;
+    //         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>', NomDeLaContrainte);
 
-        }
-    }
+    //     }
+    // }
 
     int Interco;
     COUTS_DE_TRANSPORT* TransportCost;

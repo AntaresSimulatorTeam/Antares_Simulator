@@ -58,19 +58,19 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-    //constraint for each area inside adq patch: 2 * ENS > 10
-    for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
-        {
-            // Cnt = hourlyCsrProblem.numberOfConstraintCsr.find(Area)->second;
-            std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsr.find(Area);
-            if(it != hourlyCsrProblem.numberOfConstraintCsr.end())
-                Cnt = it->second;
-            ProblemeAResoudre->SecondMembre[Cnt] = 10;
-            logs.debug() << Cnt << ": dummy 2*ENS > 10: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
-        }
-    }
+    // //constraint for each area inside adq patch: 2 * ENS > 10
+    // for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    // {
+    //     if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+    //     {
+    //         // Cnt = hourlyCsrProblem.numberOfConstraintCsr.find(Area)->second;
+    //         std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsr.find(Area);
+    //         if(it != hourlyCsrProblem.numberOfConstraintCsr.end())
+    //             Cnt = it->second;
+    //         ProblemeAResoudre->SecondMembre[Cnt] = 10;
+    //         logs.debug() << Cnt << ": dummy 2*ENS > 10: RHS[" << Cnt << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+    //     }
+    // }
 
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     COUTS_DE_TRANSPORT* TransportCost;

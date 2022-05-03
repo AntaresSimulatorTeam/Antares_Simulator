@@ -735,7 +735,7 @@ public:
         hourInWeekTriggeredCsr = hourInWeek;
         pWeeklyProblemBelongedTo = pProblemeHebdo;
     };
-    std::map<int, int> numberOfConstraintCsr;
+    // std::map<int, int> numberOfConstraintCsr;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
     std::map<int, int> numberOfConstraintCsrHourlyBinding; //length is number of binding constraint contains interco 2-2
