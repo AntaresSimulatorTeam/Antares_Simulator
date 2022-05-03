@@ -21,7 +21,9 @@ using namespace Yuni;
 using namespace Antares::Data;
 
 using SimulationEco = Solver::Simulation::ISimulation<Solver::Simulation::Economy>;
-using SimulationEcoPtr = std::unique_ptr<SimulationEco>;
+// We use a custom deleter function since cleanSimulation should be called
+// after deleting the SimulationEco object, not before.
+using SimulationEcoPtr = std::unique_ptr<SimulationEco, void(*)(SimulationEco*)>;
 
 BOOST_AUTO_TEST_SUITE(simple_test)
 
@@ -169,6 +171,26 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
     return pStudy->parameters.getYearsWeightSum();
 }
 
+void cleanSimulation(Study& study)
+{
+    // simulation
+    SIM_DesallocationTableaux();
+
+    // release all reference to the current study held by this class
+    study.clear();
+
+    // removed any global reference
+    Data::Study::Current::Set(nullptr);
+}
+
+void destroy(SimulationEco* simulation)
+{
+    auto& study = simulation->study;
+    delete simulation;
+    cleanSimulation(study);
+}
+
+
 SimulationEcoPtr runSimulation(Study::Ptr pStudy)
 {
     // Runtime data dedicated for the solver
@@ -179,7 +201,7 @@ SimulationEcoPtr runSimulation(Study::Ptr pStudy)
     pSettings.noOutput = false;
 
     // Launch simulation
-    auto simulation = std::unique_ptr<SimulationEco>(new SimulationEco(*pStudy, pSettings));
+    SimulationEcoPtr simulation(new SimulationEco(*pStudy, pSettings), destroy);
 
     // Allocate all arrays
     SIM_AllocationTableaux();
@@ -188,19 +210,6 @@ SimulationEcoPtr runSimulation(Study::Ptr pStudy)
     simulation->run();
 
     return simulation;
-}
-
-void cleanSimulation(Study::Ptr pStudy)
-{
-    // simulation
-    SIM_DesallocationTableaux();
-
-    // release all reference to the current study held by this class
-    pStudy->clear();
-
-    pStudy = nullptr;
-    // removed any global reference
-    Data::Study::Current::Set(nullptr);
 }
 
 // Very simple test with one area and one load and one year
@@ -242,9 +251,6 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
     // Load must be load
     checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
-
-    // Clean simulation
-    cleanSimulation(pStudy);
 }
 
 // Very simple test with one area and one load and two year
@@ -286,9 +292,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 
     // Load must be load
     checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
-
-    // Clean simulation
-    cleanSimulation(pStudy);
 }
 
 // Very simple test with one area and one load and two year and two identical TS
@@ -332,9 +335,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 
     // Load must be load
     checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
-
-    // Clean simulation
-    cleanSimulation(pStudy);
 }
 
 // Very simple test with one area and one load and two year and two TS with different load
@@ -394,9 +394,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
     // Load must be load
     checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(
       simulation, pArea, averageLoad);
-
-    // Clean simulation
-    cleanSimulation(pStudy);
 }
 
 // Very simple test with one area and one load and two year with different load and weight
@@ -475,9 +472,6 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
     // Load must be load
     checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(
       simulation, pArea, averageLoad);
-
-    // Clean simulation
-    cleanSimulation(pStudy);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
