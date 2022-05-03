@@ -12,7 +12,7 @@
 #include <simulation/economy.h>
 
 #include <iostream>
-#include <stdio.h>
+#include <memory>
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
@@ -20,461 +20,464 @@ namespace tt = boost::test_tools;
 using namespace Yuni;
 using namespace Antares::Data;
 
+using SimulationEco = Solver::Simulation::ISimulation<Solver::Simulation::Economy>;
+using SimulationEcoPtr = std::unique_ptr<SimulationEco>;
+
 BOOST_AUTO_TEST_SUITE(simple_test)
 
 // checkVariable<VCard>(simulation, pArea, expectedHourlyVal)
 //
 // Check variable value from VCard
 // Template param :
-//		VCard				: VCard defining variable (Solver::Variable::Economy::VCardOverallCost for example)
+//		VCard				: VCard defining variable
+//(Solver::Variable::Economy::VCardOverallCost for example)
 // classical params :
 //		simulation 			: Simulation object containing results
 //		area				: Area to be checked
 //		expectedHourlyValue	: Expected hourly value
 template<class VCard>
-void checkVariable(
-						Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation,
-						Area* pArea,
-						double expectedHourlyValue
-				   )
+void checkVariable(SimulationEcoPtr& simulation, Area* pArea, double expectedHourlyValue)
 
-{ 
-	/*Get value*/
-	typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
-	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
-	BOOST_TEST(result->avgdata.hourly[0] == expectedHourlyValue,			tt::tolerance(0.001));
-	BOOST_TEST(result->avgdata.daily[0]  == expectedHourlyValue * 24,		tt::tolerance(0.001));
-	BOOST_TEST(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7,	tt::tolerance(0.001));
+{
+    /*Get value*/
+    typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
+    simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
+    BOOST_TEST(result->avgdata.hourly[0] == expectedHourlyValue, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.daily[0] == expectedHourlyValue * 24, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == expectedHourlyValue * 24 * 7, tt::tolerance(0.001));
 }
 
 void prepareStudy(Study::Ptr pStudy, int nbYears)
 {
-	//Define study parameters
-	pStudy->parameters.reset();
-	pStudy->parameters.years(nbYears);
+    // Define study parameters
+    pStudy->parameters.reset();
+    pStudy->parameters.years(nbYears);
 
-	//Prepare parameters for simulation
-	Data::StudyLoadOptions options;
-	pStudy->parameters.prepareForSimulation(options);
+    // Prepare parameters for simulation
+    Data::StudyLoadOptions options;
+    pStudy->parameters.prepareForSimulation(options);
 
-	// Logical cores
-	// -------------------------
-	// Getting the number of logical cores to use before loading and creating the areas :
-	// Areas need this number to be up-to-date at construction.
-	pStudy->getNumberOfCores(false, 0);
+    // Logical cores
+    // -------------------------
+    // Getting the number of logical cores to use before loading and creating the areas :
+    // Areas need this number to be up-to-date at construction.
+    pStudy->getNumberOfCores(false, 0);
 
-	// Define as current study
-	Data::Study::Current::Set(pStudy);
+    // Define as current study
+    Data::Study::Current::Set(pStudy);
 }
 
 Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 {
-	Area* pArea = pStudy->areaAdd(areaName);
+    Area* pArea = pStudy->areaAdd(areaName);
 
-	BOOST_CHECK(pArea != NULL);
+    BOOST_CHECK(pArea != NULL);
 
-	//Need to add unsupplied energy cost constraint so load is respected
-	pArea->thermal.unsuppliedEnergyCost = 10000.0;
-	pArea->spreadUnsuppliedEnergyCost	= 0.01;
+    // Need to add unsupplied energy cost constraint so load is respected
+    pArea->thermal.unsuppliedEnergyCost = 10000.0;
+    pArea->spreadUnsuppliedEnergyCost = 0.01;
 
-	//Define default load
-	pArea->load.series->series.resize(nbTS, HOURS_PER_YEAR);
-	pArea->load.series->series.fill(0.0);
+    // Define default load
+    pArea->load.series->series.resize(nbTS, HOURS_PER_YEAR);
+    pArea->load.series->series.fill(0.0);
 
-	return pArea;
+    return pArea;
 }
 
-
-std::shared_ptr<ThermalCluster> addCluster(Study::Ptr pStudy, Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
+std::shared_ptr<ThermalCluster> addCluster(Study::Ptr pStudy,
+                                           Area* pArea,
+                                           const std::string& clusterName,
+                                           double maximumPower,
+                                           double cost,
+                                           int nbTS,
+                                           int unitCount = 1)
 {
     auto pCluster = std::make_shared<ThermalCluster>(pArea, pStudy->maxNbYearsInParallel);
-	pCluster->setName(clusterName);
-	pCluster->reset();
-	
-	pCluster->unitCount			= unitCount;
-	pCluster->nominalCapacity	= maximumPower;
+    pCluster->setName(clusterName);
+    pCluster->reset();
 
-	//Power cost
-	pCluster->marginalCost	= cost;
+    pCluster->unitCount = unitCount;
+    pCluster->nominalCapacity = maximumPower;
 
-	//Must define market bid cost otherwise all production is used
-	pCluster->marketBidCost = cost;
+    // Power cost
+    pCluster->marginalCost = cost;
 
-	//Must define  min stable power always 0.0
-	pCluster->minStablePower = 0.0;
+    // Must define market bid cost otherwise all production is used
+    pCluster->marketBidCost = cost;
 
-	//Define power consumption
-	pCluster->series->series.resize(nbTS, HOURS_PER_YEAR);
-	pCluster->series->series.fill(0.0);
+    // Must define  min stable power always 0.0
+    pCluster->minStablePower = 0.0;
 
-	//No modulation on cost
-	pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-	pCluster->modulation.fill(1.);
-	pCluster->modulation.fillColumn(thermalMinGenModulation, 0.);
+    // Define power consumption
+    pCluster->series->series.resize(nbTS, HOURS_PER_YEAR);
+    pCluster->series->series.fill(0.0);
 
-	//Initialize production cost from modulation
-	if (not pCluster->productionCost)
-		pCluster->productionCost = new double[HOURS_PER_YEAR];
+    // No modulation on cost
+    pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+    pCluster->modulation.fill(1.);
+    pCluster->modulation.fillColumn(thermalMinGenModulation, 0.);
 
-	
-	double* prodCost	= pCluster->productionCost;
-	double marginalCost = pCluster->marginalCost;
+    // Initialize production cost from modulation
+    if (!pCluster->productionCost)
+        pCluster->productionCost = new double[HOURS_PER_YEAR];
 
-	// Production cost
-	auto& modulation = pCluster->modulation[thermalModulationCost];
-	for (uint h = 0; h != pCluster->modulation.height; ++h)
-		prodCost[h] = marginalCost * modulation[h];
+    double* prodCost = pCluster->productionCost;
+    double marginalCost = pCluster->marginalCost;
 
-	
-	pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
+    // Production cost
+    auto& modulation = pCluster->modulation[thermalModulationCost];
+    for (uint h = 0; h != pCluster->modulation.height; ++h)
+        prodCost[h] = marginalCost * modulation[h];
+
+    pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
 
     auto added = pArea->thermal.list.add(pCluster);
 
-	BOOST_CHECK(added != nullptr);
+    BOOST_CHECK(added != nullptr);
 
     pArea->thermal.list.mapping[pCluster->id()] = added;
 
-	return pCluster;
+    return pCluster;
 }
 
 ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
 {
-	ScenarioBuilder::Rules::Ptr pRules;
+    ScenarioBuilder::Rules::Ptr pRules;
 
-	pStudy->scenarioRulesCreate();
-	ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
-	if (p_sets && !p_sets->empty())
-	{
-		pRules = p_sets->createNew("Custom");
+    pStudy->scenarioRulesCreate();
+    ScenarioBuilder::Sets* p_sets = pStudy->scenarioRules;
+    if (p_sets && !p_sets->empty())
+    {
+        pRules = p_sets->createNew("Custom");
 
-		pStudy->parameters.useCustomScenario  = true;
-		pStudy->parameters.activeRulesScenario = "Custom";
-	}
+        pStudy->parameters.useCustomScenario = true;
+        pStudy->parameters.activeRulesScenario = "Custom";
+    }
 
-	return pRules;
+    return pRules;
 }
 
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)
 {
-	pStudy->parameters.userPlaylist = true;
+    pStudy->parameters.userPlaylist = true;
 
-	for (std::size_t i = 0; i < yearsWeight.size(); i++)
-	{
-		pStudy->parameters.setYearWeight(i, yearsWeight[i]);
-	}
-    
-	return pStudy->parameters.getYearsWeightSum();
+    for (unsigned int i = 0; i < yearsWeight.size(); i++)
+    {
+        pStudy->parameters.setYearWeight(i, yearsWeight[i]);
+    }
+
+    return pStudy->parameters.getYearsWeightSum();
 }
 
-Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy)
+SimulationEcoPtr runSimulation(Study::Ptr pStudy)
 {
-	// Runtime data dedicated for the solver
-	BOOST_CHECK(pStudy->initializeRuntimeInfos());
+    // Runtime data dedicated for the solver
+    BOOST_CHECK(pStudy->initializeRuntimeInfos());
 
-	Settings pSettings;
-	pSettings.tsGeneratorsOnly = false;
-	pSettings.noOutput = false;
+    Settings pSettings;
+    pSettings.tsGeneratorsOnly = false;
+    pSettings.noOutput = false;
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
+    // Launch simulation
+    auto simulation = std::unique_ptr<SimulationEco>(new SimulationEco(*pStudy, pSettings));
 
-	// Allocate all arrays
-	SIM_AllocationTableaux();
+    // Allocate all arrays
+    SIM_AllocationTableaux();
 
-	// Let's go
-	simulation->run();
+    // Let's go
+    simulation->run();
 
-	return simulation;
+    return simulation;
 }
 
-void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation)
+void cleanSimulation(Study::Ptr pStudy)
 {
-	// simulation
-	SIM_DesallocationTableaux();
+    // simulation
+    SIM_DesallocationTableaux();
 
-	delete simulation;
+    // release all reference to the current study held by this class
+    pStudy->clear();
 
-	// release all reference to the current study held by this class
-	pStudy->clear();
-
-	pStudy = nullptr;
-	// removed any global reference
-	Data::Study::Current::Set(nullptr);
+    pStudy = nullptr;
+    // removed any global reference
+    Data::Study::Current::Set(nullptr);
 }
 
-//Very simple test with one area and one load and one year
+// Very simple test with one area and one load and one year
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    // Create study
+    auto pStudy = std::make_shared<Study>(true); // for the solver
 
-	//On year  and one TS
-	int nbYears = 1;
-	int  nbTS	= 1;
+    // On year  and one TS
+    int nbYears = 1;
+    int nbTS = 1;
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad		= nbTS;
-	pStudy->parameters.nbTimeSeriesThermal	= nbTS;
+    // Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesLoad = nbTS;
+    pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-	//Create area
-	double load = 7.0;
-	Area*  pArea = addArea(pStudy,"Area 1", nbTS);	
+    // Create area
+    double load = 7.0;
+    Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
-	//Initialize time series
-	pArea->load.series->series.fillColumn(0, load);
+    // Initialize time series
+    pArea->load.series->series.fillColumn(0, load);
 
-	//Add thermal  cluster
-	double availablePower	= 50.0;
-	double cost				= 2.0;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pStudy, pArea,"Cluster 1", maximumPower,cost, nbTS);
+    // Add thermal  cluster
+    double availablePower = 50.0;
+    double cost = 2.0;
+    double maximumPower = 100.0;
+    auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	//Initialize time series
-	pCluster->series->series.fillColumn(0, availablePower);
+    // Initialize time series
+    pCluster->series->series.fillColumn(0, availablePower);
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
-		
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+    // Launch simulation
+    auto simulation = runSimulation(pStudy);
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+    // Overall cost must be load * cost by MW
+    checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);	
+    // Load must be load
+    checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+
+    // Clean simulation
+    cleanSimulation(pStudy);
 }
 
-//Very simple test with one area and one load and two year
+// Very simple test with one area and one load and two year
 BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    // Create study
+    auto pStudy = std::make_shared<Study>(true); // for the solver
 
-	//On year  and one TS
-	int nbYears = 2;
-	int  nbTS	= 1;
+    // On year  and one TS
+    int nbYears = 2;
+    int nbTS = 1;
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+    // Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesLoad = nbTS;
+    pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-	//Create area
-	double load = 7.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
+    // Create area
+    double load = 7.0;
+    Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
-	//Initialize time series
-	pArea->load.series->series.fillColumn(0, load);
+    // Initialize time series
+    pArea->load.series->series.fillColumn(0, load);
 
-	//Add thermal  cluster
-	double availablePower	= 10.0;
-	double cost				= 2.0;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+    // Add thermal  cluster
+    double availablePower = 10.0;
+    double cost = 2.0;
+    double maximumPower = 100.0;
+    auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	//Initialize time series
-	pCluster->series->series.fillColumn(0, availablePower);
+    // Initialize time series
+    pCluster->series->series.fillColumn(0, availablePower);
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+    // Launch simulation
+    auto simulation = runSimulation(pStudy);
 
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+    // Overall cost must be load * cost by MW
+    checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+    // Load must be load
+    checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+    // Clean simulation
+    cleanSimulation(pStudy);
 }
 
-
-//Very simple test with one area and one load and two year and two identical TS
+// Very simple test with one area and one load and two year and two identical TS
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    // Create study
+    auto pStudy = std::make_shared<Study>(true); // for the solver
 
-	//On year  and one TS
-	int nbYears = 2;
-	int  nbTS	= 2;
+    // On year  and one TS
+    int nbYears = 2;
+    int nbTS = 2;
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+    // Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesLoad = nbTS;
+    pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-	//Create area
-	double load = 7.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
+    // Create area
+    double load = 7.0;
+    Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
-	//Initialize time series
-	pArea->load.series->series.fillColumn(0, load);
-	pArea->load.series->series.fillColumn(1, load);
+    // Initialize time series
+    pArea->load.series->series.fillColumn(0, load);
+    pArea->load.series->series.fillColumn(1, load);
 
-	//Add thermal  cluster
-	double availablePower = 10.0;
-	double cost = 2.0;
-	double maximumPower = 100.0;
-	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+    // Add thermal  cluster
+    double availablePower = 10.0;
+    double cost = 2.0;
+    double maximumPower = 100.0;
+    auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	//Initialize time series
-	pCluster->series->series.fillColumn(0, availablePower);
-	pCluster->series->series.fillColumn(1, availablePower);
+    // Initialize time series
+    pCluster->series->series.fillColumn(0, availablePower);
+    pCluster->series->series.fillColumn(1, availablePower);
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+    // Launch simulation
+    auto simulation = runSimulation(pStudy);
 
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
+    // Overall cost must be load * cost by MW
+    checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
+    // Load must be load
+    checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+    // Clean simulation
+    cleanSimulation(pStudy);
 }
 
-
-
-//Very simple test with one area and one load and two year and two TS with different load
+// Very simple test with one area and one load and two year and two TS with different load
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    // Create study
+    auto pStudy = std::make_shared<Study>(true); // for the solver
 
-	//On year  and one TS
-	int nbYears = 2;
-	int  nbTS = 2;
+    // On year  and one TS
+    int nbYears = 2;
+    int nbTS = 2;
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+    // Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesLoad = nbTS;
+    pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-	//Create area
-	double load = 5.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
+    // Create area
+    double load = 5.0;
+    Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
-	//Initialize time series
-	pArea->load.series->series.fillColumn(0, load);
-	pArea->load.series->series.fillColumn(1, load * 2);
+    // Initialize time series
+    pArea->load.series->series.fillColumn(0, load);
+    pArea->load.series->series.fillColumn(1, load * 2);
 
-	double averageLoad = load * 1.5;
+    double averageLoad = load * 1.5;
 
-	//Add thermal  cluster
-	double availablePower	= 20.0;
-	double cost				= 2.2;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+    // Add thermal  cluster
+    double availablePower = 20.0;
+    double cost = 2.2;
+    double maximumPower = 100.0;
+    auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	//Initialize time series
-	pCluster->series->series.fillColumn(0, availablePower);
-	pCluster->series->series.fillColumn(1, availablePower);
+    // Initialize time series
+    pCluster->series->series.fillColumn(0, availablePower);
+    pCluster->series->series.fillColumn(1, availablePower);
 
-	//Create scenario rules to force use of TS otherwise the TS used is random
-	std::vector<int> areaLoadTS;
-	areaLoadTS.assign(nbYears, 1);
-	areaLoadTS[0] = 1;	areaLoadTS[1] = 2;
+    // Create scenario rules to force use of TS otherwise the TS used is random
+    std::vector<int> areaLoadTS;
+    areaLoadTS.assign(nbYears, 1);
+    areaLoadTS[0] = 1;
+    areaLoadTS[1] = 2;
 
-	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
-	for (int i = 0; i < nbYears; i++)
-	{
-		pRules->load.set(pArea->index, i, areaLoadTS[i]);
-	}
+    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+    for (int i = 0; i < nbYears; i++)
+    {
+        pRules->load.set(pArea->index, i, areaLoadTS[i]);
+    }
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+    // Launch simulation
+    auto simulation = runSimulation(pStudy);
 
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, averageLoad * cost);
+    // Overall cost must be load * cost by MW
+    checkVariable<Solver::Variable::Economy::VCardOverallCost>(
+      simulation, pArea, averageLoad * cost);
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
+    // Load must be load
+    checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(
+      simulation, pArea, averageLoad);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+    // Clean simulation
+    cleanSimulation(pStudy);
 }
 
-
-
-//Very simple test with one area and one load and two year with different load and weight
+// Very simple test with one area and one load and two year with different load and weight
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 {
-	//Create study
-	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    // Create study
+    auto pStudy = std::make_shared<Study>(true); // for the solver
 
-	//Two years  and two TS
-	int nbYears = 2;
-	int  nbTS	= 2;
+    // Two years  and two TS
+    int nbYears = 2;
+    int nbTS = 2;
 
-	//Prepare study
-	prepareStudy(pStudy, nbYears);
-	pStudy->parameters.nbTimeSeriesLoad = nbTS;
-	pStudy->parameters.nbTimeSeriesThermal = nbTS;
+    // Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesLoad = nbTS;
+    pStudy->parameters.nbTimeSeriesThermal = nbTS;
 
-    //Define years weight
-	std::vector<float> yearsWeight;
-	yearsWeight.assign(nbYears, 1);
-	yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
+    // Define years weight
+    std::vector<float> yearsWeight;
+    yearsWeight.assign(nbYears, 1);
+    yearsWeight[0] = 4.f;
+    yearsWeight[1] = 10.f;
 
-	float yearSum = defineYearsWeight(pStudy,yearsWeight);
+    float yearSum = defineYearsWeight(pStudy, yearsWeight);
 
-	//Create area
-	double load = 5.0;
-	Area* pArea = addArea(pStudy, "Area 1", nbTS);
+    // Create area
+    double load = 5.0;
+    Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
-	//Initialize time series
-	std::vector<double> loadList;
-	loadList.assign(nbTS, load);
-	loadList[1] =  load * 2;
+    // Initialize time series
+    std::vector<double> loadList;
+    loadList.assign(nbTS, load);
+    loadList[1] = load * 2;
 
-	for (int i = 0; i < nbTS; i++)
-	{
-		pArea->load.series->series.fillColumn(i, loadList[i]);
-	}	
+    for (int i = 0; i < nbTS; i++)
+    {
+        pArea->load.series->series.fillColumn(i, loadList[i]);
+    }
 
-	//Add thermal  cluster
-	double availablePower	= 20.0;
-	double cost				= 2.2;
-	double maximumPower		= 100.0;
-	auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
+    // Add thermal  cluster
+    double availablePower = 20.0;
+    double cost = 2.2;
+    double maximumPower = 100.0;
+    auto pCluster = addCluster(pStudy, pArea, "Cluster 1", maximumPower, cost, nbTS);
 
-	//Initialize time series
-	pCluster->series->series.fillColumn(0, availablePower);
-	pCluster->series->series.fillColumn(1, availablePower);
+    // Initialize time series
+    pCluster->series->series.fillColumn(0, availablePower);
+    pCluster->series->series.fillColumn(1, availablePower);
 
-	//Create scenario rules to force use of TS otherwise the TS used is random
-	std::vector<int> areaLoadTS;
-	areaLoadTS.assign(nbYears, 1);
-	areaLoadTS[0] = 1;	areaLoadTS[1] = 2;
+    // Create scenario rules to force use of TS otherwise the TS used is random
+    std::vector<int> areaLoadTS;
+    areaLoadTS.assign(nbYears, 1);
+    areaLoadTS[0] = 1;
+    areaLoadTS[1] = 2;
 
-	ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
-	for (int i = 0; i < nbYears; i++)
-	{
-		pRules->load.set(pArea->index, i, areaLoadTS[i]);
-	}
+    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+    for (int i = 0; i < nbYears; i++)
+    {
+        pRules->load.set(pArea->index, i, areaLoadTS[i]);
+    }
 
-	//Calculate average load with mc years weight
-	double averageLoad = 0.0;
-	for (int i = 0; i < nbYears; i++)
-	{
-		averageLoad += loadList[areaLoadTS[i] - 1 ] * yearsWeight[i] / yearSum;
-	}
+    // Calculate average load with mc years weight
+    double averageLoad = 0.0;
+    for (int i = 0; i < nbYears; i++)
+    {
+        averageLoad += loadList[areaLoadTS[i] - 1] * yearsWeight[i] / yearSum;
+    }
 
-	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+    // Launch simulation
+    auto simulation = runSimulation(pStudy);
 
-	//Overall cost must be load * cost by MW
-	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, averageLoad * cost);
+    // Overall cost must be load * cost by MW
+    checkVariable<Solver::Variable::Economy::VCardOverallCost>(
+      simulation, pArea, averageLoad * cost);
 
-	//Load must be load
-	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, averageLoad);
+    // Load must be load
+    checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(
+      simulation, pArea, averageLoad);
 
-	//Clean simulation
-	cleanSimulation(pStudy, simulation);
+    // Clean simulation
+    cleanSimulation(pStudy);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

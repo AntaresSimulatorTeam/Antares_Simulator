@@ -44,6 +44,13 @@
 #include <antares/logs.h>
 #include <antares/emergency.h>
 
+#include "../utils/ortools_utils.h"
+
+extern "C"
+{
+#include "spx_fonctions.h"
+}
+
 using namespace Antares;
 
 #ifdef _MSC_VER
@@ -51,13 +58,6 @@ using namespace Antares;
 #else
 #define SNPRINTF snprintf
 #endif
-
-#include "../utils/ortools_utils.h"
-
-extern "C"
-{
-#include "spx_fonctions.h"
-}
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int mxPaliers)
 {
@@ -241,8 +241,8 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
     const int NombreDePasDeTempsPourUneOptimisation
       = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    const int NbIntervalles
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+    const auto NbIntervalles
+      = static_cast<int>(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
     if (ProblemeAResoudre)
     {
