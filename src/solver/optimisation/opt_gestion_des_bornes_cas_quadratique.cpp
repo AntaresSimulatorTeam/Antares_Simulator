@@ -109,7 +109,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    
+
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
@@ -118,48 +118,59 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     // variables: ENS for each area inside adq patch
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
             ProblemeAResoudre->Xmin[Var] = 0.0;
             ProblemeAResoudre->Xmax[Var] = hourlyCsrProblem.densNewValues[area];
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
-            AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]
+              = 0.0;
+            AdresseDuResultat = &(
+              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
 
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
 
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
         }
     }
 
-    // variables: Spilled Energy for each area inside adq patch // todo after debugging transfer this into same loop as ENS
+    // variables: Spilled Energy for each area inside adq patch // todo after debugging transfer
+    // this into same loop as ENS
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area] == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
 
             ProblemeAResoudre->Xmin[Var] = 0.0;
             ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour] = 0.0;
-            AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]
+              = 0.0;
+            AdresseDuResultat = &(
+              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
 
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
 
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
         }
     }
 
-    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links between nodes of type 2. 
-    // Set hourly bounds for links between nodes of type 2, depending on the user input (max direct and indirect flow).
+    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
+    // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
+    // the user input (max direct and indirect flow).
     double* Xmin;
     double* Xmax;
-    int* TypeDeVariable;    
+    int* TypeDeVariable;
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    COUTS_DE_TRANSPORT* TransportCost;
     Xmin = ProblemeAResoudre->Xmin;
     Xmax = ProblemeAResoudre->Xmax;
 
@@ -167,44 +178,57 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)
     {
-
         // only consider link between 2 and 2
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-        && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco] == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
+            // flow
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
             Xmax[Var] = LINFINI_ANTARES;
             Xmin[Var] = -LINFINI_ANTARES;
 
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
 
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
 
+            // direct / indirect flow
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            // CSR Todo?
+            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+            //                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+            // else
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
-            // if (TransportCost->IntercoGereeAvecDesCouts == OUI_ANTARES)
-            {
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            Xmin[Var] = 0.0;
+            Xmax[Var] = LINFINI_ANTARES;
 
-                Xmin[Var] = 0.0;
-                Xmax[Var] = LINFINI_ANTARES;
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
 
-                logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            // CSR Todo?
+            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+            //                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+            // else
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            Xmin[Var] = 0.0;
+            Xmax[Var] = LINFINI_ANTARES;
 
-                Xmin[Var] = 0.0;
-                Xmax[Var] = LINFINI_ANTARES;
-
-                logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", " << ProblemeAResoudre->Xmax[Var];
-
-            }
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
         }
     }
-    // todo: remove 
+    // todo: remove  //CSR Todo?
     // Loop flow: amount of power flowing circularly though the grid
     // when all "nodes" are perfectly balanced (no import and no
     // export). Such loop flows may be expected on any "simplified" grid
