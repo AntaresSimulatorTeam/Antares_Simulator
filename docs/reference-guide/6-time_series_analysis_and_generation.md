@@ -8,7 +8,9 @@ The different categories of time-series call for wholly different generation pro
 
 - For thermal power, the generator is based on the animation of a daily three-state Markov chain (available – planned outage – forced outage) attached to each plant.
 
-- For Hydro-power, the generator works out monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables with known correlations through space and time. So as to keep the model simple, for an interconnected system made of N areas, the user defines, along with the N expectations and N standard deviations of the monthly energies, the N X N correlation matrix R(n,m) of the logs of the annual hydro energies between the areas n,m, and the N average auto-correlations r(k) between one month and the next in each area k. The correlation **C(n,i,m,j)** between the logs of hydro energies in area **n**, month **i** and area **m**, month **j** is taken to be $$C(n,i,m,j) = R(n,m)*\sqrt{(r(n)*r(m))^{|j-i|}}$$ This most simplified model asks for considerably fewer data than a comprehensive 12N X 12N time-space matrix. Note that if R is positive semi-definite but C is not, matrix C is automatically transformed into a fitting p.s.d matrix and the data generation keeps going on (however, the log report will show a warning message). If the primary matrix R is not p.s.d, data are considered as corrupted, the generation stops and a fatal error message will be displayed in the log report
+- For Hydro-power, the generator works out monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables with known correlations through space and time. So as to keep the model simple, for an interconnected system made of N areas, the user defines, along with the N expectations and N standard deviations of the monthly energies, the N X N correlation matrix R(n,m) of the logs of the annual hydro energies between the areas n,m, and the N average auto-correlations r(k) between one month and the next in each area k. The correlation **C(n,i,m,j)** between the logs of hydro energies in area **n**, month **i** and area **m**, month **j** is taken to be 
+$$C(n,i,m,j) = R(n,m)*\sqrt{(r(n)*r(m))^{|j-i|}}$$
+This most simplified model asks for considerably fewer data than a comprehensive 12N X 12N time-space matrix. Note that if R is positive semi-definite but C is not, matrix C is automatically transformed into a fitting p.s.d matrix and the data generation keeps going on (however, the log report will show a warning message). If the primary matrix R is not p.s.d, data are considered as corrupted, the generation stops and a fatal error message will be displayed in the log report
 
 - For Wind power, Solar power and Load, the required time-series are 8760-hour long and have to emulate as closely as possible the response of the system to variations of wind speed, sunshine and temperature. In all three cases, the rationale of the model is to offer the possibility to consider either the final variable to model (wind power output, solar power output, load) or an underlying intermediate variable (wind speed, nebulosity, deviation between load and the level expected in standard temperature conditions) as a stationary stochastic process, with given marginal laws, given auto-correlation functions and given spatial correlations (eventually, the values of the final variables and those of the core stationary process are tied by diurnal/seasonal rhythms and scaling functions).
 
@@ -35,17 +37,14 @@ TS Gen. Parameters : \\(\alpha\\), \\(\beta\\), \\(\gamma\\) and \\(\delta\\)
 | Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\beta \Gamma (1 + {1\over\alpha})$$ | $$\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]$$ |
 | Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\alpha * \beta$$ | $$\alpha * \beta^2$$ |
 
-Uniform: uniform defined on (\\(\gamma\\), \\(\delta\\)).
+_Uniform: uniform defined on (\\(\gamma\\), \\(\delta\\))._  
+_Beta: Beta (\\(\alpha\\), \\(\beta\\)) defined on (\\(\gamma\\), \\(\delta\\))._  
+_Normal: expectation \\(\alpha\\), standard deviation \\(\beta\\)._  
+_Weibull: shape \\(\alpha\\), scale \\(\beta\\), defined on (0,+\\(\infty\\))._  
+_Gamma: shape \\(\alpha\\), scale \\(\beta\\), defined on (0, +\\(\infty\\))._
 
-Beta: Beta (\\(\alpha\\), \\(\beta\\)) defined on (\\(\gamma\\), \\(\delta\\)).
+In the expressions of expectation and variance, \\(\Gamma(x)\\) is the standard Euler Function.
 
-Normal: expectation \\(\alpha\\), standard deviation \\(\beta\\).
-
-Weibull: shape \\(\alpha\\), scale \\(\beta\\), defined on (0,+\\(\infty\\)).
-
-Gamma: shape \\(\alpha\\), scale \\(\beta\\), defined on (0, +\\(\infty\\)).
-
-In the expressions of expectation and variance, $$\Gamma(x)$$ is the standard Euler Function
 
 - Two parameters for the definition of the autocorrelation function
 
@@ -67,9 +66,9 @@ The section of the GUI specific to the generation of wind, solar and load time-s
 
 1. **Spatial correlation matrices that are located within the "spatial correlation" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
-This tab contains a workspace for the description of 12 monthly spatial correlation matrices_ \\(\Xi\\) _and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
-
-Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices.
+	This tab contains a workspace for the description of 12 monthly spatial correlation matrices \\(\Xi\\) and one annual correlation matrix. For the stochastic generators to work properly, these matrices must meet the usual requirements (matrices must be p.s.d, symmetric, with all terms between -100 and +100, and a main diagonal made of 100s). If this is not the case, generators will emit an infeasibility diagnosis. Matrices can be either set up manually OR automatically filled out by the time-series analyzer (see next paragraph).
+	
+	Depending on the choices made in the main "simulation" window, the matrices used will be either the 12 monthly matrices or the annual matrix. Whether to use the first or the second option depends on the quality of the statistical data at hand: with high quality data (for instance, that derived from the analysis of a very large pool of historical data), use of monthly correlations is recommended because monthly differences between matrices have a physical meaning ; with less robust data (derived from a handful of historical data,…), use of the single annual correlation matrix should be preferred because it smooths out the numeric noise which impairs the monthly matrices.
 
 2. **Four parameters and four subtabs that are located within the "local" tab of each path "Wind|Solar|Load / &lt;area\_name&gt;"**
 
@@ -94,29 +93,23 @@ Depending on the choices made in the main "simulation" window, the matrices used
 **FOUR SUBTABS**
 
 - Subtab "Coefficients"
-
-A twelve-month table of values for the primary parameters \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\) <br/>
-This table may be either filled out manually or automatically (use of the time-series analyzer)
+	A twelve-month table of values for the primary parameters \\(\alpha\\), \\(\beta\\), \\(\gamma\\), \\(\delta\\), \\(\theta\\), \\(\mu\\) <br/>
+	This table may be either filled out manually or automatically (use of the time-series analyzer)
 
 - Subtab "Translation"
-
-Contains an 8760-hour array T to add to the time-series generated, prior or after scaling. This array can be either filled out manually or by the time-series analyzer.
+	Contains an 8760-hour array T to add to the time-series generated, prior or after scaling. This array can be either filled out manually or by the time-series analyzer.
 
 - Subtab "Daily profile"
-
-A 24\*12 table of hourly / monthly coefficients K(hm) that are used to modulate the values of the stationary stochastic process by which the actual process is approximated. This table can be either filled out manually or by the time-series analyzer.
+	A 24\*12 table of hourly / monthly coefficients K(hm) that are used to modulate the values of the stationary stochastic process by which the actual process is approximated. This table can be either filled out manually or by the time-series analyzer.
 
 - Subtab "Conversion"
-
-A table of 2 \* N values (with 1&lt;=N&lt;=50) that is used to turn the initial time-series produced by the generators (for instance, wind speeds) into final data (for instance, wind power). The transfer function (speed to power, etc.) is approximated by N discrete points whose abscises X(N) an ordinates Y(N) are given by the table.
+	A table of 2 \* N values (with 1&lt;=N&lt;=50) that is used to turn the initial time-series produced by the generators (for instance, wind speeds) into final data (for instance, wind power). The transfer function (speed to power, etc.) is approximated by N discrete points whose abscises X(N) an ordinates Y(N) are given by the table.
 
 ## Time-series analysis (load, wind, solar)
 
 The time-series analyzer module available in Antares is meant to identify the values that should be given to the parameters used in the time-series generators (load, solar power, wind power) so as to fit best historical time-series at hand.
 
-**IMPORTANT**
-
-When the time-series analyzer is used, it automatically updates the parameters relevant to the analysis (for instance: analysis of "wind" time-series will overwrite all local and global "wind" parameters [correlation matrices] that may have been previously set manually).
+**IMPORTANT: ** When the time-series analyzer is used, it automatically updates the parameters relevant to the analysis (for instance: analysis of "wind" time-series will overwrite all local and global "wind" parameters [correlation matrices] that may have been previously set manually).
 
 The primary TS analyzer window shows two tabs:
 
@@ -145,7 +138,7 @@ The primary TS analyzer window shows two tabs:
         - Ready (a file bearing the expected name was found)
         - Not found (no file found with the expected name)
 
-**IMPORTANT** To generate stochastic data similar to the historical data analyzed, generation parameters must be kept consistent with the results of the analysis, which means, in the generators:
+**IMPORTANT:** To generate stochastic data similar to the historical data analyzed, generation parameters must be kept consistent with the results of the analysis, which means, in the generators:
 
 - Keep the same:
 
@@ -179,17 +172,17 @@ The primary TS analyzer window shows two tabs:
     - Lower-bound (Min) <br/>
       In the analysis, all values below Min in the historical files will be replaced by Min
 
-**IMPORTANT** For each month, time-series to analyze are assumed to represent a stationary stochastic signal modulated by 24 hourly shape-factors. All of these shape-factors are expected to be different from zero. If the signal is partly masked by sequences of zeroes (for instance, if solar power time-series are to be analyzed as such because time-series of nebulosity are not available), the analysis is possible but is subject to the following restrictions:
+**IMPORTANT:** For each month, time-series to analyze are assumed to represent a stationary stochastic signal modulated by 24 hourly shape-factors. All of these shape-factors are expected to be different from zero. If the signal is partly masked by sequences of zeroes (for instance, if solar power time-series are to be analyzed as such because time-series of nebulosity are not available), the analysis is possible but is subject to the following restrictions:
 
 - **Use of the "detrended" mode in the first Tab is mandatory** _(use of the "raw" mode would produce wrong correlation matrices)_
 
 - **Short- and Long- Term autocorrelation parameters in the second Tab must be identical and set to 99%** _(to ensure that auto-correlation be assessed for the shortest possible time lag, i.e. one hour)_
 
-**NOTICE** For the whole year, the analyzer delivers a table of 12x24 hourly shape-factors consistent with the 12 sets of parameters identified for the stationary stochastic processes. The content of the table depends on the mode of analysis chosen:
+**NOTICE:** For the whole year, the analyzer delivers a table of 12x24 hourly shape-factors consistent with the 12 sets of parameters identified for the stationary stochastic processes. The content of the table depends on the mode of analysis chosen:
 
-**"raw"** analysis: for each month, the sum of the 24 hourly shape-factors is equal to 24 (i.e. each term is a modulation around the daily average).
+- **"raw"** analysis: for each month, the sum of the 24 hourly shape-factors is equal to 24 (i.e. each term is a modulation around the daily average).
 
-**"detrended"** analysis: for the whole year, hourly coefficients are expressed relatively to the annual hourly peak of the (zero-mean) signal absolute value. (i.e. all factors belong to the [0,1] interval)
+- **"detrended"** analysis: for the whole year, hourly coefficients are expressed relatively to the annual hourly peak of the (zero-mean) signal absolute value. (i.e. all factors belong to the [0,1] interval)
 
 ## Time-series generation (thermal)
 
@@ -242,17 +235,17 @@ In complement to the average value of the duration D of outages beginning on a p
         - If choice = "geometric": **F = 0 and G = D** <br/>
           (which in turn implies 1 &lt;= actual duration &lt;= #4D)
 
-    - 0&lt;V&lt;1: The variability of the actual outage duration is such that the ratio $\sigma / D$$of its standard deviation to its expectation has a value that depends on **V** , on **D** and on the chosen distribution law. More precisely:
+    - 0&lt;V&lt;1: The variability of the actual outage duration is such that the ratio \\(\sigma / D\\) of its standard deviation to its expectation has a value that depends on **V** , on **D** and on the chosen distribution law. More precisely:
 
-        - If choice = "uniform": **$\sigma / D = [1/3^0.5] \* V \* (D-1) / D$** <br/>
+        - If choice = "uniform": \\(\sigma / D = [{1/3}^{0.5}] \* V \* (D-1) / D \\) <br/>
           and <br/>
           **Duration min = D (1-V) + V** <br/>
           **Duration max = D (1+V) - V**
 
-        - _If choice = "geometric": $$\sigma$$ **/ D = V \* [(D-1) / D]^0.5**_ <br/>
-          _and_ <br/>
-          _**Duration min = F**_ <br/>
-          _**Duration max # 4D-3F**_ <br/>
+        - If choice = "geometric": \\(\sigma / D = V \* [(D-1) / D]^{0.5}\\) <br/>
+          and <br/>
+          **Duration min = F** <br/>
+          **Duration max # 4D-3F** <br/>
           _with F = D – G_ <br/>
           _G = 2z /[(1+4z)^0.5 - 1]_ <br/>
           _z = (V^2) \* D \* (D-1)_
@@ -270,29 +263,29 @@ In complement to the average value of the duration D of outages beginning on a p
 
 **2. Outage rates: meaning and modeling**
 
-_The concept of outage rate is not always clearly distinguished from the notion of failure rate, to which it is closely related._
+The concept of outage rate is not always clearly distinguished from the notion of failure rate, to which it is closely related.
 
-_Outage rates OR represent the average_ **proportion** _of time during which a plant is unavailable (for instance, OR = 5.2%)._
+Outage rates OR represent the average **proportion** of time during which a plant is unavailable (for instance, OR = 5.2%).
 
-_Failure rates FR represent the average_ **number** _of outages_ **starting** _during a period of time of a given length (for instance, FR = 1.5 per year). If the time step is short enough (typically one day, which is the value used in Antares), the failure rates are always lower than 1 (for instance, FR = (1.5 / 365) per day)._
+Failure rates FR represent the average **number** of outages **starting** during a period of time of a given length (for instance, FR = 1.5 per year). If the time step is short enough (typically one day, which is the value used in Antares), the failure rates are always lower than 1 (for instance, FR = (1.5 / 365) per day).
 
-_When this condition is met and if the physical outage process can be modelled by a Poisson process, failure rates can be interpreted as probabilities._
+When this condition is met and if the physical outage process can be modelled by a Poisson process, failure rates can be interpreted as probabilities.
 
-_In Antares the following relation between failure rates FR, outage rates OR and outage durations OD is used:_
+In Antares the following relation between failure rates FR, outage rates OR and outage durations OD is used:
 
-_**<center>FR = OR / [OR+ OD \* ( 1 – OR )]</center>**_
+**<center>FR = OR / [OR+ OD \* ( 1 – OR )]</center>**
 
-_To determine whether a plant available on day D is still available on day D+1, the Antares stochastic generator therefore makes draws based on the failure rates equivalent to the data provided in the form of outage rates and outage durations._
+To determine whether a plant available on day D is still available on day D+1, the Antares stochastic generator therefore makes draws based on the failure rates equivalent to the data provided in the form of outage rates and outage durations.
 
-_Since two processes may be described in the GUI, consecutive draws are made for each process so as to determine whether:_
+Since two processes may be described in the GUI, consecutive draws are made for each process so as to determine whether:
 
-- _An outage of the first category begins (it will last for the specified duration)_
-- _An outage of the second category begins (it will last for the specified duration)_
-- _No outage occurs, the plant is still available on D+1_
+- An outage of the first category begins (it will last for the specified duration)
+- An outage of the second category begins (it will last for the specified duration)
+- No outage occurs, the plant is still available on D+1
 
-_Whether to describe the "planned outage" process as a random process or not depends of the kind of data at hand, which is often related to the horizon of the studies to carry out: when actual overhauls plans are known, the PO rates can be set at 1 when the plant is deemed to be unavailable and to zero on the other days._
+Whether to describe the "planned outage" process as a random process or not depends of the kind of data at hand, which is often related to the horizon of the studies to carry out: when actual overhauls plans are known, the PO rates can be set at 1 when the plant is deemed to be unavailable and to zero on the other days.
 
-_For long term studies in which only general patterns are known, season-, month- or week- modulated rates and duration may be used to describe the "planned" process as a stochastic one. Another possible use of the model is to incorporate the overhauls plans in the "nominal capacity modulation" array, and consider the stochastic "planned outage" processor as a simulator for a second modality of forced outage (longer or shorter than the main component)_
+For long term studies in which only general patterns are known, season-, month- or week- modulated rates and duration may be used to describe the "planned" process as a stochastic one. Another possible use of the model is to incorporate the overhauls plans in the "nominal capacity modulation" array, and consider the stochastic "planned outage" processor as a simulator for a second modality of forced outage (longer or shorter than the main component)
 
 **NOTE:** _Once the outage duration and outage rate are defined, the failure rate is completely determined. For the sake of clarity, the Antares GUI displays still another parameter often used in reliability analysis, which is the MTBF (Mean Time Between Failure). Relations between MTBF, FR and OR are:_
 
@@ -328,15 +321,15 @@ _OOR=(F+P)/(A+F+P)_
 
 **3. Planned Outages Minimum and Maximum Numbers**
 
-_In the description given so far regarding how outages are modeled, no true difference was made between "forced" and "planned" outages, i.e. both relied on unconstrained random draws. This is satisfactory only if the process to model through the "planned" data is actually little constrained, or not at all._
+In the description given so far regarding how outages are modeled, no true difference was made between "forced" and "planned" outages, i.e. both relied on unconstrained random draws. This is satisfactory only if the process to model through the "planned" data is actually little constrained, or not at all.
 
-_In all other occurrences, it makes sense to define a general framework for the maintenance schedule. In Antares this is defined at the cluster scale by two specific 365-day arrays:_
+In all other occurrences, it makes sense to define a general framework for the maintenance schedule. In Antares this is defined at the cluster scale by two specific 365-day arrays:
 
-_PO Min Nb and PO Max Nb._
+<center>PO Min Nb and PO Max Nb.</center>
 
-_These parameters are used by the time-series generator as constraints that_ **cannot be violated**_, regardless of the raw outcome of regular random draws. To meet these constraints, the generator may have to anticipate or delay "planned" outages yielded by the primary random draws stage. If data regarding planned outage rates and planned outage Max and Min numbers are not consistent, the Max and Min Numbers take precedence._
+These parameters are used by the time-series generator as constraints that **cannot be violated**, regardless of the raw outcome of regular random draws. To meet these constraints, the generator may have to anticipate or delay "planned" outages yielded by the primary random draws stage. If data regarding planned outage rates and planned outage Max and Min numbers are not consistent, the Max and Min Numbers take precedence.
 
-_Exemples (for simplicity'sake, they are described here with only one value instead of 365):_
+_Examples (for simplicity'sake, they are described here with only one value instead of 365):_
 
 _Cluster size = 100 PO rate =10% PO Min Nb=0 PO Max Nb= 100_
 
@@ -352,49 +345,40 @@ _Cluster size = 100 PO rate =0% PO Min Nb=10 PO Max Nb= 10_
 
 ## Time-series analysis (thermal)
 
-_The stochastic generator for time-series of available dispatchable power generation needs to be given assumptions regarding forced &amp; planned outages rates &amp; durations. Depending on the quality and quantity of statistics at hand, these estimates can be either described as "flat" (same constant values used from the beginning to the end of the year) or as more or less modulated signals, with the possibility of choosing different values for each day of the year._
+The stochastic generator for time-series of available dispatchable power generation needs to be given assumptions regarding forced &amp; planned outages rates &amp; durations. Depending on the quality and quantity of statistics at hand, these estimates can be either described as "flat" (same constant values used from the beginning to the end of the year) or as more or less modulated signals, with the possibility of choosing different values for each day of the year.
 
-_Different ways can be considered to work out values for FOR,POR,FOD,POD from historical data regarding outages. For any (family of) plant(s) to study, notations have to be defined with respect to the "calendar accuracy" chosen by the user. For the sake of clarity, assume from now on that the user wants to assess weekly rates and durations, that is to say: describe the whole year with 52 values for rates and durations, for both forced and planned outages (within any given week, identical values will therefore be assigned to the seven days of the week)._
+Different ways can be considered to work out values for FOR,POR,FOD,POD from historical data regarding outages. For any (family of) plant(s) to study, notations have to be defined with respect to the "calendar accuracy" chosen by the user. For the sake of clarity, assume from now on that the user wants to assess weekly rates and durations, that is to say: describe the whole year with 52 values for rates and durations, for both forced and planned outages (within any given week, identical values will therefore be assigned to the seven days of the week).
 
-_With the following notations:_
+With the following notations:
 
-_D(w) = Overall cumulated statistical observation time available for week (w)_
+- D(w) = Overall cumulated statistical observation time available for week (w)  
+	for instance, for w = 1= first week of January : D(w) = 3500 days coming from 10 years of observation of 50 identical plants
 
-_for instance, for w = 1= first week of January : D(w) = 3500 days coming from 10 years of observation of 50 identical plants_
+- Df(w) = Within D(w), overall time spent in forced outages, either beginning during week w or before (for instance , Df(1) = 163 days)
 
-_Df(w) = Within D(w), overall time spent in forced outages, either beginning_
+- Dp(w) = Within D(w), overall time spent in planned outages, either beginning during week w or before (for instance, Dp(1) = 22 days)
 
-_during week w or before (for instance , Df(1) = 163 days)_
+- Kf(w) = Number of forced outages beginning during week (w)  
+	(for instance, Kf(1) = 26)
 
-_Dp(w) = Within D(w), overall time spent in planned outages, either beginning_
+- Kp(w) = Number of planned outages beginning during week (w)  
+	(for instance, Kp(1) = 3)
 
-_during week w or before (for instance, Dp(1) = 22 days)_
+- FOT(w) = Overall cumulated time (expressed in days) spent in forced outages beginning during week (w) (for instance, FOT(1)= 260)  
+	Note that if outages last more than one week FOT(w) necessarily includes days from weeks w+1, w+2,…
 
-_Kf(w) = Number of forced outages beginning during week (w)_
+- POT(w) = Overall cumulated time (expressed in days) spent in planned outages beginning during week (w) (for instance, POT(1) = 84)  
+	Note that if outages last more than one week POT(w) necessarily includes days from weeks w+1, w+2,…
 
-_(for instance, Kf(1) = 26)_
+The following formulas can be used :
 
-_Kp(w) = Number of planned outages beginning during week (w)_
+**FOD (w) = FOT(w) / Kf(w)**
 
-_(for instance, Kp(1) = 3)_
+**POD (w) = POT(w) / Kp(w)**
 
-_FOT(w) = Overall cumulated time (expressed in days) spent in forced outages beginning during week (w) (for instance, FOT(1)= 260)_
+**FOR(w) = FOD(w) / [FOD(w) + ( (D(w) - Dp(w)) / Kf(w))]**
 
-_Note that if outages last more than one week FOT(w) necessarily includes days from weeks w+1, w+2,…_
-
-_POT(w) = Overall cumulated time (expressed in days) spent in planned outages beginning during week (w) (for instance, POT(1) = 84)_
-
-_Note that if outages last more than one week POT(w) necessarily includes days from weeks w+1, w+2,…_
-
-_The following formulas can be used :_
-
-_**FOD (w) = FOT(w) / Kf(w)**_
-
-_**POD (w) = POT(w) / Kp(w)**_
-
-_**FOR(w) = FOD(w) / [FOD(w) + ( (D(w) - Dp(w)) / Kf(w))]**_
-
-_**POR(w) = POD(w) /[POD(w) + ( (D(w) - Df(w))) / Kp(w))]**_
+**POR(w) = POD(w) /[POD(w) + ( (D(w) - Df(w))) / Kp(w))]**
 
 _For the examples given above, the estimated parameters would therefore be :_
 
@@ -410,29 +394,29 @@ _These values should eventually (using the GUI or other means) be assigned to th
 
 ## Time-series generation and analysis (hydro)
 
-_The stochastic hydro generator assesses monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables. The values generated are interpreted as monthly amounts of hydro energies generated (sum of Run of River – ROR – and hydro storage – HS) or as amounts of hydro inflows, depending on the modeling chosen for the area (straightforward estimate of energies generated or explicit management of reservoirs)._
+The stochastic hydro generator assesses monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables. The values generated are interpreted as monthly amounts of hydro energies generated (sum of Run of River – ROR – and hydro storage – HS) or as amounts of hydro inflows, depending on the modeling chosen for the area (straightforward estimate of energies generated or explicit management of reservoirs).
 
-_The historical data to work from depend on the kind of modeling chosen (statistics of monthly generation in the first case, or statistics of monthly inflows in the second case)._
+The historical data to work from depend on the kind of modeling chosen (statistics of monthly generation in the first case, or statistics of monthly inflows in the second case).
 
-_In both cases, assuming that a large number of historical time-series of energies are available, the rationale of the assessment of parameters is the following (from now on, "energies" mean either "ROR and HS energies generated" or "inflows to ROR and HS"),_
+In both cases, assuming that a large number of historical time-series of energies are available, the rationale of the assessment of parameters is the following (from now on, "energies" mean either "ROR and HS energies generated" or "inflows to ROR and HS"),
 
-1. _For each area n, build up annual energy time-series **A(n)** by aggregation of the original monthly energy time-series **M(n)**. For each pair of areas (n,m) , assess the correlation **R(n,m)** between the random variables **Log(A(n))** and **Log(A(m))**. Expressed in percentage, matrix **R** should be used to fill out the "spatial correlation tab" of in the active window "hydro"_
+1. For each area n, build up annual energy time-series **A(n)** by aggregation of the original monthly energy time-series **M(n)**. For each pair of areas (n,m) , assess the correlation **R(n,m)** between the random variables **Log(A(n))** and **Log(A(m))**. Expressed in percentage, matrix **R** should be used to fill out the "spatial correlation tab" of in the active window "hydro"
 
-2. _For each area n, build up two monthly time-series derived from the original array **M(n)**, by proceeding as follows. Assuming that **M(n)** has K elements (for instance, K= 180 if 15 years of statistics are available):_
+2. For each area n, build up two monthly time-series derived from the original array **M(n)**, by proceeding as follows. Assuming that **M(n)** has K elements (for instance, K= 180 if 15 years of statistics are available):
 
-    - _**M'(n)** = time-series of K-1 elements obtained by deleting the first element of the time-series Log(M(n))_
-    - _**M''(n)** = time-series of K-1 elements obtained by deleting the last element of the time-series Log(M(n))_
+    - **M'(n)** = time-series of K-1 elements obtained by deleting the first element of the time-series Log(M(n))
+    - **M''(n)** = time-series of K-1 elements obtained by deleting the last element of the time-series Log(M(n))
 
-_Assess the correlation **IMC(n)** between the random variables **M'(n)** and **M''(n)**. This value (lying in [-1,1]) should be used to fill out the field "inter-monthly correlation value" of the "local data" tab in the "hydro" active window_
+	Assess the correlation **IMC(n)** between the random variables **M'(n)** and **M''(n)**. This value (lying in [-1,1]) should be used to fill out the field "inter-monthly correlation value" of the "local data" tab in the "hydro" active window.
 
-3. _For each area n, build up 12 monthly energy time-series derived from the original array **M(n)** by extracting from **M(n)** the values related to each month of the year (**M1(n)**= time-series of energies in January,…, **M12(n)** = time-series of energies in December.)_
+3. For each area n, build up 12 monthly energy time-series derived from the original array **M(n)** by extracting from **M(n)** the values related to each month of the year (**M1(n)**= time-series of energies in January,…, **M12(n)** = time-series of energies in December.)
 
-_Assess the expectations and standard deviations of the 12 random variables **M1(n)** ,…, **M12(n)**. These values should be used to fill out the fields "expectation" and "std deviation" of the "local data" tab in the "hydro" active window._
+	Assess the expectations and standard deviations of the 12 random variables **M1(n)** ,…, **M12(n)**. These values should be used to fill out the fields "expectation" and "std deviation" of the "local data" tab in the "hydro" active window.
 
-_Aside from expectation and standard deviations, minimum and maximum bounds can be freely set on the monthly overall energies (ROR + HS). Whether to assess these bounds by examination of historical data or on the basis of other considerations depends on the context of the studies to carry out_
+	Aside from expectation and standard deviations, minimum and maximum bounds can be freely set on the monthly overall energies (ROR + HS). Whether to assess these bounds by examination of historical data or on the basis of other considerations depends on the context of the studies to carry out.
 
-4. _For each area n, extract from the 12 monthly overall energy time-series **M1(n) ,…, M12(n)** the contribution of the 12 monthly time-series of ROR energies **R1(n),…, R12(n)**._
+4. For each area n, extract from the 12 monthly overall energy time-series **M1(n) ,…, M12(n)** the contribution of the 12 monthly time-series of ROR energies **R1(n),…, R12(n)**.
 
-_Assess the expectations of the 12 random variables **R1(n)/M1(n),…., R12(n)/M12(n)** . These values should be used to fill out the fields "ROR share" of the "local data" tab in the "hydro" active window._
+	Assess the expectations of the 12 random variables **R1(n)/M1(n),…., R12(n)/M12(n)** . These values should be used to fill out the fields "ROR share" of the "local data" tab in the "hydro" active window.
 
 [^decay]: Obtained by the generation of purely exponentially autocorrelated values (parameter \\(\theta\\) ) followed by a moving average transformation (parameter \\(\mu\\) ). \\(\theta\\) and \\(\mu\\) should be carefully chosen so as to accommodate at best the experimental data at hand. If meaningful historical data are available, this identification may be directly made using the Antares time-series analyzer.
