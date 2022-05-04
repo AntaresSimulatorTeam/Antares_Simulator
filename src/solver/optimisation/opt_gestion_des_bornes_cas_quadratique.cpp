@@ -123,7 +123,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
             ProblemeAResoudre->Xmin[Var] = 0.0;
-            ProblemeAResoudre->Xmax[Var] = 10000; //hourlyCsrProblem.densNewValues[hour];//CSR todo use DENS new;
+            ProblemeAResoudre->Xmax[Var] = hourlyCsrProblem.densNewValues[area];
 
             ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour] = 0.0;
             AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);

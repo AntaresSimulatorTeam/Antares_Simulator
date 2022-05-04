@@ -179,7 +179,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
                          == adqmPhysicalAreaOutsideAdqPatch)
                 {
                     flowsNode1toNodeA
-                      -= Math::Min(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+                      -= Math::Min(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
             }
@@ -195,7 +195,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
                          == adqmPhysicalAreaOutsideAdqPatch)
                 {
                     flowsNode1toNodeA
-                      += Math::Max(0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+                      += Math::Max(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
                 }
                 Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
             }
@@ -206,14 +206,15 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
               = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
             if (includeFlowsOutsideAdqPatchToDensNew)
             {
-                densNew = Math::Max(0, ensInit + netPositionInit + flowsNode1toNodeA);
+                densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
             }
             else
             {
-                densNew = Math::Max(0, ensInit + netPositionInit);
+                densNew = Math::Max(0.0, ensInit + netPositionInit);
             }
             hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
             hourlyCsrProblem.densNewValues[Area] = densNew;
+            logs.debug() << "DENS_new[" << Area <<"] = " << hourlyCsrProblem.densNewValues[Area] ;
             hourlyCsrProblem.rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
             logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << hourlyCsrProblem.rhsAreaBalanceValues[Area]
                         << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit << ") - SpillageInit(" << spillageInit <<")";
