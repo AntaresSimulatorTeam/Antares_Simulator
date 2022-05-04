@@ -109,7 +109,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     // – Sum flow_indirect(node 2 upstream <- node A) – Sum flow_direct(node A -> node 2 downstream)
     // ] – spillage(node A) = ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
-    double rhsAreaBalance;
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
@@ -119,11 +118,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
               = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
                 Cnt = it->second;
-            std::map<int, double>::iterator itt = hourlyCsrProblem.rhsAreaBalanceValues.find(Area);
-            if (itt != hourlyCsrProblem.rhsAreaBalanceValues.end())
-                rhsAreaBalance = itt->second;
 
-            ProblemeAResoudre->SecondMembre[Cnt] = rhsAreaBalance;
+            ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
             logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
                          << "] = " << ProblemeAResoudre->SecondMembre[Cnt] << " (Area = " << Area
                          << ")";
