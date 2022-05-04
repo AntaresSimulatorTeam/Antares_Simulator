@@ -326,7 +326,7 @@ class AdequacyPatchRuntimeData
 public:
     std::vector<AdequacyPatchMode> areaMode;
     std::vector<AdequacyPatchMode> originAreaType;
-    std::vector<AdequacyPatchMode> extremityAreaType; 
+    std::vector<AdequacyPatchMode> extremityAreaType;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -615,7 +615,8 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    std::vector<HOURLY_CSR_PROBLEM> houlyCsrProblems; //CSR: this should be an array for the hours triggered CSR
+    std::vector<HOURLY_CSR_PROBLEM>
+      houlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
@@ -721,7 +722,8 @@ public:
 
 class HOURLY_CSR_RESULT
 {
-    //CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside RESULTATS_HORAIRES?
+    // CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside
+    // RESULTATS_HORAIRES?
 };
 
 // hourly CSR problem structure
@@ -735,27 +737,24 @@ public:
         hourInWeekTriggeredCsr = hourInWeek;
         pWeeklyProblemBelongedTo = pProblemeHebdo;
     };
-    // std::map<int, int> numberOfConstraintCsr;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
-    std::map<int, int> numberOfConstraintCsrHourlyBinding; //length is number of binding constraint contains interco 2-2
- 
-    //to remember if a bc contains an interco type 2<->2 
-    //this can be merged with numberOfConstraintCsrHourlyBinding, 
-    // with a check in map numberOfConstraintCsrHourlyBinding.find(..) != .end() 
-    std::map<int, bool> bindingConstraintContainsIntercoInsideAdqPatch; //lenght is number of total binding constraint
+    std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
+                                                           // contains interco 2-2
 
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
 
     /* variables */
-    // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to create variables inside HOURLY_CSR_PROBLEM
+    // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to
+    // create variables inside HOURLY_CSR_PROBLEM
 
     /* Results */
-    HOURLY_CSR_RESULT hourlyResult; //CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside RESULTATS_HORAIRES?
+    HOURLY_CSR_RESULT hourlyResult; // CSR todo: shall we create a new HOURLY_CSR_RESULT structure,
+                                    // or do we update directly inside RESULTATS_HORAIRES?
 
-    //CSR todo: there should be structures for building the optimization problem like:
+    // CSR todo: there should be structures for building the optimization problem like:
     // CORRESPONDANCES_DES_VARIABLES*
     // CORRESPONDANCES_DES_CONTRAINTES*
 };
