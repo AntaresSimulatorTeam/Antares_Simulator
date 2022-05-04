@@ -51,6 +51,7 @@ jobs:
         buildargs: ANTARES_DEPS_VERSION
 
   build:
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
