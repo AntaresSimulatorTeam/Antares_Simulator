@@ -154,15 +154,14 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
     for (int j = 0; j < nbHoursInAWeek; ++j)
         sumENS[j] = 0.0;
 
-    for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
+    for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
     {
-        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
             Math::sumTwoArrays<double>(
               sumENS,
-              pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-            //   pProblemeHebdo->NombreDePasDeTemps);
-              nbHoursInAWeek); //use nbHoursInAWeek seems more clear
+              pProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive,
+              nbHoursInAWeek);
     }
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {

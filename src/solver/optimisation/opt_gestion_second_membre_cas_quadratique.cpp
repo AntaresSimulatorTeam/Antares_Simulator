@@ -133,7 +133,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        if (bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end()) // ok
+        if (bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end())
         {
             MatriceDesContraintesCouplantes
               = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
