@@ -53,6 +53,8 @@ jobs:
   build:
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
+      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+
     runs-on: ubuntu-latest
     needs: docker_publish
     container: 'antaresrte/rte-antares:centos7-simulator'
@@ -81,17 +83,17 @@ jobs:
         ref: master
         token: ${{ secrets.XPRS_TOKEN }}
 
-    - name: Download OR-Tools, XPRESS
+    - name: Download OR-Tools if needed
       if: ${{ matrix.ortools == 'ON' }}
       id: ortools-flags
       run: |
           if [ "${{ matrix.ortools }}" == "ON" ]; then
-            mkdir or-tools && cd or-tools
+            mkdir ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
             wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.1/ortools_cxx_centos7_shared_xprs.zip
             unzip -q ortools.zip
             rm ortools.zip
 
-            echo "::set-output name=ortools_flags::-DCMAKE_PREFIX_PATH=$(realpath ortools/*) -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
+            echo "::set-output name=ortools_flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
           else
             echo "::set-output name=ortools_flags::"
           fi
