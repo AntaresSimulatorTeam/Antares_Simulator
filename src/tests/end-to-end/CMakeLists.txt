@@ -28,7 +28,7 @@ target_include_directories(tests-simple-study
 
 add_test(NAME end-to-end-simple-study COMMAND tests-simple-study)
 
-set_property(TEST end-to-end-simple-study PROPERTY LABELS TESTLABEL end-to-end)
+set_property(TEST end-to-end-simple-study PROPERTY LABELS end-to-end)
 
 copy_dependency(sirius_solver tests-simple-study)
 
