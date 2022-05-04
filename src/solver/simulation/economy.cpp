@@ -146,6 +146,8 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
                                             std::set<int>& triggerCsrSet)
 {
     float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    threshold = 500; //todo remove. for debug
+
     double sumENS[nbHoursInAWeek] = {};
 
     //init sumENS[]. 
@@ -162,7 +164,6 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
             //   pProblemeHebdo->NombreDePasDeTemps);
               nbHoursInAWeek); //use nbHoursInAWeek seems more clear
     }
-    threshold = 500; //todo remove. for debug
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
         if ((int)sumENS[i] >= threshold)
