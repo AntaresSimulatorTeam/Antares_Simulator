@@ -122,21 +122,21 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_NON_BORNEE;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " flow[" << Interco << "]. ";
             NumberOfVariables++;
 
             CorrespondanceVarNativesVarOptim
               ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
               = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
             CorrespondanceVarNativesVarOptim
               ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
               = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;
         }

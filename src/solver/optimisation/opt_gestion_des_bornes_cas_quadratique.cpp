@@ -186,8 +186,23 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         {
             // flow
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            Xmax[Var] = LINFINI_ANTARES;
-            Xmin[Var] = -LINFINI_ANTARES;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                if (Math::Infinite(Xmin[Var]) == -1)
+                    TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                else
+                    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
+            else
+            {
+                if (Math::Infinite(Xmin[Var]) == -1)
+                    TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                else
+                    TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            }
 
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
@@ -207,7 +222,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
             Xmin[Var] = 0.0;
-            Xmax[Var] = LINFINI_ANTARES;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
 
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
                          << ProblemeAResoudre->Xmax[Var];
@@ -222,7 +242,12 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
             Xmin[Var] = 0.0;
-            Xmax[Var] = LINFINI_ANTARES;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+            TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
 
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
                          << ProblemeAResoudre->Xmax[Var];
