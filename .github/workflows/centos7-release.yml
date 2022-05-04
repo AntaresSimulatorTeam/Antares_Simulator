@@ -74,11 +74,6 @@ jobs:
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config release -j2
     
-    - name: Running unit tests
-      run: |
-           cd _build
-           ctest3 -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-               
     - name: Installer .rpm creation
       run: |
            cd _build
