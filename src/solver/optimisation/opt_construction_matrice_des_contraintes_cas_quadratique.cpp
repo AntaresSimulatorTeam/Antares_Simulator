@@ -120,6 +120,29 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     int Interco;
     COUTS_DE_TRANSPORT* TransportCost;
 
+    // constraint: ENS < DENS_new
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+            Pi[NombreDeTermes] = 1.0;
+            Colonne[NombreDeTermes] = Var;
+            NombreDeTermes++;
+
+            hourlyCsrProblem.numberOfConstraintCsrEns[Area]
+              = ProblemeAResoudre->NombreDeContraintes;
+            NomDeLaContrainte = "ENS < DENS_new. Area:" + std::to_string(Area) + "; "
+                                + ProblemeHebdo->NomsDesPays[Area];
+            logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
+                         << NomDeLaContrainte;
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<', NomDeLaContrainte);
+        }
+    }
+
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)

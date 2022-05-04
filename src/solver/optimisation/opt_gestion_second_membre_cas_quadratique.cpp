@@ -62,6 +62,21 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     COUTS_DE_TRANSPORT* TransportCost;
 
+    // constraint for each area inside adq patch: ENS < DENS_new
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsrEns.find(Area);
+            if (it != hourlyCsrProblem.numberOfConstraintCsrEns.end())
+                Cnt = it->second;
+            ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.densNewValues[Area];
+            logs.debug() << Cnt << ": ENS < DENS_new: RHS[" << Cnt
+                         << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+        }
+    }
+
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)

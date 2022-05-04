@@ -83,7 +83,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
               = NumberOfVariables;
-            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             logs.debug() << NumberOfVariables << " ENS[" << area << "]. ";
 
             NumberOfVariables++;
