@@ -148,11 +148,11 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
     float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
     threshold = 500; //todo remove. for debug
 
-    double sumENS[nbHoursInAWeek] = {};
+    double sumENS[nbHoursInAWeek] = {0}; // this shold be better as init?, i debugged it. Works fine!
 
-    //init sumENS[]. 
-    for (int j = 0; j < nbHoursInAWeek; ++j)
-        sumENS[j] = 0.0;
+    // // init sumENS[].
+    // for (int j = 0; j < nbHoursInAWeek; ++j)
+    //     sumENS[j] = 0.0;
 
     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
     {
