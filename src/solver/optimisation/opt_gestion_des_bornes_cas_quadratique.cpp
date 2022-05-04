@@ -192,16 +192,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
             if (Math::Infinite(Xmax[Var]) == 1)
             {
                 if (Math::Infinite(Xmin[Var]) == -1)
-                    TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
                 else
-                    TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
                 if (Math::Infinite(Xmin[Var]) == -1)
-                    TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
-                    TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
 
             AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
@@ -223,10 +223,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
             Xmin[Var] = 0.0;
             Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             if (Math::Infinite(Xmax[Var]) == 1)
             {
-                TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
 
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
@@ -243,10 +243,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
             Xmin[Var] = 0.0;
             Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
-            TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             if (Math::Infinite(Xmax[Var]) == 1)
             {
-                TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
 
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
