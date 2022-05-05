@@ -160,12 +160,23 @@ static void extract_from_MPSolver(const MPSolver* solver,
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
 
+    const bool isMIP = std::any_of(problemeSimplexe->VariablesEntieres.cbegin(),
+                                   problemeSimplexe->VariablesEntieres.cend(),
+                                   [](bool x) { return x; });
+
     // Extracting variable values and reduced costs
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
-        problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
+        if (isMIP) 
+        {
+            problemeSimplexe->CoutsReduits[idxVar] = 0;
+        } 
+        else 
+        {
+            problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
+        }
     }
 
     auto& constraints = solver->constraints();
@@ -173,7 +184,14 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
         auto& row = constraints[idxRow];
-        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+        if (isMIP) 
+        {
+            problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = 0;
+        } 
+        else 
+        {
+            problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
+        }
     }
 }
 
