@@ -244,6 +244,8 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
     const auto NbIntervalles
       = static_cast<int>(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
+    const bool ortoolsUsed = ProblemeAResoudre->ortoolsUsed;
+
     if (ProblemeAResoudre)
     {
         MemFree(ProblemeAResoudre->Sens);
@@ -266,8 +268,7 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
         if (ProblemeAResoudre->ProblemesSpx)
         {
-            const auto study = Data::Study::Current::Get();
-            const bool ortoolsUsed = study->parameters.ortoolsUsed;
+
 
             if (ortoolsUsed)
             {
