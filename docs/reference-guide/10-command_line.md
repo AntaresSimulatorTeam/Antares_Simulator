@@ -1,6 +1,6 @@
 # Using the command line
 
-_Several executable parts of Antares\_Simulator can be run in command line from a console. The list and general syntax of these components is given hereafter._
+Several executable parts of Antares\_Simulator can be run in command line from a console. The list and general syntax of these components is given hereafter.
 
 _In all cases, arguments " –h" or "–help" can be used to get help_
 
