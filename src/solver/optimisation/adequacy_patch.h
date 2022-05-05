@@ -108,5 +108,9 @@ void setBoundsNoAdqPatch(double& Xmax,
  * Calculate parameters for curtailment sharing rule inside adequacy patch.
  */
 void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);
+/*!
+ * Check local matching rule violation for each area inside adequacy patch.
+ */
+void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

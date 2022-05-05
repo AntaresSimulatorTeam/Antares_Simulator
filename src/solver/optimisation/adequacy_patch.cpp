@@ -222,3 +222,82 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     }
     return;
 }
+
+void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
+{
+    // todo. To much code is duplicated. Create sub function and reuse them. or try something else!
+    float threshold = ProblemeHebdo->adqPatch->ThresholdDisplayLocalMatchingRuleViolations;
+    double netPositionInit;
+    double flowsNode1toNodeA;
+    double densNew;
+    double ensInit;
+    const int numOfHoursInWeek = 168;
+    double spillageInit;
+    int Interco;
+    std::vector <int> lmrTmpVector;
+    std::map<int, std::vector<int>> localMatchingRuleViolation; // todo remove, for debugg
+    bool includeFlowsOutsideAdqPatchToDensNew
+      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+
+    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == adqmPhysicalAreaInsideAdqPatch)
+        {
+            lmrTmpVector.clear();
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                netPositionInit = 0;
+                flowsNode1toNodeA = 0;
+
+                Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+                while (Interco >= 0)
+                {
+                    if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                        == adqmPhysicalAreaInsideAdqPatch)
+                    {
+                        netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
+                    }
+                    else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                             == adqmPhysicalAreaOutsideAdqPatch)
+                    {
+                        flowsNode1toNodeA -= Math::Min(
+                          0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+                    }
+                    Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+                }
+                Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
+                while (Interco >= 0)
+                {
+                    if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                        == adqmPhysicalAreaInsideAdqPatch)
+                    {
+                        netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
+                    }
+                    else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                             == adqmPhysicalAreaOutsideAdqPatch)
+                    {
+                        flowsNode1toNodeA += Math::Max(
+                          0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+                    }
+                    Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+                }
+                
+                ensInit = ProblemeHebdo->ResultatsHoraires[Area]
+                            ->ValeursHorairesDeDefaillancePositive[hour];
+                if (includeFlowsOutsideAdqPatchToDensNew)
+                    densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+                else
+                    densNew = Math::Max(0.0, ensInit + netPositionInit);
+
+                // check LMR violations
+                lmrTmpVector.push_back(0);
+                if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
+                    lmrTmpVector.at(hour) = 1;
+            }
+            localMatchingRuleViolation[Area] = lmrTmpVector; // todo remove, for debugg
+            //ProblemeHebdo->localMatchingRuleViolation[Area] = lmrTmpVector;
+        }
+    }
+    return;
+}

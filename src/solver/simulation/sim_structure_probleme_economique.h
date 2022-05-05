@@ -617,6 +617,7 @@ struct PROBLEME_HEBDO
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
     std::vector<HOURLY_CSR_PROBLEM>
       hourlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
+    std::map<int, std::vector<int>> localMatchingRuleViolation;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
