@@ -1,4 +1,5 @@
-import pandas as pd
+import pandas
+
 
 def read_csv(file_name):
     def cols(col_name):
@@ -6,9 +7,9 @@ def read_csv(file_name):
         return (col_name not in ['Area', 'system', 'annual', 'monthly', 'weekly', 'daily', 'hourly']) and "Unnamed" not in col_name
 
     ignore_rows = [0,1,2,3,5,6]
-    return pd.read_csv(file_name,
-                       skiprows=ignore_rows,
-                       sep='\t',
-                       usecols=cols,
-                       low_memory=False,
-                       dtype=float)
+    return pandas.read_csv(file_name,
+                        skiprows=ignore_rows,
+                        sep='\t',
+                        usecols=cols,
+                        low_memory=False,
+                        dtype=float)

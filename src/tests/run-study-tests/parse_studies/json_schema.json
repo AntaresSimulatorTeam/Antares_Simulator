@@ -1,0 +1,83 @@
+{
+    "type" : "array",
+    "items":
+    {
+        "type": "object",
+        "required": ["name", "checks"],
+        "properties" :
+        {
+            "name": {"type": "string"},
+            "checks":
+            {
+                "type": "object",
+                "anyOf":
+                [
+                    {"required": ["output_compare"]},
+                    {"required": ["integrity_compare"]},
+                    {"required": ["hydro_level"]},
+                    {"required": ["unfeasible_problem"]}
+                ],
+                "properties":
+                {
+                    "output_compare" :
+                    {
+                        "type" : "object",
+                        "properties":
+                        {
+                            "absolute_tolerances" : {"type" :  "object", "additionalProperties" : {"type" :  "number"}},
+                            "relative_tolerances" : {"type" :  "object", "additionalProperties" : {"type" :  "number"}}
+                        },
+                        "additionalProperties" : false
+                    },
+
+                    "integrity_compare" : {"type" : "null"},
+
+                    "hydro_level" :
+                    {
+                        "type" : "object",
+                        "required" : ["hour_in_year", "absolute_tolerance", "level"],
+                        "properties":
+                        {
+                            "hour_in_year" : { "type": "number", "minimum": -1, "maximum" : 8760},
+                            "absolute_tolerance" : { "type": "number" },
+                            "level" : { "type": "number", "minimum": 0, "maximum": 100}
+                        },
+                        "additionalProperties" : false
+                    },
+
+                    "unfeasible_problem" :
+                    {
+                        "type" : "object",
+                        "required" : ["behavior", "weeks_in_year"],
+                        "properties":
+                        {
+                            "behavior" :
+                            {
+                                "type" : "string",
+                                "enum": ["error-verbose", "error-dry", "warning-verbose", "warning-dry"]
+                            },
+                            "weeks_in_year" :
+                            {
+                                "type" : "array",
+                                "items" :
+                                {
+                                    "type" : "object",
+                                    "required" : ["year", "weeks"],
+                                    "properties" :
+                                    {
+                                        "year" : { "type": "number", "minimum": 1},
+                                        "weeks" :
+                                        {
+                                            "type" :  "array",
+                                            "items" : {"type" : "number", "minimum" : 1, "maximum" : 52}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
