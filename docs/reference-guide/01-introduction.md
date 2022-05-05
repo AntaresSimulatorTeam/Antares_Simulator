@@ -1,5 +1,3 @@
-General reference guide v8.1.1
-
 # Introduction
 
 This document describes all the main features of the **Antares\_Simulator** package, version 8.1.1.

@@ -5,7 +5,7 @@
 **Document available on : [https://antares-simulator.org](https://antares-simulator.org/)**
 
 
-## 1 Introduction
+## Introduction
 
 The purpose of this document is to give every user of the **Antares\_Simulator** model (regardless of its version number), a detailed and comprehensive formulation of the main optimization problems solved by the application's inner optimization engine.
 
@@ -35,7 +35,7 @@ The number and the size of the individual problems to solve (a least-cost hydro-
 
 Depending on user-defined results accuracy requirements, various practical options allow to simplify either the formulation of the weekly UC & dispatch problems (e.g. do not account for constraints associated with operational reserves) or their resolution (i.e. find, for the native MILP, an approximate solution based on two successive LPs). For the sake of simplicity and clarity, the way these options are used to revise the primary problem formulation is not detailed hereafter. Likewise, many simplifications are introduced to keep notations as light as possible. This is why, for instance, the overall sum of load, wind power generation, solar power generation, run of the river generation, and all other kinds of so-called ";must-run"; generation is simply denoted ";load"; in the present document.
 
-## 2 Typology of the problems solved
+## Typology of the problems solved
 
 In terms of power studies, the different fields of application Antares has been designed for are the following:
 
@@ -74,9 +74,9 @@ The next sections of this document develop the following subjects:
 
 - Miscellaneous complements to the standard problems
 
-## 3 Notations
+## Notations
 
-### 3.1 General notations
+### General notations
 **TODO : add units**
 
 | Notation             | Explanation                                                                                                        |
@@ -97,7 +97,7 @@ The next sections of this document develop the following subjects:
 | \\(u_\uparrow^p\\)   | vector resulting from the permutation on \\(u \in \mathbb{R}^s\\) : $$ u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)$$ |
 
 
-### 3.2 Grid
+### Grid
 **TODO : add units**
 
 | Notation                                      | Explanation                                                                                            |
@@ -116,7 +116,7 @@ The next sections of this document develop the following subjects:
 | \\(\gamma_l^-\in \mathbb{R}^T\\)              | transmission cost through \\(l\\), from \\(d_l\\) to \\(u_l\\). Proportional to the power flow         |
 | \\(Z_l \in \mathbb{R}\_+\\)                   | overall impedance of \\(l\\)                                                                           |
 
-### 3.3 Thermal units
+### Thermal units
 **TODO : add units**
 
 | Notation                                                      | Explanation                                                                            |
@@ -141,7 +141,7 @@ The next sections of this document develop the following subjects:
 | \\(M_\theta^- \in \mathbb{N}^T\\)                             | number of units in cluster changing from state on to state off in cluster \\(\theta\\) |
 | \\(M_\theta^{--} \in \mathbb{N}^T\\)                                   | number of units in cluster changing from state on to state outage cluster \\(\theta\\) |
 
-### 3.4 Reservoir-type hydropower units (or other power storage facilities)
+### Reservoir-type hydropower units (or other power storage facilities)
 **TODO : add units**
 
 | Notation                                         | Explanation                                                                                                                          |
@@ -168,7 +168,7 @@ The next sections of this document develop the following subjects:
 | \\(R\_\lambda \in \mathbb{R}^T_+\\)              | stored energy level in reservoir \\(\lambda\\)                                                                                       |
 | \\(\mathfrak{R}\_{\lambda_q} \in \mathbb{R}_+\\) | filling level of reservoir layer \\(q\\) at time \\(T\\) (end of the week)                                                           |
 
-### 3.5 Binding constraints
+### Binding constraints
 
 In problems \\(\mathcal{P}^k\\), the need for a versatile modelling of the power system calls for the introduction of an arbitrary number of linear binding constraints between system's variables throughout the grid, expressed either in terms of hourly power, daily energies or weekly energies.
 These constraints may bind together synchronous flows as well as thermal units power outputs. They may be related to synchronous values or bear on different times.
@@ -194,7 +194,7 @@ Generic notations for binding constraints :
 | \\(u^b \in \mathbb{R}^{\mathrm{size}}\\) | upper bound of binding constraint \\(b\\)                                                                   |
 | \\(l^b \in \mathbb{R}^{\mathrm{size}}\\) | lower bound of binding constraint \\(b\\)                                                                   |
 
-### 3.6 Demand, security uplift, unsupplied and spilled energies
+### Demand, security uplift, unsupplied and spilled energies
 | Notation                          | Explanation                                                                            |
 | ------------                      | -------------                                                                          |
 | \\(D_n \in \mathbb{R}^T\\)        | net power demand expressed in node \\(n\\), including must-run generation              |
@@ -205,11 +205,11 @@ Generic notations for binding constraints :
 | \\(G_n^- \in \mathbb{R}^T_+\\)    | spilled power in the nominal state                                                     |
 
 
-## 4 Formulation of problem \\(\mathcal{P}^k\\)
+## Formulation of problem \\(\mathcal{P}^k\\)
 
 Superscript k is implicit in all subsequent notations of this section (omitted for simplicity's sake)
 
-## 4.1 Objective
+## Objective
 $$
     \min\_{M\_\theta \in \mathrm{Argmin} \Omega\_{\mathrm{unit com}}}(\Omega\_{\mathrm{dispatch}})
 $$
@@ -249,7 +249,7 @@ with
 
 \\(\Omega\_{\mathrm{unit com}}\\) is the expression derived from \\(\Omega\_{\mathrm{dispatch}}\\) by replacing all variables that depend on the system's state by their equivalent in the uplifted state.
 
-## 4.2 Constraints related to the nominal system state
+## Constraints related to the nominal system state
 
 Balance between load and generation:
 
@@ -347,13 +347,13 @@ Power output remains within limits set by minimum stable power and maximum capac
 
 Minimum running and not-running durations contribute to the unit-commitment plan. Note that this modeling requires that one at least of the following conditions is met:
 
-### 4.3 Constraints related to the uplifted system state (activation of security reserves)
+### Constraints related to the uplifted system state (activation of security reserves)
 
 All constraints to previously defined for regular operation conditions are repeated with replacement of all variables by their twins when they exist.
 
 Besides, in the expression of constraints , all occurrences of are replaced by D_n + S_n$$
 
-## 5 Antares as a SCOPF ("flow-based model")
+## Antares as a SCOPF ("flow-based model")
 
 When problems \\(\mathcal{P}^k\\) do not include any instance of so-called ";binding constraints"; and if no market pools are defined, the flows within the grid are only committed to meet the bounds set on the initial transmission capacities, potentially reinforced by investments (problem ).In other words, there are no electrical laws enforcing any particular pattern on the flows, even though hurdles costs and may influence flow directions through an economic signal.
 
@@ -363,11 +363,11 @@ In a particularly favorable case, various upstream studies, taking account the d
 
 These can therefore be readily translated as ";hourly binding constraints";, without any loss of information. This kind of model will be further referred to as a "flow-based model". Its potential downside is the fact that data may prove to be volatile in short-term studies and difficult to assess in long-term studies.
 
-## 7 Antares as a SCOPF ("KL model")
+## Antares as a SCOPF ("KL model")
 
 When a full flow-based model cannot be set up (lack of robust data for the relevant horizon), it remains possible that classical power system studies carried on the detailed system yield sufficient information to enrich the raw backbone model. An occurrence of particular interest is when these studies show that the physics of the active power flow within the real system can be valuably approached by considering that the edges of behave as simple impedances .This model can be further improved if a residual (passive) loop flow is to be expected on the real system when all nodes have a zero net import and export balance (situation typically encountered when individual nodes actually represent large regions of the real system). This passive loop flow should therefore be added to the classical flow dictated by Kirchhoff's rules on the basis of impedances . This model will be further referred to as a "KL model". Different categories of binding constraints, presented hereafter, make it possible to implement this feature in and
 
-### 7.1 Implementation of Kirchhoff's second law
+### Implementation of Kirchhoff's second law
 
 The implementation ofKirchhoff's second law for the reference state calls for the following additional hourly binding \\(L+1-N\\) constraints:
 
@@ -375,7 +375,7 @@ The implementation ofKirchhoff's second law for the reference state calls for th
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = 0
 \\)
 
-### 7.2 Implementation of a passive loop flow
+### Implementation of a passive loop flow
 
 In cases where a residual passive loop flow should be incorporated in the model to complete the enforcement of regular Kirchhoff's rules, the binding constraints mentioned in 7.1 should be replaced by:
 
@@ -383,7 +383,7 @@ In cases where a residual passive loop flow should be incorporated in the model 
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} = C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t}
 \\)
 
-### 7.3 Modelling of phase-shifting transformers
+### Modelling of phase-shifting transformers
 
 In cases where the power system is equipped with phase-shifting transformers whose ratings are known, ad hoc classical power studies can be carried out to identify the minimum and maximum flow deviations and phase-shift that each component may induce on the grid. The following additional notations are in order:
 
@@ -400,27 +400,27 @@ The enhancement of the model with a representation of the phase-shifting compone
 \forall t \in T, C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} - \Pi^{-shift} \leq C\_{g}^t Diag(Z\_{l}) \tilde{F}\_{t} \leq C\_{g}^t Diag(Z\_{l}) \tilde{\phi}\_{t} + \Pi^{+shift}
 \\)
 
-### 7.4 Modelling of DC components
+### Modelling of DC components
 
 When the power system graph contains edges that represent DC components, additional notations need be defined:
 
 The proper modeling of the system then requires that all constraints identified in 7.1, 7.2, 7.3 be formulated using notations instead of
 
-### 7.5 Implementation of security rules N-1,..., N-k
+### Implementation of security rules N-1,..., N-k
 
 Upstream power system classical calculations on the detailed system are assumed to have provided appropriate estimates for line outage distribution factors (LODFs) for all components involved in the contingency situations to consider. The following additional notations will be further used:
 
 The implementation of security rules for the chosen situations requires the following additional binding constraints:
 
-## 8 Antares as a SCOPF (";KL+FB model";)
+## Antares as a SCOPF (";KL+FB model";)
 
 If the information context is rich enough, it is possible to set up a hybrid model based on both previous approaches: on the one hand, a ";KL layer"; makes use of the best available estimates for grid impedances and loop flows, so as to instantiate physically plausible flow patterns; on the other hand, a ";FB layer"; sets multiple kinds of limits on the admissible flow amplitudes, as a result of various operation commitments.
 
 To work appropriately, such a hybrid model needs an additional auxiliary layer that performs a mapping between the two ";twin"; FB and KL grid layers.
 
-## 9 Miscellaneous
+## Miscellaneous
 
-### 9.1 Modelling of pumped storage power plants
+### Modelling of pumped storage power plants
 
 A number of specific equipments, as well as particular operation rules or commercial agreements, can be modelled with appropriate use of binding constraints. A typical case is that of a pumped storage power plant operated with a daily or weekly cycle. Such a component can be modelled as a set of two virtual nodes connected to the real grid through one-way lines. On one node is attached a virtual load with zero VOLL, which may absorb power from the system. On the other node is installed a virtual generating unit with zero operation cost, which may send power to the system. The flows on the two virtual lines are bound together by a daily or weekly constraint (depending on the PSP cycle duration), with a weight set to fit the PSP efficiency ratio. Besides, time offsets may be included in the constraints to take into account considerations regarding the volume of the PSP reservoir (additional energy constraint).
 
