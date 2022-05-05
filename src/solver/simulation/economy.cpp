@@ -192,7 +192,7 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
 
 void UpdateWeeklyResultAfterCSR(PROBLEME_HEBDO* pProblemeHebdo)
 {
-    std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->houlyCsrProblems;
+    std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->hourlyCsrProblems;
 
     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
     {
@@ -245,18 +245,18 @@ bool Economy::year(Progression::Task& progression,
                 InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace], hoursInWeekTriggerCsrSet);
                 if( hoursInWeekTriggerCsrSet.size() > 0)
                 {
-                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
+                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
                     for(int hourInWeek : hoursInWeekTriggerCsrSet)
                     {
                         logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                        pProblemesHebdo[numSpace]->houlyCsrProblems.push_back(hourlyCsrProblem);
+                        pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
                         OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
                         logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
 
                     }
                     UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
-                    pProblemesHebdo[numSpace]->houlyCsrProblems.clear();
+                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
                 }
             }
             else

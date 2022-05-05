@@ -616,7 +616,7 @@ struct PROBLEME_HEBDO
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
     std::vector<HOURLY_CSR_PROBLEM>
-      houlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
+      hourlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
