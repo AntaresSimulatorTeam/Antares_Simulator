@@ -239,13 +239,6 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-    const int NombreDePasDeTempsPourUneOptimisation
-      = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    const auto NbIntervalles
-      = static_cast<int>(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
-
-    const bool ortoolsUsed = ProblemeAResoudre->ortoolsUsed;
-
     if (ProblemeAResoudre)
     {
         MemFree(ProblemeAResoudre->Sens);
@@ -268,25 +261,6 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
         if (ProblemeAResoudre->ProblemesSpx)
         {
-
-
-            if (ortoolsUsed)
-            {
-                for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-                {
-                    ORTOOLS_LibererProbleme(
-                      (MPSolver*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
-                }
-            }
-            else
-            {
-                for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-                {
-                    SPX_LibererProbleme(
-                      (PROBLEME_SPX*)ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
-                }
-            }
-
             MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
             MemFree(ProblemeAResoudre->ProblemesSpx);
         }
