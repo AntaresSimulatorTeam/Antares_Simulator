@@ -43,7 +43,7 @@ namespace Antares
 {
 namespace Data
 {
-PreproThermal::PreproThermal(std::shared_ptr<const ThermalCluster> cluster) :
+PreproThermal::PreproThermal(std::weak_ptr<const ThermalCluster> cluster) :
  itsThermalCluster(cluster)
 {
 }
@@ -101,7 +101,12 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
-    auto* parentArea = itsThermalCluster->parentArea;
+
+    auto cluster = itsThermalCluster.lock();
+    if (!cluster)
+        return false;
+
+    auto parentArea = cluster->parentArea;
 
     if (study.header.version < 350)
     {
@@ -132,8 +137,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                 // Reset NPO max to cluster size
                 auto& npomax = data[npoMax];
                 for (uint y = 0; y != data.height; ++y)
-                    npomax[y] = itsThermalCluster->unitCount;
-
+                    npomax[y] = cluster->unitCount;
             }
             else
                 ret = false;
@@ -167,7 +171,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     }
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
-    if (study.usedByTheSolver && itsThermalCluster->doWeGenerateTS(thermalTSglobalGeneration))
+    if (study.usedByTheSolver && cluster->doWeGenerateTS(thermalTSglobalGeneration))
     {
         auto& colFoRate = data[foRate];
         auto& colPoRate = data[poRate];
@@ -188,19 +192,19 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
             if (cNPOMin < 0)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": NPO min can not be negative (line:" << (i + 1) << ")";
                 ++errors;
             }
             if (cNPOMax < 0)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": NPO max can not be negative (line:" << (i + 1) << ")";
                 ++errors;
             }
             if (cNPOMin > cNPOMax)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": NPO max must be greater or equal to NPO min (line:" << (i + 1)
                              << ")";
                 ++errors;
@@ -208,34 +212,34 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
             if (foRate < 0. or foRate > 1.)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for FO rate (line:" << (i + 1) << ")";
                 ++errors;
             }
 
             if (poRate < 0. or poRate > 1.)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for PO rate (line:" << (i + 1) << ")";
                 ++errors;
             }
 
             if (foDuration < 1. or foDuration > 365.)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for FO Duration (line:" << (i + 1) << ")";
                 ++errors;
             }
             if (poDuration < 1. or poDuration > 365.)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": invalid value for PO Duration (line:" << (i + 1) << ")";
                 ++errors;
             }
 
             if (errors > 30)
             {
-                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << itsThermalCluster->id()
+                logs.error() << "Thermal: Prepro: " << parentArea->id << '/' << cluster->id()
                              << ": too many errors. skipping";
                 break;
             }
@@ -283,7 +287,11 @@ void PreproThermal::reset()
 
 bool PreproThermal::normalizeAndCheckNPO()
 {
-    auto* parentArea = itsThermalCluster->parentArea;
+    auto cluster = itsThermalCluster.lock();
+    if (!cluster)
+        return false;
+
+    auto parentArea = cluster->parentArea;
 
     // alias to our data columns
     auto& columnNPOMax = data[npoMax];
@@ -299,9 +307,9 @@ bool PreproThermal::normalizeAndCheckNPO()
 
     for (uint y = 0; y != data.height; ++y)
     {
-        if (columnNPOMax[y] > itsThermalCluster->unitCount)
+        if (columnNPOMax[y] > cluster->unitCount)
         {
-            columnNPOMax[y] = itsThermalCluster->unitCount;
+            columnNPOMax[y] = cluster->unitCount;
             normalized = true;
         }
 
@@ -309,7 +317,7 @@ bool PreproThermal::normalizeAndCheckNPO()
         {
             if (++errors < maxErrors)
             {
-                logs.error() << itsThermalCluster->id() << " in area " << itsThermalCluster->parentArea->id
+                logs.error() << cluster->id() << " in area " << cluster->parentArea->id
                              << ": NPO min can not be greater than NPO max (hour: " << (y + 1)
                              << ", npo-min: " << columnNPOMin[y] << ", npo-max: " << columnNPOMax[y]
                              << ')';
@@ -318,7 +326,7 @@ bool PreproThermal::normalizeAndCheckNPO()
     }
 
     if (errors >= maxErrors)
-        logs.error() << itsThermalCluster->id() << " in area " << parentArea->id
+        logs.error() << cluster->id() << " in area " << parentArea->id
                      << ": too many errors. skipping (total: " << errors << ')';
 
     if (normalized)

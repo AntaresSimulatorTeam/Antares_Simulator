@@ -278,7 +278,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal(this->shared_from_this());
+        prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
 
@@ -513,7 +513,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal(this->shared_from_this());
+        prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
 
     // Links
