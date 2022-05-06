@@ -76,12 +76,7 @@ jobs:
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools == 'ON' }}
-      uses: actions/checkout@v2
-      with:
-        repository: rte-france/xpress-mp
-        path: ${{ env.XPRESSDIR }}
-        ref: master
-        token: ${{ secrets.XPRS_TOKEN }}
+      run: git clone https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/xpress-mp ${{ env.XPRESSDIR }} -b master ${{ env.XPRESSDIR }}
 
     - name: ls XPRESS
       if:  ${{ matrix.ortools == 'ON' }}
