@@ -234,8 +234,8 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
     const int numOfHoursInWeek = 168;
     double spillageInit;
     int Interco;
-    std::vector <int> lmrTmpVector;
-    std::map<int, std::vector<int>> localMatchingRuleViolation; // todo remove, for debugg
+    //std::vector <int> lmrTmpVector;
+    //std::map<int, std::vector<int>> localMatchingRuleViolation; // todo remove, for debugg
     bool includeFlowsOutsideAdqPatchToDensNew
       = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
 
@@ -244,7 +244,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == adqmPhysicalAreaInsideAdqPatch)
         {
-            lmrTmpVector.clear();
+            //lmrTmpVector.clear();
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
                 netPositionInit = 0;
@@ -291,11 +291,16 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
                     densNew = Math::Max(0.0, ensInit + netPositionInit);
 
                 // check LMR violations
-                lmrTmpVector.push_back(0);
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = hour;
+                // lmrTmpVector.push_back(0);
                 if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
-                    lmrTmpVector.at(hour) = 1;
+                    ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
+                    //lmrTmpVector.at(hour) = 1;
+                logs.debug()
+                  << "LMR violations. Area:" << Area << ". hour:" << hour << ". Value:"
+                  << ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour];
             }
-            localMatchingRuleViolation[Area] = lmrTmpVector; // todo remove, for debugg
+            // localMatchingRuleViolation[Area] = lmrTmpVector; // todo remove, for debugg
             //ProblemeHebdo->localMatchingRuleViolation[Area] = lmrTmpVector;
         }
     }
