@@ -64,7 +64,6 @@ jobs:
         ortools: [ON, OFF]
 
     steps:
-
     - uses: nelonoel/branch-name@v1.0.1
 
     - name: Checkout
@@ -83,6 +82,10 @@ jobs:
         path: ${{ env.XPRESSDIR }}
         ref: master
         token: ${{ secrets.XPRS_TOKEN }}
+
+    - name: ls XPRESS
+      if:  ${{ matrix.ortools == 'ON' }}
+      run: ls -l ${{ env.XPRESSDIR }}
 
     - name: Download OR-Tools if needed
       if: ${{ matrix.ortools == 'ON' }}
