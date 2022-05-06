@@ -117,6 +117,6 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
-void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
+void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

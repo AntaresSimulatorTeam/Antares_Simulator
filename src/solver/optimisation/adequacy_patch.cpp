@@ -179,7 +179,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     return;
 }
 
-void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
+void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
     float threshold = ProblemeHebdo->adqPatch->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
@@ -208,13 +208,13 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
                     totalLmrViolation += (ensInit - densNew);
                 }
 
-                logs.debug()
-                  << "LMR violations. Area:" << Area << ". hour:" << hour << ". Value:"
-                  << ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour];
+                // logs.debug()
+                //   << "LMR violations. Area:" << Area << ". hour:" << hour << ". Value:"
+                //   << ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour];
             }
         }
     }
-    logs.debug() << "Total LMR violation:" << totalLmrViolation;
+    logs.debug() << "Week:" << weekNb + 1 << ". Total LMR violation:" << totalLmrViolation;
     return;
 }
 
