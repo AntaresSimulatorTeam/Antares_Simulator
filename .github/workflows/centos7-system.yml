@@ -90,7 +90,7 @@ jobs:
       run: |
           if [ "${{ matrix.ortools }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.1/ortools_cxx_centos7_shared_xprs.zip
+            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.2/ortools_cxx_centos7_shared_xprs.zip
             unzip -q ortools.zip
             rm ortools.zip
 
