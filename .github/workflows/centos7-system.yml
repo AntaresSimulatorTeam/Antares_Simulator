@@ -76,7 +76,7 @@ jobs:
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools == 'ON' }}
-      run: git clone https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/xpress-mp ${{ env.XPRESSDIR }} -b master ${{ env.XPRESSDIR }}
+      run: git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/xpress-mp ${{ env.XPRESSDIR }} ${{ env.XPRESSDIR }}
 
     - name: ls XPRESS
       if:  ${{ matrix.ortools == 'ON' }}
