@@ -105,6 +105,12 @@ void setBoundsNoAdqPatch(double& Xmax,
                          const int Interco);
 
 /*!
+ * Calculates sum of import and export flows per given area per given hour.
+ */
+std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                   int Area,
+                                                   int hour);
+/*!
  * Calculate parameters for curtailment sharing rule inside adequacy patch.
  */
 void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);

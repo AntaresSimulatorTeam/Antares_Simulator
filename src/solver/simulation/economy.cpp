@@ -258,7 +258,7 @@ bool Economy::year(Progression::Task& progression,
                     UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
                     pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
                 }
-                checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace]);
+                //checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace]);
             }
             else
             {
