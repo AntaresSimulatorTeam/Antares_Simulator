@@ -150,29 +150,22 @@ void setBoundsNoAdqPatch(double& Xmax,
 void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     double netPositionInit;
-    double flowsNode1toNodeA;
     double densNew;
     double ensInit;
     double spillageInit;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
-
+    
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == adqmPhysicalAreaInsideAdqPatch)
         {
-            std::tie(netPositionInit, flowsNode1toNodeA) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-            // calculate densNew per area
+            std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+
             ensInit
               = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
             spillageInit
               = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
-            if (includeFlowsOutsideAdqPatchToDensNew)
-                densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
-            else
-                densNew = Math::Max(0.0, ensInit + netPositionInit);
 
             hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
             hourlyCsrProblem.densNewValues[Area] = densNew;
@@ -181,7 +174,6 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             logs.debug() << "DENS_new[" << Area <<"] = " << hourlyCsrProblem.densNewValues[Area] ;
             logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << hourlyCsrProblem.rhsAreaBalanceValues[Area]
                         << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit << ") - SpillageInit(" << spillageInit <<")";
-            logs.debug() << "flowsNode1toNodeA[" << Area <<"] = " << flowsNode1toNodeA ;
         }
     }
     return;
@@ -191,15 +183,11 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
 {
     float threshold = ProblemeHebdo->adqPatch->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
-    double flowsNode1toNodeA;
     double densNew;
     double ensInit;
     const int numOfHoursInWeek = 168;
-    double spillageInit;
     double totalLmrViolation = 0;
-    bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
-
+    
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
@@ -207,15 +195,11 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
-                std::tie(netPositionInit, flowsNode1toNodeA) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+                std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+
                 ensInit = ProblemeHebdo->ResultatsHoraires[Area]
                             ->ValeursHorairesDeDefaillancePositive[hour];
                 
-                if (includeFlowsOutsideAdqPatchToDensNew)
-                    densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
-                else
-                    densNew = Math::Max(0.0, ensInit + netPositionInit);
-
                 // check LMR violations
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
                 if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
@@ -238,9 +222,13 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
                                                    int Area,
                                                    int hour)
 {
+    int Interco;
     double netPositionInit = 0;
     double flowsNode1toNodeA = 0;
-    int Interco;
+    double ensInit;
+    double densNew;
+    bool includeFlowsOutsideAdqPatchToDensNew
+      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
 
     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
@@ -274,5 +262,12 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
         }
         Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
-    return std::make_pair(netPositionInit, flowsNode1toNodeA);
+    
+    ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+    if (includeFlowsOutsideAdqPatchToDensNew)
+        densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+    else
+        densNew = Math::Max(0.0, ensInit + netPositionInit);
+
+    return std::make_pair(netPositionInit, densNew);
 }
