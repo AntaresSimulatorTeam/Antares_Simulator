@@ -189,7 +189,6 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
 {
-    // todo. To much code is duplicated. Create sub function and reuse them. or try something else!
     float threshold = ProblemeHebdo->adqPatch->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
     double flowsNode1toNodeA;
@@ -197,8 +196,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
     double ensInit;
     const int numOfHoursInWeek = 168;
     double spillageInit;
-    //std::vector <int> lmrTmpVector;
-    //std::map<int, std::vector<int>> localMatchingRuleViolation; // todo remove, for debugg
+    double totalLmrViolation = 0;
     bool includeFlowsOutsideAdqPatchToDensNew
       = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
 
@@ -207,7 +205,6 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == adqmPhysicalAreaInsideAdqPatch)
         {
-            //lmrTmpVector.clear();
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
                 std::tie(netPositionInit, flowsNode1toNodeA) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
@@ -221,19 +218,19 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
 
                 // check LMR violations
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-                // lmrTmpVector.push_back(0);
                 if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
+                {
                     ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
-                    //lmrTmpVector.at(hour) = 1;
+                    totalLmrViolation += (ensInit - densNew);
+                }
 
                 logs.debug()
                   << "LMR violations. Area:" << Area << ". hour:" << hour << ". Value:"
                   << ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour];
             }
-            // localMatchingRuleViolation[Area] = lmrTmpVector; // todo remove, for debugg
-            //ProblemeHebdo->localMatchingRuleViolation[Area] = lmrTmpVector;
         }
     }
+    logs.debug() << "Total LMR violation:" << totalLmrViolation;
     return;
 }
 
