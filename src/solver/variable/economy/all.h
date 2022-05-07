@@ -60,6 +60,7 @@
 #include "hydroCost.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
+#include "lmrViolations.h"
 #include "spilledEnergy.h"
 
 #include "lold.h"
@@ -146,6 +147,7 @@ typedef          // Prices
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
+                         <LMRViolations // LMR Violations
                           <SpilledEnergy          // Spilled Energy
                            <LOLD                  // LOLD
                             <LOLP                 // LOLP
@@ -161,7 +163,7 @@ typedef          // Prices
                                                              // MBO 25/02/2016 - refs: #55
                                   // Links
                                   <Variable::Economy::Links // All links
-                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -217,6 +219,8 @@ typedef // Prices
                                             UnsupliedEnergy,
                                             Common::SpatialAggregate<
                                               DomesticUnsuppliedEnergy,
+                                            Common::SpatialAggregate<
+                                              LMRViolations,
                                               Common::SpatialAggregate<
                                                 SpilledEnergy,
                                                 // LOLD
@@ -241,7 +245,7 @@ typedef // Prices
                                                             Common::SpatialAggregate<
                                                               NbOfDispatchedUnits // MBO 25/02/2016
                                                                                   // - refs: #55
-                                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<
