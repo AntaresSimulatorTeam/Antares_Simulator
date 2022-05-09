@@ -104,4 +104,19 @@ void setBoundsNoAdqPatch(double& Xmax,
                          VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                          const int Interco);
 
+/*!
+ * Calculates curtailment sharing rule parameters netPositionInit and densNew per given area and hour.
+ */
+std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                   int Area,
+                                                   int hour);
+/*!
+ * Calculate parameters for curtailment sharing rule.
+ */
+void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);
+/*!
+ * Check local matching rule violation for each area inside adequacy patch.
+ */
+void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
+
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

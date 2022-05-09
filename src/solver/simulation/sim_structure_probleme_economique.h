@@ -326,7 +326,7 @@ class AdequacyPatchRuntimeData
 public:
     std::vector<AdequacyPatchMode> areaMode;
     std::vector<AdequacyPatchMode> originAreaType;
-    std::vector<AdequacyPatchMode> extremityAreaType; 
+    std::vector<AdequacyPatchMode> extremityAreaType;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -450,6 +450,7 @@ typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
     double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
+    int* ValeursHorairesLmrViolations; // adq patch lmr violations
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -501,7 +502,13 @@ struct AdequacyPatchParameters
     bool AdequacyFirstStep;
     bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
     bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+    bool SaveIntermediateResults;
+    // AdequacyPatch::AdequacyPatchPTO PriceTakingOrder;
+    float ThresholdInitiateCurtailmentSharingRule;
+    float ThresholdDisplayLocalMatchingRuleViolations;
 };
+
+class HOURLY_CSR_PROBLEM;
 
 struct PROBLEME_HEBDO
 {
@@ -609,7 +616,10 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    
+    std::vector<HOURLY_CSR_PROBLEM>
+      hourlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
+    //std::map<int, std::vector<int>> localMatchingRuleViolation;
+
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
@@ -710,6 +720,46 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+};
+
+class HOURLY_CSR_RESULT
+{
+    // CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside
+    // RESULTATS_HORAIRES?
+};
+
+// hourly CSR problem structure
+class HOURLY_CSR_PROBLEM
+{
+public:
+    int hourInWeekTriggeredCsr;
+    PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
+    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    {
+        hourInWeekTriggeredCsr = hourInWeek;
+        pWeeklyProblemBelongedTo = pProblemeHebdo;
+    };
+    std::map<int, int> numberOfConstraintCsrEns;
+    std::map<int, int> numberOfConstraintCsrAreaBalance;
+    std::map<int, int> numberOfConstraintCsrFlowDissociation;
+    std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
+                                                           // contains interco 2-2
+
+    std::map<int, double> netPositionInitValues;
+    std::map<int, double> densNewValues;
+    std::map<int, double> rhsAreaBalanceValues;
+
+    /* variables */
+    // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to
+    // create variables inside HOURLY_CSR_PROBLEM
+
+    /* Results */
+    HOURLY_CSR_RESULT hourlyResult; // CSR todo: shall we create a new HOURLY_CSR_RESULT structure,
+                                    // or do we update directly inside RESULTATS_HORAIRES?
+
+    // CSR todo: there should be structures for building the optimization problem like:
+    // CORRESPONDANCES_DES_VARIABLES*
+    // CORRESPONDANCES_DES_CONTRAINTES*
 };
 
 #endif

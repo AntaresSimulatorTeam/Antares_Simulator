@@ -57,3 +57,119 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
               = ValeursDeResistances->ResistanceApparente[Interco];
     }
 }
+
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
+                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] cost";
+    int Var;
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    double priceTakingOrders; // PTO
+    double quadraticCost;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
+
+    // variables: ENS for each area inside adq patch
+    // obj function term is: 1 / (PTO * PTO) * ENS * ENS
+    //  => quadratic cost: 1 / (PTO * PTO)
+    //  => linear cost: 0
+    // PTO can take two different values according to option:
+    //  1. from DENS
+    //  2. from load
+    memset((char*)ProblemeAResoudre->CoutLineaire,
+           0,
+           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                // CSR Todo options
+                // if (ProblemeHebdo->adqPatch->PriceTakingOrder ==
+                // Data::AdequacyPatch::adqPatchPTOIsLoad)
+                // {
+                // priceTakingOrders
+                // = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+                //     +
+                //     ProblemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
+                // }
+                // else
+                // {
+                priceTakingOrders
+                  = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+                // }
+
+                if (priceTakingOrders <= 0.0)
+                {
+                    // CSR todo a warning that DENS is negative and it is considered for CSR, there
+                    // was a check for positive threshold
+                    quadraticCost = 0.0;
+                }
+                else
+                {
+                    quadraticCost = 1 / (priceTakingOrders * priceTakingOrders);
+                }
+
+                ProblemeAResoudre->CoutQuadratique[Var] = quadraticCost;
+                logs.debug() << Var << ". Quad C = " << ProblemeAResoudre->CoutQuadratique[Var];
+            }
+        }
+    }
+
+    // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
+    // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x
+    // flow_indirect )
+    //  => quadratic cost: 0
+    //  => linear cost: hurdle_cost_direct or hurdle_cost_indirect
+    // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
+    // OUI_ANTARES (use hurdle cost option is true). otherwise these members are zero.
+
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+            // flow
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                ProblemeAResoudre->CoutLineaire[Var] = 0.0;
+                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+            }
+            // direct / indirect flow
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                    ProblemeAResoudre->CoutLineaire[Var] = 0;
+                else
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+            }
+
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+            {
+                if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                    ProblemeAResoudre->CoutLineaire[Var] = 0;
+                else
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+            }
+        }
+    }
+}

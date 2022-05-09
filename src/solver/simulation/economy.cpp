@@ -35,6 +35,8 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include <set>
+#include "../optimisation/adequacy_patch.h"
 
 using namespace Yuni;
 
@@ -140,6 +142,61 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
+void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
+                                            std::set<int>& triggerCsrSet)
+{
+    float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    double sumENS[nbHoursInAWeek] = {0};
+
+    for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
+    {
+        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            Math::sumTwoArrays<double>(
+              sumENS,
+              pProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive,
+              nbHoursInAWeek);
+    }
+    for (int i = 0; i < nbHoursInAWeek; ++i)
+    {
+        if ((int)sumENS[i] >= threshold)
+        {
+            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i]
+                         << "], threshold = " << threshold;
+            triggerCsrSet.insert(i);
+        }
+    }
+    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
+}
+
+void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int hourInWeek = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_HEBDO* pWeeklyProblem = hourlyCsrProblem.pWeeklyProblemBelongedTo;
+
+    OPT_LiberationProblemesSimplexe(pWeeklyProblem); //CSR todo !!! do we do this here ???? or do we create another PROBLEME_ANTARES_A_RESOUDRE inside HOURLY_CSR_PROBLEM ???? 
+    calculateCsrParameters(pWeeklyProblem, hourlyCsrProblem);
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblem, hourlyCsrProblem);
+    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblem->ProblemeAResoudre, hourlyCsrProblem);
+    return;
+}
+
+// void UpdateWeeklyResultAfterCSR(PROBLEME_HEBDO* pProblemeHebdo)
+// {
+//     std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->hourlyCsrProblems;
+
+//     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
+//     {
+//         RESULTATS_HORAIRES* ResultatsHoraires = pProblemeHebdo->ResultatsHoraires[area];
+//         //CSR todo update ResultatsHoraires for each area using hourlyCsrProblems
+//     }
+//     return;
+// }
+
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -178,6 +235,25 @@ bool Economy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+
+                std::set<int> hoursInWeekTriggerCsrSet;
+                InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace],
+                                                       hoursInWeekTriggerCsrSet);
+                if (hoursInWeekTriggerCsrSet.size() > 0)
+                {
+                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+                    for (int hourInWeek : hoursInWeekTriggerCsrSet)
+                    {
+                        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
+                        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
+                        pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
+                        OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
+                        logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
+                    }
+                    // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
+                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+                }
+                checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
             }
             else
             {

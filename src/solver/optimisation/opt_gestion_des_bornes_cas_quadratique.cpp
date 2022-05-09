@@ -94,3 +94,165 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* P
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
     }
 }
+
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] bounds";
+
+    int Var;
+    double* AdresseDuResultat;
+    int hour;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+
+    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    // variables: ENS for each area inside adq patch
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+
+            ProblemeAResoudre->Xmin[Var] = 0.0;
+            ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
+
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]
+              = 0.0;
+            AdresseDuResultat = &(
+              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
+
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
+        }
+    }
+
+    // variables: Spilled Energy for each area inside adq patch 
+    // todo after debugging transfer this into same area loop as ENS
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
+
+            ProblemeAResoudre->Xmin[Var] = 0.0;
+            ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
+
+            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]
+              = 0.0;
+            AdresseDuResultat = &(
+              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
+
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
+        }
+    }
+
+    // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
+    // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
+    // the user input (max direct and indirect flow).
+    double* Xmin;
+    double* Xmax;
+    int* TypeDeVariable;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
+    Xmin = ProblemeAResoudre->Xmin;
+    Xmax = ProblemeAResoudre->Xmax;
+
+    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
+
+    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)
+    {
+        // only consider link between 2 and 2
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            // flow
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                if (Math::Infinite(Xmin[Var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                else
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
+            else
+            {
+                if (Math::Infinite(Xmin[Var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                else
+                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            }
+
+            AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
+            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = AdresseDuResultat;
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
+
+            // direct / indirect flow
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            // CSR Todo?
+            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
+            //                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+            // else
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+
+            Xmin[Var] = 0.0;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
+
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            // CSR Todo?
+            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
+            //                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
+            // else
+            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+
+            Xmin[Var] = 0.0;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            if (Math::Infinite(Xmax[Var]) == 1)
+            {
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+            }
+
+            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+                         << ProblemeAResoudre->Xmax[Var];
+        }
+    }
+
+    return;
+}

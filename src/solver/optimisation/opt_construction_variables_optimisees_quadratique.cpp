@@ -52,8 +52,96 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     {
         CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
           = NombreDeVariables;
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
         NombreDeVariables++;
     }
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
+}
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] variable list:";
+    int NumberOfVariables = 0;
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    assert(ProblemeAResoudre != NULL);
+
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    // variables: ENS of each area inside adq patch
+    logs.debug() << " ENS of each area inside adq patch: ";
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        // Only ENS for areas inside adq patch are considered as variables
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
+              = NumberOfVariables;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+            logs.debug() << NumberOfVariables << " ENS[" << area << "]. ";
+
+            NumberOfVariables++;
+        }
+    }
+
+    // variables: Spilled Energy  of each area inside adq patch 
+    // todo after debugging transfer this into same area loop as ENS
+    logs.debug() << " Spilled Energy  of each area inside adq patch: ";
+    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    {
+        // Only Spilled Energy  for areas inside adq patch are considered as variables
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area]
+              = NumberOfVariables;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+            logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "]. ";
+
+            NumberOfVariables++;
+        }
+    }
+
+    // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
+    // and 2.
+    logs.debug()
+      << " transmissin flows (flow, flow_direct and flow_indirect). For links between 2 and 2:";
+    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        // only consider link between 2 and 2
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
+              = NumberOfVariables;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            logs.debug() << NumberOfVariables << " flow[" << Interco << "]. ";
+            NumberOfVariables++;
+
+            CorrespondanceVarNativesVarOptim
+              ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+              = NumberOfVariables;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
+            NumberOfVariables++;
+
+            CorrespondanceVarNativesVarOptim
+              ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+              = NumberOfVariables;
+            ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
+            NumberOfVariables++;
+        }
+    }
+
+    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
+    return;
 }

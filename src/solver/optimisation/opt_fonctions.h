@@ -36,8 +36,10 @@ void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*, uint);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
@@ -46,13 +48,17 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const int,
                                                             const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
+bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE*, HOURLY_CSR_PROBLEM&);
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);

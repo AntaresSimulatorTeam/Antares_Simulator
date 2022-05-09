@@ -183,3 +183,135 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
         return false;
     }
 }
+
+
+bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    //CSR todo call solver for quadratic houly CSR 
+    //this part should be exactly the same as in OPT_AppelDuSolveurQuadratique, except for some log. todo refactoring
+    int Var;
+    double* pt;
+    double ToleranceSurLAdmissibilite;
+    int ChoixToleranceParDefautSurLAdmissibilite;
+    double ToleranceSurLaStationnarite;
+    int ChoixToleranceParDefautSurLaStationnarite;
+    double ToleranceSurLaComplementarite;
+    int ChoixToleranceParDefautSurLaComplementarite;
+
+    PROBLEME_POINT_INTERIEUR Probleme;
+
+    ToleranceSurLAdmissibilite = 1.e-5;
+    ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
+
+    ToleranceSurLaStationnarite = 1.e-5;
+    ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
+
+    ToleranceSurLaComplementarite = 1.e-5;
+    ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
+
+    Probleme.NombreMaxDIterations = -1;
+    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
+    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme.X = ProblemeAResoudre->X;
+    Probleme.Xmin = ProblemeAResoudre->Xmin;
+    Probleme.Xmax = ProblemeAResoudre->Xmax;
+    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+
+    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
+
+    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
+    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
+    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
+    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme.CoefficientsDeLaMatriceDesContraintes
+      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
+    Probleme.Sens = ProblemeAResoudre->Sens;
+    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+
+    Probleme.AffichageDesTraces = NON_PI;
+
+    Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
+    Probleme.ToleranceDAdmissibilite = ToleranceSurLAdmissibilite;
+
+    Probleme.UtiliserLaToleranceDeStationnariteParDefaut
+      = ChoixToleranceParDefautSurLaStationnarite;
+    Probleme.ToleranceDeStationnarite = ToleranceSurLaStationnarite;
+
+    Probleme.UtiliserLaToleranceDeComplementariteParDefaut
+      = ChoixToleranceParDefautSurLaComplementarite;
+    Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
+
+    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+
+    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
+    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+
+    PI_Quamin(&Probleme);
+
+    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
+    if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
+    {
+        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        {
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            if (pt)
+                *pt = ProblemeAResoudre->X[Var];
+            logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
+        }
+
+        return true;
+    }
+    else
+    {
+        logs.warning() << "CSR Quadratic Optimization: No solution, hour in week: " << hourlyCsrProblem.hourInWeekTriggeredCsr; //todo refactoring
+
+        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        {
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            if (pt)
+                *pt = std::numeric_limits<double>::quiet_NaN();
+        }
+
+#ifndef NDEBUG
+
+        {
+            logs.info();
+
+            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+
+            logs.info() << "Here is the trace:";
+            for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+            {
+                logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
+                                         Var,
+                                         ProblemeAResoudre->CoutLineaire[Var],
+                                         ProblemeAResoudre->CoutQuadratique[Var]);
+            }
+            for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+            {
+                logs.info().appendFormat("Constraint %ld sens %c B %e",
+                                         Cnt,
+                                         ProblemeAResoudre->Sens[Cnt],
+                                         ProblemeAResoudre->SecondMembre[Cnt]);
+
+                int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+                int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+                for (; il < ilMax; ++il)
+                {
+                    Var = ProblemeAResoudre->IndicesColonnes[il];
+                    logs.info().appendFormat(
+                      "      coeff %e var %ld xmin %e xmax %e type %ld",
+                      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                      Var,
+                      ProblemeAResoudre->Xmin[Var],
+                      ProblemeAResoudre->Xmax[Var],
+                      ProblemeAResoudre->TypeDeVariable[Var]);
+                }
+            }
+        }
+#endif
+
+        return false;
+    }
+}

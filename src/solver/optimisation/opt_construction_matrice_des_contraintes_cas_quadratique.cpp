@@ -32,6 +32,8 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 
+using namespace Antares::Data;
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
 {
     int Interco;
@@ -86,6 +88,269 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+    }
+
+    MemFree(Pi);
+    MemFree(Colonne);
+}
+
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] constraint list:";
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Area;
+    int Var;
+    int NombreDeTermes;
+    double* Pi;
+    int* Colonne;
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    std::string NomDeLaContrainte;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
+    // constraint: ENS < DENS_new
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+            Pi[NombreDeTermes] = 1.0;
+            Colonne[NombreDeTermes] = Var;
+            NombreDeTermes++;
+
+            hourlyCsrProblem.numberOfConstraintCsrEns[Area]
+              = ProblemeAResoudre->NombreDeContraintes;
+            NomDeLaContrainte = "ENS < DENS_new. Area:" + std::to_string(Area) + "; "
+                                + ProblemeHebdo->NomsDesPays[Area];
+            logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
+                         << NomDeLaContrainte;
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<', NomDeLaContrainte);
+        }
+    }
+
+    // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
+    // type 2.
+    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco]
+              = ProblemeAResoudre->NombreDeContraintes;
+
+            NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
+            logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": "
+                         << NomDeLaContrainte;
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+        }
+    }
+
+    // constraint:
+    // ENS(node A) +
+    // - flow (A -> 2) or (+ flow (2 -> A)) there should be only one of them, otherwise double-count
+    // - spillage(node A) =
+    // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
+    // for all areas inside adequacy patch
+
+    // todo after debugging transfer this into same area loop as ENS
+    for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        {
+            // + ENS
+            NombreDeTermes = 0;
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            // - export flows
+            Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+            while (Interco >= 0)
+            {
+                if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = -1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                        logs.debug()
+                          << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
+                          << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                          << ProblemeHebdo
+                               ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+                          << "]";
+                    }
+                }
+                Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            }
+            // or + import flows
+            Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
+            while (Interco >= 0)
+            {
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = 1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                        logs.debug()
+                          << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+                          << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                          << ProblemeHebdo
+                               ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                          << "]";
+                    }
+                }
+                Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            }
+
+            // - Spilled Energy
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Area];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = -1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+
+            hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area]
+              = ProblemeAResoudre->NombreDeContraintes;
+
+            NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
+                                + ProblemeHebdo->NomsDesPays[Area];
+            ;
+            logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
+                         << NomDeLaContrainte;
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+        }
+    }
+
+    int NbInterco;
+    double Poids;
+    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    // Special case of the binding constraints
+    for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+         CntCouplante++)
+    {
+        MatriceDesContraintesCouplantes
+          = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+
+        if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
+        {
+            NbInterco
+              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+            NombreDeTermes = 0;
+            for (int Index = 0; Index < NbInterco; Index++)
+            {
+                Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
+                Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                      == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+                    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                {
+                    Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]
+                            ->NumeroDeVariableDeLInterconnexion[Interco];
+
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = Poids;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+
+                        logs.debug()
+                          << "Interco:" + std::to_string(Interco) << ". Between:["
+                          << ProblemeHebdo
+                               ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                          << "]-["
+                          << ProblemeHebdo
+                               ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+                          << "], with Poids(coeff):" + std::to_string(Poids) + " inserted to LHS!";
+                    }
+                }
+            }
+
+            if (NombreDeTermes > 0) // current binding constraint contains an interco type 2<->2
+            {
+                hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
+                  = ProblemeAResoudre->NombreDeContraintes;
+
+                NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+
+                logs.debug() << "C (bc): " << ProblemeAResoudre->NombreDeContraintes << ": "
+                             << NomDeLaContrainte;
+
+                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                  ProblemeAResoudre,
+                  Pi,
+                  Colonne,
+                  NombreDeTermes,
+                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
+                  NomDeLaContrainte);
+            }
+        }
     }
 
     MemFree(Pi);
