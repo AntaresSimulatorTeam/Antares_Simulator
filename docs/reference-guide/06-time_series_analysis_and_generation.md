@@ -9,6 +9,7 @@ The different categories of time-series call for wholly different generation pro
 - For thermal power, the generator is based on the animation of a daily three-state Markov chain (available – planned outage – forced outage) attached to each plant.
 
 - For Hydro-power, the generator works out monthly time-series of energies, based on the assumption that they can be modeled by Log Normal variables with known correlations through space and time. So as to keep the model simple, for an interconnected system made of N areas, the user defines, along with the N expectations and N standard deviations of the monthly energies, the N X N correlation matrix R(n,m) of the logs of the annual hydro energies between the areas n,m, and the N average auto-correlations r(k) between one month and the next in each area k. The correlation **C(n,i,m,j)** between the logs of hydro energies in area **n**, month **i** and area **m**, month **j** is taken to be
+
 $$C(n,i,m,j) = R(n,m)*\sqrt{(r(n) \cdot r(m))^{|j-i|}}$$
  
 
@@ -31,13 +32,13 @@ The stationary processes are defined at a monthly scale. For each month, there a
 
 TS Gen. Parameters : \\(\alpha\\), \\(\beta\\), \\(\gamma\\) and \\(\delta\\)
 
-| **Law** | $$\alpha$$ | $$\beta$$ | $$\gamma$$ | $$\delta$$ | **Expectation** | **Variance** |
+| **Law** | $\alpha$ | \\(\beta\\) | \\(\gamma\\) | \\(\delta\\) | **Expectation** | **Variance** |
 |---------|:----------:|:---------:|:----------:|:----------:|:---------------:|:------------:|
-| Uniform | N/A | N/A | $$< \delta$$ | $$> \gamma$$ | $${(\delta - \gamma)\over 2}$$ | $${(\delta - \gamma)^2\over 12}$$ |
-| Beta | &gt;0 | &gt;0 | $$< \delta$$ | $$> \gamma$$ | $$\gamma + {\alpha(\delta - \gamma)\over (\alpha + \beta)}$$ | $$\alpha\beta(\delta - \gamma)^2\over (\alpha + \beta + 1)(\alpha + \beta)^2$$ |
-| Normal | Any | &gt;0 | N/A | N/A | $$\alpha$$ | $$\beta^2$$ |
-| Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\beta \Gamma (1 + {1\over\alpha})$$ | $$\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]$$ |
-| Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | $$\alpha * \beta$$ | $$\alpha * \beta^2$$ |
+| Uniform | N/A | N/A | \\(< \delta\\) | \\(> \gamma\\) | \\({(\delta - \gamma)\over 2}\\) | \\({(\delta - \gamma)^2\over 12}\\) |
+| Beta | &gt;0 | &gt;0 | \\(< \delta\\) | \\(> \gamma\\) | \\(\gamma + {\alpha(\delta - \gamma)\over (\alpha + \beta)}\\) | \\(\alpha\beta(\delta - \gamma)^2\over (\alpha + \beta + 1)(\alpha + \beta)^2\\) |
+| Normal | Any | &gt;0 | N/A | N/A | \\(\alpha\\) | \\(\beta^2\\) |
+| Weibull | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | \\(\beta \Gamma (1 + {1\over\alpha})\\) | \\(\beta^2[\Gamma(1+{2\over \alpha}) - \Gamma (1 + {1\over \alpha})^2]\\) |
+| Gamma | &gt;=1 <br/> &lt;50 | &gt;0 | N/A | N/A | \\(\alpha * \beta\\) | \\(\alpha * \beta^2\\) |
 
 _Uniform: uniform defined on (\\(\gamma\\), \\(\delta\\))._  
 _Beta: Beta (\\(\alpha\\), \\(\beta\\)) defined on (\\(\gamma\\), \\(\delta\\))._  
@@ -52,14 +53,16 @@ In the expressions of expectation and variance, \\(\Gamma(x)\\) is the standard 
 
 **TS Gen. Parameters : \\(\theta\\) and \\(\mu\\)**
 
-| **Law** | $\theta$ | $$\mu$$ | **Corr(Xt, Xt+h)** |
+| **Law** | \\(\theta\\) | \\(\mu\\) | **Corr(Xt, Xt+h)** |
 |-----|----|-----|--------|
-| Pure exponential decay | $$\theta > 0$$ | $$\mu = 1$$ | $$e^{-\theta h}$$ |
-| Smoothed exponential decay [^decay] | $$\theta > 0$$ | $$ 1 < \mu < 24$$ | $$\Phi(\theta, \mu, h)$$ |
+| Pure exponential decay | \\(\theta > 0\\) | \\(\mu = 1\\) | \\(e^{-\theta h}\\) |
+| Smoothed exponential decay [^decay] | \\(\theta > 0\\) | \\( 1 < \mu < 24\\) | \\(\Phi(\theta, \mu, h)\\) |
 
 $$\Phi(\theta, \mu, h)\ =\ {1\over A}\ *\ \sum_{i=0, \mu}{\ \sum_{j=h, h+\mu}{e^{-\theta|j-i|}}}$$
 
-**with $A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$**
+**with** 
+
+$$A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$$
 
 
 ## Time-series generation (load, wind, solar): GUI
