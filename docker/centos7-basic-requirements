@@ -14,7 +14,7 @@ RUN yum install -y git redhat-lsb-core make wget centos-release-scl scl-utils rp
     yum install -y rh-git227-git
 
 # Install simulator requirements
-RUN yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
+RUN yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel jsoncpp-devel
     
 # Add python and pip installation
 RUN yum install -y python3-pip &&\

@@ -18,7 +18,7 @@ jobs:
         include:
           - os: windows-latest
             triplet: x64-windows
-            vcpkgPackages: wxwidgets boost-test
+            vcpkgPackages: wxwidgets boost-test jsoncpp
             test-platform: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
