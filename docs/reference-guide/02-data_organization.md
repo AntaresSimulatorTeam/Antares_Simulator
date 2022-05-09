@@ -73,5 +73,4 @@ The associated data (so-called binding constraints bearing in their name the pre
 be accessed to be reviewed, updated and deleted at any time through the GUI.
 
 
-[^3]:
-    Many various graphic extensions (under the form of programs written in the R language) are available at: [https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)
+[^3]: Many various graphic extensions (under the form of programs written in the R language) are available at: [https://cran.r-project.org/web/packages/antaresViz/index.html](https://cran.r-project.org/web/packages/antaresViz/index.html)
