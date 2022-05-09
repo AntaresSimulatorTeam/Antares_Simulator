@@ -151,7 +151,7 @@ Application::Application()
 {
     resetProcessPriority();
     pTotalTimer
-      = std::make_shared<TimeElapsed::Timer>("Total", "total", true, &pTimeElapsedAggregator);
+      = std::unique_ptr<TimeElapsed::Timer>(new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedAggregator));
 }
 
 void Application::prepare(int argc, char* argv[])

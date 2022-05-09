@@ -88,7 +88,7 @@ private:
     bool shouldExecute = true;
 
     TimeElapsed::Aggregator pTimeElapsedAggregator;
-    std::shared_ptr<TimeElapsed::Timer> pTotalTimer;
+    std::unique_ptr<TimeElapsed::Timer> pTotalTimer;
     TimeElapsed::FileWriter mTimeElapsedWriter;
 }; // class Application
 } // namespace Solver
