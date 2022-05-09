@@ -1,4 +1,4 @@
- # Kirchhoff's Constraint Generator
+# Kirchhoff's Constraint Generator
 
 Binding Constraints introduced in [Active windows](4-active_windows.md) can take many forms (hourly, daily, weekly), involve flows or thermal generated power, etc. Sets of binding constraints of special interest are those which can be used to model and enforce Kirchhoff's second law on the AC flows.
 
