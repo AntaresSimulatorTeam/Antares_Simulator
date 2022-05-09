@@ -238,10 +238,12 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
+                TimeElapsed::Timer timer("Year-by-year export", "yby_export", false, pTimeElapsedAggregator);
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
+                timer.tick();
             }
         }
         else
