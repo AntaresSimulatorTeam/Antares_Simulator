@@ -310,6 +310,7 @@ RESOLUTION:
         }
     }
 
+    double epsilon = 1e-8;
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
         if (PremierPassage == NON_ANTARES)
@@ -324,7 +325,15 @@ RESOLUTION:
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != NULL)
-                *pt = ProblemeAResoudre->X[Var];
+                if (ProblemeAResoudre->VariablesEntieres[Var])
+                {
+                    *pt = ProblemeAResoudre->X[Var] + epsilon;
+                }
+                else 
+                {
+                    *pt = ProblemeAResoudre->X[Var];
+                }
+                
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
             if (pt != NULL)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
