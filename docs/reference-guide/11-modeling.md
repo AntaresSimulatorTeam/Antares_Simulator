@@ -94,7 +94,7 @@ The next sections of this document develop the following subjects:
 | \\(u_l \in N\\)      | vertex upstream from \\(l\\)                                                                                       |
 | \\(d_l \in N\\)      | vertex downstream from \\(l\\)                                                                                     |
 | \\(u \cdot v\\)      | inner product of vectors \\(u\\) and \\(v\\)                                                                       |
-| \\(u_\uparrow^p\\)   | vector resulting from the permutation on \\(u \in \mathbb{R}^s\\) : $$ u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)$$ |
+| \\(u_\uparrow^p\\)   | vector resulting from the permutation on \\(u \in \mathbb{R}^s\\) : \\( u\_\uparrow^p(i)=u(i+p\, \mathrm{mod}\,s)\\) |
 
 
 ### Grid
@@ -351,7 +351,7 @@ Minimum running and not-running durations contribute to the unit-commitment plan
 
 All constraints to previously defined for regular operation conditions are repeated with replacement of all variables by their twins when they exist.
 
-Besides, in the expression of constraints , all occurrences of are replaced by D_n + S_n$$
+Besides, in the expression of constraints , all occurrences of are replaced by \\(D_n + S_n\\)
 
 ## Antares as a SCOPF ("flow-based model")
 

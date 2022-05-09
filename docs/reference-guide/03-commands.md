@@ -187,7 +187,8 @@ whose detailed analysis may have shown that they were not physically realistic. 
 in replaying only a small number of years of specific interest (for instance, years in the course of which Min or Max
 values of a given variable were encountered in a previous simulation).
 
-  In addition, each MC year i=1, …, N can be given a relative “weight” \\(W_i\\)  in the simulation (default value: 1). The expectation and standard deviation of all random variables will then be computed as if the scenarios simulated were sampled from a probability density function in which MC year i is given the probability 
+  In addition, each MC year i=1, …, N can be given a relative “weight” \\(W_i\\)  in the simulation (default value: 1). The expectation and standard deviation of all random variables will then be computed as if the scenarios simulated were sampled from a probability density function in which MC year i is given the probability
+
   $$\frac{W_{i}}{\sum_{j=1,...,N}{W_{j}}}$$
 
 - **Optimization preferences** Defines a set of options related to the optimization core used in the simulations.

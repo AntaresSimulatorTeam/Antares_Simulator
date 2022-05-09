@@ -170,7 +170,9 @@ The user may pick any area appearing in the list and is then given access to dif
     by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly
     correlation matrices and of an overall annual correlation matrix.
     A matrix A must meet three conditions to be a valid correlation matrix:
+    
       $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+      
       When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
     - The "local data" tab is used to set the parameters of the stochastic generator.
@@ -463,7 +465,9 @@ The user may pick any area appearing in the list and is then given access to dif
 - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and an overall annual correlation matrix.
   
   A matrix A must meet three conditions to be a valid correlation matrix:
+  
     $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+    
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 - The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
@@ -504,6 +508,7 @@ The user may pick any area appearing in the list and is then given access to dif
     A matrix A must meet three conditions to be a valid correlation matrix:
 
   $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+  
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 
