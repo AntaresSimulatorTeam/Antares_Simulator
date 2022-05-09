@@ -63,10 +63,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
   HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] variable list:";
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     int NumberOfVariables = 0;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);

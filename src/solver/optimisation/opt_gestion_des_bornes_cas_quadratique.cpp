@@ -253,19 +253,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
                          << ProblemeAResoudre->Xmax[Var];
         }
     }
-    // todo: remove  //CSR Todo?
-    // Loop flow: amount of power flowing circularly though the grid
-    // when all "nodes" are perfectly balanced (no import and no
-    // export). Such loop flows may be expected on any "simplified" grid
-    // in which large regions (or even countries) are modeled by a small
-    // number of "macro" nodes, and should accordingly be accounted for.
-    // Flow circulating through the grid when all areas have a zero
-    // import/export balance. This flow, to be put down to the
-    // simplification of the real grid, is not subject to hurdle costs
-    // in the course of the optimization
-    // if (FLOW.LIN –LOOP FLOW) > 0
-    // HURD. COST = (hourly direct hurdle cost) * (FLOW LIN.)
-    // else HURD.COST = (hourly indirect hurdle cost) * (-1) * (FLOW LIN.)
 
     return;
 }

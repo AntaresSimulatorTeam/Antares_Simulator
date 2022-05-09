@@ -105,6 +105,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     int NombreDeTermes;
     double* Pi;
     int* Colonne;
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     std::string NomDeLaContrainte;
@@ -116,9 +118,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-
-    int Interco;
-    COUTS_DE_TRANSPORT* TransportCost;
 
     // constraint: ENS < DENS_new
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
@@ -285,7 +284,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     }
 
     int NbInterco;
-    double Poids; // Weight
+    double Poids;
     CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
@@ -335,10 +334,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
                 hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
                   = ProblemeAResoudre->NombreDeContraintes;
 
-                NomDeLaContrainte
-                  = "bc::hourly::" + std::to_string(hour) + "::"
-                    + MatriceDesContraintesCouplantes
-                        ->NomDeLaContrainteCouplante; // + ". Interco:" + std::to_string(Interco);
+                NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
+                                    + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
                 logs.debug() << "C (bc): " << ProblemeAResoudre->NombreDeContraintes << ": "
                              << NomDeLaContrainte;

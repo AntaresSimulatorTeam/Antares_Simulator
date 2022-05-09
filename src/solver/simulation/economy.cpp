@@ -146,13 +146,7 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
                                             std::set<int>& triggerCsrSet)
 {
     float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
-    threshold = 500; //todo remove. for debug
-
-    double sumENS[nbHoursInAWeek] = {0}; // this shold be better as init?, i debugged it. Works fine!
-
-    // // init sumENS[].
-    // for (int j = 0; j < nbHoursInAWeek; ++j)
-    //     sumENS[j] = 0.0;
+    double sumENS[nbHoursInAWeek] = {0};
 
     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
     {
@@ -167,7 +161,8 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
     {
         if ((int)sumENS[i] >= threshold)
         {
-            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i] << "], threshold = " << threshold;
+            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i]
+                         << "], threshold = " << threshold;
             triggerCsrSet.insert(i);
         }
     }
@@ -190,17 +185,17 @@ void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrP
     return;
 }
 
-void UpdateWeeklyResultAfterCSR(PROBLEME_HEBDO* pProblemeHebdo)
-{
-    std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->hourlyCsrProblems;
+// void UpdateWeeklyResultAfterCSR(PROBLEME_HEBDO* pProblemeHebdo)
+// {
+//     std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->hourlyCsrProblems;
 
-    for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
-    {
-        RESULTATS_HORAIRES* ResultatsHoraires = pProblemeHebdo->ResultatsHoraires[area];
-        //CSR todo update ResultatsHoraires for each area using hourlyCsrProblems
-    }
-    return;
-}
+//     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
+//     {
+//         RESULTATS_HORAIRES* ResultatsHoraires = pProblemeHebdo->ResultatsHoraires[area];
+//         //CSR todo update ResultatsHoraires for each area using hourlyCsrProblems
+//     }
+//     return;
+// }
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -240,22 +235,22 @@ bool Economy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
-                
+
                 std::set<int> hoursInWeekTriggerCsrSet;
-                InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace], hoursInWeekTriggerCsrSet);
-                if( hoursInWeekTriggerCsrSet.size() > 0)
+                InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace],
+                                                       hoursInWeekTriggerCsrSet);
+                if (hoursInWeekTriggerCsrSet.size() > 0)
                 {
                     pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
-                    for(int hourInWeek : hoursInWeekTriggerCsrSet)
+                    for (int hourInWeek : hoursInWeekTriggerCsrSet)
                     {
                         logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
                         pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
                         OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
                         logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
-
                     }
-                    UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
+                    // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
                     pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
                 }
                 checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
@@ -279,8 +274,6 @@ bool Economy::year(Progression::Task& progression,
               study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
 
             updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
-
-            //CSR todo: shall we start here, or shall we start the CSR directly after OPT_OptimisationHebdomadaireAdqPatch
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;

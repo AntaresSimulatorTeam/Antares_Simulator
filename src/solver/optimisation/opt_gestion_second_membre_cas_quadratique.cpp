@@ -52,15 +52,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] RHS: ";
-    // CSR todo initialize RHS right hand side of constraints for hourly CSR quadratic problem.
     int Cnt;
     int Area;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     COUTS_DE_TRANSPORT* TransportCost;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     // constraint for each area inside adq patch: ENS < DENS_new
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
@@ -126,20 +123,20 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
         }
     }
 
-    // CSR todo. Add, only hourly, user defined Binding constraints between transmission flows
+    // constraint:
+    // user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
     int CntCouplante;
     int Interco;
-    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
-    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
-    double* SecondMembre = ProblemeAResoudre->SecondMembre;
-    std::map<int, int> bingdingConstraintNumber
-      = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
-
     int NbInterco;
     double Poids;
     double ValueOfFlow;
     int Index;
+    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
+    std::map<int, int> bingdingConstraintNumber
+      = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
 
     for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
@@ -151,14 +148,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 
             Cnt = bingdingConstraintNumber[CntCouplante];
 
-            // 1. this is the original RHS of bingding constraint
+            // 1. The original RHS of bingding constraint
             SecondMembre[Cnt]
               = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
             logs.debug() << Cnt << ": Hourly bc: Existing-RHS[" << Cnt
                          << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante
                          << ")";
 
-            // 2. CSR todo: RHS part 2: flow other than 2<->2
+            // 2. RHS part 2: flow other than 2<->2
             NbInterco
               = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
             for (Index = 0; Index < NbInterco; Index++)
@@ -171,12 +168,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                     || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
                          != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
-                    // we have an interco other than type 2-2
-                    // Var =
-                    // ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]->NumeroDeVariableDeLInterconnexion[Interco];
-                    ValueOfFlow
-                      = ProblemeHebdo->ValeursDeNTC[hour]
-                          ->ValeurDuFlux[Interco]; // todo check do we care about the export/import
+                    ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
                     SecondMembre[Cnt] -= ValueOfFlow * Poids;
                     logs.debug()
                       << Cnt << ": Hourly bc: IntercoFlow-RHS[" << Cnt
@@ -192,14 +184,14 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                 }
             }
 
-            // 3. CSR todo: RHS part 3: - cluster
+            // 3. RHS part 3: - cluster
             int NbClusters
               = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
             int Area;
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays;
             int Palier;
             int IndexNumeroDuPalierDispatch;
             double ValueOfVar;
+            PALIERS_THERMIQUES* PaliersThermiquesDuPays;
 
             for (Index = 0; Index < NbClusters; Index++)
             {
@@ -213,8 +205,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                            [IndexNumeroDuPalierDispatch];
                 Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
 
-                // Var =
-                // ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt1]->NumeroDeVariableDuPalierThermique[Palier];
                 ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]
                                ->ProductionThermique[hour]
                                ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
