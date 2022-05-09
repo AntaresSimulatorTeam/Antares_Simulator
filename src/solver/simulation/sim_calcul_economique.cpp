@@ -69,9 +69,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         // AdequacyFirstStep will be initialized during the economy solve
         // AdqBehaviorMap will be initialized during the economy solve
         problem.adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq
-          = parameters.setToZero12LinksForAdequacyPatch;
+          = parameters.setToZeroNTCfromOutToIn_AdqPatch;
         problem.adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq
-          = parameters.setToZero11LinksForAdequacyPatch;
+          = parameters.setToZeroNTCfromOutToOut_AdqPatch;
     }
 
     if (parameters.include.adequacyPatch){

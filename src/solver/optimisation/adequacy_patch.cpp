@@ -33,8 +33,8 @@ using namespace Antares::Data::AdequacyPatch;
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch)
 {
     LinkCapacityForAdequacyPatchFirstStep returnNTC;
 
@@ -42,13 +42,13 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
     {
     case adqmPhysicalAreaInsideAdqPatch:
         returnNTC = SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                                  SetToZero12LinksForAdequacyPatch);
+                                                                  setToZeroNTCfromOutToIn_AdqPatch);
         break;
     case adqmPhysicalAreaOutsideAdqPatch:
         returnNTC
           = SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                           SetToZero12LinksForAdequacyPatch,
-                                                           SetToZero11LinksForAdequacyPatch);
+                                                           setToZeroNTCfromOutToIn_AdqPatch,
+                                                           setToZeroNTCfromOutToOut_AdqPatch);
         break;
     default:
         returnNTC = leaveLocalValues;
@@ -59,7 +59,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
 
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch)
+  bool setToZeroNTCfromOutToIn_AdqPatch)
 {
     LinkCapacityForAdequacyPatchFirstStep returnNTC;
 
@@ -69,7 +69,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
         returnNTC = setToZero;
         break;
     case adqmPhysicalAreaOutsideAdqPatch:
-        returnNTC = (SetToZero12LinksForAdequacyPatch) ? setToZero : setOrigineExtremityToZero;
+        returnNTC = (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
         break;
     default:
         returnNTC = leaveLocalValues;
@@ -80,18 +80,18 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
 
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch)
 {
     LinkCapacityForAdequacyPatchFirstStep returnNTC;
 
     switch (ExtremityNodeAdequacyPatchType)
     {
     case adqmPhysicalAreaInsideAdqPatch:
-        returnNTC = (SetToZero12LinksForAdequacyPatch) ? setToZero : setExtremityOrigineToZero;
+        returnNTC = (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setExtremityOrigineToZero;
         break;
     case adqmPhysicalAreaOutsideAdqPatch:
-        returnNTC = (SetToZero11LinksForAdequacyPatch) ? setToZero : leaveLocalValues;
+        returnNTC = (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
         break;
     default:
         returnNTC = leaveLocalValues;

@@ -37,10 +37,10 @@ using namespace Antares::Data;
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq patch
  * (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
@@ -49,8 +49,8 @@ using namespace Antares::Data;
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch);
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -58,7 +58,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
@@ -66,7 +66,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  */
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch);
+  bool setToZeroNTCfromOutToIn_AdqPatch);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -74,10 +74,10 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq patch
  * (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
@@ -85,8 +85,8 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
  */
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch);
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch);
 
 /*!
  * Sets link bounds for first step of adequacy patch.
