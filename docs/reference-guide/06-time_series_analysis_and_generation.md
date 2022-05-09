@@ -32,7 +32,7 @@ The stationary processes are defined at a monthly scale. For each month, there a
 
 TS Gen. Parameters : \\(\alpha\\), \\(\beta\\), \\(\gamma\\) and \\(\delta\\)
 
-| **Law** | $\alpha$ | \\(\beta\\) | \\(\gamma\\) | \\(\delta\\) | **Expectation** | **Variance** |
+| **Law** | \\(\alpha\\) | \\(\beta\\) | \\(\gamma\\) | \\(\delta\\) | **Expectation** | **Variance** |
 |---------|:----------:|:---------:|:----------:|:----------:|:---------------:|:------------:|
 | Uniform | N/A | N/A | \\(< \delta\\) | \\(> \gamma\\) | \\({(\delta - \gamma)\over 2}\\) | \\({(\delta - \gamma)^2\over 12}\\) |
 | Beta | &gt;0 | &gt;0 | \\(< \delta\\) | \\(> \gamma\\) | \\(\gamma + {\alpha(\delta - \gamma)\over (\alpha + \beta)}\\) | \\(\alpha\beta(\delta - \gamma)^2\over (\alpha + \beta + 1)(\alpha + \beta)^2\\) |
