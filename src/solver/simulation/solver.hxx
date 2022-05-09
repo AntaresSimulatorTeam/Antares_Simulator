@@ -183,7 +183,7 @@ private:
             if (not study.parameters.adequacyDraft())
             {
                 TimeElapsed::Timer time(
-                  "Hydraulic ventilation", "hydro_vent", true, pTimeElapsedAggregator);
+                  "Hydraulic ventilation", "hydro_ventilation", true, pTimeElapsedAggregator);
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
             }
 
