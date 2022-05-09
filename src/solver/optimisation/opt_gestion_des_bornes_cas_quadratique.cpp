@@ -139,8 +139,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
         }
     }
 
-    // variables: Spilled Energy for each area inside adq patch // todo after debugging transfer
-    // this into same loop as ENS
+    // variables: Spilled Energy for each area inside adq patch 
+    // todo after debugging transfer this into same area loop as ENS
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]

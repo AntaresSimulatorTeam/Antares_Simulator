@@ -106,6 +106,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     // – Sum flow_indirect(node 2 upstream <- node A) – Sum flow_direct(node A -> node 2 downstream)
     // ] – spillage(node A) = ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
+
+    // todo after debugging transfer this into same area loop as ENS
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]

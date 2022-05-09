@@ -196,6 +196,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     // - spillage(node A) =
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
+
+    // todo after debugging transfer this into same area loop as ENS
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
