@@ -91,20 +91,19 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                // CSR Todo options
-                // if (ProblemeHebdo->adqPatch->PriceTakingOrder ==
-                // Data::AdequacyPatch::adqPatchPTOIsLoad)
-                // {
-                // priceTakingOrders
-                // = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
-                //     +
-                //     ProblemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
-                // }
-                // else
-                // {
-                priceTakingOrders
-                  = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
-                // }
+                if (ProblemeHebdo->adqPatch->PriceTakingOrder
+                    == Data::AdequacyPatch::adqPatchPTOIsLoad)
+                {
+                    priceTakingOrders
+                      = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+                        + ProblemeHebdo->AllMustRunGeneration[hour]
+                            ->AllMustRunGenerationOfArea[area];
+                }
+                else
+                {
+                    priceTakingOrders
+                      = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+                }
 
                 if (priceTakingOrders <= 0.0)
                 {

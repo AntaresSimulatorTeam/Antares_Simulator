@@ -72,12 +72,12 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq
           = parameters.setToZero11LinksForAdequacyPatch;
         problem.adqPatch->SaveIntermediateResults
-          = true; // = parameters.adqPatchSaveIntermediateResults;
-        // problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
+          = parameters.adqPatchSaveIntermediateResults;
+        problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
         problem.adqPatch->ThresholdInitiateCurtailmentSharingRule
-          = 300; // = parameters.seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule];
+          = parameters.seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule];
         problem.adqPatch->ThresholdDisplayLocalMatchingRuleViolations
-          = 1; // = parameters.seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations];
+          = parameters.seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations];
     }
 
     if (parameters.include.adequacyPatch){

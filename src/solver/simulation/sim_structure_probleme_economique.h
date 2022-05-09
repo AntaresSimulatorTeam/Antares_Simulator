@@ -503,7 +503,7 @@ struct AdequacyPatchParameters
     bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
     bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
     bool SaveIntermediateResults;
-    // AdequacyPatch::AdequacyPatchPTO PriceTakingOrder;
+    AdequacyPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;
     float ThresholdDisplayLocalMatchingRuleViolations;
 };

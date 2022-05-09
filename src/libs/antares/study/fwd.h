@@ -616,9 +616,9 @@ enum AdqPatchThresholdsIndex
 };
 
 //! A default threshold value for initiate curtailment sharing rule
-const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.5;
+const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 500.0;
 //! A default threshold value for display local matching rule violations
-const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.5;
+const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 500.0;
 
 } // namespace AdequacyPatch
 } // namespace Data
