@@ -51,13 +51,13 @@ The install procedure can be done
     ```
     sudo yum install git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
     sudo yum install cmake3 devtoolset-9
-    sudo yum install libuuid-devel unzip wxGTK3-devel boost-test boost-devel
+    sudo yum install libuuid-devel unzip wxGTK3-devel boost-test boost-devel jsoncpp-devel
     ```
 === "Ubuntu (apt-get)"
 
     ```
     sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
-    sudo apt-get install libboost-test-dev
+    sudo apt-get install libboost-test-dev libjsoncpp-dev
     ```
 
 ## Automatic libraries compilation from git
