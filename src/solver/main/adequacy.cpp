@@ -40,13 +40,13 @@ void Application::runSimulationInAdequacyMode()
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, &pTimeElapsedAggregator);
-    {
-        simulation.run();
-    }
+    simulation.run();
+
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
         TimeElapsed::Timer timer("Survey report", "survey_report", true, &pTimeElapsedAggregator);
         simulation.writeResults(/*synthesis:*/ true);
+        timer.tick();
     }
 }
 } // namespace Solver

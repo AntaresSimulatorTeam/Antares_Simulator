@@ -1,6 +1,4 @@
 #include "writer.h"
-
-// FIXME : antares/logs.h
 #include "../logs.h"
 
 namespace TimeElapsed

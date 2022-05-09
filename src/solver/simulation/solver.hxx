@@ -382,12 +382,11 @@ void ISimulation<Impl>::run()
         for (uint numSpace = 0; numSpace != pNbMaxPerformedYearsInParallel; ++numSpace)
             ImplementationType::initializeState(state[numSpace], numSpace);
 
-        {
-            logs.info() << " Starting the simulation";
-            TimeElapsed::Timer time("MC Years", "mc_years", true, pTimeElapsedAggregator);
-            uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-            loopThroughYears(0, finalYear, state);
-        }
+        logs.info() << " Starting the simulation";
+        TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedAggregator);
+        uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
+        loopThroughYears(0, finalYear, state);
+        mcTimer.tick();
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -1045,6 +1044,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for load", "tsgen_load", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
+        timer.tick();
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
@@ -1052,6 +1052,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for solar", "tsgen_solar", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
+        timer.tick();
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
@@ -1059,6 +1060,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for wind", "tsgen_wind", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
+        timer.tick();
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
@@ -1066,13 +1068,16 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for hydro", "tsgen_hydro", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
+        timer.tick();
     }
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
         TimeElapsed::Timer timer(
           "TS generation for thermal", "tsgen_thermal", true, pTimeElapsedAggregator);
-        GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
+        GenerateThermalTimeSeries(
+          study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
+        timer.tick();
     }
 }
 
@@ -1102,14 +1107,19 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         // created
         bool refreshing = false;
         refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
-        refreshing = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
-        refreshing = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
-        refreshing = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
+        refreshing
+          = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
+        refreshing
+          = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
+        refreshing
+          = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
 
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        bool haveToRefreshTSThermal = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
-        refreshing = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
+        bool haveToRefreshTSThermal
+          = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
+        refreshing
+          = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the

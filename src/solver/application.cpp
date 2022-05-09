@@ -150,8 +150,8 @@ namespace Solver
 Application::Application()
 {
     resetProcessPriority();
-    pTotalTimer
-      = std::unique_ptr<TimeElapsed::Timer>(new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedAggregator));
+    pTotalTimer = std::unique_ptr<TimeElapsed::Timer>(
+      new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedAggregator));
 }
 
 void Application::prepare(int argc, char* argv[])
@@ -389,14 +389,13 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
+    TimeElapsed::Timer loadTimer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
+    if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
-        TimeElapsed::Timer timer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
-        if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
-        {
-            logs.info() << "The study is loaded.";
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-        }
+        logs.info() << "The study is loaded.";
+        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
+    loadTimer.tick();
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -528,7 +527,7 @@ Application::~Application()
         LocalPolicy::Close();
         logs.info() << "Done.";
     }
-    pTotalTimer.reset();
+    pTotalTimer->tick();
     pTimeElapsedAggregator.flush(mTimeElapsedWriter);
 }
 } // namespace Solver

@@ -48,16 +48,7 @@ void Timer::reset()
     pStartTime = MilliSecTimer();
 }
 
-Timer::Timer(const AnyString& userText,
-             const AnyString& logText,
-             bool verbose,
-             Aggregator* aggregator) :
-userText(userText), logText(logText), verbose(verbose), pAggregator(aggregator)
-{
-    reset();
-}
-
-Timer::~Timer()
+void Timer::tick()
 {
     const sint64 delta_ms = MilliSecTimer() - pStartTime;
     if (verbose)
@@ -67,6 +58,16 @@ Timer::~Timer()
     if (pAggregator)
     {
         pAggregator->append(logText, delta_ms);
+        pAggregator = nullptr; // Prevent aggregating twice
     }
+}
+
+Timer::Timer(const AnyString& userText,
+             const AnyString& logText,
+             bool verbose,
+             Aggregator* aggregator) :
+ userText(userText), logText(logText), verbose(verbose), pAggregator(aggregator)
+{
+    reset();
 }
 } // namespace TimeElapsed

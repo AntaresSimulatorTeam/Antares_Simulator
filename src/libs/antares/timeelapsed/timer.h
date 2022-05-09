@@ -50,10 +50,8 @@ public:
                    bool verbose = true,
                    Aggregator* aggregator = nullptr);
 
-    //! Destructor
-    ~Timer();
-
     void reset();
+    void tick();
 
 private:
     //! The text to display at the end
