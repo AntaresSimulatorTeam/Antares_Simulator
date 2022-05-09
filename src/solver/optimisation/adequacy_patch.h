@@ -89,19 +89,13 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsid
   bool setToZeroNTCfromOutToOut_AdqPatch);
 
 /*!
- * Sets link bounds for first step of adequacy patch.
+ * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
+ * not used.
  */
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo);
-/*!
- * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
- */
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco);
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* ProblemeHebdo);
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

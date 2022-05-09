@@ -100,47 +100,47 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsid
     return returnNTC;
 }
 
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo)
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* ProblemeHebdo)
 {
     LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
 
-    SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-      ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
-      ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-      ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
-      ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
-
-    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setToZero)
-    {
-        Xmax = 0.;
-        Xmin = 0.;
-    }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setOrigineExtremityToZero)
-    {
-        Xmax = 0.;
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-    }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setExtremityOrigineToZero)
-    {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = 0.;
-    }
-    else
-    {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-    }
-}
-
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco)
-{
+    // set as default values
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+
+    // set for adq patch first step
+    if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+    {
+        SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
+          ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
+          ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
+          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
+          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
+
+        switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
+        {
+        case setToZero:
+        {
+            Xmax = 0.;
+            Xmin = 0.;
+            break;
+        }
+        case setOrigineExtremityToZero:
+        {
+            Xmax = 0.;
+            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            break;
+        }
+        case setExtremityOrigineToZero:
+        {
+            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin = 0.;
+            break;
+        }
+        }
+    }
 }
