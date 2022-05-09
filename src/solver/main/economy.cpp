@@ -44,7 +44,7 @@ void Application::runSimulationInEconomicMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        TimeElapsed::Timer timer("Survey report", "survey_report", true, &pTimeElapsedAggregator);
+        TimeElapsed::Timer timer("Survey report", "synthesis_export", true, &pTimeElapsedAggregator);
         simulation.writeResults(/*synthesis:*/ true);
         timer.tick();
     }
