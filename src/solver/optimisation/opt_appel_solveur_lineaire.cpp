@@ -310,7 +310,6 @@ RESOLUTION:
         }
     }
 
-    double epsilon = 1e-8;
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
         if (PremierPassage == NON_ANTARES)
@@ -327,7 +326,7 @@ RESOLUTION:
             if (pt != NULL)
                 if (ProblemeAResoudre->VariablesEntieres[Var])
                 {
-                    *pt = ProblemeAResoudre->X[Var] + epsilon;
+                    *pt = round(ProblemeAResoudre->X[Var]);
                 }
                 else 
                 {
