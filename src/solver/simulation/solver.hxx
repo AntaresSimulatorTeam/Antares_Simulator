@@ -70,7 +70,8 @@ public:
             bool pPerformCalculations,
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
-            bool pYearByYear) :
+            bool pYearByYear,
+            TimeElapsed::Aggregator* timeAggregator) :
      simulationObj(pSimulationObj),
      y(pY),
      yearsIndices(pYearsIndices),
@@ -82,7 +83,8 @@ public:
      performCalculations(pPerformCalculations),
      study(pStudy),
      state(pState),
-     yearByYear(pYearByYear)
+     yearByYear(pYearByYear),
+     pTimeElapsedAggregator(timeAggregator)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -101,6 +103,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
+    TimeElapsed::Aggregator* pTimeElapsedAggregator;
 
 private:
     /*
@@ -178,7 +181,11 @@ private:
 
             // 4 - Hydraulic ventilation
             if (not study.parameters.adequacyDraft())
+            {
+                TimeElapsed::Timer time(
+                  "Hydraulic ventilation", "hydro_vent", true, pTimeElapsedAggregator);
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+            }
 
             // Updating the state
             state[numSpace].year = y;
@@ -1609,7 +1616,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    performCalculations,
                                                    study,
                                                    state,
-                                                   pYearByYear));
+                                                   pYearByYear,
+                                                   pTimeElapsedAggregator));
 
         } // End loop over years of the current set of parallel years
 
