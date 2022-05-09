@@ -304,17 +304,16 @@ private:
 
 private:
     Component& pComponent;
-    bool pInvalidated;
-    bool pInvalidatedInnerCacheSize;
+    bool pInvalidated = true;
+    bool pInvalidatedInnerCacheSize = true;
 
-    wxTextCtrl* pointX;
-    wxTextCtrl* pointY;
-
-    wxStaticText* pInfosAreaCount;
-    wxStaticText* pInfosConnxCount;
+    wxTextCtrl* pointX = nullptr;
+    wxTextCtrl* pointY = nullptr;
+    wxStaticText* pInfosAreaCount = nullptr;
+    wxStaticText* pInfosConnxCount = nullptr;
     //! Zoom to apply
-    double pZoom;
-    wxColour pBackgroundColor;
+    double pZoom = 1.;
+    wxColour pBackgroundColor = Settings::background;
 
     wxPoint pCachedRealSize;
     wxPoint pCachedBoxSize;
@@ -322,28 +321,29 @@ private:
     wxPoint pOffsetForSelectedNodes;
     wxPoint pBottomRight;
 
-    bool pKeyShift;
-    bool pKeyCtrl;
+    bool pKeyShift = false;
+    bool pKeyCtrl = false;
     wxPoint pCurrentScroll;
     wxPoint pCurrentMousePosition;
     wxPoint pCurrentMousePositionGraph;
     wxPoint pCurrentClientSize;
     wxPoint pLastMousePosition;
-    Tool::Tool* pLastSelectedTool;
+    Tool::Tool* pLastSelectedTool = nullptr;
+    Tool::Tool* pRemoverForSelection = nullptr;
 
-    MouseAction pMouseAction;
+    MouseAction pMouseAction = mouseActionNone;
     BoundingBox pSelectionBox;
 
     Tool::List pTools;
 
-    int previousMaxSizeX;
-    int previousMaxSizeY;
+    int previousMaxSizeX = -1;
+    int previousMaxSizeY = -1;
 
     const size_t uid;
 
-    Antares::Component::Notebook::Page* pPage;
+    Antares::Component::Notebook::Page* pPage = nullptr;
 
-    bool wasDrawn;
+    bool wasDrawn = false;
 
     // Event table
     DECLARE_EVENT_TABLE()

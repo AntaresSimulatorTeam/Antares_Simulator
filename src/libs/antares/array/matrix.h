@@ -208,7 +208,8 @@ public:
     */
     bool saveToCSVFile(const AnyString& filename,
                        uint precision = 6,
-                       bool print_dimensions = false) const;
+                       bool print_dimensions = false,
+                       bool saveEvenIfAllZero = false) const;
 
     /*!
     ** \brief Write the content of a matrix into a single file
@@ -225,7 +226,8 @@ public:
     bool saveToCSVFile(const AnyString& filename,
                        uint precision,
                        bool print_dimensions,
-                       PredicateT& predicate) const;
+                       PredicateT& predicate,
+                       bool saveEvenIfAllZero = false) const;
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
@@ -240,7 +242,7 @@ public:
                               bool print_dimensions,
                               PredicateT& predicate) const
     {
-        saveToBuffer(data, precision, print_dimensions, predicate);
+        saveToBuffer(data, precision, print_dimensions, predicate, false);
     }
 
     //! \name Operations on columns and rows
@@ -524,13 +526,15 @@ private:
     bool internalSaveCSVFile(const AnyString& filename,
                              uint precision,
                              bool print_dimensions,
-                             PredicateT& predicate) const;
+                             PredicateT& predicate,
+                             bool saveEvenIfAllZero) const;
 
     template<class PredicateT>
     void saveToBuffer(std::string& data,
                       uint precision,
                       bool print_dimensions,
-                      PredicateT& predicate) const;
+                      PredicateT& predicate,
+                      bool saveEvenIfAllZero) const;
 
     bool loadFromBuffer(const AnyString& filename,
                         BufferType& data,

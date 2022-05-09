@@ -81,6 +81,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.NumeroDeContrainteMaxPompage = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteDeSoldeDEchange = (int*)MemAlloc(nbPays * sizeof(int));
 
+    problem.NumeroDeContrainteBorneStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteEquivalenceStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteExpressionStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
 
@@ -377,7 +378,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     for (k = 0; k < (int)nbPays; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         problem.PaliersThermiquesDuPays[k]
           = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));
@@ -757,7 +758,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure);
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine);
@@ -908,6 +909,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.NumeroDeContrainteMaxPompage);
     MemFree(problem.NumeroDeContrainteDeSoldeDEchange);
 
+    MemFree(problem.NumeroDeContrainteBorneStockFinal);
     MemFree(problem.NumeroDeContrainteEquivalenceStockFinal);
     MemFree(problem.NumeroDeContrainteExpressionStockFinal);
     MemFree(problem.NumeroDeVariableStockFinal);

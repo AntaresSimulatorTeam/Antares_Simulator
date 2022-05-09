@@ -59,8 +59,8 @@ static Antares::Component::Spotlight* globalSpotlight = nullptr;
 Spotlight::Spotlight(wxWindow* parent, uint flags) :
  Antares::Component::Panel(parent),
  pFlags(flags),
- pEdit(nullptr),
  pLayerFilter(nullptr),
+ pEdit(nullptr),
  pListbox(nullptr),
  pItemHeight(18),
  pDisplayHandle(wxNOT_FOUND),
@@ -296,8 +296,6 @@ void Spotlight::search(const String& text)
 void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
                                                     const Yuni::String& text)
 {
-    // assert
-    assert(&out != NULL);
     assert(out.empty() && "The provided vector of search tokens must be empty");
     assert(not text.empty() && "The provided text must not be empty");
 
@@ -525,7 +523,7 @@ void Spotlight::onInputUpdated(wxCommandEvent& evt)
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
-void Spotlight::onComboUpdated(wxCommandEvent& evt)
+void Spotlight::onComboUpdated(wxCommandEvent& /* evt */)
 {
     if (IsGUIAboutToQuit())
         return;

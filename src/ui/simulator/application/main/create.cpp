@@ -390,8 +390,7 @@ void ApplWnd::internalInitialize()
     pMainMap->onDblClick.connect(this, &ApplWnd::onMapDblClick);
 
     // The first page
-    Component::Notebook::Page* MapPage
-      = layersNotebook->add(pMainMap, wxT("map"), wxT("Set Content"));
+    layersNotebook->add(pMainMap, wxT("map"), wxT("Set Content"));
 
     // Create a standard page with an input selector
     std::pair<Component::Notebook*, Toolbox::InputSelector::Area*> layersUIPage
@@ -714,15 +713,13 @@ void ApplWnd::createNBInterconnections()
         pNotebook, wxT("interconnections"), wxT("Links"));
 
     // links parameters time series
-    auto* lpg = new_check_allocation<Window::linkParametersGrid>();
-    auto* intercoParam
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, lpg);
+    auto* parametersGrid = new_check_allocation<Window::linkParametersGrid>();
+    auto* intercoParam = new_check_allocation<Window::Interconnection>(page.first, page.second, parametersGrid);
     pageLinksParameters = page.first->add(intercoParam, wxT(" Parameters "));
 
     // links NTC time series
     auto* ntcGrid = new_check_allocation<Window::linkNTCgrid>();
-    auto* intercoGrid
-      = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
+    auto* intercoGrid = new_check_allocation<Window::Interconnection>(page.first, page.second, ntcGrid);
     pageLinksNTC = page.first->add(intercoGrid, wxT(" Transmission capacities "));
 
     // Summary

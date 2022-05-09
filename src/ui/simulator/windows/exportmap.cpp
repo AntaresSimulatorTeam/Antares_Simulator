@@ -250,7 +250,7 @@ void ExportMap::internalCreateComponents()
             if (not IO::Directory::Exists(folderPath))
             {
                 folderPath = pStudy->folder;
-                int sepPos = pStudy->folder.find_last_of(SEP);
+                uint sepPos = pStudy->folder.find_last_of(SEP);
                 if (sepPos != YString::npos)
                 {
                     // found it
@@ -302,39 +302,6 @@ void ExportMap::internalCreateComponents()
     pGridSizer = new wxFlexGridSizer(2, 0, 0);
     pGridSizer->AddGrowableCol(1, 1);
     pParentProperties->SetSizer(pGridSizer);
-
-    // propCaption(wxT("With the folder's name"));
-    // pMapFolderName = (wxTextCtrl*)propEdit(wxEmptyString, mnIDEditMapFolderName);
-    // pMapFolderName->ChangeValue(pMapName->GetValue());
-
-    // Which layers are exported. Default should be the current layer
-    // Image format of the image map
-    auto* layersDiv = new wxBoxSizer(wxHORIZONTAL);
-
-    /*wxArrayString layersList;
-    layersList.Add(wxStringFromUTF8("1"));
-    layersList.Add(wxStringFromUTF8("2"));
-    layersList.Add(wxStringFromUTF8("3"));
-    layersList.Add(wxStringFromUTF8("4"));
-    layersList.Add(wxStringFromUTF8("5"));
-
-    propCaption(wxT("Export layers"));
-    pLayers = new wxComboBox(pParentProperties, wxID_ANY, layersList.Item(0), wxDefaultPosition,
-    wxSize(-1,22), layersList); pGridSizer->Add(pLayers);*/
-
-    // Splitting the exported map
-    /*pSplit = (wxCheckBox*)propEdit(new wxCheckBox(pParentProperties, wxID_ANY,
-            wxT("Split the map")));
-    pSplit->SetValue(false);
-
-    // How many tiles
-    wxArrayString splitList;
-    splitList.Add(wxStringFromUTF8("2"));
-    splitList.Add(wxStringFromUTF8("4"));
-    splitList.Add(wxStringFromUTF8("8"));
-    pSplitNumberChoice = new wxChoice(pParentProperties, wxID_ANY, wxDefaultPosition, wxSize(-1,22),
-    splitList); pSplitNumberChoice->SetSelection(1);
-    */
 
     // Using a background color. Default should be set to true if JPEG is selected, false otherwise.
     pUseBackgroundColor = (wxCheckBox*)propEdit(
@@ -459,8 +426,7 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
     {
         mapFileName = Yuni::String(pMapName->GetValue().ToStdString());
         // get the name without extension
-        int posOfsep;
-        posOfsep = mapFileName.find_last_of(".");
+        uint posOfsep = mapFileName.find_last_of(".");
 
         mapNameWithoutExtension = Yuni::String(mapFileName, 0, posOfsep);
         baseMapFileName = mapNameWithoutExtension;
@@ -484,9 +450,7 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
     while (IO::Exists(fullPathMapName))
     {
         // get the offset from the name
-        int posOfsep;
-        posOfsep = mapNameWithoutExtension.find_last_of("-");
-
+        uint posOfsep = mapNameWithoutExtension.find_last_of("-");
         if (posOfsep == YString::npos)
         {
             offsetIndex = 1;
@@ -496,7 +460,10 @@ void ExportMap::ensureUniqueFileName(Yuni::String folderPath)
             String offsetStr = mapNameWithoutExtension;
             offsetStr.consume(posOfsep + 1);
 
-            offsetIndex = (offsetStr.to(offsetIndex)) ? ++offsetIndex : 1;
+            if (offsetStr.to(offsetIndex))
+                offsetIndex++;
+            else
+                offsetIndex = 1;
         }
 
         mapNameWithoutExtension = baseMapFileName + "-" << String(offsetIndex);
@@ -544,7 +511,6 @@ void ExportMap::onExportMap(void*)
     // The user data and the output can only be copied if it is not
     // a fresh study
     bool srcFolderNotEmpty = not pStudy->folder.empty();
-    bool split = srcFolderNotEmpty and pSplit and pSplit->GetValue();
     int nbSplitParts
       = srcFolderNotEmpty and pSplitNumberChoice and pSplitNumberChoice->GetSelection();
     std::list<uint16_t> layers(1, 1); // list of the layers ID to save on disk
@@ -582,23 +548,21 @@ void ExportMap::onExportMap(void*)
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     // Checking for the root folder
+    if (System::windows)
     {
         String rootFolder;
         Resources::GetRootFolder(rootFolder);
         rootFolder.toLower();
         rootFolder << SEP;
 
-        if (System::windows)
+        // On a clean windows installation, we are in a `bin` folder
+        if (rootFolder.endsWith("\\bin\\"))
         {
-            // On a clean windows installation, we are in a `bin` folder
-            if (rootFolder.endsWith("\\bin\\"))
-            {
-                rootFolder += "..\\";
-                String tmp;
-                IO::Normalize(tmp, rootFolder);
-                rootFolder = tmp;
-                rootFolder << SEP;
-            }
+            rootFolder += "..\\";
+            String tmp;
+            IO::Normalize(tmp, rootFolder);
+            rootFolder = tmp;
+            rootFolder << SEP;
         }
 
         String pathCopy = path;

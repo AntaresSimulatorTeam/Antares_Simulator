@@ -83,7 +83,7 @@ void referenceIniFile::save()
 void referenceIniFile::save_section(string_view sectionTitle, vector<string>& sectionProperties, ofstream & file)
 {
 	file << sectionTitle << endl;
-	for (int i = 0; i < sectionProperties.size(); ++i)
+	for (std::size_t i = 0; i < sectionProperties.size(); ++i)
 		file << sectionProperties[i] << " = " << properties_[sectionProperties[i]] << endl;
 	file << endl;
 }

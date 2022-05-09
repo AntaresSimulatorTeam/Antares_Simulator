@@ -105,7 +105,6 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    template<bool PreproOnly>
     void regenerateTimeSeries(uint year);
 
     /*!

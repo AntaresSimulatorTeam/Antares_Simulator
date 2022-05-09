@@ -504,34 +504,6 @@ public:
                                             const YString& extension,
                                             uint numSpace) const;
 
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createMPSFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("problem", "mps", numSpace);
-    };
-    //@}
-
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createCriterionFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    };
-    //@}
-
     //! \name
     //@{
     /*!

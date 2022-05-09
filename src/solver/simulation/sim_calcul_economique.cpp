@@ -89,9 +89,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           ? OUI_ANTARES
           : NON_ANTARES;
 
-    problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
-
     switch (parameters.power.fluctuations)
     {
     case Data::lssFreeModulations:
@@ -147,21 +144,18 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
                : NON_ANTARES);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = ((area.hydro.reservoirManagement
-              && (problem.OptimisationAuPasHebdomadaire == OUI_ANTARES)
-              && (!area.hydro.useHeuristicTarget
-                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
-                       == OUI_ANTARES))
-               ? OUI_ANTARES
-               : NON_ANTARES);
-        problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = NON_ANTARES;
+          = ((area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget) ? OUI_ANTARES
+                                                                                : NON_ANTARES);
+
         problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = NON_ANTARES;
-        if (problem.WaterValueAccurate == OUI_ANTARES && area.hydro.useWaterValue)
-        {
+        if (problem.WaterValueAccurate == OUI_ANTARES
+            && problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes == OUI_ANTARES)
             problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = OUI_ANTARES;
-            problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire = OUI_ANTARES;
+
+        problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = NON_ANTARES;
+        if (problem.WaterValueAccurate == OUI_ANTARES
+            && problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire == OUI_ANTARES)
             problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = OUI_ANTARES;
-        }
 
         problem.CaracteristiquesHydrauliques[i]->TailleReservoir = area.hydro.reservoirCapacity;
 
@@ -276,6 +270,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDePaliersThermiques = NombrePaliers;
 
     problem.LeProblemeADejaEteInstancie = NON_ANTARES;
+
+    problem.OptimisationAuPasHebdomadaire
+      = (parameters.simplexOptimizationRange == Data::sorWeek) ? OUI_ANTARES : NON_ANTARES;
 }
 
 void SIM_InitialisationResultats()
@@ -600,24 +597,25 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
 
             uint tsFatalIndex = (uint)tsIndex.Hydraulique < ror.width ? tsIndex.Hydraulique : 0;
-            problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-              = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx] + scratchpad.mustrunSum[indx];
-
+            double& mustRunGen = problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k];
             if (parameters.renewableGeneration.isAggregated())
             {
-                problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                  += scratchpad.ts.wind[tsIndex.Eolien][indx]
-                     + scratchpad.ts.solar[tsIndex.Solar][indx];
+                mustRunGen = scratchpad.ts.wind[tsIndex.Eolien][indx]
+                             + scratchpad.ts.solar[tsIndex.Solar][indx]
+                             + scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
+                             + scratchpad.mustrunSum[indx];
             }
 
             // Renewable
             if (parameters.renewableGeneration.isClusters())
             {
+                mustRunGen = scratchpad.miscGenSum[indx] + ror[tsFatalIndex][indx]
+                             + scratchpad.mustrunSum[indx];
+
                 area.renewable.list.each([&](const RenewableCluster& cluster) {
                     assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
-                    problem.AllMustRunGeneration[j]->AllMustRunGenerationOfArea[k]
-                      += cluster.valueAtTimeStep(
-                        tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
+                    mustRunGen += cluster.valueAtTimeStep(
+                      tsIndex.RenouvelableParPalier[cluster.areaWideIndex], (uint)indx);
                 });
             }
 
@@ -874,8 +872,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                     if (area.hydro.reservoirManagement) /* No need to include the condition "use
                                                            water value" */
                     {
-                        if (problem.CaracteristiquesHydrauliques[k]->SuiviNiveauHoraire
-                            == OUI_ANTARES)
+                        if (not area.hydro.useHeuristicTarget)
                         {
                             for (uint j = 0; j < 7; ++j)
                             {
@@ -890,8 +887,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                             }
                         }
 
-                        if (problem.CaracteristiquesHydrauliques[k]->SuiviNiveauHoraire
-                            == NON_ANTARES)
+                        if (area.hydro.useHeuristicTarget)
                         {
                             double WNI = 0.;
                             for (uint j = 0; j < 7; ++j)

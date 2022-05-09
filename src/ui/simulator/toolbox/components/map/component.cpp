@@ -392,7 +392,7 @@ Antares::Component::MapNotebook::Page* Component::addNewLayer(wxString pageName,
         size_t numberOffset = 0;
 
         while (
-          pNoteBook->find(wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset, false)
+          pNoteBook->find(wxString::FromUTF8("Map ") << pMapLayer->getUid() + numberOffset)
           != nullptr)
             numberOffset++;
 
@@ -458,7 +458,7 @@ void Component::removeLayer(Antares::Component::MapNotebook::Page& page)
     }
 }
 
-void Component::drawerVisible(bool v)
+void Component::drawerVisible()
 {
     wxSizer* sizer = GetSizer();
     if (sizer)
@@ -548,8 +548,6 @@ Data::Study::Ptr Component::attachedStudy()
 
 bool Component::loadFromStudy(Data::Study& study)
 {
-    assert(&study != NULL && "invalid study");
-
     if (!pMapActiveLayer)
         return false;
 
@@ -651,6 +649,8 @@ bool Component::saveToImageFile(const AnyString& filePath,
         return svgDC.IsOk();
         // break;
     }
+    case mfFormatCount:
+        return false;
     }
 
     return true; // all was fine
@@ -903,6 +903,7 @@ void Component::onNew(void*)
 {
     if (pMapActiveLayer)
         pMapActiveLayer->addNewNode();
+    setFocus();
 }
 
 void Component::evtPopupCopy(wxCommandEvent&)
@@ -1063,7 +1064,7 @@ void Component::onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*)
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Create a new area"), "images/16x16/area.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Component::evtNewArea),
+                 wxCommandEventHandler(Component::evtNewArea<1>),
                  nullptr,
                  this);
 
@@ -1076,57 +1077,27 @@ void Component::onNewDropdown(Antares::Component::Button&, wxMenu& menu, void*)
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Create 2 new areas"), nullptr);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Component::evtNewArea2),
+                 wxCommandEventHandler(Component::evtNewArea<2>),
                  nullptr,
                  this);
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Create 4 new areas"), nullptr);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Component::evtNewArea4),
+                 wxCommandEventHandler(Component::evtNewArea<4>),
                  nullptr,
                  this);
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Create 6 new areas"), nullptr);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Component::evtNewArea6),
+                 wxCommandEventHandler(Component::evtNewArea<6>),
                  nullptr,
                  this);
     it = Menu::CreateItem(&menu, wxID_ANY, wxT("Create 8 new areas"), nullptr);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Component::evtNewArea8),
+                 wxCommandEventHandler(Component::evtNewArea<8>),
                  nullptr,
                  this);
-}
-
-void Component::evtNewArea(wxCommandEvent&)
-{
-    if (pMapActiveLayer)
-        pMapActiveLayer->addNewNode();
-}
-
-void Component::evtNewArea2(wxCommandEvent&)
-{
-    if (pMapActiveLayer)
-        pMapActiveLayer->addNewNode(2);
-}
-
-void Component::evtNewArea4(wxCommandEvent&)
-{
-    if (pMapActiveLayer)
-        pMapActiveLayer->addNewNode(4);
-}
-
-void Component::evtNewArea6(wxCommandEvent&)
-{
-    if (pMapActiveLayer)
-        pMapActiveLayer->addNewNode(6);
-}
-
-void Component::evtNewArea8(wxCommandEvent&)
-{
-    if (pMapActiveLayer)
-        pMapActiveLayer->addNewNode(8);
 }
 
 void Component::recenterView()

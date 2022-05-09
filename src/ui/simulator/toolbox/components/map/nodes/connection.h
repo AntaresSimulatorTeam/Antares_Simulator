@@ -69,7 +69,7 @@ public:
     /*!
     ** \brief Get the visivility for a layerId
     */
-    const bool isVisibleOnLayer(const size_t& layerID) const;
+    bool isVisibleOnLayer(const size_t& layerID) const;
     //@}
 
     //! Type of the node

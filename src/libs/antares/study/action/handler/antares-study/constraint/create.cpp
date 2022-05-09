@@ -98,7 +98,7 @@ bool Create::prepareWL(Context& ctx)
         if (suffix == "<auto>" || !explicitTarget)
         {
             TransformNameIntoID(pFuturConstraintName, id);
-            constraintFound = ctx.study.bindingConstraints.find(id);
+            constraintFound = ctx.study->bindingConstraints.find(id);
             if (constraintFound)
             {
                 Antares::Data::ConstraintName::Size sepPos = id.find_last_of('-');
@@ -119,7 +119,7 @@ bool Create::prepareWL(Context& ctx)
                     pFuturConstraintName.clear() << pTargetConstraintName << "-" << indx;
                     id.clear();
                     TransformNameIntoID(pFuturConstraintName, id);
-                    constraintFound = ctx.study.bindingConstraints.find(id);
+                    constraintFound = ctx.study->bindingConstraints.find(id);
                 } while (constraintFound);
             }
         }
@@ -127,13 +127,13 @@ bool Create::prepareWL(Context& ctx)
         {
             pFuturConstraintName += suffix;
             TransformNameIntoID(pFuturConstraintName, id);
-            constraintFound = ctx.study.bindingConstraints.find(id);
+            constraintFound = ctx.study->bindingConstraints.find(id);
         }
     }
     else
     {
         TransformNameIntoID(pFuturConstraintName, id);
-        constraintFound = ctx.study.bindingConstraints.find(id);
+        constraintFound = ctx.study->bindingConstraints.find(id);
     }
 
     pInfos.caption.clear() << "Constraint " << pFuturConstraintName;
@@ -178,13 +178,13 @@ bool Create::performWL(Context& ctx)
 
     String id;
     TransformNameIntoID(pFuturConstraintName, id);
-    ctx.constraint = ctx.study.bindingConstraints.find(id);
+    ctx.constraint = ctx.study->bindingConstraints.find(id);
 
     // The area
     if (!ctx.constraint)
     {
         // create the area
-        ctx.constraint = ctx.study.bindingConstraints.add(pFuturConstraintName);
+        ctx.constraint = ctx.study->bindingConstraints.add(pFuturConstraintName);
         ctx.constraint->clearAndReset(pFuturConstraintName, pType, pOperator);
         logs.debug() << "[study-action] The constraint " << pFuturConstraintName
                      << " has been created";

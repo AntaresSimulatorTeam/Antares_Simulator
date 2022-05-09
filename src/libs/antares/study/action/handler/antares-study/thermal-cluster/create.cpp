@@ -73,7 +73,7 @@ bool Create::prepareWL(Context& ctx)
 
     // finding the final area
     const Data::AreaName& areaMapping = ctx.areaNameMapping[pOriginalAreaName];
-    const Data::Area* area = ctx.study.areas.findFromName(areaMapping);
+    const Data::Area* area = ctx.study->areas.findFromName(areaMapping);
     bool forceAreaCreate = ctx.areaForceCreate[pOriginalAreaName];
     bool forcePlantCreate = ctx.clusterForceCreate[pOriginalAreaName];
 

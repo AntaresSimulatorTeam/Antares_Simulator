@@ -219,22 +219,16 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
     // Read link's parameters times series
     filename.clear() << folder << SEP << with->id << "_parameters.txt";
-    const uint matrixWidth = 6;
-    success
-      = parameters.loadFromCSVFile(
-          filename, matrixWidth, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
-        && success;
+    success = parameters.loadFromCSVFile(filename, fhlMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+              && success;
 
     // Read link's direct capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_direct.txt";
-    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
-              && success;
+    success = directCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
 
     // Read link's indirect capacities time series
     filename.clear() << capacitiesFolder << SEP << with->id << "_indirect.txt";
-    success
-      = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR, Matrix<>::optImmediate)
-        && success;
+    success = indirectCapacities.loadFromCSVFile(filename, 1, HOURS_PER_YEAR) && success;
 
     return success;
 }
@@ -711,8 +705,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 // Copper plate mode
                 auto infinity = +std::numeric_limits<double>::infinity();
-                link.directCapacities.fillColumn(0, +infinity);
-                link.indirectCapacities.fillColumn(0, +infinity);
+                link.directCapacities.fill(infinity);
+                link.indirectCapacities.fill(infinity);
                 break;
             }
             }
@@ -750,11 +744,12 @@ bool saveAreaLinksTimeSeriesToFolder(const Area* area, const char* const folder)
 
         // Save direct capacities time series
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_direct.txt";
-        success = link.directCapacities.saveToCSVFile(filename) && success;
+        success = link.directCapacities.saveToCSVFile(filename, 6, false, true) && success;
 
         // Save indirect capacities time series
+
         filename.clear() << capacitiesFolder << SEP << link.with->id << "_indirect.txt";
-        success = link.indirectCapacities.saveToCSVFile(filename) && success;
+        success = link.indirectCapacities.saveToCSVFile(filename, 6, false, true) && success;
     }
 
     return success;

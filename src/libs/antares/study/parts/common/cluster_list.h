@@ -149,7 +149,7 @@ public:
     **
     ** \param idToFind ID of the cluster to rename
     ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renammed)
+    ** \return True if the operation succeeded (the cluster has been renamed)
     **   false otherwise (not found or if another cluster has the same name)
     **
     ** The indexes for clusters will be rebuilt.

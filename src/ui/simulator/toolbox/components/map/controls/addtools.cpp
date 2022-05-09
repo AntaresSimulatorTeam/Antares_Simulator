@@ -50,18 +50,19 @@ AddingToolsHelper::AddingToolsHelper(Manager& manager,
 {
 }
 
-void AddingToolsHelper::operator()()
+Tool::Tool* AddingToolsHelper::operator()()
 {
     const bool haveConnections = (pConnectionsSelectedCount != 0);
     const bool haveRealNodes = (pConnectionsSelectedCount != pSelectedCount);
 
     // The common tools
-    createCommonTools(haveRealNodes, haveConnections);
+    Tool::Tool* t = createCommonTools(haveRealNodes, haveConnections);
 
     if (haveRealNodes)
         createToolsForRealNodes();
     if (haveConnections)
         createToolsForConnections();
+    return t;
 }
 
 void AddingToolsHelper::createToolsForRealNodes()
@@ -74,7 +75,8 @@ void AddingToolsHelper::createToolsForConnections()
 {
 }
 
-void AddingToolsHelper::createCommonTools(const bool haveRealNodes, const bool haveConnections)
+Tool::Tool* AddingToolsHelper::createCommonTools(const bool haveRealNodes,
+                                                 const bool haveConnections)
 {
     // To delete selected items
     Tool::Remover* t = createToolToTheBottom<Tool::Remover>();
@@ -92,6 +94,7 @@ void AddingToolsHelper::createCommonTools(const bool haveRealNodes, const bool h
     }
 
     pBottom.x += 5;
+    return t;
 }
 
 } // namespace Private

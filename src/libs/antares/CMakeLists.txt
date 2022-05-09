@@ -374,14 +374,13 @@ set(SRC_STDCXX
 source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
-	config.h  constants.h
+    config.h
+    constants.h
+    xpansion.h
 	# Misc
 
 	locale.h
 	locale.cpp
-
-	string-to-double.h
-	string-to-double.cpp
 
 	emergency.h emergency.cpp
 

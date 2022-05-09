@@ -23,7 +23,7 @@ jobs:
       uses: tj-actions/changed-files@v1.1.2
       with:
         files: |
-          docker/centos7
+          docker/centos7-basic-requirements
           antares-deps-version.json
 
     - name: Read antares-deps version
@@ -78,23 +78,6 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            cmake3 --build _build --config Release -j2
     
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
-    - name : Run non-regression tests
-      run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest3 -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
-           
     - name: Installer .rpm creation
       run: |
            cd _build

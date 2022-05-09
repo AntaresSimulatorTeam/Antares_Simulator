@@ -36,6 +36,7 @@
 #include "../../fwd.h"
 #include <set>
 #include <map>
+#include <memory>
 #include <vector>
 
 namespace Antares
@@ -64,16 +65,10 @@ enum class LocalTSGenerationBehavior
     forceNoGen
 };
 
-enum class GlobalTSGenerationBehavior
-{
-    generate = 0, // Stochastic
-    doNotGenerate // Ready-made
-};
-
 /*!
 ** \brief A single thermal cluster
 */
-class ThermalCluster final : public Cluster
+class ThermalCluster final : public Cluster, public std::enable_shared_from_this<ThermalCluster>
 {
 public:
     enum ThermalDispatchableGroup
@@ -118,16 +113,11 @@ public:
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
 public:
-    //! \name Constructor & Destructor
-    //@{
-    /*!
-    ** \brief Default constructor, with a parent area
-    */
     explicit ThermalCluster(Data::Area* parent);
     explicit ThermalCluster(Data::Area* parent, uint nbParallelYears);
-    //! Destructor
+
+    ThermalCluster() = delete;
     ~ThermalCluster();
-    //@}
 
     /*!
     ** \brief Invalidate all data associated to the thermal cluster
@@ -223,7 +213,7 @@ public:
     bool checkMinStablePowerWithNewModulation(uint index, double value);
     //@}
 
-    bool doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const;
+    bool doWeGenerateTS(bool globalTSgeneration) const;
 
 public:
     /*!
