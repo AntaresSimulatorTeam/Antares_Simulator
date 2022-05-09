@@ -1070,7 +1070,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Adequacy patch
-    if (study.header.version >= 820)
+    if (study.header.version >= 820 && study.parameters.include.adequacyPatch)
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
