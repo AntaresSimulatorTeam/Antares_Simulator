@@ -79,5 +79,5 @@ You can download pre-compiled antares-deps archive from [Antares dependencies co
 Note:
 > For windows, you must you use a MSVC version compatible with MSVC version used in GitHub Action.
 
-[antares-deps-url]: https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v2.0.0-rc2
+[antares-deps-url]: https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v2.0.1
 
