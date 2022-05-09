@@ -177,6 +177,38 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
+bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdequacyPatchPTO& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "dens")
+    {
+        out = AdequacyPatch::adqPatchPTOIsDens;
+        return true;
+    }
+    if (s == "load")
+    {
+        out = AdequacyPatch::adqPatchPTOIsLoad;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid price taking order. Got '" << text << "'";
+
+    return false;
+}
+
+const char* PriceTakingOrderToString(AdequacyPatch::AdequacyPatchPTO pto)
+{
+    switch (pto)
+    {
+    case AdequacyPatch::adqPatchPTOIsDens:
+        return "DENS";
+    case AdequacyPatch::adqPatchPTOIsLoad:
+        return "Load";
+    }
+    return "";
+}
 
 Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
 {
@@ -200,6 +232,14 @@ void Parameters::resetSeeds()
     // The same way for all others
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
+}
+void Parameters::resetSeedsAdqPatch()
+{
+    // Initialize all seeds/threshold values for adequacy patch
+    seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule]
+      = (float)adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
+    seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations]
+      = (float)adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::reset()
@@ -305,9 +345,6 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
-    include.adequacyPatch = false;
-    setToZero12LinksForAdequacyPatch = true;
-    setToZero11LinksForAdequacyPatch = true;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -318,6 +355,14 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
+    
+    // Adequacy patch
+    include.adequacyPatch = false;
+    setToZero12LinksForAdequacyPatch = true;
+    setToZero11LinksForAdequacyPatch = true;
+    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
+    adqPatchSaveIntermediateResults = false;
+    resetSeedsAdqPatch();
 
     // Initialize all seeds
     resetSeeds();
@@ -555,12 +600,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
-    if (key == "include-adequacypatch")
-        return value.to<bool>(d.include.adequacyPatch);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
-        return value.to<bool>(d.setToZero12LinksForAdequacyPatch);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
-        return value.to<bool>(d.setToZero11LinksForAdequacyPatch);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -620,6 +659,34 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     return false;
 }
+static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
+{
+    if (key == "include-adq-patch")
+        return value.to<bool>(d.include.adequacyPatch);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+        return value.to<bool>(d.setToZero12LinksForAdequacyPatch);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+        return value.to<bool>(d.setToZero11LinksForAdequacyPatch);
+    if (key == "save-intermediate-results")
+        return value.to<bool>(d.adqPatchSaveIntermediateResults);
+    // Price taking order
+    if (key == "price-taking-order")
+        return StringToPriceTakingOrder(value, d.adqPatchPriceTakingOrder);
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<float>(
+          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<float>(
+          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
@@ -1003,6 +1070,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
          {"input", &SGDIntLoadFamily_Input},
          {"output", &SGDIntLoadFamily_Output},
          {"optimization", &SGDIntLoadFamily_Optimization},
+         {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
          {"other preferences", &SGDIntLoadFamily_OtherPreferences},
          {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
          {"playlist", &SGDIntLoadFamily_Playlist},
@@ -1718,16 +1786,28 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
-        section->add("include-adequacypatch", include.adequacyPatch);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
-                     setToZero12LinksForAdequacyPatch);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
-                     setToZero11LinksForAdequacyPatch);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
         section->add("include-unfeasible-problem-behavior",
                      Enum::toString(include.unfeasibleProblemBehavior));
+    }
+
+    // Adequacy patch
+    {
+        auto* section = ini.addSection("adequacy patch");
+        section->add("include-adq-patch", include.adequacyPatch);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                     setToZero12LinksForAdequacyPatch);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step",
+                     setToZero11LinksForAdequacyPatch);
+        section->add("save-intermediate-results", adqPatchSaveIntermediateResults);
+        section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
+        // Threshholds
+        section->add("threshold-initiate-curtailment-sharing-rule",
+                     seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
+        section->add("threshold-display-local-matching-rule-violations",
+                     seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
     }
 
     // Other preferences

@@ -594,6 +594,32 @@ enum LinkCapacityForAdequacyPatchFirstStep
 
 }; // enum NTC
 
+/*!
+** \brief Types of Price Taking Order (PTO) for Adequacy Patch
+*/
+enum AdequacyPatchPTO
+{
+    //! PTO is DENS
+    adqPatchPTOIsDens = 0,
+    //! PTO is Load
+    adqPatchPTOIsLoad
+
+}; // enum AdequacyPatchPTO
+
+enum AdqPatchThresholdsIndex
+{
+    //! Threshold to initiate curtailment sharing rule
+    adqPatchThresholdInitiateCurtailmentSharingRule = 0,
+    //! Threshold to display Local Matching Rule violations
+    adqPatchThresholdDisplayLocalMatchingRuleViolations,
+    adqPatchThresholdsMax
+};
+
+//! A default threshold value for initiate curtailment sharing rule
+const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.5;
+//! A default threshold value for display local matching rule violations
+const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.5;
+
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares

@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
-#define __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
+#ifndef __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADEQUACY_PATCH_H__
+#define __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADEQUACY_PATCH_H__
 
 #include <antares/wx-wrapper.h>
 #include "../../../toolbox/components/button.h"
@@ -42,7 +42,7 @@ namespace Options
 /*!
 ** \brief Startup Wizard User Interface
 */
-class Optimization final : public wxDialog
+class AdequacyPatchOptions final : public wxDialog
 {
 public:
     //! \name Constructor & Destructor
@@ -52,9 +52,9 @@ public:
     **
     ** \param parent The parent window
     */
-    Optimization(wxWindow* parent);
+    AdequacyPatchOptions(wxWindow* parent);
     //! Destructor
-    virtual ~Optimization();
+    virtual ~AdequacyPatchOptions();
     //@}
 
 private:
@@ -72,56 +72,36 @@ private:
     void refresh();
     void onClose(void*);
     void onResetToDefault(void*);
+    wxTextCtrl* insertEdit(wxWindow* parent,
+                           wxSizer* sizer,
+                           const wxString& text,
+                           wxObjectEventFunction);
 
+    void onSelectPtoIsDens(wxCommandEvent&);
+    void onSelectPtoIsLoad(wxCommandEvent&);
     void onSelectModeInclude(wxCommandEvent& evt);
     void onSelectModeIgnore(wxCommandEvent& evt);
-    void onSelectSimplexDay(wxCommandEvent& evt);
-    void onSelectSimplexWeek(wxCommandEvent& evt);
-
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
-
-    void onSelectLinkTypeLocal(wxCommandEvent& evt);
-    void onSelectLinkTypeAC(wxCommandEvent& evt);
-
-    void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
-    void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
-    void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
-    void onSelectUnfeasibleBehaviorErrorMps(wxCommandEvent& evt);
-    void onSelectUnfeasibleBehavior(
-      const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior);
 
     void onPopupMenu(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-    void onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-    void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
-    void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
-    void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
-    
-    void onInternalMotion(wxMouseEvent&);
+    void onPopupMenuNTC(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
+    void onPopupMenuPTO(Component::Button&, wxMenu& menu, void*);
 
+    void onInternalMotion(wxMouseEvent&);  
+    void onEditSeedTSDraws(wxCommandEvent&);
 private:
-    Component::Button* pBtnConstraints;
-    Component::Button* pBtnHurdleCosts;
-    Component::Button* pBtnTransmissionCapacities;
-    Component::Button* pBtnLinkType;
-    Component::Button* pBtnThermalClusterMinStablePower;
-    Component::Button* pBtnThermalClusterMinUPTime;
-    Component::Button* pBtnDayAheadReserve;
-    Component::Button* pBtnStrategicReserve;
-    Component::Button* pBtnPrimaryReserve;
-    Component::Button* pBtnSpinningReserve;
-    Component::Button* pBtnSimplexOptimizationRange;
-
-    Component::Button* pBtnExportMPS;
-    Component::Button* pBtnUnfeasibleProblemBehavior;
+    Component::Button* pBtnAdequacyPatch;
+    Component::Button* pBtnAdequacyPatchNTC12;
+    Component::Button* pBtnAdequacyPatchNTC11;
+    Component::Button* pBtnAdequacyPatchPTO;
+    Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
+    wxTextCtrl* pEditSeeds[Data::AdequacyPatch::adqPatchThresholdsMax];
     bool* pTargetRef;
 
-}; // class Optimization
+}; // class AdequacyPatchOptions
 
 } // namespace Options
 } // namespace Window
 } // namespace Antares
 
-#endif // __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
+#endif // __ANTARES_APPLICATION_WINDOWS_OPTIONS_ADEQUACY_PATCH_H__

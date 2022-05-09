@@ -32,6 +32,8 @@
 #include "../../windows/options/select-output/select-output.h"
 #include "../../windows/options/playlist/playlist.h"
 #include "../../windows/options/optimization/optimization.h"
+#include "../../windows/options/adequacy-patch/adequacy-patch-options.h"
+#include "../../windows/options/adequacy-patch/adequacy-patch-areas.h"
 #include "../../windows/options/advanced/advanced.h"
 #include "../../windows/message.h"
 
@@ -122,6 +124,20 @@ void ApplWnd::evtOnOptionsAdvanced(wxCommandEvent&)
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdvancedParameters>(this);
+}
+
+void ApplWnd::evtOnOptionsAdequacyPatchConfigure(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
+}
+
+void ApplWnd::evtOnOptionsAdequacyPatchAreas(wxCommandEvent&)
+{
+    Forms::Disabler<ApplWnd> disabler(*this);
+    if (Data::Study::Current::Valid())
+        Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchAreas>(this);
 }
 
 } // namespace Forms
