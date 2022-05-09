@@ -52,14 +52,14 @@ In the expressions of expectation and variance, \\(\Gamma(x)\\) is the standard 
 
 **TS Gen. Parameters : \\(\theta\\) and \\(\mu\\)**
 
-| **Law** | $$\theta$$ | $$\mu$$ | **Corr(Xt, Xt+h)** |
+| **Law** | $\theta$ | $$\mu$$ | **Corr(Xt, Xt+h)** |
 |-----|----|-----|--------|
 | Pure exponential decay | $$\theta > 0$$ | $$\mu = 1$$ | $$e^{-\theta h}$$ |
 | Smoothed exponential decay [^decay] | $$\theta > 0$$ | $$ 1 < \mu < 24$$ | $$\Phi(\theta, \mu, h)$$ |
 
 $$\Phi(\theta, \mu, h)\ =\ {1\over A}\ *\ \sum_{i=0, \mu}{\ \sum_{j=h, h+\mu}{e^{-\theta|j-i|}}}$$
 
-**with $$A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$$**
+**with $A=\mu + 2 \sum_{i=1, \mu; j=1, \mu; j > i}{e^{-\theta(j-i)}}$**
 
 
 ## Time-series generation (load, wind, solar): GUI
