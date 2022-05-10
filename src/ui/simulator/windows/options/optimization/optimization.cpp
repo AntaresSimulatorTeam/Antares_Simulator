@@ -46,13 +46,10 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
 
     auto* label = Component::CreateLabel(parent, text, true);
 
@@ -373,7 +370,7 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->AddSpacer(2);
     }
-    SubTitle(this, s, wxT("Adequacy Patch"));
+    addLabelAdqPatch(this, s, wxT("Adequacy Patch"));
     // Adequacy patch
     {
         label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
