@@ -267,11 +267,6 @@ extern Yuni::Event<void(Data::BindingConstraint*)> OnStudyConstraintModified;
 extern Yuni::Event<void()> OnStudyNodalOptimizationChanged;
 
 /*!
-** \brief Event: The area use adequacy patch settings have been changed
-*/
-extern Yuni::Event<void()> OnStudyAreaUseAdequacyPatchChanged;
-
-/*!
 ** \brief Event: The simulation settings have been changed
 */
 extern Yuni::Event<void()> OnStudySimulationSettingsChanged;
