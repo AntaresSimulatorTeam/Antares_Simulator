@@ -250,6 +250,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
             pbPalier.PminDuPalierThermiquePendantUneSemaine[l] = 0;
             pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
+            pbPalier.NomDuPalierThermique[l] = cluster.name().c_str();
 
             pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;
             pbPalier.CoutDArretDUnGroupeDuPalierThermique[l] = 0;
