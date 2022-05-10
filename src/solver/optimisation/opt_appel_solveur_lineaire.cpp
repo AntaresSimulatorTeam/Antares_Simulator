@@ -318,22 +318,14 @@ RESOLUTION:
         }
         CoutOpt = 0.0;
 
-        double epsilon = 1e-6;
         for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         {
             CoutOpt += ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];
 
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != NULL)
-                if (ProblemeAResoudre->VariablesEntieres[Var])
-                {
-                    *pt = ProblemeAResoudre->X[Var] - epsilon;
-                }
-                else 
-                {
-                    *pt = ProblemeAResoudre->X[Var];
-                }
-                
+                *pt = ProblemeAResoudre->X[Var];
+
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
             if (pt != NULL)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
