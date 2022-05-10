@@ -103,7 +103,7 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
                          [](const std::pair<Antares::Data::AreaName, Antares::Data::Area*>& area)
                          {
                              return area.second->adequacyPatchMode
-                                    == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+                                    == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch;
                          }))
         {
             throw Error::NoAreaInsideAdqPatchMode();

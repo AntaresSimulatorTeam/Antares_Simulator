@@ -570,11 +570,11 @@ namespace AdequacyPatch
 enum AdequacyPatchMode
 {
     //! Virtual area in adq patch
-    adqmVirtualArea = 0,
+    virtualArea = 0,
     //! Physical Area outside the adq-patch
-    adqmPhysicalAreaOutsideAdqPatch,
+    physicalAreaOutsideAdqPatch,
     //! Physical Area inside the adq-patch
-    adqmPhysicalAreaInsideAdqPatch
+    physicalAreaInsideAdqPatch
 
 }; // enum AdequacyPatchMode
 
