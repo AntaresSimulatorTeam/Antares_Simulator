@@ -116,8 +116,8 @@ void setNTCbounds(double& Xmax,
     if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
     {
         SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-          ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
-          ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
+          ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco],
+          ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco],
           ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
           ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
 
