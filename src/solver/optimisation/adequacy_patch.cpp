@@ -41,45 +41,39 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     bool setToZeroNTCfromOutToOut_AdqPatch
       = ProblemeHebdo->adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
 
-    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
-
     switch (OriginNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        returnNTC = getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                          setToZeroNTCfromOutToIn_AdqPatch);
+        return getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
+                                                     setToZeroNTCfromOutToIn_AdqPatch);
         break;
     case physicalAreaOutsideAdqPatch:
-        returnNTC = getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                           setToZeroNTCfromOutToIn_AdqPatch,
-                                                           setToZeroNTCfromOutToOut_AdqPatch);
+        return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
+                                                      setToZeroNTCfromOutToIn_AdqPatch,
+                                                      setToZeroNTCfromOutToOut_AdqPatch);
         break;
     default:
-        returnNTC = leaveLocalValues;
+        return leaveLocalValues;
         break;
     }
-    return returnNTC;
 }
 
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch)
 {
-    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
-
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        returnNTC = setToZero;
+        return setToZero;
         break;
     case physicalAreaOutsideAdqPatch:
-        returnNTC = (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
+        return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
         break;
     default:
-        returnNTC = leaveLocalValues;
+        return leaveLocalValues;
         break;
     }
-    return returnNTC;
 }
 
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
@@ -87,21 +81,18 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch)
 {
-    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
-
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        returnNTC = (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setExtremityOrigineToZero;
+        return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setExtremityOrigineToZero;
         break;
     case physicalAreaOutsideAdqPatch:
-        returnNTC = (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
+        return (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
         break;
     default:
-        returnNTC = leaveLocalValues;
+        return leaveLocalValues;
         break;
     }
-    return returnNTC;
 }
 
 void setNTCbounds(double& Xmax,
