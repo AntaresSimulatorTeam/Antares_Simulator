@@ -7,14 +7,14 @@
 
 namespace TimeElapsed
 {
-struct Info
+struct TimeInfo
 {
-    Info(unsigned int duration_ms, unsigned int nCalls) : duration_ms_(duration_ms), numberOfCalls_(nCalls)
+    TimeInfo(unsigned int duration_ms, unsigned int nCalls) : duration_ms_(duration_ms), numberOfCalls_(nCalls)
     {
     }
     unsigned int duration_ms_ = 0;
     unsigned int numberOfCalls_ = 0;
 };
 
-using InfoMapType = std::map<Yuni::ShortString256, Info>;
+using TimeInfoMapType = std::map<Yuni::ShortString256, TimeInfo>;
 } // namespace TimeElapsed

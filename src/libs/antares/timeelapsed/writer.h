@@ -12,7 +12,7 @@ class FileWriter : public IWriter
 public:
     FileWriter() = default;
     bool setOutputFile(const Yuni::String& filename);
-    void flush(const InfoMapType& imt) override;
+    void flush(const TimeInfoMapType& imt) override;
 
 private:
     Yuni::IO::File::Stream mOutputFile;

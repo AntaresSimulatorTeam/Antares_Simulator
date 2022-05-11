@@ -13,7 +13,7 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
     }
     else
     {
-        mInfoMap.emplace(text, Info(duration_ms, 1));
+        mInfoMap.emplace(text, TimeInfo(duration_ms, 1));
     }
 }
 

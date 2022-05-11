@@ -14,7 +14,7 @@ bool FileWriter::setOutputFile(const Yuni::String& filename)
     return true;
 }
 
-void FileWriter::flush(const InfoMapType& imt)
+void FileWriter::flush(const TimeInfoMapType& imt)
 {
     mOutputFile << "#item\tduration_ms\tNbOccurences\n";
     for (const auto& it : imt)

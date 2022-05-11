@@ -15,6 +15,6 @@ public:
     void flush(IWriter& writer) const;
 
 private:
-    InfoMapType mInfoMap;
+    TimeInfoMapType mInfoMap;
 };
 } // namespace TimeElapsed

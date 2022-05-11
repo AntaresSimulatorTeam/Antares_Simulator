@@ -8,6 +8,6 @@ class IWriter
 {
 public:
     virtual ~IWriter() = default;
-    virtual void flush(const InfoMapType& imt) = 0;
+    virtual void flush(const TimeInfoMapType& imt) = 0;
 };
 } // namespace TimeElapsed
