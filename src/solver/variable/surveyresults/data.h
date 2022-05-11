@@ -31,7 +31,6 @@
 #include "../constants.h"
 #include <yuni/core/string.h>
 #include <antares/study.h>
-#include <antares/timeelapsed.h>
 
 namespace Antares
 {
