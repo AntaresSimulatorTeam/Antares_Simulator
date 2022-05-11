@@ -147,11 +147,9 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application()
+  Application::Application() : pTotalTimer("Total", "total", true, &pTimeElapsedContentHandler)
 {
     resetProcessPriority();
-    pTotalTimer = std::unique_ptr<TimeElapsed::Timer>(
-      new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedContentHandler));
 }
 
 void Application::prepare(int argc, char* argv[])
@@ -527,7 +525,7 @@ Application::~Application()
         LocalPolicy::Close();
         logs.info() << "Done.";
     }
-    pTotalTimer->stop();
+    pTotalTimer.stop();
     pTimeElapsedContentHandler.flush(mTimeElapsedWriter);
 }
 } // namespace Solver

@@ -88,7 +88,7 @@ private:
     bool shouldExecute = true;
 
     TimeElapsed::ContentHandler pTimeElapsedContentHandler;
-    std::unique_ptr<TimeElapsed::Timer> pTotalTimer;
+    TimeElapsed::Timer pTotalTimer;
     TimeElapsed::CSVWriter mTimeElapsedWriter;
 }; // class Application
 } // namespace Solver
