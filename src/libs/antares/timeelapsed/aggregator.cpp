@@ -9,7 +9,7 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
     {
         // Found !
         res->second.duration_ms += duration_ms;
-        res->second.nCalls++;
+        res->second.numberOfCalls_++;
     }
     else
     {

@@ -9,11 +9,11 @@ namespace TimeElapsed
 {
 struct Info
 {
-    Info(Yuni::sint64 duration_ms, unsigned int nCalls) : duration_ms(duration_ms), nCalls(nCalls)
+    Info(unsigned int duration_ms, unsigned int nCalls) : duration_ms_(duration_ms), numberOfCalls_(nCalls)
     {
     }
-    Yuni::sint64 duration_ms = 0;
-    unsigned int nCalls = 0;
+    unsigned int duration_ms_ = 0;
+    unsigned int numberOfCalls_ = 0;
 };
 
 using InfoMapType = std::map<Yuni::ShortString256, Info>;
