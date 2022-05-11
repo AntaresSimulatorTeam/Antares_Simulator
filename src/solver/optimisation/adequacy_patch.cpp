@@ -30,23 +30,27 @@
 
 using namespace Antares::Data::AdequacyPatch;
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  AdequacyPatchMode OriginNodeAdequacyPatchType,
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch)
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
+    AdequacyPatchMode OriginNodeAdequacyPatchType
+      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
+    AdequacyPatchMode ExtremityNodeAdequacyPatchType
+      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
+    bool setToZeroNTCfromOutToIn_AdqPatch
+      = ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+    bool setToZeroNTCfromOutToOut_AdqPatch
+      = ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+
     LinkCapacityForAdequacyPatchFirstStep returnNTC;
 
     switch (OriginNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        returnNTC = SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                                  setToZeroNTCfromOutToIn_AdqPatch);
+        returnNTC = getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
+                                                          setToZeroNTCfromOutToIn_AdqPatch);
         break;
     case physicalAreaOutsideAdqPatch:
-        returnNTC
-          = SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
+        returnNTC = getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
                                                            setToZeroNTCfromOutToIn_AdqPatch,
                                                            setToZeroNTCfromOutToOut_AdqPatch);
         break;
@@ -57,7 +61,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
     return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch)
 {
@@ -78,7 +82,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
     return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch)
@@ -106,7 +110,7 @@ void setNTCbounds(double& Xmax,
                   const int Interco,
                   PROBLEME_HEBDO* ProblemeHebdo)
 {
-    LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
+    LinkCapacityForAdequacyPatchFirstStep ntcToZeroStatusForAdqPatch;
 
     // set as default values
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
@@ -115,13 +119,9 @@ void setNTCbounds(double& Xmax,
     // set for adq patch first step
     if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
     {
-        SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-          ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco],
-          ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco],
-          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
-          ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
+        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
 
-        switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
+        switch (ntcToZeroStatusForAdqPatch)
         {
         case setToZero:
         {

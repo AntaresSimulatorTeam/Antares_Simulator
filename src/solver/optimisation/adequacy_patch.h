@@ -33,24 +33,15 @@ using namespace Antares::Data;
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
- * @param OriginNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
+ * @param ProblemeHebdo PROBLEME_HEBDO*: Weekly problem structure.
  *
- * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
- *
- * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
- * (type 1) towards nodes inside adq patch (type 2).
- *
- * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq patch
- * (type 1).
+ * @param Interco int: Index of the link.
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  AdequacyPatchMode OriginNodeAdequacyPatchType,
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch);
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo,
+                                                         int Interco);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -64,7 +55,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch);
 
@@ -83,7 +74,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch);
