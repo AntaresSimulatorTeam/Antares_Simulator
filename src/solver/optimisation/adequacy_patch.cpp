@@ -37,9 +37,9 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* Problem
     AdequacyPatchMode ExtremityNodeAdequacyPatchType
       = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
     bool setToZeroNTCfromOutToIn_AdqPatch
-      = ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+      = ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
     bool setToZeroNTCfromOutToOut_AdqPatch
-      = ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+      = ProblemeHebdo->adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
 
     LinkCapacityForAdequacyPatchFirstStep returnNTC;
 
