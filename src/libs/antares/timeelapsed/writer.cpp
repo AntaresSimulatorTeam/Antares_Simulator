@@ -21,7 +21,7 @@ void FileWriter::flush(const InfoMapType& imt)
     {
         const auto& label = it.first;
         const auto& info = it.second;
-        mOutputFile << label << "\t" << info.duration_ms << "\t" << info.numberOfCalls_ << "\n";
+        mOutputFile << label << "\t" << info.duration_ms_ << "\t" << info.numberOfCalls_ << "\n";
     }
 }
 } // namespace TimeElapsed

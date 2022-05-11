@@ -8,7 +8,7 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
     if (res != mInfoMap.end())
     {
         // Found !
-        res->second.duration_ms += duration_ms;
+        res->second.duration_ms_ += duration_ms;
         res->second.numberOfCalls_++;
     }
     else
