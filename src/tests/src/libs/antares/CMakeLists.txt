@@ -57,7 +57,7 @@ set_target_properties(tests-matrix-save PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME save-matrix COMMAND tests-matrix-save)
 
-set_property(TEST save-matrix PROPERTY LABELS TESTLABEL unit)
+set_property(TEST save-matrix PROPERTY LABELS unit)
 
 # Building tests on Matrix load operations
 set(SRC_TEST_MATRIX_LOAD
@@ -89,4 +89,4 @@ set_target_properties(tests-matrix-load PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME load-matrix COMMAND tests-matrix-load)
 
-set_property(TEST load-matrix PROPERTY LABELS TESTLABEL unit)
+set_property(TEST load-matrix PROPERTY LABELS unit)

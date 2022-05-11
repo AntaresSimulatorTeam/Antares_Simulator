@@ -11,6 +11,3 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg.git
-[submodule "src/tests/resources/NonRegTests"]
-	path = src/tests/resources/NonRegTests
-	url = https://github.com/AntaresSimulatorTeam/NonRegTests
