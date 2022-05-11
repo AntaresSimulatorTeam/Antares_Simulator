@@ -387,7 +387,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    TimeElapsed::Timer loadTimer("Study Loading", "study_loading", true, &pTimeElapsedContentHandler);
+    TimeElapsed::Timer loadTimer("Study loading", "study_loading", true, &pTimeElapsedContentHandler);
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
