@@ -48,7 +48,7 @@ void Timer::stop()
     const sint64 delta_ms = MilliSecTimer() - pStartTime;
     if (verbose)
     {
-        Antares::logs.info() << " Elapsed time: " << logText << ": " << delta_ms << "ms";
+        Antares::logs.info() << logText << " done (" << delta_ms << " ms)";
     }
     if (pContentHandler)
     {

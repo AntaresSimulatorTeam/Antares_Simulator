@@ -147,7 +147,7 @@ namespace Antares
 {
 namespace Solver
 {
-  Application::Application() : pTotalTimer("Total", "total", true, &pTimeElapsedContentHandler)
+  Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
 {
     resetProcessPriority();
 }
@@ -523,7 +523,6 @@ Application::~Application()
         // Removing all unused spwa files
         Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
-        logs.info() << "Done.";
     }
     pTotalTimer.stop();
     pTimeElapsedContentHandler.flush(mTimeElapsedWriter);
