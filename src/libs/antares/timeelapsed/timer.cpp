@@ -59,8 +59,8 @@ void Timer::stop()
 Timer::Timer(const AnyString& logText,
              const AnyString& fileText,
              bool verbose,
-             ContentHandler* aggregator) :
-  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(aggregator)
+             ContentHandler* handler) :
+  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(handler)
 {
     pStartTime = MilliSecTimer();
 }

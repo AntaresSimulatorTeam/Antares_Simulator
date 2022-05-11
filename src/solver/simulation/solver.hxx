@@ -266,7 +266,7 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
-                                      TimeElapsed::ContentHandler* aggregator) :
+                                      TimeElapsed::ContentHandler* handler) :
  ImplementationType(study),
  study(study),
  settings(settings),
@@ -276,7 +276,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
- pTimeElapsedContentHandler(aggregator)
+ pTimeElapsedContentHandler(handler)
 {
     // Ask to the interface to show the messages
     logs.info();

@@ -48,7 +48,7 @@ public:
     explicit Timer(const AnyString& userText,
                    const AnyString& logText = "",
                    bool verbose = true,
-                   ContentHandler* aggregator = nullptr);
+                   ContentHandler* handler = nullptr);
 
     void stop();
 
