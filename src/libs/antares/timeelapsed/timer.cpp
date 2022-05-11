@@ -27,7 +27,7 @@
 
 #include <yuni/yuni.h>
 #include "timer.h"
-#include "aggregator.h"
+#include "content_handler.h"
 #include "../logs.h"
 #include <math.h>
 #include <yuni/core/system/gettimeofday.h>
@@ -48,20 +48,19 @@ void Timer::stop()
     const sint64 delta_ms = MilliSecTimer() - pStartTime;
     if (verbose)
     {
-        Antares::logs.info() << " Elapsed time: " << userText << ": " << delta_ms << "ms";
+        Antares::logs.info() << " Elapsed time: " << logText << ": " << delta_ms << "ms";
     }
-    if (pAggregator)
+    if (pContentHandler)
     {
-        pAggregator->append(logText, delta_ms);
-        pAggregator = nullptr; // Prevent aggregating twice
+        pContentHandler->append(fileText, delta_ms);
     }
 }
 
-Timer::Timer(const AnyString& userText,
-             const AnyString& logText,
+Timer::Timer(const AnyString& logText,
+             const AnyString& fileText,
              bool verbose,
-             Aggregator* aggregator) :
- userText(userText), logText(logText), verbose(verbose), pAggregator(aggregator)
+             ContentHandler* aggregator) :
+  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(aggregator)
 {
     pStartTime = MilliSecTimer();
 }

@@ -151,7 +151,7 @@ Application::Application()
 {
     resetProcessPriority();
     pTotalTimer = std::unique_ptr<TimeElapsed::Timer>(
-      new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedAggregator));
+      new TimeElapsed::Timer("Total", "total", true, &pTimeElapsedContentHandler));
 }
 
 void Application::prepare(int argc, char* argv[])
@@ -389,7 +389,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    TimeElapsed::Timer loadTimer("Study Loading", "study_loading", true, &pTimeElapsedAggregator);
+    TimeElapsed::Timer loadTimer("Study Loading", "study_loading", true, &pTimeElapsedContentHandler);
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
@@ -528,7 +528,7 @@ Application::~Application()
         logs.info() << "Done.";
     }
     pTotalTimer->stop();
-    pTimeElapsedAggregator.flush(mTimeElapsedWriter);
+    pTimeElapsedContentHandler.flush(mTimeElapsedWriter);
 }
 } // namespace Solver
 } // namespace Antares

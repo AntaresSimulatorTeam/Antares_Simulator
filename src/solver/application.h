@@ -87,7 +87,7 @@ private:
 
     bool shouldExecute = true;
 
-    TimeElapsed::Aggregator pTimeElapsedAggregator;
+    TimeElapsed::ContentHandler pTimeElapsedContentHandler;
     std::unique_ptr<TimeElapsed::Timer> pTotalTimer;
     TimeElapsed::CSVWriter mTimeElapsedWriter;
 }; // class Application

@@ -32,7 +32,7 @@
 
 namespace TimeElapsed
 {
-class Aggregator;
+class ContentHandler;
 
 class Timer final
 {
@@ -48,13 +48,13 @@ public:
     explicit Timer(const AnyString& userText,
                    const AnyString& logText = "",
                    bool verbose = true,
-                   Aggregator* aggregator = nullptr);
+                   ContentHandler* aggregator = nullptr);
 
     void stop();
 
 private:
     //! The text to display at the end
-    Yuni::ShortString256 userText;
+    Yuni::ShortString256 fileText;
     // Aggregation
     Yuni::ShortString256 logText;
     //! timestamp when the timer started
@@ -62,7 +62,7 @@ private:
     //! Display text on destruction
     bool verbose;
     //! Aggregation into a single file for automation
-    Aggregator* pAggregator;
+    ContentHandler* pContentHandler;
 }; // class Timer
 } // namespace TimeElapsed
 

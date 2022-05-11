@@ -336,8 +336,8 @@ set(SRC_TIMEELAPSED
 	timeelapsed.h
 	timeelapsed/timer.h
 	timeelapsed/timer.cpp
-    timeelapsed/aggregator.h
-    timeelapsed/aggregator.cpp
+    timeelapsed/content_handler.h
+    timeelapsed/content_handler.cpp
     timeelapsed/info.h
     timeelapsed/i_writer.h
     timeelapsed/csv_writer.h

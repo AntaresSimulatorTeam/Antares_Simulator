@@ -12,7 +12,7 @@ struct TimeInfo
     TimeInfo(unsigned int duration_ms, unsigned int nCalls) : duration_ms_(duration_ms), numberOfCalls_(nCalls)
     {
     }
-    unsigned int duration_ms_ = 0;
+    Yuni::sint64 duration_ms_ = 0;
     unsigned int numberOfCalls_ = 0;
 };
 

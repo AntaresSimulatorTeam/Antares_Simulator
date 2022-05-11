@@ -71,7 +71,7 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            TimeElapsed::Aggregator* timeAggregator) :
+            TimeElapsed::ContentHandler* timeElapsedContentHandler) :
      simulationObj(pSimulationObj),
      y(pY),
      yearsIndices(pYearsIndices),
@@ -84,7 +84,7 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pTimeElapsedAggregator(timeAggregator)
+     pTimeElapsedContentHandler(timeElapsedContentHandler)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -103,7 +103,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    TimeElapsed::Aggregator* pTimeElapsedAggregator;
+    TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
 
 private:
     /*
@@ -183,7 +183,7 @@ private:
             if (not study.parameters.adequacyDraft())
             {
                 TimeElapsed::Timer time(
-                  "Hydraulic ventilation", "hydro_ventilation", true, pTimeElapsedAggregator);
+                  "Hydraulic ventilation", "hydro_ventilation", true, pTimeElapsedContentHandler);
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
             }
 
@@ -238,7 +238,7 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                TimeElapsed::Timer timer("Year-by-year export", "yby_export", false, pTimeElapsedAggregator);
+                TimeElapsed::Timer timer("Year-by-year export", "yby_export", false, pTimeElapsedContentHandler);
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
@@ -266,7 +266,7 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
-                                      TimeElapsed::Aggregator* aggregator) :
+                                      TimeElapsed::ContentHandler* aggregator) :
  ImplementationType(study),
  study(study),
  settings(settings),
@@ -276,7 +276,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
- pTimeElapsedAggregator(aggregator)
+ pTimeElapsedContentHandler(aggregator)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -385,7 +385,7 @@ void ISimulation<Impl>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
 
         logs.info() << " Starting the simulation";
-        TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedAggregator);
+        TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedContentHandler);
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         loopThroughYears(0, finalYear, state);
         mcTimer.stop();
@@ -1044,7 +1044,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
         TimeElapsed::Timer timer(
-          "TS generation for load", "tsgen_load", true, pTimeElapsedAggregator);
+          "TS generation for load", "tsgen_load", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
         timer.stop();
     }
@@ -1052,7 +1052,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
         TimeElapsed::Timer timer(
-          "TS generation for solar", "tsgen_solar", true, pTimeElapsedAggregator);
+          "TS generation for solar", "tsgen_solar", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
         timer.stop();
     }
@@ -1060,7 +1060,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
         TimeElapsed::Timer timer(
-          "TS generation for wind", "tsgen_wind", true, pTimeElapsedAggregator);
+          "TS generation for wind", "tsgen_wind", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
         timer.stop();
     }
@@ -1068,7 +1068,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
         TimeElapsed::Timer timer(
-          "TS generation for hydro", "tsgen_hydro", true, pTimeElapsedAggregator);
+          "TS generation for hydro", "tsgen_hydro", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
         timer.stop();
     }
@@ -1076,7 +1076,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
         TimeElapsed::Timer timer(
-          "TS generation for thermal", "tsgen_thermal", true, pTimeElapsedAggregator);
+          "TS generation for thermal", "tsgen_thermal", true, pTimeElapsedContentHandler);
         GenerateThermalTimeSeries(
           study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
         timer.stop();
@@ -1607,7 +1607,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    study,
                                                    state,
                                                    pYearByYear,
-                                                   pTimeElapsedAggregator));
+                                                   pTimeElapsedContentHandler));
 
         } // End loop over years of the current set of parallel years
 

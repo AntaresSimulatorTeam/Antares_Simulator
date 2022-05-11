@@ -39,12 +39,12 @@ void Application::runSimulationInAdequacyDraftMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pTimeElapsedAggregator);
+    SimulationType simulation(*pStudy, pSettings, &pTimeElapsedContentHandler);
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        TimeElapsed::Timer timer("Survey report", "synthesis_export", true, &pTimeElapsedAggregator);
+        TimeElapsed::Timer timer("Survey report", "synthesis_export", true, &pTimeElapsedContentHandler);
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
     }

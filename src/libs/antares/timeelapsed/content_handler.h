@@ -8,7 +8,7 @@
 
 namespace TimeElapsed
 {
-class Aggregator final
+class ContentHandler final
 {
 public:
     void append(const Yuni::ShortString256& text, Yuni::sint64 duration_ms);

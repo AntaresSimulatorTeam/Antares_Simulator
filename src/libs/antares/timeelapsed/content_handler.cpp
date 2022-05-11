@@ -1,8 +1,8 @@
-#include "aggregator.h"
+#include "content_handler.h"
 
 namespace TimeElapsed
 {
-void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_ms)
+void ContentHandler::append(const Yuni::ShortString256& text, Yuni::sint64 duration_ms)
 {
     auto res = mInfoMap.find(text);
     if (res != mInfoMap.end())
@@ -17,7 +17,7 @@ void Aggregator::append(const Yuni::ShortString256& text, Yuni::sint64 duration_
     }
 }
 
-void Aggregator::flush(IWriter& writer) const
+void ContentHandler::flush(IWriter& writer) const
 {
     writer.flush(mInfoMap);
 }
