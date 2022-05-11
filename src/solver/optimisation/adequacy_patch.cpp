@@ -30,7 +30,7 @@
 
 using namespace Antares::Data::AdequacyPatch;
 
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
       = ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
@@ -41,7 +41,7 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* Problem
     bool setToZeroNTCfromOutToOut_AdqPatch
       = ProblemeHebdo->adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
 
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
+    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
 
     switch (OriginNodeAdequacyPatchType)
     {
@@ -61,11 +61,11 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* Problem
     return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch)
 {
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
+    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
 
     switch (ExtremityNodeAdequacyPatchType)
     {
@@ -82,12 +82,12 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
     return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeOutsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch)
 {
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
+    ntcSetToZeroStatus_AdqPatchStep1 returnNTC;
 
     switch (ExtremityNodeAdequacyPatchType)
     {
@@ -110,7 +110,7 @@ void setNTCbounds(double& Xmax,
                   const int Interco,
                   PROBLEME_HEBDO* ProblemeHebdo)
 {
-    LinkCapacityForAdequacyPatchFirstStep ntcToZeroStatusForAdqPatch;
+    ntcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
     // set as default values
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];

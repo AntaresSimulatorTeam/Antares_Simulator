@@ -40,8 +40,7 @@ using namespace Antares::Data;
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo,
-                                                         int Interco);
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -55,7 +54,7 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatus(PROBLEME_HEBDO* Problem
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch);
 
@@ -68,13 +67,13 @@ LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeInsideAdq(
  * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq patch
- * (type 1).
+ * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq
+ * patch (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep getNTCtoZeroStatusOriginNodeOutsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch);
