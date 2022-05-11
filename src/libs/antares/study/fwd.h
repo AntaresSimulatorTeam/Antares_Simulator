@@ -79,7 +79,7 @@ using AreaNameMapping = std::map<AreaName, AreaName>;
 /*!
 ** \brief Study's Consistency errors
 */
-typedef enum
+enum StudyError
 {
     stErrNone = 0,
     //! startTime, finalHour = 0..8760
@@ -95,7 +95,7 @@ typedef enum
     //! Too much binding constaints
     stErrTooMuchBindingConstraints,
     /**/
-} StudyError;
+};
 
 /*!
 ** \brief Types of Study

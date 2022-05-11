@@ -72,7 +72,7 @@ wxButton* CreateButton(wxWindow* parent,
                        UserDataT userdata)
 {
     // type alias
-    typedef ::Antares::Private::Component::CustomWxButton ButtonType;
+    using ButtonType = ::Antares::Private::Component::CustomWxButton;
     // Title of the button
     wxString title;
     title << wxT("   ") << caption << wxT("   ");
