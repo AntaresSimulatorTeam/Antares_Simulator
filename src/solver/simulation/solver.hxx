@@ -385,17 +385,22 @@ void ISimulation<Impl>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
 
         logs.info() << " Starting the simulation";
-        TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedContentHandler);
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-        loopThroughYears(0, finalYear, state);
-        mcTimer.stop();
-
+        {
+            TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedContentHandler);
+            loopThroughYears(0, finalYear, state);
+            mcTimer.stop();
+        }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         Solver::TSGenerator::DestroyAll(study);
 
         // Post operations
-        ImplementationType::simulationEnd();
+        {
+            TimeElapsed::Timer postproTimer("Post-processing", "postpro", true, pTimeElapsedContentHandler);
+            ImplementationType::simulationEnd();
+            postproTimer.stop();
+        }
 
         ImplementationType::variables.simulationEnd();
 

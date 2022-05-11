@@ -44,7 +44,7 @@ void Application::runSimulationInAdequacyDraftMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        TimeElapsed::Timer timer("Survey report", "synthesis_export", true, &pTimeElapsedContentHandler);
+        TimeElapsed::Timer timer("Synthesis export", "synthesis_export", true, &pTimeElapsedContentHandler);
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
     }
