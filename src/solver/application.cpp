@@ -395,7 +395,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
-    loadTimer.tick();
+    loadTimer.stop();
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -527,7 +527,7 @@ Application::~Application()
         LocalPolicy::Close();
         logs.info() << "Done.";
     }
-    pTotalTimer->tick();
+    pTotalTimer->stop();
     pTimeElapsedAggregator.flush(mTimeElapsedWriter);
 }
 } // namespace Solver

@@ -43,12 +43,7 @@ static inline sint64 MilliSecTimer()
 
 namespace TimeElapsed
 {
-void Timer::reset()
-{
-    pStartTime = MilliSecTimer();
-}
-
-void Timer::tick()
+void Timer::stop()
 {
     const sint64 delta_ms = MilliSecTimer() - pStartTime;
     if (verbose)
@@ -68,6 +63,6 @@ Timer::Timer(const AnyString& userText,
              Aggregator* aggregator) :
  userText(userText), logText(logText), verbose(verbose), pAggregator(aggregator)
 {
-    reset();
+    pStartTime = MilliSecTimer();
 }
 } // namespace TimeElapsed

@@ -46,7 +46,7 @@ void Application::runSimulationInAdequacyMode()
     {
         TimeElapsed::Timer timer("Survey report", "synthesis_export", true, &pTimeElapsedAggregator);
         simulation.writeResults(/*synthesis:*/ true);
-        timer.tick();
+        timer.stop();
     }
 }
 } // namespace Solver

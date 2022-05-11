@@ -243,7 +243,7 @@ private:
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
-                timer.tick();
+                timer.stop();
             }
         }
         else
@@ -388,7 +388,7 @@ void ISimulation<Impl>::run()
         TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedAggregator);
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         loopThroughYears(0, finalYear, state);
-        mcTimer.tick();
+        mcTimer.stop();
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -1046,7 +1046,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for load", "tsgen_load", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
-        timer.tick();
+        timer.stop();
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
@@ -1054,7 +1054,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for solar", "tsgen_solar", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
-        timer.tick();
+        timer.stop();
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
@@ -1062,7 +1062,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for wind", "tsgen_wind", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
-        timer.tick();
+        timer.stop();
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
@@ -1070,7 +1070,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
         TimeElapsed::Timer timer(
           "TS generation for hydro", "tsgen_hydro", true, pTimeElapsedAggregator);
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
-        timer.tick();
+        timer.stop();
     }
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
@@ -1079,7 +1079,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
           "TS generation for thermal", "tsgen_thermal", true, pTimeElapsedAggregator);
         GenerateThermalTimeSeries(
           study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
-        timer.tick();
+        timer.stop();
     }
 }
 
