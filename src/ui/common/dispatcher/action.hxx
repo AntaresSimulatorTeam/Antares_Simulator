@@ -49,7 +49,7 @@ public:
     template<class C>
     JobSimpleDispatcher(const C* object, void (C::*method)(void))
     {
-        typedef void (C::*MemberType)();
+        using MemberType = void (C::*)();
         callback.bind(const_cast<C*>(object), reinterpret_cast<MemberType>(method));
     }
 
