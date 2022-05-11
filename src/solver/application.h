@@ -89,7 +89,7 @@ private:
 
     TimeElapsed::Aggregator pTimeElapsedAggregator;
     std::unique_ptr<TimeElapsed::Timer> pTotalTimer;
-    TimeElapsed::FileWriter mTimeElapsedWriter;
+    TimeElapsed::CSVWriter mTimeElapsedWriter;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

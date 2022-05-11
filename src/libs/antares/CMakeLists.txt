@@ -340,8 +340,8 @@ set(SRC_TIMEELAPSED
     timeelapsed/aggregator.cpp
     timeelapsed/info.h
     timeelapsed/i_writer.h
-    timeelapsed/writer.h
-    timeelapsed/writer.cpp
+    timeelapsed/csv_writer.h
+    timeelapsed/csv_writer.cpp
 	)
 source_group("misc\\timeelapsed" FILES ${SRC_TIMEELAPSED})
 

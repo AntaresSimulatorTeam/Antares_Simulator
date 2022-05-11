@@ -1,9 +1,9 @@
-#include "writer.h"
+#include "csv_writer.h"
 #include "../logs.h"
 
 namespace TimeElapsed
 {
-bool FileWriter::setOutputFile(const Yuni::String& filename)
+bool CSVWriter::setOutputFile(const Yuni::String& filename)
 {
     if (!mOutputFile.openRW(filename))
     {
@@ -14,9 +14,9 @@ bool FileWriter::setOutputFile(const Yuni::String& filename)
     return true;
 }
 
-void FileWriter::flush(const TimeInfoMapType& imt)
+void CSVWriter::flush(const TimeInfoMapType& imt)
 {
-    mOutputFile << "#item\tduration_ms\tNbOccurences\n";
+    mOutputFile << "#item\tduration_ms\tNumber of calls\n";
     for (const auto& it : imt)
     {
         const auto& label = it.first;

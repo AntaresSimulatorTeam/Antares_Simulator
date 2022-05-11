@@ -7,10 +7,10 @@
 
 namespace TimeElapsed
 {
-class FileWriter : public IWriter
+class CSVWriter : public IWriter
 {
 public:
-    FileWriter() = default;
+    CSVWriter() = default;
     bool setOutputFile(const Yuni::String& filename);
     void flush(const TimeInfoMapType& imt) override;
 
