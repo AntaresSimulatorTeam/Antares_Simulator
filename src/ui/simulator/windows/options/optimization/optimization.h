@@ -117,8 +117,8 @@ private:
 
     Component::Button* pBtnExportMPS;
     Component::Button* pBtnAdequacyPatch;
-    Component::Button* pBtnAdequacyPatchNTC12;
-    Component::Button* pBtnAdequacyPatchNTC11;
+    Component::Button* pBtnNTCfromOutToInAdqPatch;
+    Component::Button* pBtnNTCfromOutToOutAdqPatch;
     Component::Button* pBtnUnfeasibleProblemBehavior;
     bool* pTargetRef;
 

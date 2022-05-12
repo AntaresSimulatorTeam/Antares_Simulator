@@ -124,7 +124,7 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
     {
         if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             memcpy(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
                    pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
                    pProblemeHebdo->NombreDePasDeTemps * sizeof(double));

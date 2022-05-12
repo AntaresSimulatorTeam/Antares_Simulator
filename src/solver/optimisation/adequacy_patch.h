@@ -33,24 +33,14 @@ using namespace Antares::Data;
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
- * @param OriginNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
+ * @param ProblemeHebdo PROBLEME_HEBDO*: Weekly problem structure.
  *
- * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
- *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
- * (type 1) towards nodes inside adq patch (type 2).
- *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
- * (type 1).
+ * @param Interco int: Index of the link.
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  AdequacyPatchMode OriginNodeAdequacyPatchType,
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch);
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -58,15 +48,15 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch);
+  bool setToZeroNTCfromOutToIn_AdqPatch);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -74,34 +64,28 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
- * (type 1).
+ * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq
+ * patch (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch);
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch);
 
 /*!
- * Sets link bounds for first step of adequacy patch.
+ * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
+ * not used.
  */
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo);
-/*!
- * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
- */
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco);
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* ProblemeHebdo);
 
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

@@ -184,15 +184,22 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                 s.toLower();
                 s.trim();
 
-                if (s == "virtual area" || s == "0")
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
-                else if (s == "physical area outside patch" || s == "1")
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
-                else if (s == "physical area inside patch" || s == "2")
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+                switch (s.to<int>())
+                {
+                case 0:
+                    area->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                    break;
+                case 1:
+                    area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                    break;
+                case 2:
+                    area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                    break;
+                default:
+                    break;
+                }
             }
         }
-        OnStudyAreaUseAdequacyPatchChanged();
         return true;
     }
     if (name == "area.links_count")
