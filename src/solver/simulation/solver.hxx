@@ -1442,6 +1442,8 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
 
 static void logPerformedYearsInAset(setOfParallelYears& set)
 {
+    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears << " perfomed)";
+    
     std::string performedYearsToLog = "";
     std::for_each(std::begin(set.yearsIndices), std::end(set.yearsIndices), [&](uint const& y) {
         if (set.isYearPerformed[y])
@@ -1491,10 +1493,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     std::vector<setOfParallelYears>::iterator set_it;
     for (set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it)
     {
-        logs.info() << "parallel batch size : " << set_it->nbYears << " (" << set_it->nbPerformedYears << " perfomed)";
-
-        logPerformedYearsInAset(*set_it);
-
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
@@ -1568,6 +1566,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    pYearByYear));
 
         } // End loop over years of the current set of parallel years
+
+        logPerformedYearsInAset(*set_it);
 
         qs.start();
 
