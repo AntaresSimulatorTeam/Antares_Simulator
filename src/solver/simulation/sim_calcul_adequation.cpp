@@ -261,7 +261,6 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
         for (uint j = 0; j < area.thermal.list.size(); ++j)
         {
             auto& cluster = *(area.thermal.list.byIndex[j]);
-            assert(&cluster != NULL);
             assert(cluster.series != NULL);
             assert((uint)tsIndex.ThermiqueParPalier[cluster.areaWideIndex]
                    < cluster.series->series.width);

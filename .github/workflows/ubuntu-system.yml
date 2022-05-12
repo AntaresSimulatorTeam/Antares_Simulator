@@ -17,19 +17,21 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-20.04]
+        test-platform: [ubuntu-20.04]
 
     steps:
     - uses: actions/checkout@v2
     
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1
-      
+
     - name: Install libraries
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
 
+    # antares-deps
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
@@ -43,11 +45,11 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
         os-full-name: Ubuntu-20.04
-           
+
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
-        python-version: 3.8
+        python-version: 3.x
           
     - name: Install dependencies
       run: |
@@ -64,26 +66,27 @@ jobs:
            
     - name: Build
       run: |
-           ls -1
            cmake --build _build --config release -j2
 
-    - name: Run unit tests
+    - name: Run unfeasibility-related tests
       run: |
            cd _build
-           ctest -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest -C Release --output-on-failure -R unfeasible
 
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
 
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
-    - name : Run non-regression tests
-      run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
+    - name: Run short-tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
 
     - name: Installer .deb creation
       run: |

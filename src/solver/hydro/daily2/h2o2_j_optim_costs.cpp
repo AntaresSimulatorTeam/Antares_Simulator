@@ -30,6 +30,7 @@
 
 Hydro_problem_costs::Hydro_problem_costs(const Data::Study& study)
 {
+    noiseGenerator.reset(Constants::seed);
     end_days_levels = -1. / 32.;
     overflow = 32 * 68. + 1.;
     deviations = 1.;

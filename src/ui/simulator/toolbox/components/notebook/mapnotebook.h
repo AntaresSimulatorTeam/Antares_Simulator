@@ -116,7 +116,7 @@ public:
             tabButton(std::string imagePath,
                       MapTabs* parentFrame,
                       BtnType t = btnNone,
-                      char* hoverImagePath = nullptr);
+                      const char* hoverImagePath = nullptr);
             ~tabButton();
             void drawButton(wxDC& dc, int x, int y);
             void onMouseUp(wxMouseEvent&);
@@ -126,12 +126,12 @@ public:
 
             BtnType type;
             wxPoint coords;
-            wxBitmap* buttonImage;
-            wxBitmap* hoverImage;
-            wxRect* pBoundingBox;
-            MapTabs* parentTabFrame;
+            wxBitmap* buttonImage = nullptr;
+            wxBitmap* hoverImage = nullptr;
+            wxRect* pBoundingBox = nullptr;
+            MapTabs* parentTabFrame = nullptr;
             bool isVisible;
-            bool drawHover;
+            bool drawHover = false;
         };
 
         int sizingOffset;

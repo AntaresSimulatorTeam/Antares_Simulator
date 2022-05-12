@@ -468,19 +468,12 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
 void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
 {
     const auto& gd = study.parameters;
-    thermalTSRefresh = gd.timeSeriesToGenerate & timeSeriesThermal;
-    Data::GlobalTSGenerationBehavior globalBehavior;
-    if (gd.timeSeriesToGenerate & timeSeriesThermal)
-    {
-        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
-    }
-    else
-    {
-        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
-    }
-    study.areas.each([this, globalBehavior](Data::Area& area) {
-        area.thermal.list.each([this, globalBehavior](const Data::ThermalCluster& cluster) {
-            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalBehavior, true);
+    bool globalThermalTSgeneration = gd.timeSeriesToGenerate & timeSeriesThermal;
+    thermalTSRefresh = globalThermalTSgeneration;
+    
+    study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
+        area.thermal.list.each([this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
+            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
         });
     });
 }
