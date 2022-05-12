@@ -147,7 +147,7 @@ namespace Antares
 {
 namespace Solver
 {
-  Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
+Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
 {
     resetProcessPriority();
 }
@@ -387,7 +387,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    TimeElapsed::Timer loadTimer("Study loading", "study_loading", true, &pTimeElapsedContentHandler);
+    TimeElapsed::Timer loadTimer(
+      "Study loading", "study_loading", true, &pTimeElapsedContentHandler);
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
@@ -406,10 +407,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Prepare time measurement file
     // study.folderOutput is defined by Study::loadFromFolder, which MUST be called before
     study.buffer.clear() << study.folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    if (!mTimeElapsedWriter.setOutputFile(study.buffer))
-    {
-        throw Error::CreatingTimeMeasurementFile(study.buffer);
-    }
+    mTimeElapsedWriter.initialize(study.buffer, &pTimeElapsedContentHandler);
 
     // no output ?
     study.parameters.noOutput = pSettings.noOutput;
@@ -525,7 +523,7 @@ Application::~Application()
         LocalPolicy::Close();
     }
     pTotalTimer.stop();
-    pTimeElapsedContentHandler.flush(mTimeElapsedWriter);
+    mTimeElapsedWriter.flush();
 }
 } // namespace Solver
 } // namespace Antares

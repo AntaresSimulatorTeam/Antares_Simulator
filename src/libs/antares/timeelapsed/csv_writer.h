@@ -3,7 +3,7 @@
 #include <yuni/io/file.h>
 
 #include "i_writer.h"
-#include "info.h"
+#include "content_handler.h"
 
 namespace TimeElapsed
 {
@@ -11,10 +11,11 @@ class CSVWriter : public IWriter
 {
 public:
     CSVWriter() = default;
-    bool setOutputFile(const Yuni::String& filename);
-    void flush(const TimeInfoMapType& imt) override;
+    void initialize(const Yuni::String& filename, ContentHandler* handler);
+    void flush() override;
 
 private:
     Yuni::IO::File::Stream mOutputFile;
+    ContentHandler* contentHandler_ = nullptr;
 };
 } // namespace TimeElapsed

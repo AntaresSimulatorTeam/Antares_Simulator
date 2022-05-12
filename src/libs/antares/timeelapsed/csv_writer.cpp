@@ -1,23 +1,23 @@
+#include <antares/exception/LoadingError.hpp>
+
 #include "csv_writer.h"
 #include "../logs.h"
 
 namespace TimeElapsed
 {
-bool CSVWriter::setOutputFile(const Yuni::String& filename)
+void CSVWriter::initialize(const Yuni::String& filename, ContentHandler* handler)
 {
+    contentHandler_ = handler;
     if (!mOutputFile.openRW(filename))
     {
-        Antares::logs.error() << "I/O error: " << filename
-                              << ": Impossible to write the file (not enough permission ?)";
-        return false;
+        throw Antares::Error::CreatingTimeMeasurementFile(filename);
     }
-    return true;
 }
 
-void CSVWriter::flush(const TimeInfoMapType& imt)
+void CSVWriter::flush()
 {
     mOutputFile << "#item\tduration_ms\tNumber of calls\n";
-    for (const auto& it : imt)
+    for (const auto& it : *contentHandler_)
     {
         const auto& label = it.first;
         const auto& info = it.second;
