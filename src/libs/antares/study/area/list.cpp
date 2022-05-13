@@ -335,20 +335,20 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
 {
     IniFile ini;
     IniFile::Section* section = ini.addSection("adequacy-patch");
-    int value;
+    std::string value;
     switch (area.adequacyPatchMode)
     {
     case Data::AdequacyPatch::virtualArea:
-        value = 0;
+        value = "virtual";
         break;
     case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
-        value = 1;
+        value = "outside";
         break;
     case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
-        value = 2;
+        value = "inside";
         break;
     default:
-        value = 1; //default physicalAreaOutsideAdqPatch
+        value = "outside"; //default physicalAreaOutsideAdqPatch
         break;
     }
     section->add("adequacy-patch-mode", value);
@@ -768,23 +768,14 @@ static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
                 tmp.toLower();
                 if (tmp == "adequacy-patch-mode")
                 {
-                    auto value = p->value.to<int>();
-                    switch (value)
-                    {
-                    case 0:
+                    auto value = (p->value).toLower();
+
+                    if (value == "virtual")
                         area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
-                        break;
-                    case 1:
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                        break;
-                    case 2:
+                    else if (value == "inside")
                         area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
-                        break;
-                    default:
+                    else
                         area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                        break;
-                    }
-                    continue;
                 }
             }
         }
