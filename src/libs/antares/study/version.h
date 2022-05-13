@@ -110,8 +110,6 @@ typedef enum // Version
     version810 = 810,
     //! Study version 8.2
     version820 = 820,
-    //! Study version 8.3
-    version830 = 830,
 
     // see versionLatest below
 
