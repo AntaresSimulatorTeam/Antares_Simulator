@@ -9,10 +9,15 @@ on:
       - fix/*
       - release/*
 jobs:
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -42,6 +47,12 @@ jobs:
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
         
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
