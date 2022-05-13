@@ -753,7 +753,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 template<class StringT>
 static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
 {
-    if (study.header.version >= 820 && study.parameters.include.adequacyPatch)
+    if (study.header.version >= 820)
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
