@@ -751,6 +751,46 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 }
 
 template<class StringT>
+static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
+{
+    if (study.header.version >= 820 && study.parameters.include.adequacyPatch)
+    {
+        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
+                       << "adequacy_patch.ini";
+        IniFile ini;
+        if (ini.open(buffer))
+        {
+            auto* section = ini.find("adequacy-patch");
+            for (auto* p = section->firstProperty; p; p = p->next)
+            {
+                CString<30, false> tmp;
+                tmp = p->key;
+                tmp.toLower();
+                if (tmp == "adequacy-patch-mode")
+                {
+                    auto value = p->value.to<int>();
+                    switch (value)
+                    {
+                    case 0:
+                        area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                        break;
+                    case 1:
+                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                        break;
+                    case 2:
+                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                        break;
+                    default:
+                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                        break;
+                    }
+                    continue;
+                }
+            }
+        }
+    }
+}
+template<class StringT>
 static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              AreaList* list,
                                              Area& area,
@@ -1070,42 +1110,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Adequacy patch
-    if (study.header.version >= 820 && study.parameters.include.adequacyPatch)
-    {
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                       << "adequacy_patch.ini";
-        IniFile ini;
-        if (ini.open(buffer))
-        {
-            auto* section = ini.find("adequacy-patch");
-            for (auto* p = section->firstProperty; p; p = p->next)
-            {
-                CString<30, false> tmp;
-                tmp = p->key;
-                tmp.toLower();
-                if (tmp == "adequacy-patch-mode")
-                {
-                    auto value = p->value.to<int>();
-                    switch (value)
-                    {
-                    case 0:
-                        area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
-                        break;
-                    case 1:
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                        break;
-                    case 2:
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
-                        break;
-                    default:
-                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                        break;
-                    }
-                    continue;
-                }
-            }
-        }
-    }
+    readAdqPatchMode(study, area, buffer);
 
     // Nodal Optimization
     if (study.header.version >= 330)
