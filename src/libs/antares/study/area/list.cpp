@@ -768,7 +768,9 @@ static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
                 tmp.toLower();
                 if (tmp == "adequacy-patch-mode")
                 {
-                    auto value = (p->value).toLower();
+                    auto value = p->value;
+                    value.trim();
+                    value.toLower();
 
                     if (value == "virtual")
                         area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
