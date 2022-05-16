@@ -5,9 +5,8 @@
 
 namespace TimeElapsed
 {
-void CSVWriter::initialize(const Yuni::String& filename, ContentHandler* handler)
+CSVWriter::CSVWriter(const Yuni::String& filename, ContentHandler* handler) : contentHandler_(handler)
 {
-    contentHandler_ = handler;
     if (!mOutputFile.openRW(filename))
     {
         throw Antares::Error::CreatingTimeMeasurementFile(filename);

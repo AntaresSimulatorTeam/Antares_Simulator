@@ -404,11 +404,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
         throw Error::NoAreas();
     }
 
-    // Prepare time measurement file
-    // study.folderOutput is defined by Study::loadFromFolder, which MUST be called before
-    study.buffer.clear() << study.folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    mTimeElapsedWriter.initialize(study.buffer, &pTimeElapsedContentHandler);
-
     // no output ?
     study.parameters.noOutput = pSettings.noOutput;
 
@@ -496,6 +491,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
+void Application::saveElapsedTime()
+{
+    pTotalTimer.stop();
+
+    pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
+    TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
+    // Write time data
+    writer.flush();
+}
+
 Application::~Application()
 {
     // Destroy all remaining bouns (callbacks)
@@ -522,8 +527,6 @@ Application::~Application()
         Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
     }
-    pTotalTimer.stop();
-    mTimeElapsedWriter.flush();
 }
 } // namespace Solver
 } // namespace Antares

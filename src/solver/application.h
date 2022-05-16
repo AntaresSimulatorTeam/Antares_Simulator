@@ -50,6 +50,8 @@ public:
     */
     void resetProcessPriority() const;
 
+    void saveElapsedTime();
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -89,7 +91,6 @@ private:
 
     TimeElapsed::ContentHandler pTimeElapsedContentHandler;
     TimeElapsed::Timer pTotalTimer;
-    TimeElapsed::CSVWriter mTimeElapsedWriter;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

@@ -10,8 +10,7 @@ namespace TimeElapsed
 class CSVWriter : public IWriter
 {
 public:
-    CSVWriter() = default;
-    void initialize(const Yuni::String& filename, ContentHandler* handler);
+    explicit CSVWriter(const Yuni::String& filename, ContentHandler* handler);
     void flush() override;
 
 private:
