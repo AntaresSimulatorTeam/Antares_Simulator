@@ -40,7 +40,6 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        artifact_version: all
         
     - name: Install dependencies
       run: |
