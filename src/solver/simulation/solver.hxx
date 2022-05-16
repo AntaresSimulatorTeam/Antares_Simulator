@@ -1013,10 +1013,10 @@ void ISimulation<Impl>::estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage&
     linearCombination
       += nbConstraints * (60 * sizeof(double) + 58 * sizeof(int) + 24 * sizeof(char));
 
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucAccurate)
-        u.requiredMemoryForInput += (uint)(5.51 * linearCombination) * u.nbYearsParallel;
-    else
+    if (parameters.unitCommitment.ucMode == Antares::Data::ucFast)
         u.requiredMemoryForInput += (uint)(5. * linearCombination) * u.nbYearsParallel;
+    else
+        u.requiredMemoryForInput += (uint)(5.51 * linearCombination) * u.nbYearsParallel;
 }
 
 template<class Impl>
