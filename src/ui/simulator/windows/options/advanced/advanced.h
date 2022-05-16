@@ -101,6 +101,7 @@ private:
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
     void onSelectUCFast(wxCommandEvent& evt);
     void onSelectUCAccurate(wxCommandEvent& evt);
+    void onSelectUCMILP(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
     void onSelectNCmin(wxCommandEvent& evt);

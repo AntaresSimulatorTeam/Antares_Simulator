@@ -82,7 +82,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -96,7 +97,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
 #endif
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -104,7 +106,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -117,7 +120,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 #endif
-                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
             }
         }

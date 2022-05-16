@@ -860,6 +860,16 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
                  wxCommandEventHandler(AdvancedParameters::onSelectUCAccurate),
                  nullptr,
                  this);
+
+    text.clear();
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucMILP)); // Accurate
+    text << wxT("   ");
+    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCMILP),
+                 nullptr,
+                 this);
 }
 
 void AdvancedParameters::onSelectUCFast(wxCommandEvent& evt)
@@ -885,6 +895,20 @@ void AdvancedParameters::onSelectUCAccurate(wxCommandEvent& evt)
     if (study.parameters.unitCommitment.ucMode != Data::ucAccurate)
     {
         study.parameters.unitCommitment.ucMode = Data::ucAccurate;
+        MarkTheStudyAsModified();
+        refresh();
+    }
+}
+
+void AdvancedParameters::onSelectUCMILP(wxCommandEvent& evt)
+{
+    if (not Data::Study::Current::Valid())
+        return;
+    auto& study = *Data::Study::Current::Get();
+
+    if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
+    {
+        study.parameters.unitCommitment.ucMode = Data::ucMILP;
         MarkTheStudyAsModified();
         refresh();
     }

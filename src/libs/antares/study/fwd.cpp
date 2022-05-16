@@ -294,8 +294,10 @@ UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
     s.toLower();
     if (s == "fast")
         return ucFast;
-    if (s == "accurate") // mixed integer linear problem
+    if (s == "accurate") 
         return ucAccurate;
+    if (s == "milp") // mixed integer linear problem
+        return ucMILP;
 
     return ucUnknown;
 }
@@ -308,6 +310,8 @@ const char* UnitCommitmentModeToCString(UnitCommitmentMode ucommitment)
         return "fast";
     case ucAccurate:
         return "accurate"; // (slow)
+    case ucMILP:
+        return "milp";
     case ucUnknown:
         return "";
     }

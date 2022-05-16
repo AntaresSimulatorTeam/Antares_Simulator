@@ -843,7 +843,8 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     }
 
     // Mode accurate
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucAccurate)
+    if (parameters.unitCommitment.ucMode == Antares::Data::ucAccurate
+        || parameters.unitCommitment.ucMode == Antares::Data::ucMILP)
     {
         for (uint i = 0; i != study.areas.size(); i++)
         {

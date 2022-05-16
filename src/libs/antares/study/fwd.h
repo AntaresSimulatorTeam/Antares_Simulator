@@ -470,6 +470,7 @@ enum UnitCommitmentMode
 {
     ucFast = 0,
     ucAccurate,
+    ucMILP,
     ucUnknown,
 };
 
