@@ -847,7 +847,7 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristic),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCFast),
                  nullptr,
                  this);
 
@@ -857,12 +857,12 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCMixedIntegerLinearProblem),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCAccurate),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& evt)
+void AdvancedParameters::onSelectUCFast(wxCommandEvent& evt)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
@@ -876,7 +876,7 @@ void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& evt)
     }
 }
 
-void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt)
+void AdvancedParameters::onSelectUCAccurate(wxCommandEvent& evt)
 {
     if (not Data::Study::Current::Valid())
         return;
