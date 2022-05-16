@@ -58,11 +58,6 @@ public:
         return AncestorType::width() + 3;
     }
 
-    int widthExcludingAgregatedColumns() const override
-    {
-        return AncestorType::width();
-    }
-
     virtual int height() const
     {
         return AncestorType::height();
@@ -325,11 +320,6 @@ public:
     int width() const override
     {
         return AncestorType::width() + 3;
-    }
-
-    int widthExcludingAgregatedColumns() const override
-    {
-        return AncestorType::width();
     }
 
     int height() const override

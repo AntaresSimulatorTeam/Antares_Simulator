@@ -348,12 +348,9 @@ struct ModifierOperatorsData<modifierDataset>
         }
         case opResizeColumns:
         {
-            const auto width = (uint)renderer->widthExcludingAgregatedColumns();
+            uint width = (uint)renderer->width();
             uint maxwidth = (uint)renderer->maxWidthResize();
             uint newwidth = value.to<uint>();
-
-            if (newwidth == width)
-                break; // nothing to do
 
             if (newwidth > 0 && newwidth <= maxwidth)
             {

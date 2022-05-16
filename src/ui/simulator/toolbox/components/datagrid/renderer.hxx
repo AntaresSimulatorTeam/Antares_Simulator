@@ -41,11 +41,6 @@ inline int IRenderer::internalWidth() const
     return width();
 }
 
-inline int IRenderer::widthExcludingAgregatedColumns() const
-{
-    return width();
-}
-
 inline int IRenderer::internalHeight() const
 {
     return height();
