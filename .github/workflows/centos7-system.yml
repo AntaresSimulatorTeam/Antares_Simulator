@@ -8,7 +8,13 @@ on:
       - features/*
       - fix/*
       - release/*
+      - doc/*
 jobs:
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   docker_publish:
 
@@ -57,7 +63,9 @@ jobs:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
-    needs: docker_publish
+    needs: 
+      - docker_publish
+      - doc_generation
     container: 'antaresrte/rte-antares:centos7-simulator'
     strategy:
       matrix:
@@ -100,6 +108,12 @@ jobs:
             echo "::set-output name=flags::"
             echo "::set-output name=label::"
           fi
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
 
     - name: Configure
       run: |

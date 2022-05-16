@@ -178,8 +178,6 @@ EVT_MENU(mnIDWindowRaise_Other, ApplWnd::evtOnRaiseWindow)
 // Help
 EVT_MENU(mnIDHelpAbout, ApplWnd::evtOnHelpAbout)
 EVT_MENU(mnIDHelpPDFGeneralReferenceGuide, ApplWnd::evtOnHelpPDFGeneralReferenceGuide)
-EVT_MENU(mnIDHelpPDFOptimizationProblemsFormulation,
-         ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation)
 EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
          ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
