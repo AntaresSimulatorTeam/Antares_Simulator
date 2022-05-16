@@ -42,6 +42,18 @@ void printVersion()
 #endif
 }
 
+// CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
+// avec " ortools-solver != Sirius "
+void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
+                       bool ortoolsUsed)
+{
+    if (ucMode == Antares::Data::UnitCommitmentMode::ucMILP
+        && !ortoolsUsed)
+    {
+        throw Error::IncompatibleMILPSolverOptions();
+    }
+}
+
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
 // = MILP ».
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
@@ -232,6 +244,9 @@ void Application::prepare(int argc, char* argv[])
 
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
+    checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
+                      pParameters->ortoolsUsed);
+
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
 

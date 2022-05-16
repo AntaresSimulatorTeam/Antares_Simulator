@@ -73,6 +73,11 @@ IncompatibleParallelOptions::IncompatibleParallelOptions() :
 {
 }
 
+IncompatibleMILPSolverOptions::IncompatibleMILPSolverOptions() : 
+ LoadingError("Unit Commitment mode 'milp' must be used with an OR-Tools solver ")
+{
+}
+
 IncompatibleOptRangeHydroPricing::IncompatibleOptRangeHydroPricing() :
  LoadingError("Simplex optimization range and hydro pricing mode : values are not compatible ")
 {
