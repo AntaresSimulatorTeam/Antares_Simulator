@@ -282,7 +282,7 @@ void Parameters::reset()
     shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
-    unitCommitment.ucMode = ucHeuristic;
+    unitCommitment.ucMode = ucFast;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
@@ -730,7 +730,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.unitCommitment.ucMode = ucFast;
         return false;
     }
     // Renewable generation modelling

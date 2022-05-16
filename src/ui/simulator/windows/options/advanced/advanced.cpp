@@ -367,7 +367,7 @@ void AdvancedParameters::onResetToDefault(void*)
         // parameters.shedding.strategy = Data::shsShareMargins;
         parameters.shedding.policy = Data::shpShavePeaks;
         parameters.reserveManagement.daMode = Data::daGlobal;
-        parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        parameters.unitCommitment.ucMode = Data::ucFast;
         parameters.nbCores.ncMode = Data::ncAvg;
 
         parameters.renewableGeneration.rgModelling = Data::rgAggregated;
@@ -842,7 +842,7 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristic)); // Fast
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucFast)); // Fast
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
@@ -852,7 +852,7 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
                  this);
 
     text.clear();
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucMILP)); // Accurate
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucAccurate)); // Accurate
     text << wxT("   (slow)");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
@@ -868,9 +868,9 @@ void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& evt)
     if (not Data::Study::Current::Valid())
         return;
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristic)
+    if (study.parameters.unitCommitment.ucMode != Data::ucFast)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristic;
+        study.parameters.unitCommitment.ucMode = Data::ucFast;
         MarkTheStudyAsModified();
         refresh();
     }
@@ -882,9 +882,9 @@ void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucMILP)
+    if (study.parameters.unitCommitment.ucMode != Data::ucAccurate)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucMILP;
+        study.parameters.unitCommitment.ucMode = Data::ucAccurate;
         MarkTheStudyAsModified();
         refresh();
     }

@@ -110,7 +110,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             thermalClusterProduction = hourlyResults->ProductionThermique[hourInTheWeek]
                                          ->ProductionThermiqueDuPalier[thermalCluster->index];
 
-            if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
+            if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucAccurate) // Economy accurate
                 thermalClusterNumberON
                   = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
                                         ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
@@ -333,7 +333,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
 
                 switch (unitCommitmentMode)
                 {
-                case Antares::Data::UnitCommitmentMode::ucHeuristic:
+                case Antares::Data::UnitCommitmentMode::ucFast:
                 {
                     if (currentCluster->pminOfAGroup[numSpace] > 0.)
                     {
@@ -353,7 +353,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                           thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                     break;
                 }
-                case Antares::Data::UnitCommitmentMode::ucMILP:
+                case Antares::Data::UnitCommitmentMode::ucAccurate:
                 {
                     ON_min[h] = Math::Max(
                       static_cast<uint>(Math::Ceil(thermalClusterProduction

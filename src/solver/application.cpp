@@ -60,7 +60,7 @@ void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optR
                                          Antares::Data::UnitCommitmentMode ucMode)
 {
     if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+        && ucMode == Antares::Data::UnitCommitmentMode::ucAccurate)
     {
         throw Error::IncompatibleOptRangeUCMode();
     }

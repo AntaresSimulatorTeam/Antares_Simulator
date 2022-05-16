@@ -165,7 +165,7 @@ public:
     //! The non propostional cost for the current cluster of the current hour (startupCost *
     //! (newUnitCount - previousUnitCount)) + (fixed cost * newUnitCount) - MBO - 13/05/2014 - #21
     double thermalClusterNonProportionalCost;
-    //! Number of groups turned ON by cluster for the current hour in the year with the ucMILP
+    //! Number of groups turned ON by cluster for the current hour in the year with the ucAccurate
     //! (accurate) unit commitment mode
     uint thermalClusterNumberON;
     //! Minimum power of a group of the cluster for the current hour in the year
@@ -175,8 +175,8 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
-    //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
-    //! ucMILP (accurate)
+    //! Number of unit dispatched for all clusters for the whole year for ucFast (fast heuristic) or
+    //! ucAccurate (accurate heuristic)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
 
     //! Thermal operating cost for the current thermal cluster for the whole year
@@ -200,7 +200,7 @@ public:
     NUMERO_CHRONIQUES_TIREES_PAR_PAYS* timeseriesIndex;
     //! Study mode: economy / adequacy / draft
     Data::StudyMode studyMode;
-    //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
+    //! Study unit commitment mode: ucFast / ucAccurate
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;

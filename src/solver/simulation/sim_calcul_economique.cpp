@@ -85,7 +85,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
-      = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+      = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucAccurate)
           ? OUI_ANTARES
           : NON_ANTARES;
 
