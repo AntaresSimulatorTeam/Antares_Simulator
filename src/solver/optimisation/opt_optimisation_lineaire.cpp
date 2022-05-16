@@ -104,6 +104,27 @@ OptimisationHebdo:
         if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
-    
+
+    if ((ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION
+        && !(ProblemeHebdo->OptimisationAvecVariablesEntieres))
+    {
+        if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+        {
+            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(ProblemeHebdo);
+        }
+        else if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+        {
+            OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
+        }
+        else
+            printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
+                   "initialise a OUI_ANTARES ou NON_ANTARES\n");
+
+        (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
+
+        if (ProblemeHebdo->Expansion == NON_ANTARES)
+            goto OptimisationHebdo;
+    }
+
     return true;
 }
