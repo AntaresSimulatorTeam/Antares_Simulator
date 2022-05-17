@@ -253,25 +253,6 @@ namespace Economy
             NextType::yearBegin(year, numSpace);
         }
 
-        void yearEndBuildPrepareDataForEachThermalCluster(State& state,
-                                                          uint year,
-                                                          unsigned int numSpace)
-        {
-            // gp : add something here ?
-            // gp : if not, remove this function : IVariable counterpart already does it 
-
-            // Next variable
-            NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-        }
-
-        void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
-        {
-            // gp : add something here ?
-
-            // Next variable
-            NextType::yearEndBuildForEachThermalCluster(state, year, numSpace);
-        }
-
         void yearEndBuild(State& state, unsigned int year)
         {
             // Next variable
@@ -333,13 +314,18 @@ namespace Economy
 
         void hourForEachThermalCluster(State& state, unsigned int numSpace)
         {
-            // Total Non Proportional cost for this hour
-            // NP = startup cost + fixed cost
-            // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-            // += production for the current thermal dispatchable cluster
-            //	(state.thermalClusterNonProportionalCost);
+            // Useful local variables
+            double* MarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
+            auto* cluster = state.thermalCluster;
+            double hourlyClusterProduction = state.thermalClusterProduction;
+            uint hourInTheWeek = state.hourInTheWeek;
+            uint hourInTheYear = state.hourInTheYear;
+            int modulationCostColumn = Data::thermalModulationCost;
 
-            // gp : add something here ?
+            // Thermal cluster profit
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear] =
+                hourlyClusterProduction *
+                (- MarginalCosts[hourInTheWeek] - cluster->marginalCost * cluster->modulation[modulationCostColumn][hourInTheYear]);
 
             // Next item in the list
             NextType::hourForEachThermalCluster(state, numSpace);

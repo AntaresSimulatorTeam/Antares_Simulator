@@ -208,20 +208,6 @@ void Areas<NEXTTYPE>::yearBegin(uint year, uint numSpace)
         pAreas[i].yearBegin(year, numSpace);
 }
 
-/*template<>
-void Areas<NEXTTYPE>::yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
-{
-        for (uint i = 0; i != pAreaCount; ++i)
-                pAreas[i].yearEndBuildPrepareDataForEachThermalCluster(state, year);
-}
-
-template<>
-void Areas<NEXTTYPE>::yearEndBuildForEachThermalCluster(State& state, uint year)
-{
-        for (uint i = 0; i != pAreaCount; ++i)
-                pAreas[i].yearEndBuildForEachThermalCluster(state, year);
-}*/
-
 template<>
 void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
 {
