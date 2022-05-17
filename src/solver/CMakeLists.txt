@@ -116,6 +116,7 @@ macro(solver_app name swap)
 	executable_strip(${exec_name})	
 	
 	copy_dependency(sirius_solver ${exec_name})	
+    copy_dependency(ortools::ortools ${exec_name})
 
 endmacro()
 
