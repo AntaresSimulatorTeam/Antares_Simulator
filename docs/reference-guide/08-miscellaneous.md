@@ -67,7 +67,7 @@ The table below gives an overview of the different reserves available in Antares
 ## The heuristic for seasonal hydro pre-allocation
 
 
-This heuristic, first introduced in broad terms in [Active windows](4-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
+This heuristic, first introduced in broad terms in [Active windows](04-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
 
 Basically, the seasonal hydro pre-allocation process comprises two stages carried out two times
 (first time: monthly scale; second time: daily scale).
@@ -356,7 +356,7 @@ output=false
 
 ## The Annual System Cost Output file
 
-In addition to the general files introduced in [Output Files](5-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+In addition to the general files introduced in [Output Files](05-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
 
 The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
 
@@ -430,7 +430,7 @@ This parameter can take the two values "cold start" or "hot start". [default: co
 
 **General:**
 
-This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](4-active_windows.md)).
+This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](04-active_windows.md)).
 
 As a consequence, Areas which fall in either of the two following categories are not impacted by the value of the parameter:
 - No hydro-storage capability installed
@@ -505,11 +505,11 @@ This parameter is meant to define how the reservoir level difference between the
 
 **Fast:**
 
-The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](5-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
+The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
 
 **Accurate:**
 
-The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](5-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
+The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
 
 ## The "Unit Commitment mode" advanced parameter
 

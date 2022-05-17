@@ -70,7 +70,7 @@ the study's folder but the user may modify it. The default name of a new study i
 
 The other "input" subcommands here below are used to move from one active window to another.
 Note that the availability of the __Wind__, __Solar__, and __Renewable__ subcommands depend on the advanced 
-parameter *"Renewable Generation modeling"* described in [miscellaneous](8-miscellaneous.md).
+parameter *"Renewable Generation modeling"* described in [miscellaneous](08-miscellaneous.md).
 
 - **System Maps**
 - **Simulation**
@@ -134,44 +134,44 @@ a significant computer time when there are many Monte-Carlo years to process).
 
 - **Open in Windows Explorer** This command displays the list of available simulation results and allows
 browsing through the output files structure. The content of these files may be reviewed by tools such as Excel.
-File structures are detailed in [Output Files](5-output_files.md).
+File structures are detailed in [Output Files](05-output_files.md).
 
 ## Run
 
 - **Monte Carlo Simulation** Runs either an economy simulation, an adequacy simulation, or a "draft" simulation,
-depending on the values of the parameters set in the "simulation" active window (see [Simulation window](4-active_windows.md#simulation)).
+depending on the values of the parameters set in the "simulation" active window (see [Simulation window](04-active_windows.md#simulation)).
 If hardware resources and simulation settings allow it, simulations benefit from full multi-threading
-(see [System requirements](9-system_requirements.md))
+(see [System requirements](09-system_requirements.md))
 
 - **Time-series Generators** Runs any or all of the Antares stochastic time-series generators,
-depending on the values of the parameters set in the "simulation" active window (see [Simulation window](4-active_windows.md#simulation)), and 
-each cluster's "Generate TS" parameter (see [Thermal window](4-active_windows.md#thermal))
+depending on the values of the parameters set in the "simulation" active window (see [Simulation window](04-active_windows.md#simulation)), and 
+each cluster's "Generate TS" parameter (see [Thermal window](04-active_windows.md#thermal))
 
 - **Time-series Analyzer** Runs the Antares historical time-series analyzer.
 The parameters of this module are defined by a specific active window, available only on launching the analyzer
-(see [Time-series analysis and generation](6-time_series_analysis_and_generation.md))
+(see [Time-series analysis and generation](06-time_series_analysis_and_generation.md))
 
 - **Kirchhoff's Constraints Generator** Runs the Antares Kirchhoff's Constraints Generator.
 The parameters of this module are defined by a specific active window, available only on launching the KCG
-(see [Kirchhoff Constraints Generator](7-kirchhoffs_constraint_generator.md))
+(see [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md))
 
 ## Configure
 
 - **Thematic Trimming** Opens a window in which a choice can be made regarding the individual output status of
-the variables defined in [Output Files](5-output_files.md). Each computed variable can either be stored as part of
+the variables defined in [Output Files](05-output_files.md). Each computed variable can either be stored as part of
 the Output data to produce at the end of the simulation, or trimmed from it. In the latter case, the variable is regularly computed but the printing stage is skipped. Thematic Trimming does not reduce computation time but can bring some benefits on total runtime (smaller files to write). Thematic Trimming can save large amounts of storage space in simulations where only a handful of variables are of interest.
 
 - **Geographic Trimming** Opens an auxiliary window that allows multiple selection of the results to store at
 the end of a simulation: Choice of areas, interconnections, temporal aggregations (hourly, daily, etc.).
 Note that in addition to this feature, alternative access to the function is available
-(see [Active windows](4-active_windows.md), "output profile"). Geographic Trimming does not reduce actual computation 
+(see [Active windows](04-active_windows.md), "output profile"). Geographic Trimming does not reduce actual computation 
 time but can bring some benefits on total runtime (fewer files to write). Geographic Trimming can save large 
 amounts of storage space in simulations where only a few Areas and Links are of interest.
 
 - **Regional Districts** Allows selecting a set of areas to bundle them together in a "district". 
 These are used in the course of simulations to aggregate results over several areas. 
 They can be given almost any name (a "@" prefix is automatically added by Antares). 
-Bypassing the GUI is possible (see [Miscellaneous](8-miscellaneous.md)).
+Bypassing the GUI is possible (see [Miscellaneous](08-miscellaneous.md)).
 
 - **MC Scenario builder** For each Monte-Carlo year of the simulation defined in the "Simulation" window,
 this command allows to state, for each kind of time-series, whether it should be randomly drawn from
@@ -249,7 +249,7 @@ that are more numerical than physical. The set of parameters is study-specific a
 for this package)
 
 - **Resources monitor** Indicates the amounts of RAM and disk space currently used and those required for a simulation
-in the available modes (see [System requirements](9-system_requirements.md)).
+in the available modes (see [System requirements](09-system_requirements.md)).
 Note that the "disk requirement" amount does not include the footprint of the specific "mps" files that may have
 to be written aside from the regular output (see previous § "optimization preferences").
 Besides, the resources monitor shows the number of CPU cores available on the machine Antares is running on.

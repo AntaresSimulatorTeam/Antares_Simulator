@@ -49,7 +49,7 @@ study or anywhere else (for instance, on a remote "historical data" or "Meteorol
 
 3. The study folder contains a specific subfolder named "user", whose status is particular: Antares is not allowed
 to delete any files within it (yet files may be updated on the user's requirement). As a consequence,
-the "user" subfolder is unaffected by the "clean study" command (see [Commands](3-commands.md)).
+the "user" subfolder is unaffected by the "clean study" command (see [Commands](03-commands.md)).
 This subfolder is therefore a
 "private" user space, where all kinds of information can be stored without any kind of interference with Antares.
 Note that on using the "save as" command (described further below), the choice is given to make or not a copy of

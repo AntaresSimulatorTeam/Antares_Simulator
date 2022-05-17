@@ -85,7 +85,7 @@ These two parts are detailed hereafter.
 
     - Thematic Trimming:
         - **None** Storage, for the geographic selection defined previously,
-      of all variables defined in [Output Files](5-output_files.md) for Areas and Links.
+      of all variables defined in [Output Files](05-output_files.md) for Areas and Links.
         - **Custom** Storage, for the geographic selection defined previously, of the variables selected with
       the "Thematic Trimming" command of the "Configure" option available in the main menu.
 
@@ -109,7 +109,7 @@ Either « ready-made » or «stochastic » (i.e. Antares-generated), defined by 
 
     - **Refresh span** Number of MC years at the end of which the renewal will be performed (if so required)
 
-    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](6-time_series_analysis_and_generation.md))
+    - **Seasonal correlation** ("monthly" or "annual") Indicates whether the spatial correlation matrices to use are defined month by month or if a single annual matrix for the whole year should rather be used (see [Time-series analysis and generation](06-time_series_analysis_and_generation.md))
 
     - **Store in input**
         - **Yes** the generated time-series will be stored in the INPUT in replacement of the original ones (wherever they may come from)
@@ -177,7 +177,7 @@ The user may pick any area appearing in the list and is then given access to dif
 
     - The "local data" tab is used to set the parameters of the stochastic generator.
     These parameters are presented in four sub-tabs whose content is presented in
-    [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
+    [Time-series analysis and generation](06-time_series_analysis_and_generation.md).
 
     - The "digest" tab displays for all areas a short account of the local data
 
@@ -249,8 +249,8 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Default contribution to the spinning reserve (% of nominal capacity)
     - CO2 tons emitted per electric MWh
     - Marginal operating cost (€/MWh)
-    - Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](6-time_series_analysis_and_generation.md#time-series-generation-thermal)
-    - Volatility (planned): a parameter between 0 and 1, see section [Time-series generation (thermal)](6-time_series_analysis_and_generation.md#time-series-generation-thermal)
+    - Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](06-time_series_analysis_and_generation.md#time-series-generation-thermal)
+    - Volatility (planned): a parameter between 0 and 1, see section [Time-series generation (thermal)](06-time_series_analysis_and_generation.md#time-series-generation-thermal)
     - Law (forced): Probabilistic law used for the generation of the forced outage time-series, can be set to either uniform or geometric
     - Law (planned): Probabilistic law used for the generation of the planned outage time-series, can be set to either uniform or geometric
     - Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:
@@ -314,7 +314,7 @@ In the main Window, the user may pick any area appearing in the list and is then
 - The "spatial correlation" tab gives access to an annual inter-area correlation matrix that will be used by the stochastic generator if it is activated. Correlations are expressed in percentages, hence to be valid this matrix must be symmetric, p.s.d, with a main diagonal of 100s and all terms lying between (-100 ,+100)
 
 
-- The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Miscellaneous](8-miscellaneous.md).
+- The "Allocation" tab gives access to an annual inter-area allocation matrix A(i,j) that may be used during a heuristic hydro pre-allocation process, regardless of whether the stochastic time-series generator is used or not. This matrix describes the weights that are given to the loads of areas (i) in the definition of the monthly and weekly hydro storage generation profiles of areas (j). The way this is done in detailed in [Miscellaneous](08-miscellaneous.md).
 
 
 - The "local data" tab is used to set up the parameters of the stochastic generator_ **AND** _to define techno-economic characteristics of the hydro system that are used in Economy and Adequacy optimizations. For the purpose of versatility (use of the hydro section to model storage facilities quite different in size and nature), this "local tab" is itself divided up into four different subtabs whose list follows and which are further described:
@@ -391,7 +391,7 @@ It includes 15 parameters (out of which 7 are booleans) presented hereafter:
 
 - "Inter-daily breakdown" and "Inter-monthly breakdown" : parameters used in the assessment, through a 
 heuristic process, of an "ideal" seasonal generation profile, if the use of such a profile is required 
-(the heuristic itself is presented in [Miscellaneous](8-miscellaneous.md))
+(the heuristic itself is presented in [Miscellaneous](08-miscellaneous.md))
 
 - "Intra-daily modulation": parameter which represents, for the storage power, the maximum authorized value for
 the ratio of the daily peak to the average power generated throughout the day. This parameter is meant to allow 
@@ -404,7 +404,7 @@ the day 24 : use of the whole daily energy in one single hour is allowed
     
 	- The whole amount of STOR energy of each month MUST be used during this month (no long-term storage) 
 	
-	- The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Miscellaneous](8-miscellaneous.md)
+	- The actual daily generation should follow, during the month, an "ideal" profile defined by the heuristic defined in [Miscellaneous](08-miscellaneous.md)
 
  	Choosing "Yes" implies that available data allow or require explicit modeling of the storage facility,
 regardless of whether a pre-allocation heuristic is used or not.
@@ -470,7 +470,7 @@ The user may pick any area appearing in the list and is then given access to dif
     
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
-- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
+- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](06-time_series_analysis_and_generation.md).
 
 - The "digest" tab displays for all areas a short account of the local data
 
@@ -512,7 +512,7 @@ The user may pick any area appearing in the list and is then given access to dif
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 
-- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](6-time_series_analysis_and_generation.md).
+- The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](06-time_series_analysis_and_generation.md).
 
 - The "digest" tab displays for all areas a short account of the local data
 
@@ -635,9 +635,9 @@ The eight 8760-hour times-series are:
 
 - Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for.
 
-- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](7-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
-- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](7-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
 
 For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in \\( rad/U^2_{ref} \\)
 
@@ -660,7 +660,7 @@ Then the DC flow approximation may be implemented, for each time-step of the sim
 
 $$ c= 1, ..., C : \sum_{i \in C}{sign(l,c)F_lZ_l = 0}$$
 
-_Note that such specific binding constraints can be automatically generated within Antares by using the auxiliary module "Kirchhoff's Constraints Generator" further described in [Kirchhoff Constraints Generator](7-kirchhoffs_constraint_generator.md)._
+_Note that such specific binding constraints can be automatically generated within Antares by using the auxiliary module "Kirchhoff's Constraints Generator" further described in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)._
 
 Aside from such sets of constraints, which may help to give realistic geographic patterns to the flows, completely different sets of constraints may be also defined, such as those set up by the market organization, which may define precise perimeters for valid commercial flows [^10].
 

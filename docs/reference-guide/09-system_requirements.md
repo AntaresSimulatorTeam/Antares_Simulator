@@ -81,7 +81,7 @@ The Table indicates either the refresh status (No) or the refresh span (the asso
 
 [^22]: The « draft » mode is not multi-threaded
 
-[^23]: This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](3-commands.md))
+[^23]: This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](03-commands.md))
 
 [^24]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
 
