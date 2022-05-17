@@ -165,8 +165,10 @@ Depending on the options chosen in the main simulation window, the output folder
 |                              |/Load               | /area names/...                |
 |                              |/Thermal            | /area names/...                |
 |                              |/Hydro              | /area names/...                |
-|                              |/Wind               | /area names/...                |
-|                              |/Solar              | /area names/...                |
+|                              |/Wind[^agg]         | /area names/...                |
+|                              |/Solar[^agg]        | /area names/...                |
+|                              |/Renewables[^ren]   | /area names/...                |
+|                              |/NTC                | /area names/...                |
 
 These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true").
 
@@ -174,8 +176,8 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 |------------------------------|--------------------|--------------------------------|
 |                              |/Load               | /batch number/area names/...   |
 |                              |/Hydro              | /batch number/area names/...   |
-|                              |/Wind               | /batch number/area names/...   |
-|                              |/Solar              | /batch number/area names/...   |
+|                              |/Wind[^agg]         | /batch number/area names/...   |
+|                              |/Solar[^agg]        | /batch number/area names/...   |
 
 
 These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
@@ -240,3 +242,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+
+[^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
+
+[^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation

@@ -6,7 +6,7 @@ This section gives a summary of the whole simulation process followed by Antares
 
 1. Load or Generate [stochastic generators] Time-series of every kind for all system areas
 
-2. For each Monte-Carlo year, pick up at random or not [scenario builder] one time-series of each kind for each area
+2. For each Monte-Carlo year, pick up at random or not [scenario builder] one time-series of each kind for each area/link
 
 3. For each area and each reservoir:
 

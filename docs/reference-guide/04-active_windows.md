@@ -254,9 +254,9 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Law (forced): Probabilistic law used for the generation of the forced outage time-series, can be set to either uniform or geometric
     - Law (planned): Probabilistic law used for the generation of the planned outage time-series, can be set to either uniform or geometric
     - Generate TS: Parameter to specify the behavior of this cluster for TS generation. **This cluster-wise parameter takes priority over the study-wide one.** It can hold three values:
-      - Force generation: TS for this cluster will be generated
-      - Force no generation: TS for this cluster will not be generated
-      - Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation)).
+		- Force generation: TS for this cluster will be generated
+		- Force no generation: TS for this cluster will not be generated
+		- Use global parameter: Will use the parameter for the study (the one in the [Simulation Window](#simulation)).
     - Fixed cost (No-Load heat cost) (€ / hour of operation )
     - Start-up cost (€/start-up)
     - Market bid (€/MWh)
@@ -463,11 +463,11 @@ The user may pick any area appearing in the list and is then given access to dif
         - _If the "intra-modal correlated draws" option has been selected in the_ **simulation** _window, every area should have either one single time-series or the same given number (e.g. 25, 25, 1, 25, ...)_
 
 - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and an overall annual correlation matrix.
-  
-  A matrix A must meet three conditions to be a valid correlation matrix:
-  
-    $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
-    
+
+	A matrix A must meet three conditions to be a valid correlation matrix:
+
+	$$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
 
 - The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](06-time_series_analysis_and_generation.md).
@@ -505,13 +505,12 @@ The user may pick any area appearing in the list and is then given access to dif
 
 - The "spatial correlation" tab gives access to the inter-area correlation matrices that will be used by the stochastic generator if it is activated. Different sub-tabs are available for the definition of 12 monthly correlation matrices and of an overall annual correlation matrix.
 
-    A matrix A must meet three conditions to be a valid correlation matrix:
+	A matrix A must meet three conditions to be a valid correlation matrix:
 
-  $$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
-  
+	$$\forall i,\ \forall j,\ {A_{ii} = 100; -100 \le A_{ij} \le 100}; A\ symmetric; A\ positive\ semi\mbox{-}definite$$
+
     When given invalid matrices, the TS generator emits an infeasibility diagnosis
-
-
+    
 - The "local data" tab is used to set the parameters of the stochastic generator. These parameters are presented in four subtabs whose content is presented in [Time-series analysis and generation](06-time_series_analysis_and_generation.md).
 
 - The "digest" tab displays for all areas a short account of the local data
@@ -611,35 +610,55 @@ This window is used to handle all input data regarding reserves and the potentia
 
 ## Links
 
-This window is used to handle all input data regarding the interconnections. On picking any interconnection in the primary list, the user gets direct access to all data regarding the link, which are five annual parameters and a set of eight ready-made 8760-hour time-series
+This window is used to handle all input data regarding the interconnections. On picking any interconnection in the primary list, the user gets direct access to all data regarding the link, which are five annual parameters, a set of six ready-made 8760-hour time-series, and a flexible number of ready-made 8760-hour time-series corresponding to the capacities of the links.
 
-The five parameters, used in economy or adequacy simulations (not in draft), are namely:
+- The five parameters, used in economy or adequacy simulations (not in draft) are displayed in the "Parameters" and in the "Transmission capacities" tab. They are namely:
 
-- "Hurdle cost": set by the user to state whether (linear) transmission fees should be taken into account or not in economy and adequacy simulations
-- "Transmission capacities": set by the user to state whether the capacities to consider are those indicated in 8760-hour arrays or if zero or infinite values should be used instead (actual values / set to zero / set to infinite)
-- "Asset type": set by the user to state whether the link is either an AC component (subject to Kirchhoff's laws), a DC component, or another type of asset
-- "Account for loop flows": set by the KCG [^9] to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws
-- "Account for PST": set by the KCG to include (or not) the settings of phase-shifting transformers in the formulation of the constraints enforcing Kirchhoff's laws
+	- "Hurdle cost": set by the user to state whether (linear) transmission fees should be taken into account or not in economy and adequacy simulations
+	- "Transmission capacities": set by the user to state whether the capacities to consider are those indicated in 8760-hour arrays or if zero or infinite values should be used instead (actual values / set to zero / set to infinite)
+	- "Asset type": set by the user to state whether the link is either an AC component (subject to Kirchhoff's laws), a DC component, or another type of asset
+	- "Account for loop flows": set by the KCG [^9] to include (or not) passive loop flows in the formulation of the constraints enforcing Kirchhoff's laws
+	- "Account for PST": set by the KCG to include (or not) the settings of phase-shifting transformers in the formulation of the constraints enforcing Kirchhoff's laws
 
-The eight 8760-hour times-series are:
+- The "Parameters" tab displays six 8760-hour times-series, which are:
 
-- NTC direct: the upstream-to-downstream capacity, in MW
+	- Hurdle cost direct: an upstream-to-downstream transmission fee, in €/MWh
+	
+	- Hurdle cost indirect: a downstream-to-upstream transmission fee, in €/MWh
+	
+	- Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference \\( U_{ref} \\)
+	
+	- Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for.
+	
+	- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+	
+	- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
+	
+	For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in \\( rad/U^2_{ref} \\)
+	
 
-- NTC indirect: the downstream-to-upstream capacity, in MW
+- The "Transmission capacities" tab displays "ready-made" 8760-hour time-series already available for simulation purposes.  
+In this tab, the table "Direct" describes the upstream-to-downstream capacity, in MW, and the table "Indirect" describes the downstream-to-upstream capacity, in MW.  
+	_Please note that Time-Series analysis and generation is not available for capacity Time-Series._ <br/><br/>
+	Different ways to update data are :
+	- direct typing
+	- copy/paste a selected field to/from the clipboard
+	- load/save all the time-series from/to a file (usually located in the "user" subfolder)
+	- Apply different functions (+,-, *, /,etc.) to the existing (possibly filtered) values (e.g. simulate a 2% growth rate by choosing "multiply-all-by-1.02")
+	- Handle the whole (unfiltered) existing dataset to either:
+	
+		- Change the number of columns (function name: resize)
+		- Adjust the values associated with the current first day of the year (function name: shift rows)
+	
+	Versatile "Filter" functions allow quick access to user-specified sections of data (e.g. display only the generation expected on Sundays at midnight, for all time-series).
 
-- Hurdle cost direct: an upstream-to-downstream transmission fee, in €/MWh
+- _Note that:_
 
-- Hurdle cost indirect: a downstream-to-upstream transmission fee, in €/MWh
-
-- Impedance: used in economy simulations to give a physical meaning to raw outputs, when no binding constraints have been defined to enforce Kirchhoff's laws (see "Output" section, variable "Flow Quad") OR used by the Kirchhoff's constraint generator to build up proper flow constraints (AC flow computed with the classical "DC approximation"). Since voltage levels are not explicitly defined and handled within Antares, all impedances are assumed to be scaled to some reference \\( U_{ref} \\)
-
-- Loop flow: amount of power flowing circularly though the grid when all "nodes" are perfectly balanced (no import and no export). Such loop flows may be expected on any "simplified" grid in which large regions (or even countries) are modeled by a small number of "macro" nodes, and should accordingly be accounted for.
-
-- PST min (denoted \\(Y^-\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): lower bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
-
-- PST max (denoted \\(Y^+\\) in [Kirchhoff Constraints Generator](07-kirchhoffs_constraint_generator.md)): upper bound of phase-shifting that can be reached by a PST installed on the link, if any (note : the effect of the active loop flow generated by the PST may be superimposed to that of the passive loop flow)
-
-For the sake of simplicity and homogeneity with the convention used for impedance, PST settings are assumed to be expressed in \\( rad/U^2_{ref} \\)
+	- _For a given link, the number of Time-Series for the direct and indirect capacity must be equal. Otherwise, an issue will be raised when launching a simulation_
+	
+	- _If the "intra-modal correlated draws" option was not selected in the_ **simulation** _window, MC adequacy or economy simulations can take place even if the number of time-series for direct/indirect capacity is not the same for all links (e.g. 2 , 5 , 1 , 45 ,...)_
+	
+	- _If the "intra-modal correlated draws" option was selected in the_ **simulation** _window, every link should have either one single time-series for both the direct and indirect capacity, or the same given number of time-series (e.g. 25 , 25 , 1 , 25...)_
 
 ## Binding constraints
 
