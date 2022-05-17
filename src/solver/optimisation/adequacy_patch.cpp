@@ -210,7 +210,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     double ensInit;
     double densNew;
     bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+      = !ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
 
     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
