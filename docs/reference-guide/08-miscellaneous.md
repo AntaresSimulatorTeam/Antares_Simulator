@@ -175,7 +175,7 @@ $$if (not.\mu) : \{ S \leftarrow \infty ; \underline{S_d} \leftarrow 0; \overlin
 
 _M1:_
 
-$$if (j \text{ and } \mu) : \text{for } m\in [1, 12]: {W_m^1 \leftarrow \frac{L_m^{\alpha}. (\sum_{m}{I_m})}{{(\sum_{m}{L_m^{\alpha}})} \}}$$
+$$if (j \text{ and } \mu) : \text{for } m\in [1, 12]: W_m^1 \leftarrow \frac{L_m^{\alpha}.(\sum_{m}{I_m})}{(\sum_{m}{L_m^{\alpha}})}$$
 
 $$else: \text{for } m\in [1, 12]: \{W_m^1 \leftarrow I_m\}$$
 
@@ -186,9 +186,9 @@ _$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M
 
 _D1:_
 
-$$if (j): \text{for } d\in [1, 31]: { W_d^1 \leftarrow \frac{L_d^{\beta}. (W_m^2)}{(\sum_{d\in m}{L_d^{\beta}}) \}}$$
+$$if (j): \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{L_d^{\beta}. (W_m^2)}{(\sum_{d\in m}{L_d^{\beta}})}$$
 
-$$else: \text{for } d\in [1, 31]: { W_d^1 \leftarrow \frac{I_d . (W_m^2)} {(\sum_{d\in m}{I_d}) \}}$$
+$$else: \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{I_d . (W_m^2)} {(\sum_{d\in m}{I_d})}$$
 
 _D2:_
 
