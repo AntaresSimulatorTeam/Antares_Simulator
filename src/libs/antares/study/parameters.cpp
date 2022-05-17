@@ -667,9 +667,9 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
 {
     if (key == "include-adq-patch")
         return value.to<bool>(d.include.adequacyPatch);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
         return value.to<bool>(d.setToZeroNTCfromOutToIn_AdqPatch);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.setToZeroNTCfromOutToOut_AdqPatch);
     if (key == "save-intermediate-results")
         return value.to<bool>(d.adqPatchSaveIntermediateResults);
@@ -1797,9 +1797,9 @@ void Parameters::saveToINI(IniFile& ini) const
     {
         auto* section = ini.addSection("adequacy patch");
         section->add("include-adq-patch", include.adequacyPatch);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
                      setToZeroNTCfromOutToIn_AdqPatch);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
+        section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      setToZeroNTCfromOutToOut_AdqPatch);
         section->add("save-intermediate-results", adqPatchSaveIntermediateResults);
         section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
