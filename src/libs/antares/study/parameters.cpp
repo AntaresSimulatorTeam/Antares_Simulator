@@ -665,7 +665,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       const String&,
                                       uint)
 {
-    if (key == "include-adequacypatch")
+    if (key == "include-adq-patch")
         return value.to<bool>(d.include.adequacyPatch);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
         return value.to<bool>(d.setToZeroNTCfromOutToIn_AdqPatch);
@@ -1796,7 +1796,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // Adequacy patch
     {
         auto* section = ini.addSection("adequacy patch");
-        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("include-adq-patch", include.adequacyPatch);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
                      setToZeroNTCfromOutToIn_AdqPatch);
         section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
