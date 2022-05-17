@@ -46,13 +46,10 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
 
     auto* label = Component::CreateLabel(parent, text, true);
 
@@ -233,17 +230,19 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchSaveIntermediateResults = button;
     }
-    SubTitle(this, s, wxT("Thresholds"));
+    addLabelAdqPatch(this, s, wxT("Thresholds"));
     // Seeds/threshold values
     for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
         pEditSeeds[i] = nullptr;
-    
+
     for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
     {
-        pEditSeeds[seed] = insertEdit(this,
-                                      s,
-                                      wxStringFromUTF8(AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
-                                      wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
+        pEditSeeds[seed]
+          = insertEdit(this,
+                       s,
+                       wxStringFromUTF8(
+                         AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
     }
 
     {
