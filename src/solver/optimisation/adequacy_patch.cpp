@@ -48,15 +48,12 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     case physicalAreaInsideAdqPatch:
         return getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
                                                      setToZeroNTCfromOutToIn_AdqPatch);
-        break;
     case physicalAreaOutsideAdqPatch:
         return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
                                                       setToZeroNTCfromOutToIn_AdqPatch,
                                                       setToZeroNTCfromOutToOut_AdqPatch);
-        break;
     default:
         return leaveLocalValues;
-        break;
     }
 }
 
@@ -68,13 +65,10 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
     {
     case physicalAreaInsideAdqPatch:
         return setToZero;
-        break;
     case physicalAreaOutsideAdqPatch:
         return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
-        break;
     default:
         return leaveLocalValues;
-        break;
     }
 }
 
@@ -87,13 +81,10 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
     {
     case physicalAreaInsideAdqPatch:
         return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setExtremityOrigineToZero;
-        break;
     case physicalAreaOutsideAdqPatch:
         return (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
-        break;
     default:
         return leaveLocalValues;
-        break;
     }
 }
 
