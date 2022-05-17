@@ -15,6 +15,9 @@ CSVWriter::CSVWriter(const Yuni::String& filename, ContentHandler* handler) : co
 
 void CSVWriter::flush()
 {
+    if (!contentHandler_)
+        return;
+
     mOutputFile << "#item\tduration_ms\tNumber of calls\n";
     for (const auto& it : *contentHandler_)
     {
