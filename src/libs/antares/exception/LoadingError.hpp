@@ -92,10 +92,16 @@ public:
     IncompatibleParallelOptions();
 };
 
-class IncompatibleMILPSolverOptions : public LoadingError
+class IncompatibleMILPWithoutOrtools : public LoadingError
 {
 public:
-    IncompatibleMILPSolverOptions();
+    IncompatibleMILPWithoutOrtools();
+};
+
+class IncompatibleMILPOrtoolsSolver : public LoadingError
+{
+public:
+    IncompatibleMILPOrtoolsSolver();
 };
 
 class IncompatibleOptRangeHydroPricing : public LoadingError

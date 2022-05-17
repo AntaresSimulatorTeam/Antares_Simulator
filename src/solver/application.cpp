@@ -45,12 +45,20 @@ void printVersion()
 // CHECK nécessaire d'un choix simultané entre " unit-commitment = MILP " et " ortools-used "
 // avec " ortools-solver != Sirius "
 void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
-                       bool ortoolsUsed)
+                       bool ortoolsUsed,
+                       Antares::Data::OrtoolsSolver ortoolsSolverUsed
+                       )
 {
-    if (ucMode == Antares::Data::UnitCommitmentMode::ucMILP
-        && !ortoolsUsed)
+    if (ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
     {
-        throw Error::IncompatibleMILPSolverOptions();
+        if (!ortoolsUsed)
+        {
+            throw Error::IncompatibleMILPWithoutOrtools();
+        }
+        else if (ortoolsSolverUsed == Antares::Data::OrtoolsSolver::sirius)
+        {
+            throw Error::IncompatibleMILPOrtoolsSolver();
+        }
     }
 }
 
@@ -245,7 +253,8 @@ void Application::prepare(int argc, char* argv[])
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(pParameters->unitCommitment.ucMode,
-                      pParameters->ortoolsUsed);
+                      pParameters->ortoolsUsed,
+                      pParameters->ortoolsEnumUsed);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);
