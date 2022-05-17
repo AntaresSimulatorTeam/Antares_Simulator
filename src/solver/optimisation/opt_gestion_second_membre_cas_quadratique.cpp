@@ -63,7 +63,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsrEns.find(Area);
             if (it != hourlyCsrProblem.numberOfConstraintCsrEns.end())
@@ -79,9 +79,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
 
@@ -111,7 +111,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it
               = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
@@ -166,9 +166,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                 Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
                 if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-                      != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+                      != Data::AdequacyPatch::physicalAreaInsideAdqPatch
                     || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                         != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                         != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
                     ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
                     SecondMembre[Cnt] -= ValueOfFlow * Poids;

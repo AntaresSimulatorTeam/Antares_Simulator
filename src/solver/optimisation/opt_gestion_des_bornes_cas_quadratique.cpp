@@ -119,7 +119,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
@@ -144,7 +144,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
 
@@ -180,9 +180,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     {
         // only consider link between 2 and 2
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // flow
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];

@@ -151,7 +151,7 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
     {
         if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             Math::sumTwoArrays<double>(
               sumENS,
               pProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive,

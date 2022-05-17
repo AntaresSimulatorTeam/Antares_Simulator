@@ -140,7 +140,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             std::tie(netPositionInit, densNew)
               = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
@@ -176,7 +176,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
@@ -216,7 +216,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     while (Interco >= 0)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
@@ -232,7 +232,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     while (Interco >= 0)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }

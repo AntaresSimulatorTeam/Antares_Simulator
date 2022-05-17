@@ -86,7 +86,7 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
@@ -133,9 +133,9 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
+              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
             // flow
