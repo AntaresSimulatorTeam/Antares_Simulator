@@ -67,12 +67,11 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     {
         problem.adqPatch = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
-        problem.adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq
-          = parameters.setToZero12LinksForAdequacyPatch;
-        problem.adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq
-          = parameters.setToZero11LinksForAdequacyPatch;
-        problem.adqPatch->SaveIntermediateResults
-          = parameters.adqPatchSaveIntermediateResults;
+        problem.adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1
+          = parameters.setToZeroNTCfromOutToIn_AdqPatch;
+        problem.adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1
+          = parameters.setToZeroNTCfromOutToOut_AdqPatch;
+        problem.adqPatch->SaveIntermediateResults = parameters.adqPatchSaveIntermediateResults;
         problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
         problem.adqPatch->ThresholdInitiateCurtailmentSharingRule
           = parameters.seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule];

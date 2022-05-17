@@ -325,8 +325,8 @@ class AdequacyPatchRuntimeData
 {
 public:
     std::vector<AdequacyPatchMode> areaMode;
-    std::vector<AdequacyPatchMode> originAreaType;
-    std::vector<AdequacyPatchMode> extremityAreaType;
+    std::vector<AdequacyPatchMode> originAreaMode;
+    std::vector<AdequacyPatchMode> extremityAreaMode; 
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -337,8 +337,8 @@ public:
         for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
         {
             auto& link = *(study.runtime->areaLink[i]);
-            originAreaType.push_back(link.from->adequacyPatchMode);
-            extremityAreaType.push_back(link.with->adequacyPatchMode);
+            originAreaMode.push_back(link.from->adequacyPatchMode);
+            extremityAreaMode.push_back(link.with->adequacyPatchMode);
         }
     }
 };
@@ -500,8 +500,8 @@ typedef struct
 struct AdequacyPatchParameters
 {
     bool AdequacyFirstStep;
-    bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
-    bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+    bool setToZeroNTCfromOutToIn_AdqPatchStep1;
+    bool setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
     bool SaveIntermediateResults;
     AdequacyPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;

@@ -355,11 +355,11 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
-    
+
     // Adequacy patch
     include.adequacyPatch = false;
-    setToZero12LinksForAdequacyPatch = true;
-    setToZero11LinksForAdequacyPatch = true;
+    setToZeroNTCfromOutToIn_AdqPatch = true;
+    setToZeroNTCfromOutToOut_AdqPatch = true;
     adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
     adqPatchSaveIntermediateResults = false;
     resetSeedsAdqPatch();
@@ -665,12 +665,12 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       const String&,
                                       uint)
 {
-    if (key == "include-adq-patch")
+    if (key == "include-adequacypatch")
         return value.to<bool>(d.include.adequacyPatch);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-        return value.to<bool>(d.setToZero12LinksForAdequacyPatch);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-        return value.to<bool>(d.setToZero11LinksForAdequacyPatch);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
+        return value.to<bool>(d.setToZeroNTCfromOutToIn_AdqPatch);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
+        return value.to<bool>(d.setToZeroNTCfromOutToOut_AdqPatch);
     if (key == "save-intermediate-results")
         return value.to<bool>(d.adqPatchSaveIntermediateResults);
     // Price taking order
@@ -1796,18 +1796,19 @@ void Parameters::saveToINI(IniFile& ini) const
     // Adequacy patch
     {
         auto* section = ini.addSection("adequacy patch");
-        section->add("include-adq-patch", include.adequacyPatch);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                     setToZero12LinksForAdequacyPatch);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step",
-                     setToZero11LinksForAdequacyPatch);
+        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
+                     setToZeroNTCfromOutToIn_AdqPatch);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
+                     setToZeroNTCfromOutToOut_AdqPatch);
         section->add("save-intermediate-results", adqPatchSaveIntermediateResults);
         section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
                      seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
-        section->add("threshold-display-local-matching-rule-violations",
-                     seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
+        section->add(
+          "threshold-display-local-matching-rule-violations",
+          seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
     }
 
     // Other preferences
