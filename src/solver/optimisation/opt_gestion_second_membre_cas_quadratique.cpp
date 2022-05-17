@@ -78,9 +78,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
     // type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
         {
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
@@ -165,9 +165,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
                 Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
                 Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
-                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
                       != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-                    || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+                    || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                          != Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
                 {
                     ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];

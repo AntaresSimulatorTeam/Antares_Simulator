@@ -215,12 +215,12 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+        if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
             == adqmPhysicalAreaInsideAdqPatch)
         {
             netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
+        else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
@@ -231,12 +231,12 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
     while (Interco >= 0)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
             == adqmPhysicalAreaInsideAdqPatch)
         {
             netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
+        else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
