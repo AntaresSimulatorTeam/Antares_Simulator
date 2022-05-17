@@ -221,7 +221,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
             netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
         else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                 == adqmPhysicalAreaOutsideAdqPatch)
+                 == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
               -= Math::Min(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
@@ -237,7 +237,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
             netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
         else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                 == adqmPhysicalAreaOutsideAdqPatch)
+                 == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
               += Math::Max(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
