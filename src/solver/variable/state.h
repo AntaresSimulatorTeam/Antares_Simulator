@@ -87,12 +87,29 @@ public:
 
     /*!
     ** \brief End the year by smoothing the thermal units run
+    ** and computing costs.
     ** We assume here that the variables related to an area
     ** are properly initialized.
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
+    ** \brief Smooth the thermal units run after resolutions 
+    ** using heuristics
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
+    ** \brief Computes the production, fixed and start-up costs, assuming
+    ** that thermalClusterDispatchedUnitsCountForYear has been built
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void yearEndComputeThermalClusterCosts(const unsigned int areaWideIndex);
 
     /*!
     ** \brief Reset internal data
