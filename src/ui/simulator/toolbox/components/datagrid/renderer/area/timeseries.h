@@ -57,6 +57,7 @@ public:
     {
         return AncestorType::width() + 3;
     }
+
     virtual int height() const
     {
         return AncestorType::height();

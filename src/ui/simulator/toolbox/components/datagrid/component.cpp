@@ -180,19 +180,19 @@ public:
     wxString caption;
 
     //! Flag to mark the study as modified if cells are updated
-    bool shouldMarkStudyModifiedWhenModifyingCell;
+    bool shouldMarkStudyModifiedWhenModifyingCell = true;
 
     //! The main sizer with all components that the user expects to see
     wxSizer* sizerForAllComponents;
     wxSizer* toolbarSizer;
     wxSizer* toolbarSizerValues;
 
-    wxComboBox* pLayerFilter;
+    wxComboBox* pLayerFilter = nullptr;
     std::vector<int> layerFilteredIndices;
     //! The attached renderer
     Renderer::IRenderer* renderer;
     //! Precision
-    Date::Precision precision;
+    Date::Precision precision = Date::stepAny;
 
     struct
     {
@@ -239,26 +239,19 @@ public:
     //@}
 
     //! The real datagrid component
-    DBGrid* grid;
+    DBGrid* grid = nullptr;
 
     //! Custom implementation of wxGridTable
-    VGridHelper* gridHelper;
+    VGridHelper* gridHelper = nullptr;
     //! Cell renderer
-    AntaresWxGridRenderer* cellRenderer;
+    AntaresWxGridRenderer* cellRenderer = nullptr;
 
     //! Counter used for beginUpdate / endUpdate
-    uint updateCount;
+    uint updateCount = 0;
 
 }; // class InternalState
 
-InternalState::InternalState() :
- shouldMarkStudyModifiedWhenModifyingCell(true),
- precision(Date::stepAny),
- grid(nullptr),
- gridHelper(nullptr),
- cellRenderer(nullptr),
- updateCount(0),
- pLayerFilter(nullptr)
+InternalState::InternalState()
 {
     filter.component = nullptr;
     filter.sizer = nullptr;
@@ -578,7 +571,6 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
     if (not flags.colorMappingRowLabels)
         grid->disableColorMappingForRowLabels();
 
-    // internal.grid->SetDefaultRenderer(new wxGridCellFloatRenderer(-1, 3));
     cellRenderer = new AntaresWxGridRenderer();
     cellRenderer->renderer = renderer;
     grid->SetDefaultRenderer(cellRenderer);
@@ -653,8 +645,6 @@ void InternalState::onMapLayerAdded(const wxString* text)
             sizerForAllComponents->Show(hzCombo);
         }
     }
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 void InternalState::onMapLayerRemoved(const wxString* text)
@@ -663,18 +653,13 @@ void InternalState::onMapLayerRemoved(const wxString* text)
     // event
     if (pLayerFilter)
     {
-        auto hzCombo = pLayerFilter->GetContainingSizer();
         auto pos = pLayerFilter->FindString(*text);
         if (pos != wxNOT_FOUND)
         {
             pLayerFilter->Delete(pos);
             pLayerFilter->Select(0);
         }
-        /*if (pLayerFilter->GetCount() == 1 && sizerForAllComponents->IsShown(hzCombo))
-                sizerForAllComponents->Hide(hzCombo);*/
     }
-    /*wxStringToString(*text, pLastResearch);
-    Dispatcher::GUI::Post(this, &Spotlight::redoResearch);*/
 }
 
 void InternalState::onMapLayerChanged(const wxString* text)
@@ -683,9 +668,6 @@ void InternalState::onMapLayerChanged(const wxString* text)
     // event
     if (pLayerFilter)
         pLayerFilter->SetValue(*text);
-
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 void InternalState::onMapLayerRenamed(const wxString* text)
@@ -694,9 +676,6 @@ void InternalState::onMapLayerRenamed(const wxString* text)
     // event
     if (pLayerFilter)
         pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
-
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 Component::Component(wxWindow* parent,
@@ -724,9 +703,6 @@ Component::Component(wxWindow* parent,
     options.colorMappingRowLabels = colorMappingRowLabels;
     options.hasLayerFilter = hasLayerFilter;
 
-    // Bind<void ()> delayedCreation;
-    // delayedCreation.bind(pInternal, &InternalState::createAllInternalControls, options);
-    // Dispatcher::GUI::Post(delayedCreation);
     internal.createAllInternalControls(options);
 
     // Events
@@ -980,7 +956,6 @@ void Component::precision(const Date::Precision p)
         if (internal.filter.component)
         {
             internal.recreateFilter();
-            // internal.filter.component->precision(p);
         }
         if (internal.gridHelper)
             internal.gridHelper->precision(p);
@@ -1277,13 +1252,6 @@ void Component::copyAllToClipboard()
 
 static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
 {
-    if (!(&grid) or !(&gridHelper))
-    {
-        assert(false and "paste from clipboard: invalid grid");
-        assert(false and "paste from clipboard: invalid gridHelper");
-        return;
-    }
-
     String::Vector rows;
     {
         String s;
@@ -1512,7 +1480,7 @@ void Component::onModifyAll(void*)
     }
 }
 
-void Component::onComboUpdated(wxCommandEvent& evt)
+void Component::onComboUpdated(wxCommandEvent& /* evt */)
 {
     auto study = Data::Study::Current::Get();
     if (!study)

@@ -152,11 +152,11 @@ void BindingConstraint::selected(bool v)
             // Add itself to the list of selected items
             pManager.pSelectedItems[this] = true;
             pManager.pExternalQueue.push(this);
-            pManager.pComponent.drawerVisible(true);
+            pManager.pComponent.drawerVisible();
         }
         else
         {
-            pManager.pComponent.drawerVisible(false);
+            pManager.pComponent.drawerVisible();
             pManager.pExternalQueue.pop();
             Connections::iterator end = pConnections.end();
             for (Connections::iterator i = pConnections.begin(); i != end; ++i)

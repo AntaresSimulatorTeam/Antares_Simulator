@@ -41,9 +41,9 @@ State::State(Data::Study& s) :
  hourInTheSimulation(0u),
  dispatchableMargin(nullptr),
  studyMode(s.parameters.mode),
+ unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
  simplexHasBeenRan(true),
- unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
  optimalSolutionCost2(0.),
@@ -237,7 +237,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     }
 }
 
-void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
+void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint /* numSpace */)
 {
     assert(area);
     assert(clusterAreaWideIndex < area->renewable.clusterCount());

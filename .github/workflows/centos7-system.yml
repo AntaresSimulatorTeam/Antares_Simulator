@@ -8,7 +8,13 @@ on:
       - features/*
       - fix/*
       - release/*
+      - doc/*
 jobs:
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   docker_publish:
           
@@ -53,7 +59,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    needs: docker_publish
+    needs: 
+      - docker_publish
+      - doc_generation
     container: 'antaresrte/rte-antares:centos7-simulator'
 
     steps:
@@ -68,6 +76,12 @@ jobs:
       run: |
            git submodule update --init --recursive src .
 
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
@@ -78,23 +92,6 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            cmake3 --build _build --config Release -j2
     
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
-    - name : Run non-regression tests
-      run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest3 -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
-           
     - name: Installer .rpm creation
       run: |
            cd _build

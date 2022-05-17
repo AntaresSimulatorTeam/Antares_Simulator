@@ -13,7 +13,7 @@ namespace Window
 namespace Inspector
 {
 // ClusterUpdater
-ClusterUpdater::ClusterUpdater(InspectorData::Ptr data, Frame& frame) : pFrame(frame), clusters()
+ClusterUpdater::ClusterUpdater(Frame& frame) : pFrame(frame)
 {
 }
 bool ClusterUpdater::changeName(const wxVariant& value)
@@ -47,10 +47,10 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
 
     if (not newgroup.empty())
     {
-        long index;
+        uint index;
         if (newgroup.to(index))
         {
-            if (index < 0 || index > groups.size())
+            if (index > groups.size())
             {
                 logs.error() << "The group index is invalid";
                 return false;
@@ -160,7 +160,7 @@ bool ClusterUpdater::changeEnabled(const wxVariant& value)
 
 // ClusterUpdaterThermal
 ClusterUpdaterThermal::ClusterUpdaterThermal(InspectorData::Ptr data, Frame& frame) :
- ClusterUpdater(data, frame)
+ ClusterUpdater(frame)
 {
     // wxProperties
     unitCount = frame.pPGThClusterUnitCount;
@@ -168,7 +168,8 @@ ClusterUpdaterThermal::ClusterUpdaterThermal(InspectorData::Ptr data, Frame& fra
     nominalCapacity = frame.pPGThClusterNominalCapacity;
 
     clusters = Data::Cluster::Set(data->ThClusters.begin(), data->ThClusters.end());
-    groups = std::vector<const wxChar*>(std::begin(arrayClusterGroup), std::end(arrayClusterGroup));
+    groups
+      = std::vector<const wxChar*>(arrayClusterGroup, arrayClusterGroup + arrayClusterGroupCount);
 }
 
 void ClusterUpdaterThermal::OnCommonSettingsChanged()
@@ -186,7 +187,7 @@ void ClusterUpdaterThermal::OnStudyClusterRenamed(Data::Cluster* cluster)
 
 // ClusterUpdaterRenewable
 ClusterUpdaterRenewable::ClusterUpdaterRenewable(InspectorData::Ptr data, Frame& frame) :
- ClusterUpdater(data, frame)
+ ClusterUpdater(frame)
 {
     // wxProperties
     unitCount = frame.pPGRnClusterUnitCount;
@@ -194,8 +195,8 @@ ClusterUpdaterRenewable::ClusterUpdaterRenewable(InspectorData::Ptr data, Frame&
     nominalCapacity = frame.pPGRnClusterNominalCapacity;
 
     clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
-    groups
-      = std::vector<const wxChar*>(std::begin(arrayRnClusterGroup), std::end(arrayRnClusterGroup));
+    groups = std::vector<const wxChar*>(arrayRnClusterGroup,
+                                        arrayRnClusterGroup + arrayRnClusterGroupCount);
 }
 
 void ClusterUpdaterRenewable::OnCommonSettingsChanged()

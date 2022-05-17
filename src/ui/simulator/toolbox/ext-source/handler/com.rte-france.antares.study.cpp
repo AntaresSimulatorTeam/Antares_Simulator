@@ -163,10 +163,8 @@ bool checkConstraintSupportingElementsIntegrity(const Antares::Action::Context::
     return true;
 }
 
-bool checkLinkSupportingElementsIntegrity(const Antares::Action::Context::Ptr context,
-                                          const BuildContext* ctx)
+static bool checkLinkSupportingElementsIntegrity(const BuildContext* ctx)
 {
-    bool missingAreasInClipboard = false;
     for (BuildContext::LinkSet::const_iterator i = ctx->link.begin(); i != ctx->link.end(); ++i)
     {
         Data::AreaName fromWantedName = i->first;
@@ -261,7 +259,7 @@ static void PreparePasteOperations(Antares::Action::Context::Ptr context,
     if (not checkConstraintSupportingElementsIntegrity(context, &ctx))
         return;
 
-    if (not checkLinkSupportingElementsIntegrity(context, &ctx))
+    if (not checkLinkSupportingElementsIntegrity(&ctx))
         return;
 
     bool copyPosition = !ctx.shouldOverwriteArea;
