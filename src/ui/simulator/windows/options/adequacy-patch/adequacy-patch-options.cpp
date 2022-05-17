@@ -189,7 +189,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC12 = button;
+        pBtnNTCfromOutToInAdqPatch = button;
     }
     // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
     // Used in the first step of adequacy patch local matching rule.
@@ -204,7 +204,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC11 = button;
+        pBtnNTCfromOutToOutAdqPatch = button;
     }
     // PTO (Price Taking Order). User can choose between DENS and Load
     {
@@ -350,10 +350,10 @@ void AdequacyPatchOptions::refresh()
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonNTC(pBtnAdequacyPatchNTC12, study.parameters.setToZeroNTCfromOutToIn_AdqPatch);
+    ResetButtonNTC(pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonNTC(pBtnAdequacyPatchNTC11, study.parameters.setToZeroNTCfromOutToOut_AdqPatch);
+    ResetButtonNTC(pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch);
     // Price taking order (PTO) for adequacy patch
     ResetButtonPTO(pBtnAdequacyPatchPTO, study.parameters.adqPatchPriceTakingOrder);
     // Save intermediate results for adequacy patch
