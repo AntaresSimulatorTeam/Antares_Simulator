@@ -639,7 +639,7 @@ This window is used to handle all input data regarding the interconnections. On 
 
 - The "Transmission capacities" tab displays "ready-made" 8760-hour time-series already available for simulation purposes.  
 In this tab, the table "Direct" describes the upstream-to-downstream capacity, in MW, and the table "Indirect" describes the downstream-to-upstream capacity, in MW.  
-	_Please note that Time-Series analysis and generation is not available for capacity Time-Series._ <br/><br/>
+	_Please note that Time-Series analysis and generation is not available for capacity Time-Series._  
 	Different ways to update data are :
 	- direct typing
 	- copy/paste a selected field to/from the clipboard

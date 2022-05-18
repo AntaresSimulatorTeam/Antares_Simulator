@@ -211,7 +211,7 @@ $$S_t \geq 0$$
 
 $$S_t \leq S$$
 
-<center> \\(S_t + G_t - S_{t-1} = I_t\\) (see note [^monthly_allocation]) </center>
+\\(S_t + G_t - S_{t-1} = I_t\\) (see note [^monthly_allocation])
 
 $$\sum_{t}{G_t} = \sum_{t}{T_t}$$
 
