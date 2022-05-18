@@ -182,7 +182,7 @@ $$else: \text{for } m\in [1, 12]: \{W_m^1 \leftarrow I_m\}$$
 
 _M2:_
 
-_$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$_
+$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$
 
 _D1:_
 
@@ -239,9 +239,9 @@ $$G_t \geq 0$$
 
 $$G_t \leq \overline{G_t}$$
 
-<center>\\(S_t + G_t + O_t - S_{t-1} = I_t\\) (see note [^daily_allocation])</center>
+\\(S_t + G_t + O_t - S_{t-1} = I_t\\) (see note [^daily_allocation])
 
-<center> \\(\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}\\) (value of Y previously found in solving **\\(D(m-1)\\)**) </center>
+\\(\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}\\) (value of Y previously found in solving **\\(D(m-1)\\)**)
 
 $$G_t - D_t \leq T_t$$
 
