@@ -40,6 +40,7 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
+        ortools-tag: v9.2-rte1.2 # TODO : from .json
         
     - name: Install dependencies
       run: |
@@ -52,7 +53,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DUSE_PRECOMPILED_EXT=ON
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DUSE_PRECOMPILED_EXT=ON
            
     - name: Build
       run: |
