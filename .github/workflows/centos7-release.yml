@@ -118,7 +118,7 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.RPM_NAME}}
-        asset_name: ${{env.RPM_NAME}}
+        asset_name: ${{env.RPM_NAME}}${{ steps.ortools.outputs.label }}
         asset_content_type: application/octet-stream
            
     - name: Upload .tar.gz
@@ -126,6 +126,6 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.TGZ_NAME}}
-        asset_name: ${{env.TGZ_NAME}}
+        asset_name: ${{env.TGZ_NAME}}${{ steps.ortools.outputs.label }}
         asset_content_type: application/octet-stream
     
