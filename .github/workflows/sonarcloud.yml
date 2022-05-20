@@ -83,6 +83,7 @@ jobs:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
           os-full-name: Ubuntu-20.04
+          ortools-tag: v9.2-rte1.2 # TODO : from .json
 
       - name: Set up Python
         uses: actions/setup-python@v1
@@ -103,7 +104,7 @@ jobs:
 
       - name: Configure
         run: |
-             cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+             cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=./install -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
       - name: Build
         run: build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2

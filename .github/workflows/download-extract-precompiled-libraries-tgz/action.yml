@@ -14,6 +14,10 @@ inputs:
     description: 'build type'
     required: false
     default: 'Release'
+  ortools-tag:
+    description: 'OR-Tools tag'
+    required: true
+
 runs:
   using: "composite"
   steps: 
@@ -24,3 +28,6 @@ runs:
            tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
            rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
 
+           wget https://github.com/rte-france/or-tools/releases/download/${{ inputs.ortools-tag }}/ortools_cxx_${{ inputs.os }}_static_sirius.zip -O ortools.zip
+           unzip ortools.zip
+           rm ortools.zip
