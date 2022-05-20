@@ -21,13 +21,16 @@ inputs:
 runs:
   using: "composite"
   steps: 
-  - id: download-extract
+  - name: Download & extract antares-deps
     shell: bash
     run: |
            wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
            tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
            rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
 
+  - name: Download & extract OR-Tools
+    shell: bash
+    run: |
            wget https://github.com/rte-france/or-tools/releases/download/${{ inputs.ortools-tag }}/ortools_cxx_${{ inputs.os }}_static_sirius.zip -O ortools.zip
            unzip ortools.zip
            rm ortools.zip
