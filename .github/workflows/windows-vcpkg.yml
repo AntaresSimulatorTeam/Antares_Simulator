@@ -20,10 +20,10 @@ jobs:
     needs: doc_generation
     strategy:
       matrix:
-        os: [windows-2019]
+        os: [windows-latest]
         buildtype: [release]
         include:
-          - os: windows-2019
+          - os: windows-latest
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
             test-platform: windows-2022
