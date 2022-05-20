@@ -14,6 +14,9 @@ inputs:
   ortools-tag:
     description: 'OR-Tools tag'
     required: true
+  ortools-os:
+    description: 'OS in the OR-Tools URL'
+    required: true
 
 runs:
   using: "composite"
@@ -28,6 +31,6 @@ runs:
   - name: Download & extract OR-Tools
     shell: bash
     run: |
-           wget https://github.com/rte-france/or-tools/releases/download/${{ inputs.ortools-tag }}/ortools_cxx_${{ inputs.os }}_static_sirius.zip -O ortools.zip
+           wget https://github.com/rte-france/or-tools/releases/download/${{ inputs.ortools-tag }}/ortools_cxx_${{ inputs.ortools-os }}_static_sirius.zip -O ortools.zip
            unzip ortools.zip
            rm ortools.zip

@@ -30,20 +30,20 @@ jobs:
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      
+
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v2
 
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-      
+
     - name: Pre-requisites
       shell: cmd
-      run: |          
+      run: |
           choco install wget unzip --no-progress
-          
+
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
@@ -53,7 +53,7 @@ jobs:
       with:
         name: pdf-doc
         path: docs/ref_guides
-        
+
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
       uses: actions/cache@v2
@@ -70,7 +70,7 @@ jobs:
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
-    
+
     - name : Install deps with VCPKG
       run: |
           cd vcpkg
@@ -78,30 +78,31 @@ jobs:
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-      
+
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
-      with: 
+      with:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
-            
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
         ortools-tag: v9.2-rte1.2 # TODO : from .json
-        
+        ortools-os: windows-2019
+
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
-           
+
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-           
+
     - name: Configure
       run: |
            cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
@@ -139,7 +140,7 @@ jobs:
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
-           
+
     - name: .zip creation
       run: |
            cd _build
@@ -150,7 +151,7 @@ jobs:
       with:
         name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
-        
+
     - name: Archive upload
       uses: actions/upload-artifact@v2
       with:
