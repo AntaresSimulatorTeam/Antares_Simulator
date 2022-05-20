@@ -50,6 +50,7 @@ jobs:
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
+           git submodule update --init or-tools
 
     - name: Configure
       run: |
