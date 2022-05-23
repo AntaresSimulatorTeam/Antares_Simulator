@@ -148,10 +148,24 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
+    - name: Upload logs on fail
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: CPack failure logs
+        path: ${{ github.workspace }}/_build
+
     - name: .zip creation
       run: |
            cd _build
            cpack -G ZIP
+
+    - name: Upload logs on fail
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: CPack failure logs
+        path: ${{ github.workspace }}/_build
 
     - name: Installer upload
       uses: actions/upload-artifact@v2
