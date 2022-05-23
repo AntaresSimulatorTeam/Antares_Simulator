@@ -52,7 +52,7 @@ jobs:
       shell: bash
       run: |
           cd "${VCPKG_ROOT}"
-          git apply "${{ github.workspace }}/patches/vcpkg/"*
+          git apply --ignore-whitespace --ignore-space-change "${{ github.workspace }}/patches/vcpkg/"*
 
     - name: Download userguide
       uses: actions/download-artifact@v2
