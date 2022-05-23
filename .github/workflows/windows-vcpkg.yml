@@ -51,8 +51,8 @@ jobs:
     - name : Patch VCPKG
       shell: bash
       run: |
-          cd ${VCPKG_ROOT}
-          git apply ${{ github.workspace }}/patches/vcpkg/*
+          cd "${VCPKG_ROOT}"
+          git apply "${{ github.workspace }}/patches/vcpkg/"*
 
     - name: Download userguide
       uses: actions/download-artifact@v2
