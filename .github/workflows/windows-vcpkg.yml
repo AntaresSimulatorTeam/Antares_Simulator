@@ -48,6 +48,11 @@ jobs:
       run: |
           git submodule update --init vcpkg
 
+    - name : Patch VCPKG
+      run: |
+          cd ${VCPKG_ROOT}
+          git apply ${{ github.workspace }}/patches/vcpkg/*
+
     - name: Download userguide
       uses: actions/download-artifact@v2
       with:
