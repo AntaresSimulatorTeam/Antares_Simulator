@@ -49,6 +49,7 @@ jobs:
           git submodule update --init vcpkg
 
     - name : Patch VCPKG
+      shell: bash
       run: |
           cd ${VCPKG_ROOT}
           git apply ${{ github.workspace }}/patches/vcpkg/*
