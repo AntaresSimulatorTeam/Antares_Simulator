@@ -88,10 +88,6 @@ jobs:
         source /opt/rh/rh-git227/enable
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
-    - name: ls XPRESS
-      if:  ${{ matrix.ortools == 'ON' }}
-      run: ls -l ${{ env.XPRESSDIR }}
-
     - name: Download OR-Tools if needed
       if: ${{ matrix.ortools == 'ON' }}
       id: ortools
