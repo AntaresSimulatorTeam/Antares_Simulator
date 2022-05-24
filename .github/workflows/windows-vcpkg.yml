@@ -148,13 +148,6 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
-    - name: Upload logs on fail
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: CPack failure logs
-        path: ${{ github.workspace }}/_build
-
     - name: .zip creation
       run: |
            cd _build
@@ -171,3 +164,10 @@ jobs:
       with:
         name: antares-windows-archive
         path: _build/*.zip
+
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-after-failure
+        path: ${{ github.workspace }}/_build
