@@ -53,7 +53,6 @@ void Area::internalInitialize()
 Area::Area() :
  index((uint)(-1)),
  enabled(true),
- adequacyPatchMode(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
  nodalOptimization(anoAll),
@@ -71,7 +70,6 @@ Area::Area() :
 
 Area::Area(const AnyString& name, uint nbParallelYears) :
  index((uint)(-1)),
- adequacyPatchMode(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
  nodalOptimization(anoAll),
@@ -91,7 +89,6 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
 
 Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uint indx) :
  index(indx),
- adequacyPatchMode(AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch),
  reserves(fhrMax, HOURS_PER_YEAR),
  miscGen(fhhMax, HOURS_PER_YEAR),
  nodalOptimization(anoAll),

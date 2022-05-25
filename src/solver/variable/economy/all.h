@@ -146,9 +146,9 @@ typedef          // Prices
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
-                          <SpilledEnergy          // Spilled Energy
-                           <LOLD                  // LOLD
-                            <LOLP                 // LOLP
+                          <SpilledEnergy           // Spilled Energy
+                           <LOLD                   // LOLD
+                            <LOLP                  // LOLP
                              <AvailableDispatchGen<DispatchableGenMargin<Marge<
                                NonProportionalCost // Startup cost + Fixed cost - MBO 13/05/2014 -
                                                    // refs: #21

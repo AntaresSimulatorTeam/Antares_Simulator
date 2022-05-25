@@ -74,8 +74,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.setToZero11LinksForAdequacyPatch;
     }
 
-    if (parameters.include.adequacyPatch){
-      problem.adequacyPatchRuntimeData.initialize(study);
+    if (parameters.include.adequacyPatch)
+    {
+        problem.adequacyPatchRuntimeData.initialize(study);
     }
 
     problem.WaterValueAccurate

@@ -563,7 +563,6 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-
 /*!
 ** \brief Types of Adequacy patch mode
 */

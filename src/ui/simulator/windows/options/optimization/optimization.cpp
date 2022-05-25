@@ -392,7 +392,8 @@ Optimization::Optimization(wxWindow* parent) :
     // physical areas inside adequacy patch (area type 2). Used in the first step of adequacy patch
     // local matching rule.
     {
-        label = Component::CreateLabel(this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
+        label = Component::CreateLabel(
+          this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
         button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
@@ -407,7 +408,8 @@ Optimization::Optimization(wxWindow* parent) :
     // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
     // Used in the first step of adequacy patch local matching rule.
     {
-        label = Component::CreateLabel(this, wxT("NTC between physical areas outside adequacy patch"));
+        label
+          = Component::CreateLabel(this, wxT("NTC between physical areas outside adequacy patch"));
         button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);

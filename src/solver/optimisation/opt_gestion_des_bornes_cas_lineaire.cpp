@@ -141,7 +141,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-    
+
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
@@ -179,9 +179,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
             if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
-                setBoundsAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
+                AdequacyPatch::setBoundsAdqPatch(
+                  Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
             else
-                setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
+                AdequacyPatch::setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
