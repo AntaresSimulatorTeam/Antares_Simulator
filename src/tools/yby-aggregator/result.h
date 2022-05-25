@@ -42,7 +42,7 @@ enum
 };
 
 //! A single cell
-typedef char CellData[maxSizePerCell];
+using CellData = char[maxSizePerCell];
 
 //! A single column
 class CellColumnData final
@@ -102,11 +102,11 @@ public:
 
 }; // class ResultMatrix
 
-typedef std::vector<ResultMatrix> ResultsAllVars;
+using ResultsAllVars = std::vector<ResultMatrix>;
 
-typedef std::map<DataFile::ShortString, ResultsAllVars> ResultsForAllTimeLevels;
-typedef std::map<DataFile::ShortString, ResultsForAllTimeLevels> ResultsForAllDataLevels;
+using ResultsForAllTimeLevels = std::map<DataFile::ShortString, ResultsAllVars>;
+using ResultsForAllDataLevels = std::map<DataFile::ShortString, ResultsForAllTimeLevels>;
 
-typedef std::map<StudyData::ShortString512, ResultsForAllDataLevels> ResultsForAllStudyItems;
+using ResultsForAllStudyItems = std::map<StudyData::ShortString512, ResultsForAllDataLevels>;
 
 #endif // __STUDY_RESULT_AGGREGATOR_RESULT_H__

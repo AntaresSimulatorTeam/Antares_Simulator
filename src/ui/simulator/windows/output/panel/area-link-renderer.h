@@ -43,13 +43,13 @@ class AreaLinkRenderer final : public Antares::Component::Datagrid::Renderer::IR
 {
 public:
     //! Convenient alias
-    typedef Antares::Component::Datagrid::Renderer::IRenderer IRenderer;
+    using IRenderer = Antares::Component::Datagrid::Renderer::IRenderer;
     //! The output viewer
-    typedef Antares::Window::OutputViewer::Component OutputViewerComponent;
+    using OutputViewerComponent = Antares::Window::OutputViewer::Component;
     //! Grid
-    typedef Antares::Component::Datagrid::Component DatagridType;
+    using DatagridType = Antares::Component::Datagrid::Component;
     //!
-    typedef Yuni::CString<64, false> CellType;
+    using CellType = Yuni::CString<64, false>;
 
 public:
     //! \name Constructor & Destructor
@@ -113,7 +113,7 @@ protected:
     DatagridType* pGrid;
 
     //! Matrix
-    typedef Antares::Matrix<CellType> MatrixType;
+    using MatrixType = Antares::Matrix<CellType>;
     //! The matrix
     const MatrixType* pMatrix;
     //! The pseudo Width

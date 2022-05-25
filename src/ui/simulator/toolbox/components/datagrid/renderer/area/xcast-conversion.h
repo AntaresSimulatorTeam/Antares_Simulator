@@ -44,7 +44,7 @@ class XCastConversion : public Renderer::Matrix<float>, public Renderer::ARender
 {
 public:
     //! Ancestor
-    typedef Renderer::Matrix<float> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<float>;
 
 public:
     //! \name Constructor & Destructor

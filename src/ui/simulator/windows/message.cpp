@@ -53,7 +53,7 @@ class MessageProvider final : public Component::Spotlight::IProvider
 {
 public:
     //! Component
-    typedef Component::Spotlight Spotlight;
+    using Spotlight = Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor

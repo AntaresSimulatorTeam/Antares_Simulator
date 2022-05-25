@@ -39,11 +39,11 @@ public:
     //! The most suitable smart pointer
     using Ptr = std::shared_ptr<Output>;
     //! A folder name (short length)
-    typedef Yuni::CString<10, false> FolderName;
+    using FolderName = Yuni::CString<10, false>;
     //! Column name
-    typedef Yuni::CString<128, false> ColumnName;
+    using ColumnName = Yuni::CString<128, false>;
     //! Vector
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
 
 public:
     Output(const YString& target, const YString::Vector& cols) : path(target), columns(cols)

@@ -561,8 +561,7 @@ template<class VCardToFindT>
 inline const double* IVariable<ChildT, NextT, VCardT>::retrieveHourlyResultsForCurrentYear(
   uint numSpace) const
 {
-    typedef RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>
-      AssignT;
+    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     return (AssignT::Yes)
              ? nullptr
              : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(numSpace);
@@ -574,8 +573,7 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    typedef RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>
-      AssignT;
+    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT,VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
@@ -587,8 +585,7 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    typedef RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>
-      AssignT;
+    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
@@ -600,8 +597,7 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
-    typedef RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>
-      AssignT;
+    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForLink<VCardToFindT>(result, link);

@@ -43,9 +43,9 @@ class IIntrusiveReference : public TP<IIntrusiveReference<ChildT, TP>>
 {
 public:
     //! Simplified type name of the instance for the current child type & threading policy.
-    typedef IIntrusiveReference<ChildT, TP> IntrusiveRef;
+    using IntrusiveRef = IIntrusiveReference<ChildT, TP>;
     //! Threading policy type
-    typedef TP<IntrusiveRef> ThreadingPolicy;
+    using ThreadingPolicy = TP<IntrusiveRef>;
 
     /*!
     ** \brief Class Helper to determine the most suitable smart pointer for a class
@@ -56,13 +56,11 @@ public:
     {
     public:
         //! A thread-safe type
-        typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted> PtrThreadSafe;
+        using PtrThreadSafe = Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted>;
         //! A default type
-        typedef Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted> PtrSingleThreaded;
+        using PtrSingleThreaded = Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted>;
         //! The most suitable smart pointer for T
-        typedef typename Yuni::Static::
-          If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType Ptr;
-
+        using Ptr = typename Yuni::Static::If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType;
     }; // class SmartPtr
 
 public:
@@ -116,7 +114,7 @@ protected:
     IIntrusiveReference& operator=(const IIntrusiveReference& rhs) const;
 
 private:
-    typedef typename ThreadingPolicy::template Volatile<int>::Type ReferenceCounterType;
+    using ReferenceCounterType = typename ThreadingPolicy::template Volatile<int>::Type;
     //! Intrusive reference count
     mutable ReferenceCounterType pRefCount;
 

@@ -52,7 +52,7 @@ public:
         return "Mersenne Twister random numbers";
     }
     //! Type of a single random
-    typedef double Value;
+    using Value = double;
     enum
     {
         //! A default seed

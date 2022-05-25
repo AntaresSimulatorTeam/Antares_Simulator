@@ -51,7 +51,7 @@ namespace // anonymous
 {
 static bool localPoliciesOpened = false;
 
-typedef std::map<PolicyKey, String> PolicyMap;
+using PolicyMap = std::map<PolicyKey, String>;
 
 //! All entries
 static PolicyMap* entries = nullptr;
