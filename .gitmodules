@@ -11,6 +11,3 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg.git
-[submodule "or-tools"]
-	path = or-tools
-	url = https://github.com/rte-france/or-tools.git
