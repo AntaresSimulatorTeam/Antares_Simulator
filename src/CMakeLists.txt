@@ -1,5 +1,5 @@
 project(antares)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
@@ -26,6 +26,7 @@ include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
+include(FetchContent)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -244,9 +245,23 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools)
+find_package(ortools QUIET)
+message(STATUS "ortools_FOUND : ${ortools_FOUND}")
 if(NOT ortools_FOUND)
-	message (FATAL_ERROR "OR-Tools not found. OR-Tools can be compiled with -DBUILD_ortools=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
+  FetchContent_Declare(ortools
+    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    GIT_TAG v9.2-rte1.3 # TODO : read from command-line
+    )
+
+  # Pass options to OR-Tools's CMake
+  set(BUILD_DEPS "ON" CACHE INTERNAL "")
+  set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
+  set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+  # We build OR-Tools as a static lib. Cyclic dependencies are detected
+  # without this flag.
+  set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+
+  FetchContent_MakeAvailable(ortools)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
