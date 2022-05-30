@@ -81,6 +81,20 @@ BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
     BOOST_CHECK(checkAllElementsIdenticalOrOne(list));
 }
 
+BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_and_one_OK)
+{
+    using namespace Antares::Solver::TimeSeriesNumbers;
+    std::vector<uint> list = {4, 4, 4, 4, 1};
+    BOOST_CHECK(checkAllElementsIdenticalOrOne(list));
+}
+
+BOOST_AUTO_TEST_CASE(test_compare_function_one_and_identical_values_OK)
+{
+    using namespace Antares::Solver::TimeSeriesNumbers;
+    std::vector<uint> list = {1, 4, 4, 4, 4};
+    BOOST_CHECK(checkAllElementsIdenticalOrOne(list));
+}
+
 BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
 {
     using namespace Antares::Solver::TimeSeriesNumbers;
