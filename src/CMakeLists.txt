@@ -15,6 +15,9 @@ set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
+# OR-Tools tag
+file(READ "../ortools_tag" ORTOOLS_TAG)
+
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
 set(CMAKE_SKIP_ASSEMBLY_SOURCE_RULES true)
@@ -180,6 +183,9 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
 message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 
+option(BUILD_ORTOOLS "Build OR-Tools" OFF)
+message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -246,11 +252,11 @@ set(GFLAGS_USE_TARGET_NAMESPACE TRUE)
 find_package(gflags)
 
 find_package(ortools QUIET)
-message(STATUS "ortools_FOUND : ${ortools_FOUND}")
-if(NOT ortools_FOUND)
+if(NOT ortools_FOUND OR BUILD_ORTOOLS)
+message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
     GIT_REPOSITORY "https://github.com/rte-france/or-tools"
-    GIT_TAG v9.2-rte1.3 # TODO : read from command-line
+    GIT_TAG ${ORTOOLS_TAG}
     )
 
   # Pass options to OR-Tools's CMake
