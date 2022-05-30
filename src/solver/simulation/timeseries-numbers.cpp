@@ -312,6 +312,9 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
+    std::sort(listNumberTS.begin(),
+              listNumberTS.end());
+
     if (std::adjacent_find(listNumberTS.begin(),
                            listNumberTS.end(),
                            Antares::Solver::TimeSeriesNumbers::compareWidth)
@@ -449,6 +452,9 @@ bool checkInterModalConsistencyForArea(Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
+    std::sort(listNumberTsOverArea.begin(),
+              listNumberTsOverArea.end());
+
     if (std::adjacent_find(listNumberTsOverArea.begin(),
                            listNumberTsOverArea.end(),
                            Antares::Solver::TimeSeriesNumbers::compareWidth)
