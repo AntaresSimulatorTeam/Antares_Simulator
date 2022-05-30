@@ -257,6 +257,8 @@ if(NOT ortools_FOUND)
   set(BUILD_DEPS "ON" CACHE INTERNAL "")
   set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
   set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+  set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "OFF" CACHE INTERNAL "")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
