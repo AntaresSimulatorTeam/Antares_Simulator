@@ -722,6 +722,11 @@ Definition of the right-hand side of "bounded below" and "bounded on both sides"
 - **TAB "&lt;"**  
 Definition of the right-hand side of "bounded above" and "bounded on both sides" inequality constraints. This RHS has either 8760 values (hourly constraints) or 365 values (daily or weekly constraints). Depending on the range actually chosen for the simplex optimization (see section **Configure** of the main menu), the weekly constraints RHS will either be represented by the sum of seven daily terms or by a set of seven daily terms (weekly constraint downgraded to daily status).
 
+**WARNING:** When some clusters are defined as being in must-run ("must-run" parameter set to "True"), these clusters are automatically removed from the binding constraints in order to avoid potential incompatibilities between these constraints and the power output imposed to the must-run clusters. The clusters which are removed from binding constraints are visible in the "Summary" tab, in which they are multiplied by N/As in the binding constraints.  
+In case a binding constraint only contains must-run clusters, it will be ignored in the simulation and subsequently identified as "Skipped" in the summary tab.  
+Please note that in the specific context of the adequacy simulation mode (in which all thermal clusters are considered as being fully must-run), **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints.
+
+
 When defining binding constraints between (hourly) power, daily or weekly (energy) flows, special attention should be paid to potential conflicts between them or with the "basic" problem constraints. Lack of caution may result in situations for which the optimization has no solution. Consider for instance a case in which three variables X1, X2, X3 (whatever they physical meaning) are involved in the following binding constraints:
 
 $$X1 + X2 > 5$$
