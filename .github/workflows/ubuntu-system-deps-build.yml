@@ -3,7 +3,6 @@ name: Ubuntu CI (deps. compilation)
 on:
   push:
     branches:
-      - feature/* # TODO REMOVE
       - release/*
       - develop
 jobs:
