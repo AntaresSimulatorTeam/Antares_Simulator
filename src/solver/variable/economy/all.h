@@ -72,7 +72,7 @@
 #include "productionByDispatchablePlant.h"
 #include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
-#include "ProfitByPlant.h"
+#include "profitByPlant.h"
 
 // By RES plant
 #include "productionByRenewablePlant.h"
