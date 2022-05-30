@@ -25,8 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <algorithm>
-#include <vector>
+#include <algorithm>  // std::adjacent_find
+#include <iterator>   // std::back_inserter
+#include <functional> // std::not_equal_to
 #include <map>
 #include <string>
 #include <array>
@@ -312,13 +313,7 @@ bool IntraModalConsistencyChecker::checkTSconsistency()
         listNumberTS.insert(listNumberTS.end(), areaNumberTSList.begin(), areaNumberTSList.end());
     }
 
-    std::sort(listNumberTS.begin(),
-              listNumberTS.end());
-
-    if (std::adjacent_find(listNumberTS.begin(),
-                           listNumberTS.end(),
-                           Antares::Solver::TimeSeriesNumbers::compareWidth)
-        != listNumberTS.end())
+    if (!TimeSeriesNumbers::checkAllElementsIdenticalOrOne(listNumberTS))
     {
         logs.error() << "Intra-modal correlation: " << tsTitle_
                      << "'s numbers of time-series are not equal for all areas";
@@ -452,13 +447,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     }
 
     // Now check if all elements of list of TS numbers are identical or equal to 1
-    std::sort(listNumberTsOverArea.begin(),
-              listNumberTsOverArea.end());
-
-    if (std::adjacent_find(listNumberTsOverArea.begin(),
-                           listNumberTsOverArea.end(),
-                           Antares::Solver::TimeSeriesNumbers::compareWidth)
-        != listNumberTsOverArea.end())
+    if (!TimeSeriesNumbers::checkAllElementsIdenticalOrOne(listNumberTsOverArea))
     {
         logs.error()
           << "Inter-modal correlation: time-series numbers of inter-modal modes in area '"
@@ -857,11 +846,16 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
     });
 }
 
-bool TimeSeriesNumbers::compareWidth(uint a, uint b)
+bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
 {
-    if (a == 1 || b == 1)
-        return false; // ignore 1 values
-    return a != b;
+    std::vector<uint> removedOnes;
+    // Remove all 1
+    std::remove_copy(w.begin(), w.end(), std::back_inserter(removedOnes), 1);
+    // Try to find adjacent elements that are pairwise different
+    auto result
+      = std::adjacent_find(removedOnes.begin(), removedOnes.end(), std::not_equal_to<uint>());
+    // Return "no such pair exists"
+    return result == removedOnes.end();
 }
 
 bool TimeSeriesNumbers::Generate(Study& study)

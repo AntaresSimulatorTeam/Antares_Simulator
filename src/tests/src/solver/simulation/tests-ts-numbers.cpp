@@ -76,26 +76,23 @@ std::shared_ptr<ClusterType> addClusterToArea(Area* area, const std::string& clu
 
 BOOST_AUTO_TEST_CASE(test_compare_function_identical_values_OK)
 {
+    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<uint> list = {4, 4, 4, 4};
-    auto find_result = std::adjacent_find(
-      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
-    BOOST_CHECK(find_result == list.end());
+    BOOST_CHECK(checkAllElementsIdenticalOrOne(list));
 }
 
-BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_OK)
+BOOST_AUTO_TEST_CASE(test_compare_function_two_distinct_values_of_which_one_KO)
 {
-    std::vector<uint> list = {1, 2, 1, 1, 2};
-    auto find_result = std::adjacent_find(
-      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
-    BOOST_CHECK(find_result == list.end());
+    using namespace Antares::Solver::TimeSeriesNumbers;
+    std::vector<uint> list = {1, 2, 1, 1, 2, 1, 3};
+    BOOST_CHECK(!checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(test_compare_function_three_distinct_values_KO)
 {
+    using namespace Antares::Solver::TimeSeriesNumbers;
     std::vector<uint> list = {1, 2, 1, 3, 2};
-    auto find_result = std::adjacent_find(
-      list.begin(), list.end(), Antares::Solver::TimeSeriesNumbers::compareWidth);
-    BOOST_CHECK(find_result != list.end());
+    BOOST_CHECK(!checkAllElementsIdenticalOrOne(list));
 }
 
 BOOST_AUTO_TEST_CASE(two_areas_with_5_ready_made_ts_on_load___check_intra_modal_consistency_OK)
