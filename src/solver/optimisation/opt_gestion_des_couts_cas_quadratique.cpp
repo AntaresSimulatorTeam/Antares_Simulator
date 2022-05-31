@@ -92,7 +92,7 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
                 if (ProblemeHebdo->adqPatch->PriceTakingOrder
-                    == Data::AdequacyPatch::isLoad)
+                    == Data::AdequacyPatch::AdqPatchPTO::isLoad)
                 {
                     priceTakingOrders
                       = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]

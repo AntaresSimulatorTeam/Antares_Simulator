@@ -184,12 +184,12 @@ bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdqPatchPTO&
     s.toLower();
     if (s == "dens")
     {
-        out = AdequacyPatch::isDens;
+        out = AdequacyPatch::AdqPatchPTO::isDens;
         return true;
     }
     if (s == "load")
     {
-        out = AdequacyPatch::isLoad;
+        out = AdequacyPatch::AdqPatchPTO::isLoad;
         return true;
     }
 
@@ -202,9 +202,9 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
 {
     switch (pto)
     {
-    case AdequacyPatch::isDens:
+    case AdequacyPatch::AdqPatchPTO::isDens:
         return "DENS";
-    case AdequacyPatch::isLoad:
+    case AdequacyPatch::AdqPatchPTO::isLoad:
         return "Load";
     }
     return "";

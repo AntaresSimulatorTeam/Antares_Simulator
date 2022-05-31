@@ -491,9 +491,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::isDens)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::AdqPatchPTO::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::isDens;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -505,9 +505,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::isLoad)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::AdqPatchPTO::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::isLoad;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }
