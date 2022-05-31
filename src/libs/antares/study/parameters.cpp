@@ -242,6 +242,16 @@ void Parameters::resetThresholdsAdqPatch()
       = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
+void Parameters::resetAdqPatchParameters()
+{
+    include.adequacyPatch = false;
+    setToZeroNTCfromOutToIn_AdqPatch = true;
+    setToZeroNTCfromOutToOut_AdqPatch = true;
+    adqPatchPriceTakingOrder = AdequacyPatch::AdqPatchPTO::isDens;
+    adqPatchSaveIntermediateResults = false;
+    resetThresholdsAdqPatch();
+}
+
 void Parameters::reset()
 {
     // Mode
@@ -357,12 +367,7 @@ void Parameters::reset()
     ortoolsEnumUsed = OrtoolsSolver::sirius;
 
     // Adequacy patch
-    include.adequacyPatch = false;
-    setToZeroNTCfromOutToIn_AdqPatch = true;
-    setToZeroNTCfromOutToOut_AdqPatch = true;
-    adqPatchPriceTakingOrder = AdequacyPatch::AdqPatchPTO::isDens;
-    adqPatchSaveIntermediateResults = false;
-    resetThresholdsAdqPatch();
+    resetAdqPatchParameters();
 
     // Initialize all seeds
     resetSeeds();

@@ -139,9 +139,13 @@ public:
     */
     void resetSeeds();
     /*!
-    ** \brief Reset to default all seeds/threshold values in adequacy patch
+    ** \brief Reset to default all threshold values in adequacy patch
     */
     void resetThresholdsAdqPatch();
+    /*!
+    ** \brief Reset to default all adequacy patch values
+    */
+    void resetAdqPatchParameters();
 
     /*!
     ** \brief Try to detect then fix any bad value
