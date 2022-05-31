@@ -353,7 +353,8 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                     thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                 break;
             }
-            case Antares::Data::UnitCommitmentMode::ucAccurate || Antares::Data::UnitCommitmentMode::ucMILP:
+            case Antares::Data::UnitCommitmentMode::ucAccurate:
+            case Antares::Data::UnitCommitmentMode::ucMILP:
             {
                 ON_min[h] = Math::Max(
                 static_cast<uint>(Math::Ceil(thermalClusterProduction
