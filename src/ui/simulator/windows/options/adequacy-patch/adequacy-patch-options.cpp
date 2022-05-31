@@ -75,10 +75,10 @@ static void ResetButtonNTC(Component::Button* button, bool value)
     }
 }
 
-static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdqPatchPTO value)
+static void ResetButtonPTO(Component::Button* button, AdqPatchPTO value)
 {
     assert(button != NULL);
-    if (value == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    if (value == AdqPatchPTO::isLoad)
     {
         button->image("images/16x16/tag.png");
         button->caption(wxT("Load"));
