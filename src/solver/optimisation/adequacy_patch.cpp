@@ -253,3 +253,11 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 
     return std::make_pair(netPositionInit, densNew);
 }
+
+template<class T>
+void sumTwoArrays(T* a, T* b, int num)
+{
+    for (uint i = 0; i < num; ++i)
+        a[i] += b[i];
+}
+template void sumTwoArrays<double>(double* a, double* b, int num);

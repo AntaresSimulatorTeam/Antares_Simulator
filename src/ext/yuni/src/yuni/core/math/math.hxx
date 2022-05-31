@@ -636,13 +636,6 @@ inline U GCD(U u, V v)
     return u;
 }
 
-template<class T>
-void sumTwoArrays(T* a, T* b, int num)
-{
-    for (uint i = 0; i < num; ++i)
-        a[i] += b[i];
-}
-
 } // namespace Math
 } // namespace Yuni
 
