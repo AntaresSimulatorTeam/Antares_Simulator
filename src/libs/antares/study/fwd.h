@@ -468,8 +468,8 @@ SheddingPolicy StringToSheddingPolicy(const AnyString& text);
 
 enum UnitCommitmentMode
 {
-    ucFast = 0,
-    ucAccurate,
+    ucHeuristicFast = 0,
+    ucHeuristicAccurate,
     ucMILP,
     ucUnknown,
 };

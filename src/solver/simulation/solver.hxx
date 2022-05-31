@@ -843,7 +843,7 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     }
 
     // Mode accurate
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucAccurate
+    if (parameters.unitCommitment.ucMode == Antares::Data::ucHeuristicAccurate
         || parameters.unitCommitment.ucMode == Antares::Data::ucMILP)
     {
         for (uint i = 0; i != study.areas.size(); i++)
@@ -1013,7 +1013,7 @@ void ISimulation<Impl>::estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage&
     linearCombination
       += nbConstraints * (60 * sizeof(double) + 58 * sizeof(int) + 24 * sizeof(char));
 
-    if (parameters.unitCommitment.ucMode == Antares::Data::ucFast)
+    if (parameters.unitCommitment.ucMode == Antares::Data::ucHeuristicFast)
         u.requiredMemoryForInput += (uint)(5. * linearCombination) * u.nbYearsParallel;
     else
         u.requiredMemoryForInput += (uint)(5.51 * linearCombination) * u.nbYearsParallel;

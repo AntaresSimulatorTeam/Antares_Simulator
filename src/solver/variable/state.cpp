@@ -110,7 +110,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             thermalClusterProduction = hourlyResults->ProductionThermique[hourInTheWeek]
                                          ->ProductionThermiqueDuPalier[thermalCluster->index];
 
-            if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucAccurate
+            if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
                 || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
                 thermalClusterNumberON
                   = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
@@ -333,7 +333,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
 
             switch (unitCommitmentMode)
             {
-            case Antares::Data::UnitCommitmentMode::ucFast:
+            case Antares::Data::UnitCommitmentMode::ucHeuristicFast:
             {
                 if (currentCluster->pminOfAGroup[numSpace] > 0.)
                 {
@@ -353,7 +353,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                     thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                 break;
             }
-            case Antares::Data::UnitCommitmentMode::ucAccurate:
+            case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
             case Antares::Data::UnitCommitmentMode::ucMILP:
             {
                 ON_min[h] = Math::Max(
@@ -407,10 +407,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                 
                 portee = 0;
                 nivmin = ON_min[h];
-
-                (ON_max[h] < thermalClusterDispatchedUnitsCountForYear[h - 1]) 
-                        ? nivmax = ON_max[h] 
-                        : nivmax = thermalClusterDispatchedUnitsCountForYear[h - 1];
+                nivmax = Math::Min<uint>(ON_max[h], thermalClusterDispatchedUnitsCountForYear[h - 1]);
 
                 if (nivmax > nivmin)
                 {

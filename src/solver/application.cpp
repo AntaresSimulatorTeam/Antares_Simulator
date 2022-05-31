@@ -48,14 +48,15 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
                        bool ortoolsUsed,
                        Antares::Data::OrtoolsSolver ortoolsSolverUsed
                        )
-{
-    if (ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
+{   
+    using namespace Antares::Data;
+    if (ucMode == UnitCommitmentMode::ucMILP)
     {
         if (!ortoolsUsed)
         {
             throw Error::IncompatibleMILPWithoutOrtools();
         }
-        else if (ortoolsSolverUsed == Antares::Data::OrtoolsSolver::sirius)
+        else if (ortoolsSolverUsed == OrtoolsSolver::sirius)
         {
             throw Error::IncompatibleMILPOrtoolsSolver();
         }
@@ -67,8 +68,9 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && hpMode == Antares::Data::HydroPricingMode::hpMILP)
+    using namespace Antares::Data;
+    if (optRange == SimplexOptimization::sorDay
+        && hpMode == HydroPricingMode::hpMILP)
     {
         throw Error::IncompatibleOptRangeHydroPricing();
     }
@@ -79,9 +81,10 @@ void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
 void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
                                          Antares::Data::UnitCommitmentMode ucMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && (ucMode == Antares::Data::UnitCommitmentMode::ucAccurate
-            || ucMode == Antares::Data::UnitCommitmentMode::ucMILP))
+    using namespace Antares::Data;
+    if (optRange == SimplexOptimization::sorDay
+        && (ucMode == UnitCommitmentMode::ucHeuristicAccurate
+            || ucMode == UnitCommitmentMode::ucMILP))
     {
         throw Error::IncompatibleOptRangeUCMode();
     }

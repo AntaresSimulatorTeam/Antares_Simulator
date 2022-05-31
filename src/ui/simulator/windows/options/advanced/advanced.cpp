@@ -367,7 +367,7 @@ void AdvancedParameters::onResetToDefault(void*)
         // parameters.shedding.strategy = Data::shsShareMargins;
         parameters.shedding.policy = Data::shpShavePeaks;
         parameters.reserveManagement.daMode = Data::daGlobal;
-        parameters.unitCommitment.ucMode = Data::ucFast;
+        parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
         parameters.nbCores.ncMode = Data::ncAvg;
 
         parameters.renewableGeneration.rgModelling = Data::rgAggregated;
@@ -842,22 +842,22 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucFast)); // Fast
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicFast)); // Fast
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCFast),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicFast),
                  nullptr,
                  this);
 
     text.clear();
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucAccurate)); // Accurate
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicAccurate)); // Accurate
     text << wxT("   (slow)");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCAccurate),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicAccurate),
                  nullptr,
                  this);
 
@@ -872,29 +872,29 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
                  this);
 }
 
-void AdvancedParameters::onSelectUCFast(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
         return;
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucFast)
+    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicFast)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucFast;
+        study.parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectUCAccurate(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
     auto& study = *Data::Study::Current::Get();
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucAccurate)
+    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicAccurate)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucAccurate;
+        study.parameters.unitCommitment.ucMode = Data::ucHeuristicAccurate;
         MarkTheStudyAsModified();
         refresh();
     }

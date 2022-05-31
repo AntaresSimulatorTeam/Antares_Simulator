@@ -99,8 +99,8 @@ private:
     void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
-    void onSelectUCFast(wxCommandEvent& evt);
-    void onSelectUCAccurate(wxCommandEvent& evt);
+    void onSelectUCHeuristicFast(wxCommandEvent& evt);
+    void onSelectUCHeuristicAccurate(wxCommandEvent& evt);
     void onSelectUCMILP(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);

@@ -1,4 +1,5 @@
 #include "named_problem.h"
+#include <algorithm>
 
 namespace Antares
 {
@@ -10,8 +11,13 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(
   const std::vector<bool>& VariablesEntieres) :
  NomDesVariables(NomDesVariables), 
  NomDesContraintes(NomDesContraintes),
- VariablesEntieres(VariablesEntieres)
+ VariablesEntieres(VariablesEntieres),
+ isMIP(std::any_of(VariablesEntieres.cbegin(),
+                        VariablesEntieres.cend(),
+                        [](bool x) { return x; })
+)
 {
 }
+
 } // namespace Optimization
 } // namespace Antares

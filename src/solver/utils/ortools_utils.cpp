@@ -109,12 +109,9 @@ MPSolver* convert_to_MPSolver(
     auto& study = *Data::Study::Current::Get();
 
     // Define solver used depending on study option
-    const bool isMIP = std::any_of(problemeSimplexe->VariablesEntieres.cbegin(),
-                                   problemeSimplexe->VariablesEntieres.cend(),
-                                   [](bool x) { return x; });
 
     MPSolver::OptimizationProblemType solverType;
-    if (isMIP)
+    if (problemeSimplexe->isMIP)
     {
         solverType
           = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
@@ -159,10 +156,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
-
-    const bool isMIP = std::any_of(problemeSimplexe->VariablesEntieres.cbegin(),
-                                   problemeSimplexe->VariablesEntieres.cend(),
-                                   [](bool x) { return x; });
+    const bool isMIP = problemeSimplexe->isMIP;
 
     // Extracting variable values and reduced costs
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
