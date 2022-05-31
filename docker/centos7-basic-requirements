@@ -22,6 +22,6 @@ RUN yum install -y python3-pip &&\
     pip3 install pytest pytest-xdist numpy pandas
 
 # Download and extract pre-compiled libraries
-RUN wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release-solver.tar.gz
+RUN wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
 RUN tar -xvf rte-antares-deps-centos7-Release-solver.tar.gz
 RUN rm -rf rte-antares-deps-centos7-Release-solver.tar.gz
