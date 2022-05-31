@@ -104,21 +104,6 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-const char* AdqPatchSeedToCString(Data::AdequacyPatch::AdqPatchThresholdsIndex seed)
-{
-    switch (seed)
-    {
-    case Data::AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule:
-        return "Initiate curtailment sharing rule";
-    case Data::AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations:
-        return "Display local matching rule violations";
-    case Data::AdequacyPatch::adqPatchThresholdsMax:
-        return "";
-    }
-    return "";
-}
-
-
 AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
  wxDialog(parent,
           wxID_ANY,
@@ -231,18 +216,20 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         pBtnAdequacyPatchSaveIntermediateResults = button;
     }
     addLabelAdqPatch(this, s, wxT("Thresholds"));
-    // Seeds/threshold values
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
-        pEditSeeds[i] = nullptr;
-
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
+    // Threshold values
     {
-        pEditSeeds[seed]
+        pThresholdCSRStart = nullptr;
+        pThresholdLMRviolations = nullptr;
+        pThresholdCSRStart
           = insertEdit(this,
                        s,
-                       wxStringFromUTF8(
-                         AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
-                       wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
+                       wxStringFromUTF8("Initiate curtailment sharing rule"),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
+        pThresholdLMRviolations
+          = insertEdit(this,
+                       s,
+                       wxStringFromUTF8("Display local matching rule violations"),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
     }
 
     {
@@ -323,7 +310,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             study.parameters.adqPatchPriceTakingOrder
               = Data::AdequacyPatch::AdqPatchPTO::isDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
-            study.parameters.resetSeedsAdqPatch();
+            study.parameters.resetThresholdsAdqPatch();
 
             refresh();
             MarkTheStudyAsModified();
@@ -358,11 +345,14 @@ void AdequacyPatchOptions::refresh()
     // Save intermediate results for adequacy patch
     ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
                        study.parameters.adqPatchSaveIntermediateResults);
-    //Threshold values
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
+    // Threshold values
     {
-        if (pEditSeeds[seed])
-            pEditSeeds[seed]->SetValue(wxString() << study.parameters.seedAdqPatch[seed]);
+        if (pThresholdCSRStart)
+            pThresholdCSRStart->SetValue(
+              wxString() << study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule);
+        if (pThresholdLMRviolations)
+            pThresholdLMRviolations->SetValue(
+              wxString() << study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations);
     }
 }
 
@@ -529,7 +519,7 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
     return edit;
 }
 
-void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
+void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -537,30 +527,51 @@ void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
 
     int id = evt.GetId();
 
-    // Looking for the good id
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
+    if (pThresholdCSRStart && id == pThresholdCSRStart->GetId())
     {
-        if (pEditSeeds[i] && id == pEditSeeds[i]->GetId())
-        {
-            String text;
-            wxStringToString(pEditSeeds[i]->GetValue(), text);
+        String text;
+        wxStringToString(pThresholdCSRStart->GetValue(), text);
 
-            float newseed;
-            if (not text.to(newseed))
-            {
-                logs.error() << "impossible to update the seed for '"
-                             << AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)i) << "'";
-            }
-            else
-            {
-                if (newseed != study.parameters.seedAdqPatch[i])
-                {
-                    study.parameters.seedAdqPatch[i] = newseed;
-                    MarkTheStudyAsModified();
-                }
-            }
-            return;
+        float newthreshold;
+        if (not text.to(newthreshold))
+        {
+            logs.error() << "impossible to update the seed for '"
+                         << "Initiate curtailment sharing rule"
+                         << "'";
         }
+        else
+        {
+            if (newthreshold != study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule)
+            {
+                study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule = newthreshold;
+                MarkTheStudyAsModified();
+            }
+        }
+        return;
+    }
+
+    if (pThresholdLMRviolations && id == pThresholdLMRviolations->GetId())
+    {
+        String text;
+        wxStringToString(pThresholdLMRviolations->GetValue(), text);
+
+        float newthreshold;
+        if (not text.to(newthreshold))
+        {
+            logs.error() << "impossible to update the seed for '"
+                         << "Display local matching rule violations"
+                         << "'";
+        }
+        else
+        {
+            if (newthreshold
+                != study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations)
+            {
+                study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations = newthreshold;
+                MarkTheStudyAsModified();
+            }
+        }
+        return;
     }
 }
 

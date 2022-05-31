@@ -606,15 +606,6 @@ enum AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-enum AdqPatchThresholdsIndex
-{
-    //! Threshold to initiate curtailment sharing rule
-    adqPatchThresholdInitiateCurtailmentSharingRule = 0,
-    //! Threshold to display Local Matching Rule violations
-    adqPatchThresholdDisplayLocalMatchingRuleViolations,
-    adqPatchThresholdsMax
-};
-
 //! A default threshold value for initiate curtailment sharing rule
 const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 500.0;
 //! A default threshold value for display local matching rule violations

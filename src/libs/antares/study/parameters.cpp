@@ -233,13 +233,13 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
-void Parameters::resetSeedsAdqPatch()
+void Parameters::resetThresholdsAdqPatch()
 {
-    // Initialize all seeds/threshold values for adequacy patch
-    seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule]
-      = (float)adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
-    seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations]
-      = (float)adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
+    // Initialize all thresholds values for adequacy patch
+    adqPatchThresholdInitiateCurtailmentSharingRule
+      = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
+    adqPatchThresholdDisplayLocalMatchingRuleViolations
+      = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::reset()
@@ -362,7 +362,7 @@ void Parameters::reset()
     setToZeroNTCfromOutToOut_AdqPatch = true;
     adqPatchPriceTakingOrder = AdequacyPatch::AdqPatchPTO::isDens;
     adqPatchSaveIntermediateResults = false;
-    resetSeedsAdqPatch();
+    resetThresholdsAdqPatch();
 
     // Initialize all seeds
     resetSeeds();
@@ -678,11 +678,9 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return StringToPriceTakingOrder(value, d.adqPatchPriceTakingOrder);
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<float>(
-          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
+        return value.to<float>(d.adqPatchThresholdInitiateCurtailmentSharingRule);
     if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<float>(
-          d.seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
+        return value.to<float>(d.adqPatchThresholdDisplayLocalMatchingRuleViolations);
 
     return false;
 }
@@ -1805,10 +1803,9 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
-                     seedAdqPatch[AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule]);
-        section->add(
-          "threshold-display-local-matching-rule-violations",
-          seedAdqPatch[AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations]);
+                     adqPatchThresholdInitiateCurtailmentSharingRule);
+        section->add("threshold-display-local-matching-rule-violations",
+                     adqPatchThresholdDisplayLocalMatchingRuleViolations);
     }
 
     // Other preferences

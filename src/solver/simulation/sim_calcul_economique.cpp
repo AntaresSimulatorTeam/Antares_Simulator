@@ -74,9 +74,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.adqPatch->SaveIntermediateResults = parameters.adqPatchSaveIntermediateResults;
         problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
         problem.adqPatch->ThresholdInitiateCurtailmentSharingRule
-          = parameters.seedAdqPatch[adqPatchThresholdInitiateCurtailmentSharingRule];
+          = parameters.adqPatchThresholdInitiateCurtailmentSharingRule;
         problem.adqPatch->ThresholdDisplayLocalMatchingRuleViolations
-          = parameters.seedAdqPatch[adqPatchThresholdDisplayLocalMatchingRuleViolations];
+          = parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations;
     }
 
     if (parameters.include.adequacyPatch){
