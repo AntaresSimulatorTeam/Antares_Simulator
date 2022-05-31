@@ -60,7 +60,7 @@
 #include "hydroCost.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
-#include "lmrViolations.h"
+#include "localMatchingRuleViolations.h"
 #include "spilledEnergy.h"
 
 #include "lold.h"
