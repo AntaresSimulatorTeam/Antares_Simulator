@@ -50,6 +50,9 @@ jobs:
       run: |
            git submodule update --init --recursive src
 
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure
       run: |
            cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH=..\install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DUSE_PRECOMPILED_EXT=ON
