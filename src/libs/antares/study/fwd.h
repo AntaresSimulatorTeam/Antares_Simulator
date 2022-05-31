@@ -597,14 +597,14 @@ enum ntcSetToZeroStatus_AdqPatchStep1
 /*!
 ** \brief Types of Price Taking Order (PTO) for Adequacy Patch
 */
-enum AdequacyPatchPTO
+enum AdqPatchPTO
 {
     //! PTO is DENS
-    adqPatchPTOIsDens = 0,
+    isDens = 0,
     //! PTO is Load
-    adqPatchPTOIsLoad
+    isLoad
 
-}; // enum AdequacyPatchPTO
+}; // enum AdqPatchPTO
 
 enum AdqPatchThresholdsIndex
 {

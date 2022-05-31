@@ -517,7 +517,7 @@ public:
     //! set to null (if true) only in the first step of adequacy patch local matching rule.
     bool setToZeroNTCfromOutToOut_AdqPatch;
     //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
-    AdequacyPatch::AdequacyPatchPTO adqPatchPriceTakingOrder;
+    AdequacyPatch::AdqPatchPTO adqPatchPriceTakingOrder;
     //! Select whether the intermediate result before the application of the curtailment sharing is
     //! to be kept in the results
     bool adqPatchSaveIntermediateResults;

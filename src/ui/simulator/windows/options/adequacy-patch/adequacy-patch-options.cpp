@@ -74,10 +74,10 @@ static void ResetButtonNTC(Component::Button* button, bool value)
     }
 }
 
-static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdequacyPatchPTO value)
+static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdqPatchPTO value)
 {
     assert(button != NULL);
-    if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsLoad)
+    if (value == Data::AdequacyPatch::AdqPatchPTO::isLoad)
     {
         button->image("images/16x16/tag.png");
         button->caption(wxT("Load"));
@@ -321,7 +321,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             study.parameters.setToZeroNTCfromOutToIn_AdqPatch = true;
             study.parameters.setToZeroNTCfromOutToOut_AdqPatch = true;
             study.parameters.adqPatchPriceTakingOrder
-              = Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
+              = Data::AdequacyPatch::AdqPatchPTO::isDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
             study.parameters.resetSeedsAdqPatch();
 
@@ -491,9 +491,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsDens)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsDens;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -505,9 +505,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsLoad)
+        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsLoad;
+            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }

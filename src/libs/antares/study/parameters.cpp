@@ -177,19 +177,19 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
-bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdequacyPatchPTO& out)
+bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdqPatchPTO& out)
 {
     CString<24, false> s = text;
     s.trim();
     s.toLower();
     if (s == "dens")
     {
-        out = AdequacyPatch::adqPatchPTOIsDens;
+        out = AdequacyPatch::isDens;
         return true;
     }
     if (s == "load")
     {
-        out = AdequacyPatch::adqPatchPTOIsLoad;
+        out = AdequacyPatch::isLoad;
         return true;
     }
 
@@ -198,13 +198,13 @@ bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdequacyPatc
     return false;
 }
 
-const char* PriceTakingOrderToString(AdequacyPatch::AdequacyPatchPTO pto)
+const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
 {
     switch (pto)
     {
-    case AdequacyPatch::adqPatchPTOIsDens:
+    case AdequacyPatch::isDens:
         return "DENS";
-    case AdequacyPatch::adqPatchPTOIsLoad:
+    case AdequacyPatch::isLoad:
         return "Load";
     }
     return "";
@@ -360,7 +360,7 @@ void Parameters::reset()
     include.adequacyPatch = false;
     setToZeroNTCfromOutToIn_AdqPatch = true;
     setToZeroNTCfromOutToOut_AdqPatch = true;
-    adqPatchPriceTakingOrder = AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
+    adqPatchPriceTakingOrder = AdequacyPatch::AdqPatchPTO::isDens;
     adqPatchSaveIntermediateResults = false;
     resetSeedsAdqPatch();
 

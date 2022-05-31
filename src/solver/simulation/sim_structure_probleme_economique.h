@@ -503,7 +503,7 @@ struct AdequacyPatchParameters
     bool setToZeroNTCfromOutToIn_AdqPatchStep1;
     bool setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
     bool SaveIntermediateResults;
-    AdequacyPatchPTO PriceTakingOrder;
+    AdqPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;
     float ThresholdDisplayLocalMatchingRuleViolations;
 };
