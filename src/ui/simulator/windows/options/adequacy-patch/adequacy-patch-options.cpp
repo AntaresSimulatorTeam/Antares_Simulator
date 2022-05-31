@@ -39,6 +39,7 @@
 #include <antares/logs.h>
 
 using namespace Yuni;
+using namespace Data::AdequacyPatch;
 
 namespace Antares
 {
@@ -303,15 +304,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
         if (message.showModal() == Window::Message::btnContinue)
         {
             auto& study = *studyptr;
-
-            study.parameters.include.adequacyPatch = false;
-            study.parameters.setToZeroNTCfromOutToIn_AdqPatch = true;
-            study.parameters.setToZeroNTCfromOutToOut_AdqPatch = true;
-            study.parameters.adqPatchPriceTakingOrder
-              = Data::AdequacyPatch::AdqPatchPTO::isDens;
-            study.parameters.adqPatchSaveIntermediateResults = false;
-            study.parameters.resetThresholdsAdqPatch();
-
+            study.parameters.resetAdqPatchParameters();
             refresh();
             MarkTheStudyAsModified();
             return;
@@ -481,9 +474,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::AdqPatchPTO::isDens)
+        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -495,9 +488,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::AdqPatchPTO::isLoad)
+        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isLoad;
+            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }
