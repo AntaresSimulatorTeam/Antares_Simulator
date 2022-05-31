@@ -79,7 +79,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
     {
         // Only ENS for areas inside adq patch are considered as variables
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
               = NumberOfVariables;
@@ -97,7 +97,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
     {
         // Only Spilled Energy  for areas inside adq patch are considered as variables
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area]
               = NumberOfVariables;
@@ -115,10 +115,10 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;

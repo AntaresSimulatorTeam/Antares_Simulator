@@ -32,119 +32,101 @@
 using namespace Yuni;
 using namespace Antares::Data::AdequacyPatch;
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  AdequacyPatchMode OriginNodeAdequacyPatchType,
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
+    AdequacyPatchMode OriginNodeAdequacyPatchType
+      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
+    AdequacyPatchMode ExtremityNodeAdequacyPatchType
+      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
+    bool setToZeroNTCfromOutToIn_AdqPatch
+      = ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
+    bool setToZeroNTCfromOutToOut_AdqPatch
+      = ProblemeHebdo->adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
 
     switch (OriginNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
-        returnNTC = SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                                  SetToZero12LinksForAdequacyPatch);
-        break;
-    case adqmPhysicalAreaOutsideAdqPatch:
-        returnNTC
-          = SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                           SetToZero12LinksForAdequacyPatch,
-                                                           SetToZero11LinksForAdequacyPatch);
-        break;
+    case physicalAreaInsideAdqPatch:
+        return getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
+                                                     setToZeroNTCfromOutToIn_AdqPatch);
+    case physicalAreaOutsideAdqPatch:
+        return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
+                                                      setToZeroNTCfromOutToIn_AdqPatch,
+                                                      setToZeroNTCfromOutToOut_AdqPatch);
     default:
-        returnNTC = leaveLocalValues;
-        break;
+        return leaveLocalValues;
     }
-    return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch)
+  bool setToZeroNTCfromOutToIn_AdqPatch)
 {
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
-
     switch (ExtremityNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
-        returnNTC = setToZero;
-        break;
-    case adqmPhysicalAreaOutsideAdqPatch:
-        returnNTC = (SetToZero12LinksForAdequacyPatch) ? setToZero : setOrigineExtremityToZero;
-        break;
+    case physicalAreaInsideAdqPatch:
+        return setToZero;
+    case physicalAreaOutsideAdqPatch:
+        return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
     default:
-        returnNTC = leaveLocalValues;
-        break;
+        return leaveLocalValues;
     }
-    return returnNTC;
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch)
 {
-    LinkCapacityForAdequacyPatchFirstStep returnNTC;
-
     switch (ExtremityNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
-        returnNTC = (SetToZero12LinksForAdequacyPatch) ? setToZero : setExtremityOrigineToZero;
-        break;
-    case adqmPhysicalAreaOutsideAdqPatch:
-        returnNTC = (SetToZero11LinksForAdequacyPatch) ? setToZero : leaveLocalValues;
-        break;
+    case physicalAreaInsideAdqPatch:
+        return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setExtremityOrigineToZero;
+    case physicalAreaOutsideAdqPatch:
+        return (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
     default:
-        returnNTC = leaveLocalValues;
-        break;
-    }
-    return returnNTC;
-}
-
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo)
-{
-    LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
-
-    SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-      ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
-      ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-      ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
-      ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
-
-    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setToZero)
-    {
-        Xmax = 0.;
-        Xmin = 0.;
-    }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setOrigineExtremityToZero)
-    {
-        Xmax = 0.;
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-    }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setExtremityOrigineToZero)
-    {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = 0.;
-    }
-    else
-    {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        return leaveLocalValues;
     }
 }
 
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco)
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* ProblemeHebdo)
 {
+    ntcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
+
+    // set as default values
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+
+    // set for adq patch first step
+    if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+    {
+        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
+
+        switch (ntcToZeroStatusForAdqPatch)
+        {
+        case setToZero:
+        {
+            Xmax = 0.;
+            Xmin = 0.;
+            break;
+        }
+        case setOrigineExtremityToZero:
+        {
+            Xmax = 0.;
+            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            break;
+        }
+        case setExtremityOrigineToZero:
+        {
+            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin = 0.;
+            break;
+        }
+        }
+    }
 }
 
 void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -158,7 +140,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             std::tie(netPositionInit, densNew)
               = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
@@ -194,7 +176,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == adqmPhysicalAreaInsideAdqPatch)
+            == physicalAreaInsideAdqPatch)
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
@@ -228,18 +210,18 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     double ensInit;
     double densNew;
     bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
+      = !ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
 
     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-            == adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            == physicalAreaInsideAdqPatch)
         {
             netPositionInit -= ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                 == adqmPhysicalAreaOutsideAdqPatch)
+        else if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
               -= Math::Min(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
@@ -249,13 +231,13 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
     while (Interco >= 0)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-            == adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+            == physicalAreaInsideAdqPatch)
         {
             netPositionInit += ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                 == adqmPhysicalAreaOutsideAdqPatch)
+        else if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+                 == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
               += Math::Max(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);

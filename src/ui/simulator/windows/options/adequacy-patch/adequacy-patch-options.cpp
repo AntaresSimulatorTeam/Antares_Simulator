@@ -46,13 +46,10 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
 
     auto* label = Component::CreateLabel(parent, text, true);
 
@@ -185,11 +182,11 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.setToZero12LinksForAdequacyPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.setToZeroNTCfromOutToIn_AdqPatch, wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC12 = button;
+        pBtnNTCfromOutToInAdqPatch = button;
     }
     // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
     // Used in the first step of adequacy patch local matching rule.
@@ -200,11 +197,11 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.setToZero11LinksForAdequacyPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.setToZeroNTCfromOutToOut_AdqPatch, wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC11 = button;
+        pBtnNTCfromOutToOutAdqPatch = button;
     }
     // PTO (Price Taking Order). User can choose between DENS and Load
     {
@@ -233,17 +230,19 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchSaveIntermediateResults = button;
     }
-    SubTitle(this, s, wxT("Thresholds"));
+    addLabelAdqPatch(this, s, wxT("Thresholds"));
     // Seeds/threshold values
     for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
         pEditSeeds[i] = nullptr;
-    
+
     for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
     {
-        pEditSeeds[seed] = insertEdit(this,
-                                      s,
-                                      wxStringFromUTF8(AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
-                                      wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
+        pEditSeeds[seed]
+          = insertEdit(this,
+                       s,
+                       wxStringFromUTF8(
+                         AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
     }
 
     {
@@ -319,8 +318,8 @@ void AdequacyPatchOptions::onResetToDefault(void*)
             auto& study = *studyptr;
 
             study.parameters.include.adequacyPatch = false;
-            study.parameters.setToZero12LinksForAdequacyPatch = true;
-            study.parameters.setToZero11LinksForAdequacyPatch = true;
+            study.parameters.setToZeroNTCfromOutToIn_AdqPatch = true;
+            study.parameters.setToZeroNTCfromOutToOut_AdqPatch = true;
             study.parameters.adqPatchPriceTakingOrder
               = Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
             study.parameters.adqPatchSaveIntermediateResults = false;
@@ -350,10 +349,10 @@ void AdequacyPatchOptions::refresh()
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonNTC(pBtnAdequacyPatchNTC12, study.parameters.setToZero12LinksForAdequacyPatch);
+    ResetButtonNTC(pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonNTC(pBtnAdequacyPatchNTC11, study.parameters.setToZero11LinksForAdequacyPatch);
+    ResetButtonNTC(pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch);
     // Price taking order (PTO) for adequacy patch
     ResetButtonPTO(pBtnAdequacyPatchPTO, study.parameters.adqPatchPriceTakingOrder);
     // Save intermediate results for adequacy patch

@@ -56,13 +56,13 @@ bool AdequacyPatchAreaGrid::cellValue(int, int row, const Yuni::String& value)
         bool out = s.to<int>() == 1 || s == "outside" || s == "physical area outside patch";
 
         if (vir)
-            study->areas.byIndex[row]->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
+            study->areas.byIndex[row]->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
         else if (ins)
             study->areas.byIndex[row]->adequacyPatchMode
-              = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+              = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
         else
             study->areas.byIndex[row]->adequacyPatchMode
-              = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+              = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
 
         onTriggerUpdate();
         Dispatcher::GUI::Refresh(pControl);
@@ -79,13 +79,13 @@ double AdequacyPatchAreaGrid::cellNumericValue(int, int row) const
         // for saving into *.txt file
         switch (study->areas.byIndex[row]->adequacyPatchMode)
         {
-        case Data::AdequacyPatch::adqmVirtualArea:
+        case Data::AdequacyPatch::virtualArea:
             return 0.;
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return 1.;
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return 2.;
             break;
         default:
@@ -101,13 +101,13 @@ wxString AdequacyPatchAreaGrid::cellValue(int, int row) const
     {
         switch (study->areas.byIndex[row]->adequacyPatchMode)
         {
-        case Data::AdequacyPatch::adqmVirtualArea:
+        case Data::AdequacyPatch::virtualArea:
             return wxT("virtual");
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return wxT("outside");
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return wxT("inside");
             break;
         default:
@@ -128,13 +128,13 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
     {
         switch (study->areas.byIndex[row]->adequacyPatchMode)
         {
-        case Data::AdequacyPatch::adqmVirtualArea:
+        case Data::AdequacyPatch::virtualArea:
             return IRenderer::cellStyleAdqPatchVirtual;
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return IRenderer::cellStyleAdqPatchOutside;
             break;
-        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return IRenderer::cellStyleAdqPatchInside;
             break;
         default:

@@ -123,7 +123,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             NombreDeTermes = 0;
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
@@ -146,10 +146,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     // type 2.
     for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-              == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                 == Antares::Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
+            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
 
@@ -201,7 +201,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // + ENS
             NombreDeTermes = 0;
@@ -217,8 +217,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
             Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
             while (Interco >= 0)
             {
-                if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                    == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
                     Var = CorrespondanceVarNativesVarOptim
                             ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
@@ -241,8 +241,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
             Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
             while (Interco >= 0)
             {
-                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                    == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+                    == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
                     Var = CorrespondanceVarNativesVarOptim
                             ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
@@ -305,10 +305,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
                 Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
                 Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
-                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco]
-                      == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch
-                    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco]
-                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch
+                    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                         == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
                     Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]
                             ->NumeroDeVariableDeLInterconnexion[Interco];

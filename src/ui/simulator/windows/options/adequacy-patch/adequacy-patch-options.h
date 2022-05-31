@@ -91,8 +91,8 @@ private:
     void onEditSeedTSDraws(wxCommandEvent&);
 private:
     Component::Button* pBtnAdequacyPatch;
-    Component::Button* pBtnAdequacyPatchNTC12;
-    Component::Button* pBtnAdequacyPatchNTC11;
+    Component::Button* pBtnNTCfromOutToInAdqPatch;
+    Component::Button* pBtnNTCfromOutToOutAdqPatch;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
     wxTextCtrl* pEditSeeds[Data::AdequacyPatch::adqPatchThresholdsMax];

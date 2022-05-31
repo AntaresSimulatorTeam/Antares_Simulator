@@ -918,16 +918,7 @@ struct PAdequacyPatchMode
     }
     static wxString ConvertToString(const Type v)
     {
-        switch (v)
-        {
-        case Data::AdequacyPatch::adqmVirtualArea:
-            return wxT("virtual area");
-        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
-            return wxT("physical area outside patch");
-        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
-            return wxT("physical area inside patch");
-        }
-        return wxEmptyString;
+        return adequacyPatchMode[v];
     }
 };
 
