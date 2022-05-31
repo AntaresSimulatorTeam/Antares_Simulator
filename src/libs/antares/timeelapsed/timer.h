@@ -28,38 +28,42 @@
 #define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/string.h>
+#include <yuni/string.h>
 
-class TimeElapsed final
+namespace TimeElapsed
+{
+class ContentHandler;
+
+class Timer final
 {
 public:
     //! Default constructor
-    TimeElapsed();
+    Timer() = delete;
 
     //! Copy constructor
-    TimeElapsed(const TimeElapsed& rhs) : text(rhs.text), pStartTime(rhs.pStartTime)
-    {
-    }
+    Timer(const Timer& rhs) = delete;
+    Timer& operator=(const Timer& rhs) = delete;
 
     //! Constructor with a default text
-    explicit TimeElapsed(const AnyString& text) : text(text)
-    {
-        reset();
-    }
+    explicit Timer(const AnyString& userText,
+                   const AnyString& logText = "",
+                   bool verbose = true,
+                   ContentHandler* handler = nullptr);
 
-    //! Destructor
-    ~TimeElapsed();
-
-    void reset();
-
-public:
-    //! The text to display at the end
-    Yuni::ShortString256 text;
+    void stop();
 
 private:
+    //! The text to display at the end
+    Yuni::ShortString256 fileText;
+    // Aggregation
+    Yuni::ShortString256 logText;
     //! timestamp when the timer started
     yint64 pStartTime;
-
-}; // class TimeElapsed
+    //! Display text on destruction
+    bool verbose;
+    //! Aggregation into a single file for automation
+    ContentHandler* pContentHandler;
+}; // class Timer
+} // namespace TimeElapsed
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__

@@ -57,7 +57,7 @@ void Areas::initializeFromStudy()
         study->areas.each([&](const Data::Area& area) {
             assert(indx < pRecord.size());
             assert(area.load.prepro);
-            typedef Analyzer::Areas::Record Record;
+            using Record = Analyzer::Areas::Record;
 
             Record& record = pRecord.array[indx];
             record.enabled = true;
@@ -89,7 +89,7 @@ void Areas::reloadDistributionLawsFromStudy(Data::TimeSeries ts)
         study->areas.each([&](const Data::Area& area) {
             assert(indx < pRecord.size());
             assert(area.load.prepro);
-            typedef Analyzer::Areas::Record Record;
+            using Record = Analyzer::Areas::Record;
 
             Record& record = pRecord.array[indx];
             switch (ts)

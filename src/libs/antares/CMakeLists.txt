@@ -334,8 +334,14 @@ source_group("study\\xcast" FILES ${SRC_XCAST})
 
 set(SRC_TIMEELAPSED
 	timeelapsed.h
-	timeelapsed/timeelapsed.h
-	timeelapsed/timeelapsed.cpp
+	timeelapsed/timer.h
+	timeelapsed/timer.cpp
+    timeelapsed/content_handler.h
+    timeelapsed/content_handler.cpp
+    timeelapsed/info.h
+    timeelapsed/i_writer.h
+    timeelapsed/csv_writer.h
+    timeelapsed/csv_writer.cpp
 	)
 source_group("misc\\timeelapsed" FILES ${SRC_TIMEELAPSED})
 

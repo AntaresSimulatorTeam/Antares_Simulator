@@ -99,11 +99,11 @@ public:
     };
 
     //! Set of thermal clusters
-    typedef std::set<ThermalCluster*, CompareClusterName> Set;
+    using Set = std::set<ThermalCluster*, CompareClusterName>;
     //! Set of thermal clusters (pointer)
-    typedef std::set<ThermalCluster*> SetPointer;
+    using SetPointer = std::set<ThermalCluster*>;
     //! Vector of thermal clusters
-    typedef std::vector<Data::ThermalCluster*> Vector;
+    using Vector = std::vector<Data::ThermalCluster*>;
 
 public:
     /*!

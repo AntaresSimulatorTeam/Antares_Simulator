@@ -578,12 +578,6 @@ wxMenu* ApplWnd::createMenuHelp()
                      wxT("Open PDF : General reference guide"));
 
     Menu::CreateItem(pMenuHelp,
-                     mnIDHelpPDFOptimizationProblemsFormulation,
-                     wxT("Optimization problems formulation"),
-                     "images/16x16/help.png",
-                     wxT("Open PDF : Optimization problems formulation"));
-
-    Menu::CreateItem(pMenuHelp,
                      mnIDHelpPDFSystemMapEditorReferenceGuide,
                      wxT("System Map Editor reference guide"),
                      "images/16x16/help.png",

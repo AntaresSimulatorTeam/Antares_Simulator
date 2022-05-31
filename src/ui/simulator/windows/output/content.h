@@ -42,8 +42,8 @@ namespace OutputViewerData
 class Content final
 {
 public:
-    typedef std::set<Data::AreaName> AreaNameSet;
-    typedef std::set<Data::AreaLinkName> LinkNameSet;
+    using AreaNameSet = std::set<Data::AreaName>;
+    using LinkNameSet = std::set<Data::AreaLinkName>;
 
     class SimulationType
     {

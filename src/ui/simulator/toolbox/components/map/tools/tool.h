@@ -218,7 +218,7 @@ protected:
 }; // class Tool
 
 //! List of tools
-typedef std::vector<Tool*> List;
+using List = std::vector<Tool*>;
 
 } // namespace Tool
 } // namespace Map

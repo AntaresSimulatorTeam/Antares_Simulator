@@ -190,7 +190,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
             assert(!Math::NaN(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
-            data.MLN[realmonth] += netdemand;
             data.DLN[dayYear] += netdemand;
         }
     });

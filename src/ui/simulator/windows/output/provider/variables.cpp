@@ -75,8 +75,8 @@ void Variables::search(Spotlight::IItem::Vector& out,
     // Adding all thermal clusters
     if (pComponent->pCurrentClusters)
     {
-        typedef Antares::Private::OutputViewerData::ThermalNameSetPerArea ThermalNameSetPerArea;
-        typedef Antares::Private::OutputViewerData::ThermalNameSet ThermalNameSet;
+        using ThermalNameSetPerArea = Antares::Private::OutputViewerData::ThermalNameSetPerArea;
+        using ThermalNameSet = Antares::Private::OutputViewerData::ThermalNameSet;
 
         String name;
         const ThermalNameSetPerArea::const_iterator areaEnd = pComponent->pCurrentClusters->end();

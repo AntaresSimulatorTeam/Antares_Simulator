@@ -117,7 +117,7 @@ private:
     //! Parent filter
     AFilterBase* pParentFilter;
     //! Operator list (typedef)
-    typedef std::vector<AOperator*> OperatorList;
+    using OperatorList = std::vector<AOperator*>;
     //! Operator list
     OperatorList pItems;
 
