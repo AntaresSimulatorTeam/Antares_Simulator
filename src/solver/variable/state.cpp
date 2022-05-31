@@ -255,14 +255,10 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
 {
     if (studyMode != Data::stdmAdequacyDraft)
     {
-        if (unitCommitmentMode != Antares::Data::UnitCommitmentMode::ucMILP) 
-        {
-            yearEndSmoothDispatchedUnitsCount(clusterAreaWideIndex, numSpace);
-        }
+        yearEndSmoothDispatchedUnitsCount(clusterAreaWideIndex, numSpace);
 
         yearEndComputeThermalClusterCosts(clusterAreaWideIndex);
     }
-    
 }
 
 void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, uint numSpace)
@@ -357,7 +353,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                     thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
                 break;
             }
-            case Antares::Data::UnitCommitmentMode::ucAccurate:
+            case Antares::Data::UnitCommitmentMode::ucAccurate || Antares::Data::UnitCommitmentMode::ucMILP:
             {
                 ON_min[h] = Math::Max(
                 static_cast<uint>(Math::Ceil(thermalClusterProduction
