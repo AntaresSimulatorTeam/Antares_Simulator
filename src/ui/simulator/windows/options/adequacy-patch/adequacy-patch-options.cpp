@@ -60,48 +60,46 @@ static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* tex
     sizer->AddSpacer(5);
 }
 
-static void ResetButtonNTC(Component::Button* button, bool value)
+static void updateButton(Component::Button* button, bool value, std::string buttonType)
 {
+    char type = (buttonType == "ntc") ? 'N' : ((buttonType == "pto") ? 'P' : 'S');
+
     assert(button != NULL);
     if (value)
     {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
+        switch (type)
+        {
+        case 'N':
+            button->image("images/16x16/light_orange.png");
+            button->caption(wxT("set to null"));
+            break;
+        case 'P':
+            button->image("images/16x16/tag.png");
+            button->caption(wxT("Load"));
+            break;
+        default:
+            button->image("images/16x16/light_green.png");
+            button->caption(wxT("true"));
+            break;
+        }
     }
     else
     {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-    }
-}
-
-static void ResetButtonPTO(Component::Button* button, AdqPatchPTO value)
-{
-    assert(button != NULL);
-    if (value == AdqPatchPTO::isLoad)
-    {
-        button->image("images/16x16/tag.png");
-        button->caption(wxT("Load"));
-    }
-    else
-    {
-        button->image("images/16x16/tag.png");
-        button->caption(wxT("DENS"));
-    }
-}
-
-static void ResetButtonSpecify(Component::Button* button, bool value)
-{
-    assert(button != NULL);
-    if (value)
-    {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("true"));
-    }
-    else
-    {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("false"));
+        switch (type)
+        {
+        case 'N':
+            button->image("images/16x16/light_green.png");
+            button->caption(wxT("local values"));
+            break;
+        case 'P':
+            button->image("images/16x16/tag.png");
+            button->caption(wxT("DENS"));
+            break;
+        default:
+            button->image("images/16x16/light_orange.png");
+            button->caption(wxT("false"));
+            break;
+        }
     }
 }
 
@@ -326,18 +324,28 @@ void AdequacyPatchOptions::refresh()
     auto& study = *studyptr;
 
     // Adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
+    std::string buttonType = "specify";
+    // Include adequacy patch
+    updateButton(pBtnAdequacyPatch, study.parameters.include.adequacyPatch, buttonType);
+    // Save intermediate results for adequacy patch
+    updateButton(pBtnAdequacyPatchSaveIntermediateResults,
+                 study.parameters.adqPatchSaveIntermediateResults,
+                 buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonNTC(pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch);
+    buttonType = "ntc";
+    updateButton(
+      pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch, buttonType);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonNTC(pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch);
+    updateButton(
+      pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch, buttonType);
     // Price taking order (PTO) for adequacy patch
-    ResetButtonPTO(pBtnAdequacyPatchPTO, study.parameters.adqPatchPriceTakingOrder);
-    // Save intermediate results for adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
-                       study.parameters.adqPatchSaveIntermediateResults);
+    buttonType = "pto";
+    bool isPTOload
+      = (study.parameters.adqPatchPriceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
+    updateButton(pBtnAdequacyPatchPTO, isPTOload, buttonType);
+
     // Threshold values
     {
         if (pThresholdCSRStart)
