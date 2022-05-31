@@ -271,8 +271,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                  // identique
     int h = 0;
     int k = 0;
-    uint maxUnitNeeded;
-    
+
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
         = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
@@ -305,7 +304,6 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
     
     for (h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
-        maxUnitNeeded = 0u;
         ON_min[h] = 0u;
         ON_max[h] = 0u;
 
