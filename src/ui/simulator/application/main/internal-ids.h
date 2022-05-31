@@ -134,7 +134,7 @@ enum MenusID
     mnIDOptionConfigureMCScenarioPlaylist,
     mnIDOptionOptimizationPrefs,
     mnIDOptionAdvanced,
-    mnIDOptionAdequacyPatchConfigure,
+    mnIDOptionAdequacyPatchOptions,
     mnIDOptionAdequacyPatchAreas,
 
     //@}

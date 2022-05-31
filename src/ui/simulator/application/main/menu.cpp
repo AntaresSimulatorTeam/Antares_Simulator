@@ -469,7 +469,7 @@ wxMenu* ApplWnd::createMenuOptions()
 
     wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
     Menu::CreateItem(adqPatchSubMenu,
-                     mnIDOptionAdequacyPatchConfigure,
+                     mnIDOptionAdequacyPatchOptions,
                      wxT("Options"),
                      "images/16x16/filter.png",
                      wxT("Adequacy Patch Options"));

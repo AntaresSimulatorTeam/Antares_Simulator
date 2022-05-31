@@ -126,7 +126,7 @@ void ApplWnd::evtOnOptionsAdvanced(wxCommandEvent&)
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdvancedParameters>(this);
 }
 
-void ApplWnd::evtOnOptionsAdequacyPatchConfigure(wxCommandEvent&)
+void ApplWnd::evtOnOptionsAdequacyPatchOptions(wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())
