@@ -104,6 +104,22 @@ public:
     void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
 
     /*!
+    ** \brief Computes the minimal number of units on in the cluster 
+    **
+    ** 
+    ** 
+    */
+    uint computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint numSpace);
+
+    /*!
+    ** \brief Computes the maximal number of units on in the cluster 
+    **
+    ** 
+    ** 
+    */
+    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster *cluster);
+
+    /*!
     ** \brief Computes the production, fixed and start-up costs, assuming
     ** that thermalClusterDispatchedUnitsCountForYear has been built
     **

@@ -327,58 +327,9 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
         }
 
         if (thermalClusterProduction > 0.)
-        {
-            thermalClusterOperatingCostForYear[h]
-            = (thermalClusterProduction * currentCluster->productionCost[h]);
-
-            switch (unitCommitmentMode)
-            {
-            case Antares::Data::UnitCommitmentMode::ucHeuristicFast:
-            {
-                if (currentCluster->pminOfAGroup[numSpace] > 0.)
-                {
-                    ON_min[h] = Math::Max(
-                    Math::Min(static_cast<uint>(
-                                Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
-                                            / currentCluster->pminOfAGroup[numSpace])),
-                                static_cast<uint>(
-                                Math::Ceil(thermalClusterAvailableProduction
-                                            / currentCluster->nominalCapacityWithSpinning))),
-                    static_cast<uint>(
-                        Math::Ceil(thermalClusterProduction
-                                / currentCluster->nominalCapacityWithSpinning)));
-                }
-                else
-                    ON_min[h] = static_cast<uint>(Math::Ceil(
-                    thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
-                break;
-            }
-            case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
-            case Antares::Data::UnitCommitmentMode::ucMILP:
-            {
-                ON_min[h] = Math::Max(
-                static_cast<uint>(Math::Ceil(thermalClusterProduction
-                                            / currentCluster->nominalCapacityWithSpinning)),
-                thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
-                                                                // that hour
-
-                break;
-            }
-            }
-
-            if (ON_min[h] > currentCluster->unitCount)
-                ON_min[h] = currentCluster->unitCount;
-
-            ON_max[h] = static_cast<uint>(Math::Ceil(
-            thermalClusterAvailableProduction / currentCluster->nominalCapacityWithSpinning));
-
-            if (currentCluster->minStablePower > 0.)
-            {
-                maxUnitNeeded = static_cast<uint>(
-                Math::Floor(thermalClusterProduction / currentCluster->minStablePower));
-                if (ON_max[h] > maxUnitNeeded)
-                    ON_max[h] = maxUnitNeeded;
-            }
+        {   
+            ON_min[h] = computeMinNumberOfUnitsOn(currentCluster, h, numSpace);
+            ON_max[h] = computeMaxNumberOfUnitsOn(currentCluster);
 
             if (ON_max[h] < ON_min[h])
                 ON_max[h] = ON_min[h];
@@ -472,6 +423,68 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
             thermalClusterDispatchedUnitsCountForYear[h] = ON_min[h];
     }
     
+}
+
+uint State::computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint numSpace)
+{   
+    uint minUnitsOn = 0u;
+
+    switch (unitCommitmentMode)
+    {
+    case Antares::Data::UnitCommitmentMode::ucHeuristicFast:
+    {
+        if (cluster->pminOfAGroup[numSpace] > 0.)
+        {
+            minUnitsOn = Math::Max(
+            Math::Min(static_cast<uint>(
+                        Math::Floor(thermalClusterPMinOfTheClusterForYear[t]
+                                    / cluster->pminOfAGroup[numSpace])),
+                        static_cast<uint>(
+                        Math::Ceil(thermalClusterAvailableProduction
+                                    / cluster->nominalCapacityWithSpinning))),
+            static_cast<uint>(
+                Math::Ceil(thermalClusterProduction
+                        / cluster->nominalCapacityWithSpinning)));
+        }
+        else
+            minUnitsOn = static_cast<uint>(Math::Ceil(
+            thermalClusterProduction / cluster->nominalCapacityWithSpinning));
+        break;
+    }
+    case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
+    case Antares::Data::UnitCommitmentMode::ucMILP:
+    {
+        minUnitsOn = Math::Max(
+        static_cast<uint>(Math::Ceil(thermalClusterProduction
+                                    / cluster->nominalCapacityWithSpinning)),
+        thermalClusterDispatchedUnitsCountForYear[t]); // eq. to thermalClusterON for
+                                                        // that hour
+
+        break;
+    }
+    }
+
+    if (minUnitsOn > cluster->unitCount)
+        minUnitsOn = cluster->unitCount;
+
+    return minUnitsOn;
+}
+
+uint State::computeMaxNumberOfUnitsOn(Data::ThermalCluster *cluster)
+{
+    uint maxUnitsOn = static_cast<uint>(Math::Ceil(
+                    thermalClusterAvailableProduction / cluster->nominalCapacityWithSpinning));
+    uint maxUnitNeeded = 0u;
+
+    if (cluster->minStablePower > 0.)
+    {
+        maxUnitNeeded = static_cast<uint>(
+        Math::Floor(thermalClusterProduction / cluster->minStablePower));
+        if (maxUnitsOn > maxUnitNeeded)
+            maxUnitsOn = maxUnitNeeded;
+    }
+
+    return maxUnitsOn;
 }
 
 void State::yearEndComputeThermalClusterCosts(const uint clusterAreaWideIndex)
