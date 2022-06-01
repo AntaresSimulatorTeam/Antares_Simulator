@@ -239,20 +239,18 @@ bool Economy::year(Progression::Task& progression,
 
                 std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(pProblemesHebdo[numSpace]);
 
-                if (hoursRequiringCurtailmentSharing.size() > 0)
+                pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+                for (int hourInWeek : hoursRequiringCurtailmentSharing)
                 {
-                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
-                    for (int hourInWeek : hoursRequiringCurtailmentSharing)
-                    {
-                        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
-                        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                        pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
-                        OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
-                        logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
-                    }
-                    // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
-                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+                    logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
+                    HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
+                    pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
+                    OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
+                    logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
                 }
+                // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
+                pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+
                 checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
             }
             else
