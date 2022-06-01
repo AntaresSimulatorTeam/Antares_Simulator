@@ -58,7 +58,6 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
     switch (ExtremityNodeAdequacyPatchType)
     {
     case adqmPhysicalAreaInsideAdqPatch:
-        return setToZero;
     case adqmPhysicalAreaOutsideAdqPatch:
         return setToZero;
     default:
