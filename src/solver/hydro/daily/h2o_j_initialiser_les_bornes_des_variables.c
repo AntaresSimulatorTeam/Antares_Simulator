@@ -26,6 +26,7 @@
 */
 
 #include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
 
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelles,
                                             int NumeroDeProbleme)

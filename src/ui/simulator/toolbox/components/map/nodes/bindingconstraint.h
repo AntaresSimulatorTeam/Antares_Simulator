@@ -79,7 +79,7 @@ public:
     /*!
     ** \brief Get if the drawing representation of the node contains the point (x,y)
     */
-    virtual bool contains(const int, const int, double& distance)
+    virtual bool contains(const int, const int, double& /* distance */)
     {
         return false;
     }
@@ -137,7 +137,7 @@ private:
         bool selected;
     };
 
-    typedef std::map<Connection*, Infos> Connections;
+    using Connections = std::map<Connection*, Infos>;
     Connections pConnections;
 
     struct TextPart

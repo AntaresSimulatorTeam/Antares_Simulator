@@ -442,7 +442,7 @@ void AreaList::rebuildIndexes()
     }
     else
     {
-        typedef Area* AreaWeakPtr;
+        using AreaWeakPtr = Area*;
         byIndex = new AreaWeakPtr[areas.size()];
 
         uint indx = 0;
@@ -603,7 +603,7 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     Clob data;
     {
         // Preparing a new list of areas, sorted by their name
-        typedef std::list<std::string> List;
+        using List = std::list<std::string>;
         List list;
         {
             auto end = areas.end();

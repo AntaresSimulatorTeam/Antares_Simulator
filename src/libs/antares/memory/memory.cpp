@@ -62,11 +62,11 @@ namespace Antares
 namespace // anonymous
 {
 //! Information about a single swap file
-typedef Antares::Private::Memory::SwapFileInfo SwapFileInfo;
+using SwapFileInfo = Antares::Private::Memory::SwapFileInfo;
 //! Informations about a list of swap files
-typedef std::vector<SwapFileInfo*> SwapFileList;
+using SwapFileList = std::vector<SwapFileInfo*>;
 //! handle mapping
-typedef std::unordered_map<Memory::Handle, Memory::Mapping*> MappingMap;
+using MappingMap = std::unordered_map<Memory::Handle, Memory::Mapping*>;
 
 // Global mutex for memory handler
 static Yuni::Mutex gMutex;
@@ -696,7 +696,7 @@ void Memory::cleanupCacheFolder() const
     // List of files to delete
     // We will delay the deletion of the swap files to make sure that
     // they are released by the system (Windows)
-    typedef std::vector<String> DeleteList;
+    using DeleteList = std::vector<String>;
     DeleteList toDelete;
 
     {

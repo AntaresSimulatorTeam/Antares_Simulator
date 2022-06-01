@@ -170,7 +170,7 @@ Connection::~Connection()
 /*!
 ** \brief Get the visivility for a layerId
 */
-const bool Connection::isVisibleOnLayer(const size_t& layerID) const
+bool Connection::isVisibleOnLayer(const size_t& layerID) const
 {
     return pA->isVisibleOnLayer(layerID) && pB->isVisibleOnLayer(layerID);
 }

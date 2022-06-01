@@ -45,19 +45,19 @@ class Sets final
 {
 public:
     //! Type
-    typedef T Type;
+    using Type = T;
 
     //
-    typedef Yuni::CString<128, false> IDType;
+    using IDType = Yuni::CString<128, false>;
     //! Value
     using TypePtr = std::shared_ptr<T>;
 
     //! Map of Item
-    typedef std::map<IDType, TypePtr> MapType;
+    using MapType = std::map<IDType, TypePtr>;
     //! Standard iterators from the STL
-    typedef typename MapType::iterator iterator;
+    using iterator = typename MapType::iterator;
     //! Standard iterators from the STL (const)
-    typedef typename MapType::const_iterator const_iterator;
+    using const_iterator = typename MapType::const_iterator;
 
     enum RuleType
     {
@@ -68,9 +68,9 @@ public:
         ruleMax,
     };
     //! Definition of a single rule
-    typedef std::pair<RuleType, Yuni::String::Ptr> Rule;
+    using Rule = std::pair<RuleType, Yuni::String::Ptr>;
     //! Rule Set
-    typedef std::vector<Rule> RuleSet;
+    using RuleSet = std::vector<Rule>;
 
     class Options final
     {
@@ -120,7 +120,7 @@ public:
 
     }; // class Options
 
-    typedef std::map<IDType, Options> MapOptions;
+    using MapOptions = std::map<IDType, Options>;
 
 public:
     //! \name Constructor & Destructor

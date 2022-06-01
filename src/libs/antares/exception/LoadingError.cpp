@@ -133,5 +133,10 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 {
 }
 
+CreatingTimeMeasurementFile::CreatingTimeMeasurementFile(const Yuni::String& filename) :
+ LoadingError(std::string("Error creating time measurement file : ") + filename.c_str())
+{
+}
+
 } // namespace Error
 } // namespace Antares

@@ -149,7 +149,7 @@ public:
     uint selectedAreaCount() const;
     //@}
 
-    void drawerVisible(bool v);
+    void drawerVisible();
 
     void showLayerAll();
 

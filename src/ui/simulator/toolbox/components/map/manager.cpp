@@ -97,7 +97,7 @@ bool Manager::loadFromStudy(Data::Study& study)
     clear();
 
     // An hash map to quickly find the previous node
-    typedef std::map<Data::AreaName, Node*> NodeFromID;
+    using NodeFromID = std::map<Data::AreaName, Node*>;
     NodeFromID nodeFromID;
 
     // Node creation
@@ -522,8 +522,6 @@ void Manager::changeItemSelectionState(Item* item)
             Window::Inspector::AddLink(cnnx->attachedAreaLink());
         else
             Window::Inspector::RemoveLink(cnnx->attachedAreaLink());
-
-        NodeByZPosition::const_iterator end = pAllNodes.end();
 
         if (mouseSelectionConstraints)
         {

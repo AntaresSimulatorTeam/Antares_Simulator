@@ -52,11 +52,11 @@ class AreaLink final : public Yuni::NonCopyable<AreaLink>
 {
 public:
     //! Vector of links
-    typedef std::vector<AreaLink*> Vector;
+    using Vector = std::vector<AreaLink*>;
     //! Set of links
-    typedef std::set<AreaLink*, CompareLinkName> Set;
+    using Set = std::set<AreaLink*, CompareLinkName>;
     //! Map of links
-    typedef std::map<AreaName, AreaLink*> Map;
+    using Map = std::map<AreaName, AreaLink*>;
 
     using NamePair = std::pair<Yuni::String, Yuni::String>;
 

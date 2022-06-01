@@ -42,7 +42,7 @@ class hydroLevelsData final : public dataInterface
 {
 public:
     //! Matrix
-    typedef Matrix<double> MatrixType;
+    using MatrixType = Matrix<double>;
 
 public:
     // We use default constructor and destructor

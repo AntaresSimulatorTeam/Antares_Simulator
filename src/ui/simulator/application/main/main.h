@@ -592,8 +592,6 @@ private:
     void evtOnHelpAbout(wxCommandEvent& evt);
     //! Event: PDF General Reference guide
     void evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent& evt);
-    //! Event: PDF Optimization problems formulation
-    void evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent& evt);
     //! Event: PDF System Map Editor Reference guide
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library
@@ -659,7 +657,7 @@ private:
 
 private:
     //! Pointer to a study
-    typedef Data::Study* StudyPtr;
+    using StudyPtr = Data::Study*;
 
 private:
     //! The main panel

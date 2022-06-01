@@ -43,7 +43,7 @@ namespace Renderer
 class ThermalClusterCommonModulation : public Renderer::Matrix<>
 {
 public:
-    typedef Renderer::Matrix<> AncestorType;
+    using AncestorType = Renderer::Matrix<>;
 
 public:
     ThermalClusterCommonModulation(wxWindow* control,
@@ -55,6 +55,7 @@ public:
     {
         return AncestorType::width() + 4;
     }
+
     virtual int height() const
     {
         return AncestorType::height();

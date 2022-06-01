@@ -14,10 +14,6 @@ license:			Mozilla Public License 2.0	https://spdx.org/licenses/MPL-2.0.html
 Mersenne Twister	Copyright (c) 1997-2002  M.Matsumoto and T.Nishimura   
 license:	3-clause BSD						https://spdx.org/licenses/BSD-3-Clause.html
 
-strtod library      Copyright (c) 1988-1993 The Regents of the University of California		
-					Copyright (c) 1994 Sun Microsystems, Inc
-license:	ISC license							https://spdx.org/licenses/ISC.html
-					
 Sirius_Solver 6.0.0	Copyright (c) 2007-2018  RTE
 license:	EPL 2.0								https://spdx.org/licenses/EPL-2.0.html
   
