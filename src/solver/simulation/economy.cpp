@@ -248,8 +248,6 @@ bool Economy::year(Progression::Task& progression,
                     OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
                     logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
                 }
-                // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
-                pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
 
                 checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
             }
