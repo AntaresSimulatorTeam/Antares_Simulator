@@ -58,18 +58,15 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
     }
 }
 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    logs.debug() << "[CSR] cost";
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double priceTakingOrders; // PTO
     double quadraticCost;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    int Interco;
-    COUTS_DE_TRANSPORT* TransportCost;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS for each area inside adq patch
     // obj function term is: 1 / (PTO * PTO) * ENS * ENS
@@ -78,11 +75,6 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     // PTO can take two different values according to option:
     //  1. from DENS
     //  2. from load
-    memset((char*)ProblemeAResoudre->CoutLineaire,
-           0,
-           ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
@@ -121,6 +113,17 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             }
         }
     }
+}
+
+void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int Var;
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Interco;
+    COUTS_DE_TRANSPORT* TransportCost;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
     // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x
@@ -171,4 +174,18 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
             }
         }
     }
+}
+
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
+                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] cost";
+
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    memset((char*)ProblemeAResoudre->CoutLineaire,
+           0,
+           ProblemeAResoudre->NombreDeVariables * sizeof(double));
+
+    setQuadraticCost(ProblemeHebdo, hourlyCsrProblem);
+    setLinearCost(ProblemeHebdo, hourlyCsrProblem);
 }
