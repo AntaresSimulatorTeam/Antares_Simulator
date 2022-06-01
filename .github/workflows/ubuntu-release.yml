@@ -43,7 +43,6 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
         os-full-name: Ubuntu-20.04
-        ortools-tag: v9.2-rte1.3 # TODO : from .json
         
     - name: Set up Python
       uses: actions/setup-python@v1

@@ -49,7 +49,6 @@ jobs:
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-           git submodule update --init or-tools
 
     - name: Enable git longpaths
       run:  git config --system core.longpaths true
