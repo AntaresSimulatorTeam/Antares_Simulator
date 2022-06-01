@@ -40,7 +40,6 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        ortools-tag: v9.2-rte1.3 # TODO : from .json
 
     - name: Install dependencies
       run: |
@@ -51,6 +50,9 @@ jobs:
       run: |
            git submodule update --init --recursive src
            git submodule update --init or-tools
+
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
 
     - name: Configure
       run: |

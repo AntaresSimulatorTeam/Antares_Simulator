@@ -84,7 +84,6 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        ortools-tag: v9.2-rte1.3 # TODO : from .json
 
     - name: Init submodule
       run: |

@@ -49,9 +49,10 @@ _("mc-all" files contains mostly synthetic results over all years; However, ther
 
 In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
 
-In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.  
+In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints in "Adequacy" simulations.
 
-As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system.
+As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact that they contain clusters in must-run.
 
 The files and their content are hereafter described.
 
@@ -165,8 +166,10 @@ Depending on the options chosen in the main simulation window, the output folder
 |                              |/Load               | /area names/...                |
 |                              |/Thermal            | /area names/...                |
 |                              |/Hydro              | /area names/...                |
-|                              |/Wind               | /area names/...                |
-|                              |/Solar              | /area names/...                |
+|                              |/Wind[^agg]         | /area names/...                |
+|                              |/Solar[^agg]        | /area names/...                |
+|                              |/Renewables[^ren]   | /area names/...                |
+|                              |/NTC                | /area names/...                |
 
 These files contain, for each kind of time-series, the number drawn (randomly or not) in each Monte-Carlo year (files are present if "output profile / MC scenarios" was set to "true").
 
@@ -174,8 +177,8 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 |------------------------------|--------------------|--------------------------------|
 |                              |/Load               | /batch number/area names/...   |
 |                              |/Hydro              | /batch number/area names/...   |
-|                              |/Wind               | /batch number/area names/...   |
-|                              |/Solar              | /batch number/area names/...   |
+|                              |/Wind[^agg]         | /batch number/area names/...   |
+|                              |/Solar[^agg]        | /batch number/area names/...   |
 
 
 These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
@@ -240,3 +243,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
+
+[^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
+
+[^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation

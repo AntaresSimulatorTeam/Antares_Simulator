@@ -53,7 +53,7 @@ class VGridHelper final : public wxGridTableBase
 {
 public:
     //! Indices
-    typedef std::vector<int> Indices;
+    using Indices = std::vector<int>;
 
 public:
     //! \name Constructor

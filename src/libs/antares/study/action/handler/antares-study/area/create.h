@@ -42,9 +42,9 @@ class Create : public IAction
 {
 public:
     //! The most suitable smart ptr for the class
-    typedef IAction::Ptr Ptr;
+    using Ptr = IAction::Ptr;
     //! The threading policy
-    typedef IAction::ThreadingPolicy ThreadingPolicy;
+    using ThreadingPolicy = IAction::ThreadingPolicy;
 
 public:
     static IAction* StandardActionsToCopyThermalCluster(const Data::AreaName& area,

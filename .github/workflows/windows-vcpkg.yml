@@ -97,7 +97,6 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        ortools-tag: v9.2-rte1.3 # TODO : from .json
 
     - name: Install dependencies
       run: |
@@ -133,13 +132,6 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
-    - name: Upload logs on fail
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: CPack failure logs
-        path: ${{ github.workspace }}/_build
-
     - name: .zip creation
       run: |
            cd _build
@@ -172,3 +164,9 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
     
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-after-failure
+        path: ${{ github.workspace }}/_build

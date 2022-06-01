@@ -44,7 +44,7 @@ class ReservoirLevels final : public Renderer::Matrix<double, double, 2>,
                               public Renderer::ARendererArea
 {
 public:
-    typedef Renderer::Matrix<double, double, 2> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<double, double, 2>;
 
 public:
     //! \name Constructor & Destructor

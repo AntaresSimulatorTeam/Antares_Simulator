@@ -5,6 +5,7 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
+#include <antares/timeelapsed.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -146,7 +147,7 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application()
+Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
 {
     resetProcessPriority();
 }
@@ -386,11 +387,14 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
+    TimeElapsed::Timer loadTimer(
+      "Study loading", "study_loading", true, &pTimeElapsedContentHandler);
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
+    loadTimer.stop();
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -487,6 +491,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
+void Application::saveElapsedTime()
+{
+    pTotalTimer.stop();
+
+    pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
+    TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
+    // Write time data
+    writer.flush();
+}
+
 Application::~Application()
 {
     // Destroy all remaining bouns (callbacks)
@@ -512,7 +526,6 @@ Application::~Application()
         // Removing all unused spwa files
         Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
-        logs.info() << "Done.";
     }
 }
 } // namespace Solver

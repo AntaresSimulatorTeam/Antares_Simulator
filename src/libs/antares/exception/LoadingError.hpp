@@ -166,5 +166,11 @@ class CommandLineArguments : public LoadingError
 public:
     explicit CommandLineArguments(uint errors);
 };
+
+class CreatingTimeMeasurementFile : public LoadingError
+{
+public:
+    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
+};
 } // namespace Error
 } // namespace Antares

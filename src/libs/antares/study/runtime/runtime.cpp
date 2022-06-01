@@ -139,7 +139,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
 static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
     r.interconnectionsCount = study.areas.areaLinkCount();
-    typedef AreaLink* AreaLinkPointer;
+    using AreaLinkPointer = AreaLink*;
     r.areaLink = new AreaLinkPointer[r.interconnectionsCount];
 
     uint indx = 0;

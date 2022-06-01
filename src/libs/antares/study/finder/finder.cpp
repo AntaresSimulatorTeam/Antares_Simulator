@@ -42,8 +42,8 @@ namespace // anonymous namespace
 class MyIterator final : public IO::Directory::IIterator<true>
 {
 public:
-    typedef IO::Directory::IIterator<true> IteratorType;
-    typedef IO::Flow Flow;
+    using IteratorType = IO::Directory::IIterator<true>;
+    using Flow = IO::Flow;
 
 public:
     MyIterator(StudyFinder& finder) : pFinder(finder)

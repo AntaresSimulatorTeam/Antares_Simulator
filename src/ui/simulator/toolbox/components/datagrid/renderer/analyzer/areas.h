@@ -48,7 +48,7 @@ class Areas final : public virtual Renderer::IRenderer
 {
 public:
     //! Map of string
-    typedef std::map<Yuni::String, Yuni::String> Map;
+    using Map = std::map<Yuni::String, Yuni::String>;
     class Record final
     {
     public:
@@ -62,8 +62,8 @@ public:
         class Vector final
         {
         public:
-            typedef std::vector<Record>::iterator iterator;
-            typedef std::vector<Record>::const_iterator const_iterator;
+            using iterator = std::vector<Record>::iterator;
+            using const_iterator = std::vector<Record>::const_iterator;
 
         public:
             size_t size() const

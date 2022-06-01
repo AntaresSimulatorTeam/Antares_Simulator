@@ -88,7 +88,7 @@ private:
         Yuni::String::Ptr data;
     };
 
-    typedef std::vector<Item::Ptr> List;
+    using List = std::vector<Item::Ptr>;
     List pList;
 
 }; // class Clipboard

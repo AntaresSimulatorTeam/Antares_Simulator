@@ -88,7 +88,7 @@ void ActionsScrollWindow::onDraw(wxPaintEvent&)
     if (!dc.IsOk())
         return;
 
-    typedef Antares::Private::Window::ActionPanel ActionPanel;
+    using ActionPanel = Antares::Private::Window::ActionPanel;
     ActionPanel::DrawBackgroundWithoutItems(*this, dc, GetClientSize());
 }
 
@@ -124,7 +124,7 @@ ApplyActionsDialog::ApplyActionsDialog(wxWindow* parent,
         panelScroll->SetSizer(panelSizer);
 
         // Add the first node
-        typedef Antares::Private::Window::ActionPanel ActionPanel;
+        using ActionPanel = Antares::Private::Window::ActionPanel;
         vscroll->Freeze();
 
         // Register all views

@@ -48,7 +48,7 @@ class ItemAreaLink final : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Smart ptr
-    typedef std::shared_ptr<ItemAreaLink> Ptr;
+    using Ptr = std::shared_ptr<ItemAreaLink>;
 
 public:
     //! \name Constructor & Destructor
@@ -639,7 +639,7 @@ void SpotlightProviderMCAll::search(Spotlight::IItem::Vector& out,
                                     const Spotlight::SearchToken::Vector& tokens,
                                     const Yuni::String& /* text */)
 {
-    typedef Spotlight::IItem IItem;
+    using IItem = Spotlight::IItem;
     IItem::Ptr item;
 
     if (pComponent->pCurrentLOD != lodDetailedResultsWithConcatenation || tokens.empty())

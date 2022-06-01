@@ -6,7 +6,7 @@ This section gives a summary of the whole simulation process followed by Antares
 
 1. Load or Generate [stochastic generators] Time-series of every kind for all system areas
 
-2. For each Monte-Carlo year, pick up at random or not [scenario builder] one time-series of each kind for each area
+2. For each Monte-Carlo year, pick up at random or not [scenario builder] one time-series of each kind for each area/link
 
 3. For each area and each reservoir:
 
@@ -67,7 +67,7 @@ The table below gives an overview of the different reserves available in Antares
 ## The heuristic for seasonal hydro pre-allocation
 
 
-This heuristic, first introduced in broad terms in [Active windows](4-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
+This heuristic, first introduced in broad terms in [Active windows](04-active_windows.md), chapter "hydro", is fully detailed in this paragraph.
 
 Basically, the seasonal hydro pre-allocation process comprises two stages carried out two times
 (first time: monthly scale; second time: daily scale).
@@ -175,20 +175,20 @@ $$if (not.\mu) : \{ S \leftarrow \infty ; \underline{S_d} \leftarrow 0; \overlin
 
 _M1:_
 
-$$if (j \text{ and } \mu) : \text{for } m\in [1, 12]: {\{ W_m^1 \leftarrow L_m^{\alpha}. (\sum_{m}{I_m})} \over {(\sum_{m}{L_m^{\alpha}}) \}}$$
+$$if (j \text{ and } \mu) : \text{for } m\in [1, 12]: W_m^1 \leftarrow \frac{L_m^{\alpha}.(\sum_{m}{I_m})}{(\sum_{m}{L_m^{\alpha}})}$$
 
 $$else: \text{for } m\in [1, 12]: \{W_m^1 \leftarrow I_m\}$$
 
 
 _M2:_
 
-_$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$_
+$$\text{for } m\in [1, 12]: W_m^2 \leftarrow \text{Solution of linear problem M}$$
 
 _D1:_
 
-$$if (j): \text{for } d\in [1, 31]: {\{ W_d^1 \leftarrow L_d^{\beta}. (W_m^2)} \over {(\sum_{d\in m}{L_d^{\beta}}) \}}$$
+$$if (j): \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{L_d^{\beta}. (W_m^2)}{(\sum_{d\in m}{L_d^{\beta}})}$$
 
-$$else: \text{for } d\in [1, 31]: {\{ W_d^1 \leftarrow I_d . (W_m^2)} \over {(\sum_{d\in m}{I_d}) \}}$$
+$$else: \text{for } d\in [1, 31]: W_d^1 \leftarrow \frac{I_d . (W_m^2)} {(\sum_{d\in m}{I_d})}$$
 
 _D2:_
 
@@ -211,7 +211,7 @@ $$S_t \geq 0$$
 
 $$S_t \leq S$$
 
-<center> \\(S_t + G_t - S_{t-1} = I_t\\) (see note [^monthly_allocation]) </center>
+\\(S_t + G_t - S_{t-1} = I_t\\) (see note [^monthly_allocation])
 
 $$\sum_{t}{G_t} = \sum_{t}{T_t}$$
 
@@ -239,9 +239,9 @@ $$G_t \geq 0$$
 
 $$G_t \leq \overline{G_t}$$
 
-<center>\\(S_t + G_t + O_t - S_{t-1} = I_t\\) (see note [^daily_allocation])</center>
+\\(S_t + G_t + O_t - S_{t-1} = I_t\\) (see note [^daily_allocation])
 
-<center> \\(\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}\\) (value of Y previously found in solving **\\(D(m-1)\\)**) </center>
+\\(\sum_{t}{G_t + Y} = \sum_{t}{T_t} + Y_{m-1}\\) (value of Y previously found in solving **\\(D(m-1)\\)**)
 
 $$G_t - D_t \leq T_t$$
 
@@ -356,7 +356,7 @@ output=false
 
 ## The Annual System Cost Output file
 
-In addition to the general files introduced in [Output Files](5-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
+In addition to the general files introduced in [Output Files](05-output_files.md), the Output folder of each economic or adequacy simulation includes, at its root, a file "Annual\_System\_Cost.txt" It presents the metrics of a global Monte-Carlo variable further denoted ASC.
 
 The value of ASC for any given simulated year is defined as the sum, over all areas and links, of the annual values of the area-variable "OV.COST" and of the link-variable "HURD. COST".
 
@@ -430,7 +430,7 @@ This parameter can take the two values "cold start" or "hot start". [default: co
 
 **General:**
 
-This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](4-active_windows.md)).
+This parameter is meant to define the initial reservoir levels that should be used, in each system area, when processing data related to the hydro-power storage resources to consider in each specific Monte-Carlo year (see [Active windows](04-active_windows.md)).
 
 As a consequence, Areas which fall in either of the two following categories are not impacted by the value of the parameter:
 - No hydro-storage capability installed
@@ -505,11 +505,11 @@ This parameter is meant to define how the reservoir level difference between the
 
 **Fast:**
 
-The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](5-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
+The water value is taken to remain about the same throughout the week, and a constant value equal to that found at the date and for the level at which the week_ **begins** _is used in the course of the optimization. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be reserved to simulations in which computation resources are an issue or to simulations in which level-dependent water value variations throughout a week are known to be small.
 
 **Accurate:**
 
-The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](5-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
+The water value is considered as variable throughout the week. As a consequence, a different cost is used for each "layer" of the stock from/to which energy can be withdrawn/injected, in an internal hydro merit-order involving the 100 tabulated water-values found at the date at which the week **ends**. A value interpolated from the reference table for the exact level reached at each time step within the week is used ex-post in the assessment of the variable "H.COST" (positive for generation, negative for pumping) defined in [Output Files](05-output_files.md). This option should be used if computation resources are not an issue and if level-dependent water value variations throughout a week must be accounted for.
 
 ## The "Unit Commitment mode" advanced parameter
 

@@ -39,8 +39,8 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-typedef std::list<Data::ThermalCluster*> ThermalClusterList;
-typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
+using ThermalClusterList = std::list<Data::ThermalCluster*>;
+using ThermalClusterMap = std::map<wxString, ThermalClusterList>;
 
 class ThermalClustersByOrder : public ClustersByOrder
 {

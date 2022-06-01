@@ -40,6 +40,7 @@ Here is a list of available CMake configure option :
 |`DEPS_INSTALL_DIR`|Define dependencies libraries install directory|
 |`USE_PRECOMPILED_EXT`| This option must be set if you use wxWidget as precompiled external library (default `OFF`)|
 |`BUILD_TESTING`| Enable test build (default `OFF`)|
+|`BUILD_ORTOOLS`| Enable build for OR-Tools and its dependencies (requires an Internet connecton)|
 
 Additionnal options for windows
 
