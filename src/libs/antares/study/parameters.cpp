@@ -982,7 +982,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(
+    using Callback = bool (*)(
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
       const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file

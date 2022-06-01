@@ -119,8 +119,8 @@ public:
 
 private:
     //! Input List
-    typedef std::list<Input*> InputList;
-    typedef std::vector<Input*> InputVector;
+    using InputList = std::list<Input*>;
+    using InputVector = std::vector<Input*>;
 
     void evtRefreshGrid();
 

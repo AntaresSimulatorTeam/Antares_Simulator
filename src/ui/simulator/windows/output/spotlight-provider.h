@@ -43,7 +43,7 @@ class SpotlightProvider final : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor
@@ -93,7 +93,7 @@ class SpotlightProviderGlobalSelection : public Antares::Component::Spotlight::I
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor
@@ -171,7 +171,7 @@ class SpotlightProviderMCAll : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor

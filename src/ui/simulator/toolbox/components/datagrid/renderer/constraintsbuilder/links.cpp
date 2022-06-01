@@ -77,7 +77,7 @@ void Links::initializeFromStudy()
                 assert(indx < pRecord.size());
                 // assert(area.load.prepro);
 
-                typedef ConstraintsBuilder::Links::Record Record;
+                using Record = ConstraintsBuilder::Links::Record;
 
                 Record& record = pRecord.array[indx];
                 record.enabled = true;

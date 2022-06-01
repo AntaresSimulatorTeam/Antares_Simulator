@@ -561,7 +561,7 @@ void Spotlight::FrameShow(wxWindow* parent,
                           uint flags,
                           uint width)
 {
-    typedef Antares::Private::Spotlight::SpotlightMiniFrame FrameType;
+    using FrameType = Antares::Private::Spotlight::SpotlightMiniFrame;
 
     if (IsGUIAboutToQuit())
         return;
@@ -662,7 +662,7 @@ void Spotlight::FrameShow(wxWindow* parent,
 
 void Spotlight::FrameClose()
 {
-    typedef Antares::Private::Spotlight::SpotlightMiniFrame FrameType;
+    using FrameType = Antares::Private::Spotlight::SpotlightMiniFrame;
 
     GUILocker locker;
     auto* frame = FrameType::Instance();

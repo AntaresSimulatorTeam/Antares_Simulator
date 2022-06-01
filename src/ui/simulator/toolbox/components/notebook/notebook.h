@@ -394,7 +394,7 @@ public:
     //! Orientation
     const Orientation pOrientation;
     //! All pages
-    typedef std::vector<Page*> Pages;
+    using Pages = std::vector<Page*>;
     //! All pages
     Pages pPages;
     //! The tab component

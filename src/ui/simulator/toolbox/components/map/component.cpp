@@ -1035,7 +1035,7 @@ void Component::onPasteDropdown(Antares::Component::Button&, wxMenu& menu, void*
 
 void Component::onToggleMouseSelectionArea(void*)
 {
-    typedef Antares::Component::Button ButtonType;
+    using ButtonType = Antares::Component::Button;
     auto* button = dynamic_cast<ButtonType*>(pBtnSelectionArea);
     if (button)
         pMapActiveLayer->nodes.mouseSelectionArea = !pMapActiveLayer->nodes.mouseSelectionArea;

@@ -196,7 +196,7 @@ public:
             return false;
 
         GUILocker locker;
-        typedef Toolbox::Spotlight::ItemConstraint ItemConstraint;
+        using ItemConstraint = Toolbox::Spotlight::ItemConstraint;
         auto itemconstraint = std::dynamic_pointer_cast<ItemConstraint>(item);
         if (!(!itemconstraint))
         {

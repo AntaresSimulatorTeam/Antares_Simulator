@@ -229,7 +229,7 @@ protected:
     virtual bool onExecute() override
     {
         // alias
-        typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
+        using Record = Component::Datagrid::Renderer::Analyzer::Areas::Record;
 
         Record record;
         String s;
@@ -673,7 +673,7 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
 
         // Mapping areas
         // \_ renderer
-        // typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+        // using RendererType = Component::Datagrid::Renderer::Analyzer::Areas;
         pRenderer = new RendererType();
         pRenderer->study = Data::Study::Current::Get();
         pRenderer->initializeFromStudy();
@@ -1435,7 +1435,7 @@ bool AnalyzerWizard::saveToFile(const String& filename) const
     }
 
     // aliases
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
+    using Record = Component::Datagrid::Renderer::Analyzer::Areas::Record;
     auto& mapping = *pFileMapping;
     auto& pRecord = pRenderer->record();
 

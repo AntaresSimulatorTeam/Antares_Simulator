@@ -1,6 +1,6 @@
 # Kirchhoff's Constraint Generator
 
-Binding Constraints introduced in [Active windows](4-active_windows.md) can take many forms (hourly, daily, weekly), involve flows or thermal generated power, etc. Sets of binding constraints of special interest are those which can be used to model and enforce Kirchhoff's second law on the AC flows.
+Binding Constraints introduced in [Active windows](04-active_windows.md) can take many forms (hourly, daily, weekly), involve flows or thermal generated power, etc. Sets of binding constraints of special interest are those which can be used to model and enforce Kirchhoff's second law on the AC flows.
 
 In other words, it is possible to make Antares work as a genuine DC OPF, provided that consistent binding constraints are written down for each cycle belonging to any cycle basis of the graph made out from all AC components of the power system (V vertices, E edges).
 

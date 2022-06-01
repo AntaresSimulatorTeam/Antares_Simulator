@@ -43,9 +43,9 @@ class Sets final : private Yuni::NonCopyable<Sets>
 {
 public:
     //! Iterator
-    typedef Rules::Map::iterator iterator;
+    using iterator = Rules::Map::iterator;
     //! Const iterator
-    typedef Rules::Map::const_iterator const_iterator;
+    using const_iterator = Rules::Map::const_iterator;
 
 public:
     //! Update mode, indicates wether we are called from with a ScenarioBuilderUpdater instance or

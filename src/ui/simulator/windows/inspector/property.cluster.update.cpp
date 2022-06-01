@@ -76,8 +76,8 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
     name.replace('?', '-');
     name.replace(':', '-');
 
-    typedef Data::Area* AreaType;
-    typedef std::set<AreaType> SetType;
+    using AreaType = Data::Area*;
+    using SetType = std::set<AreaType>;
     SetType set;
 
     for (auto cluster : clusters)

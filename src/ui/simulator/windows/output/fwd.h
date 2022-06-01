@@ -126,20 +126,20 @@ class Job;
 class Content;
 
 //! Content for a given output
-typedef std::map<Yuni::String, Content*> ContentMap;
+using ContentMap = std::map<Yuni::String, Content*>;
 
 //! Smart pointer on a job
-typedef Yuni::Job::IJob::Ptr::Promote<Job>::Ptr JobPtr;
+using JobPtr = Yuni::Job::IJob::Ptr::Promote<Job>::Ptr;
 
 //! Array of jobs
-typedef std::vector<JobPtr> JobVector;
+using JobVector = std::vector<JobPtr>;
 
 //! Output panel
 class Panel;
 
-typedef std::set<Data::ClusterName> ThermalNameSet;
+using ThermalNameSet = std::set<Data::ClusterName>;
 //! List of thermal clusters, for all areas
-typedef std::map<Data::AreaName, std::set<Data::ClusterName>> ThermalNameSetPerArea;
+using ThermalNameSetPerArea = std::map<Data::AreaName, std::set<Data::ClusterName>>;
 
 } // namespace OutputViewerData
 } // namespace Private

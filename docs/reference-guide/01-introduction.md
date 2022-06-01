@@ -1,6 +1,6 @@
 # Introduction
 
-This document describes all the main features of the **Antares\_Simulator** package, version 8.1.1.
+This document describes all the main features of the **Antares\_Simulator** package, version 8.2.
 
 It gives useful general information regarding the way data are handled and processed,
 as well as how the Graphic User Interface (GUI) works. To keep this documentation

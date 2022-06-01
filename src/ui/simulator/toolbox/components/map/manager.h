@@ -38,7 +38,7 @@ namespace Antares
 namespace Map
 {
 //! A bounding box
-typedef std::pair<wxPoint, wxPoint> BoundingBox;
+using BoundingBox = std::pair<wxPoint, wxPoint>;
 
 // Forward declarations
 class Connection;
@@ -339,8 +339,8 @@ private:
 
 private:
     //! All nodes ordered by their Z-Position
-    typedef std::map<Item*, bool> NodeMap;
-    typedef std::map<int, NodeMap> NodeByZPosition;
+    using NodeMap = std::map<Item*, bool>;
+    using NodeByZPosition = std::map<int, NodeMap>;
 
 private:
     Component& pComponent;

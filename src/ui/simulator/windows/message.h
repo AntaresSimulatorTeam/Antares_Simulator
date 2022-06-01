@@ -98,7 +98,7 @@ public:
         btnQuit
     };
     //! Array of items
-    typedef std::vector<Component::Spotlight::IItem::Ptr> ItemList;
+    using ItemList = std::vector<Component::Spotlight::IItem::Ptr>;
 
 public:
     //! \name Constructor & Destructor

@@ -63,23 +63,23 @@ class UIRuntimeInfo;
 class Correlation;
 
 //! Name of a single area
-typedef Yuni::CString<ant_k_area_name_max_length, false> AreaName;
+using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
-typedef Yuni::CString<ant_k_area_name_max_length * 2 + 1, false> AreaLinkName;
+using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-typedef Yuni::CString<ant_k_cluster_name_max_length, false> ClusterName;
+using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
 
-typedef Yuni::CString<ant_k_constraint_name_max_length, false> ConstraintName;
+using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 
-typedef Yuni::CString<64, false> RulesScenarioName;
+using RulesScenarioName = Yuni::CString<64, false>;
 
 //! Name mapping
-typedef std::map<AreaName, AreaName> AreaNameMapping;
+using AreaNameMapping = std::map<AreaName, AreaName>;
 
 /*!
 ** \brief Study's Consistency errors
 */
-typedef enum
+enum StudyError
 {
     stErrNone = 0,
     //! startTime, finalHour = 0..8760
@@ -95,7 +95,7 @@ typedef enum
     //! Too much binding constaints
     stErrTooMuchBindingConstraints,
     /**/
-} StudyError;
+};
 
 /*!
 ** \brief Types of Study

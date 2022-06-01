@@ -49,7 +49,7 @@ namespace Window
 class CorrelationPanelData final
 {
 public:
-    typedef Component::Datagrid::Renderer::CorrelationMatrix CorrelationMatrixType;
+    using CorrelationMatrixType = Component::Datagrid::Renderer::CorrelationMatrix;
 
 public:
     CorrelationPanelData() : pCorrelation(nullptr)
