@@ -28,6 +28,9 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
+#include <antares/study/fwd.h>
+#include "../simulation/sim_structure_probleme_economique.h"
+
 namespace Antares::Data::AdequacyPatch
 {
 /*!
