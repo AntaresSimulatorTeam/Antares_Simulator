@@ -146,7 +146,7 @@ typedef struct
     std::vector<std::string> NomDesContraintes;
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
-  
+
 } PROBLEME_ANTARES_A_RESOUDRE;
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

@@ -111,7 +111,8 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
                                          ->ProductionThermiqueDuPalier[thermalCluster->index];
 
             if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
-                || unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
+                || unitCommitmentMode
+                     == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
                 thermalClusterNumberON
                   = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
                                         ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
@@ -262,7 +263,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
 }
 
 void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, uint numSpace)
-{   
+{
     uint dur;    // nombre d'heures de fonctionnement d'un groupe au delà duquel un
                  // arrêt/redémarrage est préférable
     uint nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
@@ -274,7 +275,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
 
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
-        = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+      = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
 
     uint ON_min[Variable::maxHoursInAYear] = {}; // Nombre minimal de groupes en fonctionnement
@@ -294,14 +295,14 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
 
     if (currentCluster->fixedCost > 0.)
     {
-        dur = static_cast<uint>(
-        Math::Floor(currentCluster->startupCost / currentCluster->fixedCost));
+        dur
+          = static_cast<uint>(Math::Floor(currentCluster->startupCost / currentCluster->fixedCost));
         if (dur > endHourForCurrentYear)
             dur = endHourForCurrentYear;
     }
     else
         dur = endHourForCurrentYear;
-    
+
     for (h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
         ON_min[h] = 0u;
@@ -315,8 +316,8 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
             // When the cluster is in must-run mode, the production value
             // directly comes from the time-series
             thermalClusterProduction
-            = thermalClusterAvailableProduction; // in mustrun, production==available
-                                                // production
+              = thermalClusterAvailableProduction; // in mustrun, production==available
+                                                   // production
         }
         else
         {
@@ -325,7 +326,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
         }
 
         if (thermalClusterProduction > 0.)
-        {   
+        {
             ON_min[h] = computeMinNumberOfUnitsOn(currentCluster, h, numSpace);
             ON_max[h] = computeMaxNumberOfUnitsOn(currentCluster);
 
@@ -336,27 +337,28 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
 
     if (dur > 0)
     {
-        thermalClusterDispatchedUnitsCountForYear[startHourForCurrentYear] 
-            = ON_min[startHourForCurrentYear];
+        thermalClusterDispatchedUnitsCountForYear[startHourForCurrentYear]
+          = ON_min[startHourForCurrentYear];
         h = startHourForCurrentYear + 1;
 
         while (h < endHourForCurrentYear)
         {
             if (ON_min[h] >= thermalClusterDispatchedUnitsCountForYear[h - 1])
             {
-                thermalClusterDispatchedUnitsCountForYear[h] = ON_min[h]; 
+                thermalClusterDispatchedUnitsCountForYear[h] = ON_min[h];
                 // à la montée le nombre de groupe démarré est le plus petit possible
-                
+
                 ++h; // à la montée on ne peut progresser que d'une heure
             }
-            else 
+            else
             {
-                // on amorce une descente : thermalClusterDispatchedUnitsCountForYear[h] 
+                // on amorce une descente : thermalClusterDispatchedUnitsCountForYear[h]
                 // peut être supérieur à  ON_min[h]
-                
+
                 portee = 0;
                 nivmin = ON_min[h];
-                nivmax = Math::Min<uint>(ON_max[h], thermalClusterDispatchedUnitsCountForYear[h - 1]);
+                nivmax
+                  = Math::Min<uint>(ON_max[h], thermalClusterDispatchedUnitsCountForYear[h - 1]);
 
                 if (nivmax > nivmin)
                 {
@@ -372,7 +374,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                         // groupes dès l'heure h
                         if (ON_max[h + k]
                             < nivmax) // point moins bas rencontré sur ON_max : la borne sup du
-                                    // nombre optimal de groupes à conserver en h diminue
+                                      // nombre optimal de groupes à conserver en h diminue
                         {
                             nivmax = ON_max[h + k];
                             if (nivmax < nivmin)
@@ -391,7 +393,7 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
                             {
                                 portee = k; // durée  provisoire qui pourra être allongée
                                 nivmin
-                                = ON_min[h + k]; // niveau provisoire qui pourra être augmenté
+                                  = ON_min[h + k]; // niveau provisoire qui pourra être augmenté
                             }
                         }
                     }
@@ -399,9 +401,10 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
 
                 if (portee == 0)
                 {
-                    thermalClusterDispatchedUnitsCountForYear[h] = ON_min[h]; // la puissance appelée après h ne justifie pas de
-                                        // maintenir des groupes appelés au-delà du minimum
-                    ++h;                   // on progresse d'exactement une heure
+                    thermalClusterDispatchedUnitsCountForYear[h]
+                      = ON_min[h]; // la puissance appelée après h ne justifie pas de
+                                   // maintenir des groupes appelés au-delà du minimum
+                    ++h;           // on progresse d'exactement une heure
                 }
                 else
                 {
@@ -420,11 +423,10 @@ void State::yearEndSmoothDispatchedUnitsCount(const uint clusterAreaWideIndex, u
         for (h = startHourForCurrentYear; h < endHourForCurrentYear; h++)
             thermalClusterDispatchedUnitsCountForYear[h] = ON_min[h];
     }
-    
 }
 
-uint State::computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint numSpace)
-{   
+uint State::computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace)
+{
     uint minUnitsOn = 0u;
 
     switch (unitCommitmentMode)
@@ -434,29 +436,26 @@ uint State::computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint
         if (cluster->pminOfAGroup[numSpace] > 0.)
         {
             minUnitsOn = Math::Max(
-            Math::Min(static_cast<uint>(
-                        Math::Floor(thermalClusterPMinOfTheClusterForYear[t]
-                                    / cluster->pminOfAGroup[numSpace])),
-                        static_cast<uint>(
-                        Math::Ceil(thermalClusterAvailableProduction
-                                    / cluster->nominalCapacityWithSpinning))),
-            static_cast<uint>(
-                Math::Ceil(thermalClusterProduction
-                        / cluster->nominalCapacityWithSpinning)));
+              Math::Min(static_cast<uint>(Math::Floor(thermalClusterPMinOfTheClusterForYear[t]
+                                                      / cluster->pminOfAGroup[numSpace])),
+                        static_cast<uint>(Math::Ceil(thermalClusterAvailableProduction
+                                                     / cluster->nominalCapacityWithSpinning))),
+              static_cast<uint>(
+                Math::Ceil(thermalClusterProduction / cluster->nominalCapacityWithSpinning)));
         }
         else
-            minUnitsOn = static_cast<uint>(Math::Ceil(
-            thermalClusterProduction / cluster->nominalCapacityWithSpinning));
+            minUnitsOn = static_cast<uint>(
+              Math::Ceil(thermalClusterProduction / cluster->nominalCapacityWithSpinning));
         break;
     }
     case Antares::Data::UnitCommitmentMode::ucHeuristicAccurate:
     case Antares::Data::UnitCommitmentMode::ucMILP:
     {
-        minUnitsOn = Math::Max(
-        static_cast<uint>(Math::Ceil(thermalClusterProduction
-                                    / cluster->nominalCapacityWithSpinning)),
-        thermalClusterDispatchedUnitsCountForYear[t]); // eq. to thermalClusterON for
-                                                        // that hour
+        minUnitsOn
+          = Math::Max(static_cast<uint>(Math::Ceil(thermalClusterProduction
+                                                   / cluster->nominalCapacityWithSpinning)),
+                      thermalClusterDispatchedUnitsCountForYear[t]); // eq. to thermalClusterON for
+                                                                     // that hour
 
         break;
     }
@@ -468,16 +467,16 @@ uint State::computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint
     return minUnitsOn;
 }
 
-uint State::computeMaxNumberOfUnitsOn(Data::ThermalCluster *cluster)
+uint State::computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster)
 {
-    uint maxUnitsOn = static_cast<uint>(Math::Ceil(
-                    thermalClusterAvailableProduction / cluster->nominalCapacityWithSpinning));
+    uint maxUnitsOn = static_cast<uint>(
+      Math::Ceil(thermalClusterAvailableProduction / cluster->nominalCapacityWithSpinning));
     uint maxUnitNeeded = 0u;
 
     if (cluster->minStablePower > 0.)
     {
-        maxUnitNeeded = static_cast<uint>(
-        Math::Floor(thermalClusterProduction / cluster->minStablePower));
+        maxUnitNeeded
+          = static_cast<uint>(Math::Floor(thermalClusterProduction / cluster->minStablePower));
         if (maxUnitsOn > maxUnitNeeded)
             maxUnitsOn = maxUnitNeeded;
     }
@@ -489,19 +488,17 @@ void State::yearEndComputeThermalClusterCosts(const uint clusterAreaWideIndex)
 {
     int delta;
     uint h = 0;
-    
+
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
-        = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+      = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
 
     Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
-    double thermalClusterStartupCostForYear[Variable::maxHoursInAYear]
-      = {}; 
-    double thermalClusterFixedCostForYear[Variable::maxHoursInAYear]
-      = {};
+    double thermalClusterStartupCostForYear[Variable::maxHoursInAYear] = {};
+    double thermalClusterFixedCostForYear[Variable::maxHoursInAYear] = {};
 
     for (h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
@@ -511,8 +508,8 @@ void State::yearEndComputeThermalClusterCosts(const uint clusterAreaWideIndex)
             // When the cluster is in must-run mode, the production value
             // directly comes from the time-series
             thermalClusterProduction
-            = thermalClusterAvailableProduction; // in mustrun, production==available
-                                                // production
+              = thermalClusterAvailableProduction; // in mustrun, production==available
+                                                   // production
         }
         else
         {
@@ -520,19 +517,19 @@ void State::yearEndComputeThermalClusterCosts(const uint clusterAreaWideIndex)
             thermalClusterProduction = thermalClusterProductionForYear[h];
         }
         thermalClusterOperatingCostForYear[h]
-                    = (thermalClusterProduction * currentCluster->productionCost[h]);
+          = (thermalClusterProduction * currentCluster->productionCost[h]);
 
-
-        thermalClusterFixedCostForYear[h] 
-                    = currentCluster->fixedCost * thermalClusterDispatchedUnitsCountForYear[h];
+        thermalClusterFixedCostForYear[h]
+          = currentCluster->fixedCost * thermalClusterDispatchedUnitsCountForYear[h];
 
         if (h >= startHourForCurrentYear + 1)
         {
-            delta = thermalClusterDispatchedUnitsCountForYear[h] - thermalClusterDispatchedUnitsCountForYear[h-1];
-            
+            delta = thermalClusterDispatchedUnitsCountForYear[h]
+                    - thermalClusterDispatchedUnitsCountForYear[h - 1];
+
             (delta > 0)
-                ? (thermalClusterStartupCostForYear[h] = currentCluster->startupCost * delta)
-                : (thermalClusterStartupCostForYear[h] = 0.);
+              ? (thermalClusterStartupCostForYear[h] = currentCluster->startupCost * delta)
+              : (thermalClusterStartupCostForYear[h] = 0.);
         }
 
         // Aggregated variables for output
@@ -540,7 +537,7 @@ void State::yearEndComputeThermalClusterCosts(const uint clusterAreaWideIndex)
         // Op. Cost = (P.lvl * P.Cost) + NP.Cost
 
         thermalClusterNonProportionalCostForYear[h]
-            = thermalClusterStartupCostForYear[h] + thermalClusterFixedCostForYear[h];
+          = thermalClusterStartupCostForYear[h] + thermalClusterFixedCostForYear[h];
         thermalClusterOperatingCostForYear[h] += thermalClusterNonProportionalCostForYear[h];
     }
 }

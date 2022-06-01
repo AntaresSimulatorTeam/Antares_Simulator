@@ -163,11 +163,11 @@ static void extract_from_MPSolver(const MPSolver* solver,
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
-        if (isMIP) 
+        if (isMIP)
         {
             problemeSimplexe->CoutsReduits[idxVar] = 0;
-        } 
-        else 
+        }
+        else
         {
             problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
         }
@@ -178,11 +178,11 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
         auto& row = constraints[idxRow];
-        if (isMIP) 
+        if (isMIP)
         {
             problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = 0;
-        } 
-        else 
+        }
+        else
         {
             problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
         }

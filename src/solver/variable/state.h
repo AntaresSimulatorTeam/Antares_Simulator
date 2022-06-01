@@ -96,7 +96,7 @@ public:
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
 
     /*!
-    ** \brief Smooth the thermal units run after resolutions 
+    ** \brief Smooth the thermal units run after resolutions
     ** using heuristics
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
@@ -104,20 +104,20 @@ public:
     void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
 
     /*!
-    ** \brief Computes the minimal number of units on in the cluster 
+    ** \brief Computes the minimal number of units on in the cluster
     **
-    ** 
-    ** 
+    **
+    **
     */
-    uint computeMinNumberOfUnitsOn(Data::ThermalCluster *cluster, int t, uint numSpace);
+    uint computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace);
 
     /*!
-    ** \brief Computes the maximal number of units on in the cluster 
+    ** \brief Computes the maximal number of units on in the cluster
     **
-    ** 
-    ** 
+    **
+    **
     */
-    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster *cluster);
+    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster);
 
     /*!
     ** \brief Computes the production, fixed and start-up costs, assuming
@@ -198,8 +198,8 @@ public:
     //! The non propostional cost for the current cluster of the current hour (startupCost *
     //! (newUnitCount - previousUnitCount)) + (fixed cost * newUnitCount) - MBO - 13/05/2014 - #21
     double thermalClusterNonProportionalCost;
-    //! Number of groups turned ON by cluster for the current hour in the year with the ucHeuristicAccurate
-    //! or ucMILP modes
+    //! Number of groups turned ON by cluster for the current hour in the year with the
+    //! ucHeuristicAccurate or ucMILP modes
     uint thermalClusterNumberON;
     //! Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup;
@@ -208,8 +208,8 @@ public:
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
-    //! Number of unit dispatched for all clusters for the whole year for ucHeuristicFast (fast heuristic),
-    //! ucHeuristicAccurate (accurate heuristic) or ucMILP (MILP resolution)
+    //! Number of unit dispatched for all clusters for the whole year for ucHeuristicFast (fast
+    //! heuristic), ucHeuristicAccurate (accurate heuristic) or ucMILP (MILP resolution)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
 
     //! Thermal operating cost for the current thermal cluster for the whole year

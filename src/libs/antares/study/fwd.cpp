@@ -294,7 +294,7 @@ UnitCommitmentMode StringToUnitCommitmentMode(const AnyString& text)
     s.toLower();
     if (s == "fast")
         return ucHeuristicFast;
-    if (s == "accurate") 
+    if (s == "accurate")
         return ucHeuristicAccurate;
     if (s == "milp") // mixed integer linear problem
         return ucMILP;

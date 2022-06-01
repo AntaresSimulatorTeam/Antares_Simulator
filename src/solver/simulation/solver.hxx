@@ -238,7 +238,8 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                TimeElapsed::Timer timer("Year-by-year export", "yby_export", false, pTimeElapsedContentHandler);
+                TimeElapsed::Timer timer(
+                  "Year-by-year export", "yby_export", false, pTimeElapsedContentHandler);
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
@@ -397,7 +398,8 @@ void ISimulation<Impl>::run()
 
         // Post operations
         {
-            TimeElapsed::Timer postproTimer("Post-processing", "postpro", true, pTimeElapsedContentHandler);
+            TimeElapsed::Timer postproTimer(
+              "Post-processing", "postpro", true, pTimeElapsedContentHandler);
             ImplementationType::simulationEnd();
             postproTimer.stop();
         }

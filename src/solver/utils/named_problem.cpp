@@ -5,17 +5,13 @@ namespace Antares
 {
 namespace Optimization
 {
-PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(
-  const std::vector<std::string>& NomDesVariables,
-  const std::vector<std::string>& NomDesContraintes,
-  const std::vector<bool>& VariablesEntieres) :
- NomDesVariables(NomDesVariables), 
+PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
+                                                 const std::vector<std::string>& NomDesContraintes,
+                                                 const std::vector<bool>& VariablesEntieres) :
+ NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
- isMIP(std::any_of(VariablesEntieres.cbegin(),
-                        VariablesEntieres.cend(),
-                        [](bool x) { return x; })
-)
+ isMIP(std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; }))
 {
 }
 
