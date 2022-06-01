@@ -96,25 +96,31 @@ void setBoundsAdqPatch(double& Xmax,
       ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq,
       ProblemeHebdo->adqPatch->LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq);
 
-    if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setToZero)
+    switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
+    {
+    case setToZero:
     {
         Xmax = 0.;
         Xmin = 0.;
+        break;
     }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setOrigineExtremityToZero)
+    case setOrigineExtremityToZero:
     {
         Xmax = 0.;
         Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        break;
     }
-    else if (SetToZeroLinkNTCForAdequacyPatchFirstStep == setExtremityOrigineToZero)
+    case setExtremityOrigineToZero:
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
         Xmin = 0.;
+        break;
     }
-    else
+    default:
     {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        setBoundsNoAdqPatch(Xmax, Xmin, ValeursDeNTC, Interco);
+        break;
+    }
     }
 }
 
