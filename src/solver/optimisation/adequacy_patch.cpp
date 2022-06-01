@@ -60,7 +60,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
     case adqmPhysicalAreaInsideAdqPatch:
         return setToZero;
     case adqmPhysicalAreaOutsideAdqPatch:
-        return (SetToZero12LinksForAdequacyPatch) ? setToZero : setOrigineExtremityToZero;
+        return setToZero;
     default:
         return leaveLocalValues;
     }
