@@ -142,9 +142,9 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
-void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
-                                            std::set<int>& triggerCsrSet)
+std::set<int> getHoursRequiringCurtailmentSharing(PROBLEME_HEBDO* pProblemeHebdo)
 {
+    std::set<int> triggerCsrSet;
     float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
     double sumENS[nbHoursInAWeek] = {0};
 
@@ -167,6 +167,7 @@ void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
         }
     }
     logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
+    return triggerCsrSet;
 }
 
 void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -236,13 +237,12 @@ bool Economy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
-                std::set<int> hoursInWeekTriggerCsrSet;
-                InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace],
-                                                       hoursInWeekTriggerCsrSet);
-                if (hoursInWeekTriggerCsrSet.size() > 0)
+                std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(pProblemesHebdo[numSpace]);
+
+                if (hoursRequiringCurtailmentSharing.size() > 0)
                 {
                     pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
-                    for (int hourInWeek : hoursInWeekTriggerCsrSet)
+                    for (int hourInWeek : hoursRequiringCurtailmentSharing)
                     {
                         logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
