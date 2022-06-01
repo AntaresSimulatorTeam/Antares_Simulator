@@ -95,24 +95,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* P
     }
 }
 
-void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    logs.debug() << "[CSR] bounds";
-
     int Var;
     double* AdresseDuResultat;
     int hour;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
-
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS for each area inside adq patch
@@ -138,6 +129,18 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
                          << ProblemeAResoudre->Xmax[Var];
         }
     }
+}
+
+void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int Var;
+    double* AdresseDuResultat;
+    int hour;
+    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: Spilled Energy for each area inside adq patch 
     // todo after debugging transfer this into same area loop as ENS
@@ -163,19 +166,29 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
                          << ProblemeAResoudre->Xmax[Var];
         }
     }
+}
+
+void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int Var;
+    double* AdresseDuResultat;
+    int hour;
+    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    int* TypeDeVariable;
+    double* Xmin;
+    double* Xmax;
+    Xmin = ProblemeAResoudre->Xmin;
+    Xmax = ProblemeAResoudre->Xmax;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
+    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
     // the user input (max direct and indirect flow).
-    double* Xmin;
-    double* Xmax;
-    int* TypeDeVariable;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    Xmin = ProblemeAResoudre->Xmin;
-    Xmax = ProblemeAResoudre->Xmax;
-
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
-
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; ++Interco)
     {
         // only consider link between 2 and 2
@@ -253,6 +266,22 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
                          << ProblemeAResoudre->Xmax[Var];
         }
     }
+}
 
-    return;
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] bounds";
+
+    int Var;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+
+    setBoundsOnENS(ProblemeHebdo, hourlyCsrProblem);
+    setBoundsOnSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);
+    setBoundsOnFlows(ProblemeHebdo, hourlyCsrProblem);
 }
