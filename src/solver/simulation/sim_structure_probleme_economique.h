@@ -732,6 +732,8 @@ private:
     void setProblemCost();
     void solveProblem();
 public:
+    void run();
+public:
     int hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
     HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
@@ -748,8 +750,6 @@ public:
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
-
-    void run();
 };
 
 #endif
