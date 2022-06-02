@@ -148,3 +148,8 @@ jobs:
         name: antares-ubuntu-deb
         path: _build/*.deb
 
+    - name: Upload build on failure
+      uses: actions/upload-artifact@v2
+      with:
+        name: build
+        path: ${{ github.workspace }}/_build
