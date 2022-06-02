@@ -10,9 +10,13 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  const std::vector<bool>& VariablesEntieres) :
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
- VariablesEntieres(VariablesEntieres),
- isMIP(std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; }))
+ VariablesEntieres(VariablesEntieres)
 {
+}
+
+bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
+{
+    return std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
 }
 
 } // namespace Optimization
