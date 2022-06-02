@@ -142,21 +142,29 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
-std::set<int> getHoursRequiringCurtailmentSharing(PROBLEME_HEBDO* pProblemeHebdo)
+vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
 {
-    std::set<int> triggerCsrSet;
-    float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
-    double sumENS[nbHoursInAWeek] = {0};
+    double temp[nbHoursInAWeek] = {0};
 
-    for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
+    for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
     {
-        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+        if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            sumTwoArrays<double>(
-              sumENS,
-              pProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive,
-              nbHoursInAWeek);
+            sumTwoArrays<double>(temp,
+                                 pProblemesHebdo[numSpace]
+                                   ->ResultatsHoraires[area]
+                                   ->ValeursHorairesDeDefaillancePositive,
+                                 nbHoursInAWeek);
     }
+    std::vector<double> sumENS;
+    sumENS.assign(std::begin(temp), std::end(temp));
+    return sumENS;
+}
+
+std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace)
+{
+    float threshold = pProblemesHebdo[numSpace]->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
         if ((int)sumENS[i] >= threshold)
@@ -168,6 +176,12 @@ std::set<int> getHoursRequiringCurtailmentSharing(PROBLEME_HEBDO* pProblemeHebdo
     }
     logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
     return triggerCsrSet;
+}
+
+std::set<int> Economy::getHoursRequiringCurtailmentSharing(uint numSpace)
+{
+    vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
+    return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
 void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -225,7 +239,7 @@ bool Economy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
-                std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(pProblemesHebdo[numSpace]);
+                std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(numSpace);
 
                 for (int hourInWeek : hoursRequiringCurtailmentSharing)
                 {

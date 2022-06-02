@@ -94,6 +94,10 @@ protected:
 
     void initializeState(Variable::State& state, uint numSpace);
 
+    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
+    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
+    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
+
 private:
     uint pNbWeeks;
     uint pStartTime;
