@@ -156,7 +156,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
-    const bool isMIP = problemeSimplexe->isMIP();
+    bool isMIP = problemeSimplexe->isMIP();
 
     // Extracting variable values and reduced costs
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
