@@ -37,8 +37,51 @@
 #include "common-eco-adq.h"
 #include <set>
 #include "../optimisation/adequacy_patch.h"
+#include "../simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
+
+void HOURLY_CSR_PROBLEM::resetProblem()
+{
+    OPT_LiberationProblemesSimplexe(pWeeklyProblemBelongedTo);
+}
+void HOURLY_CSR_PROBLEM::buildProblemVariables()
+{
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo,
+                                                                         *this);
+}
+void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
+{
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+void HOURLY_CSR_PROBLEM::setVariableBounds()
+{
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
+{
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+void HOURLY_CSR_PROBLEM::setProblemCost()
+{
+    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblemBelongedTo, *this);
+}
+void HOURLY_CSR_PROBLEM::solveProblem()
+{
+    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this);
+}
+void HOURLY_CSR_PROBLEM::run()
+{
+    resetProblem();
+    calculateCsrParameters(pWeeklyProblemBelongedTo, *this);
+    buildProblemVariables();
+    buildProblemConstraintsLHS();
+    setVariableBounds();
+    buildProblemConstraintsRHS();
+    setProblemCost();
+    solveProblem();
+    return;
+}
 
 namespace Antares
 {
@@ -184,22 +227,6 @@ std::set<int> Economy::getHoursRequiringCurtailmentSharing(uint numSpace)
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
-void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
-{
-    int hourInWeek = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_HEBDO* pWeeklyProblem = hourlyCsrProblem.pWeeklyProblemBelongedTo;
-
-    OPT_LiberationProblemesSimplexe(pWeeklyProblem); //CSR todo !!! do we do this here ???? or do we create another PROBLEME_ANTARES_A_RESOUDRE inside HOURLY_CSR_PROBLEM ???? 
-    calculateCsrParameters(pWeeklyProblem, hourlyCsrProblem);
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblem->ProblemeAResoudre, hourlyCsrProblem);
-    return;
-}
-
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -245,7 +272,7 @@ bool Economy::year(Progression::Task& progression,
                 {
                     logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                     HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                    OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
+                    hourlyCsrProblem.run();
                 }
 
                 checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);

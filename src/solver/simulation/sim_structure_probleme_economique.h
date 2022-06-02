@@ -723,6 +723,14 @@ public:
 // hourly CSR problem structure
 class HOURLY_CSR_PROBLEM
 {
+private:
+    void resetProblem();
+    void buildProblemVariables();
+    void setVariableBounds();
+    void buildProblemConstraintsLHS();
+    void buildProblemConstraintsRHS();
+    void setProblemCost();
+    void solveProblem();
 public:
     int hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
@@ -740,6 +748,8 @@ public:
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
+
+    void run();
 };
 
 #endif
