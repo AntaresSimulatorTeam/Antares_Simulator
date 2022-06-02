@@ -500,8 +500,8 @@ typedef struct
 struct AdequacyPatchParameters
 {
     bool AdequacyFirstStep;
-    bool LinkCapacityForAdqPatchFirstStepFromAreaOutsideToAreaInsideAdq;
-    bool LinkCapacityForAdqPatchFirstStepBetweenAreaOutsideAdq;
+    bool SetNTCOutsideToInsideToZero;
+    bool SetNTCOutsideToOutsideToZero;
 };
 
 struct PROBLEME_HEBDO
