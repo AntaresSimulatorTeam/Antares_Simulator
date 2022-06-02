@@ -1,26 +1,18 @@
 # Useful variables definitions
 set(src_solver_optimisation "${CMAKE_SOURCE_DIR}/solver/optimisation")
 
-set(SRC_ADQ_PATCH
-	# For confort in IDE, but not necessary
-	${src_solver_optimisation}/adequacy_patch.h
-	
-	# Necessary cpp files
-	${src_solver_optimisation}/adequacy_patch.cpp
-)
-
 set(EXECUTABLE_NAME tests-adq-patch)
-
-add_executable(${EXECUTABLE_NAME} adequacy_patch.cpp ${SRC_ADQ_PATCH})
+add_executable(${EXECUTABLE_NAME} adequacy_patch.cpp)
 
 target_include_directories(${EXECUTABLE_NAME}
-								PRIVATE
-									"${src_solver_optimisation}"
+							PRIVATE
+						   "${src_solver_optimisation}"
 )
 
 target_link_libraries(${EXECUTABLE_NAME}
                       PRIVATE
                       Boost::unit_test_framework
+                      libmodel_antares
                       libantares-core
 )
 
