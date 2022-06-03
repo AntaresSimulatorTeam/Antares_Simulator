@@ -1,19 +1,7 @@
 project(antares)
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
-# Version
-set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      2)
-set(ANTARES_VERSION_REVISION  2)
-set(ANTARES_VERSION_YEAR      2022)
-
-set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
-set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
-
-# Beta release
-set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
+include(../version.cmake)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
