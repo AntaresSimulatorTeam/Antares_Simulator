@@ -503,7 +503,7 @@ struct AdequacyPatchParameters
     bool setToZeroNTCfromOutToIn_AdqPatchStep1;
     bool setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
     bool SaveIntermediateResults;
-    AdequacyPatchPTO PriceTakingOrder;
+    AdqPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;
     float ThresholdDisplayLocalMatchingRuleViolations;
 };
@@ -616,8 +616,6 @@ struct PROBLEME_HEBDO
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    std::vector<HOURLY_CSR_PROBLEM>
-      hourlyCsrProblems; // CSR: this should be an array for the hours triggered CSR
     //std::map<int, std::vector<int>> localMatchingRuleViolation;
 
     optimizationStatistics optimizationStatistics_object;
@@ -722,15 +720,19 @@ public:
     double maxPminThermiqueByDay[366];
 };
 
-class HOURLY_CSR_RESULT
-{
-    // CSR todo: shall we create a new HOURLY_CSR_RESULT structure, or do we update directly inside
-    // RESULTATS_HORAIRES?
-};
-
 // hourly CSR problem structure
 class HOURLY_CSR_PROBLEM
 {
+private:
+    void resetProblem();
+    void buildProblemVariables();
+    void setVariableBounds();
+    void buildProblemConstraintsLHS();
+    void buildProblemConstraintsRHS();
+    void setProblemCost();
+    void solveProblem();
+public:
+    void run();
 public:
     int hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
@@ -748,18 +750,6 @@ public:
     std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
-
-    /* variables */
-    // std::vector<double> ENS; //CSR todo if we reuse pProblemesHebdo, there will be no need to
-    // create variables inside HOURLY_CSR_PROBLEM
-
-    /* Results */
-    HOURLY_CSR_RESULT hourlyResult; // CSR todo: shall we create a new HOURLY_CSR_RESULT structure,
-                                    // or do we update directly inside RESULTATS_HORAIRES?
-
-    // CSR todo: there should be structures for building the optimization problem like:
-    // CORRESPONDANCES_DES_VARIABLES*
-    // CORRESPONDANCES_DES_CONTRAINTES*
 };
 
 #endif

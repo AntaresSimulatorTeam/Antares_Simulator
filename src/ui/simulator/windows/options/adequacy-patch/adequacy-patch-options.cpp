@@ -39,6 +39,7 @@
 #include <antares/logs.h>
 
 using namespace Yuni;
+using namespace Data::AdequacyPatch;
 
 namespace Antares
 {
@@ -59,65 +60,48 @@ static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* tex
     sizer->AddSpacer(5);
 }
 
-static void ResetButtonNTC(Component::Button* button, bool value)
+static void updateButton(Component::Button* button, bool value, std::string buttonType)
 {
+    char type = (buttonType == "ntc") ? 'N' : ((buttonType == "pto") ? 'P' : 'S');
+
     assert(button != NULL);
     if (value)
     {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
+        switch (type)
+        {
+        case 'N':
+            button->image("images/16x16/light_orange.png");
+            button->caption(wxT("set to null"));
+            break;
+        case 'P':
+            button->image("images/16x16/tag.png");
+            button->caption(wxT("Load"));
+            break;
+        default:
+            button->image("images/16x16/light_green.png");
+            button->caption(wxT("true"));
+            break;
+        }
     }
     else
     {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
+        switch (type)
+        {
+        case 'N':
+            button->image("images/16x16/light_green.png");
+            button->caption(wxT("local values"));
+            break;
+        case 'P':
+            button->image("images/16x16/tag.png");
+            button->caption(wxT("DENS"));
+            break;
+        default:
+            button->image("images/16x16/light_orange.png");
+            button->caption(wxT("false"));
+            break;
+        }
     }
 }
-
-static void ResetButtonPTO(Component::Button* button, Data::AdequacyPatch::AdequacyPatchPTO value)
-{
-    assert(button != NULL);
-    if (value == Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsLoad)
-    {
-        button->image("images/16x16/tag.png");
-        button->caption(wxT("Load"));
-    }
-    else
-    {
-        button->image("images/16x16/tag.png");
-        button->caption(wxT("DENS"));
-    }
-}
-
-static void ResetButtonSpecify(Component::Button* button, bool value)
-{
-    assert(button != NULL);
-    if (value)
-    {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("true"));
-    }
-    else
-    {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("false"));
-    }
-}
-
-const char* AdqPatchSeedToCString(Data::AdequacyPatch::AdqPatchThresholdsIndex seed)
-{
-    switch (seed)
-    {
-    case Data::AdequacyPatch::adqPatchThresholdInitiateCurtailmentSharingRule:
-        return "Initiate curtailment sharing rule";
-    case Data::AdequacyPatch::adqPatchThresholdDisplayLocalMatchingRuleViolations:
-        return "Display local matching rule violations";
-    case Data::AdequacyPatch::adqPatchThresholdsMax:
-        return "";
-    }
-    return "";
-}
-
 
 AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
  wxDialog(parent,
@@ -231,18 +215,20 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         pBtnAdequacyPatchSaveIntermediateResults = button;
     }
     addLabelAdqPatch(this, s, wxT("Thresholds"));
-    // Seeds/threshold values
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
-        pEditSeeds[i] = nullptr;
-
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
+    // Threshold values
     {
-        pEditSeeds[seed]
+        pThresholdCSRStart = nullptr;
+        pThresholdLMRviolations = nullptr;
+        pThresholdCSRStart
           = insertEdit(this,
                        s,
-                       wxStringFromUTF8(
-                         AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)seed)),
-                       wxCommandEventHandler(AdequacyPatchOptions::onEditSeedTSDraws));
+                       wxStringFromUTF8("Initiate curtailment sharing rule"),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
+        pThresholdLMRviolations
+          = insertEdit(this,
+                       s,
+                       wxStringFromUTF8("Display local matching rule violations"),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
     }
 
     {
@@ -316,15 +302,7 @@ void AdequacyPatchOptions::onResetToDefault(void*)
         if (message.showModal() == Window::Message::btnContinue)
         {
             auto& study = *studyptr;
-
-            study.parameters.include.adequacyPatch = false;
-            study.parameters.setToZeroNTCfromOutToIn_AdqPatch = true;
-            study.parameters.setToZeroNTCfromOutToOut_AdqPatch = true;
-            study.parameters.adqPatchPriceTakingOrder
-              = Data::AdequacyPatch::AdequacyPatchPTO::adqPatchPTOIsDens;
-            study.parameters.adqPatchSaveIntermediateResults = false;
-            study.parameters.resetSeedsAdqPatch();
-
+            study.parameters.resetAdqPatchParameters();
             refresh();
             MarkTheStudyAsModified();
             return;
@@ -346,23 +324,36 @@ void AdequacyPatchOptions::refresh()
     auto& study = *studyptr;
 
     // Adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
+    std::string buttonType = "specify";
+    // Include adequacy patch
+    updateButton(pBtnAdequacyPatch, study.parameters.include.adequacyPatch, buttonType);
+    // Save intermediate results for adequacy patch
+    updateButton(pBtnAdequacyPatchSaveIntermediateResults,
+                 study.parameters.adqPatchSaveIntermediateResults,
+                 buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonNTC(pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch);
+    buttonType = "ntc";
+    updateButton(
+      pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch, buttonType);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonNTC(pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch);
+    updateButton(
+      pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch, buttonType);
     // Price taking order (PTO) for adequacy patch
-    ResetButtonPTO(pBtnAdequacyPatchPTO, study.parameters.adqPatchPriceTakingOrder);
-    // Save intermediate results for adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatchSaveIntermediateResults,
-                       study.parameters.adqPatchSaveIntermediateResults);
-    //Threshold values
-    for (uint seed = 0; seed != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++seed)
+    buttonType = "pto";
+    bool isPTOload
+      = (study.parameters.adqPatchPriceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
+    updateButton(pBtnAdequacyPatchPTO, isPTOload, buttonType);
+
+    // Threshold values
     {
-        if (pEditSeeds[seed])
-            pEditSeeds[seed]->SetValue(wxString() << study.parameters.seedAdqPatch[seed]);
+        if (pThresholdCSRStart)
+            pThresholdCSRStart->SetValue(
+              wxString() << study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule);
+        if (pThresholdLMRviolations)
+            pThresholdLMRviolations->SetValue(
+              wxString() << study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations);
     }
 }
 
@@ -491,9 +482,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsDens)
+        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsDens;
+            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -505,9 +496,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != Data::AdequacyPatch::adqPatchPTOIsLoad)
+        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = Data::AdequacyPatch::adqPatchPTOIsLoad;
+            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -529,7 +520,7 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
     return edit;
 }
 
-void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
+void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -537,30 +528,51 @@ void AdequacyPatchOptions::onEditSeedTSDraws(wxCommandEvent& evt)
 
     int id = evt.GetId();
 
-    // Looking for the good id
-    for (uint i = 0; i != (uint)Data::AdequacyPatch::adqPatchThresholdsMax; ++i)
+    if (pThresholdCSRStart && id == pThresholdCSRStart->GetId())
     {
-        if (pEditSeeds[i] && id == pEditSeeds[i]->GetId())
-        {
-            String text;
-            wxStringToString(pEditSeeds[i]->GetValue(), text);
+        String text;
+        wxStringToString(pThresholdCSRStart->GetValue(), text);
 
-            float newseed;
-            if (not text.to(newseed))
-            {
-                logs.error() << "impossible to update the seed for '"
-                             << AdqPatchSeedToCString((Data::AdequacyPatch::AdqPatchThresholdsIndex)i) << "'";
-            }
-            else
-            {
-                if (newseed != study.parameters.seedAdqPatch[i])
-                {
-                    study.parameters.seedAdqPatch[i] = newseed;
-                    MarkTheStudyAsModified();
-                }
-            }
-            return;
+        float newthreshold;
+        if (not text.to(newthreshold))
+        {
+            logs.error() << "impossible to update the seed for '"
+                         << "Initiate curtailment sharing rule"
+                         << "'";
         }
+        else
+        {
+            if (newthreshold != study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule)
+            {
+                study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule = newthreshold;
+                MarkTheStudyAsModified();
+            }
+        }
+        return;
+    }
+
+    if (pThresholdLMRviolations && id == pThresholdLMRviolations->GetId())
+    {
+        String text;
+        wxStringToString(pThresholdLMRviolations->GetValue(), text);
+
+        float newthreshold;
+        if (not text.to(newthreshold))
+        {
+            logs.error() << "impossible to update the seed for '"
+                         << "Display local matching rule violations"
+                         << "'";
+        }
+        else
+        {
+            if (newthreshold
+                != study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations)
+            {
+                study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations = newthreshold;
+                MarkTheStudyAsModified();
+            }
+        }
+        return;
     }
 }
 

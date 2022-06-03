@@ -575,7 +575,7 @@ private:
     //! Advanced parameters
     void evtOnOptionsAdvanced(wxCommandEvent& evt);
     //! Adequacy Patch Configure
-    void evtOnOptionsAdequacyPatchConfigure(wxCommandEvent& evt);
+    void evtOnOptionsAdequacyPatchOptions(wxCommandEvent& evt);
     //! Adequacy Patch Areas
     void evtOnOptionsAdequacyPatchAreas(wxCommandEvent& evt);
     //@}

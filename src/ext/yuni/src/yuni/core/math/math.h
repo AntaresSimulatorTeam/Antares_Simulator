@@ -387,17 +387,6 @@ YUNI_DECL bool IsInteger(T x);
 template<class U, class V>
 YUNI_DECL U GCD(U u, V v);
 
-/*!
-** ** \brief Sums two arrays of the same size a[i]=a[i]+b[i]
-** **
-** ** \param a An array
-** ** \param b An array
-** ** \param num An integer
-** ** \return  
-** */
-template<class T>
-void sumTwoArrays(T* a, T* b, int num);
-
 } // namespace Math
 } // namespace Yuni
 

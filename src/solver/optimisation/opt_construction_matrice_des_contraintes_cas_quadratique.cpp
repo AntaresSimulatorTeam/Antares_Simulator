@@ -94,29 +94,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
     MemFree(Colonne);
 }
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setConstraintsOnENS(PROBLEME_HEBDO* ProblemeHebdo,
+                         HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                         double* Pi,
+                         int* Colonne)
 {
-    logs.debug() << "[CSR] constraint list:";
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Area;
     int Var;
     int NombreDeTermes;
-    double* Pi;
-    int* Colonne;
-    int Interco;
-    COUTS_DE_TRANSPORT* TransportCost;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     std::string NomDeLaContrainte;
+
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
-
-    ProblemeAResoudre->NombreDeContraintes = 0;
-    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: ENS < DENS_new
@@ -141,6 +132,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
               ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<', NomDeLaContrainte);
         }
     }
+}
+
+void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
+                           HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                           double* Pi,
+                           int* Colonne)
+{
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Var;
+    int NombreDeTermes;
+    int Interco;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    std::string NomDeLaContrainte;
+    COUTS_DE_TRANSPORT* TransportCost;
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
@@ -189,6 +198,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
               ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
         }
     }
+}
+
+void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
+                               HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                               double* Pi,
+                               int* Colonne)
+{
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Area;
+    int Var;
+    int NombreDeTermes;
+    int Interco;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    std::string NomDeLaContrainte;
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +
@@ -197,7 +224,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
-    // todo after debugging transfer this into same area loop as ENS
     for (Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
@@ -284,10 +310,27 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
               ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
         }
     }
+}
 
+void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
+                           HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                           double* Pi,
+                           int* Colonne)
+{
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int Var;
+    int NombreDeTermes;
+    int Interco;
     int NbInterco;
     double Poids;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
+    std::string NomDeLaContrainte;
+
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
@@ -352,6 +395,28 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
             }
         }
     }
+}
+
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] constraint list:";
+    double* Pi;
+    int* Colonne;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+
+    ProblemeAResoudre->NombreDeContraintes = 0;
+    ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
+
+    setConstraintsOnENS(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
+    setConstraintsOnFlows(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
+    setNodeBalanceConstraints(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
+    setBindingConstraints(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
 
     MemFree(Pi);
     MemFree(Colonne);

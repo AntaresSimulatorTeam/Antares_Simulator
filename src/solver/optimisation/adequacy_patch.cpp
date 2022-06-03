@@ -26,8 +26,10 @@
 */
 
 #include "../simulation/simulation.h"
+#include "opt_fonctions.h"
 #include "adequacy_patch.h"
 #include <math.h>
+#include "../simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
 using namespace Antares::Data::AdequacyPatch;
@@ -139,8 +141,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == physicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
             std::tie(netPositionInit, densNew)
               = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
@@ -175,8 +176,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
 
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == physicalAreaInsideAdqPatch)
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
@@ -252,4 +252,61 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
         densNew = Math::Max(0.0, ensInit + netPositionInit);
 
     return std::make_pair(netPositionInit, densNew);
+}
+
+template<class T>
+void sumTwoArrays(T* a, T* b, int num)
+{
+    for (uint i = 0; i < num; ++i)
+        a[i] += b[i];
+}
+template void sumTwoArrays<double>(double* a, double* b, int num);
+
+void HOURLY_CSR_PROBLEM::resetProblem()
+{
+    OPT_LiberationProblemesSimplexe(pWeeklyProblemBelongedTo);
+}
+
+void HOURLY_CSR_PROBLEM::buildProblemVariables()
+{
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo,
+                                                                         *this);
+}
+
+void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
+{
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+
+void HOURLY_CSR_PROBLEM::setVariableBounds()
+{
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+
+void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
+{
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+}
+
+void HOURLY_CSR_PROBLEM::setProblemCost()
+{
+    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblemBelongedTo, *this);
+}
+
+void HOURLY_CSR_PROBLEM::solveProblem()
+{
+    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this);
+}
+
+void HOURLY_CSR_PROBLEM::run()
+{
+    resetProblem();
+    calculateCsrParameters(pWeeklyProblemBelongedTo, *this);
+    buildProblemVariables();
+    buildProblemConstraintsLHS();
+    setVariableBounds();
+    buildProblemConstraintsRHS();
+    setProblemCost();
+    solveProblem();
+    return;
 }

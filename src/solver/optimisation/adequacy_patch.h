@@ -103,4 +103,15 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
  */
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
 
+/*!
+** ** \brief Sums two arrays of the same size a[i]=a[i]+b[i]
+** **
+** ** \param a An array
+** ** \param b An array
+** ** \param num An integer
+** ** \return  
+** */
+template<class T>
+extern void sumTwoArrays(T* a, T* b, int num);
+
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

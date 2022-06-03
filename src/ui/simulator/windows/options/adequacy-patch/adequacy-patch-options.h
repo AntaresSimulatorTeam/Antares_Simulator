@@ -88,14 +88,15 @@ private:
     void onPopupMenuPTO(Component::Button&, wxMenu& menu, void*);
 
     void onInternalMotion(wxMouseEvent&);  
-    void onEditSeedTSDraws(wxCommandEvent&);
+    void onEditThresholds(wxCommandEvent&);
 private:
     Component::Button* pBtnAdequacyPatch;
     Component::Button* pBtnNTCfromOutToInAdqPatch;
     Component::Button* pBtnNTCfromOutToOutAdqPatch;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
-    wxTextCtrl* pEditSeeds[Data::AdequacyPatch::adqPatchThresholdsMax];
+    wxTextCtrl* pThresholdCSRStart;
+    wxTextCtrl* pThresholdLMRviolations;
     bool* pTargetRef;
 
 }; // class AdequacyPatchOptions

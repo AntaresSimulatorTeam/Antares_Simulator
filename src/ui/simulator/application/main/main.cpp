@@ -159,7 +159,7 @@ EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
 EVT_MENU(mnIDOptionOptimizationPrefs, ApplWnd::evtOnOptionsOptimizationPrefs)
 EVT_MENU(mnIDOptionAdvanced, ApplWnd::evtOnOptionsAdvanced)
-EVT_MENU(mnIDOptionAdequacyPatchConfigure, ApplWnd::evtOnOptionsAdequacyPatchConfigure)
+EVT_MENU(mnIDOptionAdequacyPatchOptions, ApplWnd::evtOnOptionsAdequacyPatchOptions)
 EVT_MENU(mnIDOptionAdequacyPatchAreas, ApplWnd::evtOnOptionsAdequacyPatchAreas)
 
 // Window
@@ -519,7 +519,7 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDOptionConfigureMCScenarioPlaylist, opened);
         EnableItem(menu, mnIDOptionOptimizationPrefs, opened);
         EnableItem(menu, mnIDOptionAdvanced, opened);
-        EnableItem(menu, mnIDOptionAdequacyPatchConfigure, opened);
+        EnableItem(menu, mnIDOptionAdequacyPatchOptions, opened);
         EnableItem(menu, mnIDOptionAdequacyPatchAreas, opened);
 
         EnableItem(menu, mnIDInspector, opened);

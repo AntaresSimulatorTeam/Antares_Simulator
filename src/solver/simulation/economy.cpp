@@ -48,7 +48,6 @@ namespace Simulation
 {
 enum
 {
-
     nbHoursInAWeek = 168,
 };
 
@@ -136,66 +135,48 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
                    pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
     }
 
-    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-    // part that we need
     ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
-void InitiateCurtailmentSharingRuleIndexSet(PROBLEME_HEBDO* pProblemeHebdo,
-                                            std::set<int>& triggerCsrSet)
+vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
 {
-    float threshold = pProblemeHebdo->adqPatch->ThresholdInitiateCurtailmentSharingRule;
-    double sumENS[nbHoursInAWeek] = {0};
+    double temp[nbHoursInAWeek] = {0};
 
-    for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
+    for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
     {
-        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+        if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            Math::sumTwoArrays<double>(
-              sumENS,
-              pProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive,
-              nbHoursInAWeek);
+            sumTwoArrays<double>(temp,
+                                 pProblemesHebdo[numSpace]
+                                   ->ResultatsHoraires[area]
+                                   ->ValeursHorairesDeDefaillancePositive,
+                                 nbHoursInAWeek);
     }
+    std::vector<double> sumENS;
+    sumENS.assign(std::begin(temp), std::end(temp));
+    return sumENS;
+}
+
+std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace)
+{
+    float threshold = pProblemesHebdo[numSpace]->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
         if ((int)sumENS[i] >= threshold)
         {
-            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i]
-                         << "], threshold = " << threshold;
             triggerCsrSet.insert(i);
         }
     }
-    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
+    return triggerCsrSet;
 }
 
-void OPT_OptimisationHourlyCurtailmentSharingRule(HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+std::set<int> Economy::getHoursRequiringCurtailmentSharing(uint numSpace)
 {
-    int hourInWeek = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_HEBDO* pWeeklyProblem = hourlyCsrProblem.pWeeklyProblemBelongedTo;
-
-    OPT_LiberationProblemesSimplexe(pWeeklyProblem); //CSR todo !!! do we do this here ???? or do we create another PROBLEME_ANTARES_A_RESOUDRE inside HOURLY_CSR_PROBLEM ???? 
-    calculateCsrParameters(pWeeklyProblem, hourlyCsrProblem);
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblem, hourlyCsrProblem);
-    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblem->ProblemeAResoudre, hourlyCsrProblem);
-    return;
+    vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
+    return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
-
-// void UpdateWeeklyResultAfterCSR(PROBLEME_HEBDO* pProblemeHebdo)
-// {
-//     std::vector<HOURLY_CSR_PROBLEM> hourlyCsrProblems = pProblemeHebdo->hourlyCsrProblems;
-
-//     for (int area = 0; area < pProblemeHebdo->NombreDePays; ++area)
-//     {
-//         RESULTATS_HORAIRES* ResultatsHoraires = pProblemeHebdo->ResultatsHoraires[area];
-//         //CSR todo update ResultatsHoraires for each area using hourlyCsrProblems
-//     }
-//     return;
-// }
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -236,23 +217,15 @@ bool Economy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
 
-                std::set<int> hoursInWeekTriggerCsrSet;
-                InitiateCurtailmentSharingRuleIndexSet(pProblemesHebdo[numSpace],
-                                                       hoursInWeekTriggerCsrSet);
-                if (hoursInWeekTriggerCsrSet.size() > 0)
+                std::set<int> hoursRequiringCurtailmentSharing
+                  = getHoursRequiringCurtailmentSharing(numSpace);
+
+                for (int hourInWeek : hoursRequiringCurtailmentSharing)
                 {
-                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
-                    for (int hourInWeek : hoursInWeekTriggerCsrSet)
-                    {
-                        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
-                        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                        pProblemesHebdo[numSpace]->hourlyCsrProblems.push_back(hourlyCsrProblem);
-                        OPT_OptimisationHourlyCurtailmentSharingRule(hourlyCsrProblem);
-                        logs.debug() << "========= [CSR]: End hourly optim for " << hourInWeek;
-                    }
-                    // UpdateWeeklyResultAfterCSR(pProblemesHebdo[numSpace]);
-                    pProblemesHebdo[numSpace]->hourlyCsrProblems.clear();
+                    HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
+                    hourlyCsrProblem.run();
                 }
+
                 checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
             }
             else

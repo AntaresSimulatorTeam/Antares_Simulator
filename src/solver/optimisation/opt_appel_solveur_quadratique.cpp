@@ -184,21 +184,15 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     }
 }
 
-
-bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                             PROBLEME_POINT_INTERIEUR& Probleme)
 {
-    //CSR todo call solver for quadratic houly CSR 
-    //this part should be exactly the same as in OPT_AppelDuSolveurQuadratique, except for some log. todo refactoring
-    int Var;
-    double* pt;
     double ToleranceSurLAdmissibilite;
     int ChoixToleranceParDefautSurLAdmissibilite;
     double ToleranceSurLaStationnarite;
     int ChoixToleranceParDefautSurLaStationnarite;
     double ToleranceSurLaComplementarite;
     int ChoixToleranceParDefautSurLaComplementarite;
-
-    PROBLEME_POINT_INTERIEUR Probleme;
 
     ToleranceSurLAdmissibilite = 1.e-5;
     ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
@@ -246,72 +240,91 @@ bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeARes
 
     Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
     Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+}
 
-    PI_Quamin(&Probleme);
+void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    int Var;
+    double* pt;
+    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+        if (pt)
+            *pt = ProblemeAResoudre->X[Var];
+        logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
+    }
+}
 
+void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                              HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int Var;
+    double* pt;
+    logs.warning() << "CSR Quadratic Optimization: No solution, hour in week: "
+                   << hourlyCsrProblem.hourInWeekTriggeredCsr; // todo refactoring
+
+    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+        if (pt)
+            *pt = std::numeric_limits<double>::quiet_NaN();
+    }
+
+#ifndef NDEBUG
+
+    {
+        logs.info();
+
+        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+
+        logs.info() << "Here is the trace:";
+        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        {
+            logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
+                                     Var,
+                                     ProblemeAResoudre->CoutLineaire[Var],
+                                     ProblemeAResoudre->CoutQuadratique[Var]);
+        }
+        for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+        {
+            logs.info().appendFormat("Constraint %ld sens %c B %e",
+                                     Cnt,
+                                     ProblemeAResoudre->Sens[Cnt],
+                                     ProblemeAResoudre->SecondMembre[Cnt]);
+
+            int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+            int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+            for (; il < ilMax; ++il)
+            {
+                Var = ProblemeAResoudre->IndicesColonnes[il];
+                logs.info().appendFormat(
+                  "      coeff %e var %ld xmin %e xmax %e type %ld",
+                  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                  Var,
+                  ProblemeAResoudre->Xmin[Var],
+                  ProblemeAResoudre->Xmax[Var],
+                  ProblemeAResoudre->TypeDeVariable[Var]);
+            }
+        }
+    }
+#endif
+}
+
+bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                       HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    PROBLEME_POINT_INTERIEUR Probleme;
+    setInteriorPointProblem(ProblemeAResoudre, Probleme);
+    PI_Quamin(&Probleme); // resolution
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
     {
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        {
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-            if (pt)
-                *pt = ProblemeAResoudre->X[Var];
-            logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
-        }
-
+        storeInteriorPointResults(ProblemeAResoudre);
         return true;
     }
     else
     {
-        logs.warning() << "CSR Quadratic Optimization: No solution, hour in week: " << hourlyCsrProblem.hourInWeekTriggeredCsr; //todo refactoring
-
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        {
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-            if (pt)
-                *pt = std::numeric_limits<double>::quiet_NaN();
-        }
-
-#ifndef NDEBUG
-
-        {
-            logs.info();
-
-            logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-
-            logs.info() << "Here is the trace:";
-            for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-            {
-                logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-                                         Var,
-                                         ProblemeAResoudre->CoutLineaire[Var],
-                                         ProblemeAResoudre->CoutQuadratique[Var]);
-            }
-            for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
-            {
-                logs.info().appendFormat("Constraint %ld sens %c B %e",
-                                         Cnt,
-                                         ProblemeAResoudre->Sens[Cnt],
-                                         ProblemeAResoudre->SecondMembre[Cnt]);
-
-                int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-                int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-                for (; il < ilMax; ++il)
-                {
-                    Var = ProblemeAResoudre->IndicesColonnes[il];
-                    logs.info().appendFormat(
-                      "      coeff %e var %ld xmin %e xmax %e type %ld",
-                      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-                      Var,
-                      ProblemeAResoudre->Xmin[Var],
-                      ProblemeAResoudre->Xmax[Var],
-                      ProblemeAResoudre->TypeDeVariable[Var]);
-                }
-            }
-        }
-#endif
-
+        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem);
         return false;
     }
 }

@@ -58,19 +58,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 }
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    logs.debug() << "[CSR] variable list:";
     int NumberOfVariables = 0;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != NULL);
-
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS of each area inside adq patch
@@ -89,8 +83,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
             NumberOfVariables++;
         }
     }
+    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
+}
 
-    // variables: Spilled Energy  of each area inside adq patch 
+void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
+                                    HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    int NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
+
+    // variables: Spilled Energy  of each area inside adq patch
     // todo after debugging transfer this into same area loop as ENS
     logs.debug() << " Spilled Energy  of each area inside adq patch: ";
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
@@ -107,6 +113,17 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
             NumberOfVariables++;
         }
     }
+    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
+}
+
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    int NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
     // and 2.
@@ -141,7 +158,22 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
             NumberOfVariables++;
         }
     }
-
     ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
+}
+
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
+  PROBLEME_HEBDO* ProblemeHebdo,
+  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "[CSR] variable list:";
+
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    assert(ProblemeAResoudre != NULL);
+
+    constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
+    constructVariableSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);
+    constructVariableFlows(ProblemeHebdo, hourlyCsrProblem);
+
     return;
 }
