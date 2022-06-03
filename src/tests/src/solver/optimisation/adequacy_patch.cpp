@@ -14,6 +14,10 @@ static double extremiteOrigine = 5;
 
 using namespace Antares::Data::AdequacyPatch;
 
+// NOTE
+// Xmax limits the flux origin -> extremity (direct)
+// -Xmin limits the flux extremity -> origin (indirect)
+
 std::pair<double, double> one_timestep(AdequacyPatchMode originType,
                                        AdequacyPatchMode extremityType,
                                        bool SetNTCOutsideToOutsideToZero,
@@ -48,53 +52,61 @@ std::pair<double, double> one_timestep(AdequacyPatchMode originType,
   return std::make_pair(Xmin, Xmax);
 }
 
+// Virtual -> Virtual (0 -> 0)
+// No change in bounds is expected
 BOOST_AUTO_TEST_CASE(one_timestep_virtual_virtual_no_change_expected)
 {
   double Xmin, Xmax;
   std::tie(Xmin, Xmax) = one_timestep(adqmVirtualArea,
                                       adqmVirtualArea,
-                                      true,
+                                      true /*SetNTCOutsideToOutsideToZero*/,
                                       false);
   BOOST_TEST(Xmax == origineExtremite);
   BOOST_TEST(Xmin == -extremiteOrigine);
 }
 
+// Virtual -> physical area inside adq-patch (0 -> 2)
+// No change in bounds is expected
 BOOST_AUTO_TEST_CASE(one_timestep_virtual_inside_no_change_expected)
 {
   double Xmin, Xmax;
   std::tie(Xmin, Xmax) = one_timestep(adqmVirtualArea,
                                       adqmPhysicalAreaInsideAdqPatch,
-                                      true,
+                                      true /*SetNTCOutsideToOutsideToZero*/,
                                       false);
-
   BOOST_TEST(Xmax == origineExtremite);
   BOOST_TEST(Xmin == -extremiteOrigine);
 }
 
+// Virtual -> physical area outside adq-patch (0 -> 1)
+// No change in bounds is expected
 BOOST_AUTO_TEST_CASE(one_timestep_virtual_outside_no_change_expected)
 {
   double Xmin, Xmax;
   std::tie(Xmin, Xmax) = one_timestep(adqmVirtualArea,
                                       adqmPhysicalAreaOutsideAdqPatch,
-                                      true,
+                                      true /*SetNTCOutsideToOutsideToZero*/,
                                       false);
-
   BOOST_TEST(Xmax == origineExtremite);
   BOOST_TEST(Xmin == -extremiteOrigine);
 }
 
+// physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
+// NTC should be set to 0 in both directions
 BOOST_AUTO_TEST_CASE(one_timestep_outside_outside_zero_expected_both_directions)
 {
   double Xmin, Xmax;
   std::tie(Xmin, Xmax) = one_timestep(adqmPhysicalAreaOutsideAdqPatch,
                                       adqmPhysicalAreaOutsideAdqPatch,
-                                      true,
+                                      true /*SetNTCOutsideToOutsideToZero*/,
                                       false);
-
   BOOST_TEST(Xmax == 0);
   BOOST_TEST(Xmin == 0);
 }
 
+// physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
+// SetNTCOutsideToOutsideToZero = true
+// NTC should be set to 0 in both directions
 BOOST_AUTO_TEST_CASE(one_timestep_outside_outside_no_change_expected)
 {
   double Xmin, Xmax;
@@ -107,6 +119,8 @@ BOOST_AUTO_TEST_CASE(one_timestep_outside_outside_no_change_expected)
   BOOST_TEST(Xmin == -extremiteOrigine);
 }
 
+// physical area inside adq-patch -> physical area outside adq-patch (2 -> 1)
+// NTC should be set to 0 in both directions
 BOOST_AUTO_TEST_CASE(one_timestep_inside_outside_zero_expected_both_directions)
 {
   double Xmin, Xmax;
@@ -114,23 +128,26 @@ BOOST_AUTO_TEST_CASE(one_timestep_inside_outside_zero_expected_both_directions)
                                       adqmPhysicalAreaOutsideAdqPatch,
                                       false,
                                       false);
-
   BOOST_TEST(Xmax == 0);
   BOOST_TEST(Xmin == 0);
 }
 
+// physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
+// NTC should be set to 0 in both directions
 BOOST_AUTO_TEST_CASE(one_timestep_outside_inside_zero_expected_both_directions)
 {
   double Xmin, Xmax;
   std::tie(Xmin, Xmax) = one_timestep(adqmPhysicalAreaOutsideAdqPatch,
                                       adqmPhysicalAreaInsideAdqPatch,
                                       false,
-                                      true);
+                                      true /*SetNTCOutsideToInsideToZero*/);
   BOOST_TEST(Xmax == 0);
   BOOST_TEST(Xmin == 0);
 }
 
-
+// physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
+// NTC should be unchanged in direction origin->extremity (direct)
+// NTC should be set to 0 in direction extremity->origin (indirect)
 BOOST_AUTO_TEST_CASE(one_timestep_outside_inside_change_expected_one_direction)
 {
   double Xmin, Xmax;
@@ -138,7 +155,6 @@ BOOST_AUTO_TEST_CASE(one_timestep_outside_inside_change_expected_one_direction)
                                       adqmPhysicalAreaInsideAdqPatch,
                                       false,
                                       false);
-
   BOOST_TEST(Xmax == origineExtremite);
   BOOST_TEST(Xmin == 0);
 }
