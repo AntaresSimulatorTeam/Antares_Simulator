@@ -4,8 +4,8 @@ Several executable parts of Antares\_Simulator can be run in command line from a
 
 _In all cases, arguments " –h" or "–help" can be used to get help_
 
-**antares-8.2-solver** <br/>
-**antares-8.2-solver-swap** (simulation in low-RAM swap mode)
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-solver** <br/>
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-solver-swap** (simulation in low-RAM swap mode)
 
 - Simulation
 
@@ -53,7 +53,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |--use-ortools --ortools-solver= Sirius | Use the standard Antares solver through the OR-Tools modelling library |
 |--use-ortools --ortools-solver= Coin | Use the Coin solver through the OR-Tools modelling library |
 
-**antares-8.2-study-updater**
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-study-updater**
 
 |command|meaning|
 |:---|:---|
@@ -65,7 +65,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-study-finder**
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-study-finder**
 
 |command|meaning|
 |:---|:---|
@@ -75,7 +75,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-study-cleaner**
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-study-cleaner**
 
 |command|meaning|
 |:---|:---|
@@ -85,7 +85,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-config**
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-config**
 
 |command|meaning|
 |:---|:---|
@@ -93,7 +93,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-batchrun**
+**antares-@ANTARES_VERSION_HI@.@ANTARES_VERSION_LO@-batchrun**
 
 - Studies
 

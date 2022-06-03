@@ -5,7 +5,7 @@ set(ANTARES_VERSION_REVISION  2)
 set(ANTARES_VERSION_YEAR      2022)
 
 set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
+set(ANTARES_WEBSITE "https://antares-simulator.org")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release

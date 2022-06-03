@@ -2,7 +2,7 @@
 
 **_Antares\_Simulator Modeling and Optimization_**
 
-**Document available on : [https://antares-simulator.org](https://antares-simulator.org/)**
+**Document available on : [Antares website](@ANTARES_WEBSITE@)**
 
 
 ## Introduction
@@ -26,7 +26,7 @@ These steps most often involve:
 The scope of this document is exclusively devoted to step (d). Note that equivalent information regarding the other steps may be found in other documents made available either:
 
 - Within the application itself, in the "; ?"; menu
-- On the **Antares\_Simulator** website (download section) : [https://antares-simulator.org](https://antares-simulator.org/)
+- On the **Antares\_Simulator** [Antares website](@ANTARES_WEBSITE@) (download section)
 - In technical publications referenced in the bibliography section of the website
 
 The following picture gives a functional view of all that is involved in steps (a) to (e). In this illustration, Step (d), whose goal is to solve the problems introduced in this document, is materialized by the red box.
