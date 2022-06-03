@@ -55,8 +55,8 @@ namespace // anonymous
 {
 static StartupWizard* globalWndStartupWizard = nullptr;
 
-typedef std::pair<String, String> PairStringString;
-typedef std::vector<PairStringString> OutputList;
+using PairStringString = std::pair<String, String>;
+using OutputList = std::vector<PairStringString>;
 
 class ExampleProvider;
 
@@ -85,7 +85,7 @@ public:
 public:
     OutputList& pOutputList;
     String pTitle;
-    typedef std::map<String, String> List;
+    using List = std::map<String, String>;
     List pList;
 
 }; // class MyStudyFinder
@@ -94,7 +94,7 @@ class ExampleProvider final : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor

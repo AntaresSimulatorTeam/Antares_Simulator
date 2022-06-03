@@ -44,7 +44,7 @@ class XCastTranslation final : public Renderer::Matrix<yint32>, public Renderer:
 {
 public:
     //! Ancestor
-    typedef Renderer::Matrix<Yuni::sint32> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<Yuni::sint32>;
 
 public:
     //! \name Constructor & Destructor

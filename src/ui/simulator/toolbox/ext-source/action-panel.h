@@ -43,7 +43,7 @@ class ActionPanel final : public Antares::Component::Panel
 {
 public:
     //! Array
-    typedef std::vector<ActionPanel*> Vector;
+    using Vector = std::vector<ActionPanel*>;
 
     enum
     {

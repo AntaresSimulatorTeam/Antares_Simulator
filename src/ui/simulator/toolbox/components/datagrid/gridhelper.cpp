@@ -341,7 +341,7 @@ public:
     }
 
 private:
-    typedef Renderer::IRenderer CellStyle;
+    using CellStyle = Renderer::IRenderer;
 
 private:
     void internalAppendCSSCode(wxString& s, CellStyle::CellStyle style)

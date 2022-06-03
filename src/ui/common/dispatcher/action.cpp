@@ -45,7 +45,7 @@ namespace Dispatcher
 namespace // anonymous
 {
 //! The Dispatcher manager
-typedef Yuni::Job::QueueService DispatcherServiceType;
+using DispatcherServiceType = Yuni::Job::QueueService;
 
 // The Dispatcher Service
 static DispatcherServiceType gDispatcher;

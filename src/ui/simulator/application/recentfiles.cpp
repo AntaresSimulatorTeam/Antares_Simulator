@@ -37,7 +37,7 @@ namespace Antares
 {
 namespace RecentFiles
 {
-typedef SmartPtr<wxConfig, Policy::Ownership::ReferenceCounted> WxConfigPtr;
+using WxConfigPtr = SmartPtr<wxConfig, Policy::Ownership::ReferenceCounted>;
 
 static bool TryToGetTheTitleFromStudyFolder(String& cstr,
                                             String& pathConvert,

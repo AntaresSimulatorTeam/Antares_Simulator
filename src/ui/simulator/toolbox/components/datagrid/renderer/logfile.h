@@ -45,7 +45,7 @@ class LogEntry
 {
 public:
     //! Vector of log entries
-    typedef std::vector<LogEntry*> Vector;
+    using Vector = std::vector<LogEntry*>;
     //! Verbosity type
     enum VerbosityType
     {
