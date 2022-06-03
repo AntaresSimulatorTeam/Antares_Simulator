@@ -227,7 +227,7 @@ public:
     bool enabled;
     //! Use adequacy patch for this area
     AdequacyPatch::AdequacyPatchMode adequacyPatchMode
-      = AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+      = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
     //! \name Associate data */
