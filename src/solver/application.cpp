@@ -493,8 +493,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
 void Application::saveElapsedTime()
 {
-    pTotalTimer.stop();
+    if (!pStudy)
+       return;
 
+    pTotalTimer.stop();
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
     TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
     // Write time data
