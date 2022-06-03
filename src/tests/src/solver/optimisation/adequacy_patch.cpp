@@ -7,7 +7,7 @@
 #include "adequacy_patch.h"
 
 #include <vector>
-#include <string>
+#include <tuple>
 
 static double origineExtremite = -1;
 static double extremiteOrigine = 5;
