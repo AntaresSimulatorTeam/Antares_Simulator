@@ -37,7 +37,6 @@
 #include "common-eco-adq.h"
 #include <set>
 #include "../optimisation/adequacy_patch.h"
-#include "../simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
 
