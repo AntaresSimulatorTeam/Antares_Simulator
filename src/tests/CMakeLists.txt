@@ -14,7 +14,6 @@ add_subdirectory(src)
 
 
 # end to end test require boost 1.6.x because for boost::test_tools::tolerance
-if(Boost_VERSION VERSION_GREATER 106000)
 # old versions of Boost don't contain a '.', also ignore them
 # example : Boost 1.53.0 returns 105300 as Boost_VERSION
 string(FIND ${Boost_VERSION} . RESULT_BOOST)
