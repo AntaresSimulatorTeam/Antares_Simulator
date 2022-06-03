@@ -12,9 +12,16 @@ endif()
 
 add_subdirectory(src)
 
-#end to end test require boost 1.6.x because for boost::test_tools::tolerance 
+
+# end to end test require boost 1.6.x because for boost::test_tools::tolerance
 if(Boost_VERSION VERSION_GREATER 106000)
+# old versions of Boost don't contain a '.', also ignore them
+# example : Boost 1.53.0 returns 105300 as Boost_VERSION
+string(FIND ${Boost_VERSION} . RESULT_BOOST)
+if ((${Boost_VERSION} VERSION_GREATER_EQUAL 1.60.0) AND NOT (${RESULT_BOOST} EQUAL -1))
     add_subdirectory(end-to-end)
+else()
+    message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()
 
 find_package(Python3 COMPONENTS Interpreter)
