@@ -403,7 +403,7 @@ Optimization::Optimization(wxWindow* parent) :
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC12 = button;
+        pBtnAdqPatchOutsideInside = button;
     }
     // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
     // Used in the first step of adequacy patch local matching rule.
@@ -419,7 +419,7 @@ Optimization::Optimization(wxWindow* parent) :
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC11 = button;
+        pBtnAdqPatchOutsideOutside = button;
     }
 
     {
@@ -558,11 +558,11 @@ void Optimization::refresh()
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC12,
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideInside,
                              study.parameters.setToZero12LinksForAdequacyPatch);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC11,
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideOutside,
                              study.parameters.setToZero11LinksForAdequacyPatch);
 
     // Unfeasible problem behavior
