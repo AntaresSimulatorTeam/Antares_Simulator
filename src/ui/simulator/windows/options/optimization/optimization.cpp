@@ -46,13 +46,10 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
 
     auto* label = Component::CreateLabel(parent, text, true);
 
