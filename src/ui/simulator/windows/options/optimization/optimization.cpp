@@ -399,7 +399,8 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuAdequacyPatch,
-                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -415,7 +416,8 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuAdequacyPatch,
-                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
