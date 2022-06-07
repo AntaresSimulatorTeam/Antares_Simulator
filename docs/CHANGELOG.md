@@ -1,6 +1,13 @@
 Antares Changelog
 =================
 
+v8.2.2 (04/2022)
+--------------------
+## Bug fixes
+- Fix solver crash on parsing command-line parameters #624
+### GUI
+- Fix crash occuring when switching to the links panel #658
+
 v8.2.1 (03/2022)
 --------------------
 ### Bug fixes

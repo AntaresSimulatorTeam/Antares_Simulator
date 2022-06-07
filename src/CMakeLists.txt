@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      2)
-set(ANTARES_VERSION_REVISION  1)
+set(ANTARES_VERSION_REVISION  2)
 set(ANTARES_VERSION_YEAR      2022)
 
 set(ANTARES_PUBLISHER "RTE France")
