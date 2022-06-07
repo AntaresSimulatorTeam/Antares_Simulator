@@ -15,7 +15,6 @@ runs:
       run: |
         cd docs
         cmake .
-        cmake --build .
 
         PDF_NAME=antares-general-reference-guide.pdf
         cd pdf-doc-generation-with-sphinx

@@ -1,7 +1,7 @@
 project(antares-doc NONE)
 cmake_minimum_required(VERSION 3.14)
 
-include("../version.cmake")
+include(../version.cmake)
 
 configure_file(index.md.in index.md)
 
