@@ -63,11 +63,6 @@ void ClusterItem::preloadImages()
     }
 }
 
-void ClusterItem::addAdditionalIcons(wxString& out) const
-{
-    // No additional icons should be added by default
-}
-
 bool ClusterItem::HtmlContent(wxString& out, Data::Cluster* cluster, const wxString& searchString)
 {
     bool highlight = false;

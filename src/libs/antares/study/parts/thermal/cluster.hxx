@@ -76,7 +76,7 @@ template<>
 class Into<Antares::Data::ThermalLaw>
 {
 public:
-    typedef Antares::Data::ThermalLaw TargetType;
+    using TargetType = Antares::Data::ThermalLaw;
     enum
     {
         valid = 1

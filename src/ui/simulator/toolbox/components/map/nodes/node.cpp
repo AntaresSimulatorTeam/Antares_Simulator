@@ -108,7 +108,7 @@ Node::~Node()
 /*!
 ** \brief Get the visivility for a layerId
 */
-const bool Node::isVisibleOnLayer(const size_t& layerID) const
+bool Node::isVisibleOnLayer(const size_t& layerID) const
 {
     if (pAttachedArea == nullptr)
         return false;
@@ -130,9 +130,6 @@ void Node::refreshCache(wxDC& dc)
             if (pX != ui.layerX[activeLayerId] || pY != ui.layerY[activeLayerId]
                 || (int)pColor.Red() != ui.layerColor[activeLayerId][0])
             {
-                bool test1 = activeLayerId == 1;
-                bool test2 = pId == "& psp-hub";
-
                 pX = ui.x = ui.layerX[activeLayerId];
                 pY = ui.y = ui.layerY[activeLayerId];
 
@@ -155,24 +152,12 @@ void Node::refreshCache(wxDC& dc)
         }
         else
         {
-            bool test1 = activeLayerId == 1;
-            bool test2 = pId == "& psp-hub";
             ui.layerX[activeLayerId] = ui.x;
             ui.layerY[activeLayerId] = ui.y;
             ui.layerColor[activeLayerId][0] = (int)pColor.Red();
             ui.layerColor[activeLayerId][1] = (int)pColor.Green();
             ui.layerColor[activeLayerId][2] = (int)pColor.Blue();
         }
-
-        /*ui.color[0] = ui.layerColor[pManager.getActiveLayerId()][0] = (int)pColor.Red();
-        ui.color[1] = ui.layerColor[pManager.getActiveLayerId()][1] =  (int)pColor.Green();
-        ui.color[2] = ui.layerColor[pManager.getActiveLayerId()][2] = (int)pColor.Blue();
-
-        pColor.Set(
-                (unsigned char)Yuni::Math::MinMax<int>(ui.color[0], 0, 255),
-                (unsigned char)Yuni::Math::MinMax<int>(ui.color[1], 0, 255),
-                (unsigned char)Yuni::Math::MinMax<int>(ui.color[2], 0, 255),
-                wxALPHA_OPAQUE);*/
     }
 
     const wxSize size = dc.GetTextExtent(pCaption);

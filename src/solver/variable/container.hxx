@@ -362,7 +362,7 @@ void List<NextT>::exportSurveyResults(bool global,
     if (global)
     {
         // alias to the type of the report builder
-        typedef SurveyReportBuilder<true, ListType> Builder;
+        using Builder = SurveyReportBuilder<true, ListType>;
         // Building the survey results for each possible state
         Builder::Run(*this, *survey);
 
@@ -377,7 +377,7 @@ void List<NextT>::exportSurveyResults(bool global,
     else
     {
         // alias to the type of the report builder
-        typedef SurveyReportBuilder<false, ListType> Builder;
+        using Builder = SurveyReportBuilder<false, ListType>;
         // Building the survey results for each possible state
         Builder::Run(*this, *survey, numSpace);
     }

@@ -41,10 +41,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*)
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
-                                                            const int,
-                                                            const int,
-                                                            const int);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
@@ -87,7 +84,6 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void*, uint, int);
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, char);
 
 /*------------------------------*/
 

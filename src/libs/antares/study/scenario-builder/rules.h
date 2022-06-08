@@ -50,9 +50,9 @@ public:
     //! Smart pointer
     using Ptr = std::shared_ptr<Rules>;
     //! Map
-    typedef std::map<RulesScenarioName, Ptr> Map;
+    using Map = std::map<RulesScenarioName, Ptr>;
     //! Map ID
-    typedef std::map<int, Ptr> MappingID;
+    using MappingID = std::map<int, Ptr>;
 
 public:
     //! \name Constructor & Destructor

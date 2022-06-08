@@ -104,7 +104,7 @@ private:
     class DirectoryContext final : private Yuni::NonCopyable<DirectoryContext>
     {
     public:
-        typedef std::stack<DirectoryContext*> Stack;
+        using Stack = std::stack<DirectoryContext*>;
 
         explicit DirectoryContext(const String& path) : info(path), cursor(info.begin())
         {

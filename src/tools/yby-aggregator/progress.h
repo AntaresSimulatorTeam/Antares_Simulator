@@ -36,7 +36,7 @@ class Progress final : public Yuni::Thread::Timer
 {
 public:
     //! The threading policy
-    typedef Yuni::Thread::Timer::ThreadingPolicy ThreadingPolicy;
+    using ThreadingPolicy = Yuni::Thread::Timer::ThreadingPolicy;
     //! Different states related to the progression
     enum State
     {

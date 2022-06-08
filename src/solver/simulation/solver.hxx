@@ -30,9 +30,9 @@
 #include "../variable/constants.h"
 #include <antares/logs.h>
 #include <antares/date.h>
+#include <antares/timeelapsed.h>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
-#include <antares/timeelapsed.h>
 #include "../aleatoire/alea_fonctions.h"
 #include "timeseries-numbers.h"
 #include "apply-scenario.h"
@@ -70,7 +70,8 @@ public:
             bool pPerformCalculations,
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
-            bool pYearByYear) :
+            bool pYearByYear,
+            TimeElapsed::ContentHandler* timeElapsedContentHandler) :
      simulationObj(pSimulationObj),
      y(pY),
      yearsIndices(pYearsIndices),
@@ -82,7 +83,8 @@ public:
      performCalculations(pPerformCalculations),
      study(pStudy),
      state(pState),
-     yearByYear(pYearByYear)
+     yearByYear(pYearByYear),
+     pTimeElapsedContentHandler(timeElapsedContentHandler)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -101,6 +103,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
+    TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
 
 private:
     /*
@@ -178,7 +181,11 @@ private:
 
             // 4 - Hydraulic ventilation
             if (not study.parameters.adequacyDraft())
+            {
+                TimeElapsed::Timer time(
+                  "Hydraulic ventilation", "hydro_ventilation", true, pTimeElapsedContentHandler);
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+            }
 
             // Updating the state
             state[numSpace].year = y;
@@ -231,10 +238,12 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
+                TimeElapsed::Timer timer("Year-by-year export", "yby_export", false, pTimeElapsedContentHandler);
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
+                timer.stop();
             }
         }
         else
@@ -255,7 +264,9 @@ private:
 };
 
 template<class Impl>
-inline ISimulation<Impl>::ISimulation(Data::Study& study, const ::Settings& settings) :
+inline ISimulation<Impl>::ISimulation(Data::Study& study,
+                                      const ::Settings& settings,
+                                      TimeElapsed::ContentHandler* handler) :
  ImplementationType(study),
  study(study),
  settings(settings),
@@ -264,7 +275,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study, const ::Settings& sett
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
- pAnnualCostsStatistics(study)
+ pAnnualCostsStatistics(study),
+ pTimeElapsedContentHandler(handler)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -329,7 +341,7 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info();
         logs.info() << " Only the preprocessors are enabled.";
-        regenerateTimeSeries<true>(0);
+        regenerateTimeSeries(0);
 
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -353,7 +365,7 @@ void ISimulation<Impl>::run()
         // Now, we will prepare the time-series numbers
         if (not TimeSeriesNumbers::Generate(study))
         {
-            logs.fatal() << "An unrecovery error has occured. Can not continue.";
+            logs.fatal() << "An unrecoverable error has occured. Can not continue.";
             AntaresSolverEmergencyShutdown(); // will never return
             return;
         }
@@ -373,16 +385,22 @@ void ISimulation<Impl>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
 
         logs.info() << " Starting the simulation";
-        TimeElapsed time("MC Years");
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
-        loopThroughYears(0, finalYear, state);
-
+        {
+            TimeElapsed::Timer mcTimer("MC Years", "mc_years", true, pTimeElapsedContentHandler);
+            loopThroughYears(0, finalYear, state);
+            mcTimer.stop();
+        }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         Solver::TSGenerator::DestroyAll(study);
 
         // Post operations
-        ImplementationType::simulationEnd();
+        {
+            TimeElapsed::Timer postproTimer("Post-processing", "postpro", true, pTimeElapsedContentHandler);
+            ImplementationType::simulationEnd();
+            postproTimer.stop();
+        }
 
         ImplementationType::variables.simulationEnd();
 
@@ -639,7 +657,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         requiredMemoryForWeeklyPb += 10 * NombreDePasDeTemps * sizeof(double);
         requiredMemoryForWeeklyPb += NombreDePasDeTemps * sizeof(void*);
@@ -676,7 +694,7 @@ void ISimulation<Impl>::estimateMemoryForWeeklyPb(Antares::Data::StudyMemoryUsag
 
     for (int k = 0; k < (int)nbAreas; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         requiredMemoryForWeeklyPb += sizeof(PALIERS_THERMIQUES);
         requiredMemoryForWeeklyPb += sizeof(ENERGIES_ET_PUISSANCES_HYDRAULIQUES);
@@ -1019,7 +1037,6 @@ void ISimulation<Impl>::estimateMemoryForSplxPb(Antares::Data::StudyMemoryUsage&
 }
 
 template<class Impl>
-template<bool PreproOnly>
 void ISimulation<Impl>::regenerateTimeSeries(uint year)
 {
     // A preprocessor can be launched for several reasons:
@@ -1029,33 +1046,46 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
 
     using namespace Solver::TSGenerator;
     // Load
-    if (pData.haveToRefreshTSLoad
-        && (PreproOnly || !year || ((year % pData.refreshIntervalLoad) == 0)))
+    if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
+    {
+        TimeElapsed::Timer timer(
+          "TS generation for load", "tsgen_load", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
+        timer.stop();
+    }
     // Solar
-    if (pData.haveToRefreshTSSolar
-        && (PreproOnly || !year || ((year % pData.refreshIntervalSolar) == 0)))
+    if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
+    {
+        TimeElapsed::Timer timer(
+          "TS generation for solar", "tsgen_solar", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
+        timer.stop();
+    }
     // Wind
-    if (pData.haveToRefreshTSWind
-        && (PreproOnly || !year || ((year % pData.refreshIntervalWind) == 0)))
+    if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
+    {
+        TimeElapsed::Timer timer(
+          "TS generation for wind", "tsgen_wind", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
+        timer.stop();
+    }
     // Hydro
-    if (pData.haveToRefreshTSHydro
-        && (PreproOnly || !year || ((year % pData.refreshIntervalHydro) == 0)))
+    if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
+    {
+        TimeElapsed::Timer timer(
+          "TS generation for hydro", "tsgen_hydro", true, pTimeElapsedContentHandler);
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
+        timer.stop();
+    }
     // Thermal
-    Data::GlobalTSGenerationBehavior globalBehavior;
-    if (pData.haveToRefreshTSThermal)
+    const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
-        globalBehavior = Data::GlobalTSGenerationBehavior::generate;
+        TimeElapsed::Timer timer(
+          "TS generation for thermal", "tsgen_thermal", true, pTimeElapsedContentHandler);
+        GenerateThermalTimeSeries(
+          study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
+        timer.stop();
     }
-    else
-    {
-        globalBehavior = Data::GlobalTSGenerationBehavior::doNotGenerate;
-    }
-    const bool refresh = PreproOnly || !year || ((year % pData.refreshIntervalThermal) == 0);
-    GenerateThermalTimeSeries(study, year, globalBehavior, refresh);
 }
 
 template<class Impl>
@@ -1083,23 +1113,20 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         // Do we refresh just before this year ? If yes a new set of parallel years has to be
         // created
         bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (!y || ((y % pData.refreshIntervalLoad) == 0));
+        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
         refreshing
-          = refreshing
-            || (pData.haveToRefreshTSSolar && (!y || ((y % pData.refreshIntervalSolar) == 0)));
+          = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
         refreshing
-          = refreshing
-            || (pData.haveToRefreshTSWind && (!y || ((y % pData.refreshIntervalWind) == 0)));
+          = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
         refreshing
-          = refreshing
-            || (pData.haveToRefreshTSHydro && (!y || ((y % pData.refreshIntervalHydro) == 0)));
-        refreshing
-          = refreshing
-            || (pData.haveToRefreshTSThermal && (!y || ((y % pData.refreshIntervalThermal) == 0)));
+          = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
 
         // Some thermal clusters may override the global parameter.
         // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        refreshing = refreshing || study.runtime->thermalTSRefresh;
+        bool haveToRefreshTSThermal
+          = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
+        refreshing
+          = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
@@ -1126,8 +1153,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
             if (refreshing)
             {
                 set->regenerateTS = true;
-                set->yearForTSgeneration = y; // year number to be given to function
-                                              // "regenerateTimeSeries<false>(y /* year */)"
+                set->yearForTSgeneration = y;
             }
         }
 
@@ -1518,7 +1544,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
         if (set_it->regenerateTS)
-            regenerateTimeSeries<false>(set_it->yearForTSgeneration);
+            regenerateTimeSeries(set_it->yearForTSgeneration);
 
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
 
@@ -1585,7 +1611,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    performCalculations,
                                                    study,
                                                    state,
-                                                   pYearByYear));
+                                                   pYearByYear,
+                                                   pTimeElapsedContentHandler));
 
         } // End loop over years of the current set of parallel years
 

@@ -44,15 +44,15 @@ class Context
 public:
     using Ptr = std::shared_ptr<Context>;
     //! Map of properties
-    typedef std::map<Yuni::String, Yuni::String> Properties;
+    using Properties = std::map<Yuni::String, Yuni::String>;
     //! Local view
-    typedef std::map<Yuni::CString<50, false>, IAction::Ptr> LocalView;
-    typedef std::map<Yuni::CString<50, false>, LocalView> Views;
+    using LocalView = std::map<Yuni::CString<50, false>, IAction::Ptr>;
+    using Views = std::map<Yuni::CString<50, false>, LocalView>;
 
     //! Area name mapping
-    typedef std::map<Data::AreaName, bool> AreaNameMappingForceCreate;
-    typedef std::map<Data::AreaName, bool> PlantNameMappingForceCreate;
-    typedef std::map<Data::ConstraintName, bool> ConstraintMappingForceCreate;
+    using AreaNameMappingForceCreate = std::map<Data::AreaName, bool>;
+    using PlantNameMappingForceCreate = std::map<Data::AreaName, bool>;
+    using ConstraintMappingForceCreate = std::map<Data::ConstraintName, bool>;
 
 public:
     //! \name Constructor & Destructor

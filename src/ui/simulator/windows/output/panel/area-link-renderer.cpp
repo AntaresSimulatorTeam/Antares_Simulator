@@ -37,7 +37,7 @@ namespace Private
 namespace OutputViewerData
 {
 // convenient alias
-typedef Antares::Component::Datagrid::Renderer::IRenderer IRenderer;
+using IRenderer = Antares::Component::Datagrid::Renderer::IRenderer;
 
 AreaLinkRenderer::AreaLinkRenderer(OutputViewerComponent* component,
                                    const Antares::Matrix<CellType>* matrix) :
