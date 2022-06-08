@@ -47,13 +47,13 @@ namespace Economy
         //! Unit
         static const char* Unit()
         {
-            return "Profit - Euro";
+            return "Euro";
         }
 
         //! The short description of the variable
         static const char* Description()
         {
-            return "Profit costs by all the clusters";
+            return "Profit for thermal units";
         }
 
         //! The expected results
@@ -315,17 +315,16 @@ namespace Economy
         void hourForEachThermalCluster(State& state, unsigned int numSpace)
         {
             // Useful local variables
-            double* MarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
+            double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
             auto* cluster = state.thermalCluster;
             double hourlyClusterProduction = state.thermalClusterProduction;
             uint hourInTheWeek = state.hourInTheWeek;
             uint hourInTheYear = state.hourInTheYear;
-            int modulationCostColumn = Data::thermalModulationCost;
 
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear] =
                 hourlyClusterProduction *
-                (- MarginalCosts[hourInTheWeek] - cluster->marginalCost * cluster->modulation[modulationCostColumn][hourInTheYear]);
+                (- areaMarginalCosts[hourInTheWeek] - cluster->marginalCost * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
 
             // Next item in the list
             NextType::hourForEachThermalCluster(state, numSpace);
