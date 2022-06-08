@@ -265,10 +265,6 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
         solver = Antares::Optimization::convert_to_MPSolver(Probleme);
     }
 
-    // [CUSTOM - TO REMOVE]
-    solver->EnableOutput();
-    solver->SetSolverSpecificParametersAsString("THREADS 1");
-
     MPSolverParameters params;
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
