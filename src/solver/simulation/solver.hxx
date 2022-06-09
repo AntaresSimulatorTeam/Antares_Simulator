@@ -365,7 +365,7 @@ void ISimulation<Impl>::run()
         // Now, we will prepare the time-series numbers
         if (not TimeSeriesNumbers::Generate(study))
         {
-            logs.fatal() << "An unrecovery error has occured. Can not continue.";
+            logs.fatal() << "An unrecoverable error has occured. Can not continue.";
             AntaresSolverEmergencyShutdown(); // will never return
             return;
         }

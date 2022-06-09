@@ -225,7 +225,11 @@ void Application::prepare(int argc, char* argv[])
     resetLogFilename();
 
     // Starting !
+#ifdef GIT_SHA1_SHORT_STRING
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " (" << GIT_SHA1_SHORT_STRING << ")";
+#else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
+#endif
     WriteHostInfoIntoLogs();
     logs.info();
 
