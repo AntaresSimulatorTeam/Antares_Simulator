@@ -45,33 +45,33 @@ namespace Simulation
 {
 struct setOfParallelYears
 {
-    // Un lot d'année à exécuter en parallèle.
-    // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
+    // Un lot d'annï¿½e ï¿½ exï¿½cuter en parallï¿½le.
+    // En fonction d'une ï¿½ventuelle play-list, certaines seront jouï¿½es et d'autres non.
 
 public:
-    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
-    // play-list "trouée")
+    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouï¿½es en cas de
+    // play-list "trouï¿½e")
     std::vector<unsigned int> yearsIndices;
 
-    // Une annee doit-elle être rejouée ?
+    // Une annee doit-elle ï¿½tre rejouï¿½e ?
     std::map<uint, bool> yearFailed;
 
-    // Associe le numero d'une année jouée à l'indice de l'espace
+    // Associe le numero d'une annï¿½e jouï¿½e ï¿½ l'indice de l'espace
     std::map<unsigned int, unsigned int> performedYearToSpace;
 
-    // L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
+    // L'inverse : pour une annï¿½e jouï¿½e, associe l'indice de l'espace au numero de l'annï¿½e
     std::map<unsigned int, unsigned int> spaceToPerformedYear;
 
-    // Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
+    // Pour chaque annï¿½e, est-elle la premiï¿½re ï¿½ devoir ï¿½tre jouï¿½e dans son lot d'annï¿½es ?
     std::map<unsigned int, bool> isFirstPerformedYearOfASet;
 
-    // Pour chaque année du lot, est-elle jouée ou non ?
+    // Pour chaque annï¿½e du lot, est-elle jouï¿½e ou non ?
     std::map<unsigned int, bool> isYearPerformed;
 
-    // Nbre d'années en parallele vraiment jouées pour ce lot
+    // Nbre d'annï¿½es en parallele vraiment jouï¿½es pour ce lot
     unsigned int nbPerformedYears;
 
-    // Nbre d'années en parallele jouées ou non pour ce lot
+    // Nbre d'annï¿½es en parallele jouï¿½es ou non pour ce lot
     unsigned int nbYears;
 
     // Regenere-t-on des times series avant de jouer les annees du lot courant
@@ -144,7 +144,8 @@ public:
         systemCost.setNbPerformedYears(n);
         criterionCost1.setNbPerformedYears(n);
         criterionCost2.setNbPerformedYears(n);
-        optimizationTime.setNbPerformedYears(n);
+        optimizationTime1.setNbPerformedYears(n);
+        optimizationTime2.setNbPerformedYears(n);
     };
 
     void endStandardDeviations()
@@ -152,7 +153,8 @@ public:
         systemCost.endStandardDeviation();
         criterionCost1.endStandardDeviation();
         criterionCost2.endStandardDeviation();
-        optimizationTime.endStandardDeviation();
+        optimizationTime1.endStandardDeviation();
+        optimizationTime2.endStandardDeviation();
     };
 
     void writeToOutput()
@@ -218,10 +220,16 @@ private:
         Yuni::IO::File::Stream file;
         if (file.open(optimizationTimeFilename, Yuni::IO::OpenMode::append))
         {
-            file << "EXP (ms) : " << optimizationTime.costAverage << "\n";
-            file << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
-            file << "MIN (ms) : " << optimizationTime.costMin << "\n";
-            file << "MAX (ms) : " << optimizationTime.costMax << "\n";
+            file << "First optimization :\n";
+            file << "EXP (ms) : " << optimizationTime1.costAverage << "\n";
+            file << "STD (ms) : " << optimizationTime1.costStdDeviation << "\n";
+            file << "MIN (ms) : " << optimizationTime1.costMin << "\n";
+            file << "MAX (ms) : " << optimizationTime1.costMax << "\n";
+            file << "Second optimization :\n";
+            file << "EXP (ms) : " << optimizationTime2.costAverage << "\n";
+            file << "STD (ms) : " << optimizationTime2.costStdDeviation << "\n";
+            file << "MIN (ms) : " << optimizationTime2.costMin << "\n";
+            file << "MAX (ms) : " << optimizationTime2.costMax << "\n";
         }
     }
 
@@ -230,7 +238,8 @@ public:
     costStatistics systemCost;
     costStatistics criterionCost1;
     costStatistics criterionCost2;
-    costStatistics optimizationTime;
+    costStatistics optimizationTime1;
+    costStatistics optimizationTime2;
 
 private:
     Yuni::String systemCostFilename;

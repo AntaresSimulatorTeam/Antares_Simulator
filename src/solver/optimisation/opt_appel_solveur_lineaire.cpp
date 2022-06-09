@@ -117,6 +117,12 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
+    optimizationStatistics* optimizationStatistics_object;
+    if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 1)
+        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_FirstOptim);
+    else if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
+        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_SecondOptim);
+
 RESOLUTION:
 
     if (ProbSpx == nullptr && solver == nullptr)
@@ -173,7 +179,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
+            optimizationStatistics_object->addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -265,7 +271,7 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
+    optimizationStatistics_object->addSolveTime(measure.duration_ms());
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {

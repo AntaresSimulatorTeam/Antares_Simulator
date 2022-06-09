@@ -573,7 +573,8 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
-    optimizationStatistics optimizationStatistics_object;
+    optimizationStatistics optimizationStatistics_FirstOptim;
+    optimizationStatistics optimizationStatistics_SecondOptim;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;

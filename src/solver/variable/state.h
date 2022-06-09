@@ -260,8 +260,10 @@ public:
     double optimalSolutionCost1;
     // Sum of the weekly optimal costs over the year (second optimisation step)
     double optimalSolutionCost2;
-    // Average time spent in optimization over the year (ms)
-    double averageOptimizationTime;
+    // Average time spent in first optimization over the year (ms)
+    double averageOptimizationTime1;
+    // Average time spent in second optimization over the year (ms)
+    double averageOptimizationTime2;
     // -----------------------------------------------------------------
 }; // class State
 

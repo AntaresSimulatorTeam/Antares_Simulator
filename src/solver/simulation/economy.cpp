@@ -225,10 +225,15 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
-    auto& optStat = pProblemesHebdo[numSpace]->optimizationStatistics_object;
-    state.averageOptimizationTime = optStat.getAverageSolveTime();
-    optStat.reset();
+    logs.info() << "(First optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim.toString();
+    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim;
+    state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
+    firstOptStat.reset();
+
+    logs.info() << "(Second optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics_SecondOptim.toString();
+    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_SecondOptim;
+    state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
+    secondOptStat.reset();
     return true;
 }
 
