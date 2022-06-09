@@ -3,7 +3,7 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
 #include <yuni/core/string.h>

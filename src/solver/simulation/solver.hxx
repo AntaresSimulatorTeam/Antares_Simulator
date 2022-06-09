@@ -30,7 +30,7 @@
 #include "../variable/constants.h"
 #include <antares/logs.h>
 #include <antares/date.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
 #include "../aleatoire/alea_fonctions.h"
@@ -71,7 +71,7 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::ContentHandler* timeElapsedContentHandler) :
+            Benchmarking::ContentHandler* benchmarkingContentHandler) :
      simulationObj(pSimulationObj),
      y(pY),
      yearsIndices(pYearsIndices),
@@ -84,7 +84,7 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pBenchmarkingContentHandler(timeElapsedContentHandler)
+     pBenchmarkingContentHandler(benchmarkingContentHandler)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }

@@ -5,7 +5,7 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"

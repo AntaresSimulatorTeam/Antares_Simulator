@@ -31,7 +31,7 @@
 #include <antares/study.h>
 #include <antares/logs.h>
 #include <antares/study/fwd.h> // PowerFluctuations
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 
 #include <yuni/core/string.h>
 #include "../variable/state.h"
