@@ -1,7 +1,6 @@
 #include <antares/exception/LoadingError.hpp>
 
 #include "csv_writer.h"
-#include "../logs.h"
 
 namespace Benchmarking
 {

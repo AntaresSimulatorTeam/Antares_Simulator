@@ -342,6 +342,8 @@ set(SRC_BENCHMARKING
     benchmarking/i_writer.h
     benchmarking/csv_writer.h
     benchmarking/csv_writer.cpp
+    benchmarking/studyinfo.h
+    benchmarking/studyinfo.cpp
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
