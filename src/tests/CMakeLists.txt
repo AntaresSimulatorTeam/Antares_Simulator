@@ -17,7 +17,7 @@ add_subdirectory(src)
 # example : Boost 1.53.0 returns 105300 as Boost_VERSION
 string(FIND ${Boost_VERSION} . RESULT_BOOST)
 if (${RESULT_BOOST} EQUAL -1) # e.g 105300
-  if (GREATER_EQUAL ${Boost_Version} 106000)
+  if (${Boost_Version} GREATER_EQUAL 106000)
     set(RECENT_BOOST 1)
   else()
     set(RECENT_BOOST 0)
