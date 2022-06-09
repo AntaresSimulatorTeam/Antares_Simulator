@@ -348,7 +348,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
         value = "inside";
         break;
     default:
-        value = "outside"; //default physicalAreaOutsideAdqPatch
+        value = "outside"; // default physicalAreaOutsideAdqPatch
         break;
     }
     section->add("adequacy-patch-mode", value);

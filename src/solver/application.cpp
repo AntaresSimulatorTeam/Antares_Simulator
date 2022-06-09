@@ -104,8 +104,7 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
     {
         const bool containsAdqArea
           = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode
-                       == AdequacyPatch::physicalAreaInsideAdqPatch;
+                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
             });
         if (!containsAdqArea)
             throw Error::NoAreaInsideAdqPatchMode();
@@ -226,7 +225,8 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " (" << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+                      << GIT_SHA1_SHORT_STRING << ")";
 #else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
 #endif
