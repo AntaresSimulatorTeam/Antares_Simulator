@@ -41,7 +41,7 @@ static inline sint64 MilliSecTimer()
     return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 void Timer::stop()
 {
@@ -64,4 +64,4 @@ Timer::Timer(const AnyString& logText,
 {
     pStartTime = MilliSecTimer();
 }
-} // namespace TimeElapsed
+} // namespace Benchmarking

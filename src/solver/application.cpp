@@ -147,7 +147,7 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
+Application::Application() : pTotalTimer("Simulation", "total", true, &pBenchmarkingContentHandler)
 {
     resetProcessPriority();
 }
@@ -391,8 +391,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    TimeElapsed::Timer loadTimer(
-      "Study loading", "study_loading", true, &pTimeElapsedContentHandler);
+    Benchmarking::Timer loadTimer(
+      "Study loading", "study_loading", true, &pBenchmarkingContentHandler);
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
@@ -500,7 +500,7 @@ void Application::saveElapsedTime()
     pTotalTimer.stop();
 
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
+    Benchmarking::CSVWriter writer(pStudy->buffer, &pBenchmarkingContentHandler);
     // Write time data
     writer.flush();
 }

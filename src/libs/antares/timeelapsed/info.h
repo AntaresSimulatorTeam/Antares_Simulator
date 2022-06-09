@@ -5,7 +5,7 @@
 
 #include <map>
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 struct TimeInfo
 {
@@ -17,4 +17,4 @@ struct TimeInfo
 };
 
 using TimeInfoMapType = std::map<Yuni::ShortString256, TimeInfo>;
-} // namespace TimeElapsed
+} // namespace Benchmarking

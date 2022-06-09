@@ -3,7 +3,7 @@
 #include "csv_writer.h"
 #include "../logs.h"
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 CSVWriter::CSVWriter(const Yuni::String& filename, ContentHandler* handler) : contentHandler_(handler)
 {
@@ -26,4 +26,4 @@ void CSVWriter::flush()
         mOutputFile << label << "\t" << info.duration_ms_ << "\t" << info.numberOfCalls_ << "\n";
     }
 }
-} // namespace TimeElapsed
+} // namespace Benchmarking

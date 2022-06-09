@@ -1,6 +1,6 @@
 #include "content_handler.h"
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 void ContentHandler::append(const Yuni::ShortString256& text, Yuni::sint64 duration_ms)
 {
@@ -37,4 +37,4 @@ ContentHandler::const_iterator ContentHandler::cend() const
     return mInfoMap.cend();
 }
 
-} // namespace TimeElapsed
+} // namespace Benchmarking

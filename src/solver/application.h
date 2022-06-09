@@ -89,8 +89,8 @@ private:
 
     bool shouldExecute = true;
 
-    TimeElapsed::ContentHandler pTimeElapsedContentHandler;
-    TimeElapsed::Timer pTotalTimer;
+    Benchmarking::ContentHandler pBenchmarkingContentHandler;
+    Benchmarking::Timer pTotalTimer;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

@@ -66,7 +66,7 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, const ::Settings& settings, TimeElapsed::ContentHandler* handler);
+    ISimulation(Data::Study& study, const ::Settings& settings, Benchmarking::ContentHandler* handler);
     //! Destructor
     ~ISimulation();
     //@}
@@ -174,7 +174,7 @@ private:
     annualCostsStatistics pAnnualCostsStatistics;
 
     //! Aggregate execution times into a single file (optional)
-    TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
+    Benchmarking::ContentHandler* pBenchmarkingContentHandler;
 }; // class ISimulation
 
 } // namespace Simulation

@@ -6,7 +6,7 @@
 #include "info.h"
 #include "i_writer.h"
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 class ContentHandler final
 {
@@ -24,4 +24,4 @@ public:
 private:
     TimeInfoMapType mInfoMap;
 };
-} // namespace TimeElapsed
+} // namespace Benchmarking

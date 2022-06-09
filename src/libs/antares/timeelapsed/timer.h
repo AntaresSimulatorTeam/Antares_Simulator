@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 
-namespace TimeElapsed
+namespace Benchmarking
 {
 class ContentHandler;
 
@@ -64,6 +64,6 @@ private:
     //! Aggregation into a single file for automation
     ContentHandler* pContentHandler;
 }; // class Timer
-} // namespace TimeElapsed
+} // namespace Benchmarking
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
