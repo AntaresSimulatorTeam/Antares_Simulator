@@ -1,7 +1,5 @@
 #pragma once
 
-#include "info.h"
-
 namespace Benchmarking
 {
 class IWriter

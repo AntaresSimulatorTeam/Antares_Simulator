@@ -3,7 +3,7 @@
 #include <yuni/yuni.h>
 #include <yuni/string.h>
 
-#include "info.h"
+#include "timeinfo.h"
 #include "i_writer.h"
 
 namespace Benchmarking
