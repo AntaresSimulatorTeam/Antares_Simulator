@@ -1123,7 +1123,6 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
         else
         {
             set->isYearPerformed[y] = false;
-            set->isFirstPerformedYearOfASet[y] = false;
         }
 
         // Do we build a new set at next iteration (for years to be executed or not) ?
@@ -1502,7 +1501,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
 
         std::vector<unsigned int>::iterator year_it;
-        std::vector<unsigned int> yearsIndicesCopy(set_it->yearsIndices);
 
 #if HYDRO_HOT_START != 0
         // Printing on columns the years chained by final levels
