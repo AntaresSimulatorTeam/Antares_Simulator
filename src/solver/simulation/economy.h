@@ -28,6 +28,7 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include <yuni/yuni.h>
+#include <memory>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
@@ -41,6 +42,30 @@ namespace Solver
 {
 namespace Simulation
 {
+class EconomyWeeklyOptimization
+{
+public:
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
+    void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
+
+protected:
+    PROBLEME_HEBDO** pProblemesHebdo;
+};
+
+class AdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    AdequacyPatchOptimization();
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
+};
+
+class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    NoAdequacyPatchOptimization();
+    void solve(Variable::State&, int, uint numSpace) override;
+};
+
 class Economy
 {
 public:
@@ -100,7 +125,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-
+    std::unique_ptr<EconomyWeeklyOptimization> weeklyOptProblem;
 }; // class Economy
 
 } // namespace Simulation
