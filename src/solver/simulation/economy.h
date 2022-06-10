@@ -45,8 +45,10 @@ namespace Simulation
 class EconomyWeeklyOptimization
 {
 public:
+    using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
     virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
     void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
+    static Ptr create(bool adqPatchEnabled);
 
 protected:
     PROBLEME_HEBDO** pProblemesHebdo;

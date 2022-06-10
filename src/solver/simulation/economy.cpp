@@ -50,10 +50,21 @@ enum
     nbHoursInAWeek = 168,
 };
 
-// Interface class
+// Interface class + factory
 void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
 {
     pProblemesHebdo = problemesHebdo;
+}
+
+std::unique_ptr<EconomyWeeklyOptimization> EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+{
+    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
+    if (adqPatchEnabled)
+        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+    else
+        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+
+    return nullptr;
 }
 
 // Adequacy patch
@@ -120,17 +131,6 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.problemeHebdo = pProblemesHebdo[numSpace];
 }
 
-static std::unique_ptr<EconomyWeeklyOptimization> weeklyOptimizationFactory(bool adqPatchEnabled)
-{
-    using EcoWeeklyPtr = std::unique_ptr<EconomyWeeklyOptimization>;
-    if (adqPatchEnabled)
-        return EcoWeeklyPtr(new AdequacyPatchOptimization());
-    else
-        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
-
-    return nullptr;
-}
-
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
@@ -151,7 +151,8 @@ bool Economy::simulationBegin()
             }
         }
 
-        weeklyOptProblem = weeklyOptimizationFactory(study.parameters.include.adequacyPatch);
+        weeklyOptProblem
+          = EconomyWeeklyOptimization::create(study.parameters.include.adequacyPatch);
 
         SIM_InitialisationResultats();
     }
