@@ -55,7 +55,7 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_virtual_no_change_expect
 {
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
-      adqmVirtualArea, adqmVirtualArea, true /*SetNTCOutsideToOutsideToZero*/, false);
+      virtualArea, virtualArea, true /*SetNTCOutsideToOutsideToZero*/, false);
     BOOST_TEST(Xmax == origineExtremite);
     BOOST_TEST(Xmin == -extremiteOrigine);
 }
@@ -65,10 +65,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_virtual_no_change_expect
 BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_inside_no_change_expected)
 {
     double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(adqmVirtualArea,
-                                                      adqmPhysicalAreaInsideAdqPatch,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
+    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
+      virtualArea, physicalAreaInsideAdqPatch, true /*SetNTCOutsideToOutsideToZero*/, false);
     BOOST_TEST(Xmax == origineExtremite);
     BOOST_TEST(Xmin == -extremiteOrigine);
 }
@@ -78,10 +76,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_inside_no_change_expecte
 BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_outside_no_change_expected)
 {
     double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(adqmVirtualArea,
-                                                      adqmPhysicalAreaOutsideAdqPatch,
-                                                      true /*SetNTCOutsideToOutsideToZero*/,
-                                                      false);
+    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
+      virtualArea, physicalAreaOutsideAdqPatch, true /*SetNTCOutsideToOutsideToZero*/, false);
     BOOST_TEST(Xmax == origineExtremite);
     BOOST_TEST(Xmin == -extremiteOrigine);
 }
@@ -91,8 +87,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_outside_no_change_expect
 BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_zero_expected_both_directions)
 {
     double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(adqmPhysicalAreaOutsideAdqPatch,
-                                                      adqmPhysicalAreaOutsideAdqPatch,
+    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
+                                                      physicalAreaOutsideAdqPatch,
                                                       true /*SetNTCOutsideToOutsideToZero*/,
                                                       false);
     BOOST_TEST(Xmax == 0);
@@ -106,7 +102,7 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_no_change_expect
 {
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
-      adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch, false, false);
+      physicalAreaOutsideAdqPatch, physicalAreaOutsideAdqPatch, false, false);
 
     BOOST_TEST(Xmax == origineExtremite);
     BOOST_TEST(Xmin == -extremiteOrigine);
@@ -118,7 +114,7 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_inside_outside_zero_expected_bot
 {
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
-      adqmPhysicalAreaInsideAdqPatch, adqmPhysicalAreaOutsideAdqPatch, false, false);
+      physicalAreaInsideAdqPatch, physicalAreaOutsideAdqPatch, false, false);
     BOOST_TEST(Xmax == 0);
     BOOST_TEST(Xmin == 0);
 }
@@ -128,8 +124,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_inside_outside_zero_expected_bot
 BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_zero_expected_both_directions)
 {
     double Xmin, Xmax;
-    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(adqmPhysicalAreaOutsideAdqPatch,
-                                                      adqmPhysicalAreaInsideAdqPatch,
+    std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(physicalAreaOutsideAdqPatch,
+                                                      physicalAreaInsideAdqPatch,
                                                       false,
                                                       true /*SetNTCOutsideToInsideToZero*/);
     BOOST_TEST(Xmax == 0);
@@ -143,7 +139,7 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_change_expected_o
 {
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
-      adqmPhysicalAreaOutsideAdqPatch, adqmPhysicalAreaInsideAdqPatch, false, false);
+      physicalAreaOutsideAdqPatch, physicalAreaInsideAdqPatch, false, false);
     BOOST_TEST(Xmax == origineExtremite);
     BOOST_TEST(Xmin == 0);
 }
