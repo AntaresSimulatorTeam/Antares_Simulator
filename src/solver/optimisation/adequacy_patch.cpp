@@ -34,107 +34,107 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-        AdequacyPatchMode OriginNodeAdequacyPatchType,
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch,
-        bool SetToZero11LinksForAdequacyPatch)
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
+  AdequacyPatchMode OriginNodeAdequacyPatchType,
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch)
+{
+    switch (OriginNodeAdequacyPatchType)
     {
-        switch (OriginNodeAdequacyPatchType)
-        {
-        case adqmPhysicalAreaInsideAdqPatch:
-            return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                SetToZero12LinksForAdequacyPatch);
+    case adqmPhysicalAreaInsideAdqPatch:
+        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
+                                                             SetToZero12LinksForAdequacyPatch);
 
-        case adqmPhysicalAreaOutsideAdqPatch:
-            return SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                SetToZero12LinksForAdequacyPatch,
-                SetToZero11LinksForAdequacyPatch);
-        default:
-            return leaveLocalValues;
-        }
+    case adqmPhysicalAreaOutsideAdqPatch:
+        return SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
+                                                              SetToZero12LinksForAdequacyPatch,
+                                                              SetToZero11LinksForAdequacyPatch);
+    default:
+        return leaveLocalValues;
     }
+}
 
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch)
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  bool SetToZero12LinksForAdequacyPatch)
+{
+    switch (ExtremityNodeAdequacyPatchType)
     {
-        switch (ExtremityNodeAdequacyPatchType)
-        {
-        case adqmPhysicalAreaInsideAdqPatch:
-        case adqmPhysicalAreaOutsideAdqPatch:
-            return setToZero;
-        default:
-            return leaveLocalValues;
-        }
+    case adqmPhysicalAreaInsideAdqPatch:
+    case adqmPhysicalAreaOutsideAdqPatch:
+        return setToZero;
+    default:
+        return leaveLocalValues;
     }
+}
 
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch,
-        bool SetToZero11LinksForAdequacyPatch)
+LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  bool SetToZero12LinksForAdequacyPatch,
+  bool SetToZero11LinksForAdequacyPatch)
+{
+    switch (ExtremityNodeAdequacyPatchType)
     {
-        switch (ExtremityNodeAdequacyPatchType)
-        {
-        case adqmPhysicalAreaInsideAdqPatch:
-            return SetToZero12LinksForAdequacyPatch ? setToZero : setExtremityOrigineToZero;
-        case adqmPhysicalAreaOutsideAdqPatch:
-            return SetToZero11LinksForAdequacyPatch ? setToZero : leaveLocalValues;
-        default:
-            return leaveLocalValues;
-        }
+    case adqmPhysicalAreaInsideAdqPatch:
+        return SetToZero12LinksForAdequacyPatch ? setToZero : setExtremityOrigineToZero;
+    case adqmPhysicalAreaOutsideAdqPatch:
+        return SetToZero11LinksForAdequacyPatch ? setToZero : leaveLocalValues;
+    default:
+        return leaveLocalValues;
     }
+}
 
-    void setBoundsAdqPatch(double& Xmax,
-        double& Xmin,
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-        const int Interco,
-        PROBLEME_HEBDO* ProblemeHebdo)
+void setBoundsAdqPatch(double& Xmax,
+                       double& Xmin,
+                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                       const int Interco,
+                       PROBLEME_HEBDO* ProblemeHebdo)
+{
+    LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
+
+    SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
+      ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
+      ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero,
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero);
+
+    switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
     {
-        LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
-
-        SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-            ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
-            ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-            ProblemeHebdo->adqPatch->SetNTCOutsideToInsideToZero,
-            ProblemeHebdo->adqPatch->SetNTCOutsideToOutsideToZero);
-
-        switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
-        {
-        case setToZero:
-        {
-            Xmax = 0.;
-            Xmin = 0.;
-            break;
-        }
-        case setOrigineExtremityToZero:
-        {
-            Xmax = 0.;
-            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            break;
-        }
-        case setExtremityOrigineToZero:
-        {
-            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin = 0.;
-            break;
-        }
-        default:
-        {
-            setBoundsNoAdqPatch(Xmax, Xmin, ValeursDeNTC, Interco);
-            break;
-        }
-        }
+    case setToZero:
+    {
+        Xmax = 0.;
+        Xmin = 0.;
+        break;
     }
-
-    void setBoundsNoAdqPatch(double& Xmax,
-        double& Xmin,
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-        const int Interco)
+    case setOrigineExtremityToZero:
+    {
+        Xmax = 0.;
+        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        break;
+    }
+    case setExtremityOrigineToZero:
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        Xmin = 0.;
+        break;
     }
-} // end namespace Antares
+    default:
+    {
+        setBoundsNoAdqPatch(Xmax, Xmin, ValeursDeNTC, Interco);
+        break;
+    }
+    }
+}
+
+void setBoundsNoAdqPatch(double& Xmax,
+                         double& Xmin,
+                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                         const int Interco)
+{
+    Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+    Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+}
+} // namespace AdequacyPatch
 } // end namespace Data
-} // end namespace AdequacyPatch
+} // namespace Antares

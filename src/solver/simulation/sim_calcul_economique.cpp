@@ -65,12 +65,13 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     if (parameters.include.adequacyPatch)
     {
-        problem.adqPatch = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        problem.adqPatchParams
+          = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
         // AdqBehaviorMap will be initialized during the economy solve
-        problem.adqPatch->SetNTCOutsideToInsideToZero
+        problem.adqPatchParams->SetNTCOutsideToInsideToZero
           = parameters.setToZero12LinksForAdequacyPatch;
-        problem.adqPatch->SetNTCOutsideToOutsideToZero
+        problem.adqPatchParams->SetNTCOutsideToOutsideToZero
           = parameters.setToZero11LinksForAdequacyPatch;
     }
 

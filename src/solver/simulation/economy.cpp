@@ -117,9 +117,9 @@ void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
                                           uint numSpace,
                                           int hourInTheYear)
 {
-    pProblemeHebdo->adqPatch->AdequacyFirstStep = true;
+    pProblemeHebdo->adqPatchParams->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-    pProblemeHebdo->adqPatch->AdequacyFirstStep = false;
+    pProblemeHebdo->adqPatchParams->AdequacyFirstStep = false;
 
     for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
     {
@@ -174,7 +174,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            if (pProblemesHebdo[numSpace]->adqPatch)
+            if (pProblemesHebdo[numSpace]->adqPatchParams)
             {
                 OPT_OptimisationHebdomadaireAdqPatch(
                   pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
