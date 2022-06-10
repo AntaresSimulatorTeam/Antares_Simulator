@@ -47,7 +47,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year);
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
-                               Data::GlobalTSGenerationBehavior globalBehavior,
+                               bool globalThermalTSgeneration,
                                bool refresh);
 
 /*!

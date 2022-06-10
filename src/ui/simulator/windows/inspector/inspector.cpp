@@ -317,7 +317,7 @@ void AddBindingConstraint(const Data::BindingConstraint* constraint)
     if (!gData)
         gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
-    typedef Data::BindingConstraint* ConstraintPtr;
+    using ConstraintPtr = Data::BindingConstraint*;
     if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
     {
         gData->empty = false;
@@ -333,7 +333,7 @@ void AddBindingConstraints(const Data::BindingConstraint::Set& list)
     if (!gData)
         gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
-    typedef Data::BindingConstraint StudyConstraintType;
+    using StudyConstraintType = Data::BindingConstraint;
     bool notEmpty = false;
     StudyConstraintType::Set::const_iterator end = list.end();
     for (StudyConstraintType::Set::const_iterator i = list.begin(); i != end; ++i)
@@ -523,7 +523,7 @@ void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
     gData->clear();
     if (!list.empty())
     {
-        typedef Data::BindingConstraint* ConstraintPtr;
+        using ConstraintPtr = Data::BindingConstraint*;
         bool notEmpty = false;
         const Data::BindingConstraint::Vector::const_iterator end = list.end();
         for (Data::BindingConstraint::Vector::const_iterator i = list.begin(); i != end; ++i)

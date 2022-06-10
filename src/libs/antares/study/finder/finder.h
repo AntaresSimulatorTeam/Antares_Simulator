@@ -43,7 +43,7 @@ class StudyFinder : public Yuni::Policy::ObjectLevelLockable<StudyFinder>
 {
 public:
     //! The threading policy
-    typedef Yuni::Policy::ObjectLevelLockable<StudyFinder> ThreadingPolicy;
+    using ThreadingPolicy = Yuni::Policy::ObjectLevelLockable<StudyFinder>;
     enum
     {
         //! The default value for the timeout
@@ -51,7 +51,7 @@ public:
     };
 
     //! List of folders
-    typedef std::vector<Yuni::String::Ptr> FolderVector;
+    using FolderVector = std::vector<Yuni::String::Ptr>;
 
 public:
     //! \name Constructor

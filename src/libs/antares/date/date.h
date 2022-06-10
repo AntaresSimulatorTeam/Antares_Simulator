@@ -185,11 +185,11 @@ class Calendar
 {
 public:
     //! Short string representation with maximum 42 characters
-    typedef Yuni::CString<41, false> ShortString42;
+    using ShortString42 = Yuni::CString<41, false>;
     //! Short string representation with maximum 12 characters
-    typedef Yuni::CString<11, false> ShortString12;
+    using ShortString12 = Yuni::CString<11, false>;
     //! Short string representation with maximum 8 characters
-    typedef Yuni::CString<7, false> ShortString8;
+    using ShortString8 = Yuni::CString<7, false>;
     enum
     {
         //! The maximum number of hours in a year
@@ -393,7 +393,7 @@ class CalendarHour
 {
 public:
     //! Array
-    typedef std::vector<CalendarHour> Vector;
+    using Vector = std::vector<CalendarHour>;
 
 public:
     //! \name Constructor
@@ -461,7 +461,7 @@ class CalendarDay
 {
 public:
     //! Array
-    typedef std::vector<CalendarDay> Vector;
+    using Vector = std::vector<CalendarDay>;
 
 public:
     /*!

@@ -87,7 +87,7 @@ enum CallbackType
     ctLogs
 };
 
-typedef std::pair<Layer*, wxWindow*> PairLayerWindow;
+using PairLayerWindow = std::pair<Layer*, wxWindow*>;
 
 Component::Component(wxWindow* parent, bool parentIsStandaloneWindow) :
  Antares::Component::Panel(parent),
@@ -183,8 +183,6 @@ void Component::displayMiniFrame(wxWindow* parent,
 
 void Component::emptyCache()
 {
-    typedef Antares::Private::OutputViewerData::ContentMap Map;
-
     pMutex.lock();
     auto end = pAlreadyPreparedContents.cend();
     for (auto i = pAlreadyPreparedContents.cbegin(); i != end; ++i)
@@ -202,9 +200,6 @@ void Component::updateFromExternalEvent(const Data::Output::List& list,
 
 void Component::createAllControlsIfNeeded()
 {
-    // alias
-    typedef Antares::Component::Notebook Notebook;
-
     if (pControlsAlreadyCreated)
         return;
 
@@ -1138,7 +1133,7 @@ void Component::treeDataUpdate()
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
 
-        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
+        using ContentMap = Antares::Private::OutputViewerData::ContentMap;
         ContentMap::const_iterator ci = pAlreadyPreparedContents.find(path);
         if (ci != pAlreadyPreparedContents.end())
         {
@@ -1168,8 +1163,8 @@ void Component::treeDataUpdateWL(const Content& content)
 {
     GUILocker locker;
 
-    typedef Antares::Private::OutputViewerData::Content::AreaNameSet AreaNameSet;
-    typedef Antares::Private::OutputViewerData::Content::LinkNameSet LinkNameSet;
+    using AreaNameSet = Antares::Private::OutputViewerData::Content::AreaNameSet;
+    using LinkNameSet = Antares::Private::OutputViewerData::Content::LinkNameSet;
 
     bool economy = !(content.economy.empty());
     bool hasFoundSomething = false;
@@ -1649,7 +1644,7 @@ void Component::mergeOutputs()
 
     // We will use a dictionary to avoid dupplicate scan
     // (however this case should often append)
-    typedef std::set<String> ScanSet;
+    using ScanSet = std::set<String>;
     ScanSet scandirs;
 
     // We will look for all paths which wait for being analyzed
@@ -1682,8 +1677,8 @@ void Component::mergeOutputs()
         Dispatcher::GUI::Post(this, &Component::treeDataWaiting);
 
         // Alias
-        typedef Antares::Private::OutputViewerData::Job Job;
-        typedef Antares::Private::OutputViewerData::JobPtr JobPtr;
+        using Job = Antares::Private::OutputViewerData::Job;
+        using JobPtr = Antares::Private::OutputViewerData::JobPtr;
 
         // For all folders which remain to be analyzed
         auto end = scandirs.end();
@@ -1774,8 +1769,7 @@ bool Component::checkAreaIsCommonToAllOutputs(const Data::AreaName& name)
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
 
-        typedef Antares::Private::OutputViewerData::Content Content;
-        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
+        using Content = Antares::Private::OutputViewerData::Content;
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
@@ -1809,8 +1803,7 @@ void Component::checkYearByYearMode()
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
 
-        typedef Antares::Private::OutputViewerData::Content Content;
-        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
+        using Content = Antares::Private::OutputViewerData::Content;
 
         auto ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())
@@ -1853,8 +1846,8 @@ bool Component::checkLinkIsCommonToAllOutputs(const Data::AreaLinkName& name)
         // We will use the first available as reference
         const String& path = (layer->selection)->path;
 
-        typedef Antares::Private::OutputViewerData::Content Content;
-        typedef Antares::Private::OutputViewerData::ContentMap ContentMap;
+        using Content = Antares::Private::OutputViewerData::Content;
+        using ContentMap = Antares::Private::OutputViewerData::ContentMap;
 
         ContentMap::const_iterator ci = pAlreadyPreparedContents.find(path);
         if (ci == pAlreadyPreparedContents.end())

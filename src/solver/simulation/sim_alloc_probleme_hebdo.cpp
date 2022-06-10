@@ -377,7 +377,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     for (k = 0; k < (int)nbPays; k++)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         problem.PaliersThermiquesDuPays[k]
           = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));
@@ -760,7 +760,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
-        const uint nbPaliers = (study.areas.byIndex[k])->thermal.list.size();
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure);
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine);

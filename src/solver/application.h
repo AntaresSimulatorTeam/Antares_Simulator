@@ -3,6 +3,7 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
+#include <antares/timeelapsed.h>
 #include "simulation/simulation.h"
 
 #include <yuni/core/string.h>
@@ -49,6 +50,8 @@ public:
     */
     void resetProcessPriority() const;
 
+    void saveElapsedTime();
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -85,6 +88,9 @@ private:
     char** pArgv;
 
     bool shouldExecute = true;
+
+    TimeElapsed::ContentHandler pTimeElapsedContentHandler;
+    TimeElapsed::Timer pTotalTimer;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

@@ -14,13 +14,26 @@ inputs:
     description: 'build type'
     required: false
     default: 'Release'
+
 runs:
   using: "composite"
   steps: 
-  - id: download-extract
+  - name: Download & extract antares-deps
     shell: bash
     run: |
-           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
-           tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
-           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}-solver.tar.gz
-           
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${{inputs.antares-deps-version}}/rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
+           tar -xvf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
+           rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.tar.gz
+
+  - name: Read OR-Tools tag
+    shell: bash
+    run: |
+           TAG=$(cat "${{ github.workspace }}/ortools_tag")
+           echo "ortools-tag=${TAG}" >> ${GITHUB_ENV}
+
+  - name: Download & extract OR-Tools
+    shell: bash
+    run: |
+           wget https://github.com/rte-france/or-tools/releases/download/${{ env.ortools-tag }}/ortools_cxx_${{ inputs.os }}_static_sirius.zip -O ortools.zip
+           unzip ortools.zip
+           rm ortools.zip

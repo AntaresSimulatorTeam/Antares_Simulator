@@ -44,7 +44,7 @@ namespace Renderer
 class HydroPrepro final : public Renderer::Matrix<double, double, 3>, public Renderer::ARendererArea
 {
 public:
-    typedef Renderer::Matrix<double, double, 3> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<double, double, 3>;
 
 public:
     //! \name Constructor & Destructor

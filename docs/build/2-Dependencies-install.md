@@ -3,7 +3,7 @@
 *ANTARES* depends on severals mandatory libraries.
 
 - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
-- [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
+- [OR-Tools](https://github.com/rte-france.com/or-tools) (fork from [Google](https://github.com/google/or-tools))
 - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
   (Only for the complete Antares Simulator solution with GUI)
 - Boost librairies : test (Only for unit tests)
@@ -65,8 +65,6 @@ The install procedure can be done
 
 ALL dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-Some dependencies can't be installed with a package manager. They can be built at configure step with a cmake option  : `-DBUILD_not_system=ON` (`ON` by default):
-
 ### Defining dependency install directory
 When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
 
@@ -83,3 +81,7 @@ Note:
 
 [antares-deps-url]: https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v2.0.0-rc2
 
+### Pre-compiled OR-Tools : release+static only
+You can [download](https://github.com/rte-france/or-tools/releases) a precompiled OR-Tools archive that contains headers & static libraries.
+
+Please note that dynamic linking with OR-Tools is currenty unsupported.

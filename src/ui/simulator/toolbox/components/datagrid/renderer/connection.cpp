@@ -61,9 +61,13 @@ wxString Connection::rowCaption(int row) const
 
 void Connection::onConnectionChanged(Data::AreaLink* link)
 {
-    setMatrix(link);
     if (link)
+    {
+        link->invalidate(true); // Force the reload of parameters & capacities to avoid a crash.
+        setMatrix(link);
         mUseLoopFlow = link->useLoopFlow;
+    }
+
     if (pControl)
     {
         pControl->InvalidateBestSize();
@@ -146,7 +150,7 @@ static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
     if (!useLoopFlow)
         return true;
 
-    for (int ts = 0; ts < direct_ntc->width; ts++)
+    for (uint ts = 0; ts < direct_ntc->width; ts++)
     {
         const double ntcDirect = direct_ntc->entry[ts][row];
         const double ntcIndirect = indirect_ntc->entry[ts][row];

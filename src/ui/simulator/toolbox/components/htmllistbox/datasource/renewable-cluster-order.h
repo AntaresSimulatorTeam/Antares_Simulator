@@ -40,8 +40,8 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-typedef std::list<Data::RenewableCluster*> RenewableClusterList;
-typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
+using RenewableClusterList = std::list<Data::RenewableCluster*>;
+using RenewableClusterMap = std::map<wxString, RenewableClusterList>;
 
 class RenewableClustersByOrder : public ClustersByOrder
 {
