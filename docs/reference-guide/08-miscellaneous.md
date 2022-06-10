@@ -598,7 +598,7 @@ This means that an area which can serve local demand with local generation, shou
 
 **Specifications of the evolution concerning the optimization problem** 
 
-To get the DENS to constrain the ENS variations of each area, it needs to calculated through a first iteration. During this first iteration, the usual optimization problem is slightly modified before being solved. The objective of this first iteration is to get the ENS of each area to represent its DENS. In order to achieve this, links between areas are forced to have a capacity of 0. To ensure that customizable models will still work using this new feature. To do so, different categories are created for the areas, enabling different behaviours as needed. The different categories are: 
+To get the DENS to constrain the ENS variations of each area, it needs to be calculated through a first iteration. During this first iteration, the usual optimization problem is slightly modified before being solved. The objective of this first iteration is to get the ENS of each area to represent its DENS. In order to achieve this, links between areas are forced to have a capacity of 0. To ensure that customizable models will still work using this new feature. To do so, different categories are created for the areas, enabling different behaviours as needed. The different categories are: 
 
 - “0”: The area is a virtual area, 
 - “1”: The area is a physical area not included in the adequacy patch domain, 
