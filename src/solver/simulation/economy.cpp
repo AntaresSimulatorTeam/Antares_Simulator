@@ -56,7 +56,7 @@ void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problem
     pProblemesHebdo = problemesHebdo;
 }
 
-std::unique_ptr<EconomyWeeklyOptimization> EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
 {
     using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
     if (adqPatchEnabled)

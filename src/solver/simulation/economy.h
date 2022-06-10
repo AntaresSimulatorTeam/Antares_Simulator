@@ -127,7 +127,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    std::unique_ptr<EconomyWeeklyOptimization> weeklyOptProblem;
+    EconomyWeeklyOptimization::Ptr weeklyOptProblem;
 }; // class Economy
 
 } // namespace Simulation
