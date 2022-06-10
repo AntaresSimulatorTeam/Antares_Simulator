@@ -122,10 +122,11 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
 
 static std::unique_ptr<EconomyWeeklyOptimization> weeklyOptimizationFactory(bool adqPatchEnabled)
 {
+    using EcoWeeklyPtr = std::unique_ptr<EconomyWeeklyOptimization>;
     if (adqPatchEnabled)
-        return std::unique_ptr<EconomyWeeklyOptimization>(new AdequacyPatchOptimization());
+        return EcoWeeklyPtr(new AdequacyPatchOptimization());
     else
-        return std::unique_ptr<EconomyWeeklyOptimization>(new NoAdequacyPatchOptimization());
+        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
 
     return nullptr;
 }
