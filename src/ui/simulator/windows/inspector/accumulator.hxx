@@ -634,11 +634,11 @@ struct PAdequacyPatchMode
     {
         switch (v)
         {
-        case Data::AdequacyPatch::adqmVirtualArea:
+        case Data::AdequacyPatch::virtualArea:
             return wxT("virtual area");
-        case Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return wxT("physical area outside patch");
-        case Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch:
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return wxT("physical area inside patch");
         }
         return wxEmptyString;
