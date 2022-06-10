@@ -6,6 +6,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
 #include <antares/benchmarking.h>
+#include <antares/benchmarking/studyinfo.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -234,6 +235,16 @@ void Application::prepare(int argc, char* argv[])
     // Loading the study
     readDataForTheStudy(options);
 
+    // Collecting info from the study for a further record
+    Benchmarking::StudyInfo study_info(*pStudy);
+    study_info.collect();
+
+    // Flush previous info into a record file
+    Yuni::String filePath; 
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";;
+    study_info.flush(filePath);
+
+
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
@@ -391,8 +402,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    Benchmarking::Timer loadTimer(
-      "Study loading", "study_loading", true, &pBenchmarkingContentHandler);
+    Benchmarking::Timer loadTimer("Study loading", "study_loading", true, &pBenchmarkingContentHandler);
+
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
