@@ -60,7 +60,7 @@ void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problem
 AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
 void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
 {
-    auto& problemeHebdo = pProblemesHebdo[numSpace];
+    auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatch->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
     problemeHebdo->adqPatch->AdequacyFirstStep = false;
@@ -88,7 +88,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
 NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
 void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
 {
-    auto& problemeHebdo = pProblemesHebdo[numSpace];
+    auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
 
