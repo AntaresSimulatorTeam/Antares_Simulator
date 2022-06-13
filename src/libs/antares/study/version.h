@@ -111,7 +111,7 @@ enum Version
     //! Study version 8.2
     version820 = 820,
     //! Study version 8.3
-    version830 = 830
+    version830 = 830,
     // see versionLatest below
 
     // Constants
