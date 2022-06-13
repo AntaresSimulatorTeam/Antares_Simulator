@@ -50,6 +50,59 @@ enum
     nbHoursInAWeek = 168,
 };
 
+// Interface class + factory
+void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
+{
+    pProblemesHebdo = problemesHebdo;
+}
+
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+{
+    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
+    if (adqPatchEnabled)
+        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+    else
+        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+
+    return nullptr;
+}
+
+// Adequacy patch
+AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
+void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
+
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+    {
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            memcpy(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+        else
+            memset(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   0,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+    }
+
+    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
+    // part that we need
+    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+
+// No adequacy patch
+NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -98,6 +151,9 @@ bool Economy::simulationBegin()
             }
         }
 
+        weeklyOptProblem
+          = EconomyWeeklyOptimization::create(study.parameters.include.adequacyPatch);
+
         SIM_InitialisationResultats();
     }
 
@@ -105,39 +161,16 @@ bool Economy::simulationBegin()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
+
+        if (weeklyOptProblem)
+        {
+            weeklyOptProblem->initializeProblemeHebdo(pProblemesHebdo);
+        }
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
     pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
     return true;
-}
-
-void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
-                                          Variable::State& state,
-                                          uint numSpace,
-                                          int hourInTheYear)
-{
-    pProblemeHebdo->adqPatchParams->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-    pProblemeHebdo->adqPatchParams->AdequacyFirstStep = false;
-
-    for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
-    {
-        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-        else
-            memset(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   0,
-                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-    }
-
-    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-    // part that we need
-    ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
-    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
 }
 
 bool Economy::year(Progression::Task& progression,
@@ -174,15 +207,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            if (pProblemesHebdo[numSpace]->adqPatchParams)
-            {
-                OPT_OptimisationHebdomadaireAdqPatch(
-                  pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
-            }
-            else
-            {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-            }
+            weeklyOptProblem->solve(state, hourInTheYear, numSpace);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
