@@ -11,8 +11,10 @@ namespace Benchmarking
 
 	void StudyInfo::collect()
 	{
-		getNbPerformedYears();
-		getEnabledThermalClusters();
+		getAreasCount();
+		getLinksCount();
+		getPerformedYearsCount();
+		getEnabledThermalClustersCount();
 	}
 
 	void StudyInfo::flush(Yuni::String& filePath)
@@ -22,11 +24,23 @@ namespace Benchmarking
 			throw Antares::Error::CreatingStudyInfoFile(filePath);
 		}
 
+		outputFile_ << "Number of areas" << "\t" << nbAreas_ << "\n";
+		outputFile_ << "Number of links" << "\t" << nbLinks_ << "\n";
 		outputFile_ << "Number of performed years" << "\t" << nbPerformedYears_ << "\n";
 		outputFile_ << "Number of enabled thermal clusters" << "\t" << nbEnabledThermalClusters_ << "\n";
 	}
 
-	void StudyInfo::getNbPerformedYears()
+	void StudyInfo::getAreasCount()
+	{
+		nbAreas_ = study_.areas.size();
+	}
+
+	void StudyInfo::getLinksCount()
+	{
+		nbLinks_ = study_.areas.areaLinkCount();
+	}
+
+	void StudyInfo::getPerformedYearsCount()
 	{
 		for (uint i = 0; i < study_.parameters.nbYears; i++)
 		{
@@ -35,7 +49,7 @@ namespace Benchmarking
 		}
 	}
 
-	void StudyInfo::getEnabledThermalClusters()
+	void StudyInfo::getEnabledThermalClustersCount()
 	{
 		auto end = study_.areas.end();
 		for (auto i = study_.areas.begin(); i != end; ++i)

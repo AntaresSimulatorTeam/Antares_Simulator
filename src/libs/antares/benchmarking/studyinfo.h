@@ -13,8 +13,10 @@ public:
 
 private:
     // Methods
-    void getNbPerformedYears();
-    void getEnabledThermalClusters();
+    void getAreasCount();
+    void getLinksCount();
+    void getPerformedYearsCount();
+    void getEnabledThermalClustersCount();
 
     // Member data
     const Antares::Data::Study& study_;
