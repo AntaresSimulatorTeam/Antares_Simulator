@@ -74,6 +74,7 @@
 #include "productionByDispatchablePlant.h"
 #include "npCostByDispatchablePlant.h"
 #include "nbOfDispatchedUnitsByPlant.h"
+#include "profitByPlant.h"
 
 // By RES plant
 #include "productionByRenewablePlant.h"
@@ -146,24 +147,23 @@ typedef          // Prices
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
-                         <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
+                        <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                          <LMRViolations // LMR Violations
-                          <SpilledEnergy          // Spilled Energy
-                           <LOLD                  // LOLD
-                            <LOLP                 // LOLP
-                             <AvailableDispatchGen<DispatchableGenMargin<Marge<
-                               NonProportionalCost // Startup cost + Fixed cost - MBO 13/05/2014 -
-                                                   // refs: #21
-                               <NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
-                                                                       // per thermal plant detail-
-                                                                       // MBO 13/05/2014 - refs: #21
-                                <NbOfDispatchedUnits // Number of Units Dispatched - MBO 25/02/2016
-                                                     // - refs: #55
-                                 <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant-
-                                                             // MBO 25/02/2016 - refs: #55
-                                  // Links
-                                  <Variable::Economy::Links // All links
-                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                         <SpilledEnergy  // Spilled Energy
+                          <LOLD          // LOLD
+                           <LOLP         // LOLP
+                            <AvailableDispatchGen
+                             <DispatchableGenMargin
+                              <Marge
+                               <NonProportionalCost
+                                <NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
+                                                                        // per thermal plant detail
+                                 <NbOfDispatchedUnits // Number of Units Dispatched
+                                  <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
+                                   <ProfitByPlant
+                                    // Links
+                                    <Variable::Economy::Links // All links
+                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

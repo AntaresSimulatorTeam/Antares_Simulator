@@ -12,9 +12,8 @@ namespace fs = std::filesystem;
 
 void remove_files(const vector<string>& filesToRemove)
 {
-	for (int i = 0; i != filesToRemove.size(); i++)
+    for (const auto& fileToRemove : filesToRemove)
 	{
-		fs::path fileToRemove = filesToRemove[i];
 		if (fs::exists(fileToRemove))
 			fs::remove(fileToRemove);
 	}

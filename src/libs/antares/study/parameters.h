@@ -203,7 +203,7 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(int year, float weight);
+    void setYearWeight(uint year, float weight);
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;

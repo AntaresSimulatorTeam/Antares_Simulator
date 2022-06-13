@@ -68,7 +68,7 @@ namespace Jobs
 {
 namespace // anonymous
 {
-typedef std::pair<wxSizer*, wxStaticText*> StdPair;
+using StdPair = std::pair<wxSizer*, wxStaticText*>;
 
 enum JobIDS
 {
@@ -119,7 +119,7 @@ public:
 class PartList final : public Yuni::Policy::ObjectLevelLockableNotRecursive<PartList>
 {
 public:
-    typedef Yuni::Policy::ObjectLevelLockableNotRecursive<PartList> ThreadingPolicy;
+    using ThreadingPolicy = Yuni::Policy::ObjectLevelLockableNotRecursive<PartList>;
 
     static Solver::Progression::Section CStrToSection(const AnyString& section)
     {

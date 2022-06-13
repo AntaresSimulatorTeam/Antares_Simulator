@@ -37,6 +37,7 @@ extern "C"
 #endif
 
 #include "h2o_j_donnees_mensuelles.h"
+#include "h2o_j_fonctions.h"
 
 void H2O_j_ConstruireLesVariables(int NbPdt,
                                   int* NumeroDeVariableTurbine,

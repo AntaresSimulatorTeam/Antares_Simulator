@@ -153,7 +153,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         if (!updaterMode and isTheActiveRule)
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
-            disabledClustersOnRuleActive[clusterId].push_back(year);
+            disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
     }
@@ -189,7 +189,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         if (!updaterMode and isTheActiveRule)
         {
             string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
-            disabledClustersOnRuleActive[clusterId].push_back(year);
+            disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
     }
@@ -364,21 +364,22 @@ void Rules::sendWarningsForDisabledClusters()
         int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
         vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
-        // Listing the 10 first scenarii numbers (years numbers) where current cluster is refered
-        // to. Notice that these scenarii could be less then 10, but are at least 1.
-        string listScenarii = to_string(*itv + 1);
+        // Listing the 10 first years for which the current cluster was given a specific TS number 
+        // in the scenario builder.
+        // Note that this list of years size could be less then 10, but are at least 1.
+        string listYears = to_string(*itv);
         itv++;
-        for (; itv != scenariiForCurrentCluster.end(); itv++)
-            listScenarii += ", " + to_string(*itv + 1);
+        for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10; itv++, year_count++)
+            listYears += ", " + to_string(*itv);
 
         // Adding last scenario to the list
         if (nbScenariiForCluster > 10)
-            listScenarii += "..." + to_string(scenariiForCurrentCluster.back());
+            listYears += ", ..., " + to_string(scenariiForCurrentCluster.back());
 
         logs.warning()
           << "Cluster " << it->first
           << " not found: it may be disabled, though given TS numbers in sc builder for year(s) :";
-        logs.warning() << listScenarii;
+        logs.warning() << listYears;
     }
 }
 

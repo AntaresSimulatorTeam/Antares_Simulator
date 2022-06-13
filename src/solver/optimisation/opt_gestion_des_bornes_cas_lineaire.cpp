@@ -80,26 +80,6 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* ProblemeHebdo)
     return;
 }
 
-static double OPT_SommeDesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int PdtHebdo)
-{
-    int Index;
-    double SommeDesPmaxThermiques;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-
-    SommeDesPmaxThermiques = 0.0;
-    PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-    PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-
-    for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
-    {
-        SommeDesPmaxThermiques
-          += PuissanceDisponibleEtCout[Index]->PuissanceDisponibleDuPalierThermique[PdtHebdo];
-    }
-
-    return (SommeDesPmaxThermiques);
-}
-
 double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int PdtHebdo)
 {
     int Index;
@@ -122,8 +102,7 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle,
-                                                            const int NumeroDeLIntervalle)
+                                                            const int DernierPdtDeLIntervalle)
 {
     int PdtHebdo;
     int PdtJour;
@@ -132,7 +111,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     int Palier;
     int Var;
     int Index;
-    double PmxTh;
     double* AdresseDuResultat;
     int maxThermalPlant;
     double C;

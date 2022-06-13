@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <antares/study.h>
+#include <vector>
 
 namespace Antares
 {
@@ -44,7 +45,7 @@ bool Generate(Data::Study& study);
 void StoreTimeseriesIntoOuput(Data::Study& study);
 
 // Exported for unit-tests
-bool compareWidth(uint a, uint b);
+bool checkAllElementsIdenticalOrOne(const std::vector<uint>& w);
 } // namespace TimeSeriesNumbers
 } // namespace Solver
 } // namespace Antares

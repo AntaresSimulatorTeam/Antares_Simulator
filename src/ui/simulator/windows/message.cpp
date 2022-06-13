@@ -53,7 +53,7 @@ class MessageProvider final : public Component::Spotlight::IProvider
 {
 public:
     //! Component
-    typedef Component::Spotlight Spotlight;
+    using Spotlight = Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor
@@ -72,7 +72,7 @@ public:
 
     virtual void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& /*tokens*/,
-                        const Yuni::String& text = "") override
+                        const Yuni::String& /* text */) override
     {
         uint count = (uint)pItems.size();
         for (uint i = 0; i != count; ++i)

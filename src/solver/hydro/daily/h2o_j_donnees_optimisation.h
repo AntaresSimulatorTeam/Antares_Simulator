@@ -117,7 +117,7 @@ typedef struct
 {
     char LesCoutsOntEteInitialises; /* Vaut OUI ou NON */
 
-    int NombreDeProblemes;
+    unsigned int NombreDeProblemes;
     int* NbJoursDUnProbleme;
 
     CORRESPONDANCE_DES_VARIABLES** CorrespondanceDesVariables;
