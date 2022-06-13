@@ -6,12 +6,12 @@ v8.3-rc1 (06/2022)
 ### New features
 - Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
 - Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
-- Splitted MPS files for Antares Xpansion #643
+- Splitted MPS files for Antares Xpansion, to reduce the RAM & disk footprint #643
 - Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631
 - Measure the execution duration for every computation step, store the durations in a dedicated file #546
 
 ### Bug fixes
-- Fix segfault occuring when inter/intramodal == true and TS width are inconsistent #694
+- Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
 - Fix logging of performed MC years when running jobs in parallel #680
 
 ### For developers
