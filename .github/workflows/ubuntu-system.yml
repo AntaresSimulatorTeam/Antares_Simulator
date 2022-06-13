@@ -91,6 +91,11 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R test-adq-patch
 
+    - name: Run unit and end-to-end tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
+
     # simtest
     - name: Read simtest version
       id: simtest-version
