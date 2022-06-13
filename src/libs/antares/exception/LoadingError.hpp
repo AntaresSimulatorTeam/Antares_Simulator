@@ -167,6 +167,18 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
+class IncompatibleStudyModeForAdqPatch : public LoadingError
+{
+public:
+    IncompatibleStudyModeForAdqPatch();
+};
+
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
 class CreatingTimeMeasurementFile : public LoadingError
 {
 public:

@@ -14,6 +14,8 @@
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
 
+#include <algorithm>
+
 namespace
 {
 void checkStudyVersion(const AnyString& optStudyFolder)
@@ -82,6 +84,30 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
                 throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
             }
         }
+    }
+}
+
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
+                                       const Antares::Data::StudyMode studyMode)
+{
+    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
+    {
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
+void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
+{
+    using namespace Antares::Data;
+    if (adqPatchOn)
+    {
+        const bool containsAdqArea
+          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
+            });
+        if (!containsAdqArea)
+            throw Error::NoAreaInsideAdqPatchMode();
     }
 }
 
@@ -198,7 +224,8 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " (" << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+                      << GIT_SHA1_SHORT_STRING << ")";
 #else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
 #endif
@@ -242,6 +269,9 @@ void Application::prepare(int argc, char* argv[])
                                         pParameters->unitCommitment.ucMode);
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
+
+    checkAdqPatchStudyModeEconomyOnly(pParameters->include.adequacyPatch, pParameters->mode);
+    checkAdqPatchContainsAdqPatchArea(pParameters->include.adequacyPatch, pStudy->areas);
 
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate

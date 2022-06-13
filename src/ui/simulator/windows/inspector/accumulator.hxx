@@ -623,6 +623,28 @@ struct PAreaUnsuppliedEnergyCost
     }
 };
 
+struct PAdequacyPatchMode
+{
+    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
+    static Type Value(const Data::Area* area)
+    {
+        return area->adequacyPatchMode;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        switch (v)
+        {
+        case Data::AdequacyPatch::virtualArea:
+            return wxT("virtual area");
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
+            return wxT("physical area outside patch");
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
+            return wxT("physical area inside patch");
+        }
+        return wxEmptyString;
+    }
+};
+
 template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus
 {

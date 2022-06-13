@@ -10,7 +10,7 @@ if (Boost_FOUND)
 endif()
 
 
-add_subdirectory(src)
+
 
 # end to end test require boost 1.6.x because of boost::test_tools::tolerance, BOOST_TEST
 # old versions of Boost don't contain a '.', also ignore them
@@ -32,6 +32,7 @@ endif()
 
 if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
+    add_subdirectory(src)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()

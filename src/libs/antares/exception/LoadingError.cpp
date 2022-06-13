@@ -123,6 +123,16 @@ CommandLineArguments::CommandLineArguments(uint errors) :
 {
 }
 
+IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
+ LoadingError("Adequacy Patch can only be used with Economy Simulation Mode")
+{
+}
+
+NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
+ LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
+{
+}
+
 CreatingTimeMeasurementFile::CreatingTimeMeasurementFile(const Yuni::String& filename) :
  LoadingError(std::string("Error creating time measurement file : ") + filename.c_str())
 {
