@@ -101,6 +101,9 @@ jobs:
       run: |
            git submodule update --init --recursive src
 
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure
       shell: bash
       run: |
