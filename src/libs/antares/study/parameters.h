@@ -505,13 +505,23 @@ public:
     SimplexOptimization simplexOptimizationRange;
     //@}
 
-    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to physical
-    //! areas inside adequacy patch (area type 2). NTC is set to null (if true) only in the first
-    //! step of adequacy patch local matching rule.
-    bool setToZero12LinksForAdequacyPatch;
-    //! Transmission capacities between physical areas outside adequacy patch (area type 1). NTC is
-    //! set to null (if true) only in the first step of adequacy patch local matching rule.
-    bool setToZero11LinksForAdequacyPatch;
+    struct AdequacyPatch
+    {
+        struct LocalMatching
+        {
+            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+            //! only in the first step of adequacy patch local matching rule.
+            bool setToZeroOutsideInsideLinks = true;
+            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
+            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
+            //! rule.
+            bool setToZeroOutsideOutsideLinks = true;
+        };
+        LocalMatching localMatching;
+    };
+
+    AdequacyPatch adqPatch;
 
     //! \name Scenariio Builder - Rules
     //@{

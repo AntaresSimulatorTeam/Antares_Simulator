@@ -46,13 +46,10 @@ namespace Window
 {
 namespace Options
 {
-static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text, bool margintop = true)
+static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
-    if (margintop)
-    {
-        sizer->AddSpacer(25);
-        sizer->AddSpacer(25);
-    }
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
 
     auto* label = Component::CreateLabel(parent, text, true);
 
@@ -399,11 +396,12 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuAdequacyPatch,
-                     PopupInfo(study.parameters.setToZero12LinksForAdequacyPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC12 = button;
+        pBtnAdqPatchOutsideInside = button;
     }
     // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
     // Used in the first step of adequacy patch local matching rule.
@@ -415,11 +413,12 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuAdequacyPatch,
-                     PopupInfo(study.parameters.setToZero11LinksForAdequacyPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchNTC11 = button;
+        pBtnAdqPatchOutsideOutside = button;
     }
 
     {
@@ -505,8 +504,8 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = false;
             study.parameters.include.adequacyPatch = false;
-            study.parameters.setToZero12LinksForAdequacyPatch = true;
-            study.parameters.setToZero11LinksForAdequacyPatch = true;
+            study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+            study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
 
             study.parameters.include.unfeasibleProblemBehavior
@@ -558,12 +557,12 @@ void Optimization::refresh()
     ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC12,
-                             study.parameters.setToZero12LinksForAdequacyPatch);
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideInside,
+                             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    ResetButtonAdequacyPatch(pBtnAdequacyPatchNTC11,
-                             study.parameters.setToZero11LinksForAdequacyPatch);
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideOutside,
+                             study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
 
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(

@@ -179,20 +179,21 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             auto* area = *i;
             if (area)
             {
-                String s;
-                wxStringToString(value.GetString(), s);
-                s.toLower();
-                s.trim();
-
-                if (s == "virtual area" || s == "0")
+                switch (value.GetLong())
+                {
+                case 0:
                     area->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
-                else if (s == "physical area outside patch" || s == "1")
+                    break;
+                case 1:
                     area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
-                else if (s == "physical area inside patch" || s == "2")
+                    break;
+                case 2:
                     area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                    break;
+                }
             }
+            return true;
         }
-        return true;
     }
     if (name == "area.links_count")
         return false;
