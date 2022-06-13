@@ -10,7 +10,7 @@ if (Boost_FOUND)
 endif()
 
 
-add_subdirectory(src)
+
 
 
 # end to end test require boost 1.6.x because for boost::test_tools::tolerance
@@ -19,6 +19,7 @@ add_subdirectory(src)
 string(FIND ${Boost_VERSION} . RESULT_BOOST)
 if ((${Boost_VERSION} VERSION_GREATER_EQUAL 1.60.0) AND NOT (${RESULT_BOOST} EQUAL -1))
     add_subdirectory(end-to-end)
+    add_subdirectory(src)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()

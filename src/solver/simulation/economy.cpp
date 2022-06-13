@@ -72,9 +72,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
 void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
-    problemeHebdo->adqPatch->AdequacyFirstStep = true;
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-    problemeHebdo->adqPatch->AdequacyFirstStep = false;
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {

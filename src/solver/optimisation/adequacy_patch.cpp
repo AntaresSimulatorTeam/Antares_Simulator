@@ -28,7 +28,11 @@
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
 
-namespace Antares::Data::AdequacyPatch
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
 {
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
@@ -92,8 +96,8 @@ void setBoundsAdqPatch(double& Xmax,
     SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
       ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
       ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-      ProblemeHebdo->adqPatch->SetNTCOutsideToInsideToZero,
-      ProblemeHebdo->adqPatch->SetNTCOutsideToOutsideToZero);
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero,
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero);
 
     switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
     {
@@ -131,4 +135,6 @@ void setBoundsNoAdqPatch(double& Xmax,
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
-} // namespace Antares::Data::AdequacyPatch
+} // namespace AdequacyPatch
+} // end namespace Data
+} // namespace Antares
