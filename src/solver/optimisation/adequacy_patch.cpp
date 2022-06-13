@@ -28,7 +28,11 @@
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
 
-namespace Antares::Data::AdequacyPatch
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
 {
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
   AdequacyPatchMode OriginNodeAdequacyPatchType,
@@ -38,11 +42,11 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
 {
     switch (OriginNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
+    case physicalAreaInsideAdqPatch:
         return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
                                                              SetToZero12LinksForAdequacyPatch);
 
-    case adqmPhysicalAreaOutsideAdqPatch:
+    case physicalAreaOutsideAdqPatch:
         return SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
                                                               SetToZero12LinksForAdequacyPatch,
                                                               SetToZero11LinksForAdequacyPatch);
@@ -57,8 +61,8 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
 {
     switch (ExtremityNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
-    case adqmPhysicalAreaOutsideAdqPatch:
+    case physicalAreaInsideAdqPatch:
+    case physicalAreaOutsideAdqPatch:
         return setToZero;
     default:
         return leaveLocalValues;
@@ -72,9 +76,9 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsid
 {
     switch (ExtremityNodeAdequacyPatchType)
     {
-    case adqmPhysicalAreaInsideAdqPatch:
+    case physicalAreaInsideAdqPatch:
         return SetToZero12LinksForAdequacyPatch ? setToZero : setExtremityOrigineToZero;
-    case adqmPhysicalAreaOutsideAdqPatch:
+    case physicalAreaOutsideAdqPatch:
         return SetToZero11LinksForAdequacyPatch ? setToZero : leaveLocalValues;
     default:
         return leaveLocalValues;
@@ -92,8 +96,8 @@ void setBoundsAdqPatch(double& Xmax,
     SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
       ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
       ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-      ProblemeHebdo->adqPatch->SetNTCOutsideToInsideToZero,
-      ProblemeHebdo->adqPatch->SetNTCOutsideToOutsideToZero);
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero,
+      ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero);
 
     switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
     {
@@ -131,4 +135,6 @@ void setBoundsNoAdqPatch(double& Xmax,
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
-} // namespace Antares::Data::AdequacyPatch
+} // namespace AdequacyPatch
+} // end namespace Data
+} // namespace Antares

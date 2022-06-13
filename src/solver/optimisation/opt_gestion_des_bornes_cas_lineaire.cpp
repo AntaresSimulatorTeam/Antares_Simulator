@@ -156,7 +156,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+            if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
                 AdequacyPatch::setBoundsAdqPatch(
                   Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
             else
@@ -383,9 +383,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
 
                 // adq patch: update ENS <= DENS in 2nd run
-                if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep == false
+                if (ProblemeHebdo->adqPatchParams
+                    && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
                     && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
-                         == Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch)
+                         == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                     Xmax[Var]
                       = min(Xmax[Var],
                             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);

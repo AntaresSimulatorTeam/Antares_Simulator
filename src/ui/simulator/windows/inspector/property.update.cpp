@@ -182,13 +182,13 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                 switch (value.GetLong())
                 {
                 case 0:
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmVirtualArea;
+                    area->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
                     break;
                 case 1:
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaOutsideAdqPatch;
+                    area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
                     break;
                 case 2:
-                    area->adequacyPatchMode = Data::AdequacyPatch::adqmPhysicalAreaInsideAdqPatch;
+                    area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
                     break;
                 }
             }

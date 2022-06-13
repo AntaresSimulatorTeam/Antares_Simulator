@@ -322,12 +322,12 @@ typedef struct
 class AdequacyPatchRuntimeData
 {
 private:
-    using adqPatchMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
 
 public:
-    std::vector<adqPatchMode> areaMode;
-    std::vector<adqPatchMode> originAreaType;
-    std::vector<adqPatchMode> extremityAreaType;
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaType;
+    std::vector<adqPatchParamsMode> extremityAreaType;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -608,7 +608,7 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
-    std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
+    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
 
     optimizationStatistics optimizationStatistics_object;
