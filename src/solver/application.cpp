@@ -183,7 +183,6 @@ void Application::prepare(int argc, char* argv[])
     if (options.displayVersion)
     {
         printVersion();
-        shouldExecute = false;
         return;
     }
 
@@ -305,7 +304,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
-    if (!shouldExecute)
+    if (!pStudy)
         return;
 
     processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
@@ -497,8 +496,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
 void Application::saveElapsedTime()
 {
-    pTotalTimer.stop();
+    if (!pStudy)
+       return;
 
+    pTotalTimer.stop();
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
     TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
     // Write time data
