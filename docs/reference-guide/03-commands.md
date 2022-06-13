@@ -209,8 +209,11 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
-    - _Simplex optimization range [^4] _(day / week)_
+    - _Simplex optimization range [^4] (day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
+    - _Enable Adequacy patch (false / true)_
+    - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
+    - _NTC between physical areas outside adequacy patch (set to null / local values)_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
 that are more numerical than physical. The set of parameters is study-specific and can be updated at any time.
