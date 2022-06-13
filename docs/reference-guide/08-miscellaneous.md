@@ -585,7 +585,7 @@ It should be noted that, in this release, the implementation covers only one of 
 
 The rule implemented is what we call the « Local Matching » rule:  
 
-- This rule consists in satisfying ENS ≤ DENS (Domestic Energy not Served) for all selected areas. 
+- This rule consists in satisfying ENS <= DENS (Domestic Energy not Served) for all selected areas. 
 - An area cannot export more than its local margin.
  
 This means that an area which can serve local demand with local generation, should never have ENS. 
@@ -600,25 +600,25 @@ This means that an area which can serve local demand with local generation, shou
 
 To get the DENS to constrain the ENS variations of each area, it needs to be calculated through a first iteration. During this first iteration, the usual optimization problem is slightly modified before being solved. The objective of this first iteration is to get the ENS of each area to represent its DENS. In order to achieve this, links between areas are forced to have a capacity of 0. To ensure that customizable models will still work using this new feature. To do so, different categories are created for the areas, enabling different behaviours as needed. The different categories are: 
 
-- “0”: The area is a virtual area, 
-- “1”: The area is a physical area not included in the adequacy patch domain, 
-- “2”: The area is a physical area included in the adequacy patch domain. 
+- "0": The area is a virtual area, 
+- "1": The area is a physical area not included in the adequacy patch domain, 
+- "2": The area is a physical area included in the adequacy patch domain. 
 
 In the list of physical nodes, should be included also the "hub" node introduced for the Flow-based modelling (this one should be declared by the user in its list of physical nodes). 
 
 In the first iteration, the following link capacities in the following direction will be set to 0: 
 
-- node “2” <-> node “2” 
-- node “2” -> node “1” 
-- node “1” -> node “2”: optional/user defined (default 0), 
-- node “1” <-> node “1”: optional/user defined (default 0). 
+- node "2" <-> node "2" 
+- node "2" -> node "1" 
+- node "1" -> node "2": optional/user defined (default 0), 
+- node "1" <-> node "1": optional/user defined (default 0). 
 
 Once the first iteration is completed, we have access to the DENS value: 
 - DENS = ENS
  (when link capacities between physical nodes are set to 0 (iteration 1)). 
 
-During the second iteration, all link capacities between physical nodes are set to the values given by input data (as it is done in actual Antares version). The only change is that the upper bound of the ENS on specified areas is now constrained by the DENS found during the first iteration. This is introduced in the optimization problem for physical nodes that are declared in the adequacy patch domain (nodes declared as “2”):  
+During the second iteration, all link capacities between physical nodes are set to the values given by input data (as it is done in actual Antares version). The only change is that the upper bound of the ENS on specified areas is now constrained by the DENS found during the first iteration. This is introduced in the optimization problem for physical nodes that are declared in the adequacy patch domain (nodes declared as "2"):  
 
-- ENS ≤ DENS 
+- ENS <= DENS 
  (on each selected area). 
  
