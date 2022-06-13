@@ -36,6 +36,8 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 
+#include <cstring>
+
 using namespace Yuni;
 
 namespace Antares
@@ -130,6 +132,21 @@ bool Economy::year(Progression::Task& progression,
     if (isFirstPerformedYearOfSimulation)
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
+    
+    String folder;
+    String filename;
+    IO::File::Stream file;
+    folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << state.year + 1 << SEP;
+
+    if (IO::Directory::Create(folder)) {
+        filename = folder;
+        filename << "weeksSolveTimes.txt";
+        
+        if (file.open(filename, IO::OpenMode::append))
+        {
+            file << "Week; Optimization 1 (ms); Optimization 2 (ms)\n";
+        }
+    }
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -188,6 +205,15 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
                 state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
             }
+
+            //Write indiv res times into files
+            if (file.open(filename, IO::OpenMode::append))
+            {
+                file << w << "; "
+                     << pProblemesHebdo[numSpace]->tempsResolution1[0] << "; " 
+                     << pProblemesHebdo[numSpace]->tempsResolution2[0] << "\n";
+            }
+
         }
         catch (Data::AssertionError& ex)
         {
