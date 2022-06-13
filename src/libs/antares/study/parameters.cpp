@@ -315,7 +315,8 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
-
+    ortoolsParamsString = "";
+    ortoolsVerbosityOn = false;
     // Initialize all seeds
     resetSeeds();
 }
@@ -1113,6 +1114,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
     ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsParamsString = options.ortoolsParamsString;
+    ortoolsVerbosityOn = options.ortoolsVerbose;
 
     // Attempt to fix bad values if any
     fixBadValues();

@@ -112,6 +112,18 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::
                "Ortools solver used for simulation (only available with use-ortools "
                "option)\nAvailable solver list : "
                  + availableOrToolsSolversString());
+    
+    //--ortools-parameters
+    parser->add(options.ortoolsParamsString,
+                ' ',
+                "ortools-parameters",
+                "String containing the specific parameters to tune the solver used by Ortools");
+
+    //--ortools-verbose
+    parser->addFlag(options.ortoolsVerbose,
+                ' ',
+                "ortools-verbose",
+                "Activate verbosity for Ortools solver");
 
     parser->addParagraph("\nParameters");
     // --name

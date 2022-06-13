@@ -527,8 +527,12 @@ public:
     //@{
     //! Define if ortools is used
     bool ortoolsUsed;
-    //! Ortool solver used for simulation
+    //! Ortools solver used for simulation
     OrtoolsSolver ortoolsEnumUsed;
+    //! Specific parameters string for ortools solver
+    string ortoolsParamsString;
+    //! Define if Ortools verbosity should be activated
+    bool ortoolsVerbosityOn;
     //@}
 
 private:

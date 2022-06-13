@@ -146,7 +146,14 @@ MPSolver* convert_to_MPSolver(
                    problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
                    problemeSimplexe->NombreDeContraintes);
 
+    solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
+
+    if (study.parameters.ortoolsVerbosityOn)
+        solver->EnableOutput();
+
     return solver;
+
+
 }
 } // namespace Optimization
 } // namespace Antares
@@ -256,7 +263,8 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme, MPSolver* ProbSpx)
+MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                       MPSolver* ProbSpx)
 {
     MPSolver* solver = ProbSpx;
 

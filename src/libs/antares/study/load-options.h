@@ -92,6 +92,12 @@ public:
     //! Ortool solver used for simulation
     OrtoolsSolver ortoolsEnumUsed = OrtoolsSolver::sirius;
 
+    //! Parameters string for Ortools solver
+    std::string ortoolsParamsString; 
+
+    //! Activate ortools solver verbosity
+    bool ortoolsVerbose;
+
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
     //! Porgression, tick count
