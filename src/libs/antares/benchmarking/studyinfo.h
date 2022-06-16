@@ -17,6 +17,9 @@ private:
     void getLinksCount();
     void getPerformedYearsCount();
     void getEnabledThermalClustersCount();
+    void getEnabledBindingConstraintsCount();
+    void getUnitCommitmentMode();
+    void getMaxNbYearsInParallel();
 
     // Member data
     const Antares::Data::Study& study_;
@@ -24,10 +27,13 @@ private:
 
     unsigned int nbPerformedYears_ = 0;
     unsigned int nbEnabledThermalClusters_ = 0;
-    unsigned int nbEnabledBindingConstraints_ = 0;
+    unsigned int nbEnabledBC_ = 0;
+    unsigned int nbEnabledHourlyBC_ = 0;
+    unsigned int nbEnabledDailyBC_ = 0;
+    unsigned int nbEnabledWeeklyBC_ = 0;
     unsigned int nbAreas_ = 0;
     unsigned int nbLinks_ = 0;
-    unsigned int UnitComitmentMode_;
+    const char* UnitComitmentMode_ = "";
 
     // Parallel execution
     unsigned int maxNbYearsInParallel_ = 0;

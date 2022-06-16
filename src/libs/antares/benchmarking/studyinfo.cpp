@@ -1,6 +1,7 @@
 #include "studyinfo.h"
 #include <antares/exception/LoadingError.hpp>
 #include "antares/study/area/area.h"
+#include <algorithm>
 
 using namespace Antares::Data;
 
@@ -15,6 +16,9 @@ namespace Benchmarking
 		getLinksCount();
 		getPerformedYearsCount();
 		getEnabledThermalClustersCount();
+		getEnabledBindingConstraintsCount();
+		getUnitCommitmentMode();
+		getMaxNbYearsInParallel();
 	}
 
 	void StudyInfo::flush(Yuni::String& filePath)
@@ -28,6 +32,12 @@ namespace Benchmarking
 		outputFile_ << "Number of links" << "\t" << nbLinks_ << "\n";
 		outputFile_ << "Number of performed years" << "\t" << nbPerformedYears_ << "\n";
 		outputFile_ << "Number of enabled thermal clusters" << "\t" << nbEnabledThermalClusters_ << "\n";
+		outputFile_ << "Number of enabled BCs" << "\t" << nbEnabledBC_ << "\n";
+		outputFile_ << "Number of enabled hourly BCs" << "\t" << nbEnabledHourlyBC_ << "\n";
+		outputFile_ << "Number of enabled daily BCs" << "\t" << nbEnabledDailyBC_ << "\n";
+		outputFile_ << "Number of enabled weekly BCs" << "\t" << nbEnabledWeeklyBC_ << "\n";
+		outputFile_ << "Unit commitment mode" << "\t" << UnitComitmentMode_ << "\n";
+		outputFile_ << "Max number of years in parallel" << "\t" << maxNbYearsInParallel_ << "\n";
 	}
 
 	void StudyInfo::getAreasCount()
@@ -63,5 +73,37 @@ namespace Benchmarking
 					nbEnabledThermalClusters_++;
 			}
 		}
+	}
+
+	void StudyInfo::getEnabledBindingConstraintsCount()
+	{
+		nbEnabledBC_ = study_.runtime->bindingConstraintCount;
+		for (uint i = 0; i < nbEnabledBC_; i++)
+		{
+			switch (study_.runtime->bindingConstraint[i].type)
+			{
+			case BindingConstraint::Type::typeHourly:
+				nbEnabledHourlyBC_++;
+				break;
+			case BindingConstraint::Type::typeDaily:
+				nbEnabledDailyBC_++;
+				break;
+			case BindingConstraint::Type::typeWeekly:
+				nbEnabledWeeklyBC_++;
+				break;
+			default:
+				break;
+			}
+		}
+	}
+
+	void StudyInfo::getUnitCommitmentMode()
+	{
+		UnitComitmentMode_ = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+	}
+
+	void StudyInfo::getMaxNbYearsInParallel()
+	{
+		maxNbYearsInParallel_ = study_.maxNbYearsInParallel;
 	}
 }
