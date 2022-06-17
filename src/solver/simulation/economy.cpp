@@ -140,7 +140,7 @@ bool Economy::year(Progression::Task& progression,
 
     if (IO::Directory::Create(folder)) {
         filename = folder;
-        filename << "weeksSolveTimes.txt";
+        filename << "weeksSolveTimes_" << state.year << ".txt";
         
         if (file.open(filename, IO::OpenMode::append))
         {
