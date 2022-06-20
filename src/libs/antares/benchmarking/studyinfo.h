@@ -4,26 +4,41 @@
 
 namespace Benchmarking
 {
-class StudyInfo
+/*
+    === class StudyInfoContainer ===
+*/
+class StudyInfoContainer
 {
-public:   
-    StudyInfo(const Antares::Data::Study& study);
+public:
+    StudyInfoContainer(const Antares::Data::Study& study);
+
     void collect();
-    void flush(Yuni::String& filePath);
+
+    unsigned int getAreasCount();
+    unsigned int getLinksCount();
+    unsigned int getPerformedYearsCount();
+    unsigned int getEnabledThermalClustersCount();
+    const char* getUnitCommitmentMode();
+    unsigned int getMaxNbYearsInParallel();
+
+    unsigned int getEnabledBCcount();
+    unsigned int getEnabledHourlyBCcount();
+    unsigned int getEnabledDailyBCcount();
+    unsigned int getEnabledWeeklyBCcount();
 
 private:
     // Methods
-    void getAreasCount();
-    void getLinksCount();
-    void getPerformedYearsCount();
-    void getEnabledThermalClustersCount();
-    void getEnabledBindingConstraintsCount();
-    void getUnitCommitmentMode();
-    void getMaxNbYearsInParallel();
+    void collectAreasCount();
+    void collectLinksCount();
+    void collectPerformedYearsCount();
+    void collectEnabledThermalClustersCount();
+    void collectEnabledBindingConstraintsCount();
+    void collectUnitCommitmentMode();
+    void collectMaxNbYearsInParallel();
+
 
     // Member data
     const Antares::Data::Study& study_;
-    Yuni::IO::File::Stream outputFile_;
 
     unsigned int nbPerformedYears_ = 0;
     unsigned int nbEnabledThermalClusters_ = 0;
@@ -45,4 +60,22 @@ private:
     unsigned int nbVariables_ = 0;
     unsigned int nbConstraints_ = 0;
 };
+
+/*
+    === class StudyInfoWriter ===
+*/
+
+class StudyInfoWriter
+{
+public:   
+    StudyInfoWriter(Yuni::String& filePath, StudyInfoContainer& fileContent);
+    void flush();
+
+private:
+    // Member data
+    Yuni::IO::File::Stream outputFile_;
+    Yuni::String& filePath_;
+    StudyInfoContainer& fileContent_;
+};
+
 } // namespace Benchmarking

@@ -236,13 +236,14 @@ void Application::prepare(int argc, char* argv[])
     readDataForTheStudy(options);
 
     // Collecting info from the study for a further record
-    Benchmarking::StudyInfo study_info(*pStudy);
+    Benchmarking::StudyInfoContainer study_info(*pStudy);
     study_info.collect();
 
     // Flush previous info into a record file
     Yuni::String filePath; 
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";;
-    study_info.flush(filePath);
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
+    Benchmarking::StudyInfoWriter study_info_writer(filePath, study_info);
+    study_info_writer.flush();
 
 
     // Some more checks require the existence of pParameters, hence of a study.
