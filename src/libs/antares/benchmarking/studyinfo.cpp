@@ -127,8 +127,8 @@ namespace Benchmarking
 		=== class StudyInfoWriter ===
 	*/
 
-	StudyInfoWriter::StudyInfoWriter(Yuni::String& filePath, StudyInfoContainer& fileContent) 
-		: filePath_(filePath), fileContent_(fileContent)
+	StudyInfoWriter::StudyInfoWriter(StudyInfoContainer& fileContent) 
+		: fileContent_(fileContent)
 	{}
 
 	void StudyInfoCSVwriter::flush()

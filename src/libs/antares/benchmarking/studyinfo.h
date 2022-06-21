@@ -98,13 +98,11 @@ private:
 class StudyInfoWriter
 {
 public:   
-    StudyInfoWriter(Yuni::String& filePath, StudyInfoContainer& fileContent);
+    StudyInfoWriter(StudyInfoContainer& fileContent);
     virtual void flush() = 0;
 
 protected:
     // Member data
-    Yuni::IO::File::Stream outputFile_;
-    Yuni::String& filePath_;
     StudyInfoContainer& fileContent_;
 };
 
@@ -112,9 +110,12 @@ class StudyInfoCSVwriter final : public StudyInfoWriter
 {
 public:
     explicit StudyInfoCSVwriter(Yuni::String& filePath, StudyInfoContainer& fileContent) 
-        : StudyInfoWriter(filePath, fileContent)
+        : StudyInfoWriter(fileContent), filePath_(filePath)
     {}
     void flush() override;
+private:
+    Yuni::IO::File::Stream outputFile_;
+    Yuni::String& filePath_;
 };
 
 } // namespace Benchmarking
