@@ -131,7 +131,7 @@ namespace Benchmarking
 		: filePath_(filePath), fileContent_(fileContent)
 	{}
 
-	void StudyInfoWriter::flush()
+	void StudyInfoCSVwriter::flush()
 	{
 		if (!outputFile_.openRW(filePath_))
 		{

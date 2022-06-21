@@ -242,7 +242,7 @@ void Application::prepare(int argc, char* argv[])
     // Flush previous info into a record file
     Yuni::String filePath; 
     filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
-    Benchmarking::StudyInfoWriter study_info_writer(filePath, study_info);
+    Benchmarking::StudyInfoCSVwriter study_info_writer(filePath, study_info);
     study_info_writer.flush();
 
 

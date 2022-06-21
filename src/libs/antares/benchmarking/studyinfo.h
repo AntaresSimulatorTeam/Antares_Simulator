@@ -47,7 +47,7 @@ private:
 class StudyInfoContainer
 {
 public:
-    StudyInfoContainer(const Antares::Data::Study& study);
+    explicit StudyInfoContainer(const Antares::Data::Study& study);
 
     using iterator = std::vector<std::unique_ptr<StudyInfoItem>>::iterator;
     iterator begin();
@@ -75,7 +75,9 @@ private:
     // Member data
     const Antares::Data::Study& study_;
 
-    // TODO : add some more piece of information about study : see following data members. 
+    // ----------------------------------------------------------------------------------------
+    // TODO : add some more pieces of information about study : see following data members.
+    // ----------------------------------------------------------------------------------------
     // Parallel execution
     unsigned int minNbYearsInParallel_ = 0;
     unsigned int nbCoreMode_;
@@ -97,13 +99,22 @@ class StudyInfoWriter
 {
 public:   
     StudyInfoWriter(Yuni::String& filePath, StudyInfoContainer& fileContent);
-    void flush();
+    virtual void flush() = 0;
 
-private:
+protected:
     // Member data
     Yuni::IO::File::Stream outputFile_;
     Yuni::String& filePath_;
     StudyInfoContainer& fileContent_;
+};
+
+class StudyInfoCSVwriter final : public StudyInfoWriter
+{
+public:
+    explicit StudyInfoCSVwriter(Yuni::String& filePath, StudyInfoContainer& fileContent) 
+        : StudyInfoWriter(filePath, fileContent)
+    {}
+    void flush() override;
 };
 
 } // namespace Benchmarking
