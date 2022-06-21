@@ -392,387 +392,365 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         }
     }
 
-    if (ResoudreLeProblemeLineaire == OUI_ANTARES)
+    if (ResoudreLeProblemeLineaire == NON_ANTARES)
+        return;
+
+    NombreDeVariables = 0;
+    NombreDeVariables += NombreDePasDeTemps;
+    NombreDeVariables += NombreDePasDeTemps;
+    NombreDeVariables += NombreDePasDeTemps;
+    NombreDeVariables += NombreDePasDeTemps;
+
+    NumeroDeVariableDeM = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    NumeroDeVariableDeMMoinsMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    NumeroDeVariableDeMPlus = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    NumeroDeVariableDeMMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+
+    NombreDeContraintes = 0;
+    NombreDeContraintes += NombreDePasDeTemps;
+    NombreDeContraintes += NombreDePasDeTemps;
+    NombreDeContraintes += NombreDePasDeTemps;
+    NombreDeContraintes += NombreDePasDeTemps;
+    NombreDeContraintes += NombreDePasDeTemps;
+
+    PositionDeLaVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+    CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+
+    ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    NombreDeTermesDesLignes = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
+    SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
+
+    NbTermesMatrice = 0;
+    NbTermesMatrice += 4 * NombreDePasDeTemps;
+    NbTermesMatrice += 2 * NombreDePasDeTemps;
+    NbTermesMatrice += 1 * NombreDePasDeTemps;
+    NbTermesMatrice
+      += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
+    NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
+
+    IndicesColonnes = (int*)MemAlloc(NbTermesMatrice * sizeof(int));
+    CoefficientsDeLaMatriceDesContraintes = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
+
+    if (NumeroDeVariableDeM == NULL || NumeroDeVariableDeMMoinsMoins == NULL
+        || NumeroDeVariableDeMPlus == NULL || NumeroDeVariableDeMMoins == NULL
+        || PositionDeLaVariable == NULL || CoutLineaire == NULL || Xsolution == NULL || Xmin == NULL
+        || Xmax == NULL || TypeDeVariable == NULL || ComplementDeLaBase == NULL
+        || IndicesDebutDeLigne == NULL || NombreDeTermesDesLignes == NULL || Sens == NULL
+        || SecondMembre == NULL || IndicesColonnes == NULL
+        || CoefficientsDeLaMatriceDesContraintes == NULL)
     {
-        NombreDeVariables = 0;
-        NombreDeVariables += NombreDePasDeTemps;
-        NombreDeVariables += NombreDePasDeTemps;
-        NombreDeVariables += NombreDePasDeTemps;
-        NombreDeVariables += NombreDePasDeTemps;
+        logs.info();
+        logs.error() << "Internal error: insufficient memory";
+        logs.info();
+        AntaresSolverEmergencyShutdown();
+        return;
+    }
 
-        NumeroDeVariableDeM = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-        NumeroDeVariableDeMMoinsMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-        NumeroDeVariableDeMPlus = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-        NumeroDeVariableDeMMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    NombreDeVariables = 0;
+    for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+    {
+        NumeroDeVariableDeM[Pdt] = NombreDeVariables;
+        CoutLineaire[NombreDeVariables] = 1;
+        Xsolution[NombreDeVariables] = 0;
+        Xmin[NombreDeVariables] = NbMinOptDeGroupesEnMarche[Pdt];
+        Xmax[NombreDeVariables] = NombreMaxDeGroupesEnMarcheDuPalierThermique[Pdt];
+        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        NombreDeVariables++;
 
-        NombreDeContraintes = 0;
-        NombreDeContraintes += NombreDePasDeTemps;
-        NombreDeContraintes += NombreDePasDeTemps;
-        NombreDeContraintes += NombreDePasDeTemps;
-        NombreDeContraintes += NombreDePasDeTemps;
-        NombreDeContraintes += NombreDePasDeTemps;
+        NumeroDeVariableDeMMoinsMoins[Pdt] = NombreDeVariables;
+        CoutLineaire[NombreDeVariables] = 0;
+        Xsolution[NombreDeVariables] = 0;
+        Xmin[NombreDeVariables] = 0;
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+        Xmax[NombreDeVariables] = LINFINI_ANTARES;
+        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+#else
+        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+#endif
+        NombreDeVariables++;
 
-        PositionDeLaVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
-        CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-        Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-        Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-        Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-        TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+        NumeroDeVariableDeMPlus[Pdt] = NombreDeVariables;
+        CoutLineaire[NombreDeVariables] = 0;
+        Xsolution[NombreDeVariables] = 0;
+        Xmin[NombreDeVariables] = 0;
 
-        ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-        IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-        NombreDeTermesDesLignes = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-        Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
-        SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
+        Xmax[NombreDeVariables] = LINFINI_ANTARES;
+        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+        NombreDeVariables++;
 
-        NbTermesMatrice = 0;
-        NbTermesMatrice += 4 * NombreDePasDeTemps;
-        NbTermesMatrice += 2 * NombreDePasDeTemps;
-        NbTermesMatrice += 1 * NombreDePasDeTemps;
-        NbTermesMatrice
-          += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
-        NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
+        NumeroDeVariableDeMMoins[Pdt] = NombreDeVariables;
+        CoutLineaire[NombreDeVariables] = 0;
+        Xsolution[NombreDeVariables] = 0;
+        Xmin[NombreDeVariables] = 0;
 
-        IndicesColonnes = (int*)MemAlloc(NbTermesMatrice * sizeof(int));
-        CoefficientsDeLaMatriceDesContraintes = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
+        Xmax[NombreDeVariables] = LINFINI_ANTARES;
+        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+        NombreDeVariables++;
+    }
 
-        if (NumeroDeVariableDeM == NULL || NumeroDeVariableDeMMoinsMoins == NULL
-            || NumeroDeVariableDeMPlus == NULL || NumeroDeVariableDeMMoins == NULL
-            || PositionDeLaVariable == NULL || CoutLineaire == NULL || Xsolution == NULL || Xmin == NULL
-            || Xmax == NULL || TypeDeVariable == NULL || ComplementDeLaBase == NULL
-            || IndicesDebutDeLigne == NULL || NombreDeTermesDesLignes == NULL || Sens == NULL
-            || SecondMembre == NULL || IndicesColonnes == NULL
-            || CoefficientsDeLaMatriceDesContraintes == NULL)
+    NbTermesMatrice = 0;
+    NombreDeContraintes = 0;
+    for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+    {
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        t1moins1 = Pdt - 1;
+        if (t1moins1 < 0)
+            t1moins1 = NombreDePasDeTemps + t1moins1;
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[t1moins1];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMPlus[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+        Sens[NombreDeContraintes] = '=';
+        SecondMembre[NombreDeContraintes] = 0;
+        NombreDeContraintes++;
+
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+        Sens[NombreDeContraintes] = '<';
+        SecondMembre[NombreDeContraintes] = 0;
+        NombreDeContraintes++;
+
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+        t1 = Pdt;
+        t1moins1 = t1 - 1;
+        if (t1moins1 < 0)
+            t1moins1 = NombreDePasDeTemps + t1moins1;
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+        Sens[NombreDeContraintes] = '<';
+        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+              - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+            > 0)
         {
-            logs.info();
-            logs.error() << "Internal error: insufficient memory";
-            logs.info();
-            AntaresSolverEmergencyShutdown();
-            return;
-        }
-
-        NombreDeVariables = 0;
-        for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
-        {
-            NumeroDeVariableDeM[Pdt] = NombreDeVariables;
-            CoutLineaire[NombreDeVariables] = 1;
-            Xsolution[NombreDeVariables] = 0;
-            Xmin[NombreDeVariables] = NbMinOptDeGroupesEnMarche[Pdt];
-            Xmax[NombreDeVariables] = NombreMaxDeGroupesEnMarcheDuPalierThermique[Pdt];
-            TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            NombreDeVariables++;
-
-            NumeroDeVariableDeMMoinsMoins[Pdt] = NombreDeVariables;
-            CoutLineaire[NombreDeVariables] = 0;
-            Xsolution[NombreDeVariables] = 0;
-            Xmin[NombreDeVariables] = 0;
-    #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-            Xmax[NombreDeVariables] = LINFINI_ANTARES;
-            TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-    #else
-            TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-    #endif
-            NombreDeVariables++;
-
-            NumeroDeVariableDeMPlus[Pdt] = NombreDeVariables;
-            CoutLineaire[NombreDeVariables] = 0;
-            Xsolution[NombreDeVariables] = 0;
-            Xmin[NombreDeVariables] = 0;
-
-            Xmax[NombreDeVariables] = LINFINI_ANTARES;
-            TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            NombreDeVariables++;
-
-            NumeroDeVariableDeMMoins[Pdt] = NombreDeVariables;
-            CoutLineaire[NombreDeVariables] = 0;
-            Xsolution[NombreDeVariables] = 0;
-            Xmin[NombreDeVariables] = 0;
-
-            Xmax[NombreDeVariables] = LINFINI_ANTARES;
-            TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            NombreDeVariables++;
-        }
-
-        NbTermesMatrice = 0;
-        NombreDeContraintes = 0;
-        for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
-        {
-            NombreDeTermes = 0;
-            IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            t1moins1 = Pdt - 1;
-            if (t1moins1 < 0)
-                t1moins1 = NombreDePasDeTemps + t1moins1;
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[t1moins1];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMPlus[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-            Sens[NombreDeContraintes] = '=';
-            SecondMembre[NombreDeContraintes] = 0;
-            NombreDeContraintes++;
-
-            NombreDeTermes = 0;
-            IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-            Sens[NombreDeContraintes] = '<';
-            SecondMembre[NombreDeContraintes] = 0;
-            NombreDeContraintes++;
-
-    #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-            t1 = Pdt;
-            t1moins1 = t1 - 1;
-            if (t1moins1 < 0)
-                t1moins1 = NombreDePasDeTemps + t1moins1;
-            NombreDeTermes = 0;
-            IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-            Sens[NombreDeContraintes] = '<';
-            if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                  - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                > 0)
-            {
-                SecondMembre[NombreDeContraintes]
-                  = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                    - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-            }
-            else
-            {
-                SecondMembre[NombreDeContraintes] = 0;
-            }
-            NombreDeContraintes++;
-    #else
-            Var = NumeroDeVariableDeMMoinsMoins[Pdt];
-            t1 = Pdt;
-            t1moins1 = t1 - 1;
-            if (t1moins1 < 0)
-                t1moins1 = NombreDePasDeTemps + t1moins1;
-            Xmax[Var] = 0;
-            if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                  - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                > 0)
-            {
-                Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                            - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-            }
-    #endif
-
-            NombreDeTermes = 0;
-            IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-            for (k = Pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
-            {
-                t1 = k;
-                if (t1 < 0)
-                    t1 = NombreDePasDeTemps + t1;
-
-                CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
-                IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMPlus[t1];
-                NombreDeTermes++;
-                NbTermesMatrice++;
-
-                CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-                IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[t1];
-                NombreDeTermes++;
-                NbTermesMatrice++;
-            }
-
-            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-            Sens[NombreDeContraintes] = '>';
-            SecondMembre[NombreDeContraintes] = 0;
-            NombreDeContraintes++;
-
-            NombreDeTermes = 0;
-            IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
-            NombreDeTermes++;
-            NbTermesMatrice++;
-
-            for (k = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
-            {
-                t1 = k;
-                if (t1 < 0)
-                    t1 = NombreDePasDeTemps + t1;
-                CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-                IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[t1];
-                NombreDeTermes++;
-                NbTermesMatrice++;
-            }
-
-            NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-            Sens[NombreDeContraintes] = '<';
-            t1 = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
-            if (t1 < 0)
-                t1 = NombreDePasDeTemps + t1;
-            SecondMembre[NombreDeContraintes] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-            for (k = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
-            {
-                t1 = k;
-
-                if (t1 < 0)
-                    t1 = NombreDePasDeTemps + t1;
-                t1moins1 = t1 - 1;
-                if (t1moins1 < 0)
-                    t1moins1 = NombreDePasDeTemps + t1moins1;
-                if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                      - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                    > 0)
-                {
-                    SecondMembre[NombreDeContraintes]
-                      += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                        - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
-                }
-            }
-            NombreDeContraintes++;
-        }
-
-    #ifdef TRACES
-        printf(
-          "Optimisation auxiliaire: NombreDeVariables %d NombreDeContraintes %d NbTermesMatrice %d\n",
-          NombreDeVariables,
-          NombreDeContraintes,
-          NbTermesMatrice);
-    #endif
-
-        Probleme.Contexte = SIMPLEXE_SEUL;
-        Probleme.BaseDeDepartFournie = NON_SPX;
-
-        Probleme.NombreMaxDIterations = -1;
-        Probleme.DureeMaxDuCalcul = -1.;
-
-        Probleme.CoutLineaire = CoutLineaire;
-        Probleme.X = Xsolution;
-        Probleme.Xmin = Xmin;
-        Probleme.Xmax = Xmax;
-        Probleme.NombreDeVariables = NombreDeVariables;
-        Probleme.TypeDeVariable = TypeDeVariable;
-
-        Probleme.NombreDeContraintes = NombreDeContraintes;
-        Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
-        Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
-        Probleme.IndicesColonnes = IndicesColonnes;
-        Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
-        Probleme.Sens = Sens;
-        Probleme.SecondMembre = SecondMembre;
-
-        Probleme.ChoixDeLAlgorithme = SPX_DUAL;
-
-        Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
-        Probleme.FaireDuScaling = OUI_SPX;
-        Probleme.StrategieAntiDegenerescence = AGRESSIF;
-
-        Probleme.PositionDeLaVariable = PositionDeLaVariable;
-        Probleme.NbVarDeBaseComplementaires = 0;
-        Probleme.ComplementDeLaBase = ComplementDeLaBase;
-
-        Probleme.LibererMemoireALaFin = OUI_SPX;
-
-        Probleme.UtiliserCoutMax = NON_SPX;
-        Probleme.CoutMax = 0.0;
-
-        Probleme.CoutsMarginauxDesContraintes = NULL;
-        Probleme.CoutsReduits = NULL;
-
-        Probleme.AffichageDesTraces = NON_SPX;
-
-        Probleme.NombreDeContraintesCoupes = 0;
-
-        ProbSpx = NULL;
-        ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
-
-        if (Probleme.ExistenceDUneSolution == OUI_SPX)
-        {
-            int Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-            for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
-            {
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-                {
-                    ProblemeHebdo->valeursPremiereOptimisationEtHeuristique[ProblemeHebdo->nombreDeVariablesAFixer] 
-                      = ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
-                    ProblemeHebdo->colonnesAFixer[ProblemeHebdo->nombreDeVariablesAFixer] 
-                      = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-                    ProblemeHebdo->nombreDeVariablesAFixer++;
-                }
-                else
-                    NbMinOptDeGroupesEnMarche[Pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
-            }
+            SecondMembre[NombreDeContraintes]
+              = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
         }
         else
         {
-    #ifdef TRACES
-            printf("Pas de solution au probleme auxiliaire\n");
-    #endif
+            SecondMembre[NombreDeContraintes] = 0;
+        }
+        NombreDeContraintes++;
+#else
+        Var = NumeroDeVariableDeMMoinsMoins[Pdt];
+        t1 = Pdt;
+        t1moins1 = t1 - 1;
+        if (t1moins1 < 0)
+            t1moins1 = NombreDePasDeTemps + t1moins1;
+        Xmax[Var] = 0;
+        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+              - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+            > 0)
+        {
+            Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                        - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+        }
+#endif
+
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+        for (k = Pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
+        {
+            t1 = k;
+            if (t1 < 0)
+                t1 = NombreDePasDeTemps + t1;
+
+            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = -1;
+            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMPlus[t1];
+            NombreDeTermes++;
+            NbTermesMatrice++;
+
+            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[t1];
+            NombreDeTermes++;
+            NbTermesMatrice++;
         }
 
-        MemFree(NumeroDeVariableDeM);
-        MemFree(NumeroDeVariableDeMMoinsMoins);
-        MemFree(NumeroDeVariableDeMPlus);
-        MemFree(NumeroDeVariableDeMMoins);
-        MemFree(PositionDeLaVariable);
-        MemFree(CoutLineaire);
-        MemFree(Xsolution);
-        MemFree(Xmin);
-        MemFree(Xmax);
-        MemFree(TypeDeVariable);
-        MemFree(ComplementDeLaBase);
-        MemFree(IndicesDebutDeLigne);
-        MemFree(NombreDeTermesDesLignes);
-        MemFree(Sens);
-        MemFree(SecondMembre);
-        MemFree(IndicesColonnes);
-        MemFree(CoefficientsDeLaMatriceDesContraintes);
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+        Sens[NombreDeContraintes] = '>';
+        SecondMembre[NombreDeContraintes] = 0;
+        NombreDeContraintes++;
+
+        NombreDeTermes = 0;
+        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
+
+        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeM[Pdt];
+        NombreDeTermes++;
+        NbTermesMatrice++;
+
+        for (k = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
+        {
+            t1 = k;
+            if (t1 < 0)
+                t1 = NombreDePasDeTemps + t1;
+            CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
+            IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoins[t1];
+            NombreDeTermes++;
+            NbTermesMatrice++;
+        }
+
+        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
+        Sens[NombreDeContraintes] = '<';
+        t1 = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique;
+        if (t1 < 0)
+            t1 = NombreDePasDeTemps + t1;
+        SecondMembre[NombreDeContraintes] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
+        for (k = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
+        {
+            t1 = k;
+
+            if (t1 < 0)
+                t1 = NombreDePasDeTemps + t1;
+            t1moins1 = t1 - 1;
+            if (t1moins1 < 0)
+                t1moins1 = NombreDePasDeTemps + t1moins1;
+            if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                  - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                > 0)
+            {
+                SecondMembre[NombreDeContraintes]
+                  += NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
+                     - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
+            }
+        }
+        NombreDeContraintes++;
     }
-    else if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-    { 
-        int Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+
+#ifdef TRACES
+    printf(
+      "Optimisation auxiliaire: NombreDeVariables %d NombreDeContraintes %d NbTermesMatrice %d\n",
+      NombreDeVariables,
+      NombreDeContraintes,
+      NbTermesMatrice);
+#endif
+
+    Probleme.Contexte = SIMPLEXE_SEUL;
+    Probleme.BaseDeDepartFournie = NON_SPX;
+
+    Probleme.NombreMaxDIterations = -1;
+    Probleme.DureeMaxDuCalcul = -1.;
+
+    Probleme.CoutLineaire = CoutLineaire;
+    Probleme.X = Xsolution;
+    Probleme.Xmin = Xmin;
+    Probleme.Xmax = Xmax;
+    Probleme.NombreDeVariables = NombreDeVariables;
+    Probleme.TypeDeVariable = TypeDeVariable;
+
+    Probleme.NombreDeContraintes = NombreDeContraintes;
+    Probleme.IndicesDebutDeLigne = IndicesDebutDeLigne;
+    Probleme.NombreDeTermesDesLignes = NombreDeTermesDesLignes;
+    Probleme.IndicesColonnes = IndicesColonnes;
+    Probleme.CoefficientsDeLaMatriceDesContraintes = CoefficientsDeLaMatriceDesContraintes;
+    Probleme.Sens = Sens;
+    Probleme.SecondMembre = SecondMembre;
+
+    Probleme.ChoixDeLAlgorithme = SPX_DUAL;
+
+    Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
+    Probleme.FaireDuScaling = OUI_SPX;
+    Probleme.StrategieAntiDegenerescence = AGRESSIF;
+
+    Probleme.PositionDeLaVariable = PositionDeLaVariable;
+    Probleme.NbVarDeBaseComplementaires = 0;
+    Probleme.ComplementDeLaBase = ComplementDeLaBase;
+
+    Probleme.LibererMemoireALaFin = OUI_SPX;
+
+    Probleme.UtiliserCoutMax = NON_SPX;
+    Probleme.CoutMax = 0.0;
+
+    Probleme.CoutsMarginauxDesContraintes = NULL;
+    Probleme.CoutsReduits = NULL;
+
+    Probleme.AffichageDesTraces = NON_SPX;
+
+    Probleme.NombreDeContraintesCoupes = 0;
+
+    ProbSpx = NULL;
+    ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
+
+    if (Probleme.ExistenceDUneSolution == OUI_SPX)
+    {
         for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
         {
-            ProblemeHebdo->valeursPremiereOptimisationEtHeuristique[ProblemeHebdo->nombreDeVariablesAFixer] 
-              = (double) NbMinOptDeGroupesEnMarche[Pdt];
-            ProblemeHebdo->colonnesAFixer[ProblemeHebdo->nombreDeVariablesAFixer] 
-              = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-            ProblemeHebdo->nombreDeVariablesAFixer++;
+            NbMinOptDeGroupesEnMarche[Pdt] = (int)ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
         }
     }
+    else
+    {
+#ifdef TRACES
+        printf("Pas de solution au probleme auxiliaire\n");
+#endif
+    }
+
+    MemFree(NumeroDeVariableDeM);
+    MemFree(NumeroDeVariableDeMMoinsMoins);
+    MemFree(NumeroDeVariableDeMPlus);
+    MemFree(NumeroDeVariableDeMMoins);
+    MemFree(PositionDeLaVariable);
+    MemFree(CoutLineaire);
+    MemFree(Xsolution);
+    MemFree(Xmin);
+    MemFree(Xmax);
+    MemFree(TypeDeVariable);
+    MemFree(ComplementDeLaBase);
+    MemFree(IndicesDebutDeLigne);
+    MemFree(NombreDeTermesDesLignes);
+    MemFree(Sens);
+    MemFree(SecondMembre);
+    MemFree(IndicesColonnes);
+    MemFree(CoefficientsDeLaMatriceDesContraintes);
 
     return;
 }

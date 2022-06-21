@@ -112,20 +112,8 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    
-
-    if (ProblemeHebdo->OptimisationAvecVariablesEntieres && ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
-    {
-        Probleme.solveOnlyRelaxation = false;
-        ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeMip[(int)NumIntervalle]);
-        solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeMip[(int)NumIntervalle]);
-    }
-    else
-    {
-        Probleme.solveOnlyRelaxation = true;
-        ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-        solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    }
+    ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
@@ -155,11 +143,7 @@ RESOLUTION:
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-
-            if (ProblemeHebdo->OptimisationAvecVariablesEntieres && ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
-                ProblemeAResoudre->ProblemesSpx->ProblemeMip[NumIntervalle] = nullptr;
-            else
-                ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
 
             ProbSpx = nullptr;
             solver = nullptr;
@@ -251,6 +235,11 @@ RESOLUTION:
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
 
+    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
+    //		- Only for first optimization
+    //		- If mode Xpansion is asked
+    //		- For time beeing, only for simplex, without use of ortools
+
     Probleme.NombreDeContraintesCoupes = 0;
 
     // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
@@ -271,10 +260,7 @@ RESOLUTION:
         solver = ORTOOLS_Simplexe(&Probleme, solver);
         if (solver != nullptr)
         {
-            if (ProblemeHebdo->OptimisationAvecVariablesEntieres && ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
-                ProblemeAResoudre->ProblemesSpx->ProblemeMip[NumIntervalle] = (void*)solver;
-            else
-                ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
+            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
         }
     }
     else

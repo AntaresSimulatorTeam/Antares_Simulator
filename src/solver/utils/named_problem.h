@@ -19,8 +19,7 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     const std::vector<bool>& VariablesEntieres;
-    bool solveOnlyRelaxation;
-
+    
     bool isMIP() const;
 };
 } // namespace Optimization

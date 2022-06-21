@@ -1,7 +1,5 @@
 #include "ortools_utils.h"
 
-#include <xprs.h>
-
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
@@ -17,8 +15,7 @@ static void transferVariables(MPSolver* solver,
                               const double* costs,
                               int nbVar,
                               const std::vector<std::string>& NomDesVariables,
-                              const std::vector<bool>& VariablesEntieres,
-                              bool solveOnlyRelaxation)
+                              const std::vector<bool>& VariablesEntieres)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -39,11 +36,7 @@ static void transferVariables(MPSolver* solver,
             varName = NomDesVariables[idxVar];
         }
 
-        const MPVariable* var;
-        if (solveOnlyRelaxation)
-            var = solver->MakeVar(min_l, max_l, false, varName);
-        else
-            var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
+        const MPVariable* var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
@@ -118,11 +111,15 @@ MPSolver* convert_to_MPSolver(
     // Define solver used depending on study option
 
     MPSolver::OptimizationProblemType solverType;
-    if (problemeSimplexe->isMIP() && !problemeSimplexe->solveOnlyRelaxation)
+    if (problemeSimplexe->isMIP())
+    {
         solverType
           = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
+    }
     else
+    {
         solverType = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+    }
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
@@ -134,8 +131,7 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
                       problemeSimplexe->NomDesVariables,
-                      problemeSimplexe->VariablesEntieres,
-                      problemeSimplexe->solveOnlyRelaxation);
+                      problemeSimplexe->VariablesEntieres);
 
     // Create constraints and set coefs
     transferRows(solver,
@@ -331,14 +327,6 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* solver,
 void ORTOOLS_LibererProbleme(MPSolver* solver)
 {
     delete solver;
-}
-
-void XPRESS_AjouterSolutionInitiale(MPSolver* solver) //, int length, int* values, int* columns
-{
-    void* ptr = solver->underlying_solver();
-    XPRSprob xpr = static_cast<XPRSprob>(ptr);
-
-    //XPRSaddmipsol(xpr, );  
 }
 
 using namespace Antares::Data;

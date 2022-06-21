@@ -586,10 +586,6 @@ struct PROBLEME_HEBDO
     RESULTATS_HORAIRES** ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
 
-    double* valeursPremiereOptimisationEtHeuristique;
-    int* colonnesAFixer;
-    int nombreDeVariablesAFixer;
-
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
 

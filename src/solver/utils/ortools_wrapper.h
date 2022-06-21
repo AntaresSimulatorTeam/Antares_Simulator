@@ -19,6 +19,4 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
                                int nbVar);
 void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
 
-void XPRESS_AjouterSolutionInitiale(MPSolver* solver, int length, int* values, int* columns);
-
 #endif

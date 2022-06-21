@@ -576,11 +576,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
     }
 
-    problem.valeursPremiereOptimisationEtHeuristique 
-      = (double*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(double));
-    problem.colonnesAFixer
-      = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-
     problem.numeroOptimisation = (int*)MemAlloc(7 * sizeof(int));
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
     problem.coutOptimalSolution2 = (double*)MemAlloc(7 * sizeof(double));
@@ -932,9 +927,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.CoefficientEcretementPMaxHydraulique);
 
     MemFree(problem.BruitSurCoutHydraulique);
-
-    MemFree(problem.valeursPremiereOptimisationEtHeuristique);
-    MemFree(problem.colonnesAFixer);
 
     MemFree(problem.numeroOptimisation);
     MemFree(problem.coutOptimalSolution1);
