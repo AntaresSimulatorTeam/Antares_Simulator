@@ -13,6 +13,15 @@ namespace Benchmarking
 	StudyInfoContainer::StudyInfoContainer(const Antares::Data::Study& study) : study_(study)
 	{}
 
+	StudyInfoContainer::iterator StudyInfoContainer::begin()
+	{
+		return items_.begin();
+	}
+
+	StudyInfoContainer::iterator StudyInfoContainer::end()
+	{
+		return items_.end();
+	}
 
 	// Collecting data from study
 	void StudyInfoContainer::collect()
@@ -29,25 +38,33 @@ namespace Benchmarking
 
 	void StudyInfoContainer::collectAreasCount()
 	{
-		nbAreas_ = study_.areas.size();
+		addItem<StudyInfoItem_integerValue>("areas", study_.areas.size());
 	}
 
 	void StudyInfoContainer::collectLinksCount()
 	{
-		nbLinks_ = study_.areas.areaLinkCount();
+		addItem<StudyInfoItem_integerValue>("links", study_.areas.areaLinkCount());
 	}
 
 	void StudyInfoContainer::collectPerformedYearsCount()
 	{
+		// Computing the number of performed years
+		unsigned int nbPerformedYears = 0;
 		for (uint i = 0; i < study_.parameters.nbYears; i++)
 		{
 			if (study_.parameters.yearsFilter[i])
-				nbPerformedYears_++;
+				nbPerformedYears++;
 		}
+
+		// Adding an item related to number of performed years to the file content
+		addItem<StudyInfoItem_integerValue>("performed years", nbPerformedYears);
 	}
 
 	void StudyInfoContainer::collectEnabledThermalClustersCount()
 	{
+		// Computing the number of enabled thermal clusters
+		unsigned int nbEnabledThermalClusters = 0;
+
 		auto end = study_.areas.end();
 		for (auto i = study_.areas.begin(); i != end; ++i)
 		{
@@ -57,55 +74,53 @@ namespace Benchmarking
 			{
 				ThermalCluster* cluster = i->second.get();
 				if (cluster->enabled)
-					nbEnabledThermalClusters_++;
+					nbEnabledThermalClusters++;
 			}
 		}
+
+		// Adding an item related to number of enabled thermal clusters to the file content
+		addItem<StudyInfoItem_integerValue>("enabled thermal clusters", nbEnabledThermalClusters);
 	}
 
 	void StudyInfoContainer::collectEnabledBindingConstraintsCount()
 	{
-		nbEnabledBC_ = study_.runtime->bindingConstraintCount;
-		for (uint i = 0; i < nbEnabledBC_; i++)
+		unsigned int nbEnabledBC = study_.runtime->bindingConstraintCount;
+		unsigned int nbEnabledHourlyBC(0), nbEnabledDailyBC(0), nbEnabledWeeklyBC(0);
+
+		for (uint i = 0; i < nbEnabledBC; i++)
 		{
 			switch (study_.runtime->bindingConstraint[i].type)
 			{
 			case BindingConstraint::Type::typeHourly:
-				nbEnabledHourlyBC_++;
+				nbEnabledHourlyBC++;
 				break;
 			case BindingConstraint::Type::typeDaily:
-				nbEnabledDailyBC_++;
+				nbEnabledDailyBC++;
 				break;
 			case BindingConstraint::Type::typeWeekly:
-				nbEnabledWeeklyBC_++;
+				nbEnabledWeeklyBC++;
 				break;
 			default:
 				break;
 			}
 		}
+
+		addItem<StudyInfoItem_integerValue>("enabled BC", nbEnabledBC);
+		addItem<StudyInfoItem_integerValue>("enabled hourly BC", nbEnabledHourlyBC);
+		addItem<StudyInfoItem_integerValue>("enabled daily BC", nbEnabledDailyBC);
+		addItem<StudyInfoItem_integerValue>("enabled weekly BC", nbEnabledWeeklyBC);
 	}
 
 	void StudyInfoContainer::collectUnitCommitmentMode()
 	{
-		UnitComitmentMode_ = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
+		addItem<StudyInfoItem_charValue>("unit commitment", unitCommitment);
 	}
 
 	void StudyInfoContainer::collectMaxNbYearsInParallel()
 	{
-		maxNbYearsInParallel_ = study_.maxNbYearsInParallel;
+		addItem<StudyInfoItem_integerValue>("max parallel years", study_.maxNbYearsInParallel);
 	}
-
-	// Getters
-	unsigned int StudyInfoContainer::getAreasCount() { return nbAreas_; }
-	unsigned int StudyInfoContainer::getLinksCount() { return nbLinks_; }
-	unsigned int StudyInfoContainer::getPerformedYearsCount() { return nbPerformedYears_; }
-	unsigned int StudyInfoContainer::getEnabledThermalClustersCount() { return nbEnabledThermalClusters_; }
-	const char* StudyInfoContainer::getUnitCommitmentMode() { return UnitComitmentMode_; }
-	unsigned int StudyInfoContainer::getMaxNbYearsInParallel() { return maxNbYearsInParallel_; }
-
-	unsigned int StudyInfoContainer::getEnabledBCcount() { return nbEnabledBC_; }
-	unsigned int StudyInfoContainer::getEnabledHourlyBCcount() { return nbEnabledHourlyBC_; }
-	unsigned int StudyInfoContainer::getEnabledDailyBCcount() { return nbEnabledDailyBC_; }
-	unsigned int StudyInfoContainer::getEnabledWeeklyBCcount() { return nbEnabledWeeklyBC_; }
 
 
 	/*
@@ -123,21 +138,8 @@ namespace Benchmarking
 			throw Antares::Error::CreatingStudyInfoFile(filePath_);
 		}
 
-		outputFile_ << "Number of areas" << "\t" << fileContent_.getAreasCount() << "\n";
-		outputFile_ << "Number of links" << "\t" << fileContent_.getLinksCount() << "\n";
-		outputFile_ << "Number of performed years" << "\t" << fileContent_.getPerformedYearsCount() << "\n";
-		outputFile_ << "Number of enabled thermal clusters" << "\t" << fileContent_.getEnabledThermalClustersCount() << "\n";
-
-		outputFile_ << "Number of enabled BCs" << "\t" << fileContent_.getEnabledBCcount() << "\n";
-		outputFile_ << "Number of enabled hourly BCs" << "\t" << fileContent_.getEnabledHourlyBCcount() << "\n";
-		outputFile_ << "Number of enabled daily BCs" << "\t" << fileContent_.getEnabledDailyBCcount() << "\n";
-		outputFile_ << "Number of enabled weekly BCs" << "\t" << fileContent_.getEnabledWeeklyBCcount() << "\n";
-
-		outputFile_ << "Unit commitment mode" << "\t" << fileContent_.getUnitCommitmentMode() << "\n";
-		outputFile_ << "Max number of years in parallel" << "\t" << fileContent_.getMaxNbYearsInParallel() << "\n";
-		
-		// Only for test : is about to be removed
-		// std::string blabla("blabla");
-		// outputFile_ << blabla;
+		StudyInfoContainer::iterator it = fileContent_.begin();
+		for (; it != fileContent_.end(); it++)
+			outputFile_ << (*it)->name() << " : " << (*it)->value() << "\n";
 	}
 }
