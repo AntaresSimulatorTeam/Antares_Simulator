@@ -10,7 +10,8 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  const std::vector<bool>& VariablesEntieres) :
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
- VariablesEntieres(VariablesEntieres)
+ VariablesEntieres(VariablesEntieres),
+ solveOnlyRelaxation(true)
 {
 }
 

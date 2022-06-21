@@ -68,6 +68,7 @@
 typedef struct
 {
     void** ProblemeSpx;
+    void** ProblemeMip;
 } PROBLEMES_SIMPLEXE;
 
 /* Le probleme a resoudre */

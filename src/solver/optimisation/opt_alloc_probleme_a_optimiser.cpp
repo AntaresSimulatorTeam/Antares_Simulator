@@ -164,9 +164,13 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
 
     ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
     ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+    ProblemeAResoudre->ProblemesSpx->ProblemeMip = (void**)MemAlloc(NbIntervalles * sizeof(void*));
     for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+    {
         ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
-
+        ProblemeAResoudre->ProblemesSpx->ProblemeMip[NumIntervalle] = NULL;
+    }
+        
     ProblemeAResoudre->PositionDeLaVariable
       = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
     ProblemeAResoudre->ComplementDeLaBase

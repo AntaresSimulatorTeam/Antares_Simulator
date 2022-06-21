@@ -105,8 +105,7 @@ OptimisationHebdo:
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
 
-    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION
-        && !(ProblemeHebdo->OptimisationAvecVariablesEntieres))
+    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
     {
         if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         {
@@ -115,6 +114,11 @@ OptimisationHebdo:
         else if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
         {
             OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
+
+            /*if (ProblemeHebdo->OptimisationAvecVariablesEntieres) 
+            {
+                ORTOOLS_AjouterUneSolutionInitialeDansSolveur();
+            }   */
         }
         else
             printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
