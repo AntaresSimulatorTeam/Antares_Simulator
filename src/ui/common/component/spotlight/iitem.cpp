@@ -39,8 +39,8 @@ namespace Antares
 {
 namespace Component
 {
-//! Convenient typedef for unsigned char
-typedef unsigned char uchar;
+//! Convenient using char = for unsigned
+using uchar = unsigned char;
 
 //! Highlight color
 static wxColour gColorHighlight;
@@ -390,8 +390,6 @@ void Spotlight::IItem::draw(wxDC& dc,
     {
         // Sub caption, wx format
         wxString subCaption = wxStringFromUTF8(pSubCaption);
-        bool b = pCaption.equals("W2");
-        int length = subCaption.Length();
         uint bounds_width = bounds.width;
 
         // display the main label

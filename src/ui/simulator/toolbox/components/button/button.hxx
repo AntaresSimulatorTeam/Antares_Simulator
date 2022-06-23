@@ -51,7 +51,7 @@ Button::Button(wxWindow* parent,
  pHover(true)
 {
     // callback
-    typedef void (T::*MethodType)(void*);
+    using MethodType = void (T::*)(void*);
     if (object)
         pOnClick.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
 
@@ -66,7 +66,7 @@ inline void Button::onPopupMenu(const T* object, void (T::*method)(Button&, wxMe
 {
     if (object)
     {
-        typedef void (T::*MethodType)(Button&, wxMenu&, void*);
+        using MethodType = void (T::*)(Button&, wxMenu&, void*);
         pOnPopup.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
     }
     else
@@ -83,7 +83,7 @@ inline void Button::onClick(const T* object, void (T::*method)(void*))
 {
     if (object)
     {
-        typedef void (T::*MethodType)(void*);
+        using MethodType = void (T::*)(void*);
         pOnClick.bind(const_cast<T*>(object), reinterpret_cast<MethodType>(method));
     }
     else

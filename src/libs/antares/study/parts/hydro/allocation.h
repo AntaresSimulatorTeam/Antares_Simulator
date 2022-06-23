@@ -39,7 +39,7 @@ class HydroAllocation final
 {
 public:
     //! Coefficients
-    typedef std::map<AreaName, double> Coefficients;
+    using Coefficients = std::map<AreaName, double>;
 
 public:
     //! \id Constructor & Destructor

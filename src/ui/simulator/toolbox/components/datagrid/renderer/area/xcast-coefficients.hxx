@@ -81,8 +81,6 @@ inline bool XCastCoefficients<T>::cellValue(int x, int y, const Yuni::String& va
     if (!pArea)
         return false;
     auto& xcast = *(pArea->xcastData<T>());
-    if (!(&xcast))
-        return false;
     float v;
     if (!value.to(v))
         return false;
@@ -227,9 +225,6 @@ IRenderer::CellStyle XCastCoefficients<T>::cellStyle(int col, int row) const
     if (!pArea)
         return IRenderer::cellStyleDefault;
     XCast& xcast = *(pArea->xcastData<T>());
-    if (!(&xcast))
-        return IRenderer::cellStyleDefault;
-    assert(&xcast != NULL);
     if ((uint)col >= xcast.data.width || (uint)row >= xcast.data.height)
         return IRenderer::cellStyleDefault;
 

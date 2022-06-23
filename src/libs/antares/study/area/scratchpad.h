@@ -46,7 +46,7 @@ class AreaScratchpad final : private Yuni::NonCopyable<AreaScratchpad>
 {
 public:
     //! Matrix used for time-series
-    typedef Matrix<double, Yuni::sint32> TSMatrix;
+    using TSMatrix = Matrix<double, Yuni::sint32>;
 
 public:
     //! \name Constructor

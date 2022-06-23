@@ -276,7 +276,7 @@ public:
     /*!
     ** \brief Find a page by its name
     */
-    Page* find(const wxString& name, bool warn = true);
+    Page* find(const wxString& name);
 
     void set_page_visibility(const wxString& name, bool visible);
 
@@ -394,7 +394,7 @@ public:
     //! Orientation
     const Orientation pOrientation;
     //! All pages
-    typedef std::vector<Page*> Pages;
+    using Pages = std::vector<Page*>;
     //! All pages
     Pages pPages;
     //! The tab component

@@ -40,8 +40,8 @@ namespace Data
 class UIRuntimeInfo final
 {
 public:
-    typedef std::map<enum BindingConstraint::Type, BindingConstraint::Vector> VectorByType;
-    typedef std::map<enum BindingConstraint::Operator, VectorByType> ByOperatorAndType;
+    using VectorByType = std::map<enum BindingConstraint::Type, BindingConstraint::Vector>;
+    using ByOperatorAndType = std::map<enum BindingConstraint::Operator, VectorByType>;
 
 public:
     //! \name Constructor & Destructor

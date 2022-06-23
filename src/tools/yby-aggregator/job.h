@@ -108,11 +108,11 @@ private:
 
 private:
     //! Type for a temporary column
-    typedef CellData* TemporaryColumnData;
+    using TemporaryColumnData = CellData*;
     //! Buffer type
-    typedef Yuni::CString<65536> BufferType;
+    using BufferType = Yuni::CString<65536>;
     //! Jump table
-    typedef std::vector<uint> JumpTable;
+    using JumpTable = std::vector<uint>;
 
 private:
     //! Buffer for reading data

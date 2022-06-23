@@ -41,9 +41,9 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     AdequacyPatchMode ExtremityNodeAdequacyPatchType
       = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
     bool setToZeroNTCfromOutToIn_AdqPatch
-      = ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
+      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
     bool setToZeroNTCfromOutToOut_AdqPatch
-      = ProblemeHebdo->adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
+      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
 
     switch (OriginNodeAdequacyPatchType)
     {
@@ -68,7 +68,7 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
     case physicalAreaInsideAdqPatch:
         return setToZero;
     case physicalAreaOutsideAdqPatch:
-        return (setToZeroNTCfromOutToIn_AdqPatch) ? setToZero : setOrigineExtremityToZero;
+        return setToZero;
     default:
         return leaveLocalValues;
     }
@@ -103,7 +103,7 @@ void setNTCbounds(double& Xmax,
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
-    if (ProblemeHebdo->adqPatch && ProblemeHebdo->adqPatch->AdequacyFirstStep)
+    if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
     {
         ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
 
@@ -167,7 +167,7 @@ void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
-    float threshold = ProblemeHebdo->adqPatch->ThresholdDisplayLocalMatchingRuleViolations;
+    float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
     double densNew;
     double ensInit;
@@ -210,7 +210,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     double ensInit;
     double densNew;
     bool includeFlowsOutsideAdqPatchToDensNew
-      = !ProblemeHebdo->adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1;
+      = !ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
 
     Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)

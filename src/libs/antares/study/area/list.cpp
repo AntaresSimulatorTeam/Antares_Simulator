@@ -348,7 +348,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
         value = "inside";
         break;
     default:
-        value = "outside"; //default physicalAreaOutsideAdqPatch
+        value = "outside"; // default physicalAreaOutsideAdqPatch
         break;
     }
     section->add("adequacy-patch-mode", value);
@@ -442,7 +442,7 @@ void AreaList::rebuildIndexes()
     }
     else
     {
-        typedef Area* AreaWeakPtr;
+        using AreaWeakPtr = Area*;
         byIndex = new AreaWeakPtr[areas.size()];
 
         uint indx = 0;
@@ -603,7 +603,7 @@ bool AreaList::saveListToFile(const AnyString& filename) const
     Clob data;
     {
         // Preparing a new list of areas, sorted by their name
-        typedef std::list<std::string> List;
+        using List = std::list<std::string>;
         List list;
         {
             auto end = areas.end();
@@ -753,7 +753,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 template<class StringT>
 static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
 {
-    if (study.header.version >= 820)
+    if (study.header.version >= 820 && study.parameters.include.adequacyPatch)
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
@@ -768,9 +768,7 @@ static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
                 tmp.toLower();
                 if (tmp == "adequacy-patch-mode")
                 {
-                    auto value = p->value;
-                    value.trim();
-                    value.toLower();
+                    auto value = (p->value).toLower();
 
                     if (value == "virtual")
                         area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;

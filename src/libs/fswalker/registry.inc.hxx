@@ -36,10 +36,10 @@ namespace FSWalker
 class EventsRegistry : private Yuni::NonCopyable<EventsRegistry>
 {
 public:
-    typedef std::vector<OnDirectoryEvent> OnDirectoryEventList;
-    typedef std::vector<OnFileEvent> OnFileEventList;
-    typedef std::vector<uint> IndexList;
-    typedef std::vector<void*> UserDataList;
+    using OnDirectoryEventList = std::vector<OnDirectoryEvent>;
+    using OnFileEventList = std::vector<OnFileEvent>;
+    using IndexList = std::vector<uint>;
+    using UserDataList = std::vector<void*>;
 
 public:
     EventsRegistry()

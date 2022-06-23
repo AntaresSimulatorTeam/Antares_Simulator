@@ -160,7 +160,6 @@ enum MenusID
     //@{
     mnIDHelpHelp,
     mnIDHelpPDFGeneralReferenceGuide,
-    mnIDHelpPDFOptimizationProblemsFormulation,
     mnIDHelpPDFSystemMapEditorReferenceGuide,
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,

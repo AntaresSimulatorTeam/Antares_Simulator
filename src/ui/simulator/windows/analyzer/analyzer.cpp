@@ -229,7 +229,7 @@ protected:
     virtual bool onExecute() override
     {
         // alias
-        typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
+        using Record = Component::Datagrid::Renderer::Analyzer::Areas::Record;
 
         Record record;
         String s;
@@ -468,7 +468,7 @@ private:
 
 void FileSearchProvider::search(Spotlight::IItem::Vector& out,
                                 const Spotlight::SearchToken::Vector& tokens,
-                                const Yuni::String& text)
+                                const Yuni::String& /* text */)
 {
     if (tokens.empty())
     {
@@ -673,7 +673,7 @@ AnalyzerWizard::AnalyzerWizard(wxFrame* parent) :
 
         // Mapping areas
         // \_ renderer
-        // typedef Component::Datagrid::Renderer::Analyzer::Areas RendererType;
+        // using RendererType = Component::Datagrid::Renderer::Analyzer::Areas;
         pRenderer = new RendererType();
         pRenderer->study = Data::Study::Current::Get();
         pRenderer->initializeFromStudy();
@@ -1275,7 +1275,7 @@ void AnalyzerWizard::evtUpdateFileMapping(wxCommandEvent&)
     // clear the filesearch component
     onFileSearchClear();
 
-    if (!(&map) or map.empty())
+    if (map.empty())
     {
         enableAll(false);
     }
@@ -1435,7 +1435,7 @@ bool AnalyzerWizard::saveToFile(const String& filename) const
     }
 
     // aliases
-    typedef Component::Datagrid::Renderer::Analyzer::Areas::Record Record;
+    using Record = Component::Datagrid::Renderer::Analyzer::Areas::Record;
     auto& mapping = *pFileMapping;
     auto& pRecord = pRenderer->record();
 

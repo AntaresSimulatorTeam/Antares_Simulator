@@ -37,7 +37,7 @@
 namespace LocalPolicy
 {
 //! A key entry
-typedef Yuni::ShortString64 PolicyKey;
+using PolicyKey = Yuni::ShortString64;
 
 /*!
 ** \brief Open the local policies

@@ -79,7 +79,7 @@ public:
 class SpotlightProviderWindows : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     SpotlightProviderWindows()
@@ -92,7 +92,7 @@ public:
 
     virtual void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "")
+                        const Yuni::String& /* text */)
     {
         auto& framelist = Component::Frame::Registry::List();
         int elemIdx = -1;

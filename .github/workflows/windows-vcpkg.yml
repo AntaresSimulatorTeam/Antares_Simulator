@@ -9,10 +9,15 @@ on:
       - fix/*
       - release/*
 jobs:
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -21,27 +26,34 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
+            test-platform: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      
+
     steps:
-    - uses: actions/checkout@v2    
+    - uses: actions/checkout@v2
 
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
-        python-version: 3.8
-      
+        python-version: '3.x'
+
     - name: Pre-requisites
       shell: cmd
-      run: |          
+      run: |
           choco install wget unzip --no-progress
-          
+
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
-        
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
+
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
       uses: actions/cache@v2
@@ -57,8 +69,8 @@ jobs:
         # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
         key: |
-          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
-    
+          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}
+
     - name : Install deps with VCPKG
       run: |
           cd vcpkg
@@ -66,54 +78,71 @@ jobs:
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-      
+
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
-      with: 
+      with:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
-            
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        
+
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
-           
+
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-           
+
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure
+      shell: bash
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH="../install" -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
     - name: Build
+      shell: bash
       run: |
            cmake --build _build --config release -j2
 
-    - name: Running unit tests
+    - name: Run unfeasibility-related tests
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+           ctest -C Release --output-on-failure -R unfeasible
 
-    - name: Inject slug/short variables
-      uses: rlespinasse/github-slug-action@v3.x
-
-    - name : Run non-regression tests
+    - name: Run adq-patch related tests
       run: |
-         if [[ "${{ env.GITHUB_REF_SLUG }}" =~ "release" ]]; then
-            cd _build
-            ctest -C Release --output-on-failure -L "non-regression"
-         else
-            echo "Non-regression tests were not run"
-         fi
-      shell: bash
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run short-tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
 
     - name: NSIS Installer creation
       shell: bash
@@ -124,7 +153,7 @@ jobs:
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
-           
+
     - name: .zip creation
       run: |
            cd _build
@@ -135,9 +164,16 @@ jobs:
       with:
         name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
-        
+
     - name: Archive upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-windows-archive
         path: _build/*.zip
+
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-after-failure
+        path: ${{ github.workspace }}/_build

@@ -179,12 +179,7 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
             auto* area = *i;
             if (area)
             {
-                String s;
-                wxStringToString(value.GetString(), s);
-                s.toLower();
-                s.trim();
-
-                switch (s.to<int>())
+                switch (value.GetLong())
                 {
                 case 0:
                     area->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
@@ -195,12 +190,10 @@ bool InspectorGrid::onPropertyChanging_A(wxPGProperty*,
                 case 2:
                     area->adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
                     break;
-                default:
-                    break;
                 }
             }
+            return true;
         }
-        return true;
     }
     if (name == "area.links_count")
         return false;
@@ -677,8 +670,6 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
                 (*i)->minUpTime = d;
             else if (name == "cluster.mindowntime")
                 (*i)->minDownTime = d;
-            else
-                ;
         }
         return true;
     }

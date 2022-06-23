@@ -66,7 +66,7 @@ Comparison::~Comparison()
 
 void Comparison::search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector&,
-                        const Yuni::String& text)
+                        const Yuni::String& /* text */)
 {
     {
         auto item = std::make_shared<Spotlight::IItem>();

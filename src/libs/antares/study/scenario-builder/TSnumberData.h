@@ -42,7 +42,7 @@ class TSNumberData : public dataInterface
 {
 public:
     //! Matrix
-    typedef Matrix<Yuni::uint32> MatrixType;
+    using MatrixType = Matrix<Yuni::uint32>;
 
 public:
     // We use default constructor and destructor

@@ -134,7 +134,7 @@ public:
                     continue;
             }
 
-            name = (const char* const)pent->d_name;
+            name = (const char*)pent->d_name;
             filename.clear();
             filename << parent << Yuni::IO::Separator << name;
             if (stat(filename.c_str(), &s) != 0)

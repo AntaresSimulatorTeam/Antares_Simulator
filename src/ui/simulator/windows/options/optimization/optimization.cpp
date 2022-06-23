@@ -472,7 +472,6 @@ void Optimization::refresh()
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
-
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(
       Data::getIcon(study.parameters.include.unfeasibleProblemBehavior));

@@ -28,8 +28,15 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
-using namespace Antares::Data;
+#include <antares/study/fwd.h>
+#include "../simulation/sim_structure_probleme_economique.h"
 
+// namespace Antares
+// {
+// namespace Data
+// {
+// namespace AdequacyPatch
+// {
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
@@ -114,4 +121,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
 template<class T>
 extern void sumTwoArrays(T* a, T* b, int num);
 
+// } // end namespace Antares
+// } // end namespace Data
+// } // end namespace AdequacyPatch
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

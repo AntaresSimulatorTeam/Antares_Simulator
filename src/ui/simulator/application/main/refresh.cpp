@@ -117,9 +117,9 @@ void ApplWnd::refreshMenuOutput()
 
     // NOTE : in some rare cases, it may happen that two simulations have the
     // same timestamp
-    typedef Data::StudyMode StudyModeT;
-    typedef std::map<Yuni::sint64, Data::Output::List, CompareByTimestamp> TemporalMap;
-    typedef std::map<StudyModeT, TemporalMap, CompareByStudyMode> Map;
+    using StudyModeT = Data::StudyMode;
+    using TemporalMap = std::map<Yuni::sint64, Data::Output::List, CompareByTimestamp>;
+    using Map = std::map<StudyModeT, TemporalMap, CompareByStudyMode>;
 
     // Getting the list of all available outputs
     const Data::Output::List& list = ListOfOutputsForTheCurrentStudy;

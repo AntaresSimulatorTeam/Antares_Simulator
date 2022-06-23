@@ -75,8 +75,8 @@ private:
 class ThreadUpdater final : public Yuni::Thread::IThread
 {
 public:
-    typedef Antares::Action::IAction::Ptr IActionPtr;
-    typedef Antares::Action::Context::Ptr ContextPtr;
+    using IActionPtr = Antares::Action::IAction::Ptr;
+    using ContextPtr = Antares::Action::Context::Ptr;
 
 public:
     ThreadUpdater(PerformerDialog& form, ContextPtr& context, IActionPtr& action) :

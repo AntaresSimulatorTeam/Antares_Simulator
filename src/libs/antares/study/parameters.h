@@ -203,7 +203,7 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(int year, float weight);
+    void setYearWeight(uint year, float weight);
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
@@ -513,15 +513,26 @@ public:
     SimplexOptimization simplexOptimizationRange;
     //@}
 
-    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to physical
-    //! areas inside adequacy patch (area type 2). NTC is set to null (if true) only in the first
-    //! step of adequacy patch local matching rule.
-    bool setToZeroNTCfromOutToIn_AdqPatch;
-    //! Transmission capacities between physical areas outside adequacy patch (area type 1). NTC is
-    //! set to null (if true) only in the first step of adequacy patch local matching rule.
-    bool setToZeroNTCfromOutToOut_AdqPatch;
+    struct AdequacyPatch
+    {
+        struct LocalMatching
+        {
+            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+            //! only in the first step of adequacy patch local matching rule.
+            bool setToZeroOutsideInsideLinks = true;
+            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
+            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
+            //! rule.
+            bool setToZeroOutsideOutsideLinks = true;
+        };
+        LocalMatching localMatching;
+    };
+
+    AdequacyPatch adqPatch;
+
     //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
-    AdequacyPatch::AdqPatchPTO adqPatchPriceTakingOrder;
+    Data::AdequacyPatch::AdqPatchPTO adqPatchPriceTakingOrder;
     //! Select whether the intermediate result before the application of the curtailment sharing is
     //! to be kept in the results
     bool adqPatchSaveIntermediateResults;

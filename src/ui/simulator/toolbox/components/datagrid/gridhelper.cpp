@@ -44,7 +44,6 @@ class GridCellAttrProvider final : public wxGridCellAttrProvider
 public:
     GridCellAttrProvider(VGridHelper& parent) : pParent(parent)
     {
-        assert(&parent != NULL);
         assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
         // WARNING : Several instances will share pStyles and pStylesAreInitialized
@@ -362,7 +361,7 @@ public:
     }
 
 private:
-    typedef Renderer::IRenderer CellStyle;
+    using CellStyle = Renderer::IRenderer;
 
 private:
     void internalAppendCSSCode(wxString& s, CellStyle::CellStyle style)

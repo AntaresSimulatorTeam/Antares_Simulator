@@ -46,9 +46,9 @@ class IObject : public Yuni::IIntrusiveSmartPtr<IObject>
 {
 public:
     //! Ancestor
-    typedef Yuni::IIntrusiveSmartPtr<IObject> Ancestor;
+    using Ancestor = Yuni::IIntrusiveSmartPtr<IObject>;
     //! The current threading policy
-    typedef Ancestor::ThreadingPolicy ThreadingPolicy;
+    using ThreadingPolicy = Ancestor::ThreadingPolicy;
 
     /*!
     ** \brief Class Helper to determine the most suitable smart pointer for a class
@@ -59,11 +59,11 @@ public:
     {
     public:
         //! The most suitable smart pointer for T
-        typedef typename Ancestor::template SmartPtrType<U>::Ptr Ptr;
+        using Ptr = typename Ancestor::template SmartPtrType<U>::Ptr;
     };
 
     //! The most suitable smart pointer for the this class
-    typedef Ancestor::SmartPtrType<IObject>::Ptr Ptr;
+    using Ptr = Ancestor::SmartPtrType<IObject>::Ptr;
 
 public:
     //! \name Identifiers
@@ -127,8 +127,7 @@ protected:
 
 protected:
     //! The most suitable type for a bool
-    typedef Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>, bool>::ResultType
-      EnableType;
+    using EnableType = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>,bool>::ResultType;
 
     //! Object Identifier
     const Ref pOID;

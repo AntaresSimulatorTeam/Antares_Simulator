@@ -49,7 +49,7 @@ void referenceScBuilderFile::write()
 {
     ofstream file;
     file.open(absolute_path_);
-    for (int i = 0; i < content_.size(); ++i)
+    for (uint i = 0; i < content_.size(); ++i)
         file << content_[i] << endl;
     file << endl;
 }

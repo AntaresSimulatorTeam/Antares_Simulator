@@ -65,22 +65,25 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     if (parameters.include.adequacyPatch)
     {
-        problem.adqPatch = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        problem.adqPatchParams
+          = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
-        problem.adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1
-          = parameters.setToZeroNTCfromOutToIn_AdqPatch;
-        problem.adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1
-          = parameters.setToZeroNTCfromOutToOut_AdqPatch;
-        problem.adqPatch->SaveIntermediateResults = parameters.adqPatchSaveIntermediateResults;
-        problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
-        problem.adqPatch->ThresholdInitiateCurtailmentSharingRule
+        problem.adqPatchParams->SetNTCOutsideToInsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
+        problem.adqPatchParams->SetNTCOutsideToOutsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
+        problem.adqPatchParams->SaveIntermediateResults
+          = parameters.adqPatchSaveIntermediateResults;
+        problem.adqPatchParams->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
+        problem.adqPatchParams->ThresholdInitiateCurtailmentSharingRule
           = parameters.adqPatchThresholdInitiateCurtailmentSharingRule;
-        problem.adqPatch->ThresholdDisplayLocalMatchingRuleViolations
+        problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
           = parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations;
     }
 
-    if (parameters.include.adequacyPatch){
-      problem.adequacyPatchRuntimeData.initialize(study);
+    if (parameters.include.adequacyPatch)
+    {
+        problem.adequacyPatchRuntimeData.initialize(study);
     }
 
     problem.WaterValueAccurate

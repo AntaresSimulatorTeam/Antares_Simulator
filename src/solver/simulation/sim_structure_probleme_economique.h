@@ -323,10 +323,13 @@ typedef struct
 
 class AdequacyPatchRuntimeData
 {
+private:
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
 public:
-    std::vector<AdequacyPatchMode> areaMode;
-    std::vector<AdequacyPatchMode> originAreaMode;
-    std::vector<AdequacyPatchMode> extremityAreaMode; 
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -500,8 +503,8 @@ typedef struct
 struct AdequacyPatchParameters
 {
     bool AdequacyFirstStep;
-    bool setToZeroNTCfromOutToIn_AdqPatchStep1;
-    bool setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
+    bool SetNTCOutsideToInsideToZero;
+    bool SetNTCOutsideToOutsideToZero;
     bool SaveIntermediateResults;
     AdqPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;
@@ -614,9 +617,8 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
-    std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
+    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    //std::map<int, std::vector<int>> localMatchingRuleViolation;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
