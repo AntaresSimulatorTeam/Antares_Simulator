@@ -115,10 +115,6 @@ OptimisationHebdo:
         {
             OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
 
-            /*if (ProblemeHebdo->OptimisationAvecVariablesEntieres) 
-            {
-                ORTOOLS_AjouterUneSolutionInitialeDansSolveur();
-            }   */
         }
         else
             printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "

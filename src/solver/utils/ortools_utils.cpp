@@ -1,7 +1,5 @@
 #include "ortools_utils.h"
 
-#include <xprs.h>
-
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
@@ -17,8 +15,7 @@ static void transferVariables(MPSolver* solver,
                               const double* costs,
                               int nbVar,
                               const std::vector<std::string>& NomDesVariables,
-                              const std::vector<bool>& VariablesEntieres,
-                              bool solveOnlyRelaxation)
+                              const std::vector<bool>& VariablesEntieres)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -40,10 +37,7 @@ static void transferVariables(MPSolver* solver,
         }
 
         const MPVariable* var;
-        if (solveOnlyRelaxation)
-            var = solver->MakeVar(min_l, max_l, false, varName);
-        else
-            var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
+        var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
@@ -118,7 +112,7 @@ MPSolver* convert_to_MPSolver(
     // Define solver used depending on study option
 
     MPSolver::OptimizationProblemType solverType;
-    if (problemeSimplexe->isMIP() && !problemeSimplexe->solveOnlyRelaxation)
+    if (problemeSimplexe->isMIP())
         solverType
           = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
     else
@@ -134,8 +128,7 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
                       problemeSimplexe->NomDesVariables,
-                      problemeSimplexe->VariablesEntieres,
-                      problemeSimplexe->solveOnlyRelaxation);
+                      problemeSimplexe->VariablesEntieres);
 
     // Create constraints and set coefs
     transferRows(solver,
@@ -173,7 +166,12 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
-        problemeSimplexe->X[idxVar] = var->solution_value();
+
+        if (problemeSimplexe->solveOnlyRelaxation)
+            problemeSimplexe->X[idxVar] = var->unrounded_solution_value();
+        else
+            problemeSimplexe->X[idxVar] = var->solution_value();
+        
         if (isMIP)
         {
             problemeSimplexe->CoutsReduits[idxVar] = 0;
@@ -277,6 +275,23 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
         solver = Antares::Optimization::convert_to_MPSolver(Probleme);
     }
 
+    if (Probleme->isMIP())
+    {
+        if (Probleme->solveOnlyRelaxation) 
+            solver->SetSolveParameters("gl");
+        else 
+            solver->SetSolveParameters("g");
+
+        auto addingHint = std::bind(XPRSaddmipsol,
+                                        static_cast<XPRSprob>(solver->underlying_solver()),
+                                        Probleme->NombreDeVariablesFixees,
+                                        Probleme->ValeursDesVariablesFixees,
+                                        Probleme->ColonnesFixees,
+                                        "");
+        solver->AddSetupMethod(addingHint);
+    }
+        
+
     MPSolverParameters params;
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -333,12 +348,16 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-void XPRESS_AjouterSolutionInitiale(MPSolver* solver) //, int length, int* values, int* columns
+void XPRESS_AjouterSolutionInitiale(const int nombreDeVariablesFixees,
+                                    const double* valeursDesVariablesFixees,
+                                    const int* indicesDesVariablesFixees,
+                                    XPRSprob xpr) 
 {
-    void* ptr = solver->underlying_solver();
-    XPRSprob xpr = static_cast<XPRSprob>(ptr);
-
-    //XPRSaddmipsol(xpr, );  
+    XPRSaddmipsol(xpr,
+                 nombreDeVariablesFixees,
+                 valeursDesVariablesFixees,
+                 indicesDesVariablesFixees,
+                 "");
 }
 
 using namespace Antares::Data;

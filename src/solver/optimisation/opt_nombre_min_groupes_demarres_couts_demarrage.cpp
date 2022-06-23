@@ -766,7 +766,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         int Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
         for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
         {
-            ProblemeHebdo->valeursPremiereOptimisationEtHeuristique[ProblemeHebdo->nombreDeVariablesAFixer] 
+            ProblemeHebdo->valeursPremiereOptimisationEtHeuristique[ProblemeHebdo->nombreDeVariablesAFixer]
               = (double) NbMinOptDeGroupesEnMarche[Pdt];
             ProblemeHebdo->colonnesAFixer[ProblemeHebdo->nombreDeVariablesAFixer] 
               = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];

@@ -577,9 +577,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     }
 
     problem.valeursPremiereOptimisationEtHeuristique 
-      = (double*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(double));
+      = (double*)MemAlloc(NombreDePasDeTemps * study.runtime->thermalPlantTotalCount * sizeof(double));
     problem.colonnesAFixer
-      = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
+      = (int*)MemAlloc(NombreDePasDeTemps * study.runtime->thermalPlantTotalCount * sizeof(int));
 
     problem.numeroOptimisation = (int*)MemAlloc(7 * sizeof(int));
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));

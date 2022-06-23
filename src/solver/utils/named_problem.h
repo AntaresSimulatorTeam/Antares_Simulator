@@ -14,11 +14,19 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
-                            const std::vector<bool>& VariablesEntieres);
+                            const std::vector<bool>& VariablesEntieres,
+                            const double* ValeursDesVariablesFixees,
+                            const int* ColonnesFixees,
+                            const int NombreDeVariablesFixees);
 
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     const std::vector<bool>& VariablesEntieres;
+
+    const double* ValeursDesVariablesFixees;
+    const int* ColonnesFixees;
+    const int NombreDeVariablesFixees;
+
     bool solveOnlyRelaxation;
 
     bool isMIP() const;

@@ -7,11 +7,17 @@ namespace Optimization
 {
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
-                                                 const std::vector<bool>& VariablesEntieres) :
+                                                 const std::vector<bool>& VariablesEntieres,
+                                                 const double* ValeursDesVariablesFixees,
+                                                 const int* ColonnesFixees,
+                                                 const int NombreDeVariablesFixees) :
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
- solveOnlyRelaxation(true)
+ solveOnlyRelaxation(true),
+ ValeursDesVariablesFixees(ValeursDesVariablesFixees),
+ ColonnesFixees(ColonnesFixees),
+ NombreDeVariablesFixees(NombreDeVariablesFixees)
 {
 }
 

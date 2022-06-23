@@ -2,6 +2,7 @@
 #define __ORTOOLS_WRAPPER__
 
 #include "named_problem.h"
+#include <xprs.h>
 
 using namespace operations_research;
 
@@ -18,7 +19,5 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
                                const int* typeVar,
                                int nbVar);
 void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
-
-void XPRESS_AjouterSolutionInitiale(MPSolver* solver, int length, int* values, int* columns);
 
 #endif
