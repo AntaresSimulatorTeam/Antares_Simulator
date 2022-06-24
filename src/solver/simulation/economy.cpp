@@ -70,7 +70,7 @@ EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEn
 
 // Adequacy patch
 AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
-void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
+void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
@@ -94,11 +94,20 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
     // part that we need
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+
+    std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(numSpace);
+    for (int hourInWeek : hoursRequiringCurtailmentSharing)
+    {
+        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
+        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
+        hourlyCsrProblem.run();
+    }
+    checkLocalMatchingRuleViolations(problemeHebdo, w);
 }
 
 // No adequacy patch
 NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
-void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint w = 0)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
@@ -174,33 +183,7 @@ bool Economy::simulationBegin()
     return true;
 }
 
-// void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
-//                                           Variable::State& state,
-//                                           uint numSpace,
-//                                           int hourInTheYear)
-// {
-//     pProblemeHebdo->adqPatchParams->AdequacyFirstStep = true;
-//     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-//     pProblemeHebdo->adqPatchParams->AdequacyFirstStep = false;
-
-//     for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
-//     {
-//         if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
-//             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-//             memcpy(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-//                    pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-//                    pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-//         else
-//             memset(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-//                    0,
-//                    pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-//     }
-
-//     ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
-//     OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-// }
-
-vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
+vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace)
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
@@ -216,9 +199,11 @@ vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
     return sumENS;
 }
 
-std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace)
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
+                                                                            uint numSpace)
 {
-    float threshold = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
+    float threshold
+      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
@@ -233,7 +218,7 @@ std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS,
     return triggerCsrSet;
 }
 
-std::set<int> Economy::getHoursRequiringCurtailmentSharing(uint numSpace)
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace)
 {
     vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
@@ -273,22 +258,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblem->solve(state, hourInTheYear, numSpace);
-
-            if (pProblemesHebdo[numSpace]->adqPatchParams)
-            {
-                std::set<int> hoursRequiringCurtailmentSharing
-                  = getHoursRequiringCurtailmentSharing(numSpace);
-
-                for (int hourInWeek : hoursRequiringCurtailmentSharing)
-                {
-                    logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
-                    HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                    hourlyCsrProblem.run();
-                }
-
-                checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
-            }
+            weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
