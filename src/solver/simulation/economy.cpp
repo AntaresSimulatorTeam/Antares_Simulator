@@ -225,7 +225,7 @@ std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS,
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
-        if ((int)sumENS[i] >= threshold)
+        if ((int)sumENS[i] > threshold)
         {
             triggerCsrSet.insert(i);
         }

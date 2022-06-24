@@ -188,7 +188,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
 
                 // check LMR violations
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-                if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
+                if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
                 {
                     ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
                     totalLmrViolation += (ensInit - densNew);
