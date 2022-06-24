@@ -726,6 +726,7 @@ public:
 class HOURLY_CSR_PROBLEM
 {
 private:
+    void calculateCsrParameters();
     void resetProblem();
     void buildProblemVariables();
     void setVariableBounds();
