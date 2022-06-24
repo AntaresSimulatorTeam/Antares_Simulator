@@ -91,7 +91,8 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
                         + ProblemeHebdo->AllMustRunGeneration[hour]
                             ->AllMustRunGenerationOfArea[area];
                 }
-                else
+                else if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
+                         == Data::AdequacyPatch::AdqPatchPTO::isDens)
                 {
                     priceTakingOrders
                       = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
