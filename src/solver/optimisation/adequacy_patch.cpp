@@ -32,8 +32,13 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
-using namespace Antares::Data::AdequacyPatch;
 
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
@@ -131,40 +136,6 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-void HOURLY_CSR_PROBLEM::calculateCsrParameters()
-{
-    double netPositionInit;
-    double densNew;
-    double ensInit;
-    double spillageInit;
-    int hour = hourInWeekTriggeredCsr;
-
-    for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
-    {
-        if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
-            == physicalAreaInsideAdqPatch)
-        {
-            std::tie(netPositionInit, densNew)
-              = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
-
-            ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
-                        ->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
-                             ->ValeursHorairesDeDefaillanceNegative[hour];
-
-            netPositionInitValues[Area] = netPositionInit;
-            densNewValues[Area] = densNew;
-            rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
-
-            logs.debug() << "DENS_new[" << Area << "] = " << densNewValues[Area];
-            logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << rhsAreaBalanceValues[Area]
-                         << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit
-                         << ") - SpillageInit(" << spillageInit << ")";
-        }
-    }
-    return;
-}
-
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
     float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
@@ -258,6 +229,44 @@ void addArray(std::vector<double>& A, double* B, int num)
 {
     for (uint i = 0; i < num; ++i)
         A[i] += B[i];
+}
+
+} // end namespace Antares
+} // end namespace Data
+} // end namespace AdequacyPatch
+
+void HOURLY_CSR_PROBLEM::calculateCsrParameters()
+{
+    double netPositionInit;
+    double densNew;
+    double ensInit;
+    double spillageInit;
+    int hour = hourInWeekTriggeredCsr;
+
+    for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
+    {
+        if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
+            == physicalAreaInsideAdqPatch)
+        {
+            std::tie(netPositionInit, densNew)
+              = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
+
+            ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+                        ->ValeursHorairesDeDefaillancePositive[hour];
+            spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+                             ->ValeursHorairesDeDefaillanceNegative[hour];
+
+            netPositionInitValues[Area] = netPositionInit;
+            densNewValues[Area] = densNew;
+            rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
+
+            logs.debug() << "DENS_new[" << Area << "] = " << densNewValues[Area];
+            logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << rhsAreaBalanceValues[Area]
+                         << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit
+                         << ") - SpillageInit(" << spillageInit << ")";
+        }
+    }
+    return;
 }
 
 void HOURLY_CSR_PROBLEM::resetProblem()

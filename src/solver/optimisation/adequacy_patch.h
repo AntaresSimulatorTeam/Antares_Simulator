@@ -31,12 +31,12 @@
 #include <antares/study/fwd.h>
 #include "../simulation/sim_structure_probleme_economique.h"
 
-// namespace Antares
-// {
-// namespace Data
-// {
-// namespace AdequacyPatch
-// {
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
@@ -117,7 +117,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
 ** */
 void addArray(std::vector<double>& A, double* B, int num);
 
-// } // end namespace Antares
-// } // end namespace Data
-// } // end namespace AdequacyPatch
+} // end namespace Antares
+} // end namespace Data
+} // end namespace AdequacyPatch
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */
