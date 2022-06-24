@@ -227,9 +227,12 @@ std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS,
     {
         if ((int)sumENS[i] > threshold)
         {
+            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i]
+                         << "], threshold = " << threshold;
             triggerCsrSet.insert(i);
         }
     }
+    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
     return triggerCsrSet;
 }
 
@@ -282,6 +285,7 @@ bool Economy::year(Progression::Task& progression,
 
                 for (int hourInWeek : hoursRequiringCurtailmentSharing)
                 {
+                    logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
                     HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
                     hourlyCsrProblem.run();
                 }
