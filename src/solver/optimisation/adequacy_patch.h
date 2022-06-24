@@ -108,15 +108,14 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
 
 /*!
-** ** \brief Sums two arrays of the same size a[i]=a[i]+b[i]
+** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
 ** **
-** ** \param a An array
-** ** \param b An array
+** ** \param A A vector
+** ** \param B An array
 ** ** \param num An integer
-** ** \return  
+** ** \return
 ** */
-template<class T>
-extern void sumTwoArrays(T* a, T* b, int num);
+void addArray(std::vector<double>& A, double* B, int num);
 
 // } // end namespace Antares
 // } // end namespace Data

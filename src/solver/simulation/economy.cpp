@@ -202,20 +202,17 @@ bool Economy::simulationBegin()
 
 vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
 {
-    double temp[nbHoursInAWeek] = {0};
-
+    std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
     {
         if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            sumTwoArrays<double>(temp,
-                                 pProblemesHebdo[numSpace]
-                                   ->ResultatsHoraires[area]
-                                   ->ValeursHorairesDeDefaillancePositive,
-                                 nbHoursInAWeek);
+            addArray(sumENS,
+                     pProblemesHebdo[numSpace]
+                       ->ResultatsHoraires[area]
+                       ->ValeursHorairesDeDefaillancePositive,
+                     nbHoursInAWeek);
     }
-    std::vector<double> sumENS;
-    sumENS.assign(std::begin(temp), std::end(temp));
     return sumENS;
 }
 
