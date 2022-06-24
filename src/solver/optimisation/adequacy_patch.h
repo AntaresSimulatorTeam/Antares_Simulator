@@ -101,10 +101,7 @@ void setNTCbounds(double& Xmax,
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
                                                    int Area,
                                                    int hour);
-// /*!
-//  * Calculate parameters for curtailment sharing rule.
-//  */
-// void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);
+
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
