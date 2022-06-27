@@ -114,7 +114,6 @@ OptimisationHebdo:
         else if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
         {
             OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
-
         }
         else
             printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
