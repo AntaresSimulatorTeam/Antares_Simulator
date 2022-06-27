@@ -255,7 +255,7 @@ find_package(ortools QUIET)
 if(NOT ortools_FOUND OR BUILD_ORTOOLS)
 message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
-    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    GIT_REPOSITORY "https://github.com/HugoKulesza/or-tools/releases/tag/xpress_init_solution"
     GIT_TAG ${ORTOOLS_TAG}
     )
 
