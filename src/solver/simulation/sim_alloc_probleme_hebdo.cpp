@@ -344,9 +344,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraintCount * sizeof(int));
     }
 
-    const auto bindingConstraintCount = study.runtime->bindingConstraintCount;
+    const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
     problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
-      study.runtime->bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
+      bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
 
     for (k = 0; k < (int)bindingConstraintCount; k++)
     {
