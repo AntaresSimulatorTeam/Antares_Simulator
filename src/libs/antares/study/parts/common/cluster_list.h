@@ -21,13 +21,13 @@ class ClusterList
 {
 public:
     // Shared pointer
-    typedef typename std::shared_ptr<ClusterT> SharedPtr;
+    using SharedPtr = typename std::shared_ptr<ClusterT>;
     // Map container
-    typedef typename std::map<ClusterName, SharedPtr> Map;
+    using Map = typename std::map<ClusterName, SharedPtr>;
     //! iterator
-    typedef typename Map::iterator iterator;
+    using iterator = typename Map::iterator;
     //! const iterator
-    typedef typename Map::const_iterator const_iterator;
+    using const_iterator = typename Map::const_iterator;
 
 public:
     //! \name Constructor & Destructor

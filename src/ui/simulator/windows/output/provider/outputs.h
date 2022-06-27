@@ -44,7 +44,7 @@ class Outputs : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor

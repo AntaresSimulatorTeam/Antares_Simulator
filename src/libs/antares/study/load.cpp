@@ -80,8 +80,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         return false;
     }
 
-    TimeElapsed time("Study loading");
-
     if (not internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)

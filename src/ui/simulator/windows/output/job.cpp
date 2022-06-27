@@ -43,7 +43,7 @@ namespace OutputViewerData
 template<class MapT>
 static inline void Browse(const AnyString& path, MapT& content)
 {
-    typedef IO::Directory::Info DirInfo;
+    using DirInfo = IO::Directory::Info;
 
     DirInfo dirinfo(path);
     typename MapT::key_type name;
@@ -141,7 +141,7 @@ void Job::onExecute()
     logs.info() << "[output-viewer] running analyzis on " << pPath;
     pContent = new Content();
 
-    typedef IO::Directory::Info DirInfo;
+    using DirInfo = IO::Directory::Info;
     DirInfo dirinfo(pPath);
 
     // Looking for economy / adequacy
@@ -217,7 +217,7 @@ void Job::onExecute()
         pComponent.pAlreadyPreparedContents[pPath] = c;
 
         // Cool we can perform the full aggregation !
-        typedef Antares::Window::OutputViewer::Component Component;
+        using Component = Antares::Window::OutputViewer::Component;
         if (0 == --pComponent.pJobsRemaining)
         {
             if (not canceling())
@@ -238,7 +238,7 @@ void Job::gatherInfosAboutThermalClusters(const AnyString& path)
                   | Matrix<>::optNeverFails
     };
 
-    typedef Antares::Matrix<Yuni::CString<164, false>> MatrixType;
+    using MatrixType = Antares::Matrix<Yuni::CString<164, false>>;
     MatrixType matrix;
     if (matrix.loadFromCSVFile(filename, 1, 0, options) and matrix.width > 2)
     {
@@ -262,7 +262,7 @@ void Job::gatherInfosAboutYearByYearData(const AnyString& path)
     // Since v3.7, the individual years can be found in the folder `mc-ind/<number>`.
     // Before 3.7, it was in the folder `Economy`, at the same level than `mc-all`.
 
-    typedef IO::Directory::Info DirInfo;
+    using DirInfo = IO::Directory::Info;
 
     // >= 3.7
     {

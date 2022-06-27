@@ -77,19 +77,17 @@ class Study;
 namespace Antares
 {
 //! Handlers for logging
-typedef Yuni::Logs::StdCout< // For writing to the standard output
+using LoggingHandlers = Yuni::Logs::StdCout< // For writing to the standard output
   Yuni::Logs::File<          // For writing into a log file
     Yuni::Logs::Callback<>   // Callback
-    >>
-  LoggingHandlers;
+  >>;
 
 //! Decorators for logging
-typedef Yuni::Logs::Time<       // Date/Time when the entry log is added
+using LoggingDecorators = Yuni::Logs::Time<       // Date/Time when the entry log is added
   Yuni::Logs::ApplicationName<  // Name of the current running application
     Yuni::Logs::VerbosityLevel< // Verbosity level (info, warning...)
       Yuni::Logs::Message<>     // The real message
-      >>>
-  LoggingDecorators;
+  >>>;
 
 //! Our log facility
 extern Yuni::Logs::Logger<LoggingHandlers, LoggingDecorators> logs;

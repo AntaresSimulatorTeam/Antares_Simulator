@@ -41,6 +41,7 @@ extern const wxChar* const geographicTrimming[];
 extern const wxChar* const thematicTrimming[];
 
 extern const wxChar* const studyMode[];
+extern const wxChar* const adequacyPatchMode[];
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares

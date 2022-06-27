@@ -69,10 +69,10 @@ private:
     class Part final
     {
     public:
-        typedef std::map<Section, Part> MapPerSection;
-        typedef std::map<uint, MapPerSection> Map;
-        // typedef Yuni::LinkedList<Part*> ListRef;
-        typedef std::list<Part*> ListRef;
+        using MapPerSection = std::map<Section, Part>;
+        using Map = std::map<uint, MapPerSection>;
+        // using ListRef = Yuni::LinkedList<Part*>;
+        using ListRef = std::list<Part*>;
 
     public:
         //! The total number of ticks to achieve

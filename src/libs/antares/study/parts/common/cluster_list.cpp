@@ -204,7 +204,7 @@ void ClusterList<ClusterT>::rebuildIndex()
     if (not empty())
     {
         uint indx = 0;
-        typedef ClusterT* ClusterWeakPtr;
+        using ClusterWeakPtr = ClusterT*;
         byIndex = new ClusterWeakPtr[size()];
 
         auto end = cluster.end();

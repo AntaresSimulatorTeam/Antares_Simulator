@@ -39,8 +39,8 @@ namespace Antares
 {
 namespace Component
 {
-//! Convenient typedef for unsigned char
-typedef unsigned char uchar;
+//! Convenient using char = for unsigned
+using uchar = unsigned char;
 
 //! Highlight color
 static wxColour gColorHighlight;
