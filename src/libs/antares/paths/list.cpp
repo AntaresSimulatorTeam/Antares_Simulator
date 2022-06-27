@@ -125,8 +125,8 @@ uint PathList::internalDeleteAllFiles()
 class PathListIterator : public IO::Directory::IIterator<true>
 {
 public:
-    typedef IO::Directory::IIterator<true> IteratorType;
-    typedef IO::Flow Flow;
+    using IteratorType = IO::Directory::IIterator<true>;
+    using Flow = IO::Flow;
 
 public:
     PathListIterator(PathList& l, const PathList& e, Yuni::Bind<bool(uint)>& progress) :

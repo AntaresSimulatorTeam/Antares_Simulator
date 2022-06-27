@@ -72,7 +72,7 @@ wxButton* CreateButton(wxWindow* parent,
                        UserDataT userdata)
 {
     // type alias
-    typedef ::Antares::Private::Component::CustomWxButton ButtonType;
+    using ButtonType = ::Antares::Private::Component::CustomWxButton;
     // Title of the button
     wxString title;
     title << wxT("   ") << caption << wxT("   ");
@@ -83,7 +83,7 @@ wxButton* CreateButton(wxWindow* parent,
     // Event
     if (object)
     {
-        typedef void (T::*MemberType)(UserDataT);
+        using MemberType = void (T::*)(UserDataT);
         button->onUserClick.bind(
           const_cast<T*>(object), reinterpret_cast<MemberType>(method), userdata);
     }

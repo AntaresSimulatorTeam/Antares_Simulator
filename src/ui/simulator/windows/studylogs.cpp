@@ -73,11 +73,11 @@ class LogFile final : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
-    typedef std::shared_ptr<LogFile> Ptr;
+    using Ptr = std::shared_ptr<LogFile>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef std::shared_ptr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
 
 public:
     //! \name Constructor & Destructor
@@ -328,8 +328,8 @@ void FileListProvider::refreshFileList(bool showAll)
 class JobGUIUpdate final : public Yuni::Job::IJob
 {
 public:
-    typedef Component::Datagrid::Renderer::LogEntry LogEntry;
-    typedef Component::Datagrid::Renderer::LogEntryContainer LogEntryContainer;
+    using LogEntry = Component::Datagrid::Renderer::LogEntry;
+    using LogEntryContainer = Component::Datagrid::Renderer::LogEntryContainer;
 
 public:
     explicit JobGUIUpdate(StudyLogs* window) : pWindow(window)
@@ -358,10 +358,10 @@ private:
 class JobLoadLogFile final : public Yuni::Job::IJob
 {
 public:
-    typedef Component::Datagrid::Renderer::LogEntry LogEntry;
-    typedef Component::Datagrid::Renderer::LogEntryContainer LogEntryContainer;
-    typedef CString<1024 * 1024> BufferType;
-    typedef Clob LineType;
+    using LogEntry = Component::Datagrid::Renderer::LogEntry;
+    using LogEntryContainer = Component::Datagrid::Renderer::LogEntryContainer;
+    using BufferType = CString<1024 * 1024>;
+    using LineType = Clob;
 
 public:
     explicit JobLoadLogFile(StudyLogs* window, const String& filename) :

@@ -25,7 +25,7 @@ class Cluster
 {
 public:
     //! Map of renewable clusters
-    typedef std::map<ClusterName, Cluster*> Map;
+    using Map = std::map<ClusterName, Cluster*>;
 
 public:
     Cluster(Area* parent);
@@ -145,7 +145,7 @@ protected:
 
 public:
     //! Set of clusters
-    typedef std::set<Cluster*, CompareClusterName> Set;
+    using Set = std::set<Cluster*, CompareClusterName>;
 
     int saveDataSeriesToFolder(const AnyString& folder) const;
     int loadDataSeriesFromFolder(Study& s, const AnyString& folder);

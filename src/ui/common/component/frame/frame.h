@@ -44,7 +44,7 @@ class IFrame
 {
 public:
     //! Vector
-    typedef std::vector<IFrame*> Vector;
+    using Vector = std::vector<IFrame*>;
 
 public:
     /*!

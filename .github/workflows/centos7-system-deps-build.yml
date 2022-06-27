@@ -48,7 +48,7 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            #git 2.x must be enabled for Coin compilation with CMake ExternalProject_Add
            source /opt/rh/rh-git227/enable
-           cmake3 -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_ortools=ON
+           cmake3 -B _build -S src -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON
 
     - name: Build
       run: |
@@ -56,11 +56,6 @@ jobs:
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config release -j2
     
-    - name: Run unit tests
-      run: |
-           cd _build
-           ctest3 -C Release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
-           
     - name: Installer .rpm creation
       run: |
            cd _build

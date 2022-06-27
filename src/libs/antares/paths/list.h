@@ -57,10 +57,10 @@ public:
         size_t size;
         enum PathListOption options;
     };
-    typedef std::map<Yuni::Clob, FileInfo> ItemList;
+    using ItemList = std::map<Yuni::Clob, FileInfo>;
 
-    typedef ItemList::iterator iterator;
-    typedef ItemList::const_iterator const_iterator;
+    using iterator = ItemList::iterator;
+    using const_iterator = ItemList::const_iterator;
 
 public:
     PathList()

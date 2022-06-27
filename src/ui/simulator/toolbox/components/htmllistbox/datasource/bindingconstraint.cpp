@@ -44,8 +44,8 @@ namespace Datasource
 {
 namespace BindingConstraints
 {
-typedef Data::BindingConstraint BindingConstraintFromLib;
-typedef std::list<BindingConstraintFromLib*> BindingConstraintList;
+using BindingConstraintFromLib = Data::BindingConstraint;
+using BindingConstraintList = std::list<BindingConstraintFromLib*>;
 
 namespace // anonymous
 {

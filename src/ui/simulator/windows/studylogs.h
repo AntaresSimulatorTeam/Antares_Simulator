@@ -52,14 +52,14 @@ public:
     bool operator()(const wxString& s1, const wxString& s2) const;
 };
 
-typedef std::map<wxString, YString, CompareDesc> MapFileList;
+using MapFileList = std::map<wxString, YString, CompareDesc>;
 
 class StudyLogs;
 class FileListProvider final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
-    typedef std::shared_ptr<FileListProvider> Ptr;
+    using Spotlight = Antares::Component::Spotlight;
+    using Ptr = std::shared_ptr<FileListProvider>;
 
     explicit FileListProvider(StudyLogs& frame);
     ~FileListProvider() override;
@@ -87,8 +87,8 @@ private:
 class StudyLogs final : public Component::Frame::WxLocalFrame
 {
 public:
-    typedef Component::Datagrid::Renderer::LogEntry LogEntry;
-    typedef Component::Datagrid::Renderer::LogEntryContainer LogEntryContainer;
+    using LogEntry = Component::Datagrid::Renderer::LogEntry;
+    using LogEntryContainer = Component::Datagrid::Renderer::LogEntryContainer;
 
     class LogFilenameInfo final
     {
@@ -103,7 +103,7 @@ public:
         };
 
         //! Map
-        typedef std::map<Yuni::String, LogFilenameInfo, ltstr> Map;
+        using Map = std::map<Yuni::String, LogFilenameInfo, ltstr>;
 
     public:
         //! The html display code

@@ -69,7 +69,7 @@ template<uint ChunkSizeT, bool ExpandableT>
 class MatrixData<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
-    typedef Yuni::CString<ChunkSizeT, ExpandableT> StringT;
+    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
 
 public:
     inline static void Init(StringT& data)
@@ -144,7 +144,7 @@ public:
     {
         direct = 1,
     };
-    typedef Yuni::CString<ChunkSizeT, ExpandableT> StringT;
+    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
 
 public:
     inline static bool Do(const AnyString& str, StringT& out)
