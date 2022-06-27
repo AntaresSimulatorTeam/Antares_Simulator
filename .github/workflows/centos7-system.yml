@@ -93,7 +93,7 @@ jobs:
       id: ortools
       run: |
           if [ "${{ matrix.ortools }}" == "ON" ]; then
-            echo "::set-output name=flags::-DBUILD_ORTOOLS -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
+            echo "::set-output name=flags::-DBUILD_ORTOOLS=ON -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
             echo "::set-output name=label::-ortools-xpress"
           else
             echo "::set-output name=flags::"
