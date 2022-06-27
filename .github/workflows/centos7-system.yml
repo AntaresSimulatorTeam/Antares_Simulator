@@ -88,17 +88,12 @@ jobs:
         source /opt/rh/rh-git227/enable
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
-    - name: Download OR-Tools if needed
+    - name: Set OR-Tools flags
       if: ${{ matrix.ortools == 'ON' }}
       id: ortools
       run: |
           if [ "${{ matrix.ortools }}" == "ON" ]; then
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.2/ortools_cxx_centos7_shared_xprs.zip
-            unzip -q ortools.zip
-            rm ortools.zip
-
-            echo "::set-output name=flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
+            echo "::set-output name=flags::-DBUILD_ORTOOLS -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
             echo "::set-output name=label::-ortools-xpress"
           else
             echo "::set-output name=flags::"
