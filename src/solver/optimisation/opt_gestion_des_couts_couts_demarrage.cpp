@@ -154,6 +154,4 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
         }
     }
 #endif
-
-    return;
 }
