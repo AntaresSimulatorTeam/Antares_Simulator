@@ -42,9 +42,9 @@ enum
 };
 
 //! List of recent files
-typedef std::list<std::pair<wxString, wxString>> List;
+using List = std::list<std::pair<wxString, wxString>>;
 //! Ptr
-typedef Yuni::SmartPtr<List> ListPtr;
+using ListPtr = Yuni::SmartPtr<List>;
 
 /*!
 ** \brief Get the whole list of recent files

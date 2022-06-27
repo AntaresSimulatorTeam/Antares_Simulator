@@ -97,7 +97,7 @@ bool Manager::loadFromStudy(Data::Study& study)
     clear();
 
     // An hash map to quickly find the previous node
-    typedef std::map<Data::AreaName, Node*> NodeFromID;
+    using NodeFromID = std::map<Data::AreaName, Node*>;
     NodeFromID nodeFromID;
 
     // Node creation

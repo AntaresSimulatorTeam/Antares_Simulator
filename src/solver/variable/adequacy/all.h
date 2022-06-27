@@ -76,6 +76,9 @@
 #include "../economy/links/marginalCost.h"
 #include "../economy/links/congestionProbability.h"
 
+// By thermal plant
+#include "../economy/profitByPlant.h"
+
 namespace Antares
 {
 namespace Solver
@@ -138,12 +141,13 @@ typedef                             // Prices
                          <Variable::Adequacy::SpilledEnergy // Spilled Energy
                           <Variable::Economy::LOLD          // LOLD
                            <Variable::Economy::LOLP         // LOLP
-                            <Variable::Economy::AvailableDispatchGen<
-                              Variable::Economy::DispatchableGenMargin<
-                                Variable::Economy::Marge // OP. MRG
+                            <Variable::Economy::AvailableDispatchGen
+                             <Variable::Economy::DispatchableGenMargin
+                              <Variable::Economy::Marge // OP. MRG
+                               <Variable::Economy::ProfitByPlant
                                 // Links
                                 <Variable::Adequacy::Links // All links
-                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

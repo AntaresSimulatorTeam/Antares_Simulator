@@ -49,7 +49,7 @@ public:
     template<class C>
     JobSimpleDispatcher(const C* object, void (C::*method)(void))
     {
-        typedef void (C::*MemberType)();
+        using MemberType = void (C::*)();
         callback.bind(const_cast<C*>(object), reinterpret_cast<MemberType>(method));
     }
 
@@ -89,8 +89,7 @@ inline void Post(const C* object, void (C::*method)(void))
 template<class C>
 inline void Post(const C* object, void (C::*method)(void), uint delay)
 {
-    typedef typename ::Antares::Private::Dispatcher::JobSimpleDispatcher JobType;
-    JobType* j = new JobType(object, method);
+    auto j = new ::Antares::Private::Dispatcher::JobSimpleDispatcher(object, method);
     ::Antares::Dispatcher::GUI::Post((const Yuni::Job::IJob::Ptr&)j, delay);
 }
 

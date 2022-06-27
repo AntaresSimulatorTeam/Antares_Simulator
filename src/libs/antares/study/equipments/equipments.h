@@ -44,20 +44,20 @@ class Equipments
 {
 public:
     //! The original equipment part
-    typedef typename Yuni::Static::Remove::All<ItemT>::Type ItemType;
+    using ItemType = typename Yuni::Static::Remove::All<ItemT>::Type;
     //! Weak pointer to an equipment part
-    typedef ItemType* ItemWeakPtr;
+    using ItemWeakPtr = ItemType*;
     //! Reference to an equipment part
-    typedef ItemType& ItemRef;
+    using ItemRef = ItemType&;
     //! Smart pointer
-    typedef typename ItemType::Ptr ItemPtr;
+    using ItemPtr = typename ItemType::Ptr;
 
     //! Item vector
-    typedef std::vector<ItemPtr> ItemVector;
+    using ItemVector = std::vector<ItemPtr>;
     //! Iterator
-    typedef typename ItemVector::iterator iterator;
+    using iterator = typename ItemVector::iterator;
     //! Const Iterator
-    typedef typename ItemVector::const_iterator const_iterator;
+    using const_iterator = typename ItemVector::const_iterator;
 
 public:
     //! \name Constructor & Destructor

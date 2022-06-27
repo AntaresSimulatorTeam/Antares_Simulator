@@ -68,7 +68,7 @@ public:
     }
 
 protected:
-    typedef Yuni::CString<128, false> PropertyNameType;
+    using PropertyNameType = Yuni::CString<128, false>;
 
     void OnPropertyChanging(wxPropertyGridEvent& event);
     bool onPropertyChanging_A(wxPGProperty*, const PropertyNameType& name, const wxVariant& value);

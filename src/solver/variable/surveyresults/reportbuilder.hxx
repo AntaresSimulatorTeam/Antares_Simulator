@@ -122,7 +122,7 @@ template<bool GlobalT, class NextT, int CDataLevel, int CFile = 1>
 class SurveyReportBuilderFile
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     enum
     {
         //! A non-zero value to write down the results for the simulation
@@ -139,7 +139,7 @@ public:
             RunAnnual(list, results, numSpace);
 
         // The survey type
-        typedef SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel> SurveyRBFileType;
+        using SurveyRBFileType = SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel>;
         // Go to the next data level
         SurveyRBFileType::Run(list, results, numSpace);
     }
@@ -192,7 +192,7 @@ template<bool GlobalT, class NextT, int N>
 class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     // dead end
     static inline void Run(const ListType&, SurveyResults&, unsigned int)
     {
@@ -204,7 +204,7 @@ class SurveyReportBuilder
 {
 public:
     //! List
-    typedef NextT ListType;
+    using ListType = NextT;
     enum
     {
         nextDataLevel = CDataLevel * 2,
@@ -510,7 +510,7 @@ template<bool GlobalT, class NextT>
 class SurveyReportBuilder<GlobalT, NextT, 2 * Category::maxDataLevel>
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     // Dead end
     static void Run(const ListType&, SurveyResults&, unsigned int)
     {

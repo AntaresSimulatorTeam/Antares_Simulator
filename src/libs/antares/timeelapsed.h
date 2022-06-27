@@ -27,6 +27,8 @@
 #ifndef __ANTARES_LIBS_TIMEELAPSED_H__
 #define __ANTARES_LIBS_TIMEELAPSED_H__
 
-#include "timeelapsed/timeelapsed.h"
+#include "timeelapsed/timer.h"
+#include "timeelapsed/content_handler.h"
+#include "timeelapsed/csv_writer.h"
 
 #endif // __ANTARES_LIBS_TIMEELAPSED_H__

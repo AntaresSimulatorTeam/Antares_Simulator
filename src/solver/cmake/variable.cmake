@@ -129,6 +129,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/waterValue.h
 		variable/economy/hydroCost.h
 		variable/economy/unsupliedEnergy.h
+		variable/economy/domesticUnsuppliedEnergy.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
 		variable/economy/productionByDispatchablePlant.h
@@ -136,6 +137,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/npCostByDispatchablePlant.h
 		variable/economy/nbOfDispatchedUnitsByPlant.h
 		variable/economy/nbOfDispatchedUnits.h
+		variable/economy/profitByPlant.h
 		variable/economy/lold.h
 		variable/economy/lolp.h
 		variable/economy/avail-dispatchable-generation.h

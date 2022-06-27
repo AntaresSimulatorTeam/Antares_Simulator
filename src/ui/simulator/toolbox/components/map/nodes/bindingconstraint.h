@@ -137,7 +137,7 @@ private:
         bool selected;
     };
 
-    typedef std::map<Connection*, Infos> Connections;
+    using Connections = std::map<Connection*, Infos>;
     Connections pConnections;
 
     struct TextPart

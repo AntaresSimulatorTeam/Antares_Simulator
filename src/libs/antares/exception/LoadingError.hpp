@@ -166,5 +166,23 @@ class CommandLineArguments : public LoadingError
 public:
     explicit CommandLineArguments(uint errors);
 };
+
+class IncompatibleStudyModeForAdqPatch : public LoadingError
+{
+public:
+    IncompatibleStudyModeForAdqPatch();
+};
+
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
+class CreatingTimeMeasurementFile : public LoadingError
+{
+public:
+    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
+};
 } // namespace Error
 } // namespace Antares

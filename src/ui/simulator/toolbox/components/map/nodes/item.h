@@ -55,11 +55,11 @@ public:
         }
     };
 
-    typedef std::vector<Item*> Vector;
+    using Vector = std::vector<Item*>;
 
-    typedef std::set<Item*, SetCompare> Set;
+    using Set = std::set<Item*, SetCompare>;
 
-    typedef std::map<Item*, bool> Links;
+    using Links = std::map<Item*, bool>;
 
     enum Type
     {

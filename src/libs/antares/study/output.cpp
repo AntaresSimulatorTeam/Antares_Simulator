@@ -41,8 +41,8 @@ namespace // anonymous
 class OutputFolderIterator : public IO::Directory::IIterator<true>
 {
 public:
-    typedef IO::Directory::IIterator<true> IteratorType;
-    typedef IO::Flow Flow;
+    using IteratorType = IO::Directory::IIterator<true>;
+    using Flow = IO::Flow;
 
 public:
     OutputFolderIterator(Data::Output::List& list) : pList(list)

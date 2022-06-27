@@ -51,25 +51,25 @@ class Matrix
 {
 public:
     //! Type
-    typedef T Type;
+    using Type = T;
     //! Pointer
-    typedef T* TypePtr;
+    using TypePtr = T*;
     //! Matrix type
-    typedef Matrix<T, ReadWriteT> MatrixType;
+    using MatrixType = Matrix<T, ReadWriteT>;
 
     //! Read / Write type
-    typedef ReadWriteT ReadWriteType;
+    using ReadWriteType = ReadWriteT;
 
     //! Pointer
-    typedef Matrix<T>* MatrixPtr;
+    using MatrixPtr = Matrix<T>*;
     //! Vector
-    typedef std::set<MatrixPtr> Vector;
+    using Vector = std::set<MatrixPtr>;
 
     //! Column type
-    typedef typename Antares::Memory::Stored<T>::Type ColumnType;
+    using ColumnType = typename Antares::Memory::Stored<T>::Type;
 
     //! A buffer, for large amount of data
-    typedef Yuni::Clob BufferType;
+    using BufferType = Yuni::Clob;
 
     /*!
     ** \brief Options when loading a file
@@ -558,34 +558,34 @@ private:
 template<class T>
 class MatrixSubColumn
 {
-    // typedef <sub column>  Type;
-    // typedef const <sub column>  Type;
+    // using Type = <sub column> ;
+    // using Type = const <sub column> ;
 };
 
 template<class U>
 class MatrixSubColumn<U**>
 {
 public:
-    typedef U* Type;
-    typedef const U* ConstType;
+    using Type = U*;
+    using ConstType = const U*;
 };
 
 template<>
 class MatrixSubColumn<Matrix<double>::ColumnType*>
 {
 public:
-    typedef Matrix<double> MatrixType;
-    typedef MatrixType::ColumnType& Type;
-    typedef const MatrixType::ColumnType& ConstType;
+    using MatrixType = Matrix<double>;
+    using Type = MatrixType::ColumnType&;
+    using ConstType = const MatrixType::ColumnType&;
 };
 
 template<>
 class MatrixSubColumn<Matrix<float>::ColumnType*>
 {
 public:
-    typedef Matrix<float> MatrixType;
-    typedef MatrixType::ColumnType& Type;
-    typedef const MatrixType::ColumnType& ConstType;
+    using MatrixType = Matrix<float>;
+    using Type = MatrixType::ColumnType&;
+    using ConstType = const MatrixType::ColumnType&;
 };
 
 /*!

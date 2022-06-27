@@ -60,7 +60,7 @@ namespace // anonymous
 class basicScBuilderPageMaker
 {
 protected:
-    typedef Component::Datagrid::Component DatagridType;
+    using DatagridType = Component::Datagrid::Component;
 
 public:
     basicScBuilderPageMaker(Window::ScenarioBuilder::Panel* scenarioBuilderPanel,

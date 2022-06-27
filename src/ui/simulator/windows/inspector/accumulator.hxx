@@ -132,7 +132,7 @@ struct PAreaColor
             return rhs.color[0] == color[0] && rhs.color[1] == color[1] && rhs.color[2] == color[2];
         }
     };
-    typedef Color Type;
+    using Type = Color;
     static Type Value(const Data::Area* area)
     {
         return Color(area->ui->color);
@@ -146,7 +146,7 @@ struct PAreaColor
 
 struct PStudyMode
 {
-    typedef Data::StudyMode Type;
+    using Type = Data::StudyMode;
     static Type Value(const Data::Study::Ptr& study)
     {
         return (!(!study) ? study->parameters.mode : Data::stdmEconomy);
@@ -175,7 +175,7 @@ struct PStudyMode
 
 struct PStudyBuildingMode
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Study::Ptr& study)
     {
         if (!(!study))
@@ -205,7 +205,7 @@ struct PStudyBuildingMode
 
 struct PStudyCalendarMonth
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? 0 : (uint)study->parameters.firstMonthInYear;
@@ -220,7 +220,7 @@ struct PStudyCalendarMonth
 
 struct PStudyLeapYear
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? false : study->parameters.leapYear;
@@ -233,7 +233,7 @@ struct PStudyLeapYear
 
 struct PStudyCalendarWeek
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? (uint)Antares::monday : (uint)study->parameters.firstWeekday;
@@ -248,7 +248,7 @@ struct PStudyCalendarWeek
 
 struct PStudyPlaylist
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.userPlaylist : false;
@@ -268,7 +268,7 @@ struct PStudyPlaylist
 
 struct PStudyYearByYear
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.yearByYear : false;
@@ -281,7 +281,7 @@ struct PStudyYearByYear
 
 struct PStudySynthesis
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.synthesis : false;
@@ -294,7 +294,7 @@ struct PStudySynthesis
 
 struct PStudyGeographicTrimming
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.geographicTrimming : false;
@@ -307,7 +307,7 @@ struct PStudyGeographicTrimming
 
 struct PStudyThematicTrimming
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.thematicTrimming : false;
@@ -320,7 +320,7 @@ struct PStudyThematicTrimming
 
 struct PStudyMCScenarios
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.storeTimeseriesNumbers : false;
@@ -333,7 +333,7 @@ struct PStudyMCScenarios
 
 struct PStudyCalBegin
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::Study::Ptr& study)
     {
         return wxString() << ((!(!study) ? study->parameters.simulationDays.first : 0) + 1);
@@ -346,7 +346,7 @@ struct PStudyCalBegin
 
 struct PStudyCalEnd
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.simulationDays.end : 8760;
@@ -359,7 +359,7 @@ struct PStudyCalEnd
 
 struct PStudyYears
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.nbYears : 1;
@@ -372,7 +372,7 @@ struct PStudyYears
 
 struct PStudyHorizon
 {
-    typedef String Type;
+    using Type = String;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !(!study) ? study->parameters.horizon : nullptr;
@@ -385,7 +385,7 @@ struct PStudyHorizon
 
 struct PStudy1stJanuary
 {
-    typedef Antares::DayOfTheWeek Type;
+    using Type = Antares::DayOfTheWeek;
     static Type Value(const Data::Study::Ptr& study)
     {
         return !study ? Antares::monday : study->parameters.dayOfThe1stJanuary;
@@ -399,7 +399,7 @@ struct PStudy1stJanuary
 template<bool Orientation>
 struct PLinkArea
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::AreaLink* link)
     {
         if (Orientation)
@@ -415,7 +415,7 @@ struct PLinkArea
 
 struct PLinkCopperPlate
 {
-    typedef Data::TransmissionCapacities Type;
+    using Type = Data::TransmissionCapacities;
     static Type Value(const Data::AreaLink* link)
     {
         return link->transmissionCapacities;
@@ -437,7 +437,7 @@ struct PLinkCopperPlate
 
 struct PLinkAssetType
 {
-    typedef Data::AssetType Type;
+    using Type = Data::AssetType;
     static Type Value(const Data::AreaLink* link)
     {
         return link->assetType;
@@ -463,7 +463,7 @@ struct PLinkAssetType
 
 struct PLinkHurdlesCost
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::AreaLink* link)
     {
         return link->useHurdlesCost;
@@ -476,7 +476,7 @@ struct PLinkHurdlesCost
 
 struct PLinkPhaseShift
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::AreaLink* link)
     {
         return link->usePST;
@@ -489,7 +489,7 @@ struct PLinkPhaseShift
 
 struct PLinkLoopFlow
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::AreaLink* link)
     {
         return link->useLoopFlow;
@@ -502,7 +502,7 @@ struct PLinkLoopFlow
 
 struct PLinkDisplayComments
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::AreaLink* link)
     {
         return link->displayComments;
@@ -515,7 +515,7 @@ struct PLinkDisplayComments
 
 struct PLinkComments
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::AreaLink* link)
     {
         return wxStringFromUTF8(link->comments);
@@ -528,7 +528,7 @@ struct PLinkComments
 
 /*struct PLinkStyle
 {
-        typedef wxString Type;
+        using Type = wxString;
         static Type Value(const Data::AreaLink* link)
         {
                 return wxStringFromUTF8(link->style);
@@ -540,7 +540,7 @@ struct PLinkComments
 };*/
 struct PLinkStyle
 {
-    typedef int Type;
+    using Type = int;
     static Type Value(const Data::AreaLink* link)
     {
         return link->style;
@@ -571,7 +571,7 @@ struct PLinkStyle
 };
 struct PLinkWidth
 {
-    typedef int Type;
+    using Type = int;
     static Type Value(const Data::AreaLink* link)
     {
         return Math::MinMax(link->linkWidth, 1, 6);
@@ -598,7 +598,7 @@ struct PLinkColor
             return rhs.color[0] == color[0] && rhs.color[1] == color[1] && rhs.color[2] == color[2];
         }
     };
-    typedef Color Type;
+    using Type = Color;
     static Type Value(const Data::AreaLink* link)
     {
         return Color(link->color);
@@ -612,7 +612,7 @@ struct PLinkColor
 
 struct PAreaUnsuppliedEnergyCost
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::Area* area)
     {
         return area->thermal.unsuppliedEnergyCost;
@@ -623,10 +623,32 @@ struct PAreaUnsuppliedEnergyCost
     }
 };
 
+struct PAdequacyPatchMode
+{
+    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
+    static Type Value(const Data::Area* area)
+    {
+        return area->adequacyPatchMode;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        switch (v)
+        {
+        case Data::AdequacyPatch::virtualArea:
+            return wxT("virtual area");
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
+            return wxT("physical area outside patch");
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
+            return wxT("physical area inside patch");
+        }
+        return wxEmptyString;
+    }
+};
+
 template<enum Data::AreaNodalOptimization O>
 struct PAreaResortStatus
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Area* area)
     {
         return (0 != (area->nodalOptimization & O));
@@ -640,7 +662,7 @@ struct PAreaResortStatus
 template<bool SynthesisT, enum Data::FilterFlag F>
 struct PAreaFiltering
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Area* area)
     {
         if (SynthesisT)
@@ -657,7 +679,7 @@ struct PAreaFiltering
 template<bool SynthesisT, enum Data::FilterFlag F>
 struct PLinkFiltering
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::AreaLink* link)
     {
         if (SynthesisT)
@@ -673,7 +695,7 @@ struct PLinkFiltering
 
 struct PAreaSpilledEnergyCost
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::Area* area)
     {
         return area->thermal.spilledEnergyCost;
@@ -689,7 +711,7 @@ struct PAreaSpilledEnergyCost
 // ----------------
 struct PClusterEnabled
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->enabled;
@@ -702,7 +724,7 @@ struct PClusterEnabled
 
 struct PClusterUnitCount
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->unitCount;
@@ -715,7 +737,7 @@ struct PClusterUnitCount
 
 struct PClusterNomCapacity
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity;
@@ -728,7 +750,7 @@ struct PClusterNomCapacity
 
 struct PClusterInstalled
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::Cluster* cluster)
     {
         return cluster->nominalCapacity * cluster->unitCount;
@@ -741,7 +763,7 @@ struct PClusterInstalled
 
 struct PClusterGroup
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->group());
@@ -754,7 +776,7 @@ struct PClusterGroup
 
 struct PClusterArea
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::Cluster* cluster)
     {
         return wxStringFromUTF8(cluster->parentArea->name);
@@ -789,7 +811,7 @@ struct PClusterNomCapacityColor
 
 struct PClusterMustRun
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->mustrun;
@@ -802,7 +824,7 @@ struct PClusterMustRun
 
 struct PClusterCO2
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->co2;
@@ -815,7 +837,7 @@ struct PClusterCO2
 
 struct PClusterVolatilityPlanned
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->plannedVolatility;
@@ -828,7 +850,7 @@ struct PClusterVolatilityPlanned
 
 struct PClusterVolatilityForced
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->forcedVolatility;
@@ -841,7 +863,7 @@ struct PClusterVolatilityForced
 
 struct PClusterSpinning
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->spinning;
@@ -873,7 +895,7 @@ struct PClusterSpinningColor
 
 struct PClusterReference
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->marketBidCost;
@@ -886,7 +908,7 @@ struct PClusterReference
 
 struct PClusterRandomSpread
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->spreadCost;
@@ -899,7 +921,7 @@ struct PClusterRandomSpread
 
 struct PClusterMarginalCost
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->marginalCost;
@@ -912,7 +934,7 @@ struct PClusterMarginalCost
 
 struct PClusterStartupCost
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->startupCost;
@@ -925,7 +947,7 @@ struct PClusterStartupCost
 
 struct PClusterFixedCost
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->fixedCost;
@@ -938,7 +960,7 @@ struct PClusterFixedCost
 
 struct PClusterMinStablePower
 {
-    typedef double Type;
+    using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minStablePower;
@@ -970,7 +992,7 @@ struct PClusterMinStablePowerColor
 
 struct PClusterMinUpTime
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minUpTime;
@@ -983,7 +1005,7 @@ struct PClusterMinUpTime
 
 struct PClusterMinDownTime
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->minDownTime;
@@ -996,7 +1018,7 @@ struct PClusterMinDownTime
 
 struct PClusterLawForced
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return (uint)cluster->forcedLaw;
@@ -1009,7 +1031,7 @@ struct PClusterLawForced
 
 struct PClusterLawPlanned
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::ThermalCluster* cluster)
     {
         return cluster->plannedLaw;
@@ -1035,7 +1057,7 @@ struct PClusterDoGenerateTS
 
 struct PRnClusterTSMode
 {
-    typedef uint Type;
+    using Type = uint;
     static Type Value(const Data::RenewableCluster* cluster)
     {
         return cluster->tsMode;
@@ -1051,7 +1073,7 @@ struct PRnClusterTSMode
 // -------------------
 struct PConstraintName
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::BindingConstraint* constraint)
     {
         return wxStringFromUTF8(constraint->name());
@@ -1064,7 +1086,7 @@ struct PConstraintName
 
 struct PConstraintComments
 {
-    typedef wxString Type;
+    using Type = wxString;
     static Type Value(const Data::BindingConstraint* constraint)
     {
         return wxStringFromUTF8(constraint->comments());
@@ -1077,7 +1099,7 @@ struct PConstraintComments
 
 struct PConstraintEnabled
 {
-    typedef bool Type;
+    using Type = bool;
     static Type Value(const Data::BindingConstraint* constraint)
     {
         return constraint->enabled();
@@ -1090,7 +1112,7 @@ struct PConstraintEnabled
 
 struct PConstraintType
 {
-    typedef Data::BindingConstraint::Type Type;
+    using Type = Data::BindingConstraint::Type;
     static Type Value(const Data::BindingConstraint* constraint)
     {
         return constraint->type();
