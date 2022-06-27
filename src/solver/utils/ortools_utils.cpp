@@ -282,12 +282,11 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
         else 
             solver->SetSolveParameters("g");
 
-        auto addingHint = std::bind(XPRSaddmipsol,
-                                        static_cast<XPRSprob>(solver->underlying_solver()),
+        auto addingHint = std::bind(XPRESS_AjouterSolutionInitiale,
+                                        std::placeholders::_1,
                                         Probleme->NombreDeVariablesFixees,
                                         Probleme->ValeursDesVariablesFixees,
-                                        Probleme->ColonnesFixees,
-                                        "");
+                                        Probleme->ColonnesFixees);
         solver->AddSetupMethod(addingHint);
     }
         
@@ -348,12 +347,12 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-void XPRESS_AjouterSolutionInitiale(const int nombreDeVariablesFixees,
+void XPRESS_AjouterSolutionInitiale(void *ptr,
+                                    const int nombreDeVariablesFixees,
                                     const double* valeursDesVariablesFixees,
-                                    const int* indicesDesVariablesFixees,
-                                    XPRSprob xpr) 
+                                    const int* indicesDesVariablesFixees) 
 {
-    XPRSaddmipsol(xpr,
+    XPRSaddmipsol(static_cast<XPRSprob>(ptr),
                  nombreDeVariablesFixees,
                  valeursDesVariablesFixees,
                  indicesDesVariablesFixees,

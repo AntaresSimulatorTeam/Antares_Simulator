@@ -20,4 +20,9 @@ void ORTOOLS_CorrigerLesBornes(MPSolver* ProbSpx,
                                int nbVar);
 void ORTOOLS_LibererProbleme(MPSolver* ProbSpx);
 
+void XPRESS_AjouterSolutionInitiale(void *ptr,
+                                    const int nombreDeVariablesFixees,
+                                    const double* valeursDesVariablesFixees,
+                                    const int* indicesDesVariablesFixees);
+
 #endif
