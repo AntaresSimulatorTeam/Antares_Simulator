@@ -85,13 +85,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier]
                   = NombreDeVariables;
 
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
-#else
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-#endif
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
