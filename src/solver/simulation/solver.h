@@ -66,7 +66,7 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, const ::Settings& settings, TimeElapsed::ContentHandler* handler);
+    ISimulation(Data::Study& study, const ::Settings& settings, TimeElapsed::ContentHandler* handler = nullptr);
     //! Destructor
     ~ISimulation();
     //@}
