@@ -254,7 +254,6 @@ typedef struct
     double* TailleUnitaireDUnGroupeDuPalierThermique;
     double* PminDuPalierThermiquePendantUneHeure;
     double* PminDuPalierThermiquePendantUnJour;
-    double* PminDuPalierThermiquePendantUneSemaine;
     int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
 
