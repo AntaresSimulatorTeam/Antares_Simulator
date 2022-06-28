@@ -226,7 +226,6 @@ void Application::prepare(int argc, char* argv[])
     if (options.listSolvers)
     {
         printSolvers();
-        shouldExecute = false;
         return;
     }
 
