@@ -47,7 +47,7 @@ namespace Economy
         //! Unit
         static const char* Unit()
         {
-            return "Euro";
+            return "Profit - Euro";
         }
 
         //! The short description of the variable
