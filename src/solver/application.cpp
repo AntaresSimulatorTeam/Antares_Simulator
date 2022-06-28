@@ -9,6 +9,7 @@
 #include "../config.h"
 
 #include "misc/system-memory.h"
+#include "utils/ortools_utils.h"
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -43,6 +44,16 @@ void printVersion()
 #else
     std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
+}
+
+void printSolvers()
+{
+    std::cout << "Available solvers :" << std::endl;
+    OrtoolsUtils utils;
+    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    {
+        std::cout << solver << std::endl;
+    }
 }
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
@@ -209,6 +220,12 @@ void Application::prepare(int argc, char* argv[])
     if (options.displayVersion)
     {
         printVersion();
+        return;
+    }
+
+    if (options.listSolvers)
+    {
+        printSolvers();
         return;
     }
 
