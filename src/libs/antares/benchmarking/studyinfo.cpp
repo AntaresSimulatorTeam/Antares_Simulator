@@ -1,5 +1,6 @@
 #include "studyinfo.h"
 #include <antares/exception/LoadingError.hpp>
+#include <antares/config.h>
 #include "antares/study/area/area.h"
 #include <algorithm>
 
@@ -34,8 +35,8 @@ namespace Benchmarking
 		collectUnitCommitmentMode();
 		collectMaxNbYearsInParallel();
         collectOptimizationInfo();
+        collectSolverVersion();
 	}
-
 
 	void StudyInfoContainer::collectAreasCount()
 	{
@@ -149,4 +150,12 @@ namespace Benchmarking
 		for (; it != fileContent_.end(); it++)
 			outputFile_ << (*it)->name() << " : " << (*it)->value() << "\n";
 	}
+
+    void StudyInfoContainer::collectSolverVersion()
+    {
+        // Example : 8.3.0 -> 830
+        const unsigned int version
+          = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+        addItem<StudyInfoItem_integerValue>("antares version", version);
+    }
 }

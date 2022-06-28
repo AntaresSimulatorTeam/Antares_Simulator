@@ -75,6 +75,7 @@ private:
     void collectUnitCommitmentMode();
     void collectMaxNbYearsInParallel();
     void collectOptimizationInfo();
+    void collectSolverVersion();
 
     template<class ClassItem, typename T>
     void addItem(std::string name, T value)
