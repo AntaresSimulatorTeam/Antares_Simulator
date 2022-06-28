@@ -72,17 +72,17 @@ Panel::Panel(wxWindow* parent) : Antares::Component::Panel(parent)
 
     // TS Management
     {
-        typedef Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable
-          TSmanagementAggregatedAsRenewable;
-        typedef Component::Datagrid::Renderer::TSmanagementRenewableCluster
-          TSmanagementRenewableCluster;
+        using TSmanagementAggregatedAsRenewable
+          = Component::Datagrid::Renderer::TSmanagementAggregatedAsRenewable;
+        using TSmanagementRenewableCluster
+          = Component::Datagrid::Renderer::TSmanagementRenewableCluster;
 
         verticalSizer_ = new wxBoxSizer(wxVERTICAL);
         verticalSizer_->Add(
           new Component::CaptionPanel(this, wxT("Time-Series Management")), 0, wxALL | wxEXPAND);
 
-        TSmanagementAggregatedAsRenewable* renderer_agg = new TSmanagementAggregatedAsRenewable();
-        TSmanagementRenewableCluster* renderer_rn_cl = new TSmanagementRenewableCluster();
+        auto renderer_agg = new TSmanagementAggregatedAsRenewable();
+        auto renderer_rn_cl = new TSmanagementRenewableCluster();
 
         grid_ts_mgt_ = new DatagridType(this, renderer_agg, wxEmptyString, false, true, true);
         grid_ts_mgt_rn_cluster_

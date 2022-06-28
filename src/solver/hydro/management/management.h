@@ -119,8 +119,6 @@ public:
     //! Temporary data
     struct PerArea
     {
-        //! Net demand, for each month and for each area
-        double MLN[12];
         //! Monthly local effective demand
         double MLE[12];
         //! Monthly optimal generation

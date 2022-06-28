@@ -124,6 +124,8 @@ int main(int argc, char** argv)
 
     application.execute();
 
+    application.saveElapsedTime();
+
     FreeUTF8Arguments(argc, argv);
 
     // to avoid a bug from wxExecute, we should wait a little before returning

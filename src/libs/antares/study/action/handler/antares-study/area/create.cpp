@@ -295,7 +295,7 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
     auto* area = ctx.extStudy->areas.findFromName(pOriginalAreaName);
     if (area)
     {
-        typedef Antares::Action::AntaresStudy::ThermalCluster::RootNode RootNodePlant;
+        using RootNodePlant = Antares::Action::AntaresStudy::ThermalCluster::RootNode;
         auto* root = new RootNodePlant(pOriginalAreaName);
 
         // browsing each thermal cluster
@@ -311,8 +311,8 @@ void Create::createActionsForAStandardAreaCopy(Context& ctx, bool copyPosition)
 IAction* Create::StandardActionsToCopyThermalCluster(const Data::AreaName& area,
                                                      const Data::ClusterName& name)
 {
-    typedef Antares::Action::AntaresStudy::ThermalCluster::Create NodePlant;
-    typedef Antares::Action::AntaresStudy::ThermalCluster::CommonData NodePlantCommonData;
+    using NodePlant = Antares::Action::AntaresStudy::ThermalCluster::Create;
+    using NodePlantCommonData = Antares::Action::AntaresStudy::ThermalCluster::CommonData;
 
     auto* cluster = new NodePlant(area, name);
     // TS

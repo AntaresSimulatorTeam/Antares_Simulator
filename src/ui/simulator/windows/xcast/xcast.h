@@ -47,9 +47,9 @@ class XCast final : public wxPanel, public Yuni::IEventObserver<XCast<T>>
 {
 public:
     //! The notebook ancestor type
-    typedef Component::Notebook NotebookType;
+    using NotebookType = Component::Notebook;
     //! The Observer ancestor type
-    typedef Yuni::IEventObserver<XCast<T>> ObserverAncestorType;
+    using ObserverAncestorType = Yuni::IEventObserver<XCast<T>>;
 
 public:
     //! \name Constructor & Destructor

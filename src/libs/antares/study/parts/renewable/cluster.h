@@ -90,7 +90,7 @@ public:
     };
 
     //! Set of renewable clusters
-    typedef std::set<RenewableCluster*, CompareClusterName> Set;
+    using Set = std::set<RenewableCluster*, CompareClusterName>;
 
     /*!
     ** \brief Get the group name string

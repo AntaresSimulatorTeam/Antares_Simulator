@@ -79,9 +79,9 @@ class JobMatrix : public Yuni::Job::IJob, public Yuni::IEventObserver<JobMatrix>
 {
 public:
     //! Smart pointer
-    typedef std::shared_ptr<JobMatrix> Ptr;
+    using Ptr = std::shared_ptr<JobMatrix>;
     //! Matrix type
-    typedef ::Antares::Private::OutputViewerData::Panel::MatrixType MatrixType;
+    using MatrixType = ::Antares::Private::OutputViewerData::Panel::MatrixType;
 
 public:
     JobMatrix(Panel& panel) : Yuni::Job::IJob(), shouldAbort(0), pPanel(panel), pMatrix(nullptr)
@@ -183,9 +183,9 @@ class JobAggregator : public Yuni::Job::IJob, public Yuni::IEventObserver<JobAgg
 {
 public:
     //! Smart pointer
-    typedef std::shared_ptr<JobAggregator> Ptr;
+    using Ptr = std::shared_ptr<JobAggregator>;
     //! Matrix type
-    typedef Panel::MatrixType MatrixType;
+    using MatrixType = Panel::MatrixType;
 
 public:
     JobAggregator(Panel& panel) : Yuni::Job::IJob(), shouldAbort(0), pPanel(panel), result(nullptr)
@@ -820,7 +820,7 @@ void Panel::loadDataFromMatrix(MatrixType* matrix)
     }
     else
     {
-        typedef Antares::Component::Datagrid::Component DatagridType;
+        using DatagridType = Antares::Component::Datagrid::Component;
         clearAllComponents();
 
         auto* renderer = new AreaLinkRenderer(pComponent, matrix);

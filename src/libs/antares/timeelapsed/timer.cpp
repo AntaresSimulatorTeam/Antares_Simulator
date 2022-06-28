@@ -26,7 +26,8 @@
 */
 
 #include <yuni/yuni.h>
-#include "timeelapsed.h"
+#include "timer.h"
+#include "content_handler.h"
 #include "../logs.h"
 #include <math.h>
 #include <yuni/core/system/gettimeofday.h>
@@ -36,28 +37,31 @@ using namespace Yuni;
 static inline sint64 MilliSecTimer()
 {
     Yuni::timeval tv;
-    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
+    YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);
     return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-inline static sint64 usec_timer()
+namespace TimeElapsed
 {
-    Yuni::timeval tv;
-    YUNI_SYSTEM_GETTIMEOFDAY(&tv, NULL);
-    return tv.tv_sec * 1000000 + tv.tv_usec;
+void Timer::stop()
+{
+    const sint64 delta_ms = MilliSecTimer() - pStartTime;
+    if (verbose)
+    {
+        Antares::logs.info() << logText << " done (" << delta_ms << " ms)";
+    }
+    if (pContentHandler)
+    {
+        pContentHandler->append(fileText, delta_ms);
+    }
 }
 
-TimeElapsed::TimeElapsed() : pStartTime(MilliSecTimer())
-{
-}
-
-void TimeElapsed::reset()
+Timer::Timer(const AnyString& logText,
+             const AnyString& fileText,
+             bool verbose,
+             ContentHandler* handler) :
+  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(handler)
 {
     pStartTime = MilliSecTimer();
 }
-
-TimeElapsed::~TimeElapsed()
-{
-    Antares::logs.info() << " Elapsed time: " << text << ": " << (MilliSecTimer() - pStartTime)
-                         << "ms";
-}
+} // namespace TimeElapsed

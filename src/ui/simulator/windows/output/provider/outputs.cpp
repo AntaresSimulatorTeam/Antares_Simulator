@@ -53,11 +53,11 @@ class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
-    typedef std::shared_ptr<OutputSpotlightItem> Ptr;
+    using Ptr = std::shared_ptr<OutputSpotlightItem>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef std::shared_ptr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
 
 public:
     OutputSpotlightItem()

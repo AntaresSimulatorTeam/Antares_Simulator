@@ -8,11 +8,18 @@ on:
       - features/*
       - fix/*
       - release/*
+      - doc/*
 jobs:
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   build:
 
     runs-on: ${{ matrix.os }}
+    needs: doc_generation
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       matrix:
@@ -38,6 +45,12 @@ jobs:
       with: 
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
         
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -62,7 +75,7 @@ jobs:
 
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
            
     - name: Build
       run: |
@@ -72,6 +85,16 @@ jobs:
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
+
+    - name: Run adq-patch related tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
     # simtest
     - name: Read simtest version

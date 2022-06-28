@@ -43,7 +43,7 @@ namespace Simulation
 */
 class Panel final : public Antares::Component::Panel, public Yuni::IEventObserver<Panel>
 {
-    typedef Component::Datagrid::Component DatagridType;
+    using DatagridType = Component::Datagrid::Component;
 
 public:
     //! \name Constructor && Destructor

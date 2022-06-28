@@ -50,7 +50,7 @@ public:
     wxString entry;
 };
 
-typedef std::vector<LogInfo*> WaitingLogEntries;
+using WaitingLogEntries = std::vector<LogInfo*>;
 
 WaitingLogEntries waitingLogEntry;
 Yuni::Mutex logMutex;
