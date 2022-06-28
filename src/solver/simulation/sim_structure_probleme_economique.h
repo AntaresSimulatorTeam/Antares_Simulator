@@ -33,9 +33,6 @@
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 
-#define GROSSES_VARIABLES NON_ANTARES
-#define COEFF_GROSSES_VARIABLES 100
-
 #include <memory>
 #include <yuni/core/math.h>
 
@@ -67,10 +64,7 @@ typedef struct
     int* NumeroDeVariableDefaillanceNegativeDown;
     int* NumeroDeVariableDefaillanceNegativeAny;
 
-    int* NumeroDeGrosseVariableDefaillancePositive;
-    int* NumeroDeGrosseVariableDefaillanceNegative;
     int* NumeroDeVariableDefaillanceEnReserve;
-    int* NumeroDeGrosseVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
     int* NumeroDeVariablesVariationHydALaBaisseUp;
@@ -254,7 +248,6 @@ typedef struct
     double* TailleUnitaireDUnGroupeDuPalierThermique;
     double* PminDuPalierThermiquePendantUneHeure;
     double* PminDuPalierThermiquePendantUnJour;
-    double* PminDuPalierThermiquePendantUneSemaine;
     int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
 

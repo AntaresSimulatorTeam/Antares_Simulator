@@ -104,37 +104,4 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
             }
         }
     }
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-    for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
-         PdtHebdo++, PdtJour++)
-    {
-        CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-        {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                ProblemeAResoudre->CoutLineaire[Var] = 0;
-            }
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                ProblemeAResoudre->CoutLineaire[Var] = 0;
-            }
-
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeGrosseVariableDefaillanceEnReserve[Pays];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                {
-                    ProblemeAResoudre->CoutLineaire[Var] = 0;
-                }
-            }
-        }
-    }
-#endif
-
-    return;
 }
