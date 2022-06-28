@@ -10,7 +10,7 @@ namespace Benchmarking
 	/*
 		=== class StudyInfoContainer ===
 	*/
-	StudyInfoContainer::StudyInfoContainer(const Antares::Data::Study& study) : study_(study)
+    StudyInfoContainer::StudyInfoContainer(const Antares::Data::Study& study, const OptimizationInfo& optInfo) : study_(study), pOptimizationInfo(optInfo)
 	{}
 
 	StudyInfoContainer::iterator StudyInfoContainer::begin()
@@ -33,6 +33,7 @@ namespace Benchmarking
 		collectEnabledBindingConstraintsCount();
 		collectUnitCommitmentMode();
 		collectMaxNbYearsInParallel();
+        collectOptimizationInfo();
 	}
 
 
@@ -122,6 +123,12 @@ namespace Benchmarking
 		addItem<StudyInfoItem_integerValue>("max parallel years", study_.maxNbYearsInParallel);
 	}
 
+    void StudyInfoContainer::collectOptimizationInfo()
+    {
+        addItem<StudyInfoItem_integerValue>("variables", pOptimizationInfo.nbVariables);
+        addItem<StudyInfoItem_integerValue>("constraints", pOptimizationInfo.nbConstraints);
+        addItem<StudyInfoItem_integerValue>("non-zero coefficients", pOptimizationInfo.nbNonZeroCoeffs);
+    }
 
 	/*
 		=== class StudyInfoWriter ===

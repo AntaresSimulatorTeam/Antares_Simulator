@@ -4,7 +4,6 @@
 
 namespace Benchmarking
 {
-
 /*
     ===  Study info item ===
 */
@@ -32,14 +31,25 @@ private:
 class StudyInfoItem_charValue : public StudyInfoItem
 {
 public:
-    StudyInfoItem_charValue(std::string name,  const char* value) : StudyInfoItem(name), value_(value)
-    {}
-    std::string value() override { return value_; }
+    StudyInfoItem_charValue(std::string name, const char* value) :
+     StudyInfoItem(name), value_(value)
+    {
+    }
+    std::string value() override
+    {
+        return value_;
+    }
+
 private:
     const char* value_ = "";
 };
 
-
+struct OptimizationInfo
+{
+    unsigned int nbVariables = 0;
+    unsigned int nbConstraints = 0;
+    unsigned int nbNonZeroCoeffs = 0;
+};
 
 /*
     === class StudyInfoContainer ===
@@ -47,7 +57,7 @@ private:
 class StudyInfoContainer
 {
 public:
-    explicit StudyInfoContainer(const Antares::Data::Study& study);
+    StudyInfoContainer(const Antares::Data::Study& study, const OptimizationInfo& optInfo);
 
     using iterator = std::vector<std::unique_ptr<StudyInfoItem>>::iterator;
     iterator begin();
@@ -64,6 +74,7 @@ private:
     void collectEnabledBindingConstraintsCount();
     void collectUnitCommitmentMode();
     void collectMaxNbYearsInParallel();
+    void collectOptimizationInfo();
 
     template<class ClassItem, typename T>
     void addItem(std::string name, T value)
@@ -83,10 +94,7 @@ private:
     unsigned int nbCoreMode_;
 
     // Optimization problem
-    unsigned int nbNonZeroTermsInConstraintMatrix_ = 0;
-    unsigned int nbVariables_ = 0;
-    unsigned int nbConstraints_ = 0;
-
+    const OptimizationInfo& pOptimizationInfo;
     // List of study's information pieces (or items)
     std::vector<std::unique_ptr<StudyInfoItem>> items_;
 };

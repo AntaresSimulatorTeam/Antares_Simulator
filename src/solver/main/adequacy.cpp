@@ -47,6 +47,8 @@ void Application::runSimulationInAdequacyMode()
         Benchmarking::Timer timer("Synthesis export", "synthesis_export", true, &pBenchmarkingContentHandler);
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
+
+        this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
 }
 } // namespace Solver

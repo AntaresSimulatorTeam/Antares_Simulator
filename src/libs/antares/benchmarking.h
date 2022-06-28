@@ -30,5 +30,6 @@
 #include "benchmarking/timer.h"
 #include "benchmarking/content_handler.h"
 #include "benchmarking/csv_writer.h"
+#include "benchmarking/studyinfo.h"
 
 #endif // __ANTARES_LIBS_BENCHMARKING_H__

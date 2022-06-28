@@ -528,7 +528,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 void Application::writeElapsedTime()
 {
     if (!pStudy)
-       return;
+        return;
 
     pTotalTimer.stop();
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
@@ -540,10 +540,10 @@ void Application::writeElapsedTime()
 void Application::writeStudyInfos()
 {
     if (!pStudy)
-       return;
+        return;
 
     // Collecting info from the study for a further record
-    Benchmarking::StudyInfoContainer study_info(*pStudy);
+    Benchmarking::StudyInfoContainer study_info(*pStudy, pOptimizationInfo);
     study_info.collect();
 
     // Flush previous info into a record file

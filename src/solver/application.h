@@ -51,6 +51,7 @@ public:
     void resetProcessPriority() const;
 
     void writeElapsedTime();
+    void writeStudyInfos();
 
 private:
     /*!
@@ -73,8 +74,6 @@ private:
 
     void processCaption(const Yuni::String& caption);
 
-    void writeStudyInfos();
-
     //! The settings given from the command line
     Settings pSettings;
     //! The current Antares study
@@ -89,8 +88,10 @@ private:
     int pArgc;
     char** pArgv;
 
+    // Benchmarking
     Benchmarking::ContentHandler pBenchmarkingContentHandler;
     Benchmarking::Timer pTotalTimer;
+    Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

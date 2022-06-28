@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <memory>
+#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
@@ -89,6 +90,8 @@ public:
     //! Destructor
     ~Economy();
     //@}
+
+    Benchmarking::OptimizationInfo getOptimizationInfo() const;
 
 public:
     //! Current study
