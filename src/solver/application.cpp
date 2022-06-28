@@ -261,17 +261,6 @@ void Application::prepare(int argc, char* argv[])
     // Loading the study
     readDataForTheStudy(options);
 
-    // Collecting info from the study for a further record
-    Benchmarking::StudyInfoContainer study_info(*pStudy);
-    study_info.collect();
-
-    // Flush previous info into a record file
-    Yuni::String filePath; 
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
-    Benchmarking::StudyInfoCSVwriter study_info_writer(filePath, study_info);
-    study_info_writer.flush();
-
-
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
@@ -536,7 +525,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
-void Application::saveElapsedTime()
+void Application::writeElapsedTime()
 {
     if (!pStudy)
        return;
@@ -546,6 +535,22 @@ void Application::saveElapsedTime()
     Benchmarking::CSVWriter writer(pStudy->buffer, &pBenchmarkingContentHandler);
     // Write time data
     writer.flush();
+}
+
+void Application::writeStudyInfos()
+{
+    if (!pStudy)
+       return;
+
+    // Collecting info from the study for a further record
+    Benchmarking::StudyInfoContainer study_info(*pStudy);
+    study_info.collect();
+
+    // Flush previous info into a record file
+    Yuni::String filePath; 
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
+    Benchmarking::StudyInfoCSVwriter study_info_writer(filePath, study_info);
+    study_info_writer.flush();
 }
 
 Application::~Application()

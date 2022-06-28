@@ -50,7 +50,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void saveElapsedTime();
+    void writeElapsedTime();
 
 private:
     /*!
@@ -72,6 +72,8 @@ private:
     void onLogMessage(int level, const YString& message);
 
     void processCaption(const Yuni::String& caption);
+
+    void writeStudyInfos();
 
     //! The settings given from the command line
     Settings pSettings;
