@@ -101,6 +101,9 @@ jobs:
       run: |
            git submodule update --init --recursive src
 
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure
       shell: bash
       run: |
@@ -115,6 +118,16 @@ jobs:
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
+
+    - name: Run adq-patch related tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
     # simtest
     - name: Read simtest version

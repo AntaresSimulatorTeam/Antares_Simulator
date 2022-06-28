@@ -87,8 +87,6 @@ private:
     int pArgc;
     char** pArgv;
 
-    bool shouldExecute = true;
-
     Benchmarking::ContentHandler pBenchmarkingContentHandler;
     Benchmarking::Timer pTotalTimer;
 }; // class Application

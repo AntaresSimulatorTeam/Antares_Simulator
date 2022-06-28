@@ -61,7 +61,6 @@ class yearJob final : public Yuni::Job::IJob
 public:
     yearJob(ISimulation<Impl>* pSimulationObj,
             unsigned int pY,
-            std::vector<unsigned int>& pYearsIndices,
             std::map<uint, bool>& pYearFailed,
             std::map<uint, bool>& pIsFirstPerformedYearOfASet,
             bool pFirstSetParallelWithAPerformedYearWasRun,
@@ -74,7 +73,6 @@ public:
             Benchmarking::ContentHandler* benchmarkingContentHandler) :
      simulationObj(pSimulationObj),
      y(pY),
-     yearsIndices(pYearsIndices),
      yearFailed(pYearFailed),
      isFirstPerformedYearOfASet(pIsFirstPerformedYearOfASet),
      firstSetParallelWithAPerformedYearWasRun(pFirstSetParallelWithAPerformedYearWasRun),
@@ -92,7 +90,6 @@ public:
 private:
     ISimulation<Impl>* simulationObj;
     unsigned int y;
-    std::vector<unsigned int>& yearsIndices;
     std::map<uint, bool>& yearFailed;
     std::map<uint, bool>& isFirstPerformedYearOfASet;
     bool firstSetParallelWithAPerformedYearWasRun;
@@ -143,16 +140,6 @@ private:
 
     virtual void onExecute() override
     {
-        if (isFirstPerformedYearOfASet[y])
-        {
-            uint firstYear = yearsIndices.front();
-            uint lastYear = yearsIndices.back();
-            if (firstYear == lastYear)
-                logs.info() << "Year " << firstYear + 1;
-            else
-                logs.info() << "Years from " << firstYear + 1 << " to " << lastYear + 1;
-        }
-
         Progression::Task progression(study, y, Solver::Progression::sectYear);
 
         if (performCalculations)
@@ -1130,10 +1117,10 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
 
         // We build a new set of parallel years if one of these conditions is fulfilled :
         //	- We have to refresh (or regenerate) some or all time series before running the
-        // current year
+        //    current year
         //	- This is the first year (to be executed or not) after the previous set is full with
-        // years to be executed. 	  That is : in the previous set filled, the max number of
-        // years to be actually run is reached.
+        //    years to be executed. That is : in the previous set filled, the max number of
+        //    years to be actually run is reached.
         buildNewSet = buildNewSet || refreshing;
 
         if (buildNewSet)
@@ -1183,7 +1170,9 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
             }
         }
         else
+        {
             set->isYearPerformed[y] = false;
+        }
 
         // Do we build a new set at next iteration (for years to be executed or not) ?
         if (indexSpace == pNbMaxPerformedYearsInParallel - 1 || y == endYear - 1)
@@ -1499,6 +1488,19 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
     }
 }
 
+static void logPerformedYearsInAset(setOfParallelYears& set)
+{
+    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears << " perfomed)";
+    
+    std::string performedYearsToLog = "";
+    std::for_each(std::begin(set.yearsIndices), std::end(set.yearsIndices), [&](uint const& y) {
+        if (set.isYearPerformed[y])
+            performedYearsToLog += std::to_string(y + 1) + " ";
+        });
+
+    logs.info() << "Year(s) " << performedYearsToLog;
+}
+
 template<class Impl>
 void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                          uint endYear,
@@ -1539,7 +1541,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     std::vector<setOfParallelYears>::iterator set_it;
     for (set_it = setsOfParallelYears.begin(); set_it != setsOfParallelYears.end(); ++set_it)
     {
-        logs.info() << "parallel batch size : " << set_it->nbYears;
         // 1 - We may want to regenerate the time-series this year.
         // This is the case when the preprocessors are enabled from the
         // interface and/or the refresh is enabled.
@@ -1549,7 +1550,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         computeRandomNumbers(randomForParallelYears, set_it->yearsIndices, set_it->isYearPerformed);
 
         std::vector<unsigned int>::iterator year_it;
-        std::vector<unsigned int> yearsIndicesCopy(set_it->yearsIndices);
 
 #if HYDRO_HOT_START != 0
         // Printing on columns the years chained by final levels
@@ -1596,13 +1596,12 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // If the year has not to be rerun, we skip the computation of the year Note that, when
-            // we enter for the first time in the "for" loop, all years of the set have to be rerun
+            // If the year has not to be rerun, we skip the computation of the year. 
+            // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
             // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
 
             qs.add(new yearJob<ImplementationType>(this,
                                                    y,
-                                                   yearsIndicesCopy,
                                                    set_it->yearFailed,
                                                    set_it->isFirstPerformedYearOfASet,
                                                    pFirstSetParallelWithAPerformedYearWasRun,
@@ -1615,6 +1614,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    pBenchmarkingContentHandler));
 
         } // End loop over years of the current set of parallel years
+
+        logPerformedYearsInAset(*set_it);
 
         qs.start();
 

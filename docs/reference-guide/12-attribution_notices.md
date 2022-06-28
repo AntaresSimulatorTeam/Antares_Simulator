@@ -12,7 +12,7 @@ Antares\_Simulator is distributed in the hope that it will be useful, but WITHOU
 
 You should have received a copy of the GNU General Public License along with Antares\_Simulator. If not, see &lt;[https://www.gnu.org/licenses/](https://www.gnu.org/licenses/)  &gt;.
 
-**Antares\_Simulator 8.1.1 uses external libraries and makes extensive use of the following persons' or companies code. Source and binary forms of these programs are distributed along with Antares\_Simulator with NO WARRANTY:**
+**Antares\_Simulator 8.3 uses external libraries and makes extensive use of the following persons' or companies code. Source and binary forms of these programs are distributed along with Antares\_Simulator with NO WARRANTY:**
 
 - Wxwidgets 3.1.3 Copyright (c) 1998-2017 The wxWidget Team  
   [https://github.com/wxWidgets/wxWidgets.git](https://github.com/wxWidgets/wxWidgets.git)  

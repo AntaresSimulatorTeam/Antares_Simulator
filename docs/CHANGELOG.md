@@ -1,9 +1,30 @@
 Antares Changelog
 =================
 
+v8.3-rc1 (06/2022)
+--------------------
+### New features
+- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
+- Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
+- Split MPS files for Antares Xpansion, to reduce the RAM & disk footprint #643
+- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631
+- Measure the execution duration for every computation step, store the durations in a dedicated file #546
+
+### Bug fixes
+- Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
+- Fix logging of performed MC years when running jobs in parallel #680
+
+### For developers
+- Display the git commit-id in the logs for debugging & diagnosis purposes #698
+- Code cleaning in hydro heuristic #671
+- Use antares-deps 2.0.2, which now excludes OR-Tools #684
+- Fetch OR-Tools directly, allowing more flexibility on the flavor (XPRESS/Sirius/etc.) #684
+- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
+- Code cleaning #665 #663 #687
+
 v8.2.2 (04/2022)
 --------------------
-## Bug fixes
+### Bug fixes
 - Fix solver crash on parsing command-line parameters #624
 ### GUI
 - Fix crash occuring when switching to the links panel #658

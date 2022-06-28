@@ -85,17 +85,35 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
 
+    # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
 
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure with VCPKG
+      shell: bash
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{matrix.triplet}} -DCMAKE_PREFIX_PATH=..\install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH="../install" -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON  -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
     - name: Build
       run: |
            cmake --build _build --config release -j2
+
+    - name: Remove OR-Tools install directory to free some disk space
+      shell: bash
+      run: rm -rf ../install
+
+    - name: Remove antares-deps to free some disk space
+      shell: bash
+      run: rm -rf ${{ github.workspace }}/src/antares-deps
+
+    # TODO : don't download submodule Antares_Simulator_Tests
+    - name: Remove Antares_Simulator_Tests to free some disk space
+      shell: bash
+      run: rm -rf ${{ github.workspace }}/src/tests/resources/Antares_Simulator_Tests
 
     # simtest
     - name: Read simtest version

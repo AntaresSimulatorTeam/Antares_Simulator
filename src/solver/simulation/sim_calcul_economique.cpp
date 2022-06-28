@@ -63,6 +63,23 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
+    if (parameters.include.adequacyPatch)
+    {
+        problem.adqPatchParams
+          = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        // AdequacyFirstStep will be initialized during the economy solve
+        // AdqBehaviorMap will be initialized during the economy solve
+        problem.adqPatchParams->SetNTCOutsideToInsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
+        problem.adqPatchParams->SetNTCOutsideToOutsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
+    }
+
+    if (parameters.include.adequacyPatch)
+    {
+        problem.adequacyPatchRuntimeData.initialize(study);
+    }
+
     problem.WaterValueAccurate
       = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP)
           ? OUI_ANTARES
@@ -248,7 +265,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = cluster.nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[l] = cluster.minStablePower;
             pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
-            pbPalier.PminDuPalierThermiquePendantUneSemaine[l] = 0;
             pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
 
             pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;
