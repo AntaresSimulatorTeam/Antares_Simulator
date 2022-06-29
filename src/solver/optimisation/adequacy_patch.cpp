@@ -71,7 +71,6 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZero;
     case physicalAreaOutsideAdqPatch:
         return setToZero;
     default:
