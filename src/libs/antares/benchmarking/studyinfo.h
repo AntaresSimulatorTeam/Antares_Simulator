@@ -92,7 +92,7 @@ private:
     // ----------------------------------------------------------------------------------------
     // Parallel execution
     unsigned int minNbYearsInParallel_ = 0;
-    unsigned int nbCoreMode_;
+    unsigned int nbCoreMode_ = 0;
 
     // Optimization problem
     const OptimizationInfo& pOptimizationInfo;
