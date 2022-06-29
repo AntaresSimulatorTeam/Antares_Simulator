@@ -258,11 +258,6 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             netPositionInitValues[Area] = netPositionInit;
             densNewValues[Area] = densNew;
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
-
-            logs.debug() << "DENS_new[" << Area << "] = " << densNewValues[Area];
-            logs.debug() << "rhsAreaBalanceValues[" << Area << "] = " << rhsAreaBalanceValues[Area]
-                         << " = ENSinit(" << ensInit << ") + NetPositionInit(" << netPositionInit
-                         << ") - SpillageInit(" << spillageInit << ")";
         }
     }
     return;

@@ -98,7 +98,6 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
     std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(numSpace);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
-        logs.debug() << "========= [CSR]: Starting hourly optim for " << hourInWeek;
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
         hourlyCsrProblem.run();
     }
@@ -209,8 +208,6 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
     {
         if ((int)sumENS[i] > threshold)
         {
-            logs.debug() << "hour: [" << i << "], sumENS = [" << (int)sumENS[i]
-                         << "], threshold = " << threshold;
             triggerCsrSet.insert(i);
         }
     }
