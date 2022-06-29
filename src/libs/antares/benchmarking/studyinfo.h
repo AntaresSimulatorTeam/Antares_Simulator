@@ -80,7 +80,7 @@ private:
     template<class ClassItem, typename T>
     void addItem(std::string name, T value)
     {
-        items_.push_back(std::unique_ptr<ClassItem>(new ClassItem(name, value)));
+        items_.emplace_back(new ClassItem(name, value));
     }
 
 

@@ -74,7 +74,7 @@ namespace Benchmarking
 			auto end = area.thermal.list.end();
 			for (auto i = area.thermal.list.begin(); i != end; ++i)
 			{
-				ThermalCluster* cluster = i->second.get();
+				auto& cluster = i->second;
 				if (cluster->enabled)
 					nbEnabledThermalClusters++;
 			}
