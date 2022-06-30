@@ -131,7 +131,7 @@ namespace Benchmarking
 	void DurationCollector::toFileContent(FileContent& file_content)
 	{
 		// File header
-		// TODO here
+		file_content.addItem(new TitleLine("#item	duration_ms	Number of calls"));
 		
 		for (pair<string, vector<int64_t>> element : duration_items_)
 		{

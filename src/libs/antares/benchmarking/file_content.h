@@ -9,42 +9,56 @@ namespace Benchmarking
 /*
     ===  Study info item ===
 */
+
 class FileContentLine
 {
 public:
     FileContentLine(std::string name) : name_(name)
     {}
     virtual std::string name() { return name_; }
-    virtual std::string value() = 0;
+    virtual std::string content() = 0;
 protected:
     std::string name_ = "";
 };
 
-/*
-class FileContentLine_string : public FileContentLine
+class TitleLine : public FileContentLine
 {
 public:
-    FileContentLine_string(std::string name) : FileContentLine(name)
+    TitleLine(std::string name) : FileContentLine(name)
     {}
-    std::string value() override { return ""; }
+    std::string content() override { return name_; }
 };
-*/
 
-class FileContentLine_intValue : public FileContentLine
+
+class FileContentLine_keyValue : public FileContentLine
 {
 public:
-    FileContentLine_intValue(std::string name, unsigned int value) : FileContentLine(name), value_(value)
+    FileContentLine_keyValue(std::string name) : FileContentLine(name)
     {}
-    std::string value() override { return std::to_string(value_); }
+    virtual std::string content()
+    {
+        return name() + " : " + value();
+    }
+protected:
+    virtual std::string value() = 0;
+};
+
+class FileContentLine_intValue : public FileContentLine_keyValue
+{
+public:
+    FileContentLine_intValue(std::string name, unsigned int value) : FileContentLine_keyValue(name), value_(value)
+    {}
+
 private:
+    std::string value() override { return std::to_string(value_); }
     unsigned int value_ = 0;
 };
 
-class FileContentLine_charValue : public FileContentLine
+class FileContentLine_charValue : public FileContentLine_keyValue
 {
 public:
-    FileContentLine_charValue(std::string name, const char* value) :
-        FileContentLine(name), value_(value)
+    FileContentLine_charValue(std::string name, const char* value) 
+        : FileContentLine_keyValue(name), value_(value)
     {
     }
     std::string value() override
@@ -56,18 +70,19 @@ private:
     const char* value_ = "";
 };
 
-class FileContentLine_timeValue : public FileContentLine
+class FileContentLine_timeValue : public FileContentLine_keyValue
 {
 public:
     FileContentLine_timeValue(std::string name, unsigned int duration, int nbCalls)
-        : FileContentLine(name), duration_(duration), nb_calls_(nbCalls)
+        : FileContentLine_keyValue(name), duration_(duration), nb_calls_(nbCalls)
     {}
 
+private:
     std::string value() override
     {
         return std::to_string(duration_) + "\t" + std::to_string(nb_calls_);
     }
-private:
+
     unsigned int duration_ = 0;
     int nb_calls_ = 0;
 };
