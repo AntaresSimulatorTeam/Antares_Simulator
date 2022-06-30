@@ -271,7 +271,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = cluster.nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[l] = cluster.minStablePower;
             pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
-            pbPalier.PminDuPalierThermiquePendantUneSemaine[l] = 0;
             pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
 
             pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;
