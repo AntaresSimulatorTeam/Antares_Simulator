@@ -64,4 +64,25 @@ Timer::Timer(const AnyString& logText,
 {
     pStartTime = MilliSecTimer();
 }
+
+
+
+// ================================
+// gp : draft : simple timer
+// ================================
+SimpleTimer::SimpleTimer()
+{
+    startTime_ = MilliSecTimer();
+}
+
+void SimpleTimer::stop()
+{
+    duration_ = MilliSecTimer() - startTime_;
+}
+
+int64_t SimpleTimer::get_duration()
+{
+    return duration_;
+}
+
 } // namespace Benchmarking

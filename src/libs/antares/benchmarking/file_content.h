@@ -20,6 +20,16 @@ protected:
     std::string name_ = "";
 };
 
+/*
+class FileContentLine_string : public FileContentLine
+{
+public:
+    FileContentLine_string(std::string name) : FileContentLine(name)
+    {}
+    std::string value() override { return ""; }
+};
+*/
+
 class FileContentLine_intValue : public FileContentLine
 {
 public:
@@ -46,6 +56,21 @@ private:
     const char* value_ = "";
 };
 
+class FileContentLine_timeValue : public FileContentLine
+{
+public:
+    FileContentLine_timeValue(std::string name, unsigned int duration, int nbCalls)
+        : FileContentLine(name), duration_(duration), nb_calls_(nbCalls)
+    {}
+
+    std::string value() override
+    {
+        return std::to_string(duration_) + "\t" + std::to_string(nb_calls_);
+    }
+private:
+    unsigned int duration_ = 0;
+    int nb_calls_ = 0;
+};
 
 /*
     === class FileContent ===

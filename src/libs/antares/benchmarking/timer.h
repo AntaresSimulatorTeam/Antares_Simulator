@@ -64,6 +64,22 @@ private:
     //! Aggregation into a single file for automation
     ContentHandler* pContentHandler;
 }; // class Timer
+
+
+// ================================
+// gp : draft : simple timer
+// ================================
+class SimpleTimer
+{
+public:
+    SimpleTimer();
+    void stop();
+    int64_t get_duration();
+
+private:
+    int64_t startTime_ = 0;
+    int64_t duration_ = 0;
+};
 } // namespace Benchmarking
 
 #endif // __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__

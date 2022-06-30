@@ -421,12 +421,17 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Load the study from a folder
     Benchmarking::Timer loadTimer("Study loading", "study_loading", true, &pBenchmarkingContentHandler);
 
+    Benchmarking::SimpleTimer simple_timer; // gp : draft
+
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
     loadTimer.stop();
+
+    simple_timer.stop(); // gp : draft
+    pDurationCollector.addDuration("study_loading", simple_timer.get_duration()); // gp : draft
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -533,6 +538,20 @@ void Application::writeElapsedTime()
     Benchmarking::CSVWriter writer(pStudy->buffer, &pBenchmarkingContentHandler);
     // Write time data
     writer.flush();
+
+
+    // ===========================================
+    // gp : draft part
+    // ===========================================
+    Benchmarking::FileContent file_content;
+    pDurationCollector.toFileContent(file_content);
+
+    // Flush previous info into a record file
+    Yuni::String filePath;
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement_draft.txt";
+    Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
+    file_csv_writer.flush();
+
 }
 
 void Application::writeStudyInfos()

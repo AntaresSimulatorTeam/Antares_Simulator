@@ -91,6 +91,7 @@ private:
     // Benchmarking
     Benchmarking::ContentHandler pBenchmarkingContentHandler;
     Benchmarking::Timer pTotalTimer;
+    Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application
 } // namespace Solver

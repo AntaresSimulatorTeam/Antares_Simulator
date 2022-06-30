@@ -8,10 +8,6 @@ using namespace Antares::Data;
 
 namespace Benchmarking 
 {
-	/*
-		=== Info collectors ===
-	*/
-
 	// Collecting data from study
 	// ---------------------------
 	void StudyInfoCollector::collect()
@@ -127,6 +123,34 @@ namespace Benchmarking
 		file_content_.addItem(new FileContentLine_intValue("variables", opt_info_.nbVariables));
 		file_content_.addItem(new FileContentLine_intValue("constraints", opt_info_.nbConstraints));
 		file_content_.addItem(new FileContentLine_intValue("non-zero coefficients", opt_info_.nbNonZeroCoeffs));
+	}
+
+
+	// Collecting durations from simulation
+	// -------------------------------------
+	void DurationCollector::toFileContent(FileContent& file_content)
+	{
+		// File header
+		// TODO here
+		
+		for (pair<string, vector<int64_t>> element : duration_items_)
+		{
+			std::string name = element.first;
+			vector<int64_t> durations = element.second;
+			int64_t duration_sum = 0;
+			for (auto& duration : durations)
+			{
+				duration_sum += duration;
+			}
+
+			file_content.addItem(new FileContentLine_timeValue(name, (unsigned int)duration_sum, (int)durations.size()));
+		}
+	}
+
+	void DurationCollector::addDuration(std::string name, int64_t duration)
+	{
+		duration_items_[name].push_back(duration);
+		total_duration_ += duration;
 	}
 
 }
