@@ -6,6 +6,7 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
 #include <antares/timeelapsed.h>
+#include <antares/version.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -35,15 +36,6 @@ void checkStudyVersion(const AnyString& optStudyFolder)
                                         VersionToCStr((Version)versionLatest));
         }
     }
-}
-
-void printVersion()
-{
-#ifdef GIT_SHA1_SHORT_STRING
-    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
-#else
-    std::cout << ANTARES_VERSION_STR << std::endl;
-#endif
 }
 
 void printSolvers()
@@ -219,7 +211,7 @@ void Application::prepare(int argc, char* argv[])
 
     if (options.displayVersion)
     {
-        printVersion();
+        PrintVersionToStdCout();
         return;
     }
 
@@ -241,10 +233,10 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " ("
                       << GIT_SHA1_SHORT_STRING << ")";
 #else
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
     logs.info();
