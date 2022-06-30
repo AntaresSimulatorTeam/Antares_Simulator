@@ -5,8 +5,6 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
-#include <antares/benchmarking.h>
-#include <antares/benchmarking/studyinfo.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -545,10 +543,14 @@ void Application::writeStudyInfos()
     Benchmarking::FileContent file_content;
 
     // Collecting info from the study for a further record
+    // gp : remove file_content from StudyInfoCollector constructor
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy, file_content);
+    // gp : rename collect() into toFileContent(file_content)
     study_info_collector.collect();
 
+    // gp : remove file_content from SimulationInfoCollector constructor
     Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo, file_content);
+    // gp : rename collect() into toFileContent(file_content)
     simulation_info_collector.collect();
 
     // Flush previous info into a record file

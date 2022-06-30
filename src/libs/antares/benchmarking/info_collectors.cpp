@@ -1,4 +1,4 @@
-#include "studyinfo.h"
+#include "info_collectors.h"
 #include <antares/exception/LoadingError.hpp>
 #include <antares/config.h>
 #include "antares/study/area/area.h"
@@ -28,12 +28,12 @@ namespace Benchmarking
 
 	void StudyInfoCollector::collectAreasCount()
 	{
-		file_content_.addItem(new StudyInfoItem_integerValue("areas", study_.areas.size()));
+		file_content_.addItem(new FileContentLine_intValue("areas", study_.areas.size()));
 	}
 
 	void StudyInfoCollector::collectLinksCount()
 	{
-		file_content_.addItem(new StudyInfoItem_integerValue("links", study_.areas.areaLinkCount()));
+		file_content_.addItem(new FileContentLine_intValue("links", study_.areas.areaLinkCount()));
 	}
 
 	void StudyInfoCollector::collectPerformedYearsCount()
@@ -47,7 +47,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of performed years to the file content
-		file_content_.addItem(new StudyInfoItem_integerValue("performed years", nbPerformedYears));
+		file_content_.addItem(new FileContentLine_intValue("performed years", nbPerformedYears));
 	}
 
 	void StudyInfoCollector::collectEnabledThermalClustersCount()
@@ -69,7 +69,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of enabled thermal clusters to the file content
-		file_content_.addItem(new StudyInfoItem_integerValue("enabled thermal clusters", nbEnabledThermalClusters));
+		file_content_.addItem(new FileContentLine_intValue("enabled thermal clusters", nbEnabledThermalClusters));
 	}
 
 	void StudyInfoCollector::collectEnabledBindingConstraintsCount()
@@ -95,21 +95,21 @@ namespace Benchmarking
 			}
 		}
 
-		file_content_.addItem(new StudyInfoItem_integerValue("enabled BC", nbEnabledBC));
-		file_content_.addItem(new StudyInfoItem_integerValue("enabled hourly BC", nbEnabledHourlyBC));
-		file_content_.addItem(new StudyInfoItem_integerValue("enabled daily BC", nbEnabledDailyBC));
-		file_content_.addItem(new StudyInfoItem_integerValue("enabled weekly BC", nbEnabledWeeklyBC));
+		file_content_.addItem(new FileContentLine_intValue("enabled BC", nbEnabledBC));
+		file_content_.addItem(new FileContentLine_intValue("enabled hourly BC", nbEnabledHourlyBC));
+		file_content_.addItem(new FileContentLine_intValue("enabled daily BC", nbEnabledDailyBC));
+		file_content_.addItem(new FileContentLine_intValue("enabled weekly BC", nbEnabledWeeklyBC));
 	}
 
 	void StudyInfoCollector::collectUnitCommitmentMode()
 	{
 		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
-		file_content_.addItem(new StudyInfoItem_charValue("unit commitment", unitCommitment));
+		file_content_.addItem(new FileContentLine_charValue("unit commitment", unitCommitment));
 	}
 
 	void StudyInfoCollector::collectMaxNbYearsInParallel()
 	{
-		file_content_.addItem(new StudyInfoItem_integerValue("max parallel years", study_.maxNbYearsInParallel));
+		file_content_.addItem(new FileContentLine_intValue("max parallel years", study_.maxNbYearsInParallel));
 	}
 
 	void StudyInfoCollector::collectSolverVersion()
@@ -117,45 +117,16 @@ namespace Benchmarking
 		// Example : 8.3.0 -> 830
 		const unsigned int version
 			= 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
-		file_content_.addItem(new StudyInfoItem_integerValue("antares version", version));
+		file_content_.addItem(new FileContentLine_intValue("antares version", version));
 	}
 
 	// Collecting data from simulation
 	// ---------------------------------
 	void SimulationInfoCollector::collect()
 	{
-		file_content_.addItem(new StudyInfoItem_integerValue("variables", opt_info_.nbVariables));
-		file_content_.addItem(new StudyInfoItem_integerValue("constraints", opt_info_.nbConstraints));
-		file_content_.addItem(new StudyInfoItem_integerValue("non-zero coefficients", opt_info_.nbNonZeroCoeffs));
+		file_content_.addItem(new FileContentLine_intValue("variables", opt_info_.nbVariables));
+		file_content_.addItem(new FileContentLine_intValue("constraints", opt_info_.nbConstraints));
+		file_content_.addItem(new FileContentLine_intValue("non-zero coefficients", opt_info_.nbNonZeroCoeffs));
 	}
 
-	/*
-		=== class FileContent ===
-	*/
-	FileContent::iterator FileContent::begin()
-	{
-		return items_.begin();
-	}
-
-	FileContent::iterator FileContent::end()
-	{
-		return items_.end();
-	}
-
-
-	/*
-		=== class FileCSVwriter ===
-	*/
-
-	void FileCSVwriter::flush()
-	{
-		if (!outputFile_.openRW(filePath_))
-		{
-			throw Antares::Error::CreatingStudyInfoFile(filePath_);
-		}
-
-		FileContent::iterator it = fileContent_.begin();
-		for (; it != fileContent_.end(); it++)
-			outputFile_ << (*it)->name() << " : " << (*it)->value() << "\n";
-	}
 }
