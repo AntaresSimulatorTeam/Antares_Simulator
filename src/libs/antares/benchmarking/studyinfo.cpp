@@ -9,23 +9,12 @@ using namespace Antares::Data;
 namespace Benchmarking 
 {
 	/*
-		=== class StudyInfoContainer ===
+		=== Info collectors ===
 	*/
-    StudyInfoContainer::StudyInfoContainer(const Antares::Data::Study& study, const OptimizationInfo& optInfo) : study_(study), pOptimizationInfo(optInfo)
-	{}
-
-	StudyInfoContainer::iterator StudyInfoContainer::begin()
-	{
-		return items_.begin();
-	}
-
-	StudyInfoContainer::iterator StudyInfoContainer::end()
-	{
-		return items_.end();
-	}
 
 	// Collecting data from study
-	void StudyInfoContainer::collect()
+	// ---------------------------
+	void StudyInfoCollector::collect()
 	{
 		collectAreasCount();
 		collectLinksCount();
@@ -34,21 +23,20 @@ namespace Benchmarking
 		collectEnabledBindingConstraintsCount();
 		collectUnitCommitmentMode();
 		collectMaxNbYearsInParallel();
-        collectOptimizationInfo();
         collectSolverVersion();
 	}
 
-	void StudyInfoContainer::collectAreasCount()
+	void StudyInfoCollector::collectAreasCount()
 	{
-		addItem<StudyInfoItem_integerValue>("areas", study_.areas.size());
+		file_content_.addItem(new StudyInfoItem_integerValue("areas", study_.areas.size()));
 	}
 
-	void StudyInfoContainer::collectLinksCount()
+	void StudyInfoCollector::collectLinksCount()
 	{
-		addItem<StudyInfoItem_integerValue>("links", study_.areas.areaLinkCount());
+		file_content_.addItem(new StudyInfoItem_integerValue("links", study_.areas.areaLinkCount()));
 	}
 
-	void StudyInfoContainer::collectPerformedYearsCount()
+	void StudyInfoCollector::collectPerformedYearsCount()
 	{
 		// Computing the number of performed years
 		unsigned int nbPerformedYears = 0;
@@ -59,10 +47,10 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of performed years to the file content
-		addItem<StudyInfoItem_integerValue>("performed years", nbPerformedYears);
+		file_content_.addItem(new StudyInfoItem_integerValue("performed years", nbPerformedYears));
 	}
 
-	void StudyInfoContainer::collectEnabledThermalClustersCount()
+	void StudyInfoCollector::collectEnabledThermalClustersCount()
 	{
 		// Computing the number of enabled thermal clusters
 		unsigned int nbEnabledThermalClusters = 0;
@@ -81,10 +69,10 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of enabled thermal clusters to the file content
-		addItem<StudyInfoItem_integerValue>("enabled thermal clusters", nbEnabledThermalClusters);
+		file_content_.addItem(new StudyInfoItem_integerValue("enabled thermal clusters", nbEnabledThermalClusters));
 	}
 
-	void StudyInfoContainer::collectEnabledBindingConstraintsCount()
+	void StudyInfoCollector::collectEnabledBindingConstraintsCount()
 	{
 		unsigned int nbEnabledBC = study_.runtime->bindingConstraintCount;
 		unsigned int nbEnabledHourlyBC(0), nbEnabledDailyBC(0), nbEnabledWeeklyBC(0);
@@ -107,55 +95,67 @@ namespace Benchmarking
 			}
 		}
 
-		addItem<StudyInfoItem_integerValue>("enabled BC", nbEnabledBC);
-		addItem<StudyInfoItem_integerValue>("enabled hourly BC", nbEnabledHourlyBC);
-		addItem<StudyInfoItem_integerValue>("enabled daily BC", nbEnabledDailyBC);
-		addItem<StudyInfoItem_integerValue>("enabled weekly BC", nbEnabledWeeklyBC);
+		file_content_.addItem(new StudyInfoItem_integerValue("enabled BC", nbEnabledBC));
+		file_content_.addItem(new StudyInfoItem_integerValue("enabled hourly BC", nbEnabledHourlyBC));
+		file_content_.addItem(new StudyInfoItem_integerValue("enabled daily BC", nbEnabledDailyBC));
+		file_content_.addItem(new StudyInfoItem_integerValue("enabled weekly BC", nbEnabledWeeklyBC));
 	}
 
-	void StudyInfoContainer::collectUnitCommitmentMode()
+	void StudyInfoCollector::collectUnitCommitmentMode()
 	{
 		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
-		addItem<StudyInfoItem_charValue>("unit commitment", unitCommitment);
+		file_content_.addItem(new StudyInfoItem_charValue("unit commitment", unitCommitment));
 	}
 
-	void StudyInfoContainer::collectMaxNbYearsInParallel()
+	void StudyInfoCollector::collectMaxNbYearsInParallel()
 	{
-		addItem<StudyInfoItem_integerValue>("max parallel years", study_.maxNbYearsInParallel);
+		file_content_.addItem(new StudyInfoItem_integerValue("max parallel years", study_.maxNbYearsInParallel));
 	}
 
-    void StudyInfoContainer::collectOptimizationInfo()
-    {
-        addItem<StudyInfoItem_integerValue>("variables", pOptimizationInfo.nbVariables);
-        addItem<StudyInfoItem_integerValue>("constraints", pOptimizationInfo.nbConstraints);
-        addItem<StudyInfoItem_integerValue>("non-zero coefficients", pOptimizationInfo.nbNonZeroCoeffs);
-    }
+	void StudyInfoCollector::collectSolverVersion()
+	{
+		// Example : 8.3.0 -> 830
+		const unsigned int version
+			= 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
+		file_content_.addItem(new StudyInfoItem_integerValue("antares version", version));
+	}
+
+	// Collecting data from simulation
+	// ---------------------------------
+	void SimulationInfoCollector::collect()
+	{
+		file_content_.addItem(new StudyInfoItem_integerValue("variables", opt_info_.nbVariables));
+		file_content_.addItem(new StudyInfoItem_integerValue("constraints", opt_info_.nbConstraints));
+		file_content_.addItem(new StudyInfoItem_integerValue("non-zero coefficients", opt_info_.nbNonZeroCoeffs));
+	}
 
 	/*
-		=== class StudyInfoWriter ===
+		=== class FileContent ===
+	*/
+	FileContent::iterator FileContent::begin()
+	{
+		return items_.begin();
+	}
+
+	FileContent::iterator FileContent::end()
+	{
+		return items_.end();
+	}
+
+
+	/*
+		=== class FileCSVwriter ===
 	*/
 
-	StudyInfoWriter::StudyInfoWriter(StudyInfoContainer& fileContent) 
-		: fileContent_(fileContent)
-	{}
-
-	void StudyInfoCSVwriter::flush()
+	void FileCSVwriter::flush()
 	{
 		if (!outputFile_.openRW(filePath_))
 		{
 			throw Antares::Error::CreatingStudyInfoFile(filePath_);
 		}
 
-		StudyInfoContainer::iterator it = fileContent_.begin();
+		FileContent::iterator it = fileContent_.begin();
 		for (; it != fileContent_.end(); it++)
 			outputFile_ << (*it)->name() << " : " << (*it)->value() << "\n";
 	}
-
-    void StudyInfoContainer::collectSolverVersion()
-    {
-        // Example : 8.3.0 -> 830
-        const unsigned int version
-          = 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
-        addItem<StudyInfoItem_integerValue>("antares version", version);
-    }
 }

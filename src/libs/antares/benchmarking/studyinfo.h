@@ -52,19 +52,18 @@ struct OptimizationInfo
 };
 
 /*
-    === class StudyInfoContainer ===
+    === Info collectors ===
 */
-class StudyInfoContainer
+
+class FileContent; // Forward declaration
+
+class StudyInfoCollector
 {
 public:
-    StudyInfoContainer(const Antares::Data::Study& study, const OptimizationInfo& optInfo);
-
-    using iterator = std::vector<std::unique_ptr<StudyInfoItem>>::iterator;
-    iterator begin();
-    iterator end();
-
+    StudyInfoCollector(const Antares::Data::Study& study, FileContent& file_content)
+        : study_(study), file_content_(file_content)
+    {}
     void collect();
-
 private:
     // Methods
     void collectAreasCount();
@@ -74,17 +73,10 @@ private:
     void collectEnabledBindingConstraintsCount();
     void collectUnitCommitmentMode();
     void collectMaxNbYearsInParallel();
-    void collectOptimizationInfo();
     void collectSolverVersion();
 
-    template<class ClassItem, typename T>
-    void addItem(std::string name, T value)
-    {
-        items_.emplace_back(new ClassItem(name, value));
-    }
-
-
     // Member data
+    FileContent& file_content_;
     const Antares::Data::Study& study_;
 
     // ----------------------------------------------------------------------------------------
@@ -93,33 +85,64 @@ private:
     // Parallel execution
     unsigned int minNbYearsInParallel_ = 0;
     unsigned int nbCoreMode_ = 0;
+};
 
-    // Optimization problem
-    const OptimizationInfo& pOptimizationInfo;
+class SimulationInfoCollector
+{
+public:
+    SimulationInfoCollector(const OptimizationInfo& optInfo, FileContent& file_content)
+        : opt_info_(optInfo), file_content_(file_content)
+    {};
+
+    void collect();
+
+private:
+    FileContent& file_content_;
+    const OptimizationInfo& opt_info_;
+};
+
+/*
+    === class FileContent ===
+*/
+class FileContent
+{
+public:
+    FileContent() = default;
+
+    using iterator = std::vector<std::unique_ptr<StudyInfoItem>>::iterator;
+    iterator begin();
+    iterator end();
+
+    void addItem(StudyInfoItem* item)
+    {
+        items_.emplace_back(item);
+    }
+
+private:
     // List of study's information pieces (or items)
     std::vector<std::unique_ptr<StudyInfoItem>> items_;
 };
 
 /*
-    === class StudyInfoWriter ===
+    === class FileWriter ===
 */
 
-class StudyInfoWriter
+class FileWriter
 {
 public:   
-    StudyInfoWriter(StudyInfoContainer& fileContent);
+    FileWriter(FileContent& fileContent) : fileContent_(fileContent) {}
     virtual void flush() = 0;
 
 protected:
     // Member data
-    StudyInfoContainer& fileContent_;
+    FileContent& fileContent_;
 };
 
-class StudyInfoCSVwriter final : public StudyInfoWriter
+class FileCSVwriter final : public FileWriter
 {
 public:
-    explicit StudyInfoCSVwriter(Yuni::String& filePath, StudyInfoContainer& fileContent) 
-        : StudyInfoWriter(fileContent), filePath_(filePath)
+    explicit FileCSVwriter(Yuni::String& filePath, FileContent& fileContent) 
+        : FileWriter(fileContent), filePath_(filePath)
     {}
     void flush() override;
 private:

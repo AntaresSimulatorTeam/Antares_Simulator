@@ -45,8 +45,8 @@ public:
     Timer& operator=(const Timer& rhs) = delete;
 
     //! Constructor with a default text
-    explicit Timer(const AnyString& userText,
-                   const AnyString& logText = "",
+    explicit Timer(const AnyString& logText,
+                   const AnyString& fileText = "",
                    bool verbose = true,
                    ContentHandler* handler = nullptr);
 

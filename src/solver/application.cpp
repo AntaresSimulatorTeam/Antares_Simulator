@@ -542,15 +542,20 @@ void Application::writeStudyInfos()
     if (!pStudy)
         return;
 
+    Benchmarking::FileContent file_content;
+
     // Collecting info from the study for a further record
-    Benchmarking::StudyInfoContainer study_info(*pStudy, pOptimizationInfo);
-    study_info.collect();
+    Benchmarking::StudyInfoCollector study_info_collector(*pStudy, file_content);
+    study_info_collector.collect();
+
+    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo, file_content);
+    simulation_info_collector.collect();
 
     // Flush previous info into a record file
     Yuni::String filePath; 
     filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
-    Benchmarking::StudyInfoCSVwriter study_info_writer(filePath, study_info);
-    study_info_writer.flush();
+    Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
+    file_csv_writer.flush();
 }
 
 Application::~Application()
