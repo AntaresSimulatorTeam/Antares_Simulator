@@ -22,6 +22,6 @@ namespace Benchmarking
 
 		FileContent::iterator it = fileContent_.begin();
 		for (; it != fileContent_.end(); it++)
-			outputFile_ << (*it)->content() << "\n";
+			outputFile_ << *it << "\n";
 	}
 }

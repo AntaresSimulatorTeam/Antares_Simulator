@@ -4,16 +4,31 @@ namespace Benchmarking
 {
 	FileContent::iterator FileContent::begin()
 	{
-		return items_.begin();
+		return lines_.begin();
 	}
 
 	FileContent::iterator FileContent::end()
 	{
-		return items_.end();
+		return lines_.end();
 	}
 
-	void FileContent::addItem(FileContentLine* item)
+	void FileContent::addNameValueLine(std::string name, std::string value)
 	{
-		items_.emplace_back(item);
+		lines_.push_back(name + " : " + value);
+	}
+
+	void FileContent::addTitleLine(std::string title)
+	{
+		lines_.push_back(title);
+	}
+
+	void FileContent::addDurationLine(std::string name, unsigned int duration, int nbCalls)
+	{
+		addNameValueLine(name, std::to_string(duration) + "\t" + std::to_string(nbCalls));
+	}
+
+	void FileContent::addNameValueLine(std::string name, int value)
+	{
+		addNameValueLine(name, std::to_string(value));
 	}
 }
