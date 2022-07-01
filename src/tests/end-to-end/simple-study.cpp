@@ -176,7 +176,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 	pSettings.noOutput = false;
 
 	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings, nullptr);
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
 
 	// Allocate all arrays
 	SIM_AllocationTableaux();

@@ -253,7 +253,8 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
-                                      Benchmarking::ContentHandler* handler) :
+                                      Benchmarking::ContentHandler* handler,
+                                      Benchmarking::DurationCollector* duration_collector) :
  ImplementationType(study),
  study(study),
  settings(settings),
@@ -263,7 +264,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
- pBenchmarkingContentHandler(handler)
+ pBenchmarkingContentHandler(handler),
+ pDurationCollector(duration_collector)
 {
     // Ask to the interface to show the messages
     logs.info();

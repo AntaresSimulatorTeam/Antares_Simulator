@@ -39,14 +39,17 @@ void Application::runSimulationInAdequacyDraftMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pBenchmarkingContentHandler);
+    SimulationType simulation(*pStudy, pSettings, &pBenchmarkingContentHandler, &pDurationCollector);
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
         Benchmarking::Timer timer("Synthesis export", "synthesis_export", true, &pBenchmarkingContentHandler);
+        Benchmarking::SimpleTimer simple_timer; // gp : draft
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
+        simple_timer.stop(); // gp : draft
+        pDurationCollector.addDuration("synthesis_export", simple_timer.get_duration()); // gp : draft
     }
 }
 

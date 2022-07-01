@@ -66,7 +66,10 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, const ::Settings& settings, Benchmarking::ContentHandler* handler);
+    ISimulation(Data::Study& study, 
+                const ::Settings& settings, 
+                Benchmarking::ContentHandler* handler = nullptr, 
+                Benchmarking::DurationCollector* duration_collector = nullptr);
     //! Destructor
     ~ISimulation();
     //@}
@@ -175,6 +178,8 @@ private:
 
     //! Aggregate execution times into a single file (optional)
     Benchmarking::ContentHandler* pBenchmarkingContentHandler;
+    Benchmarking::DurationCollector* pDurationCollector;
+
 }; // class ISimulation
 
 } // namespace Simulation
