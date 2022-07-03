@@ -116,15 +116,16 @@ The area files that belong to the « values » class display **122** fields corr
 | H.OVFL | Wasted natural inflow overflowing from an already full energy storage unit |
 | H.VAL | Marginal value of stored energy (typically: shadow water value) |
 | H.COST | Expenses /Income brought by energy storage actions (H.STOR,H.PUMP) |
-| UNSP. | ENRG Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS) |
-| SPIL. | ENRG Spilled energy (energy produced that cannot be used and has to be wasted) |
+| UNSP. ENRG | Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS) |
+| SPIL. ENRG | Spilled energy (energy produced that cannot be used and has to be wasted) |
 | LOLD | Loss of load duration: adequacy indicator (length of shortfalls) |
 | LOLP | Loss of Load probability: adequacy indicator (probability of shortfalls) |
-| AVL | DTG Available dispatchable thermal generation (sum of av. power over all plants) |
-| DTG | MRG Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
-| MAX | MRG Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
+| AVL. DTG | Available dispatchable thermal generation (sum of av. power over all plants) |
+| DTG. MRG | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
+| MAX. MRG | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units [^13] |
+| Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * production of the cluster)  |
 
 
 ## Economy and Adequacy, interconnection results [^14]
