@@ -305,6 +305,7 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
+    include.splitExportedMPS = false;
     include.adequacyPatch = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
@@ -555,6 +556,8 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
+    if (key == "include-split-exported-mps")
+        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-adequacypatch")
         return value.to<bool>(d.include.adequacyPatch);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
@@ -1557,6 +1560,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (!include.exportMPS)
         logs.info() << "  :: ignoring export mps";
+    if (!include.splitExportedMPS)
+        logs.info() << "  :: ignoring split exported mps";
     if (!include.adequacyPatch)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
@@ -1720,6 +1725,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
+        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-adequacypatch", include.adequacyPatch);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
