@@ -424,6 +424,9 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
+        //! if MPS files are exported, a flag to split them
+        bool splitExportedMPS;
+
         //! a flag to use Adequacy patch
         bool adequacyPatch;
 

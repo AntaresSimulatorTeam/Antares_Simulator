@@ -564,6 +564,7 @@ struct PROBLEME_HEBDO
     char ReinitOptimisation;
 
     char ExportMPS;
+    bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 
