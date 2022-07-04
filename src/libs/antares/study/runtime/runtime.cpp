@@ -609,13 +609,13 @@ namespace CompareAreasByNumberOfClusters
 // Compare areas by number of thermal clusters
 struct thermal
 {
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
     {
         assert(a.second);
         assert(b.second);
         return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
     }
-    size_t getNbClusters(const Area* area)
+    size_t getNbClusters(const Area* area) const
     {
         assert(area);
         return area->thermal.clusterCount();
@@ -624,13 +624,13 @@ struct thermal
 // Compare areas by number of renewable clusters
 struct renewable
 {
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
     {
         assert(a.second);
         assert(b.second);
         return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
     }
-    size_t getNbClusters(const Area* area)
+    size_t getNbClusters(const Area* area) const
     {
         assert(area);
         return area->renewable.clusterCount();
@@ -659,7 +659,7 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
-void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
+void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
 {
     logs.info();
     logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";

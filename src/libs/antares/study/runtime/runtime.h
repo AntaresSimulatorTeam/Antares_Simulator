@@ -220,7 +220,7 @@ private:
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     void initializeMaxClusters(const Study& study);
     //! Prepare all thermal clusters in 'must-run' mode
-    void initializeThermalClustersInMustRunMode(Study& study);
+    void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
     void removeDisabledRenewableClustersFromSolverComputations(Study& study);
     void removeAllRenewableClustersFromSolverComputations(Study& study);
