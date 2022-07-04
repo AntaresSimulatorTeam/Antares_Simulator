@@ -556,7 +556,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
-    if (key == "include-splitexportedmps")
+    if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-adequacypatch")
         return value.to<bool>(d.include.adequacyPatch);
@@ -1725,7 +1725,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
-        section->add("include-splitexportedmps", include.splitExportedMPS);
+        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-adequacypatch", include.adequacyPatch);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
