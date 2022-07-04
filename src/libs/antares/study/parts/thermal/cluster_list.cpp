@@ -880,13 +880,15 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     if (empty())
         return true;
 
+    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+
     Clob buffer;
     bool ret = true;
 
     for (auto it = begin(); it != end(); ++it)
     {
         auto& c = *(it->second);
-        if (c.prepro)
+        if (c.prepro && c.doWeGenerateTS(globalThermalTSgeneration))
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
