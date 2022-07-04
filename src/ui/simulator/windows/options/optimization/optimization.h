@@ -116,6 +116,7 @@ private:
     Component::Button* pBtnSimplexOptimizationRange;
 
     Component::Button* pBtnExportMPS;
+    Component::Button* pBtnSplitExportedMPS;
     Component::Button* pBtnAdequacyPatch;
     Component::Button* pBtnAdqPatchOutsideInside;
     Component::Button* pBtnAdqPatchOutsideOutside;
