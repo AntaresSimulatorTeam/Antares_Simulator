@@ -167,8 +167,11 @@ public:
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 
-    //! The maximum number of clusters for each area
+    //! The maximum number of thermal clusters for each area
     uint maxThermalClustersForSingleArea;
+
+    //! The maximum number of renewable clusters for each area
+    uint maxRenewableClustersForSingleArea;
 
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     /*!

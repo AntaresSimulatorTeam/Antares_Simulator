@@ -445,6 +445,7 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
  maxThermalClustersForSingleArea(0),
+ maxRenewableClustersForSingleArea(0),
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
  hydroCostByAreaShouldBeInfinite(nullptr),
  globalMaximumCost(0.),
@@ -619,6 +620,9 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 
         if (area.thermal.clusterCount() > maxThermalClustersForSingleArea)
             maxThermalClustersForSingleArea = area.thermal.clusterCount();
+
+        if (area.renewable.clusterCount() > maxRenewableClustersForSingleArea)
+            maxRenewableClustersForSingleArea = area.renewable.clusterCount();
     }
 
     switch (count)
