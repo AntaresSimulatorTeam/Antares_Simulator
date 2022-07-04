@@ -606,6 +606,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
 namespace CompareAreasByNumberOfClusters
 {
+// Compare areas by number of thermal clusters
 struct thermal
 {
     bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
@@ -614,7 +615,13 @@ struct thermal
         assert(b.second);
         return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
     }
+    size_t getNbClusters(const Area* area)
+    {
+        assert(area);
+        return area->thermal.clusterCount();
+    }
 };
+// Compare areas by number of renewable clusters
 struct renewable
 {
     bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
@@ -623,37 +630,33 @@ struct renewable
         assert(b.second);
         return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
     }
+    size_t getNbClusters(const Area* area)
+    {
+        assert(area);
+        return area->renewable.clusterCount();
+    }
 };
 } // namespace CompareAreasByNumberOfClusters
 
-static size_t maxNumberOfThermalClusters(const Study& study)
+template<class CompareGetT>
+static size_t maxNumberOfClusters(const Study& study)
 {
-    auto pairWithMostThClusters
-      = std::max_element(study.areas.begin(), study.areas.end(), CompareAreasByNumberOfClusters::thermal());
-    if (pairWithMostThClusters != study.areas.end())
+    CompareGetT cmp;
+    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
+    if (pairWithMostClusters != study.areas.end())
     {
-        auto area = pairWithMostThClusters->second;
-        return area->thermal.clusterCount();
-    }
-    return 0;
-}
-
-static size_t maxNumberOfRenewableClusters(const Study& study)
-{
-    auto pairWithMostRnClusters
-      = std::max_element(study.areas.begin(), study.areas.end(), CompareAreasByNumberOfClusters::renewable());
-    if (pairWithMostRnClusters != study.areas.end())
-    {
-        auto area = pairWithMostRnClusters->second;
-        return area->renewable.clusterCount();
+        auto area = pairWithMostClusters->second;
+        return cmp.getNbClusters(area);
     }
     return 0;
 }
 
 void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
 {
-    this->maxThermalClustersForSingleArea = maxNumberOfThermalClusters(study);
-    this->maxRenewableClustersForSingleArea = maxNumberOfRenewableClusters(study);
+    this->maxThermalClustersForSingleArea
+      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
+    this->maxRenewableClustersForSingleArea
+      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
