@@ -436,7 +436,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbDaysPerYear(0),
  nbMonthsPerYear(0),
  parameters(nullptr),
- mode(),
  interconnectionsCount(0),
  areaLink(nullptr),
  timeseriesNumberYear(nullptr),
@@ -444,8 +443,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
- maxThermalClustersForSingleArea(0),
- maxRenewableClustersForSingleArea(0),
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
  hydroCostByAreaShouldBeInfinite(nullptr),
  globalMaximumCost(0.),
@@ -528,6 +525,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
+    // Max number of thermal/renewable clusters
+    initializeMaxClusters(study);
+
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
@@ -603,6 +603,58 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
+namespace CompareAreasByNumberOfClusters
+{
+struct thermal
+{
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
+    {
+        assert(a.second);
+        assert(b.second);
+        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
+    }
+};
+struct renewable
+{
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b)
+    {
+        assert(a.second);
+        assert(b.second);
+        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
+    }
+};
+} // namespace CompareAreasByNumberOfClusters
+
+static size_t maxNumberOfThermalClusters(const Study& study)
+{
+    auto pairWithMostThClusters
+      = std::max_element(study.areas.begin(), study.areas.end(), CompareAreasByNumberOfClusters::thermal());
+    if (pairWithMostThClusters != study.areas.end())
+    {
+        auto area = pairWithMostThClusters->second;
+        return area->thermal.clusterCount();
+    }
+    return 0;
+}
+
+static size_t maxNumberOfRenewableClusters(const Study& study)
+{
+    auto pairWithMostRnClusters
+      = std::max_element(study.areas.begin(), study.areas.end(), CompareAreasByNumberOfClusters::renewable());
+    if (pairWithMostRnClusters != study.areas.end())
+    {
+        auto area = pairWithMostRnClusters->second;
+        return area->renewable.clusterCount();
+    }
+    return 0;
+}
+
+void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
+{
+    this->maxThermalClustersForSingleArea = maxNumberOfThermalClusters(study);
+    this->maxRenewableClustersForSingleArea = maxNumberOfRenewableClusters(study);
+}
+
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 {
     logs.info();
@@ -610,6 +662,7 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
 
     // The number of thermal clusters in 'must-run' mode
     uint count = 0;
+
     // each area...
     for (uint a = 0; a != study.areas.size(); ++a)
     {
@@ -617,12 +670,6 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
         area.thermal.prepareAreaWideIndexes();
         if (mode != stdmAdequacyDraft)
             count += area.thermal.prepareClustersInMustRunMode();
-
-        if (area.thermal.clusterCount() > maxThermalClustersForSingleArea)
-            maxThermalClustersForSingleArea = area.thermal.clusterCount();
-
-        if (area.renewable.clusterCount() > maxRenewableClustersForSingleArea)
-            maxRenewableClustersForSingleArea = area.renewable.clusterCount();
     }
 
     switch (count)

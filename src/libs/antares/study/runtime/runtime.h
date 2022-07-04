@@ -168,10 +168,10 @@ public:
     bool thermalTSRefresh = false;
 
     //! The maximum number of thermal clusters for each area
-    uint maxThermalClustersForSingleArea;
+    size_t maxThermalClustersForSingleArea = 0;
 
     //! The maximum number of renewable clusters for each area
-    uint maxRenewableClustersForSingleArea;
+    size_t maxRenewableClustersForSingleArea = 0;
 
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     /*!
@@ -218,6 +218,7 @@ public:
 private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
+    void initializeMaxClusters(const Study& study);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study);
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
