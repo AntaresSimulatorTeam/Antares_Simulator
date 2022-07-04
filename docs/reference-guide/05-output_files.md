@@ -127,6 +127,7 @@ The area files that belong to the « values » class display **122** fields corr
 | NODU | Number of Dispatched Units [^13] |
 | Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * production of the cluster)  |
 
+Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2.
 
 ## Economy and Adequacy, interconnection results [^14]
 **10** files resulting from the combination of the following attributes:
