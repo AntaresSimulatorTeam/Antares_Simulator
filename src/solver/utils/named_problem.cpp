@@ -14,7 +14,7 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
- solveOnlyRelaxation(true),
+ CallbackHeuristique(NULL),
  ValeursDesVariablesFixees(ValeursDesVariablesFixees),
  ColonnesFixees(ColonnesFixees),
  NombreDeVariablesFixees(NombreDeVariablesFixees)

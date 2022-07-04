@@ -29,8 +29,6 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
     const int* ColonnesFixees;
     const int NombreDeVariablesFixees;
 
-    bool solveOnlyRelaxation;
-
     bool isMIP() const;
 };
 } // namespace Optimization

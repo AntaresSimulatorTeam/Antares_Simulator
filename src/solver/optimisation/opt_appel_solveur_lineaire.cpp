@@ -130,13 +130,6 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
                                              std::placeholders::_1,
                                              ProblemeHebdo);
     }
-
-    if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
-        Probleme.solveOnlyRelaxation = false;
-    else
-    {
-        Probleme.solveOnlyRelaxation = true;
-    }
     
     ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
     solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);

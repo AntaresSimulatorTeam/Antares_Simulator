@@ -166,11 +166,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
-
-        if (problemeSimplexe->solveOnlyRelaxation)
-            problemeSimplexe->X[idxVar] = var->unrounded_solution_value();
-        else
-            problemeSimplexe->X[idxVar] = var->solution_value();
+        problemeSimplexe->X[idxVar] = var->solution_value();
         
         if (isMIP)
         {
@@ -338,7 +334,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-void XPRESS_AjouterSolutionInitiale(void *ptr,
+/* void XPRESS_AjouterSolutionInitiale(void *ptr,
                                     const int nombreDeVariablesFixees,
                                     const double* valeursDesVariablesFixees,
                                     const int* indicesDesVariablesFixees) 
@@ -349,6 +345,7 @@ void XPRESS_AjouterSolutionInitiale(void *ptr,
                  indicesDesVariablesFixees,
                  "");
 }
+ */
 
 using namespace Antares::Data;
 
