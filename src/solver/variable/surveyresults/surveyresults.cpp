@@ -565,7 +565,7 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
  data(s, o),
- maxVariables(Math::Max<uint>(maxVars, 3 * s.runtime->maxThermalClustersForSingleArea)),
+ maxVariables(Math::Max<uint>(maxVars, 4 * s.runtime->maxThermalClustersForSingleArea)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr)
