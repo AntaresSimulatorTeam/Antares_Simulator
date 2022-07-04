@@ -277,17 +277,8 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
 
     if (Probleme->isMIP())
     {
-        if (Probleme->solveOnlyRelaxation) 
-            solver->SetSolveParameters("gl");
-        else 
-            solver->SetSolveParameters("g");
-
-        auto addingHint = std::bind(XPRESS_AjouterSolutionInitiale,
-                                        std::placeholders::_1,
-                                        Probleme->NombreDeVariablesFixees,
-                                        Probleme->ValeursDesVariablesFixees,
-                                        Probleme->ColonnesFixees);
-        solver->AddSetupMethod(addingHint);
+        solver->SetSolveParameters("g");
+        solver->AddSetupMethod(Probleme->CallbackHeuristique);
     }
         
 

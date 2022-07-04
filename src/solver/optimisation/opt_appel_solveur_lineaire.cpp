@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "xprs.h"
+
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "opt_structure_probleme_a_resoudre.h"
@@ -94,6 +96,13 @@ private:
     clock::time_point end_;
 };
 
+void XPRESS_AjouterCallbackHeuristique(void *prob,
+                                       PROBLEME_HEBDO *ProblemeHebdo);
+
+void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
+                                        void *ProblemeHebdoVoid,
+                                        int *p_infeasible);
+
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
     int Var;
@@ -115,7 +124,12 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    
+    if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+    {
+        Probleme.CallbackHeuristique = std::bind(XPRESS_AjouterCallbackHeuristique,
+                                             std::placeholders::_1,
+                                             ProblemeHebdo);
+    }
 
     if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
         Probleme.solveOnlyRelaxation = false;
@@ -443,4 +457,46 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     fclose(Flot);
 
     return;
+}
+
+void XPRESS_AjouterCallbackHeuristique(void *prob,
+                                       PROBLEME_HEBDO *ProblemeHebdo)
+{
+    XPRSaddcboptnode(static_cast<XPRSprob>(prob),
+                     XPRESS_CallbackHeuristiqueAccurate,
+                     (void*) ProblemeHebdo,
+                     0);
+}
+
+void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
+                                        void *ProblemeHebdoVoid,
+                                        int *p_infeasible)
+{
+    int var;
+    double* pt;
+    
+    PROBLEME_HEBDO* ProblemeHebdo = static_cast<PROBLEME_HEBDO*>(ProblemeHebdoVoid);
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    //Recuperer les valeurs de la relaxation
+    double* x = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    XPRSgetlpsol(prob, x, NULL, NULL, NULL);
+
+    //Les stocker dans ProblemeHebdo
+    for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++) {
+        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var];
+        *pt = x[var];
+    }
+
+    //Appeler l'heuristique accurate (remplit les tableaux de la solution à fournir au solveur)
+    OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
+
+    //Ajoute la solution au problème XPRESS
+    XPRSaddmipsol(prob,
+                 ProblemeHebdo->nombreDeVariablesAFixer,
+                 ProblemeHebdo->valeursPremiereOptimisationEtHeuristique,
+                 ProblemeHebdo->colonnesAFixer,
+                 "");
+
+    MemFree(x);
 }
