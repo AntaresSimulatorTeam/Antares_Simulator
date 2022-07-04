@@ -29,6 +29,7 @@
 #include "runtime.h"
 #include "../parameters.h"
 #include "../../date.h"
+#include <algorithm>
 #include <limits>
 #include <functional>
 #include "../../emergency.h"
