@@ -232,6 +232,44 @@ void HydroManagement::prepareEffectiveDemand(uint numSpace)
             assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
             assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
         }
+
+        if (parameters.hydroAllocationClamping
+            == Antares::Data::Parameters::HydroAllocationClamping::none)
+        {
+            auto minimumYear = std::numeric_limits<double>::infinity();
+            auto dayYear = 0u;
+
+            for (uint month = 0; month != 12; ++month)
+            {
+                auto minimumMonth = +std::numeric_limits<double>::infinity();
+                auto daysPerMonth = study.calendar.months[month].days;
+                auto realmonth = study.calendar.months[month].realmonth;
+
+                for (uint d = 0; d != daysPerMonth; ++d)
+                {
+                    auto dYear = d + dayYear;
+                    if (data.DLE[dYear] < minimumMonth)
+                        minimumMonth = data.DLE[dYear];
+                }
+
+                if (minimumMonth < 0.)
+                {
+                    for (uint d = 0; d != daysPerMonth; ++d)
+                        data.DLE[dayYear + d] -= minimumMonth - 1e-4;
+                }
+
+                if (data.MLE[realmonth] < minimumYear)
+                    minimumYear = data.MLE[realmonth];
+
+                dayYear += daysPerMonth;
+            }
+
+            if (minimumYear < 0.)
+            {
+                for (uint realmonth = 0; realmonth != 12; ++realmonth)
+                    data.MLE[realmonth] -= minimumYear - 1e-4;
+            }
+        }
     });
 }
 
