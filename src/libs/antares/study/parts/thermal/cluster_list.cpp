@@ -888,14 +888,14 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     for (auto it = begin(); it != end(); ++it)
     {
         auto& c = *(it->second);
-        if (c.prepro && c.doWeGenerateTS(globalThermalTSgeneration))
+        if (c.prepro)
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
             bool result = c.prepro->loadFromFolder(study, buffer);
 
-            if (result and study.usedByTheSolver)
+            if (result && study.usedByTheSolver && c.doWeGenerateTS(globalThermalTSgeneration))
             {
                 // checking NPO max
                 result = c.prepro->normalizeAndCheckNPO();
