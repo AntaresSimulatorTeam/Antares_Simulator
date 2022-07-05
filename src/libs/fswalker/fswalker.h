@@ -35,6 +35,8 @@
 #include "statistics.h"
 #include "job.h"
 
+#include <memory>
+
 namespace FSWalker
 {
 enum Flow
@@ -45,23 +47,23 @@ enum Flow
 };
 
 //! Event: Entering into a new folder
-typedef Flow (*OnDirectoryEvent)(const YString& path, bool empty, void* user);
+using OnDirectoryEvent = Flow (*)(const YString& path, bool empty, void* user);
 //! A file has been found
-typedef void (*OnFileEvent)(const YString& filename,
-                            const YString& parent,
-                            yint64 modified,
-                            yuint64 size,
-                            void* user);
+using OnFileEvent = void (*)(const YString& filename,
+                             const YString& parent,
+                             yint64 modified,
+                             yuint64 size,
+                             void* user);
 //! Event for dispatching a new job
-typedef Yuni::Bind<void(IJob::Ptr job)> DispatchJobEvent;
+using DispatchJobEvent = Yuni::Bind<void(IJob::Ptr job)>;
 
 class IExtension
 {
 public:
     //! Most suitable smart pointer
-    typedef Yuni::SmartPtr<IExtension> Ptr;
+    using Ptr = std::shared_ptr<IExtension>;
     //! List
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
 
 public:
     /*!
@@ -133,9 +135,7 @@ public:
     explicit Walker(const AnyString& logprefix);
     ~Walker();
 
-    void add(IExtension::Ptr& extension);
-
-    void add(IExtension* extension);
+    void add(IExtension::Ptr extension);
 
     void directory(const AnyString& path);
 

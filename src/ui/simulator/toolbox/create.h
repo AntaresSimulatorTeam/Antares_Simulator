@@ -44,12 +44,12 @@ namespace Component
 ** \param object  A popinter to the object which will receive the onClick event
 ** \param method  The method to bind for the onClick event
 */
-template<class T, class StringT>
+template<class T, class StringT, class UserDataT = void*>
 wxButton* CreateButton(wxWindow* parent,
                        const StringT& caption,
                        T* object = NULL,
-                       void (T::*method)(void*) = NULL,
-                       void* userdata = NULL);
+                       void (T::*method)(UserDataT) = NULL,
+                       UserDataT userdata = NULL);
 
 /*!
 ** \brief Create a standard label

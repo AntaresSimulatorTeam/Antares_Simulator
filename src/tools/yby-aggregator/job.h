@@ -36,11 +36,13 @@
 #include <yuni/job/queue/service.h>
 #include <yuni/io/file.h>
 
+#include <memory>
+
 class JobFileReader final : public Yuni::Job::IJob
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<JobFileReader> Ptr;
+    using Ptr = std::shared_ptr<JobFileReader>;
     enum
     {
         maxRows = 8800,
@@ -106,11 +108,11 @@ private:
 
 private:
     //! Type for a temporary column
-    typedef CellData* TemporaryColumnData;
+    using TemporaryColumnData = CellData*;
     //! Buffer type
-    typedef Yuni::CString<65536> BufferType;
+    using BufferType = Yuni::CString<65536>;
     //! Jump table
-    typedef std::vector<uint> JumpTable;
+    using JumpTable = std::vector<uint>;
 
 private:
     //! Buffer for reading data

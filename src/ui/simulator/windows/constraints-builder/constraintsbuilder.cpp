@@ -258,7 +258,7 @@ ConstraintsBuilderWizard::ConstraintsBuilderWizard(wxFrame* parent) :
         vS = new wxBoxSizer(wxVERTICAL);
 
         vS->AddSpacer(15);
-        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_BOTTOM);
+        vS->Add(Antares::Component::CreateLabel(panelGrid, wxT(" to "), true), 0, wxALIGN_NOT);
         hS->Add(vS, 0, wxALIGN_LEFT);
 
         hS->AddSpacer(5);
@@ -434,7 +434,7 @@ ConstraintsBuilderWizard::~ConstraintsBuilderWizard()
     delete pCBuilder;
 }
 
-void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& evt)
+void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& /* evt */)
 {
     auto value = pCheckNodalLoopFlow->GetValue();
 
@@ -444,7 +444,7 @@ void ConstraintsBuilderWizard::onCheckNodalLoopFlow(wxCommandEvent& evt)
     pCBuilder->saveCBuilderToFile();
 }
 
-void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& evt)
+void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& /* evt */)
 {
     // Validate();
     auto value = pInfiniteValue->GetValue();
@@ -468,7 +468,7 @@ void ConstraintsBuilderWizard::onUpdateInfiniteValue(wxCommandEvent& evt)
     pCBuilder->saveCBuilderToFile();
 }
 
-void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
+void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& /* evt */)
 {
     auto value = pIncludeLoopFlow->GetValue();
 
@@ -477,19 +477,10 @@ void ConstraintsBuilderWizard::onIncludeLoopFlow(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->useLoopFlow = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }
-    MarkTheStudyAsModified();*/
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
-void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
+void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& /* evt */)
 {
     auto value = pIncludePhaseShifts->GetValue();
 
@@ -498,15 +489,6 @@ void ConstraintsBuilderWizard::onUsePhaseShift(wxCommandEvent& evt)
     pCBuilder->setUpToDate(false);
     pCBuilder->saveCBuilderToFile();
 
-    // update all lines in the study
-    /*for (auto link : pCBuilder->pLink)
-    {
-            link->ptr->usePST = value;
-            //onConnectionChanged(link->ptr);
-            OnStudyLinkChanged(link->ptr);
-    }*/
-    // MarkTheStudyAsModified();
-    // Forms::ApplWnd::Instance()->pageLinksDetails->refresh();
     pGrid->forceRefresh();
 }
 
@@ -622,7 +604,7 @@ void ConstraintsBuilderWizard::onDelete(void*)
     if (not Data::Study::Current::Valid())
         return;
     auto studyptr = Data::Study::Current::Get();
-    if (not studyptr)
+    if (!studyptr)
         return;
     auto& study = *studyptr;
 
@@ -689,7 +671,7 @@ void ConstraintsBuilderWizard::enableAll(bool v)
     pBtnBuild->Enable(false);
 }
 
-void ConstraintsBuilderWizard::fileMapping(FileMapping* m)
+void ConstraintsBuilderWizard::fileMapping(FileMappingPtr m)
 {
     pFileMapping = m;
 
@@ -728,7 +710,7 @@ void ConstraintsBuilderWizard::gridAppend(wxFlexGridSizer& sizer,
     sizer.Add(value, 0, wxRIGHT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
 }
 
-void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& evt)
+void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& /* evt */)
 {
     wxString texValue = startingHourCtrl->GetValue();
     int num;
@@ -750,7 +732,7 @@ void ConstraintsBuilderWizard::updateBeginningHourLabel(wxEvent& evt)
     pFlexSizer->Layout();
 }
 
-void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& evt)
+void ConstraintsBuilderWizard::updateEndHourLabel(wxEvent& /* evt */)
 {
     wxString texValue = endHourCtrl->GetValue();
     int num;

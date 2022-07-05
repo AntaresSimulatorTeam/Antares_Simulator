@@ -56,7 +56,7 @@ static Data::Area* gLastArea = nullptr;
 class SpotlightProviderArea final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     SpotlightProviderArea() : pAutoTriggerSelection(true)
@@ -86,11 +86,6 @@ public:
         auto& study = *Data::Study::Current::Get();
         if (study.areas.empty())
             return;
-
-        uint currentEquipment = 0;
-        auto* mainFrm = Forms::ApplWnd::Instance();
-        if (mainFrm)
-            currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
 
         std::vector<Antares::Data::Area*> layerFilteredItems;
         if (!text.empty())
@@ -140,7 +135,6 @@ public:
         if (mainFrm)
             currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
 
-        auto end = study.areas.end();
         if (tokens.empty())
         {
             for (auto i = in.begin(); i != in.end(); ++i)
@@ -182,11 +176,10 @@ public:
         if (!Data::Study::Current::Valid() || GUIIsLock())
             return false;
         GUILocker locker;
-        typedef Toolbox::Spotlight::ItemArea::Ptr ItemArea;
-        ItemArea itemarea = Spotlight::IItem::Ptr::DynamicCast<ItemArea>(item);
+        auto itemarea = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemArea>(item);
         if (!(!itemarea))
         {
-            auto* area = itemarea->area;
+            auto area = itemarea->area;
             if (area)
             {
                 // pAutoTriggerSelection = false;
@@ -226,7 +219,7 @@ protected:
     {
         assert(area && "Invalid area");
 
-        auto* item = new Toolbox::Spotlight::ItemArea(area);
+        auto item = std::make_shared<Toolbox::Spotlight::ItemArea>(area);
         if (area->id == pLastAreaID)
             item->select();
 
@@ -236,7 +229,14 @@ protected:
             {
                 CString<32, false> text;
                 text << area->thermal.list.size();
-                item->addRightTag(text, 210, 217, 216);
+                const Yuni::uint8 R_COLOR = 210;
+                const Yuni::uint8 G_COLOR = 217;
+                const Yuni::uint8 B_COLOR = 216;
+                item->addRightTag(text, R_COLOR, G_COLOR, B_COLOR);
+                if (area->thermal.hasForcedTimeseriesGeneration())
+                    item->addRightTag(wxT("G"), R_COLOR, G_COLOR, B_COLOR);
+                if (area->thermal.hasForcedNoTimeseriesGeneration())
+                    item->addRightTag(wxT("NG"), R_COLOR, G_COLOR, B_COLOR);
             }
         }
         if (0 != (equipment & Data::timeSeriesRenewable))
@@ -389,7 +389,7 @@ void Area::internalBuildSubControls()
         OnMapLayerAdded.connect(spotlight, &Component::Spotlight::onMapLayerAdded);
         OnMapLayerRemoved.connect(spotlight, &Component::Spotlight::onMapLayerRemoved);
         OnMapLayerRenamed.connect(spotlight, &Component::Spotlight::onMapLayerRenamed);
-        spotlight->provider(new SpotlightProviderArea());
+        spotlight->provider(std::make_shared<SpotlightProviderArea>());
         wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
         hz->AddSpacer(5);
         hz->Add(spotlight, 1, wxALL | wxEXPAND);

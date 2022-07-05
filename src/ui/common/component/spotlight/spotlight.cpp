@@ -40,6 +40,7 @@
 #include <wx/minifram.h>
 
 #include <iostream>
+#include <memory>
 
 using namespace Yuni;
 
@@ -58,8 +59,8 @@ static Antares::Component::Spotlight* globalSpotlight = nullptr;
 Spotlight::Spotlight(wxWindow* parent, uint flags) :
  Antares::Component::Panel(parent),
  pFlags(flags),
- pEdit(nullptr),
  pLayerFilter(nullptr),
+ pEdit(nullptr),
  pListbox(nullptr),
  pItemHeight(18),
  pDisplayHandle(wxNOT_FOUND),
@@ -273,7 +274,7 @@ void Spotlight::search(const String& text)
     else
     {
         // Extract all tokens
-        auto* tokens = new SearchToken::Vector();
+        auto tokens = std::make_shared<SearchToken::Vector>();
         if (not text.empty())
             convertRawTextIntoSearchTokenVector(*tokens, text);
 
@@ -281,7 +282,7 @@ void Spotlight::search(const String& text)
         if (pLayerFilter)
             layerName = std::string(pLayerFilter->GetValue().mb_str());
         // Results
-        auto* results = new IItem::Vector();
+        auto results = std::make_shared<IItem::Vector>();
         provider->search(*results, *tokens, layerName);
 
         pResults = results;
@@ -295,8 +296,6 @@ void Spotlight::search(const String& text)
 void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
                                                     const Yuni::String& text)
 {
-    // assert
-    assert(&out != NULL);
     assert(out.empty() && "The provided vector of search tokens must be empty");
     assert(not text.empty() && "The provided text must not be empty");
 
@@ -338,7 +337,7 @@ void Spotlight::convertRawTextIntoSearchTokenVector(SearchToken::Vector& out,
             continue;
 
         // Adding a new search token
-        auto* searchToken = new SearchToken();
+        auto searchToken = std::make_shared<SearchToken>();
         searchToken->text.assign(tok.c_str() + offset, tok.size() - offset);
         searchToken->weight = weight;
         out.push_back(searchToken);
@@ -524,7 +523,7 @@ void Spotlight::onInputUpdated(wxCommandEvent& evt)
     Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
-void Spotlight::onComboUpdated(wxCommandEvent& evt)
+void Spotlight::onComboUpdated(wxCommandEvent& /* evt */)
 {
     if (IsGUIAboutToQuit())
         return;
@@ -541,7 +540,7 @@ void Spotlight::itemHeight(uint h)
 class FrameShowData
 {
 public:
-    typedef SmartPtr<FrameShowData> Ptr;
+    using Ptr = std::shared_ptr<FrameShowData>;
 
     static void ReExecute(const Ptr& data)
     {
@@ -562,7 +561,7 @@ void Spotlight::FrameShow(wxWindow* parent,
                           uint flags,
                           uint width)
 {
-    typedef Antares::Private::Spotlight::SpotlightMiniFrame FrameType;
+    using FrameType = Antares::Private::Spotlight::SpotlightMiniFrame;
 
     if (IsGUIAboutToQuit())
         return;
@@ -575,7 +574,7 @@ void Spotlight::FrameShow(wxWindow* parent,
         globalSpotlight = nullptr;
         frame->Close();
 
-        FrameShowData::Ptr data = new FrameShowData();
+        auto data = std::make_shared<FrameShowData>();
         data->parent = parent;
         data->provider = provider;
         data->flags = flags;
@@ -663,7 +662,7 @@ void Spotlight::FrameShow(wxWindow* parent,
 
 void Spotlight::FrameClose()
 {
-    typedef Antares::Private::Spotlight::SpotlightMiniFrame FrameType;
+    using FrameType = Antares::Private::Spotlight::SpotlightMiniFrame;
 
     GUILocker locker;
     auto* frame = FrameType::Instance();

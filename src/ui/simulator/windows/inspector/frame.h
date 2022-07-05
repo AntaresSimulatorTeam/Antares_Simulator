@@ -184,6 +184,8 @@ private:
     wxPGProperty* pPGUnsupplied;
     wxPGProperty* pPGSpilled;
     wxPGProperty* pPGAreaName;
+    wxPGProperty* pPGAreaAdequacyPatchTitle;
+    wxPGProperty* pPGAreaAdequacyPatchMode;
     wxPGProperty* pPGAreaColor;
     wxPGProperty* pPGAreaLinks;
     wxPGProperty* pPGAreaPlants;
@@ -204,6 +206,7 @@ private:
     wxPGProperty* pPGThClusterReliabilityModel;
     wxPGProperty* pPGThClusterCosts;
     wxPGProperty* pPGThClusterName;
+    wxPGProperty* pPGThClusterDoGenerateTS;
 
 public:
     wxPGProperty* pPGThClusterNominalCapacity;

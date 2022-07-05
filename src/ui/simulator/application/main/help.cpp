@@ -87,11 +87,6 @@ void ApplWnd::evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent&)
     OpenPDF("help/antares-general-reference-guide.pdf");
 }
 
-void ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent&)
-{
-    OpenPDF("help/optimization-problems-formulation.pdf");
-}
-
 void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
 {
     OpenPDF("help/system-map-editor-reference-guide.pdf");
@@ -100,6 +95,11 @@ void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
 void ApplWnd::evtOnHelpPDFExamplesLibrary(wxCommandEvent&)
 {
     OpenPDF("help/antares-examples-library.pdf");
+}
+
+void ApplWnd::evtOnHelpOnlineDocumentation(wxCommandEvent&)
+{
+    wxLaunchDefaultBrowser(ANTARES_ONLINE_DOC);
 }
 
 } // namespace Forms

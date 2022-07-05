@@ -71,7 +71,7 @@ public:
     WalkerThread(Statistics& stats);
     ~WalkerThread();
 
-    void dispatchJob(IJob::Ptr job);
+    void dispatchJob(IJob::Ptr job) const;
 
     void run();
 
@@ -98,13 +98,13 @@ protected:
                           sint64 modified,
                           uint64 size);
 
-    void waitForAllJobs();
+    void waitForAllJobs() const;
 
 private:
     class DirectoryContext final : private Yuni::NonCopyable<DirectoryContext>
     {
     public:
-        typedef std::stack<DirectoryContext*> Stack;
+        using Stack = std::stack<DirectoryContext*>;
 
         explicit DirectoryContext(const String& path) : info(path), cursor(info.begin())
         {
@@ -135,7 +135,7 @@ private:
 
 WalkerThread::WalkerThread(Statistics& stats) : pFileJob(nullptr), pOriginalStatistics(stats)
 {
-    pJobCounter = new Atomic::Int<32>();
+    pJobCounter = std::make_shared<Atomic::Int<32>>();
     pShouldStop = false;
 
     MutexLocker locker(gsMutex);
@@ -383,7 +383,7 @@ void WalkerThread::walk(const String& path)
     logs.info() << logPrefix << "operation completed";
 }
 
-void WalkerThread::waitForAllJobs()
+void WalkerThread::waitForAllJobs() const
 {
     // Previous number of jobs
     int lastremain = -1;
@@ -424,7 +424,7 @@ void WalkerThread::waitForAllJobs()
     }
 }
 
-void WalkerThread::dispatchJob(IJob::Ptr job)
+void WalkerThread::dispatchJob(IJob::Ptr job) const
 {
     // get the shared counter
     job->pJobCounter = pJobCounter;
@@ -514,16 +514,9 @@ void Walker::retrieveStatistics(Statistics& out)
     out = pStats;
 }
 
-void Walker::add(IExtension::Ptr& extension)
+void Walker::add(IExtension::Ptr extension)
 {
     if (!(!extension))
         pExtensions.push_back(extension);
 }
-
-void Walker::add(IExtension* extension)
-{
-    if (extension)
-        pExtensions.push_back(extension);
-}
-
 } // namespace FSWalker

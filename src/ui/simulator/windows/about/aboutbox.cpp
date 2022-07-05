@@ -51,10 +51,13 @@ Michael		Boulade		V4 - V6\n\
 Michel		Doquet		V1 - V7\n\
 Damien		Gerard		V3 - V5\n\
 Robert		Gonzalez		V3 - V5\n\
+Jean-Marie		Kerloch		V7-V8\n\
 Sylvain		Marandon		V6 - V7\n\
 Eric		Momot		V1 - V2\n\
 Papa		Ndiaye		V5 - V7\n\
-Guillaume		Pierre		V5 - V7\n\
+Florian		Omnes	V7-V8\n\
+Guillaume		Pierre		V5 - V8\n\
+Andrea		Sgattoni		V6-V8\n\
 Frederique	Verrier		V1 - V2\n\
 Li		Wu		V5\n\
 \n\
@@ -877,7 +880,7 @@ AboutBox::AboutBox(wxWindow* parent) :
     textSizer->Add(
       Resources::StaticBitmapLoadFromFile(this, wxID_ANY, "images/128x128/antares.png"),
       0,
-      wxALL | wxALIGN_TOP | wxALIGN_CENTER_HORIZONTAL);
+      wxALL | wxALIGN_TOP);
     textSizer->AddSpacer(15);
 
     auto* sv = new wxBoxSizer(wxVERTICAL);
@@ -943,6 +946,17 @@ AboutBox::AboutBox(wxWindow* parent) :
     version->SetBackgroundColour(wxColour(255, 255, 255));
     version->SetForegroundColour(wxColour(90, 90, 90));
     sv->Add(version, 0, wxALL | wxEXPAND);
+
+#ifdef GIT_SHA1_SHORT_STRING
+    sv->AddSpacer(1);
+    // git sha-1 (short)
+    vstr.clear();
+    vstr << wxT("git revision: " GIT_SHA1_SHORT_STRING);
+    wxStaticText* SHA1Text = Component::CreateLabel(this, vstr, false, true);
+    SHA1Text->SetBackgroundColour(wxColour(255, 255, 255));
+    SHA1Text->SetForegroundColour(wxColour(90, 90, 90));
+    sv->Add(SHA1Text, 0, wxALL | wxEXPAND);
+#endif
 
     sv->AddSpacer(20);
 
@@ -1017,7 +1031,7 @@ AboutBox::AboutBox(wxWindow* parent) :
     // Close button
     {
         auto* btn = Component::CreateButton(pPanel, wxT("   Close   "), this, &AboutBox::onClose);
-        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALIGN_CENTRE_VERTICAL | wxALL);
+        pPanelSizer->Add(btn, 0, wxFIXED_MINSIZE | wxALL);
         pPanelSizer->Add(5, 2);
         btn->SetDefault();
         btn->SetFocus();

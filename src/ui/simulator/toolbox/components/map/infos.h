@@ -45,7 +45,7 @@ class PanelInfos : public wxPanel
 {
 public:
     //! List of item
-    typedef std::vector<Item*> ItemList;
+    using ItemList = std::vector<Item*>;
     //! IDs
     enum IDs
     {

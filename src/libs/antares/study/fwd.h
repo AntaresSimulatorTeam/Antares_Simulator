@@ -63,23 +63,23 @@ class UIRuntimeInfo;
 class Correlation;
 
 //! Name of a single area
-typedef Yuni::CString<ant_k_area_name_max_length, false> AreaName;
+using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 //! Name of a single link
-typedef Yuni::CString<ant_k_area_name_max_length * 2 + 1, false> AreaLinkName;
+using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
-typedef Yuni::CString<ant_k_cluster_name_max_length, false> ClusterName;
+using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
 
-typedef Yuni::CString<ant_k_constraint_name_max_length, false> ConstraintName;
+using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 
-typedef Yuni::CString<64, false> RulesScenarioName;
+using RulesScenarioName = Yuni::CString<64, false>;
 
 //! Name mapping
-typedef std::map<AreaName, AreaName> AreaNameMapping;
+using AreaNameMapping = std::map<AreaName, AreaName>;
 
 /*!
 ** \brief Study's Consistency errors
 */
-typedef enum
+enum StudyError
 {
     stErrNone = 0,
     //! startTime, finalHour = 0..8760
@@ -95,7 +95,7 @@ typedef enum
     //! Too much binding constaints
     stErrTooMuchBindingConstraints,
     /**/
-} StudyError;
+};
 
 /*!
 ** \brief Types of Study
@@ -206,9 +206,11 @@ enum TimeSeries
     timeSeriesSolar = 16,
     //! TimeSeries : Renewable
     timeSeriesRenewable = 32,
+    //! TimeSeries : Renewable
+    timeSeriesTransmissionCapacities = 64,
 
     //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 6,
+    timeSeriesCount = 7,
 
 }; // enum TimeSeries
 
@@ -502,12 +504,12 @@ const char* NumberOfCoresModeToCString(NumberOfCoresMode ncores);
 NumberOfCoresMode StringToNumberOfCoresMode(const AnyString& text);
 
 /*
-* Renewable generation modelling
-*/
+ * Renewable generation modelling
+ */
 enum RenewableGenerationModelling
 {
     rgAggregated = 0, // Default
-    rgClusters, // Using renewable clusters
+    rgClusters,       // Using renewable clusters
     rgUnknown,
 };
 
@@ -552,6 +554,45 @@ class TSNumberRules;
 class Sets;
 
 } // namespace ScenarioBuilder
+} // namespace Data
+} // namespace Antares
+
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Virtual area in adq patch
+    virtualArea = 0,
+    //! Physical Area outside the adq-patch
+    physicalAreaOutsideAdqPatch = 1,
+    //! Physical Area inside the adq-patch
+    physicalAreaInsideAdqPatch = 2
+}; // enum AdequacyPatchMode
+
+/*!
+** \brief Setting Link Capacity (NTC) for Adequacy patch first step
+*/
+enum LinkCapacityForAdequacyPatchFirstStep
+{
+    //! Leave NTC local values
+    leaveLocalValues = 0,
+    //! Set NTC to zero
+    setToZero,
+    //! set only origine->extremity NTC to zero
+    setOrigineExtremityToZero,
+    //! set only extremity->origine NTC to zero
+    setExtremityOrigineToZero
+
+}; // enum NTC
+
+} // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
 

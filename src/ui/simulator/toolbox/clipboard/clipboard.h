@@ -29,6 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include <antares/array/matrix.h>
+#include <memory>
 #include <vector>
 #include "../components/datagrid/gridhelper.h"
 
@@ -77,7 +78,7 @@ private:
     class Item final
     {
     public:
-        typedef Yuni::SmartPtr<Item> Ptr;
+        using Ptr = std::shared_ptr<Item>;
 
     public:
         Item(const Type t, Yuni::String::Ptr d) : type(t), data(d)
@@ -87,7 +88,7 @@ private:
         Yuni::String::Ptr data;
     };
 
-    typedef std::vector<Item::Ptr> List;
+    using List = std::vector<Item::Ptr>;
     List pList;
 
 }; // class Clipboard

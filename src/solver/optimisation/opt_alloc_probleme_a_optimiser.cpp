@@ -125,7 +125,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
     logs.info();
 
-    if (NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
+    if ((uint)NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
     {
         logs.fatal() << "Optimisation problem too large to be allocated.";
         AntaresSolverEmergencyShutdown();
@@ -175,6 +175,9 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     ProblemeAResoudre->Pi
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+
+    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -257,6 +260,9 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
         MemFree(ProblemeAResoudre->ComplementDeLaBase);
         MemFree(ProblemeAResoudre->Pi);
         MemFree(ProblemeAResoudre->Colonne);
+
+        ProblemeAResoudre->NomDesVariables.clear();
+        ProblemeAResoudre->NomDesContraintes.clear();
 
         MemFree(ProblemeAResoudre);
 

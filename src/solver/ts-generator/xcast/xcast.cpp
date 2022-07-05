@@ -696,7 +696,7 @@ bool XCast::run()
 
     default:
     {
-        exit(1);
+        AntaresSolverEmergencyShutdown(1);
     }
     }
     return false;

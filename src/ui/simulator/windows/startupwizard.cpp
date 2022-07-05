@@ -55,8 +55,8 @@ namespace // anonymous
 {
 static StartupWizard* globalWndStartupWizard = nullptr;
 
-typedef std::pair<String, String> PairStringString;
-typedef std::vector<PairStringString> OutputList;
+using PairStringString = std::pair<String, String>;
+using OutputList = std::vector<PairStringString>;
 
 class ExampleProvider;
 
@@ -85,7 +85,7 @@ public:
 public:
     OutputList& pOutputList;
     String pTitle;
-    typedef std::map<String, String> List;
+    using List = std::map<String, String>;
     List pList;
 
 }; // class MyStudyFinder
@@ -94,7 +94,7 @@ class ExampleProvider final : public Antares::Component::Spotlight::IProvider
 {
 public:
     //! The spotlight component (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     //! \name Constructor & Destructor
@@ -137,7 +137,7 @@ public:
     */
     virtual void search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector& tokens,
-                        const Yuni::String& text = "") override
+                        const Yuni::String& /* text */) override
     {
         String title;
         String number;
@@ -147,7 +147,7 @@ public:
             auto end = pOutputs.end();
             for (auto i = pOutputs.begin(); i != end; ++i, ++index)
             {
-                auto* item = new Spotlight::IItem();
+                auto item = std::make_shared<Spotlight::IItem>();
                 extractNumber(i->first, title, number);
                 item->caption(title);
                 item->tag = index;
@@ -168,7 +168,7 @@ public:
                     const String& text = (*ti)->text;
                     if (i->first.icontains(text))
                     {
-                        auto* item = new Spotlight::IItem();
+                        auto item = std::make_shared<Spotlight::IItem>();
                         item->caption(i->first);
                         item->tag = index;
                         item->addTag("example", 177, 209, 245);
@@ -766,7 +766,8 @@ void StartupWizard::showAllExamples()
         width = 320,
 #endif
     };
-    Component::Spotlight::FrameShow(pBtnExamples, new ExampleProvider(pExFolder), 0, width);
+    Component::Spotlight::FrameShow(
+      pBtnExamples, std::make_shared<ExampleProvider>(pExFolder), 0, width);
     if (pBtnExamples)
         pBtnExamples->Enable(true);
 }

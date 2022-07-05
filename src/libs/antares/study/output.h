@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <map>
+#include <memory>
 #include <functional>
 #include "study.h"
 
@@ -41,18 +42,18 @@ class Output final
 {
 public:
     //! Smartptr
-    typedef Yuni::SmartPtr<Output> Ptr;
+    using Ptr = std::shared_ptr<Output>;
     //! List
-    typedef std::list<Ptr> List;
+    using List = std::list<Ptr>;
     //! Title
-    typedef Yuni::CString<128, false> Title;
+    using Title = Yuni::CString<128, false>;
     //! Name
-    typedef Yuni::CString<128, false> Name;
+    using Name = Yuni::CString<128, false>;
 
     //! Map of study output info, ordered by their timestamp
-    typedef std::map<Yuni::sint64, Ptr> MapByTimestamp;
+    using MapByTimestamp = std::map<Yuni::sint64, Ptr>;
     //! Map of study output info, ordered by their timestamp (desc)
-    typedef std::map<Yuni::sint64, Ptr, std::greater<Yuni::sint64>> MapByTimestampDesc;
+    using MapByTimestampDesc = std::map<Yuni::sint64, Ptr, std::greater<Yuni::sint64>>;
 
 public:
     /*!

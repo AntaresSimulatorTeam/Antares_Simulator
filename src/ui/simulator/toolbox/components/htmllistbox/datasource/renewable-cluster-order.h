@@ -40,9 +40,8 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
-typedef std::list<Data::RenewableCluster*> RenewableClusterList;
-typedef std::map<wxString, RenewableClusterList> RenewableClusterMap;
+using RenewableClusterList = std::list<Data::RenewableCluster*>;
+using RenewableClusterMap = std::map<wxString, RenewableClusterList>;
 
 class RenewableClustersByOrder : public ClustersByOrder
 {
@@ -62,8 +61,6 @@ private:
     void rebuildItemsList(const wxString& search) override;
 
 }; // RenewableClustersByOrder
-
-
 
 class RenewableClustersByAlphaOrder : public RenewableClustersByOrder
 {
@@ -90,8 +87,6 @@ private:
     void sortClustersInGroup(RenewableClusterList& clusterList) override;
 
 }; // class RenewableClustersByAlphaOrder
-
-
 
 class RenewableClustersByAlphaReverseOrder : public RenewableClustersByOrder
 {
@@ -123,4 +118,3 @@ private:
 } // namespace HTMLListbox
 } // namespace Component
 } // namespace Antares
-

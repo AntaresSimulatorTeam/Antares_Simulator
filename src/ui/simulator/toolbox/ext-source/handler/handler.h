@@ -39,17 +39,17 @@ namespace ExtSource
 namespace Handler
 {
 //! A single key
-typedef Yuni::CString<50, false> Key;
+using Key = Yuni::CString<50, false>;
 //! A single value
-typedef Yuni::String Value;
+using Value = Yuni::String;
 
 //! Map of properties
-typedef std::map<Key, Value> PropertyMap;
+using PropertyMap = std::map<Key, Value>;
 
 /*!
 ** \brief Paste from the clipboard items from an Antares Study
 */
-void AntaresStudy(Data::Study& target,
+void AntaresStudy(Data::Study::Ptr target,
                   const Yuni::String& content,
                   uint offset,
                   PropertyMap& map,

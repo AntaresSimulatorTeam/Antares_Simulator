@@ -397,6 +397,11 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       pPGAreaResort,
       new wxBoolProperty(wxT("other dispatch. power"), wxT("area.other_dispatch_power"), false));
 
+    pPGAreaAdequacyPatchTitle
+      = Category(pg, wxT("Adequacy Patch"), wxT("area.adequacy_patch_title"));
+    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(
+      wxT("adequacy patch mode"), wxT("area.adequacy_patch_mode"), adequacyPatchMode));
+
     pPGAreaLocalization = Category(pg, wxT("Localization"), wxT("area.localization"));
     P_INT("x", "area.x");
     P_INT("y", "area.y");
@@ -529,7 +534,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
 
     pPGThClusterReliabilityModel
-      = Category(pg, wxT("Reliability model"), wxT("cluster.reliabilitymodel"));
+      = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
+    pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
     pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
@@ -545,7 +551,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
         RnGroupChoices.Add(arrayRnClusterGroup[i], i);
     pPGRnClusterGroup = page->Append(
-        new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
+      new wxEditEnumProperty(wxT("group"), wxT("rn-cluster.group"), RnGroupChoices, wxEmptyString));
 
     pPGRnClusterArea = P_STRING("area", "rn-cluster.area");
     pg->DisableProperty(pPGRnClusterArea);
@@ -558,6 +564,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGRnClusterNominalCapacity = P_FLOAT("Nominal capacity (MW)", "rn-cluster.nominal_capacity");
     pPGRnClusterInstalled = P_FLOAT("Installed (MW)", "rn-cluster.installed");
     pg->DisableProperty(pPGRnClusterInstalled);
+
     // --- CONSTRAINT ---
     pPGConstraintSeparator = Group(pg, wxEmptyString, wxEmptyString);
     pPGConstraintTitle = Group(pg, wxT("1 CONSTRAINT"), wxT("constraint.title"));
@@ -692,30 +699,27 @@ void Frame::apply(const InspectorData::Ptr& data)
 
     wxSizer* sizer = GetSizer();
 
-    auto& study = (!data) ? *Data::Study::Current::Get() : data->study;
+    auto study = Data::Study::Current::Get();
     wxPGProperty* p;
     bool hide;
     bool multiple;
 
-    if (pAllowAnyObject and &study)
+    if (pAllowAnyObject and study)
     {
         if (pPGCommonStudyName and pPGCommonStudyAuthor)
         {
-            pPGCommonStudyName->SetValueFromString(wxStringFromUTF8(study.header.caption));
-            pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study.header.author));
+            pPGCommonStudyName->SetValueFromString(wxStringFromUTF8(study->header.caption));
+            pPGCommonStudyAuthor->SetValueFromString(wxStringFromUTF8(study->header.author));
         }
     }
     else
     {
-        if (&study)
+        // ugly hack : to allow self refresh when several properties
+        // are modified in the same time
+        if (not pAlreadyConnectedToSimulationChangesEvent)
         {
-            // ugly hack : to allow self refresh when several properties
-            // are modified in the same time
-            if (not pAlreadyConnectedToSimulationChangesEvent)
-            {
-                OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
-                pAlreadyConnectedToSimulationChangesEvent = true;
-            }
+            OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
+            pAlreadyConnectedToSimulationChangesEvent = true;
         }
     }
 
@@ -773,7 +777,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     // -----
     pPGAreaSeparator->Hide(hide);
     pPGAreaGeneral->Hide(hide);
-    pPGAreaFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
+    pPGAreaFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     if (!hide)
     {
         pPGAreaName->Hide(multiple);
@@ -782,6 +786,8 @@ void Frame::apply(const InspectorData::Ptr& data)
             pPGAreaName->SetValueFromString(wxStringFromUTF8((*(data->areas.begin()))->name));
         // Area color
         Accumulator<PAreaColor>::Apply(pPGAreaColor, data->areas);
+        // Adequacy patch
+        Accumulator<PAdequacyPatchMode>::Apply(pPGAreaAdequacyPatchMode, data->areas);
         // Area position
         if (!multiple)
         {
@@ -832,6 +838,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     }
     pPGAreaOptimization->Hide(hide);
     pPGAreaResort->Hide(hide);
+    pPGAreaAdequacyPatchTitle->Hide(hide);
     pPGAreaLocalization->Hide(hide || multiple);
     pPGAreaDeps->Hide(hide);
 
@@ -841,7 +848,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     hide = !data || data->links.empty();
     multiple = (data and data->links.size() > 1);
     pPGLinkSeparator->Hide(hide);
-    pPGLinkFilteringStatus->Hide(!(!hide and &study and study.parameters.geographicTrimming));
+    pPGLinkFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     p = PROPERTY("link.title");
     p->Hide(hide);
     if (!hide)
@@ -937,8 +944,10 @@ void Frame::apply(const InspectorData::Ptr& data)
         // CO2
         Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
         // Volatility
-        Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned, data->ThClusters);
-        Accumulator<PClusterVolatilityForced>::Apply(pPGThClusterVolatilityForced, data->ThClusters);
+        Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned,
+                                                      data->ThClusters);
+        Accumulator<PClusterVolatilityForced>::Apply(pPGThClusterVolatilityForced,
+                                                     data->ThClusters);
         // Laws
         Accumulator<PClusterLawPlanned>::Apply(pPGThClusterLawPlanned, data->ThClusters);
         Accumulator<PClusterLawForced>::Apply(pPGThClusterLawForced, data->ThClusters);
@@ -948,6 +957,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
         Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
         Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
+        // Override global TS generation setting, per cluster
+        Accumulator<PClusterDoGenerateTS>::Apply(pPGThClusterDoGenerateTS, data->ThClusters);
 
         // check Nominal capacity with thermal modulation
         AccumulatorCheck<PClusterNomCapacityColor>::ApplyTextColor(pPGThClusterNominalCapacity,
@@ -956,7 +967,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         AccumulatorCheck<PClusterMinStablePowerColor>::ApplyTextColor(pPGThClusterMinStablePower,
                                                                       data->ThClusters);
         // check Min. Stable Power with thermal modulation
-        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning, data->ThClusters);
+        AccumulatorCheck<PClusterSpinningColor>::ApplyTextColor(pPGThClusterSpinning,
+                                                                data->ThClusters);
     }
 
     pPGThClusterParams->Hide(hide);
@@ -979,7 +991,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         {
             p->SetLabel(wxT("RENEWABLE CLUSTER"));
             pPGRnClusterName->SetValueFromString(
-                wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
+              wxStringFromUTF8((*(data->RnClusters.begin()))->name()));
         }
         else
             p->SetLabel(wxString() << data->RnClusters.size() << wxT(" RENEWABLE CLUSTERS"));

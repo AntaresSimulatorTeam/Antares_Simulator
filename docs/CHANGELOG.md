@@ -1,6 +1,94 @@
 Antares Changelog
 =================
 
+v8.3-rc1 (06/2022)
+--------------------
+### New features
+- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
+- Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
+- Split MPS files for Antares Xpansion, to reduce the RAM & disk footprint #643
+- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631
+- Measure the execution duration for every computation step, store the durations in a dedicated file #546
+
+### Bug fixes
+- Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
+- Fix logging of performed MC years when running jobs in parallel #680
+
+### For developers
+- Display the git commit-id in the logs for debugging & diagnosis purposes #698
+- Code cleaning in hydro heuristic #671
+- Use antares-deps 2.0.2, which now excludes OR-Tools #684
+- Fetch OR-Tools directly, allowing more flexibility on the flavor (XPRESS/Sirius/etc.) #684
+- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
+- Code cleaning #665 #663 #687
+
+v8.2.2 (04/2022)
+--------------------
+### Bug fixes
+- Fix solver crash on parsing command-line parameters #624
+### GUI
+- Fix crash occuring when switching to the links panel #658
+
+v8.2.1 (03/2022)
+--------------------
+### Bug fixes
+- Fix scenario builder data loss when renaming area #610
+- Write 1 in the ts-numbers when series.width == 1 #609
+- Add noise to the cost vector in the allocation problems to enforce uniqueness #622
+- Linux only : fix segfault occurring when an INI file does not exist #606
+
+### GUI
+- Place "Dataset > Resize columns to..." in first position #607
+- Allow that all NTC be 0 in one direction #595
+- Fix occasional crash when opening the links panel #594
+- Linux only : fix frozen window occurring after a "Save as..." #586
+- Linux only : fix impossibility to save a study #600
+- Developer version only : fix assertion errors in the GUI #584
+
+v8.2.0 (03/2022)
+--------------------
+### New features
+- Multiple timeseries for link capacities (NTC). It is now possible to establish different scenarios for the capacity of a link. Users can now take partial or total outages for links into account #520
+- Infeasible problem analyzer. When the underlying problem has no solution, list the most suspicious constraints in a report. This should help users identify faulty binding constraints #431
+- Add a hydro-debug switch that allows the printing of some useful debug data in heuristic mode #254
+
+### GUI
+- Add a "view results" button in the dialog that appears when a simulation has been completed #511
+- Help menu : add an "online documentation" item #509
+- Improve UI for new thermal parameter "tsGenBehavior" #534
+- Improve cell styles when loop-flow is enabled for a link #571
+
+### Bug fixes
+- Prevent an area from having a link to itself #531
+- Fix crash when the study folder does not exist #521
+- Fix crash when failing to load a study #502
+
+### For developers
+- Remove calls to exit() #505. Provide consistent return values for antares-solver by fixing a segfault related to the log object #522
+- Remove calls to setjmp, goto's big brother #527
+- Large refactor of antares-solver's main function, hoping to make error management easier to understand #521
+- Use std::shared_ptr instead of Yuni::SmartPtr in most cases #529
+- Simplify and clean some parts of the code #537, #538, #540
+
+v8.1.1 (01/2022)
+--------------------
+
+### Bug fixes
+- Fix segfault occurring randomly when thermal clusters are disabled (#472)
+- Fix hydro level discontinuities (#491). Very rarely, hydro reservoirs would inexplicably be filled from 0% to 100% in 1h, this violating the modelling constraints.
+- Execution times when the Sirius solver is used in conjunction with OR-Tools are now similar as with Sirius alone. This is a result of [this fix](https://github.com/AntaresSimulatorTeam/or-tools/pull/1), related to "hot-start".
+
+### GUI
+- Speed up scrolling (#395)
+- Warn the user about disabled renewable clusters only when relevant (#386)
+
+### Packages
+Include antares-analyzer into .zip and .tar.gz archives (#470). This is especially useful if you use the portable version of Antares.
+
+### For developers
+In the CI workflow, CentOS 7 now uses devtoolset-9 (previously 7), with in particular gcc 9. This allows for C++17 features to be used without hassle.
+
+
 v8.1.0 (09/2021)
 --------------------
 

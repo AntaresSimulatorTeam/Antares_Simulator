@@ -76,3 +76,7 @@ buildDebian
 .vscode/
 *.dll
 .idea/
+
+# pytest
+__pycache__
+venv/

@@ -146,7 +146,7 @@ void Panel::update()
     if (not Data::Study::Current::Valid()) // should never happen here
         return;
     auto& study = *Data::Study::Current::Get();
-    if (!&study or !study.scenarioRules)
+    if (!study.scenarioRules)
     {
         // This may happen sometimes, especially at the creation of the component
         // for example (but this has been disabled)
@@ -219,7 +219,7 @@ void Panel::onStudyChanged(Data::Study& study)
     pDeleteList.clear();
     pRenameList.clear();
 
-    if (!&study or !study.scenarioRules)
+    if (!study.scenarioRules)
         pRules = nullptr;
 
     Dispatcher::GUI::Post(this, &Panel::update, 20);

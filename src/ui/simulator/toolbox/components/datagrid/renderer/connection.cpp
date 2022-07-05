@@ -59,14 +59,52 @@ wxString Connection::rowCaption(int row) const
     return wxStringFromUTF8(study->calendar.text.hours[row]);
 }
 
-wxString Connection::columnCaption(int colIndx) const
+void Connection::onConnectionChanged(Data::AreaLink* link)
+{
+    if (link)
+    {
+        link->invalidate(true); // Force the reload of parameters & capacities to avoid a crash.
+        setMatrix(link);
+        mUseLoopFlow = link->useLoopFlow;
+    }
+
+    if (pControl)
+    {
+        pControl->InvalidateBestSize();
+        pControl->Refresh();
+    }
+}
+
+wxColour Connection::horizontalBorderColor(int x, int y) const
+{
+    // Getting informations about the next hour
+    // (because the returned color is about the bottom border of the cell,
+    // so the next hour for the user)
+    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
+    {
+        auto& hourinfo = study->calendar.hours[y + 1];
+
+        if (hourinfo.firstHourInMonth)
+            return Default::BorderMonthSeparator();
+        if (hourinfo.firstHourInDay)
+            return Default::BorderDaySeparator();
+    }
+    return IRenderer::verticalBorderColor(x, y);
+}
+
+// ===========================
+// Parameters grid renderer
+// ===========================
+connectionParameters::connectionParameters(wxWindow* parent,
+                                           Toolbox::InputSelector::Connections* notifier) :
+ Connection(parent, notifier)
+{
+}
+
+wxString connectionParameters::columnCaption(int colIndx) const
 {
     switch (colIndx)
     {
-    case Data::fhlNTCDirect:
-        return wxT(" TRANS. CAPACITY \nDirect   ");
-    case Data::fhlNTCIndirect:
-        return wxT(" TRANS. CAPACITY \nIndirect");
     case Data::fhlHurdlesCostDirect:
         return wxT(" HURDLES COST \nDirect");
     case Data::fhlHurdlesCostIndirect:
@@ -83,25 +121,57 @@ wxString Connection::columnCaption(int colIndx) const
     return wxString();
 }
 
-void Connection::onConnectionChanged(Data::AreaLink* link)
+bool connectionParameters::cellValue(int x, int y, const Yuni::String& value)
 {
-    this->matrix((link) ? &(link->data) : NULL);
-    if (pControl)
+    switch (x)
     {
-        pControl->InvalidateBestSize();
-        pControl->Refresh();
+    case Data::fhlHurdlesCostDirect:
+    case Data::fhlHurdlesCostIndirect:
+    default:
+    {
+        double v;
+        if (!value.to(v))
+            return false;
+        if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
+            return Renderer::Matrix<>::cellValue(x, y, "0");
+        break;
     }
+    }
+
+    return Renderer::Matrix<>::cellValue(x, y, value);
 }
 
-IRenderer::CellStyle Connection::cellStyle(int col, int row) const
+static bool checkLoopFlow(const Antares::Matrix<>* direct_ntc,
+                          const Antares::Matrix<>* indirect_ntc,
+                          double loopflow,
+                          int row,
+                          bool useLoopFlow)
+{
+    if (!useLoopFlow)
+        return true;
+
+    for (uint ts = 0; ts < direct_ntc->width; ts++)
+    {
+        const double ntcDirect = direct_ntc->entry[ts][row];
+        const double ntcIndirect = indirect_ntc->entry[ts][row];
+
+        if (ntcDirect < loopflow)
+        {
+            return false;
+        }
+        if (loopflow < 0. && std::abs(loopflow) > ntcIndirect)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+IRenderer::CellStyle connectionParameters::cellStyle(int col, int row) const
 {
     double cellvalue = cellNumericValue(col, row);
     switch (col)
     {
-    case Data::fhlNTCDirect:
-        break;
-    case Data::fhlNTCIndirect:
-        break;
     case Data::fhlHurdlesCostDirect:
     {
         double cellvalueHrdlCostIndirect = cellNumericValue(col + 1, row);
@@ -127,16 +197,8 @@ IRenderer::CellStyle Connection::cellStyle(int col, int row) const
                                 : Renderer::Matrix<>::cellStyle(col, row);
     case Data::fhlLoopFlow:
     {
-        double ntcDirect = cellNumericValue(Data::fhlNTCDirect, row);
-        double ntcIndirect = cellNumericValue(Data::fhlNTCIndirect, row);
-        if ((ntcDirect < cellvalue))
-        {
-            return IRenderer::cellStyleError;
-        }
-        if (cellvalue < 0. && std::abs(cellvalue) > ntcIndirect)
-        {
-            return IRenderer::cellStyleError;
-        }
+        if (!checkLoopFlow(direct_ntc_, indirect_ntc_, cellvalue, row, mUseLoopFlow))
+            return IRenderer::cellStyleWarning;
         break;
     }
     case Data::fhlPShiftMinus:
@@ -162,53 +224,86 @@ IRenderer::CellStyle Connection::cellStyle(int col, int row) const
     return Renderer::Matrix<>::cellStyle(col, row);
 }
 
-wxColour Connection::horizontalBorderColor(int x, int y) const
+void connectionParameters::setMatrix(Data::AreaLink* link)
 {
-    // Getting informations about the next hour
-    // (because the returned color is about the bottom border of the cell,
-    // so the next hour for the user)
-    if (!(!study) && y + 1 < Date::Calendar::maxHoursInYear)
-    {
-        auto& hourinfo = study->calendar.hours[y + 1];
+    matrix(link ? &(link->parameters) : nullptr);
 
-        if (hourinfo.firstHourInMonth)
-            return Default::BorderMonthSeparator();
-        if (hourinfo.firstHourInDay)
-            return Default::BorderDaySeparator();
-    }
-    return IRenderer::verticalBorderColor(x, y);
+    direct_ntc_ = link ? &(link->directCapacities) : nullptr;
+    indirect_ntc_ = link ? &(link->indirectCapacities) : nullptr;
 }
 
-bool Connection::cellValue(int x, int y, const Yuni::String& value)
+// ===========================
+// NTC grid renderer
+// ===========================
+connectionNTC::connectionNTC(wxWindow* parent, Toolbox::InputSelector::Connections* notifier) :
+ Connection(parent, notifier)
 {
-    switch (x)
-    {
-    case Data::fhlNTCDirect:
-    case Data::fhlNTCIndirect:
-    {
-        double v;
-        if (!value.to(v))
-            return false;
-        if (v < 0.)
-            return Renderer::Matrix<>::cellValue(x, y, "0");
-        break;
-    }
-    case Data::fhlHurdlesCostDirect:
-    case Data::fhlHurdlesCostIndirect:
-    default:
-    {
-        double v;
-        if (!value.to(v))
-            return false;
-        if (Math::Abs(v) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
-            return Renderer::Matrix<>::cellValue(x, y, "0");
-        break;
-    }
-    }
+}
+
+bool connectionNTC::cellValue(int x, int y, const Yuni::String& value)
+{
+    double v;
+    if (!value.to(v))
+        return false;
+    if (v < 0.)
+        return Renderer::Matrix<>::cellValue(x, y, "0");
 
     return Renderer::Matrix<>::cellValue(x, y, value);
 }
 
+IRenderer::CellStyle connectionNTC::cellStyle(int col, int row) const
+{
+    if (!mLoopFlowData)
+        return Renderer::Matrix<>::cellStyle(col, row);
+
+    const double loopFlow = (*mLoopFlowData)[row];
+    const double ntc = Renderer::Matrix<>::cellNumericValue(col, row);
+    if (!checkLoopFlow(ntc, loopFlow))
+        return IRenderer::cellStyleWarning;
+
+    return Renderer::Matrix<>::cellStyle(col, row);
+}
+
+// ----------------
+// Direct
+// ----------------
+connectionNTCdirect::connectionNTCdirect(wxWindow* parent,
+                                         Toolbox::InputSelector::Connections* notifier) :
+ connectionNTC(parent, notifier)
+{
+}
+void connectionNTCdirect::setMatrix(Data::AreaLink* link)
+{
+    matrix(link ? &(link->directCapacities) : nullptr);
+    mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
+}
+
+bool connectionNTCdirect::checkLoopFlow(double ntcDirect, double loopFlow) const
+{
+    if (!mUseLoopFlow)
+        return true;
+    return ntcDirect >= loopFlow;
+}
+// ----------------
+// Indirect
+// ----------------
+connectionNTCindirect::connectionNTCindirect(wxWindow* parent,
+                                             Toolbox::InputSelector::Connections* notifier) :
+ connectionNTC(parent, notifier)
+{
+}
+void connectionNTCindirect::setMatrix(Data::AreaLink* link)
+{
+    matrix(link ? &(link->indirectCapacities) : nullptr);
+    mLoopFlowData = link ? &(link->parameters[Data::fhlLoopFlow]) : nullptr;
+}
+
+bool connectionNTCindirect::checkLoopFlow(double ntcIndirect, double loopFlow) const
+{
+    if (!mUseLoopFlow)
+        return true;
+    return (loopFlow >= 0) || (std::abs(loopFlow) <= ntcIndirect);
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

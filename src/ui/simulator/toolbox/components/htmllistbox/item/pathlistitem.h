@@ -30,6 +30,8 @@
 #include "item.h"
 #include <antares/paths/list.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -45,7 +47,7 @@ class PathListItem : public IItem
 {
 public:
     //! The smartptr
-    typedef Yuni::SmartPtr<PathListItem> Ptr;
+    using Ptr = std::shared_ptr<PathListItem>;
 
 public:
     static bool HtmlContent(wxString& out,

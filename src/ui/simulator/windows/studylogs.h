@@ -40,19 +40,55 @@
 #include "../application/study.h"
 #include "../toolbox/components/datagrid/renderer/logfile.h"
 #include <ui/common/component/frame/local-frame.h>
+#include <ui/common/component/spotlight.h>
 
 namespace Antares
 {
 namespace Window
 {
-/*!
-** \brief `Save As` Dialog
-*/
+class CompareDesc final
+{
+public:
+    bool operator()(const wxString& s1, const wxString& s2) const;
+};
+
+using MapFileList = std::map<wxString, YString, CompareDesc>;
+
+class StudyLogs;
+class FileListProvider final : public Component::Spotlight::IProvider
+{
+public:
+    using Spotlight = Antares::Component::Spotlight;
+    using Ptr = std::shared_ptr<FileListProvider>;
+
+    explicit FileListProvider(StudyLogs& frame);
+    ~FileListProvider() override;
+
+    FileListProvider(const FileListProvider&) = delete;
+    FileListProvider& operator=(const FileListProvider&) = delete;
+
+    void search(Spotlight::IItem::Vector& out,
+                const Spotlight::SearchToken::Vector& tokens,
+                const Yuni::String& text = "") override;
+    bool onSelect(Spotlight::IItem::Ptr& item) override;
+    bool onSelect(const Spotlight::IItem::Vector&) override;
+    void refreshFileList(bool showAll);
+
+private:
+    StudyLogs& pFrame;
+    //! Flag to know if the component must trigger the selection of an item
+    bool pAutoTriggerSelection;
+    bool pShowAll;
+    MapFileList pAllSimuLogs;
+    MapFileList pAllUILogs;
+    std::shared_ptr<wxBitmap> pBmpFile;
+}; // class FileListProvider
+
 class StudyLogs final : public Component::Frame::WxLocalFrame
 {
 public:
-    typedef Component::Datagrid::Renderer::LogEntry LogEntry;
-    typedef Component::Datagrid::Renderer::LogEntryContainer LogEntryContainer;
+    using LogEntry = Component::Datagrid::Renderer::LogEntry;
+    using LogEntryContainer = Component::Datagrid::Renderer::LogEntryContainer;
 
     class LogFilenameInfo final
     {
@@ -67,7 +103,7 @@ public:
         };
 
         //! Map
-        typedef std::map<Yuni::String, LogFilenameInfo, ltstr> Map;
+        using Map = std::map<Yuni::String, LogFilenameInfo, ltstr>;
 
     public:
         //! The html display code
@@ -155,6 +191,8 @@ private:
 
     //! Flag to display all log files
     bool pShowAllLogsFiles;
+
+    FileListProvider::Ptr mProvider;
 
     //! Event: refresh all files
     Yuni::Event<void(bool)> onRefreshListOfFiles;

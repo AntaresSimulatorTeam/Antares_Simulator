@@ -55,7 +55,7 @@ class Component : public Antares::Component::Panel, public Yuni::IEventObserver<
 {
 public:
     //! Content
-    typedef Antares::Private::OutputViewerData::Content Content;
+    using Content = Antares::Private::OutputViewerData::Content;
 
 public:
     /*!
@@ -111,10 +111,10 @@ private:
     class Tab
     {
     public:
-        //! SmartPtr
-        typedef Yuni::SmartPtr<Tab> Ptr;
+        //! std::shared_ptr
+        using Ptr = std::shared_ptr<Tab>;
         //! Vector
-        typedef std::vector<Ptr> Vector;
+        using Vector = std::vector<Ptr>;
 
     public:
         //! \name Constructor & Destructor
@@ -216,7 +216,7 @@ private:
     ** \brief Display a frame with the given data provider
     */
     void displayMiniFrame(wxWindow* parent,
-                          Antares::Component::Spotlight::IProvider* provider,
+                          Antares::Component::Spotlight::IProvider::Ptr provider,
                           int width = 340,
                           bool searchInput = true,
                           bool groups = true);
@@ -265,9 +265,9 @@ private:
 
 private:
     //! Alias to button
-    typedef Antares::Component::Button Button;
+    using Button = Antares::Component::Button;
     //! Array of wxPanel
-    typedef std::vector<wxPanel*> WxPanelVector;
+    using WxPanelVector = std::vector<wxPanel*>;
 
 private:
     //! List of all output

@@ -337,13 +337,11 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-general-reference-guide.pdf"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
-	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "optimization-problems-formulation.pdf"
 	
 	${SetOutPath} "$INSTDIR\Documentation"
 	CreateShortCut "$INSTDIR\Documentation\General reference guide (PDF).lnk" "$INSTDIR\Resources\Help\antares-general-reference-guide.pdf" "" ""
 	CreateShortCut "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
 	CreateShortCut "$INSTDIR\\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
-	CreateShortCut "$INSTDIR\Documentation\Optimization problem formulation (PDF).lnk" "$INSTDIR\Resources\Help\optimization-problems-formulation.pdf" "" ""
 
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares-output" "Antares Study Results ${CMAKE_SIMPLE_VERSION}"

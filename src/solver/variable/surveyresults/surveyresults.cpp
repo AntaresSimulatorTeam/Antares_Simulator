@@ -159,7 +159,7 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
         {
             auto end = area.links.end();
             for (auto i = area.links.begin(); i != end; ++i)
-                outLinks << area.id << '\t' << (i->second)->with->id << '\n';
+                outLinks << area.id << '\t' << i->second->with->id << '\n';
         }
 
         // Thermal clusters
@@ -202,7 +202,6 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
- time("Survey report"),
  columnIndex((uint)-1),
  thermalCluster(nullptr),
  area(nullptr),

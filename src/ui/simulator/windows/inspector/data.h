@@ -28,7 +28,7 @@
 #define __ANTARES_WINDOWS_INSPECTOR_DATA_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/smartptr.h>
+#include <memory>
 #include <antares/study.h>
 
 namespace Antares
@@ -46,7 +46,7 @@ class InspectorData final
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef Yuni::SmartPtr<InspectorData> Ptr;
+    using Ptr = std::shared_ptr<InspectorData>;
 
 public:
     //! \name Constructor & Destructor
@@ -54,7 +54,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit InspectorData(Data::Study& study);
+    explicit InspectorData(Data::Study::Ptr study);
     //! Destructor
     ~InspectorData();
     //@}
@@ -70,7 +70,7 @@ public:
 
 public:
     //! Reference to the study
-    Data::Study& study;
+    Data::Study::Ptr study;
     //! Flag to fastly know if the selection is empty
     bool empty;
     //! All selected areas

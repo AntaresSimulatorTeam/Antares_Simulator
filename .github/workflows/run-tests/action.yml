@@ -1,0 +1,34 @@
+name: "Download and run test study batches"
+description: "Download and run .zip tests from SimTest"
+inputs:
+  simtest-tag:
+    description: 'SimTest tag'
+    required: true
+  batch-name:
+    description: 'Name of the study batch'
+    required: true
+  os:
+    description: 'OS used for github action'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - id: download-extract
+    shell: bash
+    run: |
+           cd src/tests/resources/batches
+           wget -q https://github.com/AntaresSimulatorTeam/SimTest/releases/download/${{ inputs.simtest-tag }}/${{ inputs.batch-name }}-${{ inputs.os }}.zip -O batch.zip
+           unzip -q batch.zip
+           rm batch.zip
+
+  - name: Run tests
+    shell: bash
+    run: |
+           cd _build
+           ctest -C Release --output-on-failure -R json
+
+  - name: Clean batches
+    shell: bash
+    run: |
+           rm -rf src/tests/resources/batches/*

@@ -180,19 +180,19 @@ public:
     wxString caption;
 
     //! Flag to mark the study as modified if cells are updated
-    bool shouldMarkStudyModifiedWhenModifyingCell;
+    bool shouldMarkStudyModifiedWhenModifyingCell = true;
 
     //! The main sizer with all components that the user expects to see
     wxSizer* sizerForAllComponents;
     wxSizer* toolbarSizer;
     wxSizer* toolbarSizerValues;
 
-    wxComboBox* pLayerFilter;
+    wxComboBox* pLayerFilter = nullptr;
     std::vector<int> layerFilteredIndices;
     //! The attached renderer
     Renderer::IRenderer* renderer;
     //! Precision
-    Date::Precision precision;
+    Date::Precision precision = Date::stepAny;
 
     struct
     {
@@ -239,25 +239,19 @@ public:
     //@}
 
     //! The real datagrid component
-    DBGrid* grid;
+    DBGrid* grid = nullptr;
+
     //! Custom implementation of wxGridTable
-    VGridHelper* gridHelper;
+    VGridHelper* gridHelper = nullptr;
     //! Cell renderer
-    AntaresWxGridRenderer* cellRenderer;
+    AntaresWxGridRenderer* cellRenderer = nullptr;
 
     //! Counter used for beginUpdate / endUpdate
-    uint updateCount;
+    uint updateCount = 0;
 
 }; // class InternalState
 
-InternalState::InternalState() :
- shouldMarkStudyModifiedWhenModifyingCell(true),
- precision(Date::stepAny),
- grid(nullptr),
- gridHelper(nullptr),
- cellRenderer(nullptr),
- updateCount(0),
- pLayerFilter(nullptr)
+InternalState::InternalState()
 {
     filter.component = nullptr;
     filter.sizer = nullptr;
@@ -577,7 +571,6 @@ void InternalState::createAllInternalControls(const CreateOptions& flags)
     if (not flags.colorMappingRowLabels)
         grid->disableColorMappingForRowLabels();
 
-    // internal.grid->SetDefaultRenderer(new wxGridCellFloatRenderer(-1, 3));
     cellRenderer = new AntaresWxGridRenderer();
     cellRenderer->renderer = renderer;
     grid->SetDefaultRenderer(cellRenderer);
@@ -652,8 +645,6 @@ void InternalState::onMapLayerAdded(const wxString* text)
             sizerForAllComponents->Show(hzCombo);
         }
     }
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 void InternalState::onMapLayerRemoved(const wxString* text)
@@ -662,18 +653,13 @@ void InternalState::onMapLayerRemoved(const wxString* text)
     // event
     if (pLayerFilter)
     {
-        auto hzCombo = pLayerFilter->GetContainingSizer();
         auto pos = pLayerFilter->FindString(*text);
         if (pos != wxNOT_FOUND)
         {
             pLayerFilter->Delete(pos);
             pLayerFilter->Select(0);
         }
-        /*if (pLayerFilter->GetCount() == 1 && sizerForAllComponents->IsShown(hzCombo))
-                sizerForAllComponents->Hide(hzCombo);*/
     }
-    /*wxStringToString(*text, pLastResearch);
-    Dispatcher::GUI::Post(this, &Spotlight::redoResearch);*/
 }
 
 void InternalState::onMapLayerChanged(const wxString* text)
@@ -682,9 +668,6 @@ void InternalState::onMapLayerChanged(const wxString* text)
     // event
     if (pLayerFilter)
         pLayerFilter->SetValue(*text);
-
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 void InternalState::onMapLayerRenamed(const wxString* text)
@@ -693,9 +676,6 @@ void InternalState::onMapLayerRenamed(const wxString* text)
     // event
     if (pLayerFilter)
         pLayerFilter->SetString(pLayerFilter->GetSelection(), *text);
-
-    // wxStringToString(*text, pLastResearch);
-    // Dispatcher::GUI::Post(this, &Spotlight::redoResearch);
 }
 
 Component::Component(wxWindow* parent,
@@ -706,8 +686,7 @@ Component::Component(wxWindow* parent,
                      bool copypasteOnly,
                      bool readonly,
                      bool hasLayerFilter) :
-
- Panel(parent)
+ Panel(parent), ComponentRefresh(pInternal)
 {
     pInternal = new InternalState();
     auto& internal = *pInternal;
@@ -724,9 +703,6 @@ Component::Component(wxWindow* parent,
     options.colorMappingRowLabels = colorMappingRowLabels;
     options.hasLayerFilter = hasLayerFilter;
 
-    // Bind<void ()> delayedCreation;
-    // delayedCreation.bind(pInternal, &InternalState::createAllInternalControls, options);
-    // Dispatcher::GUI::Post(delayedCreation);
     internal.createAllInternalControls(options);
 
     // Events
@@ -803,7 +779,7 @@ void Component::onEndUpdate()
     }
 }
 
-void Component::createModifyPanel(wxSizer* sizer, bool copypasteOnly, bool readonly)
+void Component::createModifyPanel(wxSizer* sizer, bool /*copypasteOnly*/, bool readonly)
 {
     // internal variable for GUI components and other stuff
     auto& internal = *pInternal;
@@ -858,78 +834,13 @@ void Component::createModifyPanel(wxSizer* sizer, bool copypasteOnly, bool reado
         }
     }
 
-    if (false and not copypasteOnly)
-    {
-        ssz->AddSpacer(5);
-
-        // default values
-        internal.modifier.selectedSet = modifierValues;
-        internal.modifier.selectedAction = (uint)ModifierOperatorsData<modifierValues>::opPlus;
-
-        auto* grp = new Antares::Component::PanelGroup(this);
-        ssz->Add(grp, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.sizer = ssz;
-
-        auto* sbmp
-          = Resources::StaticBitmapLoadFromFile(grp, wxID_ANY, "images/16x16/update_values.png");
-        grp->leftSizer->Add(sbmp, 0, wxALL | wxALIGN_CENTRE_VERTICAL);
-
-        auto* hz = grp->subpanel->GetSizer();
-        auto* operatorGroup
-          = new Antares::Component::Button(grp->subpanel, wxT("Change values"), nullptr);
-        operatorGroup->bold(true);
-        operatorGroup->menu(true);
-        operatorGroup->onPopupMenu(this, &Component::onPopupMenuModifierSet);
-
-        hz->Add(operatorGroup, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.btnSetSelector = operatorGroup;
-
-        auto* operatorSelector = new Antares::Component::Button(grp->subpanel, wxT("+"), nullptr);
-        operatorSelector->menu(true);
-        operatorSelector->onPopupMenu(this, &Component::onPopupMenuModifierOperators);
-        auto color = operatorSelector->GetBackgroundColour();
-        color.Set((unsigned char)Math::MinMax<int>(color.Red() + 20, 0, 255),
-                  (unsigned char)Math::MinMax<int>(color.Green() + 20, 0, 255),
-                  (unsigned char)Math::MinMax<int>(color.Blue() + 20, 0, 255));
-        operatorSelector->SetBackgroundColour(color);
-        hz->Add(operatorSelector, 0, wxALL | wxEXPAND);
-        internal.modifier.ui.btnActionSelector = operatorSelector;
-
-        auto* textValue = new wxTextCtrl(grp->subpanel,
-                                         wxID_ANY,
-                                         wxT("0"),
-                                         wxDefaultPosition,
-                                         wxSize(42, 18),
-                                         wxBORDER_NONE); // , Toolbox::Validator::Numeric());
-        hz->Add(textValue, 0, wxALL | wxALIGN_CENTER_VERTICAL);
-        internal.modifier.ui.textValue = textValue;
-
-        auto* btnSelectCalendar
-          = new Antares::Component::Button(grp->subpanel, wxT("(date not set)"));
-        btnSelectCalendar->menu(true);
-        hz->Add(btnSelectCalendar, 0, wxALL | wxALIGN_CENTER_VERTICAL);
-        btnSelectCalendar->onPopupMenu(pInternal, &InternalState::onPickDate);
-        internal.modifier.ui.btnSelectCalendar = btnSelectCalendar;
-
-        Antares::Component::AddVerticalSeparator(grp->subpanel, hz, 2);
-        auto* apply = new Antares::Component::Button(
-          grp->subpanel, wxT("Apply"), nullptr, this, &Component::onModifyAll);
-        internal.modifier.ui.btnApply = apply;
-        hz->Add(apply, 0, wxALL | wxEXPAND);
-
-        internal.modifier.ui.sizerForInput = hz;
-        internal.updaterModifiersControls();
-    }
-    else
-    {
-        internal.modifier.ui.textValue = nullptr;
-        internal.modifier.ui.btnSelectCalendar = nullptr;
-        internal.modifier.ui.btnSetSelector = nullptr;
-        internal.modifier.ui.btnActionSelector = nullptr;
-        internal.modifier.ui.btnApply = nullptr;
-        internal.modifier.ui.sizer = nullptr;
-        internal.modifier.ui.sizerForInput = nullptr;
-    }
+    internal.modifier.ui.textValue = nullptr;
+    internal.modifier.ui.btnSelectCalendar = nullptr;
+    internal.modifier.ui.btnSetSelector = nullptr;
+    internal.modifier.ui.btnActionSelector = nullptr;
+    internal.modifier.ui.btnApply = nullptr;
+    internal.modifier.ui.sizer = nullptr;
+    internal.modifier.ui.sizerForInput = nullptr;
 
     // End of the layout
     sizer->Add(ssz, 0, wxALL | wxEXPAND, 2);
@@ -1024,13 +935,13 @@ void Component::createModifyPanelValues(wxSizer* sizer, bool copypasteOnly)
     sizer->Layout();
 }
 
-void Component::forceRefreshDelayed()
+void ComponentRefresh::forceRefreshDelayed()
 {
     if (pInternal)
         Dispatcher::GUI::Post(pInternal, &InternalState::forceRefresh);
 }
 
-void Component::forceRefresh()
+void ComponentRefresh::forceRefresh()
 {
     if (pInternal)
         pInternal->forceRefresh();
@@ -1045,7 +956,6 @@ void Component::precision(const Date::Precision p)
         if (internal.filter.component)
         {
             internal.recreateFilter();
-            // internal.filter.component->precision(p);
         }
         if (internal.gridHelper)
             internal.gridHelper->precision(p);
@@ -1342,13 +1252,6 @@ void Component::copyAllToClipboard()
 
 static void PasteFromClipboard(DBGrid& grid, VGridHelper& gridHelper)
 {
-    if (!(&grid) or !(&gridHelper))
-    {
-        assert(false and "paste from clipboard: invalid grid");
-        assert(false and "paste from clipboard: invalid gridHelper");
-        return;
-    }
-
     String::Vector rows;
     {
         String s;
@@ -1469,7 +1372,7 @@ void Component::onStudyClosed()
     }
 }
 
-void Component::enableRefresh(bool enabled)
+void ComponentRefresh::enableRefresh(bool enabled)
 {
     assert(pInternal);
     auto& internal = *pInternal;
@@ -1514,6 +1417,14 @@ void Component::scroll(wxScrolledWindow* component)
     internal.grid->Scroll(x, y);
 }
 
+void Component::setOtherGrid(Component* other)
+{
+    // Store other Component, for simultaneous grid resize
+    otherComponent_ = other;
+    // For scrolling current grid and other grid simultaneously
+    pInternal->grid->setOtherGrid(other->grid());
+}
+
 wxScrolledWindow* Component::gridAsScrolledWindow()
 {
     assert(pInternal);
@@ -1532,6 +1443,18 @@ void Component::markTheStudyAsModified(bool flag)
         pInternal->shouldMarkStudyModifiedWhenModifyingCell = flag;
 }
 
+void Component::runSelectedAction(uint selectedSet,
+                                  uint selectedAction,
+                                  String value,
+                                  VGridHelper* gridHelper)
+{
+    onBeginUpdate();
+    ModifierOperators::ApplyChanges(
+      (ModifierSet)selectedSet, selectedAction, value, pInternal->renderer, gridHelper);
+    pInternal->renderer->onRefresh();
+    onEndUpdate();
+}
+
 void Component::onModifyAll(void*)
 {
     assert(pInternal);
@@ -1543,21 +1466,21 @@ void Component::onModifyAll(void*)
     String value;
     wxStringToString(internal.modifier.ui.textValue->GetValue(), value);
 
-    //
-    onBeginUpdate();
-    wxString str;
+    ModifierSet selectedSet = internal.modifier.selectedSet;
+    uint selectedAction = internal.modifier.selectedAction;
+    VGridHelper* gridHelper = internal.gridHelper;
 
-    ModifierOperators::ApplyChanges(internal.modifier.selectedSet,
-                                    internal.modifier.selectedAction,
-                                    value,
-                                    internal.renderer,
-                                    internal.gridHelper);
+    runSelectedAction(selectedSet, selectedAction, value, gridHelper);
 
-    internal.renderer->onRefresh();
-    onEndUpdate();
+    if (otherComponent_ && selectedSet == ModifierSet::modifierDataset
+        && selectedAction == (uint)ModifierOperatorsData<modifierDataset>::opResizeColumns)
+    {
+        // Apply resize columns action on the other grid (if any)
+        otherComponent_->runSelectedAction(selectedSet, selectedAction, value, nullptr);
+    }
 }
 
-void Component::onComboUpdated(wxCommandEvent& evt)
+void Component::onComboUpdated(wxCommandEvent& /* evt */)
 {
     auto study = Data::Study::Current::Get();
     if (!study)

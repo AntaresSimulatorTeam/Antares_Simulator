@@ -43,7 +43,7 @@ namespace Renderer
 class ThermalClusterPrepro : public Renderer::Matrix<>
 {
 public:
-    typedef Renderer::Matrix<> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<>;
 
 public:
     //! \name Constructor & Destructor

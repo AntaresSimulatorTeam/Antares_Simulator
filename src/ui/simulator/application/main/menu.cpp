@@ -281,7 +281,8 @@ wxMenu* ApplWnd::createMenuInput()
     Menu::CreateItem(pMenuInput, mnIDViewLoad, wxT("View  Load"), nullptr, wxT("View 'Load'"));
     Menu::CreateItem(pMenuInput, mnIDViewSolar, wxT("View  Solar"), nullptr, wxT("View 'Solar'"));
     Menu::CreateItem(pMenuInput, mnIDViewWind, wxT("View  Wind"), nullptr, wxT("View 'Wind'"));
-    Menu::CreateItem(pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
+    Menu::CreateItem(
+      pMenuInput, mnIDViewRenewable, wxT("View  Renewable"), nullptr, wxT("View 'Wind'"));
     Menu::CreateItem(pMenuInput, mnIDViewHydro, wxT("View  Hydro"), nullptr, wxT("View 'Hydro'"));
     Menu::CreateItem(
       pMenuInput, mnIDViewThermal, wxT("View  Thermal"), nullptr, wxT("View 'Thermal'"));
@@ -577,12 +578,6 @@ wxMenu* ApplWnd::createMenuHelp()
                      wxT("Open PDF : General reference guide"));
 
     Menu::CreateItem(pMenuHelp,
-                     mnIDHelpPDFOptimizationProblemsFormulation,
-                     wxT("Optimization problems formulation"),
-                     "images/16x16/help.png",
-                     wxT("Open PDF : Optimization problems formulation"));
-
-    Menu::CreateItem(pMenuHelp,
                      mnIDHelpPDFSystemMapEditorReferenceGuide,
                      wxT("System Map Editor reference guide"),
                      "images/16x16/help.png",
@@ -593,6 +588,12 @@ wxMenu* ApplWnd::createMenuHelp()
                      wxT("Examples library"),
                      "images/16x16/help.png",
                      wxT("Open PDF : Examples library"));
+
+    Menu::CreateItem(pMenuHelp,
+                     mnIDHelpOnlineDocumentation,
+                     wxT("Online documentation"),
+                     "images/16x16/world.png",
+                     wxT("Open online documentation"));
 
     pMenuHelp->AppendSeparator();
 
@@ -670,6 +671,15 @@ void ApplWnd::evtOnViewOutput(wxCommandEvent& evt)
             pSectionNotebook->select(wxT("output"), true);
             return;
         }
+    }
+}
+
+void ApplWnd::viewLatestOutput()
+{
+    if (latestOutput)
+    {
+        OnStudyUpdateOutputInfo(ListOfOutputsForTheCurrentStudy, latestOutput);
+        pSectionNotebook->select(wxT("output"), true);
     }
 }
 

@@ -66,10 +66,10 @@ Comparison::~Comparison()
 
 void Comparison::search(Spotlight::IItem::Vector& out,
                         const Spotlight::SearchToken::Vector&,
-                        const Yuni::String& text)
+                        const Yuni::String& /* text */)
 {
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Average");
         item->group("comparison");
         item->image(pBmpAverage);
@@ -77,7 +77,7 @@ void Comparison::search(Spotlight::IItem::Vector& out,
         out.push_back(item);
     }
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Differences");
         item->group("comparison");
         item->image(pBmpDiff);
@@ -85,7 +85,7 @@ void Comparison::search(Spotlight::IItem::Vector& out,
         out.push_back(item);
     }
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Minimum");
         item->group("comparison");
         item->image(pBmpMin);
@@ -93,7 +93,7 @@ void Comparison::search(Spotlight::IItem::Vector& out,
         out.push_back(item);
     }
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Maximum");
         item->group("comparison");
         item->image(pBmpMax);
@@ -101,7 +101,7 @@ void Comparison::search(Spotlight::IItem::Vector& out,
         out.push_back(item);
     }
     {
-        auto* item = new Spotlight::IItem();
+        auto item = std::make_shared<Spotlight::IItem>();
         item->caption("Sum");
         item->group("comparison");
         item->image(pBmpSum);

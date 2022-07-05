@@ -37,6 +37,13 @@
 
 #include "opt_fonctions.h"
 
+/*
+ pi_define.h doesn't include this header, yet it uses struct jmp_buf.
+ It would be nice to remove this include, but would require to change pi_define.h,
+ which isn't part of Antares
+*/
+#include <setjmp.h>
+
 extern "C"
 {
 #include "pi_define.h"

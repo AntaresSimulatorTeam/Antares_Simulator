@@ -29,6 +29,7 @@
 
 #include "../renderer.h"
 #include <antares/study/scenario-builder/rules.h>
+#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
@@ -41,48 +42,27 @@ namespace Renderer
 class ScBuilderRendererBase : public IRenderer
 {
 public:
-    //! \name Constructors & Destructor
-    //@{
-    /*!
-    ** \brief Constructor with a given timeseries
-    */
-    ScBuilderRendererBase();
-    /*!
-    ** \brief Constructor for thermal
-    */
-    //! Destructor
+    ScBuilderRendererBase() = default;
     virtual ~ScBuilderRendererBase();
-    //@}
 
-    virtual int width() const;
-    virtual int height() const;
+    int width() const override;
+    wxString columnCaption(int colIndx) const override;
+    wxString cellValue(int x, int y) const override;
 
-    virtual wxString columnCaption(int colIndx) const;
-
-    virtual wxString rowCaption(int rowIndx) const;
-
-    virtual wxString cellValue(int x, int y) const;
-
-    virtual double cellNumericValue(int x, int y) const = 0;
-
-    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
-
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    void resetColors(int, int, wxColour&, wxColour&) const override
     {
         // Do nothing
     }
 
-    virtual bool valid() const;
-
-    virtual uint maxWidthResize() const
+    uint maxWidthResize() const override
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
 
-    void control(wxWindow* control)
+    void control(wxWindow* gridPanel)
     {
-        pControl = control;
+        pGridPanel = gridPanel;
     }
 
 public:
@@ -90,15 +70,62 @@ public:
     void onRulesChanged(Data::ScenarioBuilder::Rules::Ptr rules);
 
 protected:
-    void onAreaChanged(Data::Area* area);
     virtual void onStudyClosed();
+    wxWindow* gridPanel()
+    {
+        return pGridPanel;
+    }
 
 protected:
-    wxWindow* pControl;
-    Data::Area* pArea;
     Data::ScenarioBuilder::Rules::Ptr pRules;
 
+private:
+    wxWindow* pGridPanel = nullptr;
+
 }; // class ScBuilderRendererBase
+
+// -------------------------------------------------------------------
+// Class ScBuilderRendererAreasAsRows
+//      Renderer for a scenario builder grid of which lines are
+//      names of area.
+// ------------------------------------------------------------------
+class ScBuilderRendererAreasAsRows : public ScBuilderRendererBase
+{
+public:
+    ScBuilderRendererAreasAsRows() = default;
+    ~ScBuilderRendererAreasAsRows() override = default;
+
+    int height() const override;
+    wxString rowCaption(int rowIndx) const override;
+
+    bool valid() const override;
+};
+
+// -------------------------------------------------------------------
+// Class ScBuilderRendererForAreaSelector
+//      Renderer for a scenario builder grid of which lines depend
+//      on the selected area.
+//      Example : grid lines are clusters of an area.
+// ------------------------------------------------------------------
+class ScBuilderRendererForAreaSelector : public ScBuilderRendererBase
+{
+public:
+    explicit ScBuilderRendererForAreaSelector(const Toolbox::InputSelector::Area* notifier);
+    ~ScBuilderRendererForAreaSelector() override = default;
+
+    bool valid() const override;
+
+protected:
+    void onAreaChanged(Data::Area* area);
+    void onStudyClosed() override;
+    Data::Area* selectedArea() const
+    {
+        return pArea;
+    }
+
+private:
+    Data::Area* pArea = nullptr;
+};
 
 } // namespace Renderer
 } // namespace Datagrid

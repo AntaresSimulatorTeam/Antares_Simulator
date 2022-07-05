@@ -33,6 +33,7 @@
 #include "../inifile/inifile.h"
 #include "hostname.hxx"
 #include "../config.h"
+#include <antares/emergency.h>
 #include <yuni/core/system/environment.h>
 #include <yuni/core/system/process.h>
 #include <yuni/core/system/username.h>
@@ -50,7 +51,7 @@ namespace // anonymous
 {
 static bool localPoliciesOpened = false;
 
-typedef std::map<PolicyKey, String> PolicyMap;
+using PolicyMap = std::map<PolicyKey, String>;
 
 //! All entries
 static PolicyMap* entries = nullptr;
@@ -396,14 +397,14 @@ void CheckRootPrefix(const char* argv0)
         if (IO::IsAbsolute(adapter))
         {
             if (0 != adapter.ifind(i->second))
-                exit(EXIT_FAILURE);
+                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
         }
         else
         {
             String absfilename;
             IO::MakeAbsolute(absfilename, adapter);
             if (0 != absfilename.ifind(i->second))
-                exit(EXIT_FAILURE);
+                AntaresSolverEmergencyShutdown(EXIT_FAILURE);
         }
     }
 }

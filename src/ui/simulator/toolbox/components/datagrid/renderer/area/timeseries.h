@@ -46,7 +46,7 @@ namespace Renderer
 class ATimeSeries : public Renderer::Matrix<double, Yuni::sint32>, public Renderer::ARendererArea
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     ATimeSeries(wxWindow* control, Toolbox::InputSelector::Area* notifier);
@@ -57,6 +57,7 @@ public:
     {
         return AncestorType::width() + 3;
     }
+
     virtual int height() const
     {
         return AncestorType::height();
@@ -117,7 +118,7 @@ protected:
 class TimeSeriesLoad final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesLoad(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -155,7 +156,7 @@ protected:
 class TimeSeriesSolar final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesSolar(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -193,7 +194,7 @@ protected:
 class TimeSeriesWind final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesWind(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -231,7 +232,7 @@ protected:
 class TimeSeriesHydroFatal final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesHydroFatal(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -264,7 +265,7 @@ protected:
 class TimeSeriesHydroMod final : public ATimeSeries
 {
 public:
-    typedef Renderer::Matrix<double, Yuni::sint32> AncestorType;
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
 public:
     TimeSeriesHydroMod(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
@@ -310,7 +311,7 @@ protected:
 class TimeSeriesCluster : public Renderer::Matrix<double>
 {
 public:
-    typedef Renderer::Matrix<double> AncestorType;
+    using AncestorType = Renderer::Matrix<double>;
 
 public:
     TimeSeriesCluster(wxWindow* control);
@@ -347,8 +348,8 @@ public:
     double cellNumericValue(int x, int y) const override;
 
     void resetColors(int, int, wxColour&, wxColour&) const override
-    { 
-        //Do nothing
+    {
+        // Do nothing
     }
 
     bool cellValue(int x, int y, const Yuni::String& value) override
@@ -378,7 +379,6 @@ public:
 
 class TimeSeriesThermalCluster final : public TimeSeriesCluster
 {
-
 public:
     TimeSeriesThermalCluster(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
 
@@ -393,7 +393,6 @@ protected:
     void onStudyClosed() override;
 };
 
-
 // ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
@@ -401,7 +400,8 @@ protected:
 class TimeSeriesRenewableCluster final : public TimeSeriesCluster
 {
 public:
-    TimeSeriesRenewableCluster(wxWindow* control, Toolbox::InputSelector::RenewableCluster* notifier);
+    TimeSeriesRenewableCluster(wxWindow* control,
+                               Toolbox::InputSelector::RenewableCluster* notifier);
 
     virtual ~TimeSeriesRenewableCluster();
 

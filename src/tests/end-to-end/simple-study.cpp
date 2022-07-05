@@ -176,7 +176,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 	pSettings.noOutput = false;
 
 	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings, nullptr);
 
 	// Allocate all arrays
 	SIM_AllocationTableaux();
@@ -206,7 +206,7 @@ void cleanSimulation(Study::Ptr pStudy, Solver::Simulation::ISimulation< Solver:
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 1;
@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -295,7 +295,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//On year  and one TS
 	int nbYears = 2;
@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 {
 	//Create study
-	Study::Ptr pStudy = new Study(true); // for the solver
+	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
 
 	//Two years  and two TS
 	int nbYears = 2;

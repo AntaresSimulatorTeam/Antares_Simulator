@@ -74,30 +74,15 @@ Control::Control(wxWindow* parent, Component& component) :
  wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
  nodes(*Manager::Instance()),
  pComponent(component),
- pInvalidated(true),
- pInvalidatedInnerCacheSize(true),
- pZoom(1.),
- pBackgroundColor(Settings::background),
  pCachedBoxSize(0, 0),
  pCachedOrigin(0, 0),
  pOffsetForSelectedNodes(0, 0),
- pKeyShift(false),
- pKeyCtrl(false),
  pCurrentScroll(0, 0),
  pCurrentMousePosition(INT_MAX, INT_MAX),
  pCurrentMousePositionGraph(INT_MAX, INT_MAX),
  pCurrentClientSize(0, 0),
  pLastMousePosition(INT_MAX, INT_MAX),
- pLastSelectedTool(nullptr),
- pMouseAction(mouseActionNone),
- pSelectionBox(),
- pTools(),
- previousMaxSizeX(-1),
- previousMaxSizeY(-1),
- uid(newUID++),
- pInfosAreaCount(nullptr),
- pInfosConnxCount(nullptr),
- wasDrawn(false)
+ uid(newUID++)
 {
     SetBackgroundStyle(wxBG_STYLE_CUSTOM); // GTK
     SetBackgroundColour(pBackgroundColor);
@@ -114,30 +99,15 @@ Control::Control(wxWindow* parent, Component& component, size_t uID) :
  wxScrolledWindow(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize),
  nodes(*Manager::Instance()),
  pComponent(component),
- pInvalidated(true),
- pInvalidatedInnerCacheSize(true),
- pZoom(1.),
- pBackgroundColor(Settings::background),
  pCachedBoxSize(0, 0),
  pCachedOrigin(0, 0),
  pOffsetForSelectedNodes(0, 0),
- pKeyShift(false),
- pKeyCtrl(false),
  pCurrentScroll(0, 0),
  pCurrentMousePosition(INT_MAX, INT_MAX),
  pCurrentMousePositionGraph(INT_MAX, INT_MAX),
  pCurrentClientSize(0, 0),
  pLastMousePosition(INT_MAX, INT_MAX),
- pLastSelectedTool(nullptr),
- pMouseAction(mouseActionNone),
- pSelectionBox(),
- pTools(),
- previousMaxSizeX(-1),
- previousMaxSizeY(-1),
- uid(uID),
- pInfosAreaCount(nullptr),
- pInfosConnxCount(nullptr),
- wasDrawn(false)
+ uid(uID)
 {
     while (newUID <= uID)
         newUID++;
@@ -179,6 +149,7 @@ void Control::reset()
 
     // Delete all tools to avoid persistent tools after reloading a study
     pLastSelectedTool = nullptr;
+    pRemoverForSelection = nullptr;
     removeTools();
 }
 
@@ -475,7 +446,7 @@ void Control::addToolsForCurrentSelection()
           nodes.selectedItemsAsConnectionCount(),
           wxPoint(pSelectionBox.first.x + 1, pSelectionBox.first.y + 2),
           wxPoint(pSelectionBox.first.x + 4, pSelectionBox.first.y + pSelectionBox.second.y - 1));
-        helper();
+        pRemoverForSelection = helper();
     }
 }
 
@@ -643,6 +614,7 @@ void Control::performActionForSelectedTool()
         refresh();
     }
     pLastSelectedTool = nullptr;
+    pRemoverForSelection = nullptr;
     pMouseAction = mouseActionNone;
 }
 
@@ -689,6 +661,7 @@ void Control::mouseLeftDown(wxMouseEvent&)
                     nodes.unselectAll();
                     pSelectionBox.first = pCurrentMousePositionGraph;
                     pSelectionBox.second = pCurrentMousePositionGraph;
+                    pRemoverForSelection = nullptr;
                     pMouseAction = mouseActionSelectionBox;
                 }
             }
@@ -1196,9 +1169,22 @@ void Control::keyPressed(wxKeyEvent& evt)
         pMouseAction = mouseActionNone;
         pLastSelectedTool = nullptr;
         refresh();
+        break;
     }
     case WXK_DELETE:
     {
+        if (pRemoverForSelection
+            && pRemoverForSelection->onMouseUp(pCurrentMousePositionGraph.x,
+                                               pCurrentMousePositionGraph.y))
+        {
+            pSelectionBox.second.x = 0;
+            pSelectionBox.second.y = 0;
+            removeTools(Tool::lifeSpanMouseSelection);
+            pMouseAction = mouseActionNone;
+            pLastSelectedTool = nullptr;
+            pRemoverForSelection = nullptr;
+            refresh();
+        }
         break;
     }
     case WXK_CONTROL:

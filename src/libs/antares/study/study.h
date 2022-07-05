@@ -48,6 +48,8 @@
 #include "load-options.h"
 #include "../date.h"
 
+#include <memory>
+
 #include "equipments/equipments.h" // experimental
 
 //# include "../../../solver/variable/state.h"
@@ -62,36 +64,34 @@ namespace Data
 class Study final : public Yuni::NonCopyable<Study>, public IObject
 {
 public:
-    //! The most suitable smart pointer for the class
-    typedef IObject::SmartPtr<Study>::Ptr Ptr;
-    // typedef Yuni::SmartPtr<Study>  Ptr;
+    using Ptr = std::shared_ptr<Study>;
     //! Set of studies
-    typedef std::set<Ptr> Set;
+    using Set = std::set<Ptr>;
     //! List of studies
-    typedef std::list<Ptr> List;
+    using List = std::list<Ptr>;
 
     //! A single set of areas
     // CompareAreaName : to control the order of areas in a set of areas. This order can have an
     // effect, even if tiny, on the results of aggregations.
-    typedef std::set<Area*, CompareAreaName> SingleSetOfAreas;
+    using SingleSetOfAreas = std::set<Area*, CompareAreaName>;
 
     //! Multiple sets of areas
-    typedef Antares::Data::Sets<SingleSetOfAreas> SetsOfAreas;
+    using SetsOfAreas = Antares::Data::Sets<SingleSetOfAreas>;
 
     //! A single set of links
-    typedef std::set<AreaLink*> SingleSetOfLinks;
+    using SingleSetOfLinks = std::set<AreaLink*>;
     //! Multiple sets of links
-    typedef Antares::Data::Sets<SingleSetOfLinks> SetsOfLinks;
+    using SetsOfLinks = Antares::Data::Sets<SingleSetOfLinks>;
 
     //! List of disabled areas
-    typedef std::set<AreaName> DisabledAreaList;
+    using DisabledAreaList = std::set<AreaName>;
     //! List of disabled links
-    typedef std::set<AreaLinkName> DisabledAreaLinkList;
+    using DisabledAreaLinkList = std::set<AreaLinkName>;
     //! List of disabled thermal clusters
-    typedef std::set<ClusterName> DisabledThermalClusterList;
+    using DisabledThermalClusterList = std::set<ClusterName>;
 
     //! Extension filename
-    typedef Yuni::CString<8, false> FileExtension;
+    using FileExtension = Yuni::CString<8, false>;
 
 public:
     /*!
@@ -504,34 +504,6 @@ public:
                                             const YString& extension,
                                             uint numSpace) const;
 
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createMPSFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("problem", "mps", numSpace);
-    };
-    //@}
-
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createCriterionFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    };
-    //@}
-
     //! \name
     //@{
     /*!
@@ -607,9 +579,8 @@ public:
     *cluster in the all area in the study.
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
-    bool areasThermalClustersMinStablePowerValidity(std::map<int, YString>& areaClusterNames) const;
+    void computePThetaInfForThermalClusters() const;
 
-public:
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -935,6 +906,9 @@ void StudyEnsureDataThermalTimeSeries(Study* s);
 ** \see Study::ensureDataAreAllInitializedAccordingParameters()
 */
 void StudyEnsureDataThermalPrepro(Study* s);
+
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames);
 
 } // namespace Data
 } // namespace Antares

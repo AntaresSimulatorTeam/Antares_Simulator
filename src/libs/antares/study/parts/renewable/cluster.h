@@ -38,7 +38,6 @@ namespace Antares
 {
 namespace Data
 {
-
 /* gp : useless in v8.1, could be useful in a further version
 enum RenewableModulation
 {
@@ -91,7 +90,7 @@ public:
     };
 
     //! Set of renewable clusters
-    typedef std::set<RenewableCluster*, CompareClusterName> Set;
+    using Set = std::set<RenewableCluster*, CompareClusterName>;
 
     /*!
     ** \brief Get the group name string
@@ -185,7 +184,7 @@ public:
 
     friend class RenewableClusterList;
 
-    private:
+private:
     unsigned int precision() const override;
 }; // class RenewableCluster
 

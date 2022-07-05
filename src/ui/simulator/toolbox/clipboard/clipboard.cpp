@@ -179,12 +179,12 @@ void Clipboard::copy()
 
 void Clipboard::add(const String& text)
 {
-    pList.push_back(new Item(typeText, new String(text)));
+    pList.push_back(std::make_shared<Item>(typeText, new String(text)));
 }
 
 void Clipboard::add(const String::Ptr& text)
 {
-    pList.push_back(new Item(typeText, text));
+    pList.push_back(std::make_shared<Item>(typeText, text));
 }
 
 void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
@@ -281,7 +281,7 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
         }
 
         *d << "</table></body></html>";
-        pList.push_back(new Item(typeHTML, d));
+        pList.push_back(std::make_shared<Item>(typeHTML, d));
 
         // TXT Format
         d = new String();
@@ -309,10 +309,10 @@ void Clipboard::add(Antares::Component::Datagrid::VGridHelper* m,
             *d << '\n';
 #endif
         }
-        pList.push_back(new Item(typeText, d));
+        pList.push_back(std::make_shared<Item>(typeText, d));
     }
     else
-        pList.push_back(new Item(typeText, nullptr));
+        pList.push_back(std::make_shared<Item>(typeText, nullptr));
 }
 
 void Clipboard::add(const Matrix<>& m)
@@ -336,11 +336,11 @@ void Clipboard::add(const Matrix<>& m)
             *d << '\n';
 #endif
         }
-        pList.push_back(new Item(typeText, d));
+        pList.push_back(std::make_shared<Item>(typeText, d));
         // wxTheApp->Yield();
     }
     else
-        pList.push_back(new Item(typeText, nullptr));
+        pList.push_back(std::make_shared<Item>(typeText, nullptr));
 }
 
 void Clipboard::GetFromClipboard(String& out)

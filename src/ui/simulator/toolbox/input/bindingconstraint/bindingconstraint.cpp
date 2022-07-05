@@ -55,9 +55,8 @@ namespace InputSelector
 class SpotlightProviderConstraint final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
-public:
     SpotlightProviderConstraint(Toolbox::InputSelector::BindingConstraint* component) :
      pComponent(component)
     {
@@ -159,7 +158,7 @@ public:
                     continue;
             }
 
-            auto* item = new Toolbox::Spotlight::ItemConstraint(&constraint);
+            auto item = std::make_shared<Toolbox::Spotlight::ItemConstraint>(&constraint);
             if (constraint.enabled()
                 && (constraint.linkCount() > 0 || constraint.enabledClusterCount() > 0))
             {
@@ -181,8 +180,7 @@ public:
             return false;
 
         GUILocker locker;
-        typedef Toolbox::Spotlight::ItemConstraint::Ptr ItemConstraint;
-        ItemConstraint itemconstraint = Spotlight::IItem::Ptr::DynamicCast<ItemConstraint>(item);
+        auto itemconstraint = std::dynamic_pointer_cast<Toolbox::Spotlight::ItemConstraint>(item);
         if (!(!itemconstraint))
         {
             Data::BindingConstraint* constraint = itemconstraint->constraint;
@@ -198,8 +196,8 @@ public:
             return false;
 
         GUILocker locker;
-        typedef Toolbox::Spotlight::ItemConstraint::Ptr ItemConstraint;
-        ItemConstraint itemconstraint = Spotlight::IItem::Ptr::DynamicCast<ItemConstraint>(item);
+        using ItemConstraint = Toolbox::Spotlight::ItemConstraint;
+        auto itemconstraint = std::dynamic_pointer_cast<ItemConstraint>(item);
         if (!(!itemconstraint))
         {
             Data::BindingConstraint* constraint = itemconstraint->constraint;
@@ -312,7 +310,7 @@ void BindingConstraint::internalBuildSubControls()
         OnMapLayerRemoved.connect(spotlight, &Component::Spotlight::onMapLayerRemoved);
         OnMapLayerRenamed.connect(spotlight, &Component::Spotlight::onMapLayerRenamed);
         spotlight->itemHeight(34);
-        spotlight->provider(new SpotlightProviderConstraint(this));
+        spotlight->provider(std::make_shared<SpotlightProviderConstraint>(this));
 
         wxBoxSizer* hz = new wxBoxSizer(wxHORIZONTAL);
         hz->AddSpacer(10);

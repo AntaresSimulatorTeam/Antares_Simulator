@@ -51,25 +51,25 @@ class Matrix
 {
 public:
     //! Type
-    typedef T Type;
+    using Type = T;
     //! Pointer
-    typedef T* TypePtr;
+    using TypePtr = T*;
     //! Matrix type
-    typedef Matrix<T, ReadWriteT> MatrixType;
+    using MatrixType = Matrix<T, ReadWriteT>;
 
     //! Read / Write type
-    typedef ReadWriteT ReadWriteType;
+    using ReadWriteType = ReadWriteT;
 
     //! Pointer
-    typedef Matrix<T>* MatrixPtr;
+    using MatrixPtr = Matrix<T>*;
     //! Vector
-    typedef std::set<MatrixPtr> Vector;
+    using Vector = std::set<MatrixPtr>;
 
     //! Column type
-    typedef typename Antares::Memory::Stored<T>::Type ColumnType;
+    using ColumnType = typename Antares::Memory::Stored<T>::Type;
 
     //! A buffer, for large amount of data
-    typedef Yuni::Clob BufferType;
+    using BufferType = Yuni::Clob;
 
     /*!
     ** \brief Options when loading a file
@@ -116,6 +116,11 @@ public:
     Matrix(const Matrix& rhs);
 
     /*!
+    ** \brief Move constructor
+    */
+    Matrix(Matrix&& rhs) noexcept;
+
+    /*!
     ** \brief Copy constructor
     */
     template<class U, class V>
@@ -139,6 +144,13 @@ public:
 
     template<class U, class V>
     void copyFrom(const Matrix<U, V>* rhs);
+    //@}
+
+    //@{
+    /*!
+    ** \brief Swap contents of Matrix with another
+    */
+    void swap(MatrixType& rhs) noexcept;
     //@}
 
     //! \name File manipulation
@@ -196,7 +208,8 @@ public:
     */
     bool saveToCSVFile(const AnyString& filename,
                        uint precision = 6,
-                       bool print_dimensions = false) const;
+                       bool print_dimensions = false,
+                       bool saveEvenIfAllZero = false) const;
 
     /*!
     ** \brief Write the content of a matrix into a single file
@@ -213,7 +226,8 @@ public:
     bool saveToCSVFile(const AnyString& filename,
                        uint precision,
                        bool print_dimensions,
-                       PredicateT& predicate) const;
+                       PredicateT& predicate,
+                       bool saveEvenIfAllZero = false) const;
     //@}
 
     virtual Yuni::IO::Error loadFromFileToBuffer(BufferType& buffer,
@@ -228,7 +242,7 @@ public:
                               bool print_dimensions,
                               PredicateT& predicate) const
     {
-        saveToBuffer(data, precision, print_dimensions, predicate);
+        saveToBuffer(data, precision, print_dimensions, predicate, false);
     }
 
     //! \name Operations on columns and rows
@@ -457,9 +471,13 @@ public:
     //@{
     //! Assignement
     Matrix& operator=(const Matrix& rhs);
+
+    Matrix& operator=(Matrix&& rhs) noexcept;
+
     //! Assignement
     template<class U>
     Matrix& operator=(const Matrix<U>& rhs);
+
     //! operator []
     ColumnType& operator[](uint column);
     const ColumnType& operator[](uint column) const;
@@ -508,13 +526,15 @@ private:
     bool internalSaveCSVFile(const AnyString& filename,
                              uint precision,
                              bool print_dimensions,
-                             PredicateT& predicate) const;
+                             PredicateT& predicate,
+                             bool saveEvenIfAllZero) const;
 
     template<class PredicateT>
     void saveToBuffer(std::string& data,
                       uint precision,
                       bool print_dimensions,
-                      PredicateT& predicate) const;
+                      PredicateT& predicate,
+                      bool saveEvenIfAllZero) const;
 
     bool loadFromBuffer(const AnyString& filename,
                         BufferType& data,
@@ -538,34 +558,34 @@ private:
 template<class T>
 class MatrixSubColumn
 {
-    // typedef <sub column>  Type;
-    // typedef const <sub column>  Type;
+    // using Type = <sub column> ;
+    // using Type = const <sub column> ;
 };
 
 template<class U>
 class MatrixSubColumn<U**>
 {
 public:
-    typedef U* Type;
-    typedef const U* ConstType;
+    using Type = U*;
+    using ConstType = const U*;
 };
 
 template<>
 class MatrixSubColumn<Matrix<double>::ColumnType*>
 {
 public:
-    typedef Matrix<double> MatrixType;
-    typedef MatrixType::ColumnType& Type;
-    typedef const MatrixType::ColumnType& ConstType;
+    using MatrixType = Matrix<double>;
+    using Type = MatrixType::ColumnType&;
+    using ConstType = const MatrixType::ColumnType&;
 };
 
 template<>
 class MatrixSubColumn<Matrix<float>::ColumnType*>
 {
 public:
-    typedef Matrix<float> MatrixType;
-    typedef MatrixType::ColumnType& Type;
-    typedef const MatrixType::ColumnType& ConstType;
+    using MatrixType = Matrix<float>;
+    using Type = MatrixType::ColumnType&;
+    using ConstType = const MatrixType::ColumnType&;
 };
 
 /*!

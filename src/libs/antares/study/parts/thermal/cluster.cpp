@@ -68,6 +68,30 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     return false;
 }
 
+bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
+{
+    string.trim();
+    if (string.empty())
+        return false;
+
+    if (string.equalsInsensitive("use global"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::useGlobalParameter;
+        return true;
+    }
+    if (string.equalsInsensitive("force generation"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::forceGen;
+        return true;
+    }
+    if (string.equalsInsensitive("force no generation"))
+    {
+        out = Antares::Data::LocalTSGenerationBehavior::forceNoGen;
+        return true;
+    }
+    return false;
+}
+
 } // namespace CString
 } // namespace Extension
 } // namespace Yuni
@@ -254,7 +278,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     if (not series)
         series = new DataSeriesCommon();
 
@@ -489,7 +513,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     prepro->reset();
 
     // Links
@@ -709,7 +733,21 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     return checkMinStablePower();
 }
 
-unsigned int ThermalCluster::precision() const {
+bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
+{
+    switch (tsGenBehavior)
+    {
+    case LocalTSGenerationBehavior::useGlobalParameter:
+        return globalTSgeneration;
+    case LocalTSGenerationBehavior::forceGen:
+        return true;
+    default:
+        return false;
+    }
+}
+
+unsigned int ThermalCluster::precision() const
+{
     return 0;
 }
 } // namespace Data

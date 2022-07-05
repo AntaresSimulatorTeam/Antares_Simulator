@@ -39,7 +39,7 @@ class YUNI_DECL UUID;
 namespace Antares
 {
 //! Object Unique Identifier
-typedef Yuni::UUID Ref;
+using Ref = Yuni::UUID;
 
 } // namespace Antares
 

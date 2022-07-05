@@ -21,13 +21,13 @@ class ClusterList
 {
 public:
     // Shared pointer
-    typedef typename std::shared_ptr<ClusterT> SharedPtr;
+    using SharedPtr = typename std::shared_ptr<ClusterT>;
     // Map container
-    typedef typename std::map<ClusterName, SharedPtr> Map;
+    using Map = typename std::map<ClusterName, SharedPtr>;
     //! iterator
-    typedef typename Map::iterator iterator;
+    using iterator = typename Map::iterator;
     //! const iterator
-    typedef typename Map::const_iterator const_iterator;
+    using const_iterator = typename Map::const_iterator;
 
 public:
     //! \name Constructor & Destructor
@@ -149,7 +149,7 @@ public:
     **
     ** \param idToFind ID of the cluster to rename
     ** \param newName The new name for the cluster
-    ** \return True if the operation succeeded (the cluster has been renammed)
+    ** \return True if the operation succeeded (the cluster has been renamed)
     **   false otherwise (not found or if another cluster has the same name)
     **
     ** The indexes for clusters will be rebuilt.
@@ -248,8 +248,7 @@ public:
 
     int loadDataSeriesFromFolder(Study& study,
                                  const StudyLoadOptions& options,
-                                 const AnyString& folder,
-                                 bool fast);
+                                 const AnyString& folder);
 
     int saveDataSeriesToFolder(const AnyString& folder) const;
 

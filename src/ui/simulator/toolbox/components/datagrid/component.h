@@ -46,6 +46,36 @@ namespace Renderer
 class IRenderer;
 }
 
+class ComponentRefresh
+{
+public:
+    ComponentRefresh(InternalState*& i) : pInternal(i)
+    {
+    }
+    //! \name Refresh
+    //@{
+    /*!
+    ** \brief Force a complete refresh of the grid
+    **
+    ** The sub-component Grid (wxGrid) caches some values, like the size
+    ** of the grid, and the name of the columns.
+    ** This method is especially useful when any important changes occur
+    ** (for example another area has just been selected) and the entire grid
+    ** is invalidated.
+    */
+    void forceRefresh();
+    //! Force refresh for the next main loop
+    void forceRefreshDelayed();
+
+    /*!
+    ** \brief Allow refresh
+    */
+    void enableRefresh(bool enabled);
+    //@}
+private:
+    InternalState*& pInternal;
+};
+
 /*!
 ** \brief A datagrid with virtual values
 **
@@ -57,7 +87,7 @@ class IRenderer;
 ** In the most cases, the renderer is attached to an input selector (for example an area)
 ** to update the GUI accordinly.
 */
-class Component : public Panel, public Yuni::IEventObserver<Component>
+class Component : public Panel, public Yuni::IEventObserver<Component>, public ComponentRefresh
 {
 public:
     //! \name Constructor & Destructor
@@ -95,27 +125,6 @@ public:
     wxScrolledWindow* gridAsScrolledWindow();
     //@}
 
-    //! \name Refresh
-    //@{
-    /*!
-    ** \brief Force a complete refresh of the grid
-    **
-    ** The sub-component Grid (wxGrid) caches some values, like the size
-    ** of the grid, and the name of the columns.
-    ** This method is especially useful when any important changes occur
-    ** (for example another area has just been selected) and the entire grid
-    ** is invalidated.
-    */
-    void forceRefresh();
-    //! Force refresh for the next main loop
-    void forceRefreshDelayed();
-
-    /*!
-    ** \brief Allow refresh
-    */
-    void enableRefresh(bool enabled);
-    //@}
-
     //! \name Precision
     //@{
     //! Get the precision of the datagrid
@@ -149,6 +158,9 @@ public:
     ;
     //@}
 
+    // For synchronizing scroll with another grid purpose
+    void setOtherGrid(Component* other);
+
     //! \name Modification
     //@{
     //! Get if the component can mark the study as modified if a single cell is modified
@@ -167,6 +179,11 @@ private:
     ** \brief Display or not the datagrid
     */
     void internalShowDatagrid(bool v);
+
+    void runSelectedAction(uint selectedSet,
+                           uint selectedAction,
+                           Yuni::String value,
+                           VGridHelper* gridHelper);
 
     /*!
     ** \brief Modify all visible cells
@@ -204,6 +221,8 @@ private:
     //! Internal states varaibles
     // This variable is mainly used to reduce header dependencies
     InternalState* pInternal;
+    // Outside Component instance, for simultaneous actions with the current Component
+    Component* otherComponent_ = nullptr;
 
     // nakama
     friend class InternalState;

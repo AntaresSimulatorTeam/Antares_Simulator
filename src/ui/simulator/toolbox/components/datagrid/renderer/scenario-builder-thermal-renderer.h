@@ -28,7 +28,6 @@
 #define __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_THERMAL_SCENARIO_BUILDER_H__
 
 #include "scenario-builder-renderer-base.h"
-#include "../../../../toolbox/input/area.h"
 
 namespace Antares
 {
@@ -38,16 +37,16 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class thermalScBuilderRenderer : public ScBuilderRendererBase
+class thermalScBuilderRenderer : public ScBuilderRendererForAreaSelector
 {
 public:
-    thermalScBuilderRenderer(Toolbox::InputSelector::Area* notifier);
-    bool valid() const;
-    ~thermalScBuilderRenderer();
-    bool cellValue(int x, int y, const Yuni::String& value);
-    int height() const;
-    wxString rowCaption(int rowIndx) const;
-    double cellNumericValue(int x, int y) const;
+    using ScBuilderRendererForAreaSelector::ScBuilderRendererForAreaSelector;
+    ~thermalScBuilderRenderer() override = default;
+
+    bool cellValue(int x, int y, const Yuni::String& value) override;
+    int height() const override;
+    wxString rowCaption(int rowIndx) const override;
+    double cellNumericValue(int x, int y) const override;
 }; // class thermalScBuilderRenderer
 
 } // namespace Renderer

@@ -167,9 +167,9 @@ public:
         if (link->useLoopFlow)
         {
             // Flow assessed over all MC years (linear)
-            unsigned int height = link->data.height;
+            unsigned int height = link->parameters.height;
             (void)::memcpy(pValuesForTheCurrentYear.hour,
-                           link->data[Data::fhlLoopFlow],
+                           link->parameters[Data::fhlLoopFlow],
                            sizeof(double) * height);
         }
 

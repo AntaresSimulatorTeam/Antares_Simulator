@@ -67,10 +67,10 @@ public:
     //! Random number generator
     MersenneTwister random;
 
-private:
     // forward declaration
     struct PerArea;
 
+private:
     //! \name Steps
     //@{
     //! Prepare inflows scaling for each area
@@ -103,24 +103,22 @@ private:
     double GammaVariable(double a);
     //@}
 
-public:
-    //! Reference to the study
-    Data::Study& study;
-    //! General data
-    Data::Parameters& parameters;
-
-private:
     enum
     {
         //! The maximum number of days in a year
         dayYearCount = 366
     };
 
+
+public:
+    //! Reference to the study
+    Data::Study& study;
+    //! General data
+    Data::Parameters& parameters;
+
     //! Temporary data
     struct PerArea
     {
-        //! Net demand, for each month and for each area
-        double MLN[12];
         //! Monthly local effective demand
         double MLE[12];
         //! Monthly optimal generation

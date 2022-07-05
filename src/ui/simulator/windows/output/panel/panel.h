@@ -36,6 +36,8 @@
 #include <antares/array/matrix.h>
 #include <yuni/core/event.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Private
@@ -46,14 +48,14 @@ class Panel final : public Antares::Component::Panel
 {
 public:
     //! Vector
-    typedef std::vector<Panel*> Vector;
+    using Vector = std::vector<Panel*>;
     //! Layer
-    typedef Antares::Window::OutputViewer::Layer Layer;
+    using Layer = Antares::Window::OutputViewer::Layer;
     //! The output viewer
-    typedef Antares::Window::OutputViewer::Component OutputViewerComponent;
+    using OutputViewerComponent = Antares::Window::OutputViewer::Component;
 
     //! Matrix for loading CSV files
-    typedef Antares::Matrix<Yuni::CString<64, false>> MatrixType;
+    using MatrixType = Antares::Matrix<Yuni::CString<64, false>>;
 
     class IData
     {
@@ -167,7 +169,7 @@ private:
 ** This variable is cleared when the study is closed or the user get back
 ** to the input
 */
-Yuni::SmartPtr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename);
+std::shared_ptr<Yuni::Mutex> ProvideLockingForFileLocking(const YString& filename);
 
 /*!
 ** \brief Clear all mutex for file locking

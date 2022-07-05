@@ -29,7 +29,7 @@
 
 #include <antares/wx-wrapper.h>
 #include "../renderer.h"
-#include <yuni/core/smartptr.h>
+#include <memory>
 #include <antares/study.h>
 
 namespace Antares
@@ -46,7 +46,7 @@ public:
     class IDatasource
     {
     public:
-        typedef Yuni::SmartPtr<IDatasource> Ptr;
+        using Ptr = std::shared_ptr<IDatasource>;
 
     public:
         IDatasource()

@@ -157,11 +157,11 @@ enum MenusID
     //@{
     mnIDHelpHelp,
     mnIDHelpPDFGeneralReferenceGuide,
-    mnIDHelpPDFOptimizationProblemsFormulation,
     mnIDHelpPDFSystemMapEditorReferenceGuide,
     mnIDHelpPDFExamplesLibrary,
     mnIDHelpAbout,
     mnIDHelpVisitRTEWebSite,
+    mnIDHelpOnlineDocumentation,
     //@}
 
     //! \name Misc

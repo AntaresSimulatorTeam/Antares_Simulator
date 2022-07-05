@@ -46,7 +46,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     int NombreDeVariables;
     int Index;
     int NombreDePasDeTempsPourUneOptimisation;
-    char ContrainteDeReserveJMoins1ParZone;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -54,8 +53,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
-
     NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
@@ -88,13 +85,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier]
                   = NombreDeVariables;
 
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
-#else
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-#endif
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -118,44 +110,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
             }
         }
     }
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-    {
-        for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
-        {
-            CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
-            if (Simulation == OUI_ANTARES)
-            {
-                NombreDeVariables++;
-                NombreDeVariables++;
-                if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-                {
-                    NombreDeVariables++;
-                }
-                continue;
-            }
-
-            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays]
-              = NombreDeVariables;
-            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-            NombreDeVariables++;
-
-            CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays]
-              = NombreDeVariables;
-            ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-            NombreDeVariables++;
-
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceEnReserve[Pays]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
-                NombreDeVariables++;
-            }
-        }
-    }
-#endif
 
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 

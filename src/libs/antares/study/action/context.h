@@ -32,6 +32,7 @@
 #include <map>
 #include <yuni/core/string.h>
 #include <yuni/core/bind.h>
+#include <memory>
 #include "action.h"
 
 namespace Antares
@@ -41,25 +42,24 @@ namespace Action
 class Context
 {
 public:
-    //! The most suitable smart ptr for the class
-    typedef Yuni::SmartPtr<Context> Ptr;
+    using Ptr = std::shared_ptr<Context>;
     //! Map of properties
-    typedef std::map<Yuni::String, Yuni::String> Properties;
+    using Properties = std::map<Yuni::String, Yuni::String>;
     //! Local view
-    typedef std::map<Yuni::CString<50, false>, IAction::Ptr> LocalView;
-    typedef std::map<Yuni::CString<50, false>, LocalView> Views;
+    using LocalView = std::map<Yuni::CString<50, false>, IAction::Ptr>;
+    using Views = std::map<Yuni::CString<50, false>, LocalView>;
 
     //! Area name mapping
-    typedef std::map<Data::AreaName, bool> AreaNameMappingForceCreate;
-    typedef std::map<Data::AreaName, bool> PlantNameMappingForceCreate;
-    typedef std::map<Data::ConstraintName, bool> ConstraintMappingForceCreate;
+    using AreaNameMappingForceCreate = std::map<Data::AreaName, bool>;
+    using PlantNameMappingForceCreate = std::map<Data::AreaName, bool>;
+    using ConstraintMappingForceCreate = std::map<Data::ConstraintName, bool>;
 
 public:
     //! \name Constructor & Destructor
     //@{
-    explicit Context(Data::Study& targetStudy, const size_t layer = 0);
+    explicit Context(Data::Study::Ptr targetStudy, const size_t layer = 0);
     //! Destructor
-    ~Context();
+    ~Context() = default;
     //@}
 
     /*!
@@ -69,12 +69,9 @@ public:
 
 public:
     //! The target study
-    // TODO : use smart ptr here
-    Data::Study& study;
+    Data::Study::Ptr study;
     //! An optional external study, which will be destroyed with this class
-    // TODO : use smart ptr here
-    Data::Study* extStudy;
-    bool shouldDestroyExtStudy;
+    Data::Study::Ptr extStudy;
 
     // The current Layer
     const size_t layerID;

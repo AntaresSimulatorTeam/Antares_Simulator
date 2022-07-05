@@ -71,6 +71,11 @@ public:
     */
     Yuni::uint64 totalSize() const;
 
+    /*!
+    ** \brief Set an additional list of excluded files or directories.
+    */
+    void setCustomExcludeList(const Yuni::String& c);
+
 public:
     /*! A study folder */
     Yuni::String folder;
@@ -81,6 +86,9 @@ public:
     ::PathList intruders;
     /*! List of all files/folders to prevent from the destruction */
     ::PathList exclude;
+    /*! Colon-separated list of all files/folders to prevent from the destruction */
+    Yuni::String customExclude;
+
     /*! List of all files/folders to exclude after analyzing the content of the folder */
     /* This list mainly ensures that a list of folders will not deleted enven if empty */
     ::PathList postExclude;

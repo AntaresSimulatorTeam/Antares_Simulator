@@ -17,7 +17,7 @@ class VariableCollector
 {
 public:
     //! Spotlight (alias)
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     VariableCollector(Spotlight::IItem::Vector& out,

@@ -29,19 +29,20 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
+#include <memory>
 #include <set>
 
 class StudyData final
 {
 public:
     //! The most suitable smart pointer
-    typedef Yuni::SmartPtr<StudyData> Ptr;
+    using Ptr = std::shared_ptr<StudyData>;
     //! Vector
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Short string
-    typedef Yuni::CString<10, false> ShortString;
+    using ShortString = Yuni::CString<10, false>;
     //! Short string
-    typedef Yuni::CString<512, false> ShortString512;
+    using ShortString512 = Yuni::CString<512, false>;
 
 public:
     template<class StringT>

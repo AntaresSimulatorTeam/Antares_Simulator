@@ -39,8 +39,14 @@ if(WIN32)
 	endif(MINGW)
 endif(WIN32)
 
-
 add_executable(antares-${ANTARES_PRG_VERSION}-analyzer  ${SRCS})
+
+install(TARGETS antares-${ANTARES_PRG_VERSION}-analyzer EXPORT antares-analyzer DESTINATION bin)
+
+INSTALL(EXPORT antares-analyzer
+	FILE antares-analyzerConfig.cmake
+	DESTINATION cmake
+)
 
 target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		PRIVATE

@@ -36,6 +36,8 @@
 #include <wx/combobox.h>
 #include <yuni/core/color/rgb.h>
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component

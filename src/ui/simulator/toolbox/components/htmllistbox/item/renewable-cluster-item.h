@@ -29,6 +29,8 @@
 
 #include "cluster-item.h"
 
+#include <memory>
+
 namespace Antares
 {
 namespace Component
@@ -45,8 +47,7 @@ namespace Item
 class RenewableClusterItem : public ClusterItem
 {
 public:
-    //! The smartptr
-    typedef Yuni::SmartPtr<RenewableClusterItem> Ptr;
+    using Ptr = std::shared_ptr<RenewableClusterItem>;
 
 public:
     //! \name Constructor & Destructor
@@ -66,8 +67,9 @@ public:
     //! Get the attached cluster
     Antares::Data::RenewableCluster* renewableAggregate() const;
 
+    void addAdditionalIcons(wxString& out) const override;
+
 private:
-    wxString getClusterIconFilePath() override;
     wxString htmlContentTail() override;
 
 private:

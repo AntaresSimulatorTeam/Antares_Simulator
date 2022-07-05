@@ -39,9 +39,8 @@ namespace HTMLListbox
 {
 namespace Datasource
 {
-
-typedef std::list<Data::ThermalCluster*> ThermalClusterList;
-typedef std::map<wxString, ThermalClusterList> ThermalClusterMap;
+using ThermalClusterList = std::list<Data::ThermalCluster*>;
+using ThermalClusterMap = std::map<wxString, ThermalClusterList>;
 
 class ThermalClustersByOrder : public ClustersByOrder
 {
@@ -61,8 +60,6 @@ private:
     void rebuildItemsList(const wxString& search) override;
 
 }; // ThermalClustersByOrder
-
-
 
 class ThermalClustersByAlphaOrder : public ThermalClustersByOrder
 {
@@ -84,13 +81,11 @@ public:
     {
         return "images/16x16/sort_alphabet.png";
     }
-    
+
 private:
     void sortClustersInGroup(ThermalClusterList& clusterList) override;
 
 }; // class ThermalClustersByAlphaOrder
-
-
 
 class ThermalClustersByAlphaReverseOrder : public ThermalClustersByOrder
 {
@@ -112,7 +107,7 @@ public:
     {
         return "images/16x16/sort_alphabet_descending.png";
     }
-    
+
 private:
     void sortClustersInGroup(ThermalClusterList& clusterList) override;
 

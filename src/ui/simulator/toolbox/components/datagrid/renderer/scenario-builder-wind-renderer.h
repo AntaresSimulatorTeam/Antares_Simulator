@@ -37,11 +37,11 @@ namespace Datagrid
 {
 namespace Renderer
 {
-class windScBuilderRenderer : public ScBuilderRendererBase
+class windScBuilderRenderer : public ScBuilderRendererAreasAsRows
 {
 public:
-    windScBuilderRenderer();
-    ~windScBuilderRenderer();
+    windScBuilderRenderer() = default;
+
     bool cellValue(int x, int y, const Yuni::String& value);
     double cellNumericValue(int x, int y) const;
 }; // class windScBuilderRenderer

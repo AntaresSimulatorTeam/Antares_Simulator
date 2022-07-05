@@ -37,17 +37,15 @@ namespace HTMLListbox
 {
 namespace Item
 {
-
 RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a) :
-    ClusterItem(a),
-    pRenewableCluster(a)
+ ClusterItem(a), pRenewableCluster(a)
 {
     preloadImages();
 }
 
-RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a, const wxString& additional) :
-    ClusterItem(a, additional),
-    pRenewableCluster(a)
+RenewableClusterItem::RenewableClusterItem(Antares::Data::RenewableCluster* a,
+                                           const wxString& additional) :
+ ClusterItem(a, additional), pRenewableCluster(a)
 {
     preloadImages();
 }
@@ -56,20 +54,20 @@ RenewableClusterItem::~RenewableClusterItem()
 {
 }
 
-wxString RenewableClusterItem::getClusterIconFilePath()
-{
-    return getIconFilePath("images/16x16/renewable.png");
-}
-
 wxString RenewableClusterItem::htmlContentTail()
 {
-    // Return nothing 
+    // Return nothing
     return wxString();
 }
 
 Antares::Data::RenewableCluster* RenewableClusterItem::renewableAggregate() const
 {
     return pRenewableCluster;
+}
+
+void RenewableClusterItem::addAdditionalIcons(wxString& /* out */) const
+{
+    // No additional icons should be added for renewable clusters
 }
 
 } // namespace Item

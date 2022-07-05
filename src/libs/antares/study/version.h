@@ -39,7 +39,7 @@ namespace Data
 ** \ingroup study
 ** \see CHANGELOG.txt
 */
-typedef enum // Version
+enum Version
 {
     //! Unknown version of a study
     versionUnknown = 0,
@@ -108,19 +108,22 @@ typedef enum // Version
     version800 = 800,
     //! Study version 8.1
     version810 = 810,
-
+    //! Study version 8.2
+    version820 = 820,
+    //! Study version 8.3
+    version830 = 830,
     // see versionLatest below
 
     // Constants
     //! A more recent version that we can't handle
     versionFutur = 99999,
 
-} Version;
+};
 
 enum
 {
     //! The latest version
-    versionLatest = version810,
+    versionLatest = version830,
 };
 
 /*!

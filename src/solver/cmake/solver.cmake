@@ -49,12 +49,19 @@ set(RTESOLVER_OPT
 		optimisation/opt_decompte_variables_et_contraintes_couts_demarrage.cpp
 		optimisation/opt_init_minmax_groupes_couts_demarrage.cpp
 		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
-		optimisation/renseigner_donnees_couts_demarrage.cpp
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
+		optimisation/adequacy_patch.h
+		optimisation/adequacy_patch.cpp
 
+        utils/ortools_utils.h
 		utils/ortools_utils.cpp
+        
+        utils/named_problem.h
+        utils/named_problem.cpp
 
+        utils/mps_utils.h
+        utils/mps_utils.cpp
 	)
 
 
@@ -64,12 +71,12 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver)
+target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver infeasible_problem_analysis)
 
 if(BUILD_SWAP)
 
     add_library(libmodel_antares-swap ${SRC_MODEL})
-    target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap ortools::ortools sirius_solver)
+    target_link_libraries(libmodel_antares-swap PUBLIC libantares-core-swap ortools::ortools sirius_solver infeasible_problem_analysis)
 
     set_target_properties(libmodel_antares-swap
         PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")

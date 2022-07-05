@@ -80,12 +80,15 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesSolar;
         else if (word == "renewables")
             v |= timeSeriesRenewable;
+        else if (word == "ntc")
+            v |= timeSeriesTransmissionCapacities;
         return true;
     });
     return true;
 }
 
-static bool ConvertStringToRenewableGenerationModelling(const AnyString& text, RenewableGenerationModelling & out)
+static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
+                                                        RenewableGenerationModelling& out)
 {
     CString<24, false> s = text;
     s.trim();
@@ -302,6 +305,10 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
+    include.splitExportedMPS = false;
+    include.adequacyPatch = false;
+    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -352,6 +359,12 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
         if (not v.empty())
             v += ", ";
         v += "renewables";
+    }
+    if (value & timeSeriesTransmissionCapacities)
+    {
+        if (!v.empty())
+            v += ", ";
+        v += "ntc";
     }
     s->add(name, v);
 }
@@ -512,6 +525,9 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.storeTimeseriesNumbers);
     if (key == "synthesis")
         return value.to<bool>(d.synthesis);
+    if (key == "hydro-debug")
+        return value.to<bool>(d.hydroDebug);
+
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -540,6 +556,14 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
+    if (key == "include-split-exported-mps")
+        return value.to<bool>(d.include.splitExportedMPS);
+    if (key == "include-adequacypatch")
+        return value.to<bool>(d.include.adequacyPatch);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -639,9 +663,9 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
             d.hydroPricing.hpMode = hpricing;
             return true;
         }
-        logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
+        logs.warning() << "parameters: invalid hydro pricing mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristic;
+        d.hydroPricing.hpMode = hpHeuristic;
         return false;
     }
     if (key == "initial-reservoir-levels")
@@ -723,7 +747,8 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
     }
     // Renewable generation modelling
     if (key == "renewable-generation-modelling")
-        return ConvertStringToRenewableGenerationModelling(value, d.renewableGeneration.rgModelling);
+        return ConvertStringToRenewableGenerationModelling(value,
+                                                           d.renewableGeneration.rgModelling);
 
     return false;
 }
@@ -969,7 +994,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(
+    using Callback = bool (*)(
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
       const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
@@ -1104,6 +1129,10 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // Attempt to fix bad values if any
     fixBadValues();
 
+    fixRefreshIntervals();
+
+    fixGenRefreshForNTC();
+
     // Specific action before launching a simulation
     if (options.usedByTheSolver)
         prepareForSimulation(options);
@@ -1111,6 +1140,62 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // We currently always returns true to not block any loading process
     // Anyway we already have reported all problems
     return true;
+}
+
+void Parameters::fixRefreshIntervals()
+{
+    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    {
+        refreshIntervalLoad = 1;
+        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
+    {
+        refreshIntervalSolar = 1;
+        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
+    {
+        refreshIntervalHydro = 1;
+        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
+    {
+        refreshIntervalWind = 1;
+        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
+    {
+        refreshIntervalThermal = 1;
+        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
+                        "Auto-Reset to a safe value (1).";
+    }
+}
+
+void Parameters::fixGenRefreshForNTC()
+{
+    if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
+    {
+        timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series generation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
+    }
+    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
+    {
+        timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Time-series refresh is not available for transmission capacities. It will "
+                        "be automatically disabled.";
+    }
+    if ((timeSeriesTransmissionCapacities & interModal) != 0)
+    {
+        interModal &= ~timeSeriesTransmissionCapacities;
+        logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
+                        "will be automatically disabled.";
+    }
 }
 
 void Parameters::fixBadValues()
@@ -1165,37 +1250,6 @@ void Parameters::fixBadValues()
         nbTimeSeriesWind = 1;
     if (!nbTimeSeriesSolar)
         nbTimeSeriesSolar = 1;
-
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
-    {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
 }
 
 void Parameters::resetYearsWeigth()
@@ -1249,7 +1303,7 @@ float Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(int year, float weight)
+void Parameters::setYearWeight(uint year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
@@ -1375,6 +1429,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info()
           << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
         break;
+    case rgUnknown:
+        logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
     const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
@@ -1504,6 +1560,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (!include.exportMPS)
         logs.info() << "  :: ignoring export mps";
+    if (!include.splitExportedMPS)
+        logs.info() << "  :: ignoring split exported mps";
+    if (!include.adequacyPatch)
+        logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
@@ -1613,6 +1673,8 @@ void Parameters::saveToINI(IniFile& ini) const
         auto* section = ini.addSection("output");
         section->add("synthesis", synthesis);
         section->add("storeNewSet", storeTimeseriesNumbers);
+        if (hydroDebug)
+            section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
     }
 
@@ -1663,6 +1725,12 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
+        section->add("include-split-exported-mps", include.splitExportedMPS);
+        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
+                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
+                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1844,6 +1912,17 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
         return {};
     }
     return {};
+}
+
+bool Parameters::haveToImport(int tsKind) const
+{
+    if (tsKind == timeSeriesThermal)
+    {
+        // Special case: some clusters might override the global parameter,
+        // see Cluster::doWeGenerateTS
+        return timeSeriesToImport & tsKind;
+    }
+    return (timeSeriesToImport & tsKind) && (timeSeriesToGenerate & tsKind);
 }
 
 RenewableGenerationModelling Parameters::RenewableGeneration::operator()() const

@@ -31,6 +31,8 @@
 #include "container.h"
 #include "../../../logs.h"
 
+#include <algorithm>
+
 using namespace Yuni;
 using namespace Antares;
 
@@ -38,8 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-PartThermal::PartThermal() :
- unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
+using NamedCluster = std::pair<ClusterName, ThermalClusterList::SharedPtr>;
+
+PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
@@ -71,8 +74,11 @@ void PartThermal::prepareAreaWideIndexes()
 {
     // Copy the list with all thermal clusters
     // And init the areaWideIndex (unique index for a given area)
-    if (!list.size())
+    if (list.empty())
+    {
+        clusters.clear();
         return;
+    }
 
     clusters = std::vector<ThermalCluster*>(list.size());
 
@@ -155,7 +161,11 @@ uint PartThermal::removeDisabledClusters()
     for (const auto& cluster : disabledClusters)
         list.remove(cluster);
 
-    return disabledClusters.size();
+    const auto count = disabledClusters.size();
+    if (count)
+        list.rebuildIndex();
+
+    return count;
 }
 
 void PartThermal::reset()
@@ -167,5 +177,22 @@ void PartThermal::reset()
     list.clear();
     clusters.clear();
 }
+
+bool PartThermal::hasForcedTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceGen;
+    });
+}
+
+bool PartThermal::hasForcedNoTimeseriesGeneration() const
+{
+    using Behavior = LocalTSGenerationBehavior;
+    return std::any_of(list.begin(), list.end(), [](const NamedCluster& namedCluster) {
+        return namedCluster.second->tsGenBehavior == Behavior::forceNoGen;
+    });
+}
+
 } // namespace Data
 } // namespace Antares

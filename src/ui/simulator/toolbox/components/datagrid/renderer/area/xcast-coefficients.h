@@ -44,7 +44,7 @@ class XCastCoefficients final : public Renderer::Matrix<float>, public Renderer:
 {
 public:
     //! Ancestor
-    typedef Renderer::Matrix<float> MatrixAncestorType;
+    using MatrixAncestorType = Renderer::Matrix<float>;
 
 public:
     //! \name Constructor & Destructor

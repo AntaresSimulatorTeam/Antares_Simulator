@@ -28,6 +28,7 @@
 #define __PREPROCESSOR_ATSP_H__
 
 #include <yuni/yuni.h>
+#include <memory>
 #include <yuni/core/string.h>
 #include <antares/study/xcast/xcast.h>
 #include <antares/study.h>
@@ -38,7 +39,7 @@ class ATSP final
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef Yuni::SmartPtr<ATSP> Ptr;
+    using Ptr = std::shared_ptr<ATSP>;
 
 public:
     //! \name Constructor & Destructor
@@ -70,7 +71,7 @@ private:
     {
     public:
         //! Vector
-        typedef std::vector<AreaInfo*> Vector;
+        using Vector = std::vector<AreaInfo*>;
 
     public:
         bool enabled;
@@ -84,13 +85,13 @@ private:
     {
         double data[12][4];
     };
-    typedef std::vector<MomentCentrSingle> MomentCentr;
+    using MomentCentr = std::vector<MomentCentrSingle>;
 
     struct HiddenHoursSingle
     {
         int data[12][24];
     };
-    typedef std::vector<HiddenHoursSingle> HiddenHours;
+    using HiddenHours = std::vector<HiddenHoursSingle>;
 
 private:
     // range dans les nblig première lignes et nbcol premières colonnes de OUT

@@ -111,14 +111,11 @@ Study::Study(bool forTheSolver) :
 
 Study::~Study()
 {
-    logs.debug() << "  :: destroying study " << (void*)this;
     clear();
 }
 
 void Study::clear()
 {
-    logs.debug() << "  :: clear study";
-
     // Releasing runtime infos
     FreeAndNil(runtime);
     FreeAndNil(scenarioRules);
@@ -159,7 +156,8 @@ void Study::createAsNew()
 
     // Simulations
     parameters.reset();
-    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy Source)
+    // ... At study creation, renewable cluster is the default mode for RES (Renewable Energy
+    // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
 
     parameters.yearsFilter = new bool[1];
@@ -302,8 +300,7 @@ void Study::ensureDataAreInitializedAccordingParameters()
     if (parameters.isTSGeneratedByPrepro(timeSeriesWind))
         StudyEnsureDataWindPrepro(this);
     // Thermal
-    if (parameters.isTSGeneratedByPrepro(timeSeriesThermal))
-        StudyEnsureDataThermalPrepro(this);
+    StudyEnsureDataThermalPrepro(this);
 }
 
 void Study::ensureDataAreAllInitialized()
@@ -606,16 +603,6 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
 
 bool Study::checkHydroHotStart()
 {
-    // Error messages possibly used in this method.
-    std::string parallelParametersErrMsg1
-      = "Hot Start Hydro option : conflict with parallelization parameters.";
-    std::string parallelParametersErrMsg2
-      = "Please update relevant simulation parameters or use Cold Start option.    ";
-
-    std::string calendarErrMsg1
-      = "Hot Start Hydro option : conflict with Hydro Local Data and/or Simulation Calendar.    ";
-    std::string calendarErrMsg2 = "Please update data or use Cold Start option.";
-
     bool hydroHotStart = (parameters.initialReservoirLevels.iniLevels == irlHotStart);
 
     // No need to check further if hydro hot start is not required
@@ -626,8 +613,8 @@ bool Study::checkHydroHotStart()
     // run, do all sets of parallel years have the same size ?
     if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
     {
-        logs.error() << parallelParametersErrMsg1;
-        logs.error() << parallelParametersErrMsg2;
+        logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
+        logs.error() << "Please update relevant simulation parameters or use Cold Start option.    ";
         return false;
     }
 
@@ -636,8 +623,8 @@ bool Study::checkHydroHotStart()
     uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
     if (nbDaysInSimulation < 364)
     {
-        logs.error() << calendarErrMsg1;
-        logs.error() << calendarErrMsg2;
+        logs.error() << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
+        logs.error() << "Please update data or use Cold Start option.";
         return false;
     }
 
@@ -649,6 +636,11 @@ bool Study::checkHydroHotStart()
     {
         // Reference to the area
         Area* area = i->second;
+
+        // No need to make a check on level initialization when reservoir management 
+        // is not activated for the current area
+        if (!area->hydro.reservoirManagement)
+            continue;
 
         // Month the reservoir level is initialized according to.
         // This month number is given in the civil calendar, from january to december (0 is
@@ -664,8 +656,9 @@ bool Study::checkHydroHotStart()
         // Check the day of level initialization is the first day of simulation
         if (initLevelOnSimDay != parameters.simulationDays.first)
         {
-            logs.error() << calendarErrMsg1;
-            logs.error() << calendarErrMsg2;
+            logs.error() << "Hot Start Hydro option : area '" << area->name 
+                         << "' - hydro level must be initialized on the first simulation month.    ";
+            logs.error() << "Please update data or use Cold Start option.";
             return false;
         }
     } // End loop over areas
@@ -1025,12 +1018,12 @@ bool Study::areaRename(Area* area, AreaName newName)
     // Updating all hydro allocation
     areas.each([&](Data::Area& areait) { areait.hydro.allocation.rename(oldid, newid); });
 
+    ScenarioBuilderUpdater updaterSB(*this);
     bool ret = true;
 
     // Archiving data
     {
         CorrelationUpdater updater(*this);
-        ScenarioBuilderUpdater updaterSB(*this);
 
         // Restoring the old ID
         area->id = oldid;
@@ -1050,35 +1043,6 @@ bool Study::areaRename(Area* area, AreaName newName)
         uiinfo->reloadAll();
 
     return ret;
-}
-
-bool Study::areasThermalClustersMinStablePowerValidity(
-  std::map<int, YString>& areaClusterNames) const
-{
-    YString areaname = "";
-    bool resultat = true;
-    auto endarea = areas.end();
-    int count = 0;
-
-    for (auto areait = areas.begin(); areait != endarea; areait++)
-    {
-        areaname = areait->second->name;
-        logs.debug() << "areaname : " << areaname;
-
-        std::vector<YString> clusternames;
-
-        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
-        {
-            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
-            {
-                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
-                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
-                areaClusterNames.insert(std::pair<int, YString>(count++, res));
-            }
-            resultat = false;
-        }
-    }
-    return resultat;
 }
 
 bool Study::clusterRename(Cluster* cluster, ClusterName newName)
@@ -1115,8 +1079,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     enum
     {
         kThermal,
-        kRenewable
-    } type;
+        kRenewable,
+        kUnknown
+    } type = kUnknown;
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
@@ -1163,6 +1128,9 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     case kThermal:
         ret = area.thermal.list.rename(cluster->id(), newName);
         area.thermal.prepareAreaWideIndexes();
+        break;
+    case kUnknown:
+        logs.error() << "Unknown cluster type";
         break;
     }
 
@@ -1605,6 +1573,53 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
         if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
             areas.removeThermalTimeseries();
     }
+}
+
+void Study::computePThetaInfForThermalClusters() const
+{
+    for (uint i = 0; i != this->areas.size(); i++)
+    {
+        // Alias de la zone courant
+        const auto& area = *(this->areas.byIndex[i]);
+
+        for (uint j = 0; j < area.thermal.list.size(); j++)
+        {
+            // Alias du cluster courant
+            auto& cluster = area.thermal.list.byIndex[j];
+            for (uint k = 0; k < HOURS_PER_YEAR; k++)
+                cluster->PthetaInf[k] = cluster->modulation[Data::thermalMinGenModulation][k]
+                                        * cluster->unitCount * cluster->nominalCapacity;
+        }
+    }
+}
+
+bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
+                                                std::map<int, YString>& areaClusterNames)
+{
+    YString areaname = "";
+    bool resultat = true;
+    auto endarea = areas.end();
+    int count = 0;
+
+    for (auto areait = areas.begin(); areait != endarea; areait++)
+    {
+        areaname = areait->second->name;
+        logs.debug() << "areaname : " << areaname;
+
+        std::vector<YString> clusternames;
+
+        if (not areait->second->thermalClustersMinStablePowerValidity(clusternames))
+        {
+            for (auto it = clusternames.begin(); it != clusternames.end(); it++)
+            {
+                logs.debug() << "areaname : " << areaname << " ; clustername : " << (*it);
+                YString res = "Area : " + areaname + " cluster name : " + (*it).c_str();
+                areaClusterNames.insert(std::pair<int, YString>(count++, res));
+            }
+            resultat = false;
+        }
+    }
+    return resultat;
 }
 
 } // namespace Data

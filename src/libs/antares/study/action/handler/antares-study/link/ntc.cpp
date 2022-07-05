@@ -80,12 +80,15 @@ bool NTC::performWL(Context& ctx)
 
         if (source && source != ctx.link)
         {
-            source->data.invalidate(true);
-            ctx.link->data.invalidate(true);
-            ctx.link->data.pasteToColumn((uint)Data::fhlNTCDirect,
-                                         source->data.entry[Data::fhlNTCDirect]);
-            ctx.link->data.pasteToColumn((uint)Data::fhlNTCIndirect,
-                                         source->data.entry[Data::fhlNTCIndirect]);
+            // Direct capacities
+            source->directCapacities.invalidate(true);
+            ctx.link->directCapacities.invalidate(true);
+            ctx.link->directCapacities.pasteToColumn(0, source->directCapacities.entry[0]);
+
+            // Indirect capacities
+            source->indirectCapacities.invalidate(true);
+            ctx.link->indirectCapacities.invalidate(true);
+            ctx.link->indirectCapacities.pasteToColumn(0, source->indirectCapacities.entry[0]);
             return true;
         }
         else

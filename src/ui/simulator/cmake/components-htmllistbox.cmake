@@ -20,16 +20,11 @@ add_library(libantares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
 		toolbox/components/htmllistbox/item/renewable-cluster-item.h
 		toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
-		toolbox/components/htmllistbox/item/bindingconstraint.h
-		toolbox/components/htmllistbox/item/bindingconstraint.cpp
-		toolbox/components/htmllistbox/item/bindingconstraint.hxx
 		toolbox/components/htmllistbox/item/area.hxx
 		toolbox/components/htmllistbox/item/pathlistitem.h
 		toolbox/components/htmllistbox/item/pathlistitem.cpp
 		toolbox/components/htmllistbox/datasource/datasource.h
 		toolbox/components/htmllistbox/datasource/datasource.hxx
-		toolbox/components/htmllistbox/datasource/areas.h
-		toolbox/components/htmllistbox/datasource/areas.cpp
 
         toolbox/components/htmllistbox/datasource/cluster-order.h
         toolbox/components/htmllistbox/datasource/cluster-order.cpp
@@ -44,9 +39,6 @@ add_library(libantares-ui-component-htmllistbox
         toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
         toolbox/components/htmllistbox/item/thermal-cluster-item.h
         toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
-
-		toolbox/components/htmllistbox/datasource/bindingconstraint.h
-		toolbox/components/htmllistbox/datasource/bindingconstraint.cpp
 	)
 
 

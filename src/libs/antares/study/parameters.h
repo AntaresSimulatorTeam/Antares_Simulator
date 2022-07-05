@@ -145,6 +145,17 @@ public:
     void fixBadValues();
 
     /*!
+    ** \brief Try to detect then fix refresh intervals
+    */
+    void fixRefreshIntervals();
+
+    /*!
+    ** \brief Try to detect then fix TS generation/refresh parameters
+    *         for NTC
+    */
+    void fixGenRefreshForNTC();
+
+    /*!
     ** \brief Check if some general data seem valid
     **
     ** \return The error if any (stErrNone otherwise)
@@ -184,7 +195,10 @@ public:
     ** \param year MC year index
     ** \param weight MC year weight
     */
-    void setYearWeight(int year, float weight);
+    void setYearWeight(uint year, float weight);
+
+    // Do we create files in the input folder ?
+    bool haveToImport(int tsKind) const;
 
 public:
     //! \name Mode
@@ -402,6 +416,12 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
+        //! if MPS files are exported, a flag to split them
+        bool splitExportedMPS;
+
+        //! a flag to use Adequacy patch
+        bool adequacyPatch;
+
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -488,6 +508,24 @@ public:
     SimplexOptimization simplexOptimizationRange;
     //@}
 
+    struct AdequacyPatch
+    {
+        struct LocalMatching
+        {
+            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+            //! only in the first step of adequacy patch local matching rule.
+            bool setToZeroOutsideInsideLinks = true;
+            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
+            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
+            //! rule.
+            bool setToZeroOutsideOutsideLinks = true;
+        };
+        LocalMatching localMatching;
+    };
+
+    AdequacyPatch adqPatch;
+
     //! \name Scenariio Builder - Rules
     //@{
     //! The current active rules for building scenarios (useful if building mode == custom)
@@ -500,6 +538,8 @@ public:
     // This variable is not stored within the study but only used by the solver
     bool noOutput;
     //@}
+
+    bool hydroDebug;
 
     //! \name Seeds
     //@{

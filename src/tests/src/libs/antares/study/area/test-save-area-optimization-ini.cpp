@@ -35,7 +35,7 @@ struct Fixture
 		remove_files(filesToRemove);
 	}
 
-	Study::Ptr study = new Study();
+    Study::Ptr study = std::make_shared<Study>();
 	Area* area;
 	Yuni::Clob path_to_generated_file;
 };
@@ -83,7 +83,7 @@ void referenceIniFile::save()
 void referenceIniFile::save_section(string_view sectionTitle, vector<string>& sectionProperties, ofstream & file)
 {
 	file << sectionTitle << endl;
-	for (int i = 0; i < sectionProperties.size(); ++i)
+	for (std::size_t i = 0; i < sectionProperties.size(); ++i)
 		file << sectionProperties[i] << " = " << properties_[sectionProperties[i]] << endl;
 	file << endl;
 }

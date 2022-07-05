@@ -27,8 +27,6 @@
 #ifndef __SOLVER_SIMULATION_DATA_STRUCTS_H__
 #define __SOLVER_SIMULATION_DATA_STRUCTS_H__
 
-#include <setjmp.h>
-
 typedef struct
 {
     /* donnees communes adequation et economie */
@@ -49,6 +47,11 @@ typedef struct
     int Consommation;
     int Solar;
 } NUMERO_CHRONIQUES_TIREES_PAR_PAYS;
+
+typedef struct
+{
+    int TransmissionCapacities;
+} NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION;
 
 typedef struct
 {
@@ -122,12 +125,6 @@ typedef struct
 {
     double* ParLigne;
 } MATRICE_2D;
-
-typedef struct
-{
-    int AnomalieDetectee;
-    jmp_buf Env;
-} COMPTE_RENDU;
 
 /* Old define */
 #define DEFINITION_STRUCTURES_DONNEES

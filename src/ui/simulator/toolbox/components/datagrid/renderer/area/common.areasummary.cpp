@@ -36,54 +36,53 @@ namespace Datagrid
 {
 namespace Renderer
 {
-    CommonClusterSummarySingleArea::CommonClusterSummarySingleArea(
-        wxWindow* control,
-        Toolbox::InputSelector::Area* notifier) :
-        pArea(nullptr), pControl(control), pAreaNotifier(notifier)
-    {
-        if (notifier)
-            notifier->onAreaChanged.connect(this, &CommonClusterSummarySingleArea::onAreaChanged);
-    }
+CommonClusterSummarySingleArea::CommonClusterSummarySingleArea(
+  wxWindow* control,
+  Toolbox::InputSelector::Area* notifier) :
+ pArea(nullptr), pControl(control), pAreaNotifier(notifier)
+{
+    if (notifier)
+        notifier->onAreaChanged.connect(this, &CommonClusterSummarySingleArea::onAreaChanged);
+}
 
-    CommonClusterSummarySingleArea::~CommonClusterSummarySingleArea()
-    {
-        destroyBoundEvents();
-    }
+CommonClusterSummarySingleArea::~CommonClusterSummarySingleArea()
+{
+    destroyBoundEvents();
+}
 
-    void CommonClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
+void CommonClusterSummarySingleArea::onAreaChanged(Antares::Data::Area* area)
+{
+    if (pArea != area)
     {
-        if (pArea != area)
-        {
-            pArea = area;
-            RefreshAllControls(pControl);
-        }
+        pArea = area;
+        RefreshAllControls(pControl);
     }
+}
 
-    IRenderer::CellStyle CommonClusterSummarySingleArea::cellStyle(int col, int row) const
+IRenderer::CellStyle CommonClusterSummarySingleArea::cellStyle(int col, int row) const
+{
+    if (col > 0 and Math::Zero(cellNumericValue(col, row)))
+        return IRenderer::cellStyleDefaultDisabled;
+    else
     {
-        if (col > 0 and Math::Zero(cellNumericValue(col, row)))
-            return IRenderer::cellStyleDefaultDisabled;
+        if (col == 1 || col == 2)
+            return IRenderer::cellStyleConstraintWeight;
         else
-        {
-            if (col == 1 || col == 2)
-                return IRenderer::cellStyleConstraintWeight;
-            else
-                return IRenderer::cellStyleDefault;
-        }
+            return IRenderer::cellStyleDefault;
     }
+}
 
+void CommonClusterSummarySingleArea::onStudyClosed()
+{
+    pArea = nullptr;
+    IRenderer::onStudyClosed();
+}
 
-    void CommonClusterSummarySingleArea::onStudyClosed()
-    {
-        pArea = nullptr;
-        IRenderer::onStudyClosed();
-    }
-
-    void CommonClusterSummarySingleArea::onStudyAreaDelete(Antares::Data::Area* area)
-    {
-        if (pArea == area)
-            onAreaChanged(nullptr);
-    }
+void CommonClusterSummarySingleArea::onStudyAreaDelete(Antares::Data::Area* area)
+{
+    if (pArea == area)
+        onAreaChanged(nullptr);
+}
 
 } // namespace Renderer
 } // namespace Datagrid

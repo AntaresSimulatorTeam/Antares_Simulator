@@ -35,6 +35,8 @@
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
 
+#include <memory>
+
 using namespace Yuni;
 
 namespace Antares
@@ -51,11 +53,11 @@ class OutputSpotlightItem : public Antares::Component::Spotlight::IItem
 {
 public:
     //! Ptr
-    typedef Yuni::SmartPtr<OutputSpotlightItem> Ptr;
+    using Ptr = std::shared_ptr<OutputSpotlightItem>;
     //! Vector of items
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
     //! Vector Ptr
-    typedef Yuni::SmartPtr<Vector> VectorPtr;
+    using VectorPtr = std::shared_ptr<Vector>;
 
 public:
     OutputSpotlightItem()
@@ -99,12 +101,12 @@ Outputs::~Outputs()
 
 void Outputs::search(Spotlight::IItem::Vector& out,
                      const Spotlight::SearchToken::Vector& tokens,
-                     const Yuni::String& text)
+                     const Yuni::String& /* text */)
 {
     // More than one tab: we would like to be able to close the current one
     if (pLayer && pComponent.pTabs.size() > 1)
     {
-        auto* item = new OutputSpotlightItem();
+        auto item = std::make_shared<OutputSpotlightItem>();
         item->caption("Close the tab");
         item->image(pBmpClose);
         item->tag = -1;
@@ -119,7 +121,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
     {
         // OutputSpotlightItem
         if (pLayer && pComponent.pTabs.size() > 1)
-            out.push_back(new Spotlight::Separator());
+            out.push_back(std::make_shared<Spotlight::Separator>());
 
         Data::Output::Ptr outputSelected;
         if (pLayer)
@@ -158,7 +160,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                     continue;
             }
 
-            auto* item = new OutputSpotlightItem();
+            auto item = std::make_shared<OutputSpotlightItem>();
             if (output->version != (uint)Data::versionLatest)
             {
                 CString<16, false> text;
@@ -182,6 +184,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
                 item->addTag("Draft", 230, 230, 245);
                 break;
             case Data::stdmUnknown:
+            case Data::stdmExpansion:
             case Data::stdmMax:
                 item->addTag("...", 213, 213, 213);
             }
@@ -207,8 +210,7 @@ void Outputs::search(Spotlight::IItem::Vector& out,
 
 bool Outputs::onSelect(Spotlight::IItem::Ptr& item)
 {
-    OutputSpotlightItem::Ptr withlayer
-      = Spotlight::IItem::Ptr::DynamicCast<OutputSpotlightItem::Ptr>(item);
+    auto withlayer = std::dynamic_pointer_cast<OutputSpotlightItem>(item);
     if (!item)
         return true;
 

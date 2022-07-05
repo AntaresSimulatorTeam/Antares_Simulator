@@ -299,12 +299,14 @@ void ListboxPanel::updateItems(const Spotlight::IItem::VectorPtr& vptr,
     int NbVerticalScrollUnitsInWindow = 0;
     if (!(pFlags & Spotlight::optNoSearchInput))
     {
-        NbVerticalScrollUnitsInWindow = (count*pParent->itemHeight() + searchResultTextHeight + 2) / NbPixelsPerVerticalScrollUnit;
+        NbVerticalScrollUnitsInWindow = (count * pParent->itemHeight() + searchResultTextHeight + 2)
+                                        / NbPixelsPerVerticalScrollUnit;
         SetScrollbars(1, NbPixelsPerVerticalScrollUnit, 1, NbVerticalScrollUnitsInWindow);
     }
     else
     {
-        NbVerticalScrollUnitsInWindow = (count*pParent->itemHeight() + 2) / NbPixelsPerVerticalScrollUnit;
+        NbVerticalScrollUnitsInWindow
+          = (count * pParent->itemHeight() + 2) / NbPixelsPerVerticalScrollUnit;
         SetScrollbars(1, NbPixelsPerVerticalScrollUnit, 1, NbVerticalScrollUnitsInWindow);
     }
 

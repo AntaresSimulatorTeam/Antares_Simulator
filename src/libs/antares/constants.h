@@ -27,6 +27,8 @@
 #ifndef __ANTARES_LIBS_CONSTANTS_H__
 #define __ANTARES_LIBS_CONSTANTS_H__
 
+#include "xpansion.h"
+
 /*! Name of the app to use into logs */
 #define LOG_APPLICATION_NAME "antares"
 /*! Vendor */
@@ -38,8 +40,8 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-/*! Enable / Disable the expansion mode */
-#define STUDY_MODE_EXPANSION 0
+/*! Max number of MC years */
+constexpr uint MAX_NB_MC_YEARS = 50000;
 
 /*! */
 /* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */

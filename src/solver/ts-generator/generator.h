@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
+#include <antares/study/parts/thermal/cluster.h>
 #include "xcast/xcast.h"
 
 namespace Antares
@@ -43,6 +44,11 @@ namespace TSGenerator
 */
 template<enum Data::TimeSeries T>
 bool GenerateTimeSeries(Data::Study& study, uint year);
+
+bool GenerateThermalTimeSeries(Data::Study& study,
+                               uint year,
+                               bool globalThermalTSgeneration,
+                               bool refresh);
 
 /*!
 ** \brief Destroy all TS Generators

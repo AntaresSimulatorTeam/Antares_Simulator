@@ -439,6 +439,10 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             cluster.setGroup(p->value);
             return true;
         }
+        if (p->key == "gen-ts")
+        {
+            return p->value.to(cluster.tsGenBehavior);
+        }
         break;
     }
     case 'h':
@@ -715,9 +719,9 @@ void ThermalClusterList::ensureDataPrepro()
     auto end = cluster.end();
     for (auto it = cluster.begin(); it != end; ++it)
     {
-        auto& c = *(it->second);
-        if (not c.prepro)
-            c.prepro = new PreproThermal();
+        auto c = it->second;
+        if (not c->prepro)
+            c->prepro = new PreproThermal(c);
     }
 }
 
@@ -754,7 +758,11 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("unitCount", c.unitCount);
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
-
+            // TS generation
+            if (c.tsGenBehavior != LocalTSGenerationBehavior::useGlobalParameter)
+            {
+                s->add("gen-ts", c.tsGenBehavior);
+            }
             // Min. Stable Power
             if (not Math::Zero(c.minStablePower))
                 s->add("min-stable-power", c.minStablePower);
@@ -883,12 +891,12 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
-            bool result = c.prepro->loadFromFolder(study, buffer, c.parentArea->id, c.id());
+            bool result = c.prepro->loadFromFolder(study, buffer);
 
             if (result and study.usedByTheSolver)
             {
                 // checking NPO max
-                result = c.prepro->normalizeAndCheckNPO(c.name(), c.unitCount);
+                result = c.prepro->normalizeAndCheckNPO();
             }
 
             ret = result and ret;
@@ -898,5 +906,6 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     }
     return ret;
 }
+
 } // namespace Data
 } // namespace Antares

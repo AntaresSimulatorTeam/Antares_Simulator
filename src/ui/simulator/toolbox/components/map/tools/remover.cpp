@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/study/scenario-builder/updater.hxx>
+
 #include "remover.h"
 #include "../settings.h"
 #include "../../../../windows/message.h"
@@ -104,6 +106,7 @@ bool Remover::onMouseUp(const int, const int)
     message.add(Window::Message::btnCancel, true);
     if (message.showModal() == Window::Message::btnYes)
     {
+        ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
         // Remove all selected items
         bool r = (0 != pManager.removeAllSelected());
 

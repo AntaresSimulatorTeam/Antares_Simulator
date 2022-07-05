@@ -45,18 +45,6 @@ inline Component& Component::operator<<(Item::IItem::Ptr it)
     return *this;
 }
 
-inline Component& Component::operator+=(Item::IItem* it)
-{
-    this->add(it);
-    return *this;
-}
-
-inline Component& Component::operator<<(Item::IItem* it)
-{
-    this->add(it);
-    return *this;
-}
-
 template<class D>
 inline D* Component::addDatasource()
 {

@@ -30,6 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../renderer.h"
 #include "../../../../application/study.h"
+#include <memory>
 #include <vector>
 
 namespace Antares
@@ -44,7 +45,7 @@ class LogEntry
 {
 public:
     //! Vector of log entries
-    typedef std::vector<LogEntry*> Vector;
+    using Vector = std::vector<LogEntry*>;
     //! Verbosity type
     enum VerbosityType
     {
@@ -89,7 +90,7 @@ class LogEntryContainer
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef Yuni::SmartPtr<LogEntryContainer> Ptr;
+    using Ptr = std::shared_ptr<LogEntryContainer>;
 
 public:
     LogEntryContainer() : longestLine(0), maxCharForALine(0)

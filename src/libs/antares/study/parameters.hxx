@@ -38,7 +38,7 @@ inline Yuni::uint64 Parameters::memoryUsage() const
 
 inline bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
 {
-    return (timeSeriesToGenerate & ts) || (timeSeriesToRefresh & ts);
+    return (timeSeriesToGenerate & ts);
 }
 
 inline bool Parameters::economy() const

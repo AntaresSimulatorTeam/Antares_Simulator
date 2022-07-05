@@ -50,15 +50,15 @@ struct CompareAreaName;
 class Area final : private Yuni::NonCopyable<Area>
 {
 public:
-    typedef std::set<AreaName> NameSet;
-    typedef std::set<Area*, CompareAreaName> Set;
-    typedef std::map<Area*, AreaLink::Set, CompareAreaName> LinkMap;
-    typedef std::map<AreaName, Area*> Map;
-    typedef std::vector<Area*> Vector;
-    typedef std::vector<const Area*> VectorConst;
-    typedef std::list<Area*> List;
+    using NameSet = std::set<AreaName>;
+    using Set = std::set<Area*, CompareAreaName>;
+    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
+    using Map = std::map<AreaName, Area*>;
+    using Vector = std::vector<Area*>;
+    using VectorConst = std::vector<const Area*>;
+    using List = std::list<Area*>;
     //! Name mapping -> must be replaced by AreaNameMapping
-    typedef std::map<AreaName, AreaName> NameMapping;
+    using NameMapping = std::map<AreaName, AreaName>;
 
 public:
     //! \name Constructor & Destructor
@@ -135,6 +135,7 @@ public:
     void detachLinkFromItsPointer(const AreaLink* lnk);
     //@}
 
+    void buildLinksIndexes();
     /*!
     ** \brief Ensure all data are created
     */
@@ -224,6 +225,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
     //! \name Associate data */
@@ -341,10 +344,12 @@ private:
     bool storeTimeseriesNumbersForHydro(Study& study);
     bool storeTimeseriesNumbersForThermal(Study& study);
     bool storeTimeseriesNumbersForRenewable(Study& study);
-
+    bool storeTimeseriesNumbersForTransmissionCapacities(Study& study) const;
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -378,13 +383,13 @@ class AreaList final : public Yuni::NonCopyable<AreaList>
 {
 public:
     //! An iterator
-    typedef Area::Map::iterator iterator;
+    using iterator = Area::Map::iterator;
     //! A const iterator
-    typedef Area::Map::const_iterator const_iterator;
+    using const_iterator = Area::Map::const_iterator;
     //! An iterator
-    typedef Area::Map::reverse_iterator reverse_iterator;
+    using reverse_iterator = Area::Map::reverse_iterator;
     //! A const iterator
-    typedef Area::Map::const_reverse_iterator const_reverse_iterator;
+    using const_reverse_iterator = Area::Map::const_reverse_iterator;
 
 public:
     //! \name Constructor & Destructor
@@ -570,7 +575,7 @@ public:
     **
     ** \param oldid ID of the area to rename
     ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renammed)
+    ** \return True if the operation succeeded (the area has been renamed)
     **   false otherwise (if another area has the same name)
     **
     ** \warning This function invalidates the index of all areas. If you need
@@ -584,7 +589,7 @@ public:
     ** \param oldid ID of the area to rename
     ** \param newID The new area ID
     ** \param newName The new name for the area
-    ** \return True if the operation succeeded (the area has been renammed)
+    ** \return True if the operation succeeded (the area has been renamed)
     **   false otherwise (if another area has the same name)
     **
     ** \warning This function invalidates the index of all areas. If you need
@@ -723,6 +728,9 @@ bool AreaLinksLoadFromFolder(Study& s, AreaList* l, Area* area, const AnyString&
 ** \return True if the operation succeeded, 0 otherwise
 */
 bool AreaLinksSaveToFolder(const Area* area, const char* const folder);
+
+// Save a given area's interconnexions configuration file into a folder
+bool saveAreaLinksConfigurationFileToFolder(const Area* area, const char* const folder);
 
 /*!
 ** \brief Clear all interconnection from an area
