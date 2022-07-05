@@ -469,6 +469,8 @@ void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
     double* pt;
     int node;
 
+    (void)p_infeasible;
+
     PROBLEME_HEBDO* ProblemeHebdo = static_cast<PROBLEME_HEBDO*>(ProblemeHebdoVoid);
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -498,14 +500,29 @@ void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
     //Appeler l'heuristique accurate (remplit les tableaux de la solution à fournir au solveur)
     OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
 
-    //Ajoute la solution au problème XPRESS
+    char *bndType = (char*)MemAlloc(ProblemeHebdo->nombreDeVariablesAFixer * sizeof(char));
+    memset(bndType, 'L', ProblemeHebdo->nombreDeVariablesAFixer);
+
+    XPRSbranchobject bo = NULL;
+    XPRS_bo_create(&bo, prob, 1);
+    XPRS_bo_addbranches(bo, 1);
+    XPRS_bo_addbounds(bo,
+                      0,
+                      ProblemeHebdo->nombreDeVariablesAFixer,
+                      bndType, 
+                      ProblemeHebdo->colonnesAFixer,
+                      ProblemeHebdo->valeursPremiereOptimisationEtHeuristique);
+    XPRS_bo_setpriority(bo, 100);
+
+    XPRS_bo_store(bo, &var);
+/* //Ajoute la solution au problème XPRESS
     XPRSaddmipsol(prob,
                 ProblemeHebdo->nombreDeVariablesAFixer,
                 ProblemeHebdo->valeursPremiereOptimisationEtHeuristique,
                 ProblemeHebdo->colonnesAFixer,
-                "");
-
+                ""); */
     ProblemeHebdo->NombreDAppelsHeuristique++;
 
     MemFree(x);
+    MemFree(bndType);
 }
