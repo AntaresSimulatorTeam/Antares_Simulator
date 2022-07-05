@@ -157,7 +157,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
         for (uint hour = 0; hour != 8760; ++hour)
         {
-            auto month = study.calendar.hours[hour].month;
             auto dayYear = study.calendar.hours[hour].dayYear;
 
             double netdemand = 0;
@@ -187,9 +186,23 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                 });
             }
 
+            if (parameters.hydroAllocationClamping
+                == Antares::Data::Parameters::HydroAllocationClamping::hourly)
+            {
+                netdemand = Math::Max(0, netdemand);
+            }
+
             assert(!Math::NaN(netdemand)
-                   && "hydro management: NaN detected when calculating the net demande");
+                   && "hydro management: NaN detected when calculating the net demand");
             data.DLN[dayYear] += netdemand;
+        }
+        if (parameters.hydroAllocationClamping
+            == Antares::Data::Parameters::HydroAllocationClamping::daily)
+        {
+            for (uint day = 0; day != 365; ++day)
+            {
+                data.DLN[day] = Math::Max(0, data.DLN[day]);
+            }
         }
     });
 }
@@ -218,40 +231,6 @@ void HydroManagement::prepareEffectiveDemand(uint numSpace)
 
             assert(not Math::NaN(data.DLE[day]) && "nan value detected for DLE");
             assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
-        }
-
-        auto minimumYear = std::numeric_limits<double>::infinity();
-        auto dayYear = 0u;
-
-        for (uint month = 0; month != 12; ++month)
-        {
-            auto minimumMonth = +std::numeric_limits<double>::infinity();
-            auto daysPerMonth = study.calendar.months[month].days;
-            auto realmonth = study.calendar.months[month].realmonth;
-
-            for (uint d = 0; d != daysPerMonth; ++d)
-            {
-                auto dYear = d + dayYear;
-                if (data.DLE[dYear] < minimumMonth)
-                    minimumMonth = data.DLE[dYear];
-            }
-
-            if (minimumMonth < 0.)
-            {
-                for (uint d = 0; d != daysPerMonth; ++d)
-                    data.DLE[dayYear + d] -= minimumMonth - 1e-4;
-            }
-
-            if (data.MLE[realmonth] < minimumYear)
-                minimumYear = data.MLE[realmonth];
-
-            dayYear += daysPerMonth;
-        }
-
-        if (minimumYear < 0.)
-        {
-            for (uint realmonth = 0; realmonth != 12; ++realmonth)
-                data.MLE[realmonth] -= minimumYear - 1e-4;
         }
     });
 }

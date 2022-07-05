@@ -555,6 +555,14 @@ public:
     OrtoolsSolver ortoolsEnumUsed;
     //@}
 
+    enum class HydroAllocationClamping
+    {
+        none,
+        hourly,
+        daily
+    };
+    HydroAllocationClamping hydroAllocationClamping = HydroAllocationClamping::none;
+
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);

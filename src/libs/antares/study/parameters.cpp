@@ -87,6 +87,46 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
+static bool ConvertCStrToHydroAllocationClamping(const AnyString& text,
+                                                 Parameters::HydroAllocationClamping& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "none")
+    {
+        out = Parameters::HydroAllocationClamping::none;
+        return true;
+    }
+    if (s == "hourly")
+    {
+        out = Parameters::HydroAllocationClamping::hourly;
+        return true;
+    }
+    if (s == "daily")
+    {
+        out = Parameters::HydroAllocationClamping::daily;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid hydro allocation clamping. Got '" << text << "'";
+    out = Parameters::HydroAllocationClamping::none;
+    return false;
+}
+
+static const char* HydroAllocationClampingToCString(const Parameters::HydroAllocationClamping& in)
+{
+    switch (in)
+    {
+    case Parameters::HydroAllocationClamping::hourly:
+        return "hourly";
+    case Parameters::HydroAllocationClamping::daily:
+        return "daily";
+    default:
+        return "none";
+    }
+}
+
 static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
                                                         RenewableGenerationModelling& out)
 {
@@ -319,6 +359,8 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
+
+    hydroAllocationClamping = HydroAllocationClamping::none;
 
     // Initialize all seeds
     resetSeeds();
@@ -762,6 +804,8 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
         return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
+    if (key == "hydro-allocation-clamping")
+        return ConvertCStrToHydroAllocationClamping(value, d.hydroAllocationClamping);
     return false;
 }
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
@@ -1765,6 +1809,11 @@ void Parameters::saveToINI(IniFile& ini) const
           section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
         // Adequacy Block size (adequacy draft)
         section->add("adequacy-block-size", adequacyBlockSize);
+        if (hydroAllocationClamping != HydroAllocationClamping::none)
+        {
+            section->add("hydro-allocation-clamping",
+                         HydroAllocationClampingToCString(hydroAllocationClamping));
+        }
     }
 
     // User's playlist
