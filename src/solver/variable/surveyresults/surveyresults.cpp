@@ -579,7 +579,7 @@ SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o
  maxVariables(Math::Max<uint>(
    maxVars,
    nbVariablesPerDetailThermalCluster * s.runtime->maxThermalClustersForSingleArea,
-   nbVariablesPerDetailRenewableCluster * s.runtime->maxThermalClustersForSingleArea)),
+   nbVariablesPerDetailRenewableCluster * s.runtime->maxRenewableClustersForSingleArea)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr)
