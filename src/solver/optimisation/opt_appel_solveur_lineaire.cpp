@@ -124,7 +124,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+    if (ProblemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES)
     {
         Probleme.CallbackHeuristique = std::bind(XPRESS_AjouterCallbackHeuristique,
                                              std::placeholders::_1,
@@ -467,9 +467,20 @@ void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
 {
     int var;
     double* pt;
-    
+    int node;
+
     PROBLEME_HEBDO* ProblemeHebdo = static_cast<PROBLEME_HEBDO*>(ProblemeHebdoVoid);
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
+    XPRSgetintattrib(prob, XPRS_CURRENTNODE, &node);
+    if (node != 1)
+        return;
+
+    if (ProblemeHebdo->NombreDAppelsHeuristique == 1)
+    {
+        ProblemeHebdo->NombreDAppelsHeuristique = 0;
+        return;
+    }
 
     //Recuperer les valeurs de la relaxation
     double* x = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
@@ -478,7 +489,10 @@ void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
     //Les stocker dans ProblemeHebdo
     for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++) {
         pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var];
-        *pt = x[var];
+        if (pt != NULL)
+        {
+            *pt = x[var];
+        }
     }
 
     //Appeler l'heuristique accurate (remplit les tableaux de la solution à fournir au solveur)
@@ -486,10 +500,12 @@ void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
 
     //Ajoute la solution au problème XPRESS
     XPRSaddmipsol(prob,
-                 ProblemeHebdo->nombreDeVariablesAFixer,
-                 ProblemeHebdo->valeursPremiereOptimisationEtHeuristique,
-                 ProblemeHebdo->colonnesAFixer,
-                 "");
+                ProblemeHebdo->nombreDeVariablesAFixer,
+                ProblemeHebdo->valeursPremiereOptimisationEtHeuristique,
+                ProblemeHebdo->colonnesAFixer,
+                "");
+
+    ProblemeHebdo->NombreDAppelsHeuristique++;
 
     MemFree(x);
 }

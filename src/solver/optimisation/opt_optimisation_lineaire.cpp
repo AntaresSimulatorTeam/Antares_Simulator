@@ -105,7 +105,8 @@ OptimisationHebdo:
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
 
-    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION
+        && ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
     {
         if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         {
