@@ -21,7 +21,7 @@ v8.3.0-rc2 (07/2022)
 - Upgrade examples 8.1 -> 8.3 (#733)
 - Profit by plant : only compute average, exclude min/max/std (#735)
 
-v8.3-rc1 (06/2022)
+v8.3.0-rc1 (06/2022)
 --------------------
 ### New features
 - Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
