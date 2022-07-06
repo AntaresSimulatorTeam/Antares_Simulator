@@ -211,7 +211,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.adqPatchSaveIntermediateResults, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.saveIntermediateResults, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -332,7 +332,7 @@ void AdequacyPatchOptions::refresh()
     updateButton(pBtnAdequacyPatch, study.parameters.include.adequacyPatch, buttonType);
     // Save intermediate results for adequacy patch
     updateButton(pBtnAdequacyPatchSaveIntermediateResults,
-                 study.parameters.adqPatchSaveIntermediateResults,
+                 study.parameters.adqPatch.saveIntermediateResults,
                  buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
@@ -348,17 +348,17 @@ void AdequacyPatchOptions::refresh()
     // Price taking order (PTO) for adequacy patch
     buttonType = "pto";
     bool isPTOload
-      = (study.parameters.adqPatchPriceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
+      = (study.parameters.adqPatch.curtailmentSharing.priceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
     updateButton(pBtnAdequacyPatchPTO, isPTOload, buttonType);
 
     // Threshold values
     {
         if (pThresholdCSRStart)
             pThresholdCSRStart->SetValue(
-              wxString() << study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
-              wxString() << study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations);
+              wxString() << study.parameters.adqPatch.localMatching.thresholdDisplayViolations);
     }
 }
 
@@ -487,9 +487,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isDens)
+        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isDens;
+            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -501,9 +501,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isLoad)
+        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isLoad;
+            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -547,9 +547,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         }
         else
         {
-            if (newthreshold != study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule)
+            if (newthreshold != study.parameters.adqPatch.curtailmentSharing.thresholdInitiate)
             {
-                study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdInitiate = newthreshold;
                 MarkTheStudyAsModified();
             }
         }
@@ -571,9 +571,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations)
+                != study.parameters.adqPatch.localMatching.thresholdDisplayViolations)
             {
-                study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations = newthreshold;
+                study.parameters.adqPatch.localMatching.thresholdDisplayViolations = newthreshold;
                 MarkTheStudyAsModified();
             }
         }

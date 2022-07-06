@@ -32,8 +32,13 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 
 using namespace Yuni;
-using namespace Antares::Data::AdequacyPatch;
 
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
@@ -66,7 +71,6 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZero;
     case physicalAreaOutsideAdqPatch:
         return setToZero;
     default:
@@ -131,40 +135,6 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
-{
-    double netPositionInit;
-    double densNew;
-    double ensInit;
-    double spillageInit;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
-        {
-            std::tie(netPositionInit, densNew)
-              = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-
-            ensInit
-              = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit
-              = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
-
-            hourlyCsrProblem.netPositionInitValues[Area] = netPositionInit;
-            hourlyCsrProblem.densNewValues[Area] = densNew;
-            hourlyCsrProblem.rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
-
-            logs.debug() << "DENS_new[" << Area << "] = " << hourlyCsrProblem.densNewValues[Area];
-            logs.debug() << "rhsAreaBalanceValues[" << Area
-                         << "] = " << hourlyCsrProblem.rhsAreaBalanceValues[Area] << " = ENSinit("
-                         << ensInit << ") + NetPositionInit(" << netPositionInit
-                         << ") - SpillageInit(" << spillageInit << ")";
-        }
-    }
-    return;
-}
-
 void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
     float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
@@ -188,7 +158,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
 
                 // check LMR violations
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-                if ((densNew < ensInit) && (ensInit - densNew >= Math::Abs(threshold)))
+                if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
                 {
                     ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
                     totalLmrViolation += (ensInit - densNew);
@@ -254,13 +224,44 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     return std::make_pair(netPositionInit, densNew);
 }
 
-template<class T>
-void sumTwoArrays(T* a, T* b, int num)
+void addArray(std::vector<double>& A, double* B, int num)
 {
     for (uint i = 0; i < num; ++i)
-        a[i] += b[i];
+        A[i] += B[i];
 }
-template void sumTwoArrays<double>(double* a, double* b, int num);
+
+} // end namespace Antares
+} // end namespace Data
+} // end namespace AdequacyPatch
+
+void HOURLY_CSR_PROBLEM::calculateCsrParameters()
+{
+    double netPositionInit;
+    double densNew;
+    double ensInit;
+    double spillageInit;
+    int hour = hourInWeekTriggeredCsr;
+
+    for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
+    {
+        if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
+            == physicalAreaInsideAdqPatch)
+        {
+            std::tie(netPositionInit, densNew)
+              = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
+
+            ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+                        ->ValeursHorairesDeDefaillancePositive[hour];
+            spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+                             ->ValeursHorairesDeDefaillanceNegative[hour];
+
+            netPositionInitValues[Area] = netPositionInit;
+            densNewValues[Area] = densNew;
+            rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
+        }
+    }
+    return;
+}
 
 void HOURLY_CSR_PROBLEM::resetProblem()
 {
@@ -301,7 +302,7 @@ void HOURLY_CSR_PROBLEM::solveProblem()
 void HOURLY_CSR_PROBLEM::run()
 {
     resetProblem();
-    calculateCsrParameters(pWeeklyProblemBelongedTo, *this);
+    calculateCsrParameters();
     buildProblemVariables();
     buildProblemConstraintsLHS();
     setVariableBounds();
