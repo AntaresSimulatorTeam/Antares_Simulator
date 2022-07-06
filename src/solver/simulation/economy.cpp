@@ -106,7 +106,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
 
 // No adequacy patch
 NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
-void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint w = 0)
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
