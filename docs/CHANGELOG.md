@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+v8.3.0-beta3 (07/2022)
+--------------------
+### New features
+- Adequacy patch : include curtailment sharing rule.
+
 v8.3.0-rc2 (07/2022)
 --------------------
 ### New features
