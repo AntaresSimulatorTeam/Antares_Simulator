@@ -82,6 +82,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
       = (VALEURS_DE_NTC_ET_RESISTANCES*)malloc(sizeof(VALEURS_DE_NTC_ET_RESISTANCES));
     problem.ValeursDeNTC[0]->ValeurDuFlux = (double*)malloc(3 * sizeof(double));
     problem.IndexSuivantIntercoOrigine = (int*)malloc(3 * sizeof(int));
+    problem.IndexSuivantIntercoExtremite = (int*)malloc(3 * sizeof(int));
     problem.IndexDebutIntercoOrigine = (int*)malloc(1 * sizeof(int));
     problem.IndexDebutIntercoExtremite = (int*)malloc(1 * sizeof(int));
 
@@ -106,6 +107,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
 
     // free memory
     free(problem.IndexDebutIntercoExtremite);
+    free(problem.IndexSuivantIntercoExtremite);
     free(problem.IndexDebutIntercoOrigine);
     free(problem.IndexSuivantIntercoOrigine);
     free(problem.ValeursDeNTC[0]->ValeurDuFlux);
