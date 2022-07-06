@@ -5,7 +5,6 @@
 
 #include <vector>
 #include <string>
-#include <functional>
 
 namespace Antares
 {
@@ -24,10 +23,11 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
     const std::vector<std::string>& NomDesContraintes;
     const std::vector<bool>& VariablesEntieres;
 
-    std::function<void(void*)> CallbackHeuristique;
     const double* ValeursDesVariablesFixees;
     const int* ColonnesFixees;
     const int NombreDeVariablesFixees;
+
+    bool solveOnlyRelaxation;
 
     bool isMIP() const;
 };

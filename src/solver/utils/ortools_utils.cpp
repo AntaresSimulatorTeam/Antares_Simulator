@@ -166,7 +166,11 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
-        problemeSimplexe->X[idxVar] = var->solution_value();
+
+        if (problemeSimplexe->solveOnlyRelaxation)
+            problemeSimplexe->X[idxVar] = var->unrounded_solution_value();
+        else
+            problemeSimplexe->X[idxVar] = var->solution_value();
         
         if (isMIP)
         {
@@ -273,8 +277,17 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
 
     if (Probleme->isMIP())
     {
-        solver->SetSolveParameters("g");
-        solver->AddSetupMethod(Probleme->CallbackHeuristique);
+        if (Probleme->solveOnlyRelaxation) 
+            solver->SetSolveParameters("gl");
+        else 
+            solver->SetSolveParameters("g");
+
+        auto addingHint = std::bind(XPRESS_AjouterSolutionInitiale,
+                                        std::placeholders::_1,
+                                        Probleme->NombreDeVariablesFixees,
+                                        Probleme->ValeursDesVariablesFixees,
+                                        Probleme->ColonnesFixees);
+        solver->AddSetupMethod(addingHint);
     }
         
 
@@ -334,7 +347,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-/* void XPRESS_AjouterSolutionInitiale(void *ptr,
+void XPRESS_AjouterSolutionInitiale(void *ptr,
                                     const int nombreDeVariablesFixees,
                                     const double* valeursDesVariablesFixees,
                                     const int* indicesDesVariablesFixees) 
@@ -345,7 +358,6 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
                  indicesDesVariablesFixees,
                  "");
 }
- */
 
 using namespace Antares::Data;
 

@@ -477,7 +477,6 @@ struct PROBLEME_HEBDO
     char WaterValueAccurate; /* OUI_ANTARES /NON_ANTARES*/
     char OptimisationAvecCoutsDeDemarrage;
     char OptimisationAvecVariablesEntieres;
-    int NombreDAppelsHeuristique;
     int NombreDePays;
     const char** NomsDesPays;
     int NombreDePaliersThermiques;

@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "xprs.h"
-
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include "opt_structure_probleme_a_resoudre.h"
@@ -96,13 +94,6 @@ private:
     clock::time_point end_;
 };
 
-void XPRESS_AjouterCallbackHeuristique(void *prob,
-                                       PROBLEME_HEBDO *ProblemeHebdo);
-
-void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
-                                        void *ProblemeHebdoVoid,
-                                        int *p_infeasible);
-
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
 {
     int Var;
@@ -124,11 +115,13 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
-    if (ProblemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES)
+    
+
+    if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
+        Probleme.solveOnlyRelaxation = false;
+    else
     {
-        Probleme.CallbackHeuristique = std::bind(XPRESS_AjouterCallbackHeuristique,
-                                             std::placeholders::_1,
-                                             ProblemeHebdo);
+        Probleme.solveOnlyRelaxation = true;
     }
     
     ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
@@ -450,79 +443,4 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     fclose(Flot);
 
     return;
-}
-
-void XPRESS_AjouterCallbackHeuristique(void *prob,
-                                       PROBLEME_HEBDO *ProblemeHebdo)
-{
-    XPRSaddcboptnode(static_cast<XPRSprob>(prob),
-                     XPRESS_CallbackHeuristiqueAccurate,
-                     (void*) ProblemeHebdo,
-                     0);
-}
-
-void XPRESS_CallbackHeuristiqueAccurate(XPRSprob prob,
-                                        void *ProblemeHebdoVoid,
-                                        int *p_infeasible)
-{
-    int var;
-    double* pt;
-    int node;
-
-    (void)p_infeasible;
-
-    PROBLEME_HEBDO* ProblemeHebdo = static_cast<PROBLEME_HEBDO*>(ProblemeHebdoVoid);
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-    XPRSgetintattrib(prob, XPRS_CURRENTNODE, &node);
-    if (node != 1)
-        return;
-
-    if (ProblemeHebdo->NombreDAppelsHeuristique == 1)
-    {
-        ProblemeHebdo->NombreDAppelsHeuristique = 0;
-        return;
-    }
-
-    //Recuperer les valeurs de la relaxation
-    double* x = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    XPRSgetlpsol(prob, x, NULL, NULL, NULL);
-
-    //Les stocker dans ProblemeHebdo
-    for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++) {
-        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var];
-        if (pt != NULL)
-        {
-            *pt = x[var];
-        }
-    }
-
-    //Appeler l'heuristique accurate (remplit les tableaux de la solution à fournir au solveur)
-    OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(ProblemeHebdo);
-
-    char *bndType = (char*)MemAlloc(ProblemeHebdo->nombreDeVariablesAFixer * sizeof(char));
-    memset(bndType, 'L', ProblemeHebdo->nombreDeVariablesAFixer);
-
-    XPRSbranchobject bo = NULL;
-    XPRS_bo_create(&bo, prob, 1);
-    XPRS_bo_addbranches(bo, 1);
-    XPRS_bo_addbounds(bo,
-                      0,
-                      ProblemeHebdo->nombreDeVariablesAFixer,
-                      bndType, 
-                      ProblemeHebdo->colonnesAFixer,
-                      ProblemeHebdo->valeursPremiereOptimisationEtHeuristique);
-    XPRS_bo_setpriority(bo, 100);
-
-    XPRS_bo_store(bo, &var);
-/* //Ajoute la solution au problème XPRESS
-    XPRSaddmipsol(prob,
-                ProblemeHebdo->nombreDeVariablesAFixer,
-                ProblemeHebdo->valeursPremiereOptimisationEtHeuristique,
-                ProblemeHebdo->colonnesAFixer,
-                ""); */
-    ProblemeHebdo->NombreDAppelsHeuristique++;
-
-    MemFree(x);
-    MemFree(bndType);
 }
