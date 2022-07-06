@@ -157,7 +157,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
         for (uint hour = 0; hour != 8760; ++hour)
         {
-            auto month = study.calendar.hours[hour].month;
             auto dayYear = study.calendar.hours[hour].dayYear;
 
             double netdemand = 0;
