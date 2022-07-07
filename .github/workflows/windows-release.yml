@@ -8,7 +8,6 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
-jobs:
   doc_generation:
     uses: ./.github/workflows/build-userguide.yml
     with:
