@@ -167,6 +167,10 @@ jobs:
         asset_name: ${{env.ZIP_NAME}}
         asset_content_type: application/octet-stream
 
+    - name: Remove zip to free some disk space
+      shell: bash
+      run: rm _build/${{env.ZIP_NAME}}
+
     - name: NSIS Installer creation
       shell: bash
       run: |
