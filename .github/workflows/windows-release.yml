@@ -181,6 +181,13 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
+    - name: Upload NSIS logs
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: NSISOutput.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2
       with:
