@@ -203,7 +203,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                           PmaxDUnGroupeDuPalierThermique);
                     }
 
-                    //NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = (int)ceil(X);
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = (int)ceil(X);
                 }
 
                 OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(

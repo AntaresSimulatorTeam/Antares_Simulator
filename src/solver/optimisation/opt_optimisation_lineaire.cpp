@@ -83,8 +83,10 @@ OptimisationHebdo:
         PremierPdtDeLIntervalle = PdtHebdo;
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION 
+            || ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
+            OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
+                ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
