@@ -525,21 +525,26 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
+            //! Threshold to display Local Matching Rule violations
+            float thresholdDisplayViolations;
         };
         LocalMatching localMatching;
+
+        struct CurtailmentSharing
+        {
+            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
+            //! Threshold to initiate curtailment sharing rule
+            float thresholdInitiate;
+        };
+        CurtailmentSharing curtailmentSharing;
+
+        //! Select whether the intermediate result before the application of the curtailment
+        //! sharing is to be kept in the results
+        bool saveIntermediateResults;
     };
 
     AdequacyPatch adqPatch;
-
-    //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
-    Data::AdequacyPatch::AdqPatchPTO adqPatchPriceTakingOrder;
-    //! Select whether the intermediate result before the application of the curtailment sharing is
-    //! to be kept in the results
-    bool adqPatchSaveIntermediateResults;
-    //! Threshold to initiate curtailment sharing rule
-    float adqPatchThresholdInitiateCurtailmentSharingRule;
-    //! Threshold to display Local Matching Rule violations
-    float adqPatchThresholdDisplayLocalMatchingRuleViolations;
 
     //! \name Scenariio Builder - Rules
     //@{

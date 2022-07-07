@@ -236,9 +236,9 @@ void Parameters::resetSeeds()
 void Parameters::resetThresholdsAdqPatch()
 {
     // Initialize all thresholds values for adequacy patch
-    adqPatchThresholdInitiateCurtailmentSharingRule
+    adqPatch.curtailmentSharing.thresholdInitiate
       = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
-    adqPatchThresholdDisplayLocalMatchingRuleViolations
+    adqPatch.localMatching.thresholdDisplayViolations
       = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
@@ -247,8 +247,8 @@ void Parameters::resetAdqPatchParameters()
     include.adequacyPatch = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
-    adqPatchPriceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
-    adqPatchSaveIntermediateResults = false;
+    adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+    adqPatch.saveIntermediateResults = false;
     resetThresholdsAdqPatch();
 }
 
@@ -677,15 +677,15 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
     if (key == "save-intermediate-results")
-        return value.to<bool>(d.adqPatchSaveIntermediateResults);
+        return value.to<bool>(d.adqPatch.saveIntermediateResults);
     // Price taking order
     if (key == "price-taking-order")
-        return StringToPriceTakingOrder(value, d.adqPatchPriceTakingOrder);
+        return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<float>(d.adqPatchThresholdInitiateCurtailmentSharingRule);
+        return value.to<float>(d.adqPatch.curtailmentSharing.thresholdInitiate);
     if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<float>(d.adqPatchThresholdDisplayLocalMatchingRuleViolations);
+        return value.to<float>(d.adqPatch.localMatching.thresholdDisplayViolations);
 
     return false;
 }
@@ -1806,13 +1806,14 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideOutsideLinks);
-        section->add("save-intermediate-results", adqPatchSaveIntermediateResults);
-        section->add("price-taking-order", PriceTakingOrderToString(adqPatchPriceTakingOrder));
+        section->add("save-intermediate-results", adqPatch.saveIntermediateResults);
+        section->add("price-taking-order",
+                     PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
-                     adqPatchThresholdInitiateCurtailmentSharingRule);
+                     adqPatch.curtailmentSharing.thresholdInitiate);
         section->add("threshold-display-local-matching-rule-violations",
-                     adqPatchThresholdDisplayLocalMatchingRuleViolations);
+                     adqPatch.localMatching.thresholdDisplayViolations);
     }
 
     // Other preferences

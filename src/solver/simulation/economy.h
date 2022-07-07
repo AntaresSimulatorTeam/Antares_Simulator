@@ -46,7 +46,7 @@ class EconomyWeeklyOptimization
 {
 public:
     using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
-    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) = 0;
     void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
     static Ptr create(bool adqPatchEnabled);
 
@@ -58,14 +58,18 @@ class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     AdequacyPatchOptimization();
-    void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) override;
+
+    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
+    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
+    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
 };
 
 class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     NoAdequacyPatchOptimization();
-    void solve(Variable::State&, int, uint numSpace) override;
+    void solve(Variable::State&, int, uint numSpace, uint w) override;
 };
 
 class Economy
@@ -120,10 +124,6 @@ protected:
     void prepareClustersInMustRunMode(uint numSpace);
 
     void initializeState(Variable::State& state, uint numSpace);
-
-    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
-    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
 
 private:
     uint pNbWeeks;
