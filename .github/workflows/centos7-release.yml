@@ -108,6 +108,7 @@ jobs:
            cd _build
            cpack3 -G RPM
            export RPM_NAME=$(ls *.rpm)
+           echo "RPM_NAME=${RPM_NAME}" >> $GITHUB_ENV
            echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
            
     - name: .tar.gz creation
@@ -115,6 +116,7 @@ jobs:
            cd _build
            cpack3 -G TGZ
            export TGZ_NAME=$(ls *.tar.gz)
+           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
            echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
            
     - name: Upload .rpm
