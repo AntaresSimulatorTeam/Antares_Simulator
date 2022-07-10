@@ -166,8 +166,6 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
             }
         }
     }
-    logs.debug() << "Week:" << weekNb + 1 << ". Total LMR violation:" << totalLmrViolation;
-    return;
 }
 
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
