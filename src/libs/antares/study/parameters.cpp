@@ -238,7 +238,7 @@ void Parameters::resetThresholdsAdqPatch()
     // Initialize all thresholds values for adequacy patch
     adqPatch.curtailmentSharing.thresholdInitiate
       = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
-    adqPatch.localMatching.thresholdDisplayViolations
+    adqPatch.curtailmentSharing.thresholdDisplayViolations
       = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
@@ -685,7 +685,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     if (key == "threshold-initiate-curtailment-sharing-rule")
         return value.to<float>(d.adqPatch.curtailmentSharing.thresholdInitiate);
     if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<float>(d.adqPatch.localMatching.thresholdDisplayViolations);
+        return value.to<float>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
 
     return false;
 }
@@ -1813,7 +1813,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("threshold-initiate-curtailment-sharing-rule",
                      adqPatch.curtailmentSharing.thresholdInitiate);
         section->add("threshold-display-local-matching-rule-violations",
-                     adqPatch.localMatching.thresholdDisplayViolations);
+                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
     }
 
     // Other preferences

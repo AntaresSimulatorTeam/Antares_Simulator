@@ -358,7 +358,7 @@ void AdequacyPatchOptions::refresh()
               wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
-              wxString() << study.parameters.adqPatch.localMatching.thresholdDisplayViolations);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
     }
 }
 
@@ -571,9 +571,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatch.localMatching.thresholdDisplayViolations)
+                != study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations)
             {
-                study.parameters.adqPatch.localMatching.thresholdDisplayViolations = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations = newthreshold;
                 MarkTheStudyAsModified();
             }
         }

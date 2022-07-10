@@ -743,7 +743,6 @@ public:
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
-    std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
 };

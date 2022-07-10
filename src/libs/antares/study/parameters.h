@@ -525,8 +525,6 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
-            //! Threshold to display Local Matching Rule violations
-            float thresholdDisplayViolations;
         };
         LocalMatching localMatching;
 
@@ -536,6 +534,8 @@ public:
             Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
             //! Threshold to initiate curtailment sharing rule
             float thresholdInitiate;
+            //! Threshold to display Local Matching Rule violations
+            float thresholdDisplayViolations;
         };
         CurtailmentSharing curtailmentSharing;
 
