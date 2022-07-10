@@ -308,5 +308,4 @@ void HOURLY_CSR_PROBLEM::run()
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem();
-    return;
 }
