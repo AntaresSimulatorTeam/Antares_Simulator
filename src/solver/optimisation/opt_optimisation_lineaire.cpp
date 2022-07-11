@@ -83,10 +83,8 @@ OptimisationHebdo:
         PremierPdtDeLIntervalle = PdtHebdo;
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-        if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION 
-            || ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
-            OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-                ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
@@ -107,7 +105,8 @@ OptimisationHebdo:
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
 
-    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION
+        && ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
     {
         if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         {

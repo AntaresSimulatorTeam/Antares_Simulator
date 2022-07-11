@@ -95,6 +95,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
     NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
     Eps = 1.e-3;
 
+    ProblemeHebdo->nombreDeVariablesAFixer = 0;
+
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
     {
         ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
@@ -202,7 +204,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                           X,
                           PmaxDUnGroupeDuPalierThermique);
                     }
-
+                    
                     NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = (int)ceil(X);
                 }
 
@@ -724,7 +726,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
             int Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
             for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES)
                 {
                     ProblemeHebdo->valeursPremiereOptimisationEtHeuristique[ProblemeHebdo->nombreDeVariablesAFixer] 
                       = ceil(Xsolution[NumeroDeVariableDeM[Pdt]]);
@@ -761,7 +763,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         MemFree(IndicesColonnes);
         MemFree(CoefficientsDeLaMatriceDesContraintes);
     }
-    else if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+    else if (ProblemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES)
     { 
         int Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
         for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
