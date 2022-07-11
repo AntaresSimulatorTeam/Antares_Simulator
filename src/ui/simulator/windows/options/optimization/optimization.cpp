@@ -393,7 +393,7 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.adqPatch.include, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -518,7 +518,7 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = false;
             study.parameters.include.splitExportedMPS = false;
-            study.parameters.adqPatch.include = false;
+            study.parameters.adqPatch.enabled = false;
             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
             study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
@@ -571,7 +571,7 @@ void Optimization::refresh()
     // Split exported MPS
     ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
     // Adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.adqPatch.include);
+    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.adqPatch.enabled);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     ResetButtonAdequacyPatch(pBtnAdqPatchOutsideInside,

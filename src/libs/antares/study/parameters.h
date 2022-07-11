@@ -522,7 +522,7 @@ public:
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
         };
-        bool include;
+        bool enabled;
         LocalMatching localMatching;
         std::vector<std::string> excludedVariables() const;
     };

@@ -204,7 +204,7 @@ void Parameters::resetSeeds()
 
 void Parameters::resetAdqPatchParameters()
 {
-    adqPatch.include = false;
+    adqPatch.enabled = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
 }
@@ -631,7 +631,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       uint)
 {
     if (key == "include-adq-patch")
-        return value.to<bool>(d.adqPatch.include);
+        return value.to<bool>(d.adqPatch.enabled);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
@@ -1585,7 +1585,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
-    if (!adqPatch.include)
+    if (!adqPatch.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1759,7 +1759,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // Adequacy patch
     {
         auto* section = ini.addSection("adequacy patch");
-        section->add("include-adq-patch", adqPatch.include);
+        section->add("include-adq-patch", adqPatch.enabled);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
@@ -1943,7 +1943,7 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
 
 std::vector<std::string> Parameters::AdequacyPatch::excludedVariables() const
 {
-    switch (include)
+    switch (enabled)
     {
     case true:
         return {};

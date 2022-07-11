@@ -63,7 +63,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
-    if (parameters.adqPatch.include)
+    if (parameters.adqPatch.enabled)
     {
         problem.adqPatchParams
           = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
@@ -75,7 +75,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
     }
 
-    if (parameters.adqPatch.include)
+    if (parameters.adqPatch.enabled)
     {
         problem.adequacyPatchRuntimeData.initialize(study);
     }
