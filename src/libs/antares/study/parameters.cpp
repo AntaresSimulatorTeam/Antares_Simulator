@@ -202,6 +202,13 @@ void Parameters::resetSeeds()
         seed[i] = (s += increment);
 }
 
+void Parameters::resetAdqPatchParameters()
+{
+    adqPatch.include = false;
+    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+}
+
 void Parameters::reset()
 {
     // Mode
@@ -306,9 +313,6 @@ void Parameters::reset()
 
     include.exportMPS = false;
     include.splitExportedMPS = false;
-    adqPatch.include = false;
-    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
-    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -319,6 +323,9 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
+
+    // Adequacy patch
+    resetAdqPatchParameters();
 
     // Initialize all seeds
     resetSeeds();
@@ -558,12 +565,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.exportMPS);
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
-    if (key == "include-adequacypatch")
-        return value.to<bool>(d.adqPatch.include);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
-        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
-        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -623,6 +624,22 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     return false;
 }
+static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
+{
+    if (key == "include-adq-patch")
+        return value.to<bool>(d.adqPatch.include);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
@@ -1006,6 +1023,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
          {"input", &SGDIntLoadFamily_Input},
          {"output", &SGDIntLoadFamily_Output},
          {"optimization", &SGDIntLoadFamily_Optimization},
+         {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
          {"other preferences", &SGDIntLoadFamily_OtherPreferences},
          {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
          {"playlist", &SGDIntLoadFamily_Playlist},
@@ -1731,11 +1749,6 @@ void Parameters::saveToINI(IniFile& ini) const
 
         section->add("include-exportmps", include.exportMPS);
         section->add("include-split-exported-mps", include.splitExportedMPS);
-        section->add("include-adequacypatch", adqPatch.include);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
-                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
-                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1743,6 +1756,15 @@ void Parameters::saveToINI(IniFile& ini) const
                      Enum::toString(include.unfeasibleProblemBehavior));
     }
 
+    // Adequacy patch
+    {
+        auto* section = ini.addSection("adequacy patch");
+        section->add("include-adq-patch", adqPatch.include);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    }
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");

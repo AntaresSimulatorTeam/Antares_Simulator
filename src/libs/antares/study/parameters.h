@@ -138,6 +138,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all adequacy patch values
+    */
+    void resetAdqPatchParameters();
 
     /*!
     ** \brief Try to detect then fix any bad value
