@@ -101,7 +101,8 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
         hourlyCsrProblem.run();
     }
-    checkLocalMatchingRuleViolations(problemeHebdo, w);
+    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
+    logs.info() << " [adq-patch] Year:" << state.year << " Week:" << w + 1 << ". Total LMR violation:" << totalLmrViolation;
 }
 
 // No adequacy patch
