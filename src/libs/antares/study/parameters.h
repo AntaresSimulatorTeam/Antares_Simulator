@@ -462,7 +462,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -524,7 +524,7 @@ public:
         };
         bool enabled;
         LocalMatching localMatching;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
     };
 
     AdequacyPatch adqPatch;
