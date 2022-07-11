@@ -1500,7 +1500,14 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+
+    //do not display LMRViolations if not adequacyPatch 
+    if (!include.adequacyPatch)
+    {
+        excluded_vars.push_back("LMRViolations");
+    }
+
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
