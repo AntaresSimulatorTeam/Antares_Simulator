@@ -1505,7 +1505,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     //do not display LMRViolations if not adequacyPatch 
     if (!include.adequacyPatch)
     {
-        excluded_vars.push_back("LMRViolations");
+        excluded_vars.push_back("LMR VIOL."); //LMRViolations
     }
 
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
