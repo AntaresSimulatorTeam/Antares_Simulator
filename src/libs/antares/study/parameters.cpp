@@ -1904,11 +1904,13 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
 
     switch (rgModelling)
     {
+    // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        out.insert(out.end(), agg.begin(), agg.end());
-        break;
-    case rgClusters:
         out.insert(out.end(), ren.begin(), ren.end());
+        break;
+    // Using `renewable clusters` renewable generation, exclude `aggregated` variables
+    case rgClusters:
+        out.insert(out.end(), agg.begin(), agg.end());
         break;
     default:
         break;
