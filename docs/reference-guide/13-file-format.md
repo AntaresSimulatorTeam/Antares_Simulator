@@ -5,8 +5,8 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ### Input
 In file settings/generaldata.ini, add section `adequacy patch`, with keys
 
-* `include-adq-patch` [bool]. Default value = `false`.
-* `set-to-null-ntc-from-physical-out-to-physical-in-for-first-step` [bool]. Default value = `true`.
+* `include-adq-patch` [bool]. Default value = `false`
+* `set-to-null-ntc-from-physical-out-to-physical-in-for-first-step` [bool]. Default value = `true`
 * `set-to-null-ntc-between-physical-out-for-first-step` [bool]. Default value = `true`
 
 In existing section `optimization`, add key `include-split-exported-mps` [bool]. Default value = `false`
@@ -32,3 +32,6 @@ NOTE : period can be any of the following
 * For each link, the first two columns of file input/links/area 1/area 2.txt have been moved to input/links/area 1/capacities/area 2_direct.txt and input/links/area 1/capacities/area 2_indirect.txt respectively. Note that these two files may contain more than one column, but must contain the same number of columns. The 6 remaining columns have been moved to area input/links/area 1/area 2_parameters.txt.
 
 * In file settings/generaldata.ini, add `hydro-debug` [bool] key to existing section `output`. Default value is `false`.
+
+### Output
+If parameter `hydro-debug` is enabled, a **debug** directory is created in the output folder.
