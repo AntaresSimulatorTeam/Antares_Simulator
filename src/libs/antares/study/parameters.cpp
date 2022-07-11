@@ -103,11 +103,6 @@ static bool ConvertCStrToHydroAllocationClamping(const AnyString& text,
         out = Parameters::HydroAllocationClamping::hourly;
         return true;
     }
-    if (s == "daily")
-    {
-        out = Parameters::HydroAllocationClamping::daily;
-        return true;
-    }
 
     logs.warning() << "parameters: invalid hydro allocation clamping. Got '" << text << "'";
     out = Parameters::HydroAllocationClamping::none;
@@ -120,8 +115,6 @@ static const char* HydroAllocationClampingToCString(const Parameters::HydroAlloc
     {
     case Parameters::HydroAllocationClamping::hourly:
         return "hourly";
-    case Parameters::HydroAllocationClamping::daily:
-        return "daily";
     default:
         return "none";
     }

@@ -196,14 +196,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                    && "hydro management: NaN detected when calculating the net demand");
             data.DLN[dayYear] += netdemand;
         }
-        if (parameters.hydroAllocationClamping
-            == Antares::Data::Parameters::HydroAllocationClamping::daily)
-        {
-            for (uint day = 0; day != 365; ++day)
-            {
-                data.DLN[day] = Math::Max(0, data.DLN[day]);
-            }
-        }
     });
 }
 

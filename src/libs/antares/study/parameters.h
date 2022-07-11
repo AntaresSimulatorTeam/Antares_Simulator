@@ -558,8 +558,7 @@ public:
     enum class HydroAllocationClamping
     {
         none,
-        hourly,
-        daily
+        hourly
     };
     HydroAllocationClamping hydroAllocationClamping = HydroAllocationClamping::none;
 
