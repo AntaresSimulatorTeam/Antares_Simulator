@@ -105,7 +105,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
-void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
 
 /*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
