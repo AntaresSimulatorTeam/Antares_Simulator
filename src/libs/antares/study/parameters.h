@@ -419,9 +419,6 @@ public:
         //! if MPS files are exported, a flag to split them
         bool splitExportedMPS;
 
-        //! a flag to use Adequacy patch
-        bool adequacyPatch;
-
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -521,7 +518,9 @@ public:
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
         };
+        bool include;
         LocalMatching localMatching;
+        std::vector<std::string> excludedVariables() const;
     };
 
     AdequacyPatch adqPatch;

@@ -306,7 +306,7 @@ void Parameters::reset()
 
     include.exportMPS = false;
     include.splitExportedMPS = false;
-    include.adequacyPatch = false;
+    adqPatch.include = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     include.exportStructure = false;
@@ -559,7 +559,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-adequacypatch")
-        return value.to<bool>(d.include.adequacyPatch);
+        return value.to<bool>(d.adqPatch.include);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
@@ -1432,7 +1432,13 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    const auto excluded_vars_rg = renewableGeneration.excludedVariables();
+    const auto excluded_vars_adq_patch = adqPatch.excludedVariables();
+    std::vector<std::string> excluded_vars;
+    excluded_vars.insert(excluded_vars.end(), excluded_vars_rg.begin(),
+                         excluded_vars_rg.end());
+    excluded_vars.insert(excluded_vars.end(), excluded_vars_adq_patch.begin(),
+                         excluded_vars_adq_patch.end());
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1562,7 +1568,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
-    if (!include.adequacyPatch)
+    if (!adqPatch.include)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1726,7 +1732,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
         section->add("include-exportmps", include.exportMPS);
         section->add("include-split-exported-mps", include.splitExportedMPS);
-        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("include-adequacypatch", adqPatch.include);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
@@ -1912,6 +1918,16 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
         return {};
     }
     return {};
+}
+
+std::vector<std::string> Parameters::AdequacyPatch::excludedVariables() const
+{
+  switch(include) {
+  case true:
+    return {};
+  default:
+    return {"dens"};
+  }
 }
 
 bool Parameters::haveToImport(int tsKind) const
