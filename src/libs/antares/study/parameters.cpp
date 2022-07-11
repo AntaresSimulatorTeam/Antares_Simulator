@@ -1435,10 +1435,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     const auto excluded_vars_rg = renewableGeneration.excludedVariables();
     const auto excluded_vars_adq_patch = adqPatch.excludedVariables();
     std::vector<std::string> excluded_vars;
-    excluded_vars.insert(excluded_vars.end(), excluded_vars_rg.begin(),
-                         excluded_vars_rg.end());
-    excluded_vars.insert(excluded_vars.end(), excluded_vars_adq_patch.begin(),
-                         excluded_vars_adq_patch.end());
+    excluded_vars.insert(excluded_vars.end(), excluded_vars_rg.begin(), excluded_vars_rg.end());
+    excluded_vars.insert(
+      excluded_vars.end(), excluded_vars_adq_patch.begin(), excluded_vars_adq_patch.end());
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1922,12 +1921,13 @@ std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() co
 
 std::vector<std::string> Parameters::AdequacyPatch::excludedVariables() const
 {
-  switch(include) {
-  case true:
-    return {};
-  default:
-    return {"dens"};
-  }
+    switch (include)
+    {
+    case true:
+        return {};
+    default:
+        return {"dens"};
+    }
 }
 
 bool Parameters::haveToImport(int tsKind) const
