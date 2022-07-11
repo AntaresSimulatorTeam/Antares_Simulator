@@ -186,15 +186,18 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                 });
             }
 
+            assert(!Math::NaN(netdemand)
+                   && "hydro management: NaN detected when calculating the net demand");
+
             if (parameters.hydroAllocationClamping
                 == Antares::Data::Parameters::HydroAllocationClamping::hourly)
             {
-                netdemand = Math::Max(0, netdemand);
+                data.DLN[dayYear] += Math::Max(0, netdemand);
             }
-
-            assert(!Math::NaN(netdemand)
-                   && "hydro management: NaN detected when calculating the net demand");
-            data.DLN[dayYear] += netdemand;
+            else
+            {
+                data.DLN[dayYear] += netdemand;
+            }
         }
     });
 }
