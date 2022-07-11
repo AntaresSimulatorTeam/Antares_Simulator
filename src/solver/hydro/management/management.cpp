@@ -189,8 +189,9 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             assert(!Math::NaN(netdemand)
                    && "hydro management: NaN detected when calculating the net demand");
 
-            if (parameters.hydroAllocationClamping
-                == Antares::Data::Parameters::HydroAllocationClamping::hourly)
+            if (parameters.hydroAllocationHandleNegativeDemand
+                == Antares::Data::Parameters::HydroAllocationHandleNegativeDemand::
+                  hourlyCappingNetDemand)
             {
                 data.DLN[dayYear] += Math::Max(0, netdemand);
             }
@@ -228,8 +229,9 @@ void HydroManagement::prepareEffectiveDemand(uint numSpace)
             assert(not Math::NaN(data.MLE[realmonth]) && "nan value detected for DLE");
         }
 
-        if (parameters.hydroAllocationClamping
-            == Antares::Data::Parameters::HydroAllocationClamping::none)
+        if (parameters.hydroAllocationHandleNegativeDemand
+            == Antares::Data::Parameters::HydroAllocationHandleNegativeDemand::
+              dailyMonthlyIncreaseEffectiveDemandByMin)
         {
             auto minimumYear = std::numeric_limits<double>::infinity();
             auto dayYear = 0u;

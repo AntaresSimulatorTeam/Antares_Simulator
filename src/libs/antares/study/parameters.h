@@ -555,12 +555,13 @@ public:
     OrtoolsSolver ortoolsEnumUsed;
     //@}
 
-    enum class HydroAllocationClamping
+    enum class HydroAllocationHandleNegativeDemand
     {
-        none,
-        hourly
+        dailyMonthlyIncreaseEffectiveDemandByMin,
+        hourlyCappingNetDemand
     };
-    HydroAllocationClamping hydroAllocationClamping = HydroAllocationClamping::none;
+    HydroAllocationHandleNegativeDemand hydroAllocationHandleNegativeDemand
+      = HydroAllocationHandleNegativeDemand::dailyMonthlyIncreaseEffectiveDemandByMin;
 
 private:
     //! Load data from an INI file

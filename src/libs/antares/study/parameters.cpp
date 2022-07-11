@@ -87,36 +87,40 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
     return true;
 }
 
-static bool ConvertCStrToHydroAllocationClamping(const AnyString& text,
-                                                 Parameters::HydroAllocationClamping& out)
+static bool ConvertCStrToHydroAllocationHandleNegativeDemand(
+  const AnyString& text,
+  Parameters::HydroAllocationHandleNegativeDemand& out)
 {
     CString<24, false> s = text;
     s.trim();
     s.toLower();
-    if (s == "none")
+    if (s == "increase-effective-demand")
     {
-        out = Parameters::HydroAllocationClamping::none;
+        out = Parameters::HydroAllocationHandleNegativeDemand::
+          dailyMonthlyIncreaseEffectiveDemandByMin;
         return true;
     }
-    if (s == "hourly")
+    if (s == "cap-net-demand")
     {
-        out = Parameters::HydroAllocationClamping::hourly;
+        out = Parameters::HydroAllocationHandleNegativeDemand::hourlyCappingNetDemand;
         return true;
     }
 
-    logs.warning() << "parameters: invalid hydro allocation clamping. Got '" << text << "'";
-    out = Parameters::HydroAllocationClamping::none;
+    logs.warning() << "parameters: invalid hydro negative demand handling. Got '" << text << "'";
+    // Use default value
+    out = Parameters::HydroAllocationHandleNegativeDemand::dailyMonthlyIncreaseEffectiveDemandByMin;
     return false;
 }
 
-static const char* HydroAllocationClampingToCString(const Parameters::HydroAllocationClamping& in)
+static const char* HydroAllocationHandleNegativeDemandToCString(
+  const Parameters::HydroAllocationHandleNegativeDemand& in)
 {
     switch (in)
     {
-    case Parameters::HydroAllocationClamping::hourly:
-        return "hourly";
+    case Parameters::HydroAllocationHandleNegativeDemand::hourlyCappingNetDemand:
+        return "cap-net-demand";
     default:
-        return "none";
+        return "increase-effective-demand";
     }
 }
 
@@ -353,7 +357,8 @@ void Parameters::reset()
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
 
-    hydroAllocationClamping = HydroAllocationClamping::none;
+    hydroAllocationHandleNegativeDemand
+      = HydroAllocationHandleNegativeDemand::dailyMonthlyIncreaseEffectiveDemandByMin;
 
     // Initialize all seeds
     resetSeeds();
@@ -797,8 +802,9 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
         return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
-    if (key == "hydro-allocation-clamping")
-        return ConvertCStrToHydroAllocationClamping(value, d.hydroAllocationClamping);
+    if (key == "handle-negative-demand")
+        return ConvertCStrToHydroAllocationHandleNegativeDemand(
+          value, d.hydroAllocationHandleNegativeDemand);
     return false;
 }
 static bool SGDIntLoadFamily_Playlist(Parameters& d,
@@ -1802,10 +1808,12 @@ void Parameters::saveToINI(IniFile& ini) const
           section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
         // Adequacy Block size (adequacy draft)
         section->add("adequacy-block-size", adequacyBlockSize);
-        if (hydroAllocationClamping != HydroAllocationClamping::none)
+        if (hydroAllocationHandleNegativeDemand
+            != HydroAllocationHandleNegativeDemand::dailyMonthlyIncreaseEffectiveDemandByMin)
         {
-            section->add("hydro-allocation-clamping",
-                         HydroAllocationClampingToCString(hydroAllocationClamping));
+            section->add(
+              "handle-negative-demand",
+              HydroAllocationHandleNegativeDemandToCString(hydroAllocationHandleNegativeDemand));
         }
     }
 
