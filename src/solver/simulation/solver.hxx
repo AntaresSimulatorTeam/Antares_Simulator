@@ -232,11 +232,14 @@ private:
             if (yearByYear)
             {
                 Benchmarking::Timer timer("Year-by-year export", "yby_export", false, pBenchmarkingContentHandler);
+                Benchmarking::SimpleTimer simple_timer; // gp : draft
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
                 timer.stop();
+                simple_timer.stop(); // gp : draft
+                pDurationCollector->addDuration("yby_export", simple_timer.get_duration()); // gp : draft
             }
         }
         else
