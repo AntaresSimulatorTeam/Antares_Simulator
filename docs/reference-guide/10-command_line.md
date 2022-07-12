@@ -50,8 +50,9 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-p, --pid=VALUE | Specify the file where to write the process ID |
 |-v, --version | Print the version of the solver and exit |
 |-h, --help | Display this help and exit |
-|--use-ortools --ortools-solver= Sirius | Use the standard Antares solver through the OR-Tools modelling library |
-|--use-ortools --ortools-solver= Coin | Use the Coin solver through the OR-Tools modelling library |
+|--list-solvers | Display a list of LP solvers available through OR-Tools and exit |
+|--use-ortools --ortools-solver=Sirius | Use the standard Antares solver through the OR-Tools modelling library |
+|--use-ortools --ortools-solver=Coin | Use the Coin solver through the OR-Tools modelling library |
 
 **antares-8.3-study-updater**
 
