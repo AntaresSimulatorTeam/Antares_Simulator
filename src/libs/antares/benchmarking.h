@@ -28,8 +28,6 @@
 #define __ANTARES_LIBS_BENCHMARKING_H__
 
 #include "benchmarking/timer.h"
-#include "benchmarking/content_handler.h"
-#include "benchmarking/csv_writer.h"
 #include "benchmarking/info_collectors.h"
 #include "benchmarking/file_writer.h"
 

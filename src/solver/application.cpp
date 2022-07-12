@@ -419,7 +419,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    Benchmarking::SimpleTimer timer;
+    Benchmarking::Timer timer;
 
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {

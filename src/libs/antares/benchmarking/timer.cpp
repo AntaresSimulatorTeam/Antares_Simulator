@@ -25,11 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
 #include "timer.h"
-#include "content_handler.h"
-#include "../logs.h"
-#include <math.h>
 #include <yuni/core/system/gettimeofday.h>
 
 using namespace Yuni;
@@ -43,44 +39,17 @@ static inline sint64 MilliSecTimer()
 
 namespace Benchmarking
 {
-void Timer::stop()
-{
-    const sint64 delta_ms = MilliSecTimer() - pStartTime;
-    if (verbose)
-    {
-        Antares::logs.info() << logText << " done (" << delta_ms << " ms)";
-    }
-    if (pContentHandler)
-    {
-        pContentHandler->append(fileText, delta_ms);
-    }
-}
-
-Timer::Timer(const AnyString& logText,
-             const AnyString& fileText,
-             bool verbose,
-             ContentHandler* handler) :
-  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(handler)
-{
-    pStartTime = MilliSecTimer();
-}
-
-
-
-// ================================
-// gp : draft : simple timer
-// ================================
-SimpleTimer::SimpleTimer()
+Timer::Timer()
 {
     startTime_ = MilliSecTimer();
 }
 
-void SimpleTimer::stop()
+void Timer::stop()
 {
     duration_ = MilliSecTimer() - startTime_;
 }
 
-int64_t SimpleTimer::get_duration()
+int64_t Timer::get_duration()
 {
     return duration_;
 }

@@ -44,7 +44,7 @@ void Application::runSimulationInAdequacyDraftMode()
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
         pDurationCollector.addDuration("synthesis_export", timer.get_duration());

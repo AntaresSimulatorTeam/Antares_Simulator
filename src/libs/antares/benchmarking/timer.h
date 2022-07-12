@@ -28,51 +28,13 @@
 #define __ANTARES_LIBS_TIME_ELAPSED__TIME_ELAPSED_H__
 
 #include <yuni/yuni.h>
-#include <yuni/string.h>
 
 namespace Benchmarking
 {
-class ContentHandler;
-
-class Timer final
+class Timer
 {
 public:
-    //! Default constructor
-    Timer() = delete;
-
-    //! Copy constructor
-    Timer(const Timer& rhs) = delete;
-    Timer& operator=(const Timer& rhs) = delete;
-
-    //! Constructor with a default text
-    explicit Timer(const AnyString& logText,
-                   const AnyString& fileText = "",
-                   bool verbose = true,
-                   ContentHandler* handler = nullptr);
-
-    void stop();
-
-private:
-    //! The text to display at the end
-    Yuni::ShortString256 fileText;
-    // Aggregation
-    Yuni::ShortString256 logText;
-    //! timestamp when the timer started
-    yint64 pStartTime;
-    //! Display text on destruction
-    bool verbose;
-    //! Aggregation into a single file for automation
-    ContentHandler* pContentHandler;
-}; // class Timer
-
-
-// ================================
-// gp : draft : simple timer
-// ================================
-class SimpleTimer
-{
-public:
-    SimpleTimer();
+    Timer();
     void stop();
     int64_t get_duration();
 

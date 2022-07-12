@@ -169,7 +169,7 @@ private:
             // 4 - Hydraulic ventilation
             if (not study.parameters.adequacyDraft())
             {
-                Benchmarking::SimpleTimer timer;
+                Benchmarking::Timer timer;
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
                 timer.stop();
                 pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
@@ -226,7 +226,7 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                Benchmarking::SimpleTimer timer;
+                Benchmarking::Timer timer;
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
@@ -376,7 +376,7 @@ void ISimulation<Impl>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            Benchmarking::SimpleTimer timer;
+            Benchmarking::Timer timer;
             loopThroughYears(0, finalYear, state);
             timer.stop();
             pDurationCollector->addDuration("mc_years", timer.get_duration());
@@ -387,7 +387,7 @@ void ISimulation<Impl>::run()
 
         // Post operations
         {
-            Benchmarking::SimpleTimer timer;
+            Benchmarking::Timer timer;
             ImplementationType::simulationEnd();
             timer.stop();
             pDurationCollector->addDuration("post_processing", timer.get_duration());
@@ -1039,7 +1039,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
         timer.stop();
         pDurationCollector->addDuration("tsgen_load", timer.get_duration());
@@ -1047,7 +1047,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
         timer.stop();
         pDurationCollector->addDuration("tsgen_solar", timer.get_duration());
@@ -1055,7 +1055,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
         timer.stop();
         pDurationCollector->addDuration("tsgen_wind", timer.get_duration());
@@ -1063,7 +1063,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
         timer.stop();
         pDurationCollector->addDuration("tsgen_hydro", timer.get_duration());
@@ -1071,7 +1071,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
-        Benchmarking::SimpleTimer timer;
+        Benchmarking::Timer timer;
         GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
         timer.stop();
         pDurationCollector->addDuration("tsgen_thermal", timer.get_duration());

@@ -336,12 +336,6 @@ set(SRC_BENCHMARKING
 	benchmarking.h
 	benchmarking/timer.h
 	benchmarking/timer.cpp
-    benchmarking/content_handler.h
-    benchmarking/content_handler.cpp
-    benchmarking/timeinfo.h
-    benchmarking/i_writer.h
-    benchmarking/csv_writer.h
-    benchmarking/csv_writer.cpp
     benchmarking/info_collectors.h
     benchmarking/info_collectors.cpp
 	benchmarking/file_content.h
