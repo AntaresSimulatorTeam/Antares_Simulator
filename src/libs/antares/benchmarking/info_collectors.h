@@ -80,6 +80,10 @@ public:
 private:
     int64_t total_duration_ = 0;
     map<string, vector<int64_t>> duration_items_;
+    
+    // Durations can be added in a context of multi-threading, so we need to protect
+    // these additions from thread concurrency
+    Yuni::Mutex mutex_;
 };
 
 

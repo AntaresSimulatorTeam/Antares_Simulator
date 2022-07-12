@@ -70,7 +70,8 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::ContentHandler* benchmarkingContentHandler) :
+            Benchmarking::ContentHandler* benchmarkingContentHandler,
+            Benchmarking::DurationCollector* durationCollector) :
      simulationObj(pSimulationObj),
      y(pY),
      yearFailed(pYearFailed),
@@ -82,7 +83,8 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pBenchmarkingContentHandler(benchmarkingContentHandler)
+     pBenchmarkingContentHandler(benchmarkingContentHandler),
+     pDurationCollector(durationCollector)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
     }
@@ -101,6 +103,7 @@ private:
     bool yearByYear;
     bool hydroHotStart;
     Benchmarking::ContentHandler* pBenchmarkingContentHandler;
+    Benchmarking::DurationCollector* pDurationCollector;
 
 private:
     /*
@@ -169,9 +172,12 @@ private:
             // 4 - Hydraulic ventilation
             if (not study.parameters.adequacyDraft())
             {
-                Benchmarking::Timer time(
-                  "Hydraulic ventilation", "hydro_ventilation", true, pBenchmarkingContentHandler);
+                // gp : it seems that the Timer stop is missing.
+                Benchmarking::Timer time("Hydraulic ventilation", "hydro_ventilation", true, pBenchmarkingContentHandler);
+                Benchmarking::SimpleTimer simple_timer; // gp : draft
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+                simple_timer.stop(); // gp : draft
+                pDurationCollector->addDuration("hydro_ventilation", simple_timer.get_duration()); // gp : draft
             }
 
             // Updating the state
@@ -1613,7 +1619,8 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    study,
                                                    state,
                                                    pYearByYear,
-                                                   pBenchmarkingContentHandler));
+                                                   pBenchmarkingContentHandler,
+                                                   pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 

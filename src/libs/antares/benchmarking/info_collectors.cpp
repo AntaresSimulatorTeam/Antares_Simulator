@@ -151,8 +151,10 @@ namespace Benchmarking
 
 	void DurationCollector::addDuration(std::string name, int64_t duration)
 	{
+		mutex_.lock();
 		duration_items_[name].push_back(duration);
 		total_duration_ += duration;
+		mutex_.unlock();
 	}
 
 }
