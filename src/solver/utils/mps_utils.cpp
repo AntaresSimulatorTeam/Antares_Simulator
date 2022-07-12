@@ -16,17 +16,20 @@ using namespace Antares::Data;
 
 constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
-void check(int ret)
+static inline void check(int ret, const char* func, size_t line)
 {
     if (ret < 0)
+    {
+        logs.error() << "MPS Writer - write failed in function " << func << " at line " << line;
         AntaresSolverEmergencyShutdown(2);
+    }
 }
 
 static void printHeader(FILE* Flot, int NombreDeVariables, int NombreDeContraintes)
 {
-    check(fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables));
-    check(fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes));
-    check(fprintf(Flot, "NAME          Pb Solve\n"));
+    check(fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables), __func__, __LINE__);
+    check(fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes), __func__, __LINE__);
+    check(fprintf(Flot, "NAME          Pb Solve\n"), __func__, __LINE__);
 }
 
 static void printColumnsObjective(FILE* Flot,
@@ -40,13 +43,13 @@ static void printColumnsObjective(FILE* Flot,
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
     int il;
 
-    check(fprintf(Flot, "COLUMNS\n"));
+    check(fprintf(Flot, "COLUMNS\n"), __func__, __LINE__);
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
         if (CoutLineaire && CoutLineaire[Var] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
-            check(fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer));
+            check(fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer), __func__, __LINE__);
         }
 
         il = Cdeb[Var];
@@ -56,7 +59,9 @@ static void printColumnsObjective(FILE* Flot,
                      OPT_APPEL_SOLVEUR_BUFFER_SIZE,
                      "%-.10lf",
                      CoefficientsDeLaMatriceDesContraintes[il]);
-            check(fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer));
+            check(fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer),
+                  __func__,
+                  __LINE__);
             il = Csui[il];
         }
     }
@@ -70,7 +75,7 @@ static void printBounds(FILE* Flot,
 {
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    check(fprintf(Flot, "BOUNDS\n"));
+    check(fprintf(Flot, "BOUNDS\n"), __func__, __LINE__);
 
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
@@ -78,7 +83,7 @@ static void printBounds(FILE* Flot,
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
 
-            check(fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer));
+            check(fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer), __func__, __LINE__);
             continue;
         }
 
@@ -87,11 +92,11 @@ static void printBounds(FILE* Flot,
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                check(fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer));
+                check(fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer), __func__, __LINE__);
             }
 
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-            check(fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer));
+            check(fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer), __func__, __LINE__);
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
@@ -99,23 +104,23 @@ static void printBounds(FILE* Flot,
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                check(fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer));
+                check(fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer), __func__, __LINE__);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
         {
-            check(fprintf(Flot, " MI BNDVALUE  C%07d\n", Var));
+            check(fprintf(Flot, " MI BNDVALUE  C%07d\n", Var), __func__, __LINE__);
             if (Xmax[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-                check(fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer));
+                check(fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer), __func__, __LINE__);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
         {
-            check(fprintf(Flot, " FR BNDVALUE  C%07d\n", Var));
+            check(fprintf(Flot, " FR BNDVALUE  C%07d\n", Var), __func__, __LINE__);
         }
     }
 }
@@ -124,13 +129,13 @@ static void printRHS(FILE* Flot, int NombreDeContraintes, const double* SecondMe
 {
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    check(fprintf(Flot, "RHS\n"));
+    check(fprintf(Flot, "RHS\n"), __func__, __LINE__);
     for (int Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (SecondMembre[Cnt] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
-            check(fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer));
+            check(fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer), __func__, __LINE__);
         }
     }
 }
@@ -215,22 +220,22 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    check(fprintf(Flot, "ROWS\n"));
-    check(fprintf(Flot, " N  OBJECTIF\n"));
+    check(fprintf(Flot, "ROWS\n"), __func__, __LINE__);
+    check(fprintf(Flot, " N  OBJECTIF\n"), __func__, __LINE__);
 
     for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
         if (Pb->Sens[Cnt] == '=')
         {
-            check(fprintf(Flot, " E  R%07d\n", Cnt));
+            check(fprintf(Flot, " E  R%07d\n", Cnt), __func__, __LINE__);
         }
         else if (Pb->Sens[Cnt] == '<')
         {
-            check(fprintf(Flot, " L  R%07d\n", Cnt));
+            check(fprintf(Flot, " L  R%07d\n", Cnt), __func__, __LINE__);
         }
         else if (Pb->Sens[Cnt] == '>')
         {
-            check(fprintf(Flot, " G  R%07d\n", Cnt));
+            check(fprintf(Flot, " G  R%07d\n", Cnt), __func__, __LINE__);
         }
         else
         {
@@ -247,7 +252,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
                           Csui,
                           nullptr);
 
-    check(fprintf(Flot, "ENDATA\n"));
+    check(fprintf(Flot, "ENDATA\n"), __func__, __LINE__);
 
     free(Cdeb);
     free(NumeroDeContrainte);
@@ -271,13 +276,13 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    check(fprintf(Flot, "COLUMNS\n"));
+    check(fprintf(Flot, "COLUMNS\n"), __func__, __LINE__);
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
     {
         if (Pb->CoutLineaire[Var] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", Pb->CoutLineaire[Var]);
-            check(fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer));
+            check(fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer), __func__, __LINE__);
         }
     }
 
@@ -285,7 +290,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     printBounds(Flot, Pb->NombreDeVariables, Pb->TypeDeVariable, Pb->Xmin, Pb->Xmax);
 
-    check(fprintf(Flot, "ENDATA\n"));
+    check(fprintf(Flot, "ENDATA\n"), __func__, __LINE__);
 
     fclose(Flot);
 }
@@ -398,22 +403,22 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 
     printHeader(Flot, NombreDeVariables, NombreDeContraintes);
 
-    check(fprintf(Flot, "ROWS\n"));
-    check(fprintf(Flot, " N  OBJECTIF\n"));
+    check(fprintf(Flot, "ROWS\n"), __func__, __LINE__);
+    check(fprintf(Flot, " N  OBJECTIF\n"), __func__, __LINE__);
 
     for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (Sens[Cnt] == '=')
         {
-            check(fprintf(Flot, " E  R%07d\n", Cnt));
+            check(fprintf(Flot, " E  R%07d\n", Cnt), __func__, __LINE__);
         }
         else if (Sens[Cnt] == '<')
         {
-            check(fprintf(Flot, " L  R%07d\n", Cnt));
+            check(fprintf(Flot, " L  R%07d\n", Cnt), __func__, __LINE__);
         }
         else if (Sens[Cnt] == '>')
         {
-            check(fprintf(Flot, " G  R%07d\n", Cnt));
+            check(fprintf(Flot, " G  R%07d\n", Cnt), __func__, __LINE__);
         }
         else
         {
@@ -435,7 +440,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     printBounds(
       Flot, Probleme->NombreDeVariables, Probleme->TypeDeVariable, Probleme->Xmin, Probleme->Xmax);
 
-    check(fprintf(Flot, "ENDATA\n"));
+    check(fprintf(Flot, "ENDATA\n"), __func__, __LINE__);
 
     free(Cdeb);
     free(NumeroDeContrainte);
