@@ -70,7 +70,6 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::ContentHandler* benchmarkingContentHandler,
             Benchmarking::DurationCollector* durationCollector) :
      simulationObj(pSimulationObj),
      y(pY),
@@ -83,7 +82,6 @@ public:
      study(pStudy),
      state(pState),
      yearByYear(pYearByYear),
-     pBenchmarkingContentHandler(benchmarkingContentHandler),
      pDurationCollector(durationCollector)
     {
         hydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
@@ -102,7 +100,6 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    Benchmarking::ContentHandler* pBenchmarkingContentHandler;
     Benchmarking::DurationCollector* pDurationCollector;
 
 private:
@@ -172,12 +169,10 @@ private:
             // 4 - Hydraulic ventilation
             if (not study.parameters.adequacyDraft())
             {
-                // gp : it seems that the Timer stop is missing.
-                Benchmarking::Timer time("Hydraulic ventilation", "hydro_ventilation", true, pBenchmarkingContentHandler);
-                Benchmarking::SimpleTimer simple_timer; // gp : draft
+                Benchmarking::SimpleTimer timer;
                 simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
-                simple_timer.stop(); // gp : draft
-                pDurationCollector->addDuration("hydro_ventilation", simple_timer.get_duration()); // gp : draft
+                timer.stop();
+                pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
             }
 
             // Updating the state
@@ -231,15 +226,13 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                Benchmarking::Timer timer("Year-by-year export", "yby_export", false, pBenchmarkingContentHandler);
-                Benchmarking::SimpleTimer simple_timer; // gp : draft
+                Benchmarking::SimpleTimer timer;
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
                 timer.stop();
-                simple_timer.stop(); // gp : draft
-                pDurationCollector->addDuration("yby_export", simple_timer.get_duration()); // gp : draft
+                pDurationCollector->addDuration("yby_export", timer.get_duration());
             }
         }
         else
@@ -262,7 +255,6 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
-                                      Benchmarking::ContentHandler* handler,
                                       Benchmarking::DurationCollector* duration_collector) :
  ImplementationType(study),
  study(study),
@@ -273,7 +265,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
- pBenchmarkingContentHandler(handler),
  pDurationCollector(duration_collector)
 {
     // Ask to the interface to show the messages
@@ -385,12 +376,10 @@ void ISimulation<Impl>::run()
         logs.info() << " Starting the simulation";
         uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
-            Benchmarking::Timer mcTimer("MC Years", "mc_years", true, pBenchmarkingContentHandler);
-            Benchmarking::SimpleTimer simple_timer; // gp : draft
+            Benchmarking::SimpleTimer timer;
             loopThroughYears(0, finalYear, state);
-            mcTimer.stop();
-            simple_timer.stop(); // gp : draft
-            pDurationCollector->addDuration("mc_years", simple_timer.get_duration()); // gp : draft
+            timer.stop();
+            pDurationCollector->addDuration("mc_years", timer.get_duration());
         }
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
@@ -398,12 +387,10 @@ void ISimulation<Impl>::run()
 
         // Post operations
         {
-            Benchmarking::Timer postproTimer("Post-processing", "post_processing", true, pBenchmarkingContentHandler);
-            Benchmarking::SimpleTimer simple_timer; // gp : draft
+            Benchmarking::SimpleTimer timer;
             ImplementationType::simulationEnd();
-            postproTimer.stop();
-            simple_timer.stop(); // gp : draft
-            pDurationCollector->addDuration("post_processing", simple_timer.get_duration()); // gp : draft
+            timer.stop();
+            pDurationCollector->addDuration("post_processing", timer.get_duration());
         }
 
         ImplementationType::variables.simulationEnd();
@@ -1052,52 +1039,42 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
-        Benchmarking::Timer timer("TS generation for load", "tsgen_load", true, pBenchmarkingContentHandler);
-        Benchmarking::SimpleTimer simple_timer; // gp : draft
+        Benchmarking::SimpleTimer timer;
         GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
         timer.stop();
-        simple_timer.stop(); // gp : draft
-        pDurationCollector->addDuration("tsgen_load", simple_timer.get_duration()); // gp : draft
+        pDurationCollector->addDuration("tsgen_load", timer.get_duration());
     }
     // Solar
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
-        Benchmarking::Timer timer("TS generation for solar", "tsgen_solar", true, pBenchmarkingContentHandler);
-        Benchmarking::SimpleTimer simple_timer; // gp : draft
+        Benchmarking::SimpleTimer timer;
         GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
         timer.stop();
-        simple_timer.stop(); // gp : draft
-        pDurationCollector->addDuration("tsgen_solar", simple_timer.get_duration()); // gp : draft
+        pDurationCollector->addDuration("tsgen_solar", timer.get_duration());
     }
     // Wind
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
-        Benchmarking::Timer timer("TS generation for wind", "tsgen_wind", true, pBenchmarkingContentHandler);
-        Benchmarking::SimpleTimer simple_timer; // gp : draft
+        Benchmarking::SimpleTimer timer;
         GenerateTimeSeries<Data::timeSeriesWind>(study, year);
         timer.stop();
-        simple_timer.stop(); // gp : draft
-        pDurationCollector->addDuration("tsgen_wind", simple_timer.get_duration()); // gp : draft
+        pDurationCollector->addDuration("tsgen_wind", timer.get_duration());
     }
     // Hydro
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
-        Benchmarking::Timer timer("TS generation for hydro", "tsgen_hydro", true, pBenchmarkingContentHandler);
-        Benchmarking::SimpleTimer simple_timer; // gp : draft
+        Benchmarking::SimpleTimer timer;
         GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
         timer.stop();
-        simple_timer.stop(); // gp : draft
-        pDurationCollector->addDuration("tsgen_hydro", simple_timer.get_duration()); // gp : draft
+        pDurationCollector->addDuration("tsgen_hydro", timer.get_duration());
     }
     // Thermal
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
-        Benchmarking::Timer timer("TS generation for thermal", "tsgen_thermal", true, pBenchmarkingContentHandler);
-        Benchmarking::SimpleTimer simple_timer; // gp : draft
+        Benchmarking::SimpleTimer timer;
         GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
         timer.stop();
-        simple_timer.stop(); // gp : draft
-        pDurationCollector->addDuration("tsgen_thermal", simple_timer.get_duration()); // gp : draft
+        pDurationCollector->addDuration("tsgen_thermal", timer.get_duration());
     }
 }
 
@@ -1637,7 +1614,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                                    study,
                                                    state,
                                                    pYearByYear,
-                                                   pBenchmarkingContentHandler,
                                                    pDurationCollector));
 
         } // End loop over years of the current set of parallel years

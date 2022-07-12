@@ -67,8 +67,7 @@ public:
     ** \brief Constructor (with a given study)
     */
     ISimulation(Data::Study& study, 
-                const ::Settings& settings, 
-                Benchmarking::ContentHandler* handler = nullptr, 
+                const ::Settings& settings,
                 Benchmarking::DurationCollector* duration_collector = nullptr);
     //! Destructor
     ~ISimulation();
@@ -175,9 +174,8 @@ private:
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualCostsStatistics;
-
-    //! Aggregate execution times into a single file (optional)
-    Benchmarking::ContentHandler* pBenchmarkingContentHandler;
+    
+    // Collecting durations inside the simulation
     Benchmarking::DurationCollector* pDurationCollector;
 
 }; // class ISimulation

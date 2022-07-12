@@ -89,8 +89,7 @@ private:
     char** pArgv;
 
     // Benchmarking
-    Benchmarking::ContentHandler pBenchmarkingContentHandler;
-    Benchmarking::Timer pTotalTimer;
+    Benchmarking::SimpleTimer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application

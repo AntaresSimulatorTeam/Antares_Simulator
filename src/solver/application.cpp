@@ -172,7 +172,7 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application() : pTotalTimer("Simulation", "total", true, &pBenchmarkingContentHandler)
+Application::Application()
 {
     resetProcessPriority();
 }
@@ -419,19 +419,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    Benchmarking::Timer loadTimer("Study loading", "study_loading", true, &pBenchmarkingContentHandler);
-
-    Benchmarking::SimpleTimer simple_timer; // gp : draft
+    Benchmarking::SimpleTimer timer;
 
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
-    loadTimer.stop();
 
-    simple_timer.stop(); // gp : draft
-    pDurationCollector.addDuration("study_loading", simple_timer.get_duration()); // gp : draft
+    timer.stop();
+    pDurationCollector.addDuration("study_loading", timer.get_duration());
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -533,22 +530,17 @@ void Application::writeElapsedTime()
     if (!pStudy)
         return;
 
+    // Measure of total simiulation duration
     pTotalTimer.stop();
-    pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    Benchmarking::CSVWriter writer(pStudy->buffer, &pBenchmarkingContentHandler);
-    // Write time data
-    writer.flush();
+    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-
-    // ===========================================
-    // gp : draft part
-    // ===========================================
+    
     Benchmarking::FileContent file_content;
     pDurationCollector.toFileContent(file_content);
 
     // Flush previous info into a record file
     Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement_draft.txt";
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
     Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
     file_csv_writer.flush();
 
