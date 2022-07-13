@@ -102,7 +102,7 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-    - name: Run short-tests
+    - name: Run valid-hydro
       continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
@@ -110,7 +110,7 @@ jobs:
         batch-name: valid-hydro
         os: ${{ matrix.test-platform }}
 
-    - name: Run short-tests
+    - name: Run valid-hydroBind
       continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
@@ -118,13 +118,30 @@ jobs:
         batch-name: valid-hydroBind
         os: ${{ matrix.test-platform }}
 
-    - name: Run short-tests
+    - name: Run valid-hydroPricing
       continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-hydroPricing
         os: ${{ matrix.test-platform }}
+
+    - name: Run valid-parallel
+      continue-on-error: true
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-parallel
+        os: ${{ matrix.test-platform }}
+
+    - name: Run valid-filter-outputs
+      continue-on-error: true
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-filter-outputs
+        os: ${{ matrix.test-platform }}
+
 
     - name: Installer .deb creation
       run: |
