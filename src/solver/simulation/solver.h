@@ -68,7 +68,7 @@ public:
     */
     ISimulation(Data::Study& study, 
                 const ::Settings& settings,
-                Benchmarking::DurationCollector* duration_collector = nullptr);
+                Benchmarking::IDurationCollector* duration_collector);
     //! Destructor
     ~ISimulation();
     //@}
@@ -176,7 +176,7 @@ private:
     annualCostsStatistics pAnnualCostsStatistics;
     
     // Collecting durations inside the simulation
-    Benchmarking::DurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector* pDurationCollector;
 
 }; // class ISimulation
 

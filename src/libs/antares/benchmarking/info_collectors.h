@@ -3,6 +3,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <mutex>
 
 #include <antares/study.h>
 #include "file_content.h"
@@ -67,20 +68,35 @@ private:
 };
 
 
-class DurationCollector
+
+class IDurationCollector
+{
+public:
+    virtual void addDuration(std::string name, int64_t duration) = 0;
+};
+
+class NullDurationCollector : public IDurationCollector
+{
+public:
+    NullDurationCollector() = default;
+    void addDuration(std::string name, int64_t duration) override { /* Do nothing */ }
+};
+
+class DurationCollector : public IDurationCollector
 {
 public:
     DurationCollector() = default;
 
     void toFileContent(FileContent& file_content);
-    void addDuration(std::string name, int64_t duration);
+    void addDuration(std::string name, int64_t duration) override;
 
 private:
     map<string, vector<int64_t>> duration_items_;
-    
+
     // Durations can be added in a context of multi-threading, so we need to protect
     // these additions from thread concurrency
-    Yuni::Mutex mutex_;
+    // Yuni::Mutex mutex_;
+    std::mutex mutex_;
 };
 
 

@@ -2,7 +2,6 @@
 #include <antares/exception/LoadingError.hpp>
 #include <antares/config.h>
 #include "antares/study/area/area.h"
-#include <algorithm>
 
 using namespace Antares::Data;
 
@@ -148,10 +147,10 @@ namespace Benchmarking
 	}
 
 	void DurationCollector::addDuration(std::string name, int64_t duration)
-	{
-		mutex_.lock();
+	{	
+		// mutex_.lock();
 		duration_items_[name].push_back(duration);
-		mutex_.unlock();
+		// mutex_.unlock();
 	}
 
 }

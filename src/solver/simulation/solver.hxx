@@ -70,7 +70,7 @@ public:
             Data::Study& pStudy,
             std::vector<Variable::State>& pState,
             bool pYearByYear,
-            Benchmarking::DurationCollector* durationCollector) :
+            Benchmarking::IDurationCollector* durationCollector) :
      simulationObj(pSimulationObj),
      y(pY),
      yearFailed(pYearFailed),
@@ -100,7 +100,7 @@ private:
     std::vector<Variable::State>& state;
     bool yearByYear;
     bool hydroHotStart;
-    Benchmarking::DurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector* pDurationCollector;
 
 private:
     /*
@@ -255,7 +255,7 @@ private:
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
-                                      Benchmarking::DurationCollector* duration_collector) :
+                                      Benchmarking::IDurationCollector* duration_collector) :
  ImplementationType(study),
  study(study),
  settings(settings),
