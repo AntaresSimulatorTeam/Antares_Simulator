@@ -159,9 +159,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
 
             bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
             bool opt1 = (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
-            bool exp = (ProblemeHebdo->Expansion == OUI_ANTARES);
-            bool opt2 = (ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION);
-            if ((reserveJm1 && opt1) || (reserveJm1 && exp && opt2))
+            if (reserveJm1 && opt1)
             {
                 SecondMembre[Cnt]
                   -= ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
