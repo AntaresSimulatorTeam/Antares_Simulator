@@ -42,8 +42,8 @@ In the first iteration, the following link capacities in the following direction
 
 - node "physical inside" <-> node "physical inside"
 - node "physical inside" -> node "physical outside"
-- node "physical outside" -> node "physical inside": optional/user defined (default `false`),
-- node "physical outside" <-> node "physical outside": optional/user defined (default `false`).
+- node "physical outside" -> node "physical inside": optional/user defined (default `true`),
+- node "physical outside" <-> node "physical outside": optional/user defined (default `true`).
 
 Once the first iteration is completed, we have access to the DENS value:
 - DENS = ENS
