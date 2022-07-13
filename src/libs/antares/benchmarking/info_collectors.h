@@ -95,7 +95,6 @@ private:
 
     // Durations can be added in a context of multi-threading, so we need to protect
     // these additions from thread concurrency
-    // Yuni::Mutex mutex_;
     std::mutex mutex_;
 };
 
