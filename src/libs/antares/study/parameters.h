@@ -138,6 +138,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all adequacy patch values
+    */
+    void resetAdqPatchParameters();
 
     /*!
     ** \brief Try to detect then fix any bad value
@@ -518,7 +522,7 @@ public:
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
         };
-        bool include;
+        bool enabled;
         LocalMatching localMatching;
         void addExcludedVariables(std::vector<std::string>&) const;
     };
