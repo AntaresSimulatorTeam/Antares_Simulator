@@ -530,7 +530,7 @@ void Application::writeElapsedTime()
     if (!pStudy)
         return;
 
-    // Measure of total simiulation duration
+    // Measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 

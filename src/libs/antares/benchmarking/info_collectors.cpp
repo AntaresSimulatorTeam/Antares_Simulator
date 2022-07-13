@@ -131,7 +131,7 @@ namespace Benchmarking
 	void DurationCollector::toFileContent(FileContent& file_content)
 	{
 		// File header
-		file_content.addTitleLine("#item	duration_ms	Number of calls");
+		file_content.addTitleLine("#item\tduration_ms\tNumber_of_calls");
 		
 		for (pair<string, vector<int64_t>> element : duration_items_)
 		{
@@ -145,15 +145,12 @@ namespace Benchmarking
 
 			file_content.addDurationLine(name, (unsigned int)duration_sum, (int)durations.size());
 		}
-
-		file_content.addNameValueLine("total", (unsigned int)total_duration_);
 	}
 
 	void DurationCollector::addDuration(std::string name, int64_t duration)
 	{
 		mutex_.lock();
 		duration_items_[name].push_back(duration);
-		total_duration_ += duration;
 		mutex_.unlock();
 	}
 

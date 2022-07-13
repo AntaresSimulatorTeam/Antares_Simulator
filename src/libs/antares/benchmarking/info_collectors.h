@@ -7,7 +7,6 @@
 #include <antares/study.h>
 #include "file_content.h"
 
-using namespace std;
 
 namespace Benchmarking
 {
@@ -75,10 +74,8 @@ public:
 
     void toFileContent(FileContent& file_content);
     void addDuration(std::string name, int64_t duration);
-    int64_t getTotalDuration() { return total_duration_; }
 
 private:
-    int64_t total_duration_ = 0;
     map<string, vector<int64_t>> duration_items_;
     
     // Durations can be added in a context of multi-threading, so we need to protect
