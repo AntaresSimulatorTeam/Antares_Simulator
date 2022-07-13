@@ -419,9 +419,6 @@ public:
         //! if MPS files are exported, a flag to split them
         bool splitExportedMPS;
 
-        //! a flag to use Adequacy patch
-        bool adequacyPatch;
-
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -461,7 +458,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -521,7 +518,9 @@ public:
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
         };
+        bool include;
         LocalMatching localMatching;
+        void addExcludedVariables(std::vector<std::string>&) const;
     };
 
     AdequacyPatch adqPatch;

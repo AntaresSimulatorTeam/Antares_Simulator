@@ -306,7 +306,7 @@ void Parameters::reset()
 
     include.exportMPS = false;
     include.splitExportedMPS = false;
-    include.adequacyPatch = false;
+    adqPatch.include = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     include.exportStructure = false;
@@ -559,7 +559,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-adequacypatch")
-        return value.to<bool>(d.include.adequacyPatch);
+        return value.to<bool>(d.adqPatch.include);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step-adq-patch")
@@ -1432,7 +1432,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    std::vector<std::string> excluded_vars;
+    renewableGeneration.addExcludedVariables(excluded_vars);
+    adqPatch.addExcludedVariables(excluded_vars);
+
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1562,7 +1565,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
-    if (!include.adequacyPatch)
+    if (!adqPatch.include)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1726,7 +1729,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
         section->add("include-exportmps", include.exportMPS);
         section->add("include-split-exported-mps", include.splitExportedMPS);
-        section->add("include-adequacypatch", include.adequacyPatch);
+        section->add("include-adequacypatch", adqPatch.include);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step-adq-patch",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step-adq-patch",
@@ -1885,33 +1888,39 @@ bool Parameters::saveToFile(const AnyString& filename) const
     return ini.save(filename);
 }
 
-std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
+    const static std::vector<std::string> ren = {"wind offshore",
+                                                 "wind onshore",
+                                                 "solar concrt.",
+                                                 "solar pv",
+                                                 "solar rooft",
+                                                 "renw. 1",
+                                                 "renw. 2",
+                                                 "renw. 3",
+                                                 "renw. 4"};
+
+    const static std::vector<std::string> agg = {"wind", "solar"};
+
     switch (rgModelling)
     {
-    /*
-       Order is important because AllVariablesPrintInfo::setPrintStatus
-       does not reset the search pointer.
-
-       Inverting some variable names below may result in some of them not being
-       taken into account.
-    */
+    // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        return {"wind offshore",
-                "wind onshore",
-                "solar concrt.",
-                "solar pv",
-                "solar rooft",
-                "renw. 1",
-                "renw. 2",
-                "renw. 3",
-                "renw. 4"};
+        out.insert(out.end(), ren.begin(), ren.end());
+        break;
+    // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:
-        return {"wind", "solar"};
-    case rgUnknown:
-        return {};
+        out.insert(out.end(), agg.begin(), agg.end());
+        break;
+    default:
+        break;
     }
-    return {};
+}
+
+void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
+{
+    if (!include)
+        out.emplace_back("dens");
 }
 
 bool Parameters::haveToImport(int tsKind) const
