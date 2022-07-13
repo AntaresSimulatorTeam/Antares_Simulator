@@ -73,10 +73,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
         problem.adqPatchParams->SetNTCOutsideToOutsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
-    }
 
-    if (parameters.adqPatch.enabled)
-    {
         problem.adequacyPatchRuntimeData.initialize(study);
     }
 
