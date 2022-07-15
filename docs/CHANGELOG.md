@@ -27,11 +27,10 @@ v8.3.0 (07/2022)
 - Code cleaning in hydro heuristic #671
 - Use antares-deps 2.0.2, which now excludes OR-Tools #684
 - Fetch OR-Tools directly, allowing more flexibility on the flavor (XPRESS/Sirius/etc.) #684
-- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
-- Code cleaning #665 #663 #687
-- Code cleaning #666 #725 #667 #668 #730
+- Code cleaning #663 #665 #666 #687 #725 #667 #668 #730
 
 ### Misc. improvements
+- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
 
 v8.2.2 (04/2022)
