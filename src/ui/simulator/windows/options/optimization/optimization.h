@@ -116,6 +116,9 @@ private:
 
     Component::Button* pBtnExportMPS;
     Component::Button* pBtnSplitExportedMPS;
+    Component::Button* pBtnAdequacyPatch;
+    Component::Button* pBtnAdqPatchOutsideInside;
+    Component::Button* pBtnAdqPatchOutsideOutside;
     Component::Button* pBtnUnfeasibleProblemBehavior;
     bool* pTargetRef;
 

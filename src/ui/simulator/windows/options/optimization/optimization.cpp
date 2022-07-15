@@ -293,7 +293,7 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnSpinningReserve = button;
     }
-    // Export MPS
+    // Export mps
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
@@ -357,6 +357,7 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->AddSpacer(2);
     }
+
     {
         s->AddSpacer(2);
         s->Add(105, 2);
