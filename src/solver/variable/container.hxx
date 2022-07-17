@@ -265,7 +265,6 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << '/';
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);

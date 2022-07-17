@@ -192,13 +192,25 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
     filename.reserve(folder.size() + 15);
 
     filename.clear() << folder << SEP << "areas.txt";
-    IOFileSetContent(filename, out);
+    study.pZipArchive->addData(filename.c_str(),
+                               out.c_str(),
+                               out.size());
 
     filename.clear() << folder << SEP << "links.txt";
-    IOFileSetContent(filename, outLinks);
+    study.pZipArchive->addData(filename.c_str(),
+                               outLinks.c_str(),
+                               outLinks.size());
 
     filename.clear() << folder << SEP << "thermal.txt";
-    IOFileSetContent(filename, outThermal);
+    study.pZipArchive->addData(filename.c_str(),
+                               outThermal.c_str(),
+                               outThermal.size());
+
+    // Force flush into the archive
+    // If not, out, outLinks and outThermal will be read when pZipArchive->close() is called
+    // which we don't want since out, outLinks and outThermal are released long before that.
+    study.pZipArchive->close();
+    study.pZipArchive->open(libzippp::ZipArchive::Write);
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -255,16 +267,14 @@ void SurveyResultsData::initialize(uint maxVariables)
 
 void SurveyResultsData::exportGridInfos()
 {
+    // Create output/grid
     output.clear();
     output << originalOutput << SEP << "grid";
-    if (IO::Directory::Create(output))
-    {
-        output << SEP;
-        // exportGridInfosAreas(output);
-        Solver::Variable::Private::ExportGridInfosAreas(study, output);
-    }
-    else
-        logs.error() << "I/O Error: '" << output << "': impossible to create the folder";
+    IO::Directory::Create(output);
+
+    // Archive
+    output.clear() << SEP << "grid";
+    Solver::Variable::Private::ExportGridInfosAreas(study, output);
 }
 
 void SurveyResultsData::exportGridInfosAreas(const String& folder)
@@ -871,7 +881,13 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         }
     }
 
-    IOFileSetContent(data.filename, data.fileBuffer);
+    auto archive = data.study.pZipArchive;
+    archive->addData(data.filename.c_str(),
+                               data.fileBuffer.c_str(),
+                               data.fileBuffer.size());
+    // Force flush
+    archive->close();
+    archive->open(libzippp::ZipArchive::Write);
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
