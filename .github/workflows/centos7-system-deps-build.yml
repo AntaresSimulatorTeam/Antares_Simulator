@@ -26,7 +26,7 @@ jobs:
            yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
            yum install -y cmake3 devtoolset-9
            yum install -y rh-git227-git
-           yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
+           yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel libzip-devel
                       
     
     - uses: nelonoel/branch-name@v1.0.1
