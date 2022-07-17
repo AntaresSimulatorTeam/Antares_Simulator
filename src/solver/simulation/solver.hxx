@@ -435,8 +435,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 
         // The target folder
         String newPath;
-        newPath << study.folderOutput << IO::Separator << ImplementationType::Name()
-                << IO::Separator;
+        newPath << ImplementationType::Name() << IO::Separator;
         if (synthesis)
             newPath << "mc-all";
         else
