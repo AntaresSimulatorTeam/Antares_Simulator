@@ -109,7 +109,9 @@ macro(solver_app name swap)
 
 	target_link_libraries(${exec_name}
 			PRIVATE
-				${ANTARES_SOLVER_LIBS}
+			${ANTARES_SOLVER_LIBS}
+            PUBLIC
+            libzippp::libzippp
 			)
 
 	import_std_libs(${exec_name})

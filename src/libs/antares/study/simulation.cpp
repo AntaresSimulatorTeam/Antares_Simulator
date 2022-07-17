@@ -46,26 +46,18 @@ Simulation::Simulation(Study& study) : pStudy(study)
 {
 }
 
-bool Simulation::saveToFolder(const AnyString& folder) const
+bool Simulation::saveToFolder(libzippp::ZipArchive* archive) const
 {
-    String b;
-    b.reserve(folder.size() + 20);
-    b = folder;
-
-    // Ensure that the folder has been created
-    if (!IO::Directory::Create(b))
+    if (archive)
     {
-        logs.error() << "I/O: impossible to create the directory " << b;
+        logs.notice() << comments;
+        return archive->addData("comments.txt", comments.c_str(), comments.size());
+    }
+    else
+    {
+        logs.error() << "Couldn't write comments.txt";
         return false;
     }
-
-    // Save the comments
-    b = folder;
-    b << SEP << "comments.txt";
-    if (IO::File::SetContent(b, comments))
-        return true;
-    logs.error() << "I/O: impossible to write " << b;
-    return false;
 }
 
 bool Simulation::loadFromFolder(const StudyLoadOptions& options)

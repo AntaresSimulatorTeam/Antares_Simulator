@@ -143,6 +143,12 @@ void Study::clear()
     ClearAndShrink(inputExtension);
 
     gotFatalError = false;
+    if (pZipArchive)
+    {
+        pZipArchive->close();
+        // TODO : memory leak here, the following line segfaults
+        // delete pZipArchive;
+    }
 }
 
 void Study::createAsNew()
@@ -775,12 +781,27 @@ bool Study::prepareOutput()
 
     // Settings
     buffer.clear() << folderOutput << SEP << "about-the-study";
-    if (not IO::Directory::Create(buffer))
+    IO::Directory::Create(buffer);
+
+    // zip archive
     {
-        logs.error() << "I/O: impossible to create the directory " << buffer;
-        return false;
+         buffer.clear() << folderOutput << ".zip";
+         pZipArchive = new libzippp::ZipArchive(buffer.c_str());
+         if (!pZipArchive) {
+             logs.error() << "Allocation failed";
+             return false;
+         }
+         auto ret = pZipArchive->open(libzippp::ZipArchive::New);
+         if (!ret) {
+             logs.error() << "Could not create archive " << buffer;
+             return false;
+         }
+         else
+         {
+             logs.notice() << "  Archive : " << buffer;
+         }
     }
-    if (not simulation.saveToFolder(buffer))
+    if (not simulation.saveToFolder(pZipArchive))
         return false;
 
     // Write the header as a reminder too
@@ -790,9 +811,8 @@ bool Study::prepareOutput()
     // copying the generaldata.ini
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     String dest;
-    dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
-    if (IO::errNone != IO::File::Copy(buffer, dest))
-        logs.error() << "impossible to copy " << dest;
+    dest << "about-the-study" << SEP << "parameters.ini";
+    pZipArchive->addFile(dest.c_str(), buffer.c_str());
 
     // antares-output.info
     buffer.clear() << folderOutput << SEP << "info.antares-output";

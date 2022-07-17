@@ -186,6 +186,9 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
+option(BUILD_LIBZIPPP "Build libzippp" ON)
+message(STATUS "Build libzippp ${BUILD_LIBZIPPP}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -270,6 +273,14 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
+endif()
+
+find_package(libzippp QUIET)
+if(NOT libzippp_FOUND OR BUILD_LIBZIPPP)
+  FetchContent_Declare(libzippp
+    GIT_REPOSITORY "https://github.com/ctabin/libzippp"
+    GIT_TAG "libzippp-v5.1-1.8.0")
+  FetchContent_MakeAvailable(libzippp)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt

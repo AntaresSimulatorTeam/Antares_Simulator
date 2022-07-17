@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
 #include <yuni/yuni.h>
+#include <libzippp.h>
 #include "fwd.h"
 
 namespace Antares
@@ -62,7 +63,7 @@ public:
     /*!
     ** \brief Save settings to the appropriate folder
     */
-    bool saveToFolder(const AnyString& folder) const;
+    bool saveToFolder(libzippp::ZipArchive* archive) const;
 
     //! Get (in bytes) the amount of memory used by the class
     Yuni::uint64 memoryUsage() const;

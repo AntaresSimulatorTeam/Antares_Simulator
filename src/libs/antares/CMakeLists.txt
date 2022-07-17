@@ -578,6 +578,7 @@ macro(ADD_ANTARES_CORE name)
 			yuni-static-uuid
 			libantares-core-calendar
 			libantares-solver-variable-info${name}
+            libzippp::libzippp
 		)
 endmacro()
 

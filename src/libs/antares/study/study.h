@@ -47,6 +47,7 @@
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
+#include <libzippp.h>
 
 #include <memory>
 
@@ -767,6 +768,7 @@ public:
     */
     const bool usedByTheSolver;
 
+    libzippp::ZipArchive* pZipArchive = nullptr;
 protected:
     //! \name Loading
     //@{
