@@ -7,6 +7,7 @@
 
 using namespace Antares;
 using namespace Antares::Data;
+using namespace Yuni;
 
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
@@ -16,14 +17,14 @@ using namespace Antares::Data;
 
 constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
-static void printHeader(FILE* Flot, int NombreDeVariables, int NombreDeContraintes)
+static void printHeader(Clob& Flot, int NombreDeVariables, int NombreDeContraintes)
 {
-    fprintf(Flot, "* Number of variables:   %d\n", NombreDeVariables);
-    fprintf(Flot, "* Number of constraints: %d\n", NombreDeContraintes);
-    fprintf(Flot, "NAME          Pb Solve\n");
+  Flot.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
+  Flot.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
+  Flot.appendFormat("NAME          Pb Solve\n");
 }
 
-static void printColumnsObjective(FILE* Flot,
+static void printColumnsObjective(Clob& Flot,
                                   int NombreDeVariables,
                                   const int* NumeroDeContrainte,
                                   const double* CoefficientsDeLaMatriceDesContraintes,
@@ -34,13 +35,13 @@ static void printColumnsObjective(FILE* Flot,
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
     int il;
 
-    fprintf(Flot, "COLUMNS\n");
+    Flot.appendFormat("COLUMNS\n");
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
         if (CoutLineaire && CoutLineaire[Var] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
+            Flot.appendFormat("    C%07d  OBJECTIF  %s\n", Var, buffer);
         }
 
         il = Cdeb[Var];
@@ -50,13 +51,13 @@ static void printColumnsObjective(FILE* Flot,
                      OPT_APPEL_SOLVEUR_BUFFER_SIZE,
                      "%-.10lf",
                      CoefficientsDeLaMatriceDesContraintes[il]);
-            fprintf(Flot, "    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
+            Flot.appendFormat("    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
             il = Csui[il];
         }
     }
 }
 
-static void printBounds(FILE* Flot,
+static void printBounds(Clob& Flot,
                         int NombreDeVariables,
                         const int* TypeDeBorneDeLaVariable,
                         const double* Xmin,
@@ -64,15 +65,14 @@ static void printBounds(FILE* Flot,
 {
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    fprintf(Flot, "BOUNDS\n");
+    Flot.appendFormat("BOUNDS\n");
 
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-
-            fprintf(Flot, " FX BNDVALUE  C%07d  %s\n", Var, buffer);
+            Flot.appendFormat(" FX BNDVALUE  C%07d  %s\n", Var, buffer);
             continue;
         }
 
@@ -81,11 +81,11 @@ static void printBounds(FILE* Flot,
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
+                Flot.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
 
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-            fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
+            Flot.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, buffer);
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
@@ -93,45 +93,45 @@ static void printBounds(FILE* Flot,
             if (Xmin[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                fprintf(Flot, " LO BNDVALUE  C%07d  %s\n", Var, buffer);
+                Flot.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
         {
-            fprintf(Flot, " MI BNDVALUE  C%07d\n", Var);
+            Flot.appendFormat(" MI BNDVALUE  C%07d\n", Var);
             if (Xmax[Var] != 0.0)
             {
                 SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-                fprintf(Flot, " UP BNDVALUE  C%07d  %s\n", Var, buffer);
+                Flot.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, buffer);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
         {
-            fprintf(Flot, " FR BNDVALUE  C%07d\n", Var);
+            Flot.appendFormat(" FR BNDVALUE  C%07d\n", Var);
         }
     }
 }
 
-static void printRHS(FILE* Flot, int NombreDeContraintes, const double* SecondMembre)
+static void printRHS(Clob& Flot, int NombreDeContraintes, const double* SecondMembre)
 {
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    fprintf(Flot, "RHS\n");
+    Flot.appendFormat("RHS\n");
     for (int Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (SecondMembre[Cnt] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
-            fprintf(Flot, "    RHSVAL    R%07d  %s\n", Cnt, buffer);
+            Flot.appendFormat("    RHSVAL    R%07d  %s\n", Cnt, buffer);
         }
     }
 }
 
 void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
-    FILE* Flot;
+    Clob Flot;
     int Cnt;
     int Var;
     int il;
@@ -141,6 +141,8 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     int* Cdeb;
     int* NumeroDeContrainte;
     int* Csui;
+
+
 
     for (ilMax = -1, Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
@@ -202,33 +204,31 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     free(Cder);
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
-
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
+        
+    auto filename = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
 
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    fprintf(Flot, "ROWS\n");
-    fprintf(Flot, " N  OBJECTIF\n");
+    Flot.appendFormat("ROWS\n");
+    Flot.appendFormat(" N  OBJECTIF\n");
 
     for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
         if (Pb->Sens[Cnt] == '=')
         {
-            fprintf(Flot, " E  R%07d\n", Cnt);
+            Flot.appendFormat(" E  R%07d\n", Cnt);
         }
         else if (Pb->Sens[Cnt] == '<')
         {
-            fprintf(Flot, " L  R%07d\n", Cnt);
+            Flot.appendFormat(" L  R%07d\n", Cnt);
         }
         else if (Pb->Sens[Cnt] == '>')
         {
-            fprintf(Flot, " G  R%07d\n", Cnt);
+            Flot.appendFormat(" G  R%07d\n", Cnt);
         }
         else
         {
-            fprintf(Flot,
+            Flot.appendFormat(
                     "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
                     "partie des sens reconnus\n",
                     Pb->Sens[Cnt]);
@@ -244,37 +244,42 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
                           Csui,
                           nullptr);
 
-    fprintf(Flot, "ENDATA\n");
+    Flot.appendFormat("ENDATA\n");
+
+    auto archive = study->pZipArchive;
+    archive->addData(filename,
+                     Flot.c_str(),
+                     Flot.size());
+
+    archive->close();
+    archive->open(libzippp::ZipArchive::Write);
 
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
-
-    fclose(Flot);
 }
 
 void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
-    FILE* Flot;
+    Clob Flot;
     int Var;
+    
 
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
+    auto filename = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
 
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
 
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    fprintf(Flot, "COLUMNS\n");
+    Flot.appendFormat("COLUMNS\n");
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
     {
         if (Pb->CoutLineaire[Var] != 0.0)
         {
             SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", Pb->CoutLineaire[Var]);
-            fprintf(Flot, "    C%07d  OBJECTIF  %s\n", Var, buffer);
+            Flot.appendFormat("    C%07d  OBJECTIF  %s\n", Var, buffer);
         }
     }
 
@@ -282,14 +287,20 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     printBounds(Flot, Pb->NombreDeVariables, Pb->TypeDeVariable, Pb->Xmin, Pb->Xmax);
 
-    fprintf(Flot, "ENDATA\n");
+    Flot.appendFormat("ENDATA\n");
 
-    fclose(Flot);
+    auto archive = study->pZipArchive;
+    archive->addData(filename,
+                     Flot.c_str(),
+                     Flot.size());
+
+    archive->close();
+    archive->open(libzippp::ZipArchive::Write);
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 {
-    FILE* Flot;
+    Clob Flot;
     int Cnt;
     int Var;
     int il;
@@ -388,29 +399,26 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     free(Cder);
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
-
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
+    auto filename = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
 
     printHeader(Flot, NombreDeVariables, NombreDeContraintes);
 
-    fprintf(Flot, "ROWS\n");
-    fprintf(Flot, " N  OBJECTIF\n");
+    Flot.appendFormat("ROWS\n");
+    Flot.appendFormat(" N  OBJECTIF\n");
 
     for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (Sens[Cnt] == '=')
         {
-            fprintf(Flot, " E  R%07d\n", Cnt);
+            Flot.appendFormat(" E  R%07d\n", Cnt);
         }
         else if (Sens[Cnt] == '<')
         {
-            fprintf(Flot, " L  R%07d\n", Cnt);
+            Flot.appendFormat(" L  R%07d\n", Cnt);
         }
         else if (Sens[Cnt] == '>')
         {
-            fprintf(Flot, " G  R%07d\n", Cnt);
+            Flot.appendFormat(" G  R%07d\n", Cnt);
         }
         else
         {
@@ -433,11 +441,17 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     printBounds(
       Flot, Probleme->NombreDeVariables, Probleme->TypeDeVariable, Probleme->Xmin, Probleme->Xmax);
 
-    fprintf(Flot, "ENDATA\n");
+    Flot.appendFormat("ENDATA\n");
+
+    auto archive = study->pZipArchive;
+    archive->addData(filename,
+                     Flot.c_str(),
+                     Flot.size());
+
+    archive->close();
+    archive->open(libzippp::ZipArchive::Write);
 
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
-
-    fclose(Flot);
 }

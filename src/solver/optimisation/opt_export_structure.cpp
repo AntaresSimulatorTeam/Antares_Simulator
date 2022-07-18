@@ -66,36 +66,14 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace)
 {
-    // Interco are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
-    {
-        FILE* Flot = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
-        for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
-        {
-            fprintf(Flot,
-                    "%d %d %d\n",
-                    i,
-                    ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                    ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
-        }
-        fclose(Flot);
-    }
+  // TODO
 }
 
 void OPT_ExportAreaName(const Antares::Data::Study& study,
                         PROBLEME_HEBDO* ProblemeHebdo,
                         uint numSpace)
 {
-    // Area name are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
-    {
-        FILE* Flot = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            fprintf(Flot, "%s\n", study.areas[i]->name.c_str());
-        }
-        fclose(Flot);
-    }
+  // TODO
 }
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
@@ -140,10 +118,5 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
                          const std::string& fileExtension,
                          uint numSpace)
 {
-    FILE* Flot = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
-    for (auto const& line : varname)
-    {
-        fprintf(Flot, "%s\n", line.c_str());
-    }
-    fclose(Flot);
+  // TODO
 }

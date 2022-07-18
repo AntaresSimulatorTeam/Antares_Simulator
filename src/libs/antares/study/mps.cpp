@@ -37,10 +37,12 @@ namespace Antares
 {
 namespace Data
 {
-FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
-                                               const YString& extension,
-                                               uint numSpace) const
+std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
+                                                     const YString& extension,
+                                                     uint numSpace) const
 {
+    auto archive = this->pZipArchive;
+
     static std::map<YString, int> count;
 
     // Empty log entry
@@ -63,15 +65,11 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
 
-    buffer.clear() << this->folderOutput << SEP << outputFile;
-
     // test if file already exists
-    FILE* fd_test = FileOpen(buffer.c_str(), "rb");
-    if (fd_test)
+    if (archive->hasEntry(outputFile.c_str()))
     {
         count[prefix]++;
         outputFile << "-" << count[prefix] << "." << extension;
-        fclose(fd_test);
     }
     else
     {
@@ -79,20 +77,8 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
         outputFile << "." << extension;
     }
 
-    buffer.clear() << this->folderOutput << SEP << outputFile;
-
-    logs.info() << "Solver output File: `" << buffer << "'";
-
-    FILE* fd = FileOpen(buffer.c_str(), "wb");
-    if (!fd)
-    {
-        logs.error() << "I/O Error: Impossible to write `" << buffer << "'";
-        logs.info() << "Aborting now.";
-        importLogsToOutputFolder();
-        return nullptr;
-    }
-    logs.info();
-    return fd;
+    logs.info() << "Solver output File: `" << outputFile << "'";
+    return outputFile.c_str();
 }
 
 } // namespace Data

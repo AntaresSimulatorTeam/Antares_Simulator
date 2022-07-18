@@ -390,26 +390,4 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
-    FILE* Flot;
-    double CoutOptimalDeLaSolution;
-    PROBLEME_HEBDO* Probleme;
-
-    Probleme = (PROBLEME_HEBDO*)Prob;
-
-    CoutOptimalDeLaSolution = 0.;
-    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
-    else
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
-
-    auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
-
-    fprintf(Flot, "* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
-
-    fclose(Flot);
-
-    return;
 }

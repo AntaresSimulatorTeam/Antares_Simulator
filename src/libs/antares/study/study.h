@@ -501,9 +501,9 @@ public:
     **
     ** \return a FILE structure (which may be null if any error occured)
     */
-    FILE* createFileIntoOutputWithExtension(const YString& prefix,
-                                            const YString& extension,
-                                            uint numSpace) const;
+    std::string createFileIntoOutputWithExtension(const YString& prefix,
+                                                  const YString& extension,
+                                                  uint numSpace) const;
 
     //! \name
     //@{
