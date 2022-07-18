@@ -274,6 +274,7 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     }
 
     MPSolverParameters params;
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
