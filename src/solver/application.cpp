@@ -525,49 +525,41 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
-void Application::writeElapsedTime()
+void Application::writeInfoOnExecution()
 {
     if (!pStudy)
         return;
 
-    // Measure of total simulation duration
+    // File path, where to write pieces of information
+    Yuni::String filePath;
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
+
+    Benchmarking::FileContent file_content;
+
+
+    // Last missing information to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
-
-    
-    Benchmarking::FileContent file_content;
-    pDurationCollector.toFileContent(file_content);
-
-    // Flush previous info into a record file
-    Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
-    file_csv_writer.flush();
-
-}
-
-void Application::writeStudyInfos()
-{
-    if (!pStudy)
-        return;
-
-    Benchmarking::FileContent file_content;
 
     // Collecting info from the study for a further record
     // gp : remove file_content from StudyInfoCollector constructor
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy, file_content);
-    // gp : rename collect() into toFileContent(file_content)
-    study_info_collector.collect();
 
     // gp : remove file_content from SimulationInfoCollector constructor
     Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo, file_content);
+
+
+    // Fill file content with data from collectors 
+    pDurationCollector.toFileContent(file_content);
+    // gp : rename collect() into toFileContent(file_content)
+    study_info_collector.collect();
     // gp : rename collect() into toFileContent(file_content)
     simulation_info_collector.collect();
 
     // Flush previous info into a record file
-    Yuni::String filePath; 
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "study-info.txt";
     Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
+
+
     file_csv_writer.flush();
 }
 

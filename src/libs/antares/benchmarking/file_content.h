@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <map>
+
 #include <memory>
 
 namespace Benchmarking
@@ -12,19 +13,18 @@ class FileContent
 public:
     FileContent() = default;
 
-    using iterator = std::vector<std::string>::iterator;
-    iterator begin();
-    iterator end();
+    using iterator = std::map<std::string, std::map<std::string, std::string>>::iterator;
+    iterator firstSection();
+    iterator endSections();
 
-    void addTitleLine(std::string title);
-    void addDurationLine(std::string name, unsigned int duration, int nbCalls);
-    void addNameValueLine(std::string name, int value);
-    void addNameValueLine(std::string name, std::string value);
+    void addItemToSection(std::string section, std::string key, int value);
+    void addItemToSection(std::string section, std::string key, std::string value);
+    void addDurationItem(std::string name, unsigned int duration, int nbCalls);
 
-    std::vector<std::string> content() { return lines_; }
 private:
-    // File content lines
-    std::vector<std::string> lines_;
+    // Data of the file content
+    std::map<std::string, std::map<std::string, std::string>> sections_;
+
 };
 
 } // namespace Benchmarking

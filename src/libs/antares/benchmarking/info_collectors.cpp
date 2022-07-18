@@ -23,12 +23,12 @@ namespace Benchmarking
 
 	void StudyInfoCollector::collectAreasCount()
 	{
-		file_content_.addNameValueLine("areas", study_.areas.size());
+		file_content_.addItemToSection("from study", "areas", study_.areas.size());
 	}
 
 	void StudyInfoCollector::collectLinksCount()
 	{
-		file_content_.addNameValueLine("links", study_.areas.areaLinkCount());
+		file_content_.addItemToSection("from study", "links", study_.areas.areaLinkCount());
 	}
 
 	void StudyInfoCollector::collectPerformedYearsCount()
@@ -42,7 +42,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of performed years to the file content
-		file_content_.addNameValueLine("performed years", nbPerformedYears);
+		file_content_.addItemToSection("from study", "performed years", nbPerformedYears);
 	}
 
 	void StudyInfoCollector::collectEnabledThermalClustersCount()
@@ -64,7 +64,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of enabled thermal clusters to the file content
-		file_content_.addNameValueLine("enabled thermal clusters", nbEnabledThermalClusters);
+		file_content_.addItemToSection("from study", "enabled thermal clusters", nbEnabledThermalClusters);
 	}
 
 	void StudyInfoCollector::collectEnabledBindingConstraintsCount()
@@ -90,21 +90,21 @@ namespace Benchmarking
 			}
 		}
 
-		file_content_.addNameValueLine("enabled BC", nbEnabledBC);
-		file_content_.addNameValueLine("enabled hourly BC", nbEnabledHourlyBC);
-		file_content_.addNameValueLine("enabled daily BC", nbEnabledDailyBC);
-		file_content_.addNameValueLine("enabled weekly BC", nbEnabledWeeklyBC);
+		file_content_.addItemToSection("from study", "enabled BC", nbEnabledBC);
+		file_content_.addItemToSection("from study", "enabled hourly BC", nbEnabledHourlyBC);
+		file_content_.addItemToSection("from study", "enabled daily BC", nbEnabledDailyBC);
+		file_content_.addItemToSection("from study", "enabled weekly BC", nbEnabledWeeklyBC);
 	}
 
 	void StudyInfoCollector::collectUnitCommitmentMode()
 	{
 		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
-		file_content_.addNameValueLine("unit commitment", unitCommitment);
+		file_content_.addItemToSection("from study", "unit commitment", unitCommitment);
 	}
 
 	void StudyInfoCollector::collectMaxNbYearsInParallel()
 	{
-		file_content_.addNameValueLine("max parallel years", study_.maxNbYearsInParallel);
+		file_content_.addItemToSection("from study", "max parallel years", study_.maxNbYearsInParallel);
 	}
 
 	void StudyInfoCollector::collectSolverVersion()
@@ -112,26 +112,24 @@ namespace Benchmarking
 		// Example : 8.3.0 -> 830
 		const unsigned int version
 			= 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
-		file_content_.addNameValueLine("antares version", version);
+
+		file_content_.addItemToSection("from study", "antares version", version);
 	}
 
 	// Collecting data from simulation
 	// ---------------------------------
 	void SimulationInfoCollector::collect()
 	{
-		file_content_.addNameValueLine("variables", opt_info_.nbVariables);
-		file_content_.addNameValueLine("constraints", opt_info_.nbConstraints);
-		file_content_.addNameValueLine("non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+		file_content_.addItemToSection("from simulation", "variables", opt_info_.nbVariables);
+		file_content_.addItemToSection("from simulation", "constraints", opt_info_.nbConstraints);
+		file_content_.addItemToSection("from simulation", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
 	}
 
 
 	// Collecting durations from simulation
 	// -------------------------------------
 	void DurationCollector::toFileContent(FileContent& file_content)
-	{
-		// File header
-		file_content.addTitleLine("#item\tduration_ms\tNumber_of_calls");
-		
+	{		
 		for (pair<string, vector<int64_t>> element : duration_items_)
 		{
 			std::string name = element.first;
@@ -142,7 +140,7 @@ namespace Benchmarking
 				duration_sum += duration;
 			}
 
-			file_content.addDurationLine(name, (unsigned int)duration_sum, (int)durations.size());
+			file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
 		}
 	}
 

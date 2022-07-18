@@ -1,34 +1,32 @@
 #include "file_content.h"
 
+using namespace std;
+
 namespace Benchmarking
 {
-	FileContent::iterator FileContent::begin()
+	FileContent::iterator FileContent::firstSection()
 	{
-		return lines_.begin();
+		return sections_.begin();
 	}
 
-	FileContent::iterator FileContent::end()
+	FileContent::iterator FileContent::endSections()
 	{
-		return lines_.end();
+		return sections_.end();
 	}
 
-	void FileContent::addNameValueLine(std::string name, std::string value)
+	void FileContent::addItemToSection(string section, string key, int value)
 	{
-		lines_.push_back(name + " : " + value);
+		sections_[section][key] = to_string(value);
 	}
 
-	void FileContent::addTitleLine(std::string title)
+	void FileContent::addItemToSection(string section, string key, string value)
 	{
-		lines_.push_back(title);
+		sections_[section][key] = value;
 	}
 
-	void FileContent::addDurationLine(std::string name, unsigned int duration, int nbCalls)
+	void FileContent::addDurationItem(std::string name, unsigned int duration, int nbCalls)
 	{
-		addNameValueLine(name, std::to_string(duration) + "\t" + std::to_string(nbCalls));
-	}
-
-	void FileContent::addNameValueLine(std::string name, int value)
-	{
-		addNameValueLine(name, std::to_string(value));
+		sections_["Durations"][name + "--duration"] = to_string(duration);
+		sections_["Durations"][name + "--nb_calls"] = to_string(nbCalls);
 	}
 }

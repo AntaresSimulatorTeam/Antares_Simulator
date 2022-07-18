@@ -50,8 +50,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void writeElapsedTime();
-    void writeStudyInfos();
+    void writeInfoOnExecution();
 
 private:
     /*!

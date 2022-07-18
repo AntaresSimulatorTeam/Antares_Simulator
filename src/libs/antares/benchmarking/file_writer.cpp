@@ -1,7 +1,9 @@
 #include "file_writer.h"
 #include <antares/exception/LoadingError.hpp>
+#include "antares/inifile/inifile.h"
 
 using namespace Antares::Data;
+using namespace std;
 
 namespace Benchmarking
 {
@@ -15,13 +17,16 @@ namespace Benchmarking
 	
 	void FileCSVwriter::flush()
 	{
-		if (!outputFile_.openRW(filePath_))
+		Antares::IniFile ini;
+
+		FileContent::iterator it_section = fileContent_.firstSection();
+		for (; it_section != fileContent_.endSections(); it_section++)
 		{
-			throw Antares::Error::CreatingStudyInfoFile(filePath_);
+			Antares::IniFile::Section* section = ini.addSection(it_section->first);
+			for (pair<string, string> line : it_section->second)
+				section->add(line.first, line.second);
 		}
 
-		FileContent::iterator it = fileContent_.begin();
-		for (; it != fileContent_.end(); it++)
-			outputFile_ << *it << "\n";
+		ini.save(filePath_);
 	}
 }
