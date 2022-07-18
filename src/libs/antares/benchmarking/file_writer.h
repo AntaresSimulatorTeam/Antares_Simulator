@@ -18,13 +18,12 @@ protected:
     FileContent& fileContent_;
 };
 
-class FileCSVwriter final : public FileWriter
+class iniFilewriter final : public FileWriter
 {
 public:
-    explicit FileCSVwriter(Yuni::String& filePath, FileContent& fileContent);
+    explicit iniFilewriter(Yuni::String& filePath, FileContent& fileContent);
     void flush() override;
 private:
-    Yuni::IO::File::Stream outputFile_;
     Yuni::String& filePath_;
 };
 

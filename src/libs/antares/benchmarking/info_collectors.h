@@ -26,23 +26,22 @@ struct OptimizationInfo
 class StudyInfoCollector
 {
 public:
-    StudyInfoCollector(const Antares::Data::Study& study, FileContent& file_content)
-        : study_(study), file_content_(file_content)
+    StudyInfoCollector(const Antares::Data::Study& study)
+        : study_(study)
     {}
-    void collect();
+    void toFileContent(FileContent& file_content);
 private:
     // Methods
-    void collectAreasCount();
-    void collectLinksCount();
-    void collectPerformedYearsCount();
-    void collectEnabledThermalClustersCount();
-    void collectEnabledBindingConstraintsCount();
-    void collectUnitCommitmentMode();
-    void collectMaxNbYearsInParallel();
-    void collectSolverVersion();
+    void areasCountToFileContent(FileContent& file_content);
+    void linksCountToFileContent(FileContent& file_content);
+    void performedYearsCountToFileContent(FileContent& file_content);
+    void enabledThermalClustersCountToFileContent(FileContent& file_content);
+    void enabledBindingConstraintsCountToFileContent(FileContent& file_content);
+    void unitCommitmentModeToFileContent(FileContent& file_content);
+    void maxNbYearsInParallelToFileContent(FileContent& file_content);
+    void solverVersionToFileContent(FileContent& file_content);
 
     // Member data
-    FileContent& file_content_;
     const Antares::Data::Study& study_;
 
     // ----------------------------------------------------------------------------------------
@@ -56,14 +55,13 @@ private:
 class SimulationInfoCollector
 {
 public:
-    SimulationInfoCollector(const OptimizationInfo& optInfo, FileContent& file_content)
-        : opt_info_(optInfo), file_content_(file_content)
+    SimulationInfoCollector(const OptimizationInfo& optInfo)
+        : opt_info_(optInfo)
     {};
 
-    void collect();
+    void toFileContent(FileContent& file_content);
 
 private:
-    FileContent& file_content_;
     const OptimizationInfo& opt_info_;
 };
 

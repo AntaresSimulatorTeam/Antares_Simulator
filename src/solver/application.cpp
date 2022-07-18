@@ -530,37 +530,25 @@ void Application::writeInfoOnExecution()
     if (!pStudy)
         return;
 
-    // File path, where to write pieces of information
-    Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
-
-    Benchmarking::FileContent file_content;
-
-
-    // Last missing information to get : measure of total simulation duration
+    // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    // Collecting info from the study for a further record
-    // gp : remove file_content from StudyInfoCollector constructor
-    Benchmarking::StudyInfoCollector study_info_collector(*pStudy, file_content);
+    // Info collectors : they retrieve data from study and simulation
+    Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
 
-    // gp : remove file_content from SimulationInfoCollector constructor
-    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo, file_content);
-
-
-    // Fill file content with data from collectors 
+    // Fill file content with data retrieved by collectors
+    Benchmarking::FileContent file_content;
     pDurationCollector.toFileContent(file_content);
-    // gp : rename collect() into toFileContent(file_content)
-    study_info_collector.collect();
-    // gp : rename collect() into toFileContent(file_content)
-    simulation_info_collector.collect();
+    study_info_collector.toFileContent(file_content);
+    simulation_info_collector.toFileContent(file_content);
 
     // Flush previous info into a record file
-    Benchmarking::FileCSVwriter file_csv_writer(filePath, file_content);
-
-
-    file_csv_writer.flush();
+    Yuni::String filePath;
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
+    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
+    ini_file_writer.flush();
 }
 
 Application::~Application()

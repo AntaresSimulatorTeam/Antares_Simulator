@@ -10,12 +10,12 @@ namespace Benchmarking
 	
 	FileWriter::FileWriter(FileContent& fileContent) : fileContent_(fileContent) {}
 	
-	FileCSVwriter::FileCSVwriter(Yuni::String& filePath, FileContent& fileContent)
+	iniFilewriter::iniFilewriter(Yuni::String& filePath, FileContent& fileContent)
 		: FileWriter(fileContent), filePath_(filePath)
 	{}
 	
 	
-	void FileCSVwriter::flush()
+	void iniFilewriter::flush()
 	{
 		Antares::IniFile ini;
 

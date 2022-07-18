@@ -9,29 +9,29 @@ namespace Benchmarking
 {
 	// Collecting data from study
 	// ---------------------------
-	void StudyInfoCollector::collect()
+	void StudyInfoCollector::toFileContent(FileContent& file_content)
 	{
-		collectAreasCount();
-		collectLinksCount();
-		collectPerformedYearsCount();
-		collectEnabledThermalClustersCount();
-		collectEnabledBindingConstraintsCount();
-		collectUnitCommitmentMode();
-		collectMaxNbYearsInParallel();
-        collectSolverVersion();
+		areasCountToFileContent(file_content);
+		linksCountToFileContent(file_content);
+		performedYearsCountToFileContent(file_content);
+		enabledThermalClustersCountToFileContent(file_content);
+		enabledBindingConstraintsCountToFileContent(file_content);
+		unitCommitmentModeToFileContent(file_content);
+		maxNbYearsInParallelToFileContent(file_content);
+        solverVersionToFileContent(file_content);
 	}
 
-	void StudyInfoCollector::collectAreasCount()
+	void StudyInfoCollector::areasCountToFileContent(FileContent& file_content)
 	{
-		file_content_.addItemToSection("from study", "areas", study_.areas.size());
+		file_content.addItemToSection("from study", "areas", study_.areas.size());
 	}
 
-	void StudyInfoCollector::collectLinksCount()
+	void StudyInfoCollector::linksCountToFileContent(FileContent& file_content)
 	{
-		file_content_.addItemToSection("from study", "links", study_.areas.areaLinkCount());
+		file_content.addItemToSection("from study", "links", study_.areas.areaLinkCount());
 	}
 
-	void StudyInfoCollector::collectPerformedYearsCount()
+	void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_content)
 	{
 		// Computing the number of performed years
 		unsigned int nbPerformedYears = 0;
@@ -42,10 +42,10 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of performed years to the file content
-		file_content_.addItemToSection("from study", "performed years", nbPerformedYears);
+		file_content.addItemToSection("from study", "performed years", nbPerformedYears);
 	}
 
-	void StudyInfoCollector::collectEnabledThermalClustersCount()
+	void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& file_content)
 	{
 		// Computing the number of enabled thermal clusters
 		unsigned int nbEnabledThermalClusters = 0;
@@ -64,10 +64,10 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of enabled thermal clusters to the file content
-		file_content_.addItemToSection("from study", "enabled thermal clusters", nbEnabledThermalClusters);
+		file_content.addItemToSection("from study", "enabled thermal clusters", nbEnabledThermalClusters);
 	}
 
-	void StudyInfoCollector::collectEnabledBindingConstraintsCount()
+	void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
 	{
 		unsigned int nbEnabledBC = study_.runtime->bindingConstraintCount;
 		unsigned int nbEnabledHourlyBC(0), nbEnabledDailyBC(0), nbEnabledWeeklyBC(0);
@@ -90,41 +90,40 @@ namespace Benchmarking
 			}
 		}
 
-		file_content_.addItemToSection("from study", "enabled BC", nbEnabledBC);
-		file_content_.addItemToSection("from study", "enabled hourly BC", nbEnabledHourlyBC);
-		file_content_.addItemToSection("from study", "enabled daily BC", nbEnabledDailyBC);
-		file_content_.addItemToSection("from study", "enabled weekly BC", nbEnabledWeeklyBC);
+		file_content.addItemToSection("from study", "enabled BC", nbEnabledBC);
+		file_content.addItemToSection("from study", "enabled hourly BC", nbEnabledHourlyBC);
+		file_content.addItemToSection("from study", "enabled daily BC", nbEnabledDailyBC);
+		file_content.addItemToSection("from study", "enabled weekly BC", nbEnabledWeeklyBC);
 	}
 
-	void StudyInfoCollector::collectUnitCommitmentMode()
+	void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 	{
 		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
-		file_content_.addItemToSection("from study", "unit commitment", unitCommitment);
+		file_content.addItemToSection("from study", "unit commitment", unitCommitment);
 	}
 
-	void StudyInfoCollector::collectMaxNbYearsInParallel()
+	void StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_content)
 	{
-		file_content_.addItemToSection("from study", "max parallel years", study_.maxNbYearsInParallel);
+		file_content.addItemToSection("from study", "max parallel years", study_.maxNbYearsInParallel);
 	}
 
-	void StudyInfoCollector::collectSolverVersion()
+	void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
 	{
 		// Example : 8.3.0 -> 830
 		const unsigned int version
 			= 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
 
-		file_content_.addItemToSection("from study", "antares version", version);
+		file_content.addItemToSection("from study", "antares version", version);
 	}
 
 	// Collecting data from simulation
 	// ---------------------------------
-	void SimulationInfoCollector::collect()
+	void SimulationInfoCollector::toFileContent(FileContent& file_content)
 	{
-		file_content_.addItemToSection("from simulation", "variables", opt_info_.nbVariables);
-		file_content_.addItemToSection("from simulation", "constraints", opt_info_.nbConstraints);
-		file_content_.addItemToSection("from simulation", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+		file_content.addItemToSection("from simulation", "variables", opt_info_.nbVariables);
+		file_content.addItemToSection("from simulation", "constraints", opt_info_.nbConstraints);
+		file_content.addItemToSection("from simulation", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
 	}
-
 
 	// Collecting durations from simulation
 	// -------------------------------------
