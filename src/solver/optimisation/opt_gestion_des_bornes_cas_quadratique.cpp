@@ -114,11 +114,12 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
-            ProblemeAResoudre->Xmin[Var] = 0.0;
-            ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
+            ProblemeAResoudre->Xmin[Var] = -1e-3;
+            ProblemeAResoudre->Xmax[Var] = hourlyCsrProblem.densNewValues[area] + 1e-3;
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]
-              = 0.0;
+            ProblemeAResoudre->X[Var]
+              = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour];
+
             AdresseDuResultat = &(
               ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour]);
 
@@ -151,11 +152,12 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM&
         {
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
 
-            ProblemeAResoudre->Xmin[Var] = 0.0;
+            ProblemeAResoudre->Xmin[Var] = -1e-3;
             ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
 
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]
-              = 0.0;
+            ProblemeAResoudre->X[Var]
+              = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour];
+
             AdresseDuResultat = &(
               ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
 
@@ -199,8 +201,9 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
         {
             // flow
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + 1e-3;
+            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]) - 1e-3;
+            ProblemeAResoudre->X[Var] = ValeursDeNTC->ValeurDuFlux[Interco];
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -234,8 +237,8 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             // else
             //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
-            Xmin[Var] = 0.0;
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+            Xmin[Var] = -1e-3;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + 1e-3;
             ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -254,8 +257,8 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             // else
             //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
-            Xmin[Var] = 0.0;
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
+            Xmin[Var] = -1e-3;
+            Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + 1e-3;
             ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             if (Math::Infinite(Xmax[Var]) == 1)
             {

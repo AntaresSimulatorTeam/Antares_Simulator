@@ -102,10 +102,10 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
-        hourlyCsrProblem.run();
+        hourlyCsrProblem.run(w, state.year);
     }
     double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
-    logs.info() << "[adq-patch] Year:" << state.year << " Week:" << w + 1
+    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
                 << ".Total LMR violation:" << totalLmrViolation;
 }
 
