@@ -115,7 +115,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
             ProblemeAResoudre->Xmin[Var] = -1e-3;
-            ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
+            ProblemeAResoudre->Xmax[Var] = hourlyCsrProblem.densNewValues[area] + 1e-3;
 
             ProblemeAResoudre->X[Var]
               = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour];

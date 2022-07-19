@@ -48,28 +48,28 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* Probleme
     }
 }
 
-void setRHSvalueOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
-{
-    int Cnt;
-    int Area;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+// void setRHSvalueOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+// {
+//     int Cnt;
+//     int Area;
+//     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+//     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-    // constraint for each area inside adq patch: ENS < DENS_new
-    for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        {
-            std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsrEns.find(Area);
-            if (it != hourlyCsrProblem.numberOfConstraintCsrEns.end())
-                Cnt = it->second;
-            ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.densNewValues[Area];
-            logs.debug() << Cnt << ": ENS < DENS_new: RHS[" << Cnt
-                         << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
-        }
-    }
-}
+//     // constraint for each area inside adq patch: ENS < DENS_new
+//     for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+//     {
+//         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+//             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+//         {
+//             std::map<int, int>::iterator it = hourlyCsrProblem.numberOfConstraintCsrEns.find(Area);
+//             if (it != hourlyCsrProblem.numberOfConstraintCsrEns.end())
+//                 Cnt = it->second;
+//             ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.densNewValues[Area];
+//             logs.debug() << Cnt << ": ENS < DENS_new: RHS[" << Cnt
+//                          << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+//         }
+//     }
+// }
 
 void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
@@ -247,7 +247,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* Prob
 {
     logs.debug() << "[CSR] RHS: ";
 
-    setRHSvalueOnENS(ProblemeHebdo, hourlyCsrProblem);
+    // setRHSvalueOnENS(ProblemeHebdo, hourlyCsrProblem);
     setRHSvalueOnFlows(ProblemeHebdo, hourlyCsrProblem);
     setRHSnodeBalanceValue(ProblemeHebdo, hourlyCsrProblem);
     setRHSbindingConstraintsValue(ProblemeHebdo, hourlyCsrProblem);
