@@ -135,7 +135,7 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
     float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
@@ -166,8 +166,7 @@ void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb
             }
         }
     }
-    logs.debug() << "Week:" << weekNb + 1 << ". Total LMR violation:" << totalLmrViolation;
-    return;
+    return totalLmrViolation;
 }
 
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
@@ -255,7 +254,6 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
                              ->ValeursHorairesDeDefaillanceNegative[hour];
 
-            netPositionInitValues[Area] = netPositionInit;
             densNewValues[Area] = densNew;
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
@@ -309,5 +307,4 @@ void HOURLY_CSR_PROBLEM::run()
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem();
-    return;
 }

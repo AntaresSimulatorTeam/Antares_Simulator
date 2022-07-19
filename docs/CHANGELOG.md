@@ -1,7 +1,27 @@
 Antares Changelog
 =================
 
-v8.3-rc1 (06/2022)
+v8.3.0-rc2 (07/2022)
+--------------------
+### New features
+- Add option to enable the splitting of exported MPS files. This feature is intended to be used by Antares Xpansion.
+- Add --list-solvers command-line argument, to list linear solvers available through OR-Tools
+
+### Bug fixes
+- Fix a crash occuring in studies where an area contains 100+ thermal clusters (#753)
+- Load & check prepro data only if needed (#754)
+- Fix possible loss of data if adq-patch is disabled (#738)
+- UI For property update for adq-patch mode, allow batch edit (#747)
+- UI - Fix GUI freeze when using multiple map layers (#721)
+
+### For developers
+- Code cleaning #666 #725 #667 #668 #730
+
+### Misc. improvements
+- Upgrade examples 8.1 -> 8.3 (#733)
+- Profit by plant : only compute average, exclude min/max/std (#735)
+
+v8.3.0-rc1 (06/2022)
 --------------------
 ### New features
 - Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657

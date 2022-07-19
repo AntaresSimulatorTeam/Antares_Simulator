@@ -238,13 +238,13 @@ void Parameters::resetThresholdsAdqPatch()
     // Initialize all thresholds values for adequacy patch
     adqPatch.curtailmentSharing.thresholdInitiate
       = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
-    adqPatch.localMatching.thresholdDisplayViolations
+    adqPatch.curtailmentSharing.thresholdDisplayViolations
       = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::resetAdqPatchParameters()
 {
-    include.adequacyPatch = false;
+    adqPatch.enabled = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
@@ -355,6 +355,7 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = false;
+    include.splitExportedMPS = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -605,6 +606,8 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.primary);
     if (key == "include-exportmps")
         return value.to<bool>(d.include.exportMPS);
+    if (key == "include-split-exported-mps")
+        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -671,7 +674,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       uint)
 {
     if (key == "include-adq-patch")
-        return value.to<bool>(d.include.adequacyPatch);
+        return value.to<bool>(d.adqPatch.enabled);
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
@@ -685,7 +688,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     if (key == "threshold-initiate-curtailment-sharing-rule")
         return value.to<float>(d.adqPatch.curtailmentSharing.thresholdInitiate);
     if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<float>(d.adqPatch.localMatching.thresholdDisplayViolations);
+        return value.to<float>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
 
     return false;
 }
@@ -1500,7 +1503,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    std::vector<std::string> excluded_vars;
+    renewableGeneration.addExcludedVariables(excluded_vars);
+    adqPatch.addExcludedVariables(excluded_vars);
+
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1628,7 +1634,9 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (!include.exportMPS)
         logs.info() << "  :: ignoring export mps";
-    if (!include.adequacyPatch)
+    if (!include.splitExportedMPS)
+        logs.info() << "  :: ignoring split exported mps";
+    if (!adqPatch.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
@@ -1791,6 +1799,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", include.exportMPS);
+        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1801,7 +1810,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // Adequacy patch
     {
         auto* section = ini.addSection("adequacy patch");
-        section->add("include-adq-patch", include.adequacyPatch);
+        section->add("include-adq-patch", adqPatch.enabled);
         section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
@@ -1813,7 +1822,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("threshold-initiate-curtailment-sharing-rule",
                      adqPatch.curtailmentSharing.thresholdInitiate);
         section->add("threshold-display-local-matching-rule-violations",
-                     adqPatch.localMatching.thresholdDisplayViolations);
+                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
     }
 
     // Other preferences
@@ -1963,33 +1972,42 @@ bool Parameters::saveToFile(const AnyString& filename) const
     return ini.save(filename);
 }
 
-std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
+    const static std::vector<std::string> ren = {"wind offshore",
+                                                 "wind onshore",
+                                                 "solar concrt.",
+                                                 "solar pv",
+                                                 "solar rooft",
+                                                 "renw. 1",
+                                                 "renw. 2",
+                                                 "renw. 3",
+                                                 "renw. 4"};
+
+    const static std::vector<std::string> agg = {"wind", "solar"};
+
     switch (rgModelling)
     {
-    /*
-       Order is important because AllVariablesPrintInfo::setPrintStatus
-       does not reset the search pointer.
-
-       Inverting some variable names below may result in some of them not being
-       taken into account.
-    */
+    // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        return {"wind offshore",
-                "wind onshore",
-                "solar concrt.",
-                "solar pv",
-                "solar rooft",
-                "renw. 1",
-                "renw. 2",
-                "renw. 3",
-                "renw. 4"};
+        out.insert(out.end(), ren.begin(), ren.end());
+        break;
+    // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:
-        return {"wind", "solar"};
-    case rgUnknown:
-        return {};
+        out.insert(out.end(), agg.begin(), agg.end());
+        break;
+    default:
+        break;
     }
-    return {};
+}
+
+void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
+{
+    if (!enabled)
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+    }
 }
 
 bool Parameters::haveToImport(int tsKind) const

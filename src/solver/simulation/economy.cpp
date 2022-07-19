@@ -70,7 +70,10 @@ EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEn
 
 // Adequacy patch
 AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
-void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w)
+void AdequacyPatchOptimization::solve(Variable::State& state,
+                                      int hourInTheYear,
+                                      uint numSpace,
+                                      uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
@@ -101,7 +104,9 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
         hourlyCsrProblem.run();
     }
-    checkLocalMatchingRuleViolations(problemeHebdo, w);
+    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
+    logs.info() << "[adq-patch] Year:" << state.year << " Week:" << w + 1
+                << ".Total LMR violation:" << totalLmrViolation;
 }
 
 // No adequacy patch
@@ -161,7 +166,7 @@ bool Economy::simulationBegin()
         }
 
         weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.include.adequacyPatch);
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
 
         SIM_InitialisationResultats();
     }

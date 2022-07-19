@@ -150,7 +150,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.include.adequacyPatch, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -329,7 +329,7 @@ void AdequacyPatchOptions::refresh()
     // Adequacy patch
     std::string buttonType = "specify";
     // Include adequacy patch
-    updateButton(pBtnAdequacyPatch, study.parameters.include.adequacyPatch, buttonType);
+    updateButton(pBtnAdequacyPatch, study.parameters.adqPatch.enabled, buttonType);
     // Save intermediate results for adequacy patch
     updateButton(pBtnAdequacyPatchSaveIntermediateResults,
                  study.parameters.adqPatch.saveIntermediateResults,
@@ -358,7 +358,7 @@ void AdequacyPatchOptions::refresh()
               wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
-              wxString() << study.parameters.adqPatch.localMatching.thresholdDisplayViolations);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
     }
 }
 
@@ -571,9 +571,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatch.localMatching.thresholdDisplayViolations)
+                != study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations)
             {
-                study.parameters.adqPatch.localMatching.thresholdDisplayViolations = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations = newthreshold;
                 MarkTheStudyAsModified();
             }
         }

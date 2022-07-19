@@ -424,8 +424,8 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
-        //! a flag to use Adequacy patch
-        bool adequacyPatch;
+        //! if MPS files are exported, a flag to split them
+        bool splitExportedMPS;
 
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
@@ -466,7 +466,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -525,9 +525,8 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
-            //! Threshold to display Local Matching Rule violations
-            float thresholdDisplayViolations;
         };
+        bool enabled;
         LocalMatching localMatching;
 
         struct CurtailmentSharing
@@ -536,12 +535,15 @@ public:
             Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
             //! Threshold to initiate curtailment sharing rule
             float thresholdInitiate;
+            //! Threshold to display Local Matching Rule violations
+            float thresholdDisplayViolations;
         };
         CurtailmentSharing curtailmentSharing;
 
         //! Select whether the intermediate result before the application of the curtailment
         //! sharing is to be kept in the results
         bool saveIntermediateResults;
+        void addExcludedVariables(std::vector<std::string>&) const;
     };
 
     AdequacyPatch adqPatch;
