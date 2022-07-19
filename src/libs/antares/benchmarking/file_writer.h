@@ -1,8 +1,6 @@
 #pragma once
 
 #include <yuni/yuni.h>
-#include <yuni/io/file/stream.h>
-
 #include "file_content.h"
 
 namespace Benchmarking

@@ -1,8 +1,6 @@
 #include "file_writer.h"
-#include <antares/exception/LoadingError.hpp>
 #include "antares/inifile/inifile.h"
 
-using namespace Antares::Data;
 using namespace std;
 
 namespace Benchmarking
