@@ -41,6 +41,7 @@ nav:
     - 'Miscellaneous': 'reference-guide/08-miscellaneous.md'
     - 'System requirements': 'reference-guide/09-system_requirements.md'
     - 'Command line': 'reference-guide/10-command_line.md'
+    - 'File format changes': 'reference-guide/13-file-format.md'
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
   - 'Optimisation problem' : 'reference-guide/11-modeling.md'
   - 'Build':

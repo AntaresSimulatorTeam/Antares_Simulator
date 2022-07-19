@@ -390,6 +390,8 @@ public:
     using reverse_iterator = Area::Map::reverse_iterator;
     //! A const iterator
     using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    //! Key-value type
+    using value_type = Area::Map::value_type;
 
 public:
     //! \name Constructor & Destructor

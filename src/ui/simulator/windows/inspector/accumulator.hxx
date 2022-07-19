@@ -625,7 +625,7 @@ struct PAreaUnsuppliedEnergyCost
 
 struct PAdequacyPatchMode
 {
-    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
+    using Type = Data::AdequacyPatch::AdequacyPatchMode;
     static Type Value(const Data::Area* area)
     {
         return area->adequacyPatchMode;

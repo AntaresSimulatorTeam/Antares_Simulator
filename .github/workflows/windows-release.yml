@@ -8,10 +8,15 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -71,6 +76,12 @@ jobs:
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -167,6 +178,10 @@ jobs:
         asset_name: ${{env.ZIP_NAME}}
         asset_content_type: application/octet-stream
 
+    - name: Remove zip to free some disk space
+      shell: bash
+      run: rm _build/${{env.ZIP_NAME}}
+
     - name: NSIS Installer creation
       shell: bash
       run: |
@@ -176,6 +191,13 @@ jobs:
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
+
+    - name: Upload NSIS logs
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: NSISOutput.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2

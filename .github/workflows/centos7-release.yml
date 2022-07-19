@@ -108,21 +108,23 @@ jobs:
            cd _build
            cpack3 -G RPM
            export RPM_NAME=$(ls *.rpm)
-           echo "RPM_NAME=$RPM_NAME" >> $GITHUB_ENV
+           echo "RPM_NAME=${RPM_NAME}" >> $GITHUB_ENV
+           echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
            
     - name: .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
            export TGZ_NAME=$(ls *.tar.gz)
-           echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
+           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
+           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
            
     - name: Upload .rpm
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.RPM_NAME}}
-        asset_name: ${{env.RPM_NAME}}${{ steps.ortools.outputs.label }}
+        asset_name: ${{env.RPM_NAME_WITH_SUFFIX}}
         asset_content_type: application/octet-stream
            
     - name: Upload .tar.gz
@@ -130,6 +132,6 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.TGZ_NAME}}
-        asset_name: ${{env.TGZ_NAME}}${{ steps.ortools.outputs.label }}
+        asset_name: ${{env.TGZ_NAME_WITH_SUFFIX}}
         asset_content_type: application/octet-stream
     
