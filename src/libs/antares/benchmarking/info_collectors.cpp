@@ -1,5 +1,5 @@
+#include <numeric>
 #include "info_collectors.h"
-#include <antares/exception/LoadingError.hpp>
 #include <antares/config.h>
 #include "antares/study/area/area.h"
 
@@ -7,7 +7,7 @@ using namespace Antares::Data;
 
 namespace Benchmarking 
 {
-	// Collecting data from study
+	// Collecting data study
 	// ---------------------------
 	void StudyInfoCollector::toFileContent(FileContent& file_content)
 	{
@@ -23,12 +23,12 @@ namespace Benchmarking
 
 	void StudyInfoCollector::areasCountToFileContent(FileContent& file_content)
 	{
-		file_content.addItemToSection("from study", "areas", study_.areas.size());
+		file_content.addItemToSection("study", "areas", study_.areas.size());
 	}
 
 	void StudyInfoCollector::linksCountToFileContent(FileContent& file_content)
 	{
-		file_content.addItemToSection("from study", "links", study_.areas.areaLinkCount());
+		file_content.addItemToSection("study", "links", study_.areas.areaLinkCount());
 	}
 
 	void StudyInfoCollector::performedYearsCountToFileContent(FileContent& file_content)
@@ -42,7 +42,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of performed years to the file content
-		file_content.addItemToSection("from study", "performed years", nbPerformedYears);
+		file_content.addItemToSection("study", "performed years", nbPerformedYears);
 	}
 
 	void StudyInfoCollector::enabledThermalClustersCountToFileContent(FileContent& file_content)
@@ -64,7 +64,7 @@ namespace Benchmarking
 		}
 
 		// Adding an item related to number of enabled thermal clusters to the file content
-		file_content.addItemToSection("from study", "enabled thermal clusters", nbEnabledThermalClusters);
+		file_content.addItemToSection("study", "enabled thermal clusters", nbEnabledThermalClusters);
 	}
 
 	void StudyInfoCollector::enabledBindingConstraintsCountToFileContent(FileContent& file_content)
@@ -90,21 +90,21 @@ namespace Benchmarking
 			}
 		}
 
-		file_content.addItemToSection("from study", "enabled BC", nbEnabledBC);
-		file_content.addItemToSection("from study", "enabled hourly BC", nbEnabledHourlyBC);
-		file_content.addItemToSection("from study", "enabled daily BC", nbEnabledDailyBC);
-		file_content.addItemToSection("from study", "enabled weekly BC", nbEnabledWeeklyBC);
+		file_content.addItemToSection("study", "enabled BC", nbEnabledBC);
+		file_content.addItemToSection("study", "enabled hourly BC", nbEnabledHourlyBC);
+		file_content.addItemToSection("study", "enabled daily BC", nbEnabledDailyBC);
+		file_content.addItemToSection("study", "enabled weekly BC", nbEnabledWeeklyBC);
 	}
 
 	void StudyInfoCollector::unitCommitmentModeToFileContent(FileContent& file_content)
 	{
 		const char* unitCommitment = UnitCommitmentModeToCString(study_.parameters.unitCommitment.ucMode);
-		file_content.addItemToSection("from study", "unit commitment", unitCommitment);
+		file_content.addItemToSection("study", "unit commitment", unitCommitment);
 	}
 
 	void StudyInfoCollector::maxNbYearsInParallelToFileContent(FileContent& file_content)
 	{
-		file_content.addItemToSection("from study", "max parallel years", study_.maxNbYearsInParallel);
+		file_content.addItemToSection("study", "max parallel years", study_.maxNbYearsInParallel);
 	}
 
 	void StudyInfoCollector::solverVersionToFileContent(FileContent& file_content)
@@ -113,16 +113,16 @@ namespace Benchmarking
 		const unsigned int version
 			= 100 * ANTARES_VERSION_HI + 10 * ANTARES_VERSION_LO + ANTARES_VERSION_BUILD;
 
-		file_content.addItemToSection("from study", "antares version", version);
+		file_content.addItemToSection("study", "antares version", version);
 	}
 
-	// Collecting data from simulation
-	// ---------------------------------
+	// Collecting data optimization problem
+	// -------------------------------------
 	void SimulationInfoCollector::toFileContent(FileContent& file_content)
 	{
-		file_content.addItemToSection("from simulation", "variables", opt_info_.nbVariables);
-		file_content.addItemToSection("from simulation", "constraints", opt_info_.nbConstraints);
-		file_content.addItemToSection("from simulation", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
+		file_content.addItemToSection("optimization problem", "variables", opt_info_.nbVariables);
+		file_content.addItemToSection("optimization problem", "constraints", opt_info_.nbConstraints);
+		file_content.addItemToSection("optimization problem", "non-zero coefficients", opt_info_.nbNonZeroCoeffs);
 	}
 
 	// Collecting durations from simulation
@@ -131,19 +131,15 @@ namespace Benchmarking
 	{		
 		for (pair<string, vector<int64_t>> element : duration_items_)
 		{
-			std::string name = element.first;
-			vector<int64_t> durations = element.second;
-			int64_t duration_sum = 0;
-			for (auto& duration : durations)
-			{
-				duration_sum += duration;
-			}
+			const std::string& name = element.first;
+			const auto& durations = element.second;
+			const int64_t duration_sum = accumulate(durations.begin(), durations.end(), (int64_t)0);
 
 			file_content.addDurationItem(name, (unsigned int)duration_sum, (int)durations.size());
 		}
 	}
 
-	void DurationCollector::addDuration(std::string name, int64_t duration)
+	void DurationCollector::addDuration(const std::string& name, int64_t duration)
 	{	
 		const std::lock_guard<std::mutex> lock(mutex_);
 		duration_items_[name].push_back(duration);

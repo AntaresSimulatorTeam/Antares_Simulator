@@ -525,7 +525,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
-void Application::writeInfoOnExecution()
+void Application::writeExectutionInfo()
 {
     if (!pStudy)
         return;

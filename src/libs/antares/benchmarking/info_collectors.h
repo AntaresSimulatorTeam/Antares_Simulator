@@ -70,14 +70,14 @@ private:
 class IDurationCollector
 {
 public:
-    virtual void addDuration(std::string name, int64_t duration) = 0;
+    virtual void addDuration(const std::string& name, int64_t duration) = 0;
 };
 
 class NullDurationCollector : public IDurationCollector
 {
 public:
     NullDurationCollector() = default;
-    void addDuration(std::string name, int64_t duration) override { /* Do nothing */ }
+    void addDuration(const std::string& /* name */, int64_t /* duration */) override { /* Do nothing */ }
 };
 
 class DurationCollector : public IDurationCollector
@@ -86,7 +86,7 @@ public:
     DurationCollector() = default;
 
     void toFileContent(FileContent& file_content);
-    void addDuration(std::string name, int64_t duration) override;
+    void addDuration(const std::string& name, int64_t duration) override;
 
 private:
     map<string, vector<int64_t>> duration_items_;

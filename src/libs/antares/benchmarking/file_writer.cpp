@@ -20,7 +20,7 @@ namespace Benchmarking
 		FileContent::iterator it_section = fileContent_.firstSection();
 		for (; it_section != fileContent_.endSections(); it_section++)
 		{
-			Antares::IniFile::Section* section = ini.addSection(it_section->first);
+			auto* section = ini.addSection(it_section->first);
 			for (pair<string, string> line : it_section->second)
 				section->add(line.first, line.second);
 		}

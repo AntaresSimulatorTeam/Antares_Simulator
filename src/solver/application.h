@@ -50,7 +50,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void writeInfoOnExecution();
+    void writeExectutionInfo();
 
 private:
     /*!

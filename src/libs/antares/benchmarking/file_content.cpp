@@ -14,19 +14,19 @@ namespace Benchmarking
 		return sections_.end();
 	}
 
-	void FileContent::addItemToSection(string section, string key, int value)
+	void FileContent::addItemToSection(const string& section, const string& key, int value)
 	{
 		sections_[section][key] = to_string(value);
 	}
 
-	void FileContent::addItemToSection(string section, string key, string value)
+	void FileContent::addItemToSection(const string& section, const string& key, const string& value)
 	{
 		sections_[section][key] = value;
 	}
 
-	void FileContent::addDurationItem(std::string name, unsigned int duration, int nbCalls)
+	void FileContent::addDurationItem(const string& name, unsigned int duration, int nbCalls)
 	{
-		sections_["Durations"][name + "--duration"] = to_string(duration);
-		sections_["Durations"][name + "--nb_calls"] = to_string(nbCalls);
+		addItemToSection("Durations", name + "_duration", duration);
+		addItemToSection("Durations", name + "_nb_calls", nbCalls);
 	}
 }
