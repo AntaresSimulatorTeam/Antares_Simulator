@@ -238,6 +238,14 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
                              << ". Area:" << Area << ", Palier:" << Palier << ", Poids" << Poids
                              << ", ValueOfVar:" << ValueOfVar;
             }
+            if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
+            {
+                SecondMembre[Cnt] += 1e+3;
+            }
+            else if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '>')
+            {
+                SecondMembre[Cnt] -= 1e-3;
+            }
         }
     }
 }
