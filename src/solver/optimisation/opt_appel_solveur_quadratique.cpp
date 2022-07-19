@@ -256,12 +256,16 @@ void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 }
 
 void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                              HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                              HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                              uint weekNb,
+                              int yearNb)
 {
     int Var;
     double* pt;
-    logs.warning() << "CSR Quadratic Optimization: No solution, hour in week: "
-                   << hourlyCsrProblem.hourInWeekTriggeredCsr; // todo refactoring
+    logs.warning()
+      << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
+      << yearNb + 1 << ". week: " << weekNb + 1
+      << ". hour: " << hourlyCsrProblem.hourInWeekTriggeredCsr;
 
     // for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     // {
@@ -311,7 +315,9 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 }
 
 bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                       HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                       HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                                       uint weekNb,
+                                       int yearNb)
 {
     PROBLEME_POINT_INTERIEUR Probleme;
     setInteriorPointProblem(ProblemeAResoudre, Probleme);
@@ -324,7 +330,7 @@ bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeARes
     }
     else
     {
-        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem);
+        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb);
         return false;
     }
 }

@@ -292,12 +292,12 @@ void HOURLY_CSR_PROBLEM::setProblemCost()
     OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblemBelongedTo, *this);
 }
 
-void HOURLY_CSR_PROBLEM::solveProblem()
+void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
 {
-    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this);
+    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run()
+void HOURLY_CSR_PROBLEM::run(uint week, int year)
 {
     resetProblem();
     calculateCsrParameters();
@@ -306,5 +306,5 @@ void HOURLY_CSR_PROBLEM::run()
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem();
+    solveProblem(week, year);
 }

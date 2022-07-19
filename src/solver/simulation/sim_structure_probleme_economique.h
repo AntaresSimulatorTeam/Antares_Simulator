@@ -727,9 +727,9 @@ private:
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
-    void solveProblem();
+    void solveProblem(uint week, int year);
 public:
-    void run();
+    void run(uint week, int year);
 public:
     int hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
