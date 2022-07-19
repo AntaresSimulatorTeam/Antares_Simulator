@@ -263,12 +263,12 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     logs.warning() << "CSR Quadratic Optimization: No solution, hour in week: "
                    << hourlyCsrProblem.hourInWeekTriggeredCsr; // todo refactoring
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-    {
-        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-        if (pt)
-            *pt = std::numeric_limits<double>::quiet_NaN();
-    }
+    // for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    // {
+    //     pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+    //     if (pt)
+    //         *pt = std::numeric_limits<double>::quiet_NaN();
+    // }
 
 #ifndef NDEBUG
 
