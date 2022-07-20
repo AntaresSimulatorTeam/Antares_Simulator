@@ -206,7 +206,7 @@ static void addUpstreamDownstream(wxTreeItemId& rootId,
                             listbox->SetItemBold(id, true);
                         }
                         // Adding the item for the interconnection
-                        /* wxTreeItemId itemID = */ listbox->AppendItem(
+                        listbox->AppendItem(
                           id, /*parent*/
                           // caption
                           wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
@@ -231,11 +231,11 @@ static void addByArea(wxTreeItemId& rootId,
 
     // For each area, list the links related to it. For each link, the area is either
     // its origin or extremity.
-    using ListOfLinks
-      = std::vector<std::pair<Data::AreaLink* /*pointer to link*/,
-                              bool /*true if area is the origin of the link, false otherwise*/>>;
+    using ListOfLinks = std::vector<Data::AreaLink*>;
+
     // 1. Build hierarchy
     std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
+    // AreaName area1 -> {Link* lnk1, Link* lnk2, ...}
     for (const auto& namedArea : areas)
     {
         Data::Area* area = namedArea.second;
@@ -246,24 +246,21 @@ static void addByArea(wxTreeItemId& rootId,
                 Data::AreaLink* lnk = namedLink.second;
                 if (lnk->isVisibleOnLayer(layerID))
                 {
-                    areaToListOfLinks[area->name].push_back({lnk, true});
-                    areaToListOfLinks[lnk->with->name].push_back({lnk, false});
+                    areaToListOfLinks[area->name].push_back(lnk);
+                    areaToListOfLinks[lnk->with->name].push_back(lnk);
                 }
             }
         }
     }
     // 2. Create nodes, etc.
+    // std::pair<Data::AreaName, std::vector<Data::AreaLink*>> al;
     for (const auto& al : areaToListOfLinks)
     {
         // Reference to the area
         wxTreeItemId id;
         // Foreach Interconnection for the area
-        const auto end = al.second.end();
-        for (auto i = al.second.begin(); i != end; ++i)
+        for (auto lnk : al.second)
         {
-            Data::AreaLink* lnk = i->first;
-            const bool isAreaOriginOfLink = i->second;
-
             if (!id)
             {
                 // We have to create the item corresponding to the area
@@ -274,8 +271,10 @@ static void addByArea(wxTreeItemId& rootId,
                                          1);
                 listbox->SetItemBold(id, true);
             }
+
+            const bool isAreaOriginOfLink = (al.first == lnk->from->name);
             // Adding the item for the interconnection
-            /* wxTreeItemId itemID = */ listbox->AppendItem(
+            listbox->AppendItem(
               id, /*parent*/
               // caption
               wxString() << wxT(' ')
@@ -427,7 +426,6 @@ void Connections::onMapLayerRemoved(const wxString* text)
         if (pLayerFilter->GetCount() == 1 && GetSizer()->IsShown(pLayerFilter))
             GetSizer()->Hide(pLayerFilter);
     }
-    /*wxStringToString(*text, pLastResearch);*/
     Dispatcher::GUI::Post(this, &Connections::update);
 }
 
