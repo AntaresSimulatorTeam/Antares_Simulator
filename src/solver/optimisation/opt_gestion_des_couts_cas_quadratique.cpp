@@ -83,7 +83,7 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                if (ProblemeHebdo->adqPatch->PriceTakingOrder
+                if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
                     == Data::AdequacyPatch::AdqPatchPTO::isLoad)
                 {
                     priceTakingOrders
@@ -91,7 +91,8 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
                         + ProblemeHebdo->AllMustRunGeneration[hour]
                             ->AllMustRunGenerationOfArea[area];
                 }
-                else
+                else if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
+                         == Data::AdequacyPatch::AdqPatchPTO::isDens)
                 {
                     priceTakingOrders
                       = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];

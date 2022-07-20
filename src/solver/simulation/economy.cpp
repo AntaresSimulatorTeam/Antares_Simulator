@@ -51,6 +51,72 @@ enum
     nbHoursInAWeek = 168,
 };
 
+// Interface class + factory
+void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
+{
+    pProblemesHebdo = problemesHebdo;
+}
+
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+{
+    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
+    if (adqPatchEnabled)
+        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+    else
+        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+
+    return nullptr;
+}
+
+// Adequacy patch
+AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
+void AdequacyPatchOptimization::solve(Variable::State& state,
+                                      int hourInTheYear,
+                                      uint numSpace,
+                                      uint w)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
+
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+    {
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            memcpy(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+        else
+            memset(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   0,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+    }
+
+    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
+    // part that we need
+    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+
+    std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(numSpace);
+    for (int hourInWeek : hoursRequiringCurtailmentSharing)
+    {
+        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
+        hourlyCsrProblem.run(w, state.year);
+    }
+    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
+    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
+                << ".Total LMR violation:" << totalLmrViolation;
+}
+
+// No adequacy patch
+NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -99,6 +165,9 @@ bool Economy::simulationBegin()
             }
         }
 
+        weeklyOptProblem
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+
         SIM_InitialisationResultats();
     }
 
@@ -106,6 +175,11 @@ bool Economy::simulationBegin()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
+
+        if (weeklyOptProblem)
+        {
+            weeklyOptProblem->initializeProblemeHebdo(pProblemesHebdo);
+        }
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -113,66 +187,40 @@ bool Economy::simulationBegin()
     return true;
 }
 
-void OPT_OptimisationHebdomadaireAdqPatch(PROBLEME_HEBDO* pProblemeHebdo,
-                                          Variable::State& state,
-                                          uint numSpace,
-                                          int hourInTheYear)
+vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace)
 {
-    pProblemeHebdo->adqPatch->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-    pProblemeHebdo->adqPatch->AdequacyFirstStep = false;
-
-    for (int pays = 0; pays < pProblemeHebdo->NombreDePays; ++pays)
-    {
-        if (pProblemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-        else
-            memset(pProblemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   0,
-                   pProblemeHebdo->NombreDePasDeTemps * sizeof(double));
-    }
-
-    ::SIM_RenseignementProblemeHebdo(*pProblemeHebdo, state, numSpace, hourInTheYear);
-    OPT_OptimisationHebdomadaire(pProblemeHebdo, numSpace);
-}
-
-vector<double> Economy::calculateENSoverAllAreasForEachHour(uint numSpace)
-{
-    double temp[nbHoursInAWeek] = {0};
-
+    std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
     {
         if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            sumTwoArrays<double>(temp,
-                                 pProblemesHebdo[numSpace]
-                                   ->ResultatsHoraires[area]
-                                   ->ValeursHorairesDeDefaillancePositive,
-                                 nbHoursInAWeek);
+            addArray(sumENS,
+                     pProblemesHebdo[numSpace]
+                       ->ResultatsHoraires[area]
+                       ->ValeursHorairesDeDefaillancePositive,
+                     nbHoursInAWeek);
     }
-    std::vector<double> sumENS;
-    sumENS.assign(std::begin(temp), std::end(temp));
     return sumENS;
 }
 
-std::set<int> Economy::identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace)
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
+                                                                            uint numSpace)
 {
-    float threshold = pProblemesHebdo[numSpace]->adqPatch->ThresholdInitiateCurtailmentSharingRule;
+    float threshold
+      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
-        if ((int)sumENS[i] >= threshold)
+        if ((int)sumENS[i] > threshold)
         {
             triggerCsrSet.insert(i);
         }
     }
+    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
     return triggerCsrSet;
 }
 
-std::set<int> Economy::getHoursRequiringCurtailmentSharing(uint numSpace)
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace)
 {
     vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
@@ -212,26 +260,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            if (pProblemesHebdo[numSpace]->adqPatch)
-            {
-                OPT_OptimisationHebdomadaireAdqPatch(
-                  pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
-
-                std::set<int> hoursRequiringCurtailmentSharing
-                  = getHoursRequiringCurtailmentSharing(numSpace);
-
-                for (int hourInWeek : hoursRequiringCurtailmentSharing)
-                {
-                    HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, pProblemesHebdo[numSpace]);
-                    hourlyCsrProblem.run();
-                }
-
-                checkLocalMatchingRuleViolations(pProblemesHebdo[numSpace], w);
-            }
-            else
-            {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-            }
+            weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);

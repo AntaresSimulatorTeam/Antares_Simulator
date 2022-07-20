@@ -424,8 +424,8 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
-        //! a flag to use Adequacy patch
-        bool adequacyPatch;
+        //! if MPS files are exported, a flag to split them
+        bool splitExportedMPS;
 
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
@@ -466,7 +466,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -513,22 +513,40 @@ public:
     SimplexOptimization simplexOptimizationRange;
     //@}
 
-    //! Transmission capacities from physical areas outside adequacy patch (area type 1) to physical
-    //! areas inside adequacy patch (area type 2). NTC is set to null (if true) only in the first
-    //! step of adequacy patch local matching rule.
-    bool setToZeroNTCfromOutToIn_AdqPatch;
-    //! Transmission capacities between physical areas outside adequacy patch (area type 1). NTC is
-    //! set to null (if true) only in the first step of adequacy patch local matching rule.
-    bool setToZeroNTCfromOutToOut_AdqPatch;
-    //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
-    AdequacyPatch::AdqPatchPTO adqPatchPriceTakingOrder;
-    //! Select whether the intermediate result before the application of the curtailment sharing is
-    //! to be kept in the results
-    bool adqPatchSaveIntermediateResults;
-    //! Threshold to initiate curtailment sharing rule
-    float adqPatchThresholdInitiateCurtailmentSharingRule;
-    //! Threshold to display Local Matching Rule violations
-    float adqPatchThresholdDisplayLocalMatchingRuleViolations;
+    struct AdequacyPatch
+    {
+        struct LocalMatching
+        {
+            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+            //! only in the first step of adequacy patch local matching rule.
+            bool setToZeroOutsideInsideLinks = true;
+            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
+            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
+            //! rule.
+            bool setToZeroOutsideOutsideLinks = true;
+        };
+        bool enabled;
+        LocalMatching localMatching;
+
+        struct CurtailmentSharing
+        {
+            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
+            //! Threshold to initiate curtailment sharing rule
+            float thresholdInitiate;
+            //! Threshold to display Local Matching Rule violations
+            float thresholdDisplayViolations;
+        };
+        CurtailmentSharing curtailmentSharing;
+
+        //! Select whether the intermediate result before the application of the curtailment
+        //! sharing is to be kept in the results
+        bool saveIntermediateResults;
+        void addExcludedVariables(std::vector<std::string>&) const;
+    };
+
+    AdequacyPatch adqPatch;
 
     //! \name Scenariio Builder - Rules
     //@{

@@ -87,8 +87,6 @@ private:
     int pArgc;
     char** pArgv;
 
-    bool shouldExecute = true;
-
     TimeElapsed::ContentHandler pTimeElapsedContentHandler;
     TimeElapsed::Timer pTotalTimer;
 }; // class Application

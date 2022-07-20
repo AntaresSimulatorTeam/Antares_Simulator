@@ -348,7 +348,7 @@ bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
         value = "inside";
         break;
     default:
-        value = "outside"; //default physicalAreaOutsideAdqPatch
+        value = "outside"; // default physicalAreaOutsideAdqPatch
         break;
     }
     section->add("adequacy-patch-mode", value);
@@ -753,7 +753,7 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 template<class StringT>
 static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
 {
-    if (study.header.version >= 820)
+    if (study.header.version >= 830)
     {
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
@@ -768,9 +768,7 @@ static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
                 tmp.toLower();
                 if (tmp == "adequacy-patch-mode")
                 {
-                    auto value = p->value;
-                    value.trim();
-                    value.toLower();
+                    auto value = (p->value).toLower();
 
                     if (value == "virtual")
                         area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;

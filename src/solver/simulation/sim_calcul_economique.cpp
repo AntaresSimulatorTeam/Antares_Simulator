@@ -63,24 +63,25 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
-    if (parameters.include.adequacyPatch)
+    if (parameters.adqPatch.enabled)
     {
-        problem.adqPatch = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        problem.adqPatchParams
+          = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
-        problem.adqPatch->setToZeroNTCfromOutToIn_AdqPatchStep1
-          = parameters.setToZeroNTCfromOutToIn_AdqPatch;
-        problem.adqPatch->setToZeroNTCbetweenOutsideAreas_AdqPatchStep1
-          = parameters.setToZeroNTCfromOutToOut_AdqPatch;
-        problem.adqPatch->SaveIntermediateResults = parameters.adqPatchSaveIntermediateResults;
-        problem.adqPatch->PriceTakingOrder = parameters.adqPatchPriceTakingOrder;
-        problem.adqPatch->ThresholdInitiateCurtailmentSharingRule
-          = parameters.adqPatchThresholdInitiateCurtailmentSharingRule;
-        problem.adqPatch->ThresholdDisplayLocalMatchingRuleViolations
-          = parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations;
-    }
+        problem.adqPatchParams->SetNTCOutsideToInsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
+        problem.adqPatchParams->SetNTCOutsideToOutsideToZero
+          = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
+        problem.adqPatchParams->SaveIntermediateResults
+          = parameters.adqPatch.saveIntermediateResults;
+        problem.adqPatchParams->PriceTakingOrder
+          = parameters.adqPatch.curtailmentSharing.priceTakingOrder;
+        problem.adqPatchParams->ThresholdInitiateCurtailmentSharingRule
+          = parameters.adqPatch.curtailmentSharing.thresholdInitiate;
+        problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
+          = parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations;
 
-    if (parameters.include.adequacyPatch){
-      problem.adequacyPatchRuntimeData.initialize(study);
+        problem.adequacyPatchRuntimeData.initialize(study);
     }
 
     problem.WaterValueAccurate
@@ -101,6 +102,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
     problem.ExportMPS = study.parameters.include.exportMPS;
+    problem.SplitExportedMPS = study.parameters.include.splitExportedMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
@@ -268,7 +270,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = cluster.nominalCapacityWithSpinning;
             pbPalier.PminDuPalierThermiquePendantUneHeure[l] = cluster.minStablePower;
             pbPalier.PminDuPalierThermiquePendantUnJour[l] = 0;
-            pbPalier.PminDuPalierThermiquePendantUneSemaine[l] = 0;
             pbPalier.minUpDownTime[l] = cluster.minUpDownTime;
 
             pbPalier.CoutDeDemarrageDUnGroupeDuPalierThermique[l] = cluster.startupCost;

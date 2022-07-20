@@ -563,7 +563,6 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-
 /*!
 ** \brief Types of Adequacy patch mode
 */
@@ -572,10 +571,9 @@ enum AdequacyPatchMode
     //! Virtual area in adq patch
     virtualArea = 0,
     //! Physical Area outside the adq-patch
-    physicalAreaOutsideAdqPatch,
+    physicalAreaOutsideAdqPatch = 1,
     //! Physical Area inside the adq-patch
-    physicalAreaInsideAdqPatch
-
+    physicalAreaInsideAdqPatch = 2
 }; // enum AdequacyPatchMode
 
 /*!
@@ -607,9 +605,9 @@ enum AdqPatchPTO
 }; // enum AdqPatchPTO
 
 //! A default threshold value for initiate curtailment sharing rule
-const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 500.0;
+const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
 //! A default threshold value for display local matching rule violations
-const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 500.0;
+const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
 
 } // namespace AdequacyPatch
 } // namespace Data

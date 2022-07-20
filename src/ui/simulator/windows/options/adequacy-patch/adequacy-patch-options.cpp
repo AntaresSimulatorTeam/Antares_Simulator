@@ -150,7 +150,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.include.adequacyPatch, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -160,13 +160,15 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     // physical areas inside adequacy patch (area type 2). Used in the first step of adequacy patch
     // local matching rule.
     {
-        label = Component::CreateLabel(this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
+        label = Component::CreateLabel(
+          this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
         button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.setToZeroNTCfromOutToIn_AdqPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -181,7 +183,8 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuNTC,
-                     PopupInfo(study.parameters.setToZeroNTCfromOutToOut_AdqPatch, wxT("NTC")));
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                               wxT("NTC")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -208,7 +211,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.adqPatchSaveIntermediateResults, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.saveIntermediateResults, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -326,34 +329,36 @@ void AdequacyPatchOptions::refresh()
     // Adequacy patch
     std::string buttonType = "specify";
     // Include adequacy patch
-    updateButton(pBtnAdequacyPatch, study.parameters.include.adequacyPatch, buttonType);
+    updateButton(pBtnAdequacyPatch, study.parameters.adqPatch.enabled, buttonType);
     // Save intermediate results for adequacy patch
     updateButton(pBtnAdequacyPatchSaveIntermediateResults,
-                 study.parameters.adqPatchSaveIntermediateResults,
+                 study.parameters.adqPatch.saveIntermediateResults,
                  buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     buttonType = "ntc";
-    updateButton(
-      pBtnNTCfromOutToInAdqPatch, study.parameters.setToZeroNTCfromOutToIn_AdqPatch, buttonType);
+    updateButton(pBtnNTCfromOutToInAdqPatch,
+                 study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                 buttonType);
     // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
     // adequacy patch local matching rule.
-    updateButton(
-      pBtnNTCfromOutToOutAdqPatch, study.parameters.setToZeroNTCfromOutToOut_AdqPatch, buttonType);
+    updateButton(pBtnNTCfromOutToOutAdqPatch,
+                 study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                 buttonType);
     // Price taking order (PTO) for adequacy patch
     buttonType = "pto";
     bool isPTOload
-      = (study.parameters.adqPatchPriceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
+      = (study.parameters.adqPatch.curtailmentSharing.priceTakingOrder == AdqPatchPTO::isLoad) ? true : false;
     updateButton(pBtnAdequacyPatchPTO, isPTOload, buttonType);
 
     // Threshold values
     {
         if (pThresholdCSRStart)
             pThresholdCSRStart->SetValue(
-              wxString() << study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
-              wxString() << study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
     }
 }
 
@@ -482,9 +487,9 @@ void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isDens)
+        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens)
         {
-            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isDens;
+            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -496,9 +501,9 @@ void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.adqPatchPriceTakingOrder != AdqPatchPTO::isLoad)
+        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad)
         {
-            study->parameters.adqPatchPriceTakingOrder = AdqPatchPTO::isLoad;
+            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
             refresh();
             MarkTheStudyAsModified();
         }
@@ -542,9 +547,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         }
         else
         {
-            if (newthreshold != study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule)
+            if (newthreshold != study.parameters.adqPatch.curtailmentSharing.thresholdInitiate)
             {
-                study.parameters.adqPatchThresholdInitiateCurtailmentSharingRule = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdInitiate = newthreshold;
                 MarkTheStudyAsModified();
             }
         }
@@ -566,9 +571,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         else
         {
             if (newthreshold
-                != study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations)
+                != study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations)
             {
-                study.parameters.adqPatchThresholdDisplayLocalMatchingRuleViolations = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations = newthreshold;
                 MarkTheStudyAsModified();
             }
         }

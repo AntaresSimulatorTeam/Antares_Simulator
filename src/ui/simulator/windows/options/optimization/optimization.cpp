@@ -293,7 +293,7 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnSpinningReserve = button;
     }
-    // Export mps
+    // Export MPS
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
@@ -306,6 +306,20 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnExportMPS = button;
+    }
+    // Split exported MPS
+    {
+        label = Component::CreateLabel(this, wxT("Split exported mps"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuSpecify,
+                     PopupInfo(study.parameters.include.splitExportedMPS, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnSplitExportedMPS = button;
     }
     // Unfeasible problem behavior
     {
@@ -472,7 +486,8 @@ void Optimization::refresh()
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
-
+    // Split exported MPS
+    ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(
       Data::getIcon(study.parameters.include.unfeasibleProblemBehavior));

@@ -28,8 +28,15 @@
 #ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
 #define __SOLVER_ADEQUACY_FUNCTIONS_H__
 
-using namespace Antares::Data;
+#include <antares/study/fwd.h>
+#include "../simulation/sim_structure_probleme_economique.h"
 
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
@@ -94,24 +101,23 @@ void setNTCbounds(double& Xmax,
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
                                                    int Area,
                                                    int hour);
-/*!
- * Calculate parameters for curtailment sharing rule.
- */
-void calculateCsrParameters(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem);
+
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
-void checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
 
 /*!
-** ** \brief Sums two arrays of the same size a[i]=a[i]+b[i]
+** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
 ** **
-** ** \param a An array
-** ** \param b An array
+** ** \param A A vector
+** ** \param B An array
 ** ** \param num An integer
-** ** \return  
+** ** \return
 ** */
-template<class T>
-extern void sumTwoArrays(T* a, T* b, int num);
+void addArray(std::vector<double>& A, double* B, int num);
 
+} // end namespace Antares
+} // end namespace Data
+} // end namespace AdequacyPatch
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

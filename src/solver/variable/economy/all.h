@@ -147,23 +147,20 @@ typedef          // Prices
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
-                        <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
+                         <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                          <LMRViolations // LMR Violations
-                         <SpilledEnergy  // Spilled Energy
-                          <LOLD          // LOLD
-                           <LOLP         // LOLP
-                            <AvailableDispatchGen
-                             <DispatchableGenMargin
-                              <Marge
-                               <NonProportionalCost
-                                <NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
-                                                                        // per thermal plant detail
-                                 <NbOfDispatchedUnits // Number of Units Dispatched
-                                  <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
-                                   <ProfitByPlant
-                                    // Links
-                                    <Variable::Economy::Links // All links
-                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          <SpilledEnergy           // Spilled Energy
+                           <LOLD                   // LOLD
+                            <LOLP                  // LOLP
+                             <AvailableDispatchGen<DispatchableGenMargin<Marge<NonProportionalCost<
+                               NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
+                                                                      // per thermal plant detail
+                               <NbOfDispatchedUnits                   // Number of Units Dispatched
+                                <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
+                                 <ProfitByPlant
+                                  // Links
+                                  <Variable::Economy::Links // All links
+                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

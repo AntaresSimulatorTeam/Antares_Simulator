@@ -9,10 +9,13 @@
 #include "../config.h"
 
 #include "misc/system-memory.h"
+#include "utils/ortools_utils.h"
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
+
+#include <algorithm>
 
 namespace
 {
@@ -41,6 +44,16 @@ void printVersion()
 #else
     std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
+}
+
+void printSolvers()
+{
+    std::cout << "Available solvers :" << std::endl;
+    OrtoolsUtils utils;
+    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    {
+        std::cout << solver << std::endl;
+    }
 }
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
@@ -97,18 +110,15 @@ void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
 // When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
 void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
 {
+    using namespace Antares::Data;
     if (adqPatchOn)
     {
-        if (!std::any_of(areas.cbegin(),
-                         areas.cend(),
-                         [](const std::pair<Antares::Data::AreaName, Antares::Data::Area*>& area)
-                         {
-                             return area.second->adequacyPatchMode
-                                    == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch;
-                         }))
-        {
+        const bool containsAdqArea
+          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
+            });
+        if (!containsAdqArea)
             throw Error::NoAreaInsideAdqPatchMode();
-        }
     }
 }
 
@@ -210,7 +220,12 @@ void Application::prepare(int argc, char* argv[])
     if (options.displayVersion)
     {
         printVersion();
-        shouldExecute = false;
+        return;
+    }
+
+    if (options.listSolvers)
+    {
+        printSolvers();
         return;
     }
 
@@ -226,7 +241,8 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " (" << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+                      << GIT_SHA1_SHORT_STRING << ")";
 #else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
 #endif
@@ -271,8 +287,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->include.adequacyPatch, pParameters->mode);
-    checkAdqPatchContainsAdqPatchArea(pParameters->include.adequacyPatch, pStudy->areas);
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate
@@ -335,7 +351,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
-    if (!shouldExecute)
+    if (!pStudy)
         return;
 
     processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
@@ -527,8 +543,10 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
 void Application::saveElapsedTime()
 {
-    pTotalTimer.stop();
+    if (!pStudy)
+       return;
 
+    pTotalTimer.stop();
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
     TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
     // Write time data

@@ -33,9 +33,6 @@
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 
-#define GROSSES_VARIABLES NON_ANTARES
-#define COEFF_GROSSES_VARIABLES 100
-
 #include <memory>
 #include <yuni/core/math.h>
 
@@ -69,10 +66,7 @@ typedef struct
     int* NumeroDeVariableDefaillanceNegativeDown;
     int* NumeroDeVariableDefaillanceNegativeAny;
 
-    int* NumeroDeGrosseVariableDefaillancePositive;
-    int* NumeroDeGrosseVariableDefaillanceNegative;
     int* NumeroDeVariableDefaillanceEnReserve;
-    int* NumeroDeGrosseVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
     int* NumeroDeVariablesVariationHydALaBaisseUp;
@@ -256,7 +250,6 @@ typedef struct
     double* TailleUnitaireDUnGroupeDuPalierThermique;
     double* PminDuPalierThermiquePendantUneHeure;
     double* PminDuPalierThermiquePendantUnJour;
-    double* PminDuPalierThermiquePendantUneSemaine;
     int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
 
@@ -323,10 +316,13 @@ typedef struct
 
 class AdequacyPatchRuntimeData
 {
+private:
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
 public:
-    std::vector<AdequacyPatchMode> areaMode;
-    std::vector<AdequacyPatchMode> originAreaMode;
-    std::vector<AdequacyPatchMode> extremityAreaMode; 
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -500,8 +496,8 @@ typedef struct
 struct AdequacyPatchParameters
 {
     bool AdequacyFirstStep;
-    bool setToZeroNTCfromOutToIn_AdqPatchStep1;
-    bool setToZeroNTCbetweenOutsideAreas_AdqPatchStep1;
+    bool SetNTCOutsideToInsideToZero;
+    bool SetNTCOutsideToOutsideToZero;
     bool SaveIntermediateResults;
     AdqPatchPTO PriceTakingOrder;
     float ThresholdInitiateCurtailmentSharingRule;
@@ -568,6 +564,7 @@ struct PROBLEME_HEBDO
     char ReinitOptimisation;
 
     char ExportMPS;
+    bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 
@@ -614,9 +611,8 @@ struct PROBLEME_HEBDO
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
     /* Adequacy Patch */
-    std::unique_ptr<AdequacyPatchParameters> adqPatch = nullptr;
+    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
-    //std::map<int, std::vector<int>> localMatchingRuleViolation;
 
     optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
@@ -724,15 +720,16 @@ public:
 class HOURLY_CSR_PROBLEM
 {
 private:
+    void calculateCsrParameters();
     void resetProblem();
     void buildProblemVariables();
     void setVariableBounds();
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
-    void solveProblem();
+    void solveProblem(uint week, int year);
 public:
-    void run();
+    void run(uint week, int year);
 public:
     int hourInWeekTriggeredCsr;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
@@ -747,7 +744,6 @@ public:
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
-    std::map<int, double> netPositionInitValues;
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
 };

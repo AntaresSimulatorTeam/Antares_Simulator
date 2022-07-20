@@ -880,6 +880,8 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     if (empty())
         return true;
 
+    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+
     Clob buffer;
     bool ret = true;
 
@@ -893,7 +895,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
             bool result = c.prepro->loadFromFolder(study, buffer);
 
-            if (result and study.usedByTheSolver)
+            if (result && study.usedByTheSolver && c.doWeGenerateTS(globalThermalTSgeneration))
             {
                 // checking NPO max
                 result = c.prepro->normalizeAndCheckNPO();

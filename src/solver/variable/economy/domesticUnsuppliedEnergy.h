@@ -52,7 +52,8 @@ struct VCardDomesticUnsuppliedEnergy
     //! The short description of the variable
     static const char* Description()
     {
-        return "Domestic Unsupplied Energy (demand that cannot be satisfied without interconnections/links)";
+        return "Domestic Unsupplied Energy (demand that cannot be satisfied without "
+               "interconnections/links)";
     }
 
     //! The expecte results

@@ -10,15 +10,29 @@ if (Boost_FOUND)
 endif()
 
 
-add_subdirectory(src)
 
 
-# end to end test require boost 1.6.x because for boost::test_tools::tolerance
+# end to end test require boost 1.6.x because of boost::test_tools::tolerance, BOOST_TEST
 # old versions of Boost don't contain a '.', also ignore them
 # example : Boost 1.53.0 returns 105300 as Boost_VERSION
 string(FIND ${Boost_VERSION} . RESULT_BOOST)
-if ((${Boost_VERSION} VERSION_GREATER_EQUAL 1.60.0) AND NOT (${RESULT_BOOST} EQUAL -1))
+if (${RESULT_BOOST} EQUAL -1) # e.g 105300
+  if (${Boost_VERSION} GREATER_EQUAL 106000)
+    set(RECENT_BOOST 1)
+  else()
+    set(RECENT_BOOST 0)
+  endif()
+else() # e.g 1.60.00
+  if (${Boost_VERSION} VERSION_GREATER_EQUAL "1.60.0")
+    set(RECENT_BOOST 1)
+  else()
+    set(RECENT_BOOST 0)
+  endif()
+endif()
+
+if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
+    add_subdirectory(src)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()

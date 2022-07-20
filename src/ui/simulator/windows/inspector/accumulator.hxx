@@ -37,10 +37,6 @@ namespace Window
 {
 namespace Inspector
 {
-
-static const wxChar* adequacyPatchMode[]
-  = {wxT("virtual area"), wxT("physical area outside patch"), wxT("physical area inside patch"), nullptr};
-
 struct Unique
 {
     template<class T>
@@ -629,14 +625,23 @@ struct PAreaUnsuppliedEnergyCost
 
 struct PAdequacyPatchMode
 {
-    typedef Data::AdequacyPatch::AdequacyPatchMode Type;
+    using Type = Data::AdequacyPatch::AdequacyPatchMode;
     static Type Value(const Data::Area* area)
     {
         return area->adequacyPatchMode;
     }
     static wxString ConvertToString(const Type v)
     {
-        return adequacyPatchMode[v];
+        switch (v)
+        {
+        case Data::AdequacyPatch::virtualArea:
+            return wxT("virtual area");
+        case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
+            return wxT("physical area outside patch");
+        case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
+            return wxT("physical area inside patch");
+        }
+        return wxEmptyString;
     }
 };
 

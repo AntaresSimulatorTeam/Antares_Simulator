@@ -28,6 +28,7 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include <yuni/yuni.h>
+#include <memory>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
@@ -41,6 +42,36 @@ namespace Solver
 {
 namespace Simulation
 {
+class EconomyWeeklyOptimization
+{
+public:
+    using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) = 0;
+    void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
+    static Ptr create(bool adqPatchEnabled);
+
+protected:
+    PROBLEME_HEBDO** pProblemesHebdo;
+};
+
+class AdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    AdequacyPatchOptimization();
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) override;
+
+    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
+    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
+    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
+};
+
+class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    NoAdequacyPatchOptimization();
+    void solve(Variable::State&, int, uint numSpace, uint w) override;
+};
+
 class Economy
 {
 public:
@@ -94,17 +125,13 @@ protected:
 
     void initializeState(Variable::State& state, uint numSpace);
 
-    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
-    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
-
 private:
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-
+    EconomyWeeklyOptimization::Ptr weeklyOptProblem;
 }; // class Economy
 
 } // namespace Simulation
