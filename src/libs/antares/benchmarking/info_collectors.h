@@ -43,13 +43,6 @@ private:
 
     // Member data
     const Antares::Data::Study& study_;
-
-    // ----------------------------------------------------------------------------------------
-    // TODO : add some more pieces of information about study : see following data members.
-    // ----------------------------------------------------------------------------------------
-    // Parallel execution
-    unsigned int minNbYearsInParallel_ = 0;
-    unsigned int nbCoreMode_ = 0;
 };
 
 class SimulationInfoCollector
