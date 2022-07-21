@@ -259,14 +259,15 @@ static void addByArea(wxTreeItemId& rootId,
         // Reference to the area
         wxTreeItemId id;
         // Foreach Interconnection for the area
+        auto count = al.second.size();
         for (auto lnk : al.second)
         {
             if (!id)
             {
                 // We have to create the item corresponding to the area
                 id = listbox->AppendItem(localRootId,
-                                         wxString()
-                                           << wxT(' ') << wxStringFromUTF8(al.first) << wxT(' '),
+                                         wxString() << wxT(' ') << wxStringFromUTF8(al.first)
+                                                    << wxT(" (") << count << wxT(')'),
                                          1,
                                          1);
                 listbox->SetItemBold(id, true);
