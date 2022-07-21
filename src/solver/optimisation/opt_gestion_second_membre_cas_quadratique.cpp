@@ -240,7 +240,7 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
             }
             if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
             {
-                SecondMembre[Cnt] += 1e+3;
+                SecondMembre[Cnt] += 1e-3;
             }
             else if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '>')
             {
