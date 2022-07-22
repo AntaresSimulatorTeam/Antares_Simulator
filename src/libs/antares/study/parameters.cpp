@@ -1102,7 +1102,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
