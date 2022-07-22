@@ -46,6 +46,8 @@
 #include <yuni/job/job.h>
 #include <yuni/job/queue/service.h>
 
+#include <mutex>
+
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
 
@@ -248,6 +250,43 @@ private:
             Antares::memory.flushAll();
 
     } // End of onExecute() method
+};
+
+class ZipWriteJob final : public Yuni::Job::IJob
+{
+public:
+    ZipWriteJob(libzippp::ZipArchive* archive,
+                std::mutex& zipMutex,
+                const std::string& path,
+                char* content,
+                size_t size) :
+     pZipArchive(archive), pZipMutex(zipMutex), pPath(path), pContent(content, size)
+    {
+    }
+    virtual void onExecute() override
+    {
+        std::lock_guard<std::mutex> guard(pZipMutex);
+        pZipArchive->open(libzippp::ZipArchive::Write);
+        pZipArchive->addData(pPath, pContent.buffer, pContent.size);
+        pZipArchive->close();
+    }
+
+private:
+    // File path & content
+    std::string pPath;
+    struct Content
+    {
+        Content(char* buffer, size_t size) : buffer(buffer), size(size)
+        {
+        }
+        char* buffer;
+        size_t size;
+    };
+    Content pContent;
+
+    libzippp::ZipArchive* pZipArchive;
+    // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
+    std::mutex& pZipMutex;
 };
 
 template<class Impl>
