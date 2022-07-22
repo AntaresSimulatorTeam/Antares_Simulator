@@ -263,7 +263,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
- pTimeElapsedContentHandler(handler)
+ pTimeElapsedContentHandler(handler),
+ pZipArchive(study.pZipArchive)
 {
     // Ask to the interface to show the messages
     logs.info();

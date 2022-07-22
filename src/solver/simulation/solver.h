@@ -175,6 +175,9 @@ private:
 
     //! Aggregate execution times into a single file (optional)
     TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
+
+    //! Zip archive
+    libzippp::ZipArchive* pZipArchive;
 }; // class ISimulation
 
 } // namespace Simulation
