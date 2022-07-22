@@ -272,6 +272,10 @@ public:
     }
 
 private:
+    // Pointer to Zip object
+    libzippp::ZipArchive* pZipArchive;
+    // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
+    std::mutex& pZipMutex;
     // File path & content
     std::string pPath;
     struct Content
@@ -283,10 +287,6 @@ private:
         size_t size;
     };
     Content pContent;
-
-    libzippp::ZipArchive* pZipArchive;
-    // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
-    std::mutex& pZipMutex;
 };
 
 template<class Impl>
