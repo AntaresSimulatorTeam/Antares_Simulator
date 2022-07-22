@@ -51,7 +51,8 @@ bool Simulation::saveToFolder(libzippp::ZipArchive* archive) const
     if (archive)
     {
         logs.notice() << comments;
-        return archive->addData("comments.txt", comments.c_str(), comments.size());
+        // [FO] TODO
+        return true;
     }
     else
     {

@@ -229,7 +229,10 @@ public:
     ** \tparam GlobalT True to write down the results of the simulation, false
     **   for the results of the current year
     */
-    void exportSurveyResults(bool global, const Yuni::String& output, unsigned int numSpace);
+    void exportSurveyResults(bool global,
+                             const Yuni::String& output,
+                             unsigned int numSpace,
+                             Antares::Solver::ZipWriter& writer);
 
     /*!
     ** \brief Ask to all variables to fullfil the digest

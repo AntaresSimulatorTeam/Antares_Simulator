@@ -202,7 +202,7 @@ add_library(libantares-solver-variable-info
 		variable/surveyresults/data.h
 		variable/surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core)
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core zip_writer)
 
 if(BUILD_SWAP)
 

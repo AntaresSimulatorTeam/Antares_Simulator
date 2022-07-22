@@ -44,7 +44,7 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
+
 
 #include <mutex>
 
@@ -252,43 +252,6 @@ private:
     } // End of onExecute() method
 };
 
-class ZipWriteJob final : public Yuni::Job::IJob
-{
-public:
-    ZipWriteJob(libzippp::ZipArchive* archive,
-                std::mutex& zipMutex,
-                const std::string& path,
-                char* content,
-                size_t size) :
-     pZipArchive(archive), pZipMutex(zipMutex), pPath(path), pContent(content, size)
-    {
-    }
-    virtual void onExecute() override
-    {
-        std::lock_guard<std::mutex> guard(pZipMutex);
-        pZipArchive->open(libzippp::ZipArchive::Write);
-        pZipArchive->addData(pPath, pContent.buffer, pContent.size);
-        pZipArchive->close();
-    }
-
-private:
-    // Pointer to Zip object
-    libzippp::ZipArchive* pZipArchive;
-    // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
-    std::mutex& pZipMutex;
-    // File path & content
-    std::string pPath;
-    struct Content
-    {
-        Content(char* buffer, size_t size) : buffer(buffer), size(size)
-        {
-        }
-        char* buffer;
-        size_t size;
-    };
-    Content pContent;
-};
-
 template<class Impl>
 inline ISimulation<Impl>::ISimulation(Data::Study& study,
                                       const ::Settings& settings,
@@ -303,7 +266,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pTimeElapsedContentHandler(handler),
- pZipArchive(study.pZipArchive)
+ pWriter(qs, study.pZipArchive)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -488,7 +451,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 
         // Dumping
         if (IO::Directory::Create(newPath))
-            ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace);
+            ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace, pWriter);
         else
             logs.fatal() << "impossible to create `" << newPath << "`";
     }
@@ -1571,10 +1534,9 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
-    // The queue service that runs every set of parallel years
-    Yuni::Job::QueueService qs;
     // Number of threads to perform the jobs waiting in the queue
-    qs.maximumThreadCount(pNbMaxPerformedYearsInParallel);
+    qs.maximumThreadCount(pNbMaxPerformedYearsInParallel + 1 // File writer
+    );
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;

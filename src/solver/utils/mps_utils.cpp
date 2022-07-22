@@ -246,13 +246,14 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    auto archive = study->pZipArchive;
-    archive->addData(filename,
-                     Flot.c_str(),
-                     Flot.size());
+    // [FO] TODO
+    // auto archive = study->pZipArchive;
+    // archive->addData(filename,
+    //                  Flot.c_str(),
+    //                  Flot.size());
 
-    archive->close();
-    archive->open(libzippp::ZipArchive::Write);
+    // archive->close();
+    // archive->open(libzippp::ZipArchive::Write);
 
     free(Cdeb);
     free(NumeroDeContrainte);
@@ -289,13 +290,14 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    auto archive = study->pZipArchive;
-    archive->addData(filename,
-                     Flot.c_str(),
-                     Flot.size());
+    // [FO] TODO
+    // auto archive = study->pZipArchive;
+    // archive->addData(filename,
+    //                  Flot.c_str(),
+    //                  Flot.size());
 
-    archive->close();
-    archive->open(libzippp::ZipArchive::Write);
+    // archive->close();
+    // archive->open(libzippp::ZipArchive::Write);
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
@@ -443,13 +445,14 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    auto archive = study->pZipArchive;
-    archive->addData(filename,
-                     Flot.c_str(),
-                     Flot.size());
+    // [FO] TODO
+    // auto archive = study->pZipArchive;
+    // archive->addData(filename,
+    //                  Flot.c_str(),
+    //                  Flot.size());
 
-    archive->close();
-    archive->open(libzippp::ZipArchive::Write);
+    // archive->close();
+    // archive->open(libzippp::ZipArchive::Write);
 
     free(Cdeb);
     free(NumeroDeContrainte);

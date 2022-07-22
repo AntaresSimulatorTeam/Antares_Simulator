@@ -190,27 +190,27 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
 
     String filename;
     filename.reserve(folder.size() + 15);
+    // [FO] TODO
+    // filename.clear() << folder << SEP << "areas.txt";
+    // study.pZipArchive->addData(filename.c_str(),
+    //                            out.c_str(),
+    //                            out.size());
 
-    filename.clear() << folder << SEP << "areas.txt";
-    study.pZipArchive->addData(filename.c_str(),
-                               out.c_str(),
-                               out.size());
+    // filename.clear() << folder << SEP << "links.txt";
+    // study.pZipArchive->addData(filename.c_str(),
+    //                            outLinks.c_str(),
+    //                            outLinks.size());
 
-    filename.clear() << folder << SEP << "links.txt";
-    study.pZipArchive->addData(filename.c_str(),
-                               outLinks.c_str(),
-                               outLinks.size());
+    // filename.clear() << folder << SEP << "thermal.txt";
+    // study.pZipArchive->addData(filename.c_str(),
+    //                            outThermal.c_str(),
+    //                            outThermal.size());
 
-    filename.clear() << folder << SEP << "thermal.txt";
-    study.pZipArchive->addData(filename.c_str(),
-                               outThermal.c_str(),
-                               outThermal.size());
-
-    // Force flush into the archive
-    // If not, out, outLinks and outThermal will be read when pZipArchive->close() is called
-    // which we don't want since out, outLinks and outThermal are released long before that.
-    study.pZipArchive->close();
-    study.pZipArchive->open(libzippp::ZipArchive::Write);
+    // // Force flush into the archive
+    // // If not, out, outLinks and outThermal will be read when pZipArchive->close() is called
+    // // which we don't want since out, outLinks and outThermal are released long before that.
+    // study.pZipArchive->close();
+    // study.pZipArchive->open(libzippp::ZipArchive::Write);
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -584,7 +584,10 @@ const uint nbVariablesPerDetailRenewableCluster = 1;
 // Production
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
-SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
+SurveyResults::SurveyResults(uint maxVars,
+                             const Data::Study& s,
+                             const String& o,
+                             ZipWriter& writer) :
  data(s, o),
  maxVariables(Math::Max<uint>(
    maxVars,
@@ -592,7 +595,8 @@ SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o
    nbVariablesPerDetailRenewableCluster * s.runtime->maxRenewableClustersForSingleArea)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
- isPrinted(nullptr)
+ isPrinted(nullptr),
+ pWriter(writer)
 {
     variableCaption.reserve(10);
 
@@ -881,13 +885,15 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         }
     }
 
-    auto archive = data.study.pZipArchive;
-    archive->addData(data.filename.c_str(),
-                               data.fileBuffer.c_str(),
-                               data.fileBuffer.size());
-    // Force flush
-    archive->close();
-    archive->open(libzippp::ZipArchive::Write);
+    // [FO] TODO mc-ind/mc-all here
+    // auto archive = data.study.pZipArchive;
+    // archive->addData(data.filename.c_str(),
+    //                            data.fileBuffer.c_str(),
+    //                            data.fileBuffer.size());
+    // // Force flush
+    // archive->close();
+    // archive->open(libzippp::ZipArchive::Write);
+    pWriter.addJob(data.filename.c_str(), data.fileBuffer.c_str(), data.fileBuffer.size());
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)

@@ -34,6 +34,7 @@
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
+#include "../../writer/zip_writer.h" // [FO] FIXME
 
 namespace Antares
 {
@@ -52,7 +53,7 @@ public:
     //! Caption
     typedef Yuni::CString<128, false> CaptionType;
 
-    /*!
+    /*u!
     ** \brief Try to estimate theamount of memory required by the class
     */
     static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
@@ -69,7 +70,7 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o);
+    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o, ZipWriter& writer);
     /*!
     ** \brief Destructor
     */
@@ -144,6 +145,8 @@ public:
     bool* isCurrentVarNA;
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
+
+    Antares::Solver::ZipWriter& pWriter;
 
 private:
     /*!

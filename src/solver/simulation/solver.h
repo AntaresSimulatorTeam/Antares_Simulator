@@ -34,12 +34,14 @@
 #include <antares/timeelapsed.h>
 
 #include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
 #include "../variable/state.h"
 #include "../misc/options.h"
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
+#include "../writer/zip_writer.h" // [FO] FIXME
 
 
 namespace Antares
@@ -177,7 +179,10 @@ private:
     TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
 
     //! Zip archive
-    libzippp::ZipArchive* pZipArchive;
+    Antares::Solver::ZipWriter pWriter;
+
+    //! The queue service that runs every set of parallel years
+    Yuni::Job::QueueService qs;
 }; // class ISimulation
 
 } // namespace Simulation

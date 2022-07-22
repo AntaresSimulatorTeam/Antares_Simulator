@@ -336,7 +336,8 @@ inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
-                                      unsigned int numSpace)
+                                      unsigned int numSpace,
+                                      Antares::Solver::ZipWriter& writer)
 {
     using namespace Antares;
 
@@ -354,7 +355,8 @@ void List<NextT>::exportSurveyResults(bool global,
     uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
     logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
 
-    auto survey = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output);
+    auto survey
+      = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output, writer);
 
     // Year by year ?
     survey->yearByYearResults = !global;
