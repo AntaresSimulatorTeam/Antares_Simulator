@@ -941,74 +941,45 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
                  this);
 }
 
-void AdvancedParameters::onSelectNCmin(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectNC(Data::NumberOfCoresMode ncMode)
 {
     if (not Data::Study::Current::Valid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
-    if (study.parameters.nbCores.ncMode != Data::ncMin)
+    if (study->parameters.nbCores.ncMode != ncMode)
     {
-        study.parameters.nbCores.ncMode = Data::ncMin;
+        study->parameters.nbCores.ncMode = ncMode;
+        // Force refresh for study->nbYearsParallelRaw
+        study->getNumberOfCores(false, 1 /* ignored */);
         MarkTheStudyAsModified();
         refresh();
     }
+}
+
+void AdvancedParameters::onSelectNCmin(wxCommandEvent& /* evt */)
+{
+    onSelectNC(Data::ncMin);
 }
 
 void AdvancedParameters::onSelectNClow(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncLow)
-    {
-        study.parameters.nbCores.ncMode = Data::ncLow;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNC(Data::ncLow);
 }
 
 void AdvancedParameters::onSelectNCaverage(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncAvg)
-    {
-        study.parameters.nbCores.ncMode = Data::ncAvg;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNC(Data::ncAvg);
 }
 
 void AdvancedParameters::onSelectNChigh(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncHigh)
-    {
-        study.parameters.nbCores.ncMode = Data::ncHigh;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNC(Data::ncHigh);
 }
 
 void AdvancedParameters::onSelectNCmax(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncMax)
-    {
-        study.parameters.nbCores.ncMode = Data::ncMax;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNC(Data::ncMax);
 }
 
 void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*)

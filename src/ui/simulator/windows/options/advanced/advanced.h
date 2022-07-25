@@ -109,6 +109,10 @@ private:
     void onSelectNChigh(wxCommandEvent& evt);
     void onSelectNCmax(wxCommandEvent& evt);
 
+private:
+    void onSelectNC(Data::NumberOfCoresMode ncMode);
+
+public:
     void onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*);
     void onSelectRGMaggregated(wxCommandEvent& evt);
     void onSelectRGMrenewableClusters(wxCommandEvent& evt);
