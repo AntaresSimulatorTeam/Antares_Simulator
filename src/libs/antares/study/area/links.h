@@ -126,6 +126,8 @@ public:
 
     void flush();
 
+    void overrideTransmissionCapacityAccordingToGlobalParameter(TransmissionCapacities tc);
+
 private:
     bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
     bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);

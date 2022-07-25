@@ -430,6 +430,8 @@ struct PLinkCopperPlate
             return wxT("set to zero");
         case Data::tncInfinite:
             return wxT("set to infinite");
+        default:
+            return wxT("set to zero");
         }
         return wxT("set to zero");
     }

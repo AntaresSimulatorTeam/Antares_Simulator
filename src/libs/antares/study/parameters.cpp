@@ -618,6 +618,10 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         v.toLower();
         if (v == "infinite")
             d.transmissionCapacities = tncInfinite;
+        else if (v == "infinite-physical")
+            d.transmissionCapacities = tncInfinitePhysical;
+        else if (v == "false-physical")
+            d.transmissionCapacities = tncIgnorePhysical;
         else
             d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
         return true;
@@ -1724,6 +1728,12 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         case tncInfinite:
             section->add("transmission-capacities", "infinite");
+            break;
+        case tncInfinitePhysical:
+            section->add("transmission-capacities", "infinite-physical");
+            break;
+        case tncIgnorePhysical:
+            section->add("transmission-capacities", "false-physical");
             break;
         }
 

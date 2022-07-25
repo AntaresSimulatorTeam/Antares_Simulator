@@ -233,6 +233,54 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
+static TransmissionCapacities overridePhysical(TransmissionCapacities tncGlobal,
+                                               TransmissionCapacities tncLocal)
+{
+    switch (tncGlobal)
+    {
+    case tncInfinitePhysical:
+        return tncInfinite;
+    case tncIgnorePhysical:
+        return tncIgnore;
+    case tncEnabled:
+        return tncLocal;
+    default:
+        return tncGlobal;
+    }
+}
+
+static TransmissionCapacities overrideVirtual(TransmissionCapacities tncGlobal,
+                                              TransmissionCapacities tncLocal)
+{
+    switch (tncGlobal)
+    {
+    case tncInfinitePhysical:
+    case tncIgnorePhysical:
+    case tncEnabled:
+        return tncLocal;
+    default:
+        return tncGlobal;
+    }
+}
+
+// Global Optimization override
+void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
+  TransmissionCapacities tncGlobal)
+{
+    switch (assetType)
+    {
+    case atAC:
+    case atDC:
+    case atGas:
+    case atOther:
+        transmissionCapacities = overridePhysical(tncGlobal, transmissionCapacities);
+        break;
+    case atVirt:
+        transmissionCapacities = overrideVirtual(tncGlobal, transmissionCapacities);
+        break;
+    }
+}
+
 bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
 {
     if (study.header.version < 320)
@@ -681,14 +729,14 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         // From the solver only
         if (study.usedByTheSolver)
         {
+            link.overrideTransmissionCapacityAccordingToGlobalParameter(
+              study.parameters.transmissionCapacities);
+
             if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
             {
                 link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
                 link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
             }
-            // Global Optimization override
-            if (study.parameters.transmissionCapacities != Data::tncEnabled)
-                link.transmissionCapacities = study.parameters.transmissionCapacities;
 
             switch (link.transmissionCapacities)
             {
@@ -709,6 +757,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 link.indirectCapacities.fill(infinity);
                 break;
             }
+            default:
+                return false;
             }
         }
 
