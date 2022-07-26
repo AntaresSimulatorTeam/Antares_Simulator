@@ -78,7 +78,8 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            logs.debug() << NumberOfVariables << " ENS[" << area << "]. ";
+            logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
+                         << ProblemeHebdo->NomsDesPays[area] << "].";
 
             NumberOfVariables++;
         }
@@ -108,7 +109,8 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-            logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "]. ";
+            logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
+                         << ProblemeHebdo->NomsDesPays[area] << "].";
 
             NumberOfVariables++;
         }
@@ -140,7 +142,12 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            logs.debug() << NumberOfVariables << " flow[" << Interco << "]. ";
+            logs.debug()
+              << NumberOfVariables << " flow[" << Interco << "]. ["
+              << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+              << "]-["
+              << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+              << "].";
             NumberOfVariables++;
 
             CorrespondanceVarNativesVarOptim
