@@ -46,9 +46,9 @@ Simulation::Simulation(Study& study) : pStudy(study)
 {
 }
 
-bool Simulation::saveToFolder(libzippp::ZipArchive* archive) const
+bool Simulation::saveToFolder() const
 {
-    if (archive)
+    if (true)
     {
         logs.notice() << comments;
         // [FO] TODO

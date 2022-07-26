@@ -41,8 +41,6 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                      const YString& extension,
                                                      uint numSpace) const
 {
-    auto archive = this->pZipArchive;
-
     static std::map<YString, int> count;
 
     // Empty log entry
@@ -65,8 +63,8 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
 
-    // test if file already exists
-    if (archive->hasEntry(outputFile.c_str()))
+    // TODO test if file already exists
+    if (false)
     {
         count[prefix]++;
         outputFile << "-" << count[prefix] << "." << extension;

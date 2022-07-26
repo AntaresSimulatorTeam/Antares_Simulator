@@ -4,7 +4,6 @@
 
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
-#include <libzippp.h>
 
 namespace Antares
 {
@@ -18,8 +17,8 @@ public:
     virtual void onExecute() override;
 
 private:
-    // Pointer to Zip object
-    libzippp::ZipArchive* pZipArchive;
+    // Pointer to Zip handle
+    void* pHandle;
     // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
     std::mutex& pZipMutex;
     // File path & content
@@ -31,14 +30,15 @@ private:
 class ZipWriter
 {
 public:
-    ZipWriter(Yuni::Job::QueueService& qs, libzippp::ZipArchive* archive);
+    ZipWriter(Yuni::Job::QueueService& qs, const char* path);
+    ~ZipWriter();
     void addJob(const std::string& path, const char* content, size_t size);
     friend class ZipWriteJob;
 
 private:
     Yuni::Job::QueueService& pQueueService;
-    libzippp::ZipArchive* pZipArchive;
     std::mutex pZipMutex;
+    void* pHandle;
 };
 } // namespace Solver
 } // namespace Antares

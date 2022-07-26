@@ -143,12 +143,6 @@ void Study::clear()
     ClearAndShrink(inputExtension);
 
     gotFatalError = false;
-    if (pZipArchive)
-    {
-        pZipArchive->close();
-        // TODO : memory leak here, the following line segfaults
-        // delete pZipArchive;
-    }
 }
 
 void Study::createAsNew()
@@ -783,25 +777,7 @@ bool Study::prepareOutput()
     buffer.clear() << folderOutput << SEP << "about-the-study";
     IO::Directory::Create(buffer);
 
-    // zip archive
-    {
-         buffer.clear() << folderOutput << ".zip";
-         pZipArchive = new libzippp::ZipArchive(buffer.c_str());
-         if (!pZipArchive) {
-             logs.error() << "Allocation failed";
-             return false;
-         }
-         auto ret = pZipArchive->open(libzippp::ZipArchive::New);
-         if (!ret) {
-             logs.error() << "Could not create archive " << buffer;
-             return false;
-         }
-         else
-         {
-             logs.notice() << "  Archive : " << buffer;
-         }
-    }
-    if (not simulation.saveToFolder(pZipArchive))
+    if (not simulation.saveToFolder())
         return false;
 
     // Write the header as a reminder too
@@ -812,7 +788,7 @@ bool Study::prepareOutput()
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     String dest;
     dest << "about-the-study" << SEP << "parameters.ini";
-    pZipArchive->addFile(dest.c_str(), buffer.c_str());
+    // TODO
 
     // antares-output.info
     buffer.clear() << folderOutput << SEP << "info.antares-output";

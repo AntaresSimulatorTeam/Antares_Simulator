@@ -266,7 +266,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pTimeElapsedContentHandler(handler),
- pWriter(qs, study.pZipArchive)
+ // TODO
+ pWriter(qs, "/tmp/test.zip")
 {
     // Ask to the interface to show the messages
     logs.info();

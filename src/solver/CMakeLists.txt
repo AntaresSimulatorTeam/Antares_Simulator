@@ -112,7 +112,7 @@ macro(solver_app name swap)
 			PRIVATE
 			${ANTARES_SOLVER_LIBS}
             PUBLIC
-            libzippp::libzippp
+            MINIZIP::minizip
 			)
 
 	import_std_libs(${exec_name})

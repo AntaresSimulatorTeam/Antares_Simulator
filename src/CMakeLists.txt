@@ -186,8 +186,8 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
-option(BUILD_LIBZIPPP "Build libzippp" ON)
-message(STATUS "Build libzippp ${BUILD_LIBZIPPP}")
+option(BUILD_MINIZIP_NG "Build minizip-ng" ON)
+message(STATUS "Build minizip-ng ${BUILD_MINIZIP_NG}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -275,12 +275,12 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(libzippp QUIET)
-if(NOT libzippp_FOUND OR BUILD_LIBZIPPP)
-  FetchContent_Declare(libzippp
-    GIT_REPOSITORY "https://github.com/ctabin/libzippp"
-    GIT_TAG "libzippp-v5.1-1.8.0")
-  FetchContent_MakeAvailable(libzippp)
+find_package(minizip QUIET)
+if(NOT minizip_FOUND OR BUILD_MINIZIP_NG)
+  FetchContent_Declare(minizip_ng
+    GIT_REPOSITORY "https://github.com/zlib-ng/minizip-ng"
+    GIT_TAG "3.0.6")
+  FetchContent_MakeAvailable(minizip_ng)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
