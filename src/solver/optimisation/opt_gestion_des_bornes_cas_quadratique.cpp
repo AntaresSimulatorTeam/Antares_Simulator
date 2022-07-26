@@ -127,6 +127,10 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
 
+            // update DENS values with densNew values
+            // ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour]
+            //   = hourlyCsrProblem.densNewValues[area];
+
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
                          << ProblemeAResoudre->Xmax[Var];
         }
