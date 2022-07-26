@@ -3,6 +3,7 @@
 
 #include "zip_writer.h"
 
+#include <mz.h>
 #include <mz_zip.h>
 #include <mz_strm.h>
 #include <mz_zip_rw.h>
@@ -31,6 +32,7 @@ void ZipWriteJob::onExecute()
     TimeElapsed::Timer timer_write("[zip] Writing", "[zip] Wrote took", true);
     mz_zip_file file_info = {0};
     file_info.filename = pPath.c_str();
+    file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
     // TODO : set creation date, etc.
     mz_zip_writer_entry_open(pHandle, &file_info);
     mz_zip_writer_entry_write(pHandle, pContent.data(), pContent.size());
@@ -42,8 +44,8 @@ ZipWriter::ZipWriter(Yuni::Job::QueueService& qs, const char* path) :
  pQueueService(qs)
 {
     mz_zip_writer_create(&pHandle);
-    // TODO : try mz_zip_writer_open_file_in_memory
     mz_zip_writer_open_file(pHandle, path, 0, 0);
+    mz_zip_writer_set_compress_level(pHandle, MZ_COMPRESS_LEVEL_FAST);
 }
 
 ZipWriter::~ZipWriter()
