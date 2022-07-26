@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+const double csrSolverRelaxationRHS = 1e-3;
+
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
@@ -240,11 +242,11 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
             }
             if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
             {
-                SecondMembre[Cnt] += 1e-3;
+                SecondMembre[Cnt] += csrSolverRelaxationRHS;
             }
             else if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '>')
             {
-                SecondMembre[Cnt] -= 1e-3;
+                SecondMembre[Cnt] -= csrSolverRelaxationRHS;
             }
             logs.debug() << Cnt << ": Hourly bc: -RHS[" << Cnt << "] = " << SecondMembre[Cnt];
         }
