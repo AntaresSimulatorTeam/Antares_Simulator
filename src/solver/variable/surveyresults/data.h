@@ -31,7 +31,7 @@
 #include "../constants.h"
 #include <yuni/core/string.h>
 #include <antares/study.h>
-#include "../../writer/i_writer.h" // TODO fix path
+#include <i_writer.h>
 
 namespace Antares
 {

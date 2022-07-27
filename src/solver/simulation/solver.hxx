@@ -263,7 +263,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pTimeElapsedContentHandler(handler),
- // TODO
  pResultWriter(resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs))
 {
     // Ask to the interface to show the messages
