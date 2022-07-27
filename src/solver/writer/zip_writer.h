@@ -22,7 +22,7 @@ private:
     // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
     std::mutex& pZipMutex;
     // File path & content
-    std::string pPath;
+    std::string pEntryPath;
     // Data to write
     std::vector<char> pContent;
 };
@@ -39,6 +39,7 @@ private:
     Yuni::Job::QueueService& pQueueService;
     std::mutex pZipMutex;
     void* pHandle;
+    std::string pPath;
 };
 } // namespace Solver
 } // namespace Antares

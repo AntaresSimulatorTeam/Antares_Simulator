@@ -19,7 +19,7 @@ ZipWriteJob::ZipWriteJob(ZipWriter& writer,
                          const std::string& path,
                          const char* content,
                          size_t size) :
-  pZipMutex(writer.pZipMutex), pHandle(writer.pHandle), pPath(path)
+ pZipMutex(writer.pZipMutex), pHandle(writer.pHandle), pEntryPath(path)
 {
     // We need to copy the content, since it will be de-allocated right after
     // or overwritten. RAM usage may be high in some cases.
@@ -33,7 +33,7 @@ void ZipWriteJob::onExecute()
     timer_wait.stop();
     TimeElapsed::Timer timer_write("[zip] Writing", "[zip] Wrote took", true);
     mz_zip_file file_info = {0};
-    file_info.filename = pPath.c_str();
+    file_info.filename = pEntryPath.c_str();
     file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
     file_info.modified_date = file_info.creation_date = time(0);
     mz_zip_writer_entry_open(pHandle, &file_info);
@@ -43,10 +43,10 @@ void ZipWriteJob::onExecute()
 
 // Class ZipWriter
 ZipWriter::ZipWriter(Yuni::Job::QueueService& qs, const char* path) :
- pQueueService(qs)
+ pQueueService(qs), pPath(std::string(path) + ".zip")
 {
     mz_zip_writer_create(&pHandle);
-    mz_zip_writer_open_file(pHandle, path, 0, 0);
+    mz_zip_writer_open_file(pHandle, pPath.c_str(), 0, 0);
     mz_zip_writer_set_compress_level(pHandle, MZ_COMPRESS_LEVEL_FAST);
 }
 

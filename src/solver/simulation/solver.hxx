@@ -45,7 +45,6 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 
-
 #include <mutex>
 
 #define SEP Yuni::IO::Separator
@@ -267,7 +266,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pAnnualCostsStatistics(study),
  pTimeElapsedContentHandler(handler),
  // TODO
- pWriter(qs, "/tmp/test.zip")
+ pWriter(qs, study.folderOutput.c_str())
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -452,7 +451,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 
         // Dumping
         if (IO::Directory::Create(newPath))
-            ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace, pWriter);
+            ImplementationType::variables.exportSurveyResults(
+              synthesis, newPath, numSpace, pWriter);
         else
             logs.fatal() << "impossible to create `" << newPath << "`";
     }
