@@ -8,6 +8,8 @@
 #include <mz_strm.h>
 #include <mz_zip_rw.h>
 
+#include <ctime>
+
 namespace Antares
 {
 namespace Solver
@@ -33,7 +35,7 @@ void ZipWriteJob::onExecute()
     mz_zip_file file_info = {0};
     file_info.filename = pPath.c_str();
     file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
-    // TODO : set creation date, etc.
+    file_info.modified_date = file_info.creation_date = time(0);
     mz_zip_writer_entry_open(pHandle, &file_info);
     mz_zip_writer_entry_write(pHandle, pContent.data(), pContent.size());
     timer_write.stop();
