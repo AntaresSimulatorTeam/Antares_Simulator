@@ -13,33 +13,36 @@ class ZipWriter;
 class ZipWriteJob final : public Yuni::Job::IJob
 {
 public:
-    ZipWriteJob(ZipWriter& writer, const std::string& path, const char* content, size_t size);
+    ZipWriteJob(ZipWriter& writer,
+                const std::string& entryPath,
+                const char* entryContent,
+                size_t entrySize);
     virtual void onExecute() override;
 
 private:
     // Pointer to Zip handle
     void* pHandle;
-    // Protect pZipArchive against concurrent writes, since libzip isn't thread-safe
+    // Protect pZipArchive against concurrent writes, since minizip-ng isn't thread-safe
     std::mutex& pZipMutex;
-    // File path & content
-    std::string pEntryPath;
-    // Data to write
+    // Entry path for the new file within the zip archive
+    const std::string pEntryPath;
+    // Content of the new file
     std::vector<char> pContent;
 };
 
 class ZipWriter
 {
 public:
-    ZipWriter(Yuni::Job::QueueService& qs, const char* path);
+    ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath);
     ~ZipWriter();
-    void addJob(const std::string& path, const char* content, size_t size);
+    void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize);
     friend class ZipWriteJob;
 
 private:
     Yuni::Job::QueueService& pQueueService;
     std::mutex pZipMutex;
     void* pHandle;
-    std::string pPath;
+    const std::string pArchivePath;
 };
 } // namespace Solver
 } // namespace Antares

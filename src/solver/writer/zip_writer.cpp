@@ -16,14 +16,17 @@ namespace Solver
 {
 // Class ZipWriteJob
 ZipWriteJob::ZipWriteJob(ZipWriter& writer,
-                         const std::string& path,
-                         const char* content,
-                         size_t size) :
- pZipMutex(writer.pZipMutex), pHandle(writer.pHandle), pEntryPath(path)
+                         const std::string& entryPath,
+                         const char* entryContent,
+                         size_t entrySize) :
+ pZipMutex(writer.pZipMutex), pHandle(writer.pHandle), pEntryPath(entryPath)
 {
-    // We need to copy the content, since it will be de-allocated right after
-    // or overwritten. RAM usage may be high in some cases.
-    pContent.assign(content, content + size);
+    /* We need to copy the content, since it will be de-allocated right after
+       or overwritten. RAM usage may be high in some cases, especially if disk
+       writes are slow.
+       TODO : use swap / std::move to avoid this copy
+     */
+    pContent.assign(entryContent, entryContent + entrySize);
 }
 
 void ZipWriteJob::onExecute()
@@ -42,11 +45,12 @@ void ZipWriteJob::onExecute()
 }
 
 // Class ZipWriter
-ZipWriter::ZipWriter(Yuni::Job::QueueService& qs, const char* path) :
- pQueueService(qs), pPath(std::string(path) + ".zip")
+ZipWriter::ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath) :
+ pQueueService(qs), pArchivePath(std::string(archivePath) + ".zip")
 {
     mz_zip_writer_create(&pHandle);
-    mz_zip_writer_open_file(pHandle, pPath.c_str(), 0, 0);
+    mz_zip_writer_open_file(pHandle, pArchivePath.c_str(), 0, 0);
+    // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pHandle, MZ_COMPRESS_LEVEL_FAST);
 }
 
@@ -56,9 +60,10 @@ ZipWriter::~ZipWriter()
     mz_zip_writer_delete(&pHandle);
 }
 
-void ZipWriter::addJob(const std::string& path, const char* content, size_t size)
+void ZipWriter::addJob(const std::string& entryPath, const char* entryContent, size_t entrySize)
 {
-    pQueueService.add(new ZipWriteJob(*this, path, content, size), Yuni::Job::priorityLow);
+    pQueueService.add(new ZipWriteJob(*this, entryPath, entryContent, entrySize),
+                      Yuni::Job::priorityLow);
 }
 } // namespace Solver
 } // namespace Antares
