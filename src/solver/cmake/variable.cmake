@@ -202,7 +202,7 @@ add_library(libantares-solver-variable-info
 		variable/surveyresults/data.h
 		variable/surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core zip_writer)
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
 
 if(BUILD_SWAP)
 
@@ -219,7 +219,7 @@ if(BUILD_SWAP)
             variable/surveyresults/surveyresults.cpp
     )
 
-    target_link_libraries(libantares-solver-variable-info-swap PRIVATE libantares-core-swap)
+    target_link_libraries(libantares-solver-variable-info-swap PRIVATE libantares-core-swap result_writer)
     set_target_properties(libantares-solver-variable-info-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
     
 endif()

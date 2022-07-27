@@ -111,8 +111,6 @@ macro(solver_app name swap)
 	target_link_libraries(${exec_name}
 			PRIVATE
 			${ANTARES_SOLVER_LIBS}
-            PUBLIC
-            MINIZIP::minizip
 			)
 
 	import_std_libs(${exec_name})

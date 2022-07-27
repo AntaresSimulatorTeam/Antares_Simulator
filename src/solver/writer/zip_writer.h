@@ -25,7 +25,7 @@ public:
 private:
     // Pointer to Zip handle
     void* pZipHandle;
-    // Protect pZipArchive against concurrent writes, since minizip-ng isn't thread-safe
+    // Protect pZipHandle against concurrent writes, since minizip-ng isn't thread-safe
     std::mutex& pZipMutex;
     // Entry path for the new file within the zip archive
     const std::string pEntryPath;

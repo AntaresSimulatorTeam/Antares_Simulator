@@ -41,7 +41,7 @@
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-#include "../writer/factory.h" // [FO] FIXME
+#include <writer_factory.h>
 
 namespace Antares
 {

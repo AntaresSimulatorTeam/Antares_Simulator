@@ -1,4 +1,4 @@
-#include "factory.h"
+#include "writer_factory.h"
 
 namespace Antares
 {

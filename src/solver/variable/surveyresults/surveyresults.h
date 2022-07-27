@@ -34,7 +34,7 @@
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
-#include "../../writer/zip_writer.h" // [FO] FIXME
+#include <i_writer.h>
 
 namespace Antares
 {
@@ -53,7 +53,7 @@ public:
     //! Caption
     typedef Yuni::CString<128, false> CaptionType;
 
-    /*u!
+    /*!
     ** \brief Try to estimate theamount of memory required by the class
     */
     static void EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u);
