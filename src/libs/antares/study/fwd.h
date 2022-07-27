@@ -540,6 +540,14 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
 */
 DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
 
+// Format of results
+enum ResultFormat
+{
+    // Store outputs as files inside directories
+    legacyFilesDirectories = 0,
+    // Store outputs inside a single zip archive
+    zipArchive
+};
 } // namespace Data
 } // namespace Antares
 
@@ -591,7 +599,6 @@ enum LinkCapacityForAdequacyPatchFirstStep
     setExtremityOrigineToZero
 
 }; // enum NTC
-
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares

@@ -777,7 +777,7 @@ bool Study::prepareOutput()
     buffer.clear() << folderOutput << SEP << "about-the-study";
     IO::Directory::Create(buffer);
 
-    if (not simulation.saveToFolder())
+    if (not simulation.saveToFolder(buffer))
         return false;
 
     // Write the header as a reminder too
@@ -787,8 +787,9 @@ bool Study::prepareOutput()
     // copying the generaldata.ini
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     String dest;
-    dest << "about-the-study" << SEP << "parameters.ini";
-    // TODO
+    dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
+    if (IO::errNone != IO::File::Copy(buffer, dest))
+        logs.error() << "impossible to copy " << dest;
 
     // antares-output.info
     buffer.clear() << folderOutput << SEP << "info.antares-output";

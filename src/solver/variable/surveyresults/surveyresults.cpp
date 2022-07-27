@@ -189,10 +189,7 @@ static void ExportGridInfosAreas(const Data::Study& study, IResultWriter::Ptr wr
     });   // each area
 
     writer->addJob("areas.txt", out.c_str(), out.size());
-
     writer->addJob("links.txt", outLinks.c_str(), outLinks.size());
-
-    logs.notice() << "thermal.txt";
     writer->addJob("thermal.txt", outThermal.c_str(), outThermal.size());
 }
 

@@ -46,19 +46,26 @@ Simulation::Simulation(Study& study) : pStudy(study)
 {
 }
 
-bool Simulation::saveToFolder() const
+bool Simulation::saveToFolder(const AnyString& folder) const
 {
-    if (true)
+    String b;
+    b.reserve(folder.size() + 20);
+    b = folder;
+
+    // Ensure that the folder has been created
+    if (!IO::Directory::Create(b))
     {
-        logs.notice() << comments;
-        // [FO] TODO
-        return true;
-    }
-    else
-    {
-        logs.error() << "Couldn't write comments.txt";
+        logs.error() << "I/O: impossible to create the directory " << b;
         return false;
     }
+
+    // Save the comments
+    b = folder;
+    b << SEP << "comments.txt";
+    if (IO::File::SetContent(b, comments))
+        return true;
+    logs.error() << "I/O: impossible to write " << b;
+    return false;
 }
 
 bool Simulation::loadFromFolder(const StudyLoadOptions& options)

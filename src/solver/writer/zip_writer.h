@@ -1,6 +1,7 @@
 #pragma once
 
 #include <mutex>
+#include <vector>
 
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>

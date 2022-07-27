@@ -557,6 +557,8 @@ public:
     //! Ortool solver used for simulation
     OrtoolsSolver ortoolsEnumUsed;
     //@}
+    // Format of results. Currently, only single files or zip archive are supported
+    ResultFormat resultFormat = legacyFilesDirectories;
 
 private:
     //! Load data from an INI file

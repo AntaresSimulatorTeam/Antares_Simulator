@@ -45,8 +45,6 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 
-#include <mutex>
-
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
 
@@ -266,7 +264,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pAnnualCostsStatistics(study),
  pTimeElapsedContentHandler(handler),
  // TODO
- pResultWriter(std::make_shared<ZipWriter>(qs, study.folderOutput.c_str()))
+ pResultWriter(resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs))
 {
     // Ask to the interface to show the messages
     logs.info();

@@ -110,6 +110,41 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     return false;
 }
 
+static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "files")
+    {
+        out = legacyFilesDirectories;
+        return true;
+    }
+    if (s == "zip") // Using renewable clusters
+    {
+        out = zipArchive;
+        return true;
+    }
+
+    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    out = legacyFilesDirectories;
+
+    return false;
+}
+
+static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
+{
+    const String name = "result-format";
+    switch (fmt)
+    {
+    case zipArchive:
+        section->add(name, "zip");
+        break;
+    default:
+        section->add(name, "files");
+    }
+}
+
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
 {
     if (!text)
@@ -324,6 +359,8 @@ void Parameters::reset()
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
 
+    resultFormat = legacyFilesDirectories;
+
     // Adequacy patch
     resetAdqPatchParameters();
 
@@ -534,7 +571,8 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.synthesis);
     if (key == "hydro-debug")
         return value.to<bool>(d.hydroDebug);
-
+    if (key == "result-format")
+        return ConvertCStrToResultFormat(value, d.resultFormat);
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -1697,6 +1735,7 @@ void Parameters::saveToINI(IniFile& ini) const
         if (hydroDebug)
             section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
+        ParametersSaveResultFormat(section, resultFormat);
     }
 
     // Optimization

@@ -62,7 +62,7 @@ public:
     /*!
     ** \brief Save settings to the appropriate folder
     */
-    bool saveToFolder() const;
+    bool saveToFolder(const AnyString& folder) const;
 
     //! Get (in bytes) the amount of memory used by the class
     Yuni::uint64 memoryUsage() const;
