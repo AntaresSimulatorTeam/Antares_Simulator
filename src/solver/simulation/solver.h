@@ -43,7 +43,6 @@
 
 #include "../writer/zip_writer.h" // [FO] FIXME
 
-
 namespace Antares
 {
 namespace Solver
@@ -179,7 +178,7 @@ private:
     TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
 
     //! Zip archive
-    Antares::Solver::ZipWriter pWriter;
+    Antares::Solver::IResultWriter::Ptr pResultWriter;
 
     //! The queue service that runs every set of parallel years
     Yuni::Job::QueueService qs;

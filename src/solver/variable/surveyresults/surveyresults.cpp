@@ -587,7 +587,7 @@ const uint nbVariablesPerDetailRenewableCluster = 1;
 SurveyResults::SurveyResults(uint maxVars,
                              const Data::Study& s,
                              const String& o,
-                             ZipWriter& writer) :
+                             IResultWriter::Ptr writer) :
  data(s, o),
  maxVariables(Math::Max<uint>(
    maxVars,
@@ -596,7 +596,7 @@ SurveyResults::SurveyResults(uint maxVars,
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),
- pWriter(writer)
+ pResultWriter(writer)
 {
     variableCaption.reserve(10);
 
@@ -885,15 +885,8 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         }
     }
 
-    // [FO] TODO mc-ind/mc-all here
-    // auto archive = data.study.pZipArchive;
-    // archive->addData(data.filename.c_str(),
-    //                            data.fileBuffer.c_str(),
-    //                            data.fileBuffer.size());
-    // // Force flush
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
-    pWriter.addJob(data.filename.c_str(), data.fileBuffer.c_str(), data.fileBuffer.size());
+    // mc-ind & mc-all
+    pResultWriter->addJob(data.filename.c_str(), data.fileBuffer.c_str(), data.fileBuffer.size());
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)

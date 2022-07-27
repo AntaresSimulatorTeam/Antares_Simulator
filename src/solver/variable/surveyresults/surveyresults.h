@@ -70,7 +70,10 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o, ZipWriter& writer);
+    SurveyResults(uint maxVars,
+                  const Data::Study& s,
+                  const Yuni::String& o,
+                  IResultWriter::Ptr writer);
     /*!
     ** \brief Destructor
     */
@@ -145,8 +148,8 @@ public:
     bool* isCurrentVarNA;
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
-
-    Antares::Solver::ZipWriter& pWriter;
+    // File writer
+    Antares::Solver::IResultWriter::Ptr pResultWriter;
 
 private:
     /*!

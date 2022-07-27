@@ -232,7 +232,7 @@ public:
     void exportSurveyResults(bool global,
                              const Yuni::String& output,
                              unsigned int numSpace,
-                             Antares::Solver::ZipWriter& writer);
+                             Antares::Solver::IResultWriter::Ptr writer);
 
     /*!
     ** \brief Ask to all variables to fullfil the digest

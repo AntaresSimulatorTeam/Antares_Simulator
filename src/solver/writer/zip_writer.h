@@ -5,6 +5,8 @@
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
 
+#include "i_writer.h"
+
 namespace Antares
 {
 namespace Solver
@@ -30,12 +32,12 @@ private:
     std::vector<char> pContent;
 };
 
-class ZipWriter
+class ZipWriter : public IResultWriter
 {
 public:
     ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath);
     ~ZipWriter();
-    void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize);
+    void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize) override;
     friend class ZipWriteJob;
 
 private:

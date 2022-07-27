@@ -1,7 +1,7 @@
 add_library(zip_writer
-            writer/zip_writer.cpp)
-
-# target_include_directories(zip_writer PUBLIC ${CMAKE_SOURCE_DIR}/solver/writer)
+  writer/i_writer.h
+  writer/zip_writer.cpp
+  writer/zip_writer.h)
 
 target_link_libraries(zip_writer
   PRIVATE
