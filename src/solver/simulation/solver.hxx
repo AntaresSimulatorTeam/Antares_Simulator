@@ -410,6 +410,15 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 {
     using namespace Yuni;
 
+    // The writer might need the job queue, after it's been stopped
+    // this is the case e.g if synthesis == true (writing mc-all)
+    // Don't restart the queue if the writer doesn't need it
+    const bool restartQueue = !qs.started() && pResultWriter->needsTheJobQueue();
+    if (restartQueue)
+    {
+        qs.start();
+    }
+
     assert(!settings.noOutput);
     assert(!settings.tsGeneratorsOnly);
 
@@ -455,6 +464,11 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
               synthesis, newPath, numSpace, pResultWriter);
         else
             logs.fatal() << "impossible to create `" << newPath << "`";
+    }
+    if (restartQueue)
+    {
+        qs.wait(qseIdle);
+        qs.stop();
     }
 }
 
@@ -1536,8 +1550,13 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
     // Number of threads to perform the jobs waiting in the queue
-    qs.maximumThreadCount(pNbMaxPerformedYearsInParallel + 1 // File writer
-    );
+    {
+        int numThreads = pNbMaxPerformedYearsInParallel;
+        // If the result writer uses the job queue, add one more thread for it
+        if (pResultWriter->needsTheJobQueue())
+            numThreads++;
+        qs.maximumThreadCount(numThreads);
+    }
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;
@@ -1645,7 +1664,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             logs.fatal() << "At least one year has failed in the previous set of parallel year.";
             AntaresSolverEmergencyShutdown();
         }
-
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel
         ImplementationType::variables.computeSummary(set_it->spaceToPerformedYear,

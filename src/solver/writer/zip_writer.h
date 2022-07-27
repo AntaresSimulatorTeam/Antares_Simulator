@@ -38,6 +38,7 @@ public:
     ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath);
     ~ZipWriter();
     void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize) override;
+    bool needsTheJobQueue() const override;
     friend class ZipWriteJob;
 
 private:

@@ -139,7 +139,7 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
     }
 }
 
-void ExportGridInfosAreas(const Data::Study& study, const String& folder)
+static void ExportGridInfosAreas(const Data::Study& study, IResultWriter::Ptr writer)
 {
     Clob out;
     Clob outLinks;
@@ -188,29 +188,12 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
         } // each thermal cluster
     });   // each area
 
-    String filename;
-    filename.reserve(folder.size() + 15);
-    // [FO] TODO
-    // filename.clear() << folder << SEP << "areas.txt";
-    // study.pZipArchive->addData(filename.c_str(),
-    //                            out.c_str(),
-    //                            out.size());
+    writer->addJob("areas.txt", out.c_str(), out.size());
 
-    // filename.clear() << folder << SEP << "links.txt";
-    // study.pZipArchive->addData(filename.c_str(),
-    //                            outLinks.c_str(),
-    //                            outLinks.size());
+    writer->addJob("links.txt", outLinks.c_str(), outLinks.size());
 
-    // filename.clear() << folder << SEP << "thermal.txt";
-    // study.pZipArchive->addData(filename.c_str(),
-    //                            outThermal.c_str(),
-    //                            outThermal.size());
-
-    // // Force flush into the archive
-    // // If not, out, outLinks and outThermal will be read when pZipArchive->close() is called
-    // // which we don't want since out, outLinks and outThermal are released long before that.
-    // study.pZipArchive->close();
-    // study.pZipArchive->open(libzippp::ZipArchive::Write);
+    logs.notice() << "thermal.txt";
+    writer->addJob("thermal.txt", outThermal.c_str(), outThermal.size());
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -265,21 +248,22 @@ void SurveyResultsData::initialize(uint maxVariables)
     }
 }
 
-void SurveyResultsData::exportGridInfos()
+void SurveyResultsData::exportGridInfos(Antares::Solver::IResultWriter::Ptr writer)
 {
     // Create output/grid
+    // TODO
     output.clear();
     output << originalOutput << SEP << "grid";
     IO::Directory::Create(output);
 
     // Archive
     output.clear() << SEP << "grid";
-    Solver::Variable::Private::ExportGridInfosAreas(study, output);
+    Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
 
-void SurveyResultsData::exportGridInfosAreas(const String& folder)
+void SurveyResultsData::exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer)
 {
-    Solver::Variable::Private::ExportGridInfosAreas(study, folder);
+    Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
 
 bool SurveyResultsData::createDigestFile()
@@ -918,12 +902,12 @@ void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
 
 void SurveyResults::exportGridInfos()
 {
-    data.exportGridInfos();
+    data.exportGridInfos(pResultWriter);
 }
 
-void SurveyResults::exportGridInfosAreas(const String& folder)
+void SurveyResults::exportGridInfosAreas()
 {
-    data.exportGridInfosAreas(folder);
+    data.exportGridInfosAreas(pResultWriter);
 }
 
 } // namespace Variable

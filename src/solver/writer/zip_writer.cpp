@@ -34,7 +34,8 @@ void ZipWriteJob::onExecute()
     TimeElapsed::Timer timer_wait("[zip] Waiting", "[zip] Waited", true);
     std::lock_guard<std::mutex> guard(pZipMutex);
     timer_wait.stop();
-    TimeElapsed::Timer timer_write("[zip] Writing", "[zip] Wrote took", true);
+    TimeElapsed::Timer timer_write(
+      "[zip] Writing " + pEntryPath, "[zip] Wrote " + pEntryPath + " ", true);
     mz_zip_file file_info = {0};
     file_info.filename = pEntryPath.c_str();
     file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
@@ -64,6 +65,11 @@ void ZipWriter::addJob(const std::string& entryPath, const char* entryContent, s
 {
     pQueueService.add(new ZipWriteJob(*this, entryPath, entryContent, entrySize),
                       Yuni::Job::priorityLow);
+}
+
+bool ZipWriter::needsTheJobQueue() const
+{
+    return true;
 }
 } // namespace Solver
 } // namespace Antares

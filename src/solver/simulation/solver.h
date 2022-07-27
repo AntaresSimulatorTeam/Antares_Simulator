@@ -177,9 +177,10 @@ private:
     //! Aggregate execution times into a single file (optional)
     TimeElapsed::ContentHandler* pTimeElapsedContentHandler;
 
-    //! Zip archive
+    //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter;
 
+public:
     //! The queue service that runs every set of parallel years
     Yuni::Job::QueueService qs;
 }; // class ISimulation

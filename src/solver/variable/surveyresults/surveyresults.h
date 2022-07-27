@@ -155,7 +155,7 @@ private:
     /*!
     ** \brief Export informations about each area (and its sub-components - thermal clusters, links)
     */
-    void exportGridInfosAreas(const Yuni::String& folder);
+    void exportGridInfosAreas();
 
     template<class StringT, class ConvertT, class PrecisionT>
     void AppendDoubleValue(uint& error,

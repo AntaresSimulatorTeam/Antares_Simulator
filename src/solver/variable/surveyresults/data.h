@@ -31,6 +31,7 @@
 #include "../constants.h"
 #include <yuni/core/string.h>
 #include <antares/study.h>
+#include "../../writer/i_writer.h" // TODO fix path
 
 namespace Antares
 {
@@ -56,9 +57,9 @@ public:
     ** It is composed by several files to completely describe the system
     ** and provide a good support for Excel macros.
     */
-    void exportGridInfos();
+    void exportGridInfos(Antares::Solver::IResultWriter::Ptr writer);
 
-    void exportGridInfosAreas(const Yuni::String& folder);
+    void exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer);
 
     bool createDigestFile();
 
