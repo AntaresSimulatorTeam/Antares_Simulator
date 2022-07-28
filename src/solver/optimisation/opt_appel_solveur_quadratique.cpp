@@ -194,13 +194,8 @@ void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     double ToleranceSurLaComplementarite;
     int ChoixToleranceParDefautSurLaComplementarite;
 
-    ToleranceSurLAdmissibilite = 1.e-5;
     ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
-
-    ToleranceSurLaStationnarite = 1.e-5;
     ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
-
-    ToleranceSurLaComplementarite = 1.e-5;
     ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme.NombreMaxDIterations = -1;
