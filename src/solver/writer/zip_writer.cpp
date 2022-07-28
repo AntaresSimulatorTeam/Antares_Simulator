@@ -20,16 +20,9 @@ namespace Solver
 // Class ZipWriteJob
 ZipWriteJob::ZipWriteJob(ZipWriter& writer,
                          const std::string& entryPath,
-                         const char* entryContent,
-                         size_t entrySize) :
- pZipMutex(writer.pZipMutex), pZipHandle(writer.pZipHandle), pEntryPath(entryPath)
+                         Yuni::Clob& content) :
+  pZipMutex(writer.pZipMutex), pZipHandle(writer.pZipHandle), pEntryPath(entryPath), pContent(std::move(content))
 {
-    /* We need to copy the content, since it will be de-allocated right after
-       or overwritten. RAM usage may be high in some cases, especially if disk
-       writes are slow.
-       TODO : use swap / std::move to avoid this copy
-     */
-    pContent.assign(entryContent, entryContent + entrySize);
 }
 
 void ZipWriteJob::onExecute()
@@ -66,9 +59,9 @@ ZipWriter::~ZipWriter()
     mz_zip_writer_delete(&pZipHandle);
 }
 
-void ZipWriter::addJob(const std::string& entryPath, const char* entryContent, size_t entrySize)
+void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    pQueueService.add(new ZipWriteJob(*this, entryPath, entryContent, entrySize),
+    pQueueService.add(new ZipWriteJob(*this, entryPath, entryContent),
                       Yuni::Job::priorityLow);
 }
 

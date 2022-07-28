@@ -41,15 +41,12 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addJob(const std::string& entryPath,
-                                       const char* entryContent,
-                                       size_t entrySize)
+                                       Yuni::Clob& entryContent)
 {
     Yuni::String output;
     output << pOutputFolder << Yuni::IO::Separator << entryPath.c_str();
     createDirectoryHierarchy(pOutputFolder, entryPath.c_str());
-    // TODO Avoid copy ?
-    std::string content(entryContent, entryContent + entrySize);
-    IOFileSetContent(output, content);
+    IOFileSetContent(output, entryContent);
 }
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const

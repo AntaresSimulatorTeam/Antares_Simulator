@@ -188,9 +188,9 @@ static void ExportGridInfosAreas(const Data::Study& study, IResultWriter::Ptr wr
         } // each thermal cluster
     });   // each area
 
-    writer->addJob("areas.txt", out.c_str(), out.size());
-    writer->addJob("links.txt", outLinks.c_str(), outLinks.size());
-    writer->addJob("thermal.txt", outThermal.c_str(), outThermal.size());
+    writer->addJob("areas.txt", out);
+    writer->addJob("links.txt", outLinks);
+    writer->addJob("thermal.txt", outThermal);
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -867,7 +867,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     }
 
     // mc-ind & mc-all
-    pResultWriter->addJob(data.filename.c_str(), data.fileBuffer.c_str(), data.fileBuffer.size());
+    pResultWriter->addJob(data.filename.c_str(), data.fileBuffer);
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)

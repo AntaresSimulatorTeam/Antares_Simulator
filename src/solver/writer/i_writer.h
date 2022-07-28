@@ -1,6 +1,9 @@
 #pragma once
 
+#include <yuni/core/string.h>
+
 #include <memory>
+#include <string>
 
 namespace Antares
 {
@@ -10,7 +13,7 @@ class IResultWriter
 {
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
-    virtual void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize)
+    virtual void addJob(const std::string& entryPath, Yuni::Clob& entryContent)
       = 0;
     virtual bool needsTheJobQueue() const = 0;
 };

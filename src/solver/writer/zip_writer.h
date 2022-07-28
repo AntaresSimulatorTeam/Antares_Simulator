@@ -1,10 +1,11 @@
 #pragma once
 
 #include <mutex>
-#include <vector>
+#include <string>
 
 #include <yuni/job/queue/service.h>
 #include <yuni/job/job.h>
+#include <yuni/core/string.h>
 
 #include "i_writer.h"
 
@@ -18,8 +19,7 @@ class ZipWriteJob final : public Yuni::Job::IJob
 public:
     ZipWriteJob(ZipWriter& writer,
                 const std::string& entryPath,
-                const char* entryContent,
-                size_t entrySize);
+                Yuni::Clob& content);
     virtual void onExecute() override;
 
 private:
@@ -30,7 +30,7 @@ private:
     // Entry path for the new file within the zip archive
     const std::string pEntryPath;
     // Content of the new file
-    std::vector<char> pContent;
+    Yuni::Clob pContent;
 };
 
 class ZipWriter : public IResultWriter
@@ -38,7 +38,7 @@ class ZipWriter : public IResultWriter
 public:
     ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath);
     ~ZipWriter();
-    void addJob(const std::string& entryPath, const char* entryContent, size_t entrySize) override;
+    void addJob(const std::string& entryPath, Yuni::Clob& entryContent) override;
     bool needsTheJobQueue() const override;
     friend class ZipWriteJob;
 
