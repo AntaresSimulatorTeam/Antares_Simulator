@@ -95,7 +95,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    int NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
+    int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
     // todo after debugging transfer this into same area loop as ENS
@@ -115,7 +115,6 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
             NumberOfVariables++;
         }
     }
-    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
 }
 
 void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -125,7 +124,7 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    int NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
+    int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
     // and 2.
@@ -165,7 +164,6 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             NumberOfVariables++;
         }
     }
-    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
 }
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
