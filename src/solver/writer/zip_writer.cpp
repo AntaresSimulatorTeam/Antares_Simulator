@@ -36,8 +36,10 @@ void ZipWriteJob::onExecute()
     timer_wait.stop();
     TimeElapsed::Timer timer_write(
       "[zip] Writing " + pEntryPath, "[zip] Wrote " + pEntryPath + " ", true);
-    mz_zip_file file_info = {0};
+    mz_zip_file file_info;
+    memset(&file_info, 0, sizeof(file_info));
     file_info.filename = pEntryPath.c_str();
+    file_info.zip64 = MZ_ZIP64_FORCE;
     file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
     file_info.modified_date = file_info.creation_date = time(0);
     mz_zip_writer_entry_open(pZipHandle, &file_info);
