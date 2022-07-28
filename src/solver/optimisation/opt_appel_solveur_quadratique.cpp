@@ -264,8 +264,7 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     double* pt;
     logs.warning()
       << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
-      << yearNb + 1 << ". week: " << weekNb + 1
-      << ". hour: " << hourlyCsrProblem.hourInWeekTriggeredCsr;
+      << yearNb + 1 << ". hour: " << weekNb * 168 + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 
     // for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     // {
