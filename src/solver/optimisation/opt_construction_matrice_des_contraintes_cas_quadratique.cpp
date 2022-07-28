@@ -318,15 +318,6 @@ void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
                         Pi[NombreDeTermes] = Poids;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
-
-                        // logs.debug()
-                        //   << "Interco:" + std::to_string(Interco) << ". Between:["
-                        //   << ProblemeHebdo
-                        //        ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
-                        //   << "]-["
-                        //   << ProblemeHebdo
-                        //        ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
-                        //   << "], with Poids(coeff):" + std::to_string(Poids) + " inserted to LHS!";
                     }
                 }
             }
