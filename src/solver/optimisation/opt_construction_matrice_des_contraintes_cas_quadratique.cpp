@@ -152,7 +152,7 @@ void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
                          << NomDeLaContrainte;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
         }
     }
 }
@@ -264,7 +264,7 @@ void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
                          << NomDeLaContrainte;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=', NomDeLaContrainte);
+              ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
         }
     }
 }
@@ -338,8 +338,7 @@ void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
                   Pi,
                   Colonne,
                   NombreDeTermes,
-                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
-                  NomDeLaContrainte);
+                  MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante);
             }
         }
     }
