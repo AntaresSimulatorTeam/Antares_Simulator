@@ -52,7 +52,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
     {
         CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
           = NombreDeVariables;
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
         NombreDeVariables++;
     }
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
