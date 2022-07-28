@@ -308,10 +308,10 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 #endif
 }
 
-bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                       HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-                                       uint weekNb,
-                                       int yearNb)
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                   HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                   uint weekNb,
+                   int yearNb)
 {
     PROBLEME_POINT_INTERIEUR Probleme;
     setInteriorPointProblem(ProblemeAResoudre, Probleme);
