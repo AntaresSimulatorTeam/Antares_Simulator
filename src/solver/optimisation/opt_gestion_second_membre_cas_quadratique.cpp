@@ -54,7 +54,6 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourl
 {
     int Cnt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    COUTS_DE_TRANSPORT* TransportCost;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
@@ -66,17 +65,11 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourl
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-
             std::map<int, int>::iterator it
               = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.find(Interco);
             if (it != hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.end())
                 Cnt = it->second;
-            // CSR Todo? loop flow?
-            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-            //     ProblemeAResoudre->SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[hour]
-            //                           ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            // else
+           
             ProblemeAResoudre->SecondMembre[Cnt] = 0.;
             logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
                          << "] = " << ProblemeAResoudre->SecondMembre[Cnt];

@@ -106,7 +106,6 @@ void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     std::string NomDeLaContrainte;
-    COUTS_DE_TRANSPORT* TransportCost;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
@@ -120,8 +119,6 @@ void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-
             NombreDeTermes = 0;
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             if (Var >= 0)
