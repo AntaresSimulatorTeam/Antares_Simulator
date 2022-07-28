@@ -282,6 +282,13 @@ if(NOT minizip_FOUND OR BUILD_MINIZIP_NG)
   FetchContent_Declare(minizip_ng
     GIT_REPOSITORY "https://github.com/zlib-ng/minizip-ng"
     GIT_TAG "3.0.6")
+
+  set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+  set(MZ_LZMA "OFF" CACHE INTERNAL "")
+  set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+  set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+  set(MZ_WZAES "OFF" CACHE INTERNAL "")
+
   FetchContent_MakeAvailable(minizip_ng)
 endif()
 
