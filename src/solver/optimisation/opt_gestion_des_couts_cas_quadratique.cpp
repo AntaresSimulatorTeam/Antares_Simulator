@@ -188,5 +188,5 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
 
     setQuadraticCost(ProblemeHebdo, hourlyCsrProblem);
-    setLinearCost(ProblemeHebdo, hourlyCsrProblem);
+    // setLinearCost(ProblemeHebdo, hourlyCsrProblem); // only for Daniel-Elia beta6 version - TEMPORARY!!!!
 }
