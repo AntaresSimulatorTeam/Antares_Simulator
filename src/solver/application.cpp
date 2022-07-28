@@ -457,6 +457,11 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // no output ?
     study.parameters.noOutput = pSettings.noOutput;
 
+    if (pSettings.forceZipOutput)
+    {
+        pParameters->resultFormat = Antares::Data::zipArchive;
+    }
+
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
         study.simulation.name = pSettings.simulationName;
@@ -544,7 +549,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 void Application::saveElapsedTime()
 {
     if (!pStudy)
-       return;
+        return;
 
     pTotalTimer.stop();
     pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";

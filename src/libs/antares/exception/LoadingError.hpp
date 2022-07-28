@@ -184,5 +184,10 @@ class CreatingTimeMeasurementFile : public LoadingError
 public:
     explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
 };
+class IncompatibleOutputOptions : public LoadingError
+{
+public:
+    explicit IncompatibleOutputOptions(const std::string& text);
+};
 } // namespace Error
 } // namespace Antares

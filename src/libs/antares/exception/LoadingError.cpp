@@ -138,5 +138,9 @@ CreatingTimeMeasurementFile::CreatingTimeMeasurementFile(const Yuni::String& fil
 {
 }
 
+IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
+{
+}
+
 } // namespace Error
 } // namespace Antares

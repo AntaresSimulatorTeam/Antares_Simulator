@@ -141,6 +141,12 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --derated
     parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
 
+    // --output-force-zip
+    parser->addFlag(settings.forceZipOutput,
+                    'z',
+                    "zip-output",
+                    "Force the write output into a single zip archive");
+
     parser->addParagraph("\nOptimization");
 
     // --optimization-range
@@ -258,6 +264,12 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         else
             throw Error::WritingPID(optPID);
     }
+
+    // no-output and force-zip-output
+    if (settings.noOutput && settings.forceZipOutput)
+    {
+        throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
+    }
 }
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
@@ -326,4 +338,5 @@ void Settings::reset()
     noOutput = false;
     displayProgression = false;
     ignoreConstraints = false;
+    forceZipOutput = false;
 }
