@@ -163,5 +163,6 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
 
     setQuadraticCost(ProblemeHebdo, hourlyCsrProblem);
-    setLinearCost(ProblemeHebdo, hourlyCsrProblem);
+    if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
+        setLinearCost(ProblemeHebdo, hourlyCsrProblem);
 }
