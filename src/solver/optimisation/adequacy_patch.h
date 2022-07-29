@@ -65,15 +65,11 @@ namespace AdequacyPatch
     *
     * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
     *
-    * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
-    * (type 1) towards nodes inside adq patch (type 2).
-    *
     * @return uint from an enumeration that describes the type of restrictions to put on this link for
     * adq purposes.
     */
     LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch);
+        AdequacyPatchMode ExtremityNodeAdequacyPatchType);
 
     /*!
     * Determines restriction type for transmission links for first step of adequacy patch, when start

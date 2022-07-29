@@ -287,8 +287,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->include.adequacyPatch, pParameters->mode);
-    checkAdqPatchContainsAdqPatchArea(pParameters->include.adequacyPatch, pStudy->areas);
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate
