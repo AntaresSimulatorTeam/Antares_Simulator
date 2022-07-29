@@ -9,7 +9,7 @@
 
 using namespace operations_research;
 
-constexpr char* XPRESS_PARAMS = "THREADS 1 SCALING 0";
+const char* const XPRESS_PARAMS = "THREADS 1 SCALING 0";
 
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
@@ -110,6 +110,9 @@ static void tuneSolverSpecificOptions(MPSolver* solver,
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
         solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
+        break;
+    // Add solver-specific options here
+    default:
         break;
     }
 }
