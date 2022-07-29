@@ -263,61 +263,56 @@ void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
 }
 
+void CSR_DEBUG_BLAH(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    int Var;
+
+    logs.info();
+    logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
+    logs.info() << "Here is the trace:";
+
+    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
+                                 Var,
+                                 ProblemeAResoudre->CoutLineaire[Var],
+                                 ProblemeAResoudre->CoutQuadratique[Var]);
+    }
+    for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+    {
+        logs.info().appendFormat("Constraint %ld sens %c B %e",
+                                 Cnt,
+                                 ProblemeAResoudre->Sens[Cnt],
+                                 ProblemeAResoudre->SecondMembre[Cnt]);
+
+        int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
+        int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+        for (; il < ilMax; ++il)
+        {
+            Var = ProblemeAResoudre->IndicesColonnes[il];
+            logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
+                                     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                                     Var,
+                                     ProblemeAResoudre->Xmin[Var],
+                                     ProblemeAResoudre->Xmax[Var],
+                                     ProblemeAResoudre->TypeDeVariable[Var]);
+        }
+    }
+}
+
 void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                               HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                               uint weekNb,
                               int yearNb)
 {
-    int Var;
-    double* pt;
+    const int hoursInWeek = 168;
     logs.warning()
       << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
-      << yearNb + 1 << ". hour: " << weekNb * 168 + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
-
-    // for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-    // {
-    //     pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-    //     if (pt)
-    //         *pt = std::numeric_limits<double>::quiet_NaN();
-    // }
+      << yearNb + 1
+      << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 
 #ifndef NDEBUG
-
-    {
-        logs.info();
-
-        logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
-
-        logs.info() << "Here is the trace:";
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        {
-            logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-                                     Var,
-                                     ProblemeAResoudre->CoutLineaire[Var],
-                                     ProblemeAResoudre->CoutQuadratique[Var]);
-        }
-        for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
-        {
-            logs.info().appendFormat("Constraint %ld sens %c B %e",
-                                     Cnt,
-                                     ProblemeAResoudre->Sens[Cnt],
-                                     ProblemeAResoudre->SecondMembre[Cnt]);
-
-            int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-            int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
-            for (; il < ilMax; ++il)
-            {
-                Var = ProblemeAResoudre->IndicesColonnes[il];
-                logs.info().appendFormat(
-                  "      coeff %e var %ld xmin %e xmax %e type %ld",
-                  ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-                  Var,
-                  ProblemeAResoudre->Xmin[Var],
-                  ProblemeAResoudre->Xmax[Var],
-                  ProblemeAResoudre->TypeDeVariable[Var]);
-            }
-        }
-    }
+    CSR_DEBUG_BLAH(ProblemeAResoudre);
 #endif
 }
 
