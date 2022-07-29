@@ -732,6 +732,7 @@ public:
     void run(uint week, int year);
 public:
     int hourInWeekTriggeredCsr;
+    const double belowThisThresholdSetToZero = 1e-3;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
     HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
     {
@@ -746,6 +747,8 @@ public:
 
     std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
+    
+    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
 };
 
 #endif

@@ -78,6 +78,7 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
                          << ProblemeHebdo->NomsDesPays[area] << "].";
 
@@ -109,6 +110,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
+            hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " Spilled Energy[" << area << "].-["
                          << ProblemeHebdo->NomsDesPays[area] << "].";
 

@@ -237,7 +237,17 @@ void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
 }
 
-void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void setToZeroIfBelowThreshold(double* pt, int Var, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
+                  != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
+    bool belowLimit = *pt < hourlyCsrProblem.belowThisThresholdSetToZero;
+    if (inSet && belowLimit)
+        *pt = 0.0;
+}
+
+void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                               HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     double* pt;
@@ -245,7 +255,10 @@ void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     {
         pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
         if (pt)
+        {
             *pt = ProblemeAResoudre->X[Var];
+            setToZeroIfBelowThreshold(pt, Var, hourlyCsrProblem);
+        }
         logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
     }
 }
@@ -319,7 +332,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
     {
-        storeInteriorPointResults(ProblemeAResoudre);
+        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
         return true;
     }
     else
