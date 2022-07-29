@@ -107,21 +107,7 @@ static void tuneSolverSpecificOptions(MPSolver* solver,
     {
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        solver->SetSolverSpecificParametersAsString("THREADS 1");
-        break;
-    }
-}
-
-static void setSolverSpecificParams(MPSolverParameters& params)
-{
-    auto study = Data::Study::Current::Get();
-    auto solverType = OrtoolsUtils().getLinearOptimProblemType(study->parameters.ortoolsEnumUsed);
-
-    switch (solverType)
-    {
-    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        params.SetIntegerParam(MPSolverParameters::SCALING, 0);
+        solver->SetSolverSpecificParametersAsString("THREADS 1 SCALING 0");
         break;
     }
 }
@@ -270,8 +256,6 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     }
 
     MPSolverParameters params;
-    setSolverSpecificParams(params);
-
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
