@@ -1,6 +1,13 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.4.0
+### Input
+    In section advanced parameters, file **settings/generaldata.ini**, in section `advanced-parameters`, add property `handle-negative-demand` [str]. Values can be
+
+* `increase-effective-demand`
+* `cap-net-demand`
+
 ## v8.3.0
 ### Input
 In file **settings/generaldata.ini**, add section `adequacy patch`, with properties
