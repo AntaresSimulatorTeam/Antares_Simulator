@@ -97,6 +97,35 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
+static void tuneSolverSpecificOptions(MPSolver* solver,
+                                      MPSolver::OptimizationProblemType solverType)
+{
+    if (!solver)
+        return;
+
+    switch (solverType)
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+        solver->SetSolverSpecificParametersAsString("THREADS 1");
+        break;
+    }
+}
+
+static void setSolverSpecificParams(MPSolverParameters& params)
+{
+    auto study = Data::Study::Current::Get();
+    auto solverType = OrtoolsUtils().getLinearOptimProblemType(study->parameters.ortoolsEnumUsed);
+
+    switch (solverType)
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+        params.SetIntegerParam(MPSolverParameters::SCALING, 0);
+        break;
+    }
+}
+
 namespace Antares
 {
 namespace Optimization
@@ -104,14 +133,16 @@ namespace Optimization
 MPSolver* convert_to_MPSolver(
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
     // Define solver used depending on study option
     MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+      = OrtoolsUtils().getLinearOptimProblemType(study->parameters.ortoolsEnumUsed);
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
+
+    tuneSolverSpecificOptions(solver, solverType);
 
     // Create the variables and set objective cost.
     transferVariables(solver,
@@ -239,6 +270,7 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     }
 
     MPSolverParameters params;
+    setSolverSpecificParams(params);
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
