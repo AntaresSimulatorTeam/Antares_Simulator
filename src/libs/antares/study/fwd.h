@@ -558,4 +558,43 @@ class Sets;
 } // namespace Data
 } // namespace Antares
 
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Virtual area in adq patch
+    virtualArea = 0,
+    //! Physical Area outside the adq-patch
+    physicalAreaOutsideAdqPatch = 1,
+    //! Physical Area inside the adq-patch
+    physicalAreaInsideAdqPatch = 2
+}; // enum AdequacyPatchMode
+
+/*!
+** \brief Setting Link Capacity (NTC) for Adequacy patch first step
+*/
+enum LinkCapacityForAdequacyPatchFirstStep
+{
+    //! Leave NTC local values
+    leaveLocalValues = 0,
+    //! Set NTC to zero
+    setToZero,
+    //! set only origine->extremity NTC to zero
+    setOrigineExtremityToZero,
+    //! set only extremity->origine NTC to zero
+    setExtremityOrigineToZero
+
+}; // enum NTC
+
+} // namespace AdequacyPatch
+} // namespace Data
+} // namespace Antares
+
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

@@ -86,6 +86,16 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
+    - name: Run adq-patch related tests
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
+
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -93,6 +103,13 @@ jobs:
       with:
         path: 'simtest.json'
         prop_path: 'version'
+
+    - name: Run tests about infinity on BCs RHS
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
       uses: ./.github/workflows/run-tests
