@@ -101,6 +101,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     double* pt;
     char PremierPassage;
     double CoutOpt;
+    long long solveTime;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     PROBLEME_SPX* ProbSpx;
@@ -116,6 +117,12 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
+
+    optimizationStatistics* optimizationStatistics_object;
+    if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 1)
+        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_FirstOptim);
+    else if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
+        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_SecondOptim);
 
 RESOLUTION:
 
@@ -173,7 +180,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
+            optimizationStatistics_object->addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -265,7 +272,8 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
+    solveTime = measure.duration_ms();
+    optimizationStatistics_object->addSolveTime(solveTime);
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
     {
@@ -340,10 +348,15 @@ RESOLUTION:
         }
 
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+        {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+            ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+        }
         else
+        {
             ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-
+            ProblemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+        }
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];

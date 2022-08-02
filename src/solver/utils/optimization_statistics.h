@@ -52,11 +52,6 @@ public:
         return nbUpdate;
     }
 
-    unsigned int getNbSolve() const
-    {
-        return nbSolve;
-    }
-
     long long getTotalSolveTime() const
     {
         return totalSolveTime;

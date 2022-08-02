@@ -573,7 +573,9 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
-    optimizationStatistics optimizationStatistics_object;
+    optimizationStatistics optimizationStatistics_FirstOptim;
+    optimizationStatistics optimizationStatistics_SecondOptim;
+
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -586,6 +588,9 @@ struct PROBLEME_HEBDO
 
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
+
+    double* tempsResolution1;
+    double* tempsResolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
 
@@ -674,6 +679,9 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    /* Debug */
+    char debugFolder[1024];
 };
 
 #endif
