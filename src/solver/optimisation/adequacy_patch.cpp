@@ -294,7 +294,7 @@ void HOURLY_CSR_PROBLEM::setProblemCost()
 
 void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
 {
-    OPT_AppelDuSolveurQuadratique_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
+    ADQ_PATCH_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
 }
 
 void HOURLY_CSR_PROBLEM::run(uint week, int year)

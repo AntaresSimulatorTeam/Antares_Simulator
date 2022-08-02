@@ -202,6 +202,21 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchPTO = button;
     }
+    // Select whether the hurdle cost will be included into curtailment sharing rule cost function
+    {
+        label = Component::CreateLabel(this, wxT("Include hurdle cost in CSR optimization"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(
+          this,
+          &AdequacyPatchOptions::onPopupMenuSpecify,
+          PopupInfo(study.parameters.adqPatch.curtailmentSharing.includeHurdleCost, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchIncludeHurdleCostCsr = button;
+    }
     // Select whether the intermediate result before the application of the curtailment sharing is
     // to be kept in the results
     {
@@ -333,6 +348,10 @@ void AdequacyPatchOptions::refresh()
     // Save intermediate results for adequacy patch
     updateButton(pBtnAdequacyPatchSaveIntermediateResults,
                  study.parameters.adqPatch.saveIntermediateResults,
+                 buttonType);
+    // Include hurdle cost for CSR
+    updateButton(pBtnAdequacyPatchIncludeHurdleCostCsr,
+                 study.parameters.adqPatch.curtailmentSharing.includeHurdleCost,
                  buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.

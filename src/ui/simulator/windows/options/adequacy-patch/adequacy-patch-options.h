@@ -95,6 +95,7 @@ private:
     Component::Button* pBtnNTCfromOutToOutAdqPatch;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchSaveIntermediateResults;
+    Component::Button* pBtnAdequacyPatchIncludeHurdleCostCsr;
     wxTextCtrl* pThresholdCSRStart;
     wxTextCtrl* pThresholdLMRviolations;
     bool* pTargetRef;

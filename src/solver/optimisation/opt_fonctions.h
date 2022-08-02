@@ -55,7 +55,7 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
-bool OPT_AppelDuSolveurQuadratique_CSR(PROBLEME_ANTARES_A_RESOUDRE*, HOURLY_CSR_PROBLEM&, uint week, int year);
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE*, HOURLY_CSR_PROBLEM&, uint week, int year);
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
