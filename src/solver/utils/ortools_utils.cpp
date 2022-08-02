@@ -214,6 +214,8 @@ static void change_MPSolver_rhs(const MPSolver* solver,
     auto& constraints = solver->constraints();
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
+        if (idxRow == 77695)
+            int a = 0;
         if (sens[idxRow] == '=')
             constraints[idxRow]->SetBounds(rhs[idxRow], rhs[idxRow]);
         else if (sens[idxRow] == '<')
