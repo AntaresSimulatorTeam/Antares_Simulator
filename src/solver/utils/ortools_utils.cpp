@@ -146,8 +146,6 @@ MPSolver* convert_to_MPSolver(
                    problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
                    problemeSimplexe->NombreDeContraintes);
 
-    solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
-
     if (study.parameters.ortoolsVerbosityOn)
         solver->EnableOutput();
 
@@ -272,6 +270,10 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     {
         solver = Antares::Optimization::convert_to_MPSolver(Probleme);
     }
+
+    if (Probleme->firstOptimization)
+        Probleme->specificParams += " KEEPBASIS 0";
+    solver->SetSolverSpecificParametersAsString(Probleme->specificParams);
 
     MPSolverParameters params;
 

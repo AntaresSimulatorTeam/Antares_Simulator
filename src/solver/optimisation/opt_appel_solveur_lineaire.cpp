@@ -117,12 +117,15 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
+    Probleme.specificParams = study->parameters.ortoolsParamsString;
 
     optimizationStatistics* optimizationStatistics_object;
     if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 1)
         optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_FirstOptim);
     else if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
         optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_SecondOptim);
+
+    Probleme.firstOptimization = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
 
 RESOLUTION:
 
