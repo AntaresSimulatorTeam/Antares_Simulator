@@ -58,11 +58,8 @@ using namespace Antares;
 void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                              PROBLEME_POINT_INTERIEUR& Probleme)
 {
-    double ToleranceSurLAdmissibilite;
     int ChoixToleranceParDefautSurLAdmissibilite;
-    double ToleranceSurLaStationnarite;
     int ChoixToleranceParDefautSurLaStationnarite;
-    double ToleranceSurLaComplementarite;
     int ChoixToleranceParDefautSurLaComplementarite;
 
     ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
@@ -92,15 +89,12 @@ void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     Probleme.AffichageDesTraces = NON_PI;
 
     Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
-    Probleme.ToleranceDAdmissibilite = ToleranceSurLAdmissibilite;
 
     Probleme.UtiliserLaToleranceDeStationnariteParDefaut
       = ChoixToleranceParDefautSurLaStationnarite;
-    Probleme.ToleranceDeStationnarite = ToleranceSurLaStationnarite;
 
     Probleme.UtiliserLaToleranceDeComplementariteParDefaut
       = ChoixToleranceParDefautSurLaComplementarite;
-    Probleme.ToleranceDeComplementarite = ToleranceSurLaComplementarite;
 
     Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
 
