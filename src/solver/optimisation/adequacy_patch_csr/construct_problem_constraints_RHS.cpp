@@ -52,11 +52,12 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourl
             std::map<int, int>::iterator it
               = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.find(Interco);
             if (it != hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.end())
+            {
                 Cnt = it->second;
-           
-            ProblemeAResoudre->SecondMembre[Cnt] = 0.;
-            logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
-                         << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+                ProblemeAResoudre->SecondMembre[Cnt] = 0.;
+                logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
+                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+            }
         }
     }
 }
@@ -83,12 +84,13 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             std::map<int, int>::iterator it
               = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
+            {
                 Cnt = it->second;
-
-            ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
-            logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
-                         << "] = " << ProblemeAResoudre->SecondMembre[Cnt] << " (Area = " << Area
-                         << ")";
+                ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
+                logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
+                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt]
+                             << " (Area = " << Area << ")";
+            }
         }
     }
 }
