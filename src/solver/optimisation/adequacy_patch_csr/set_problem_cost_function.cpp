@@ -37,7 +37,7 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    double priceTakingOrders; // PTO
+    double priceTakingOrders = 0.0; // PTO
     double quadraticCost;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
