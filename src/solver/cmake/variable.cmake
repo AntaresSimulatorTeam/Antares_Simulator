@@ -16,6 +16,8 @@ set(SRC_VARIABLE
 		variable/area.inc.hxx
 		variable/setofareas.h
 		variable/setofareas.hxx
+		variable/bindConstraints.h
+		variable/bindConstraints.hxx
 		variable/constants.h
 		variable/categories.h
 		variable/surveyresults.h
@@ -142,6 +144,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/lolp.h
 		variable/economy/avail-dispatchable-generation.h
 		variable/economy/dispatchable-generation-margin.h
+		variable/economy/bindingConstraintsMarginalCost.h
 		
 		# Links
 		variable/economy/links/flowLinear.h
