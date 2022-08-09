@@ -99,6 +99,7 @@ set(SRC_VARIABLE_ADEQUACY
 		variable/adequacy/all.h
 		variable/adequacy/area.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/adequacy/links.h
 		variable/adequacy/links.cpp
 		variable/adequacy/spilledEnergy.h
@@ -113,6 +114,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links.cpp
 		variable/economy/area.cpp
 		variable/economy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
 		variable/economy/co2.h
@@ -200,6 +202,8 @@ add_library(libantares-solver-variable-info
 		variable/economy/area.memory-estimation.cpp
 		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/surveyresults.h
 		variable/surveyresults/surveyresults.h
 		variable/surveyresults/data.h
@@ -216,6 +220,8 @@ if(BUILD_SWAP)
             variable/economy/area.memory-estimation.cpp
             variable/adequacy-draft/area.memory-estimation.cpp
             variable/adequacy/area.memory-estimation.cpp
+            variable/economy/bc.memory-estimation.cpp
+            variable/adequacy/bc.memory-estimation.cpp
             variable/surveyresults.h
             variable/surveyresults/surveyresults.h
             variable/surveyresults/data.h

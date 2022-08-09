@@ -26,7 +26,6 @@
 */
 #pragma once
 
-// #include <antares/study/filter.h>
 
 namespace Antares
 {
@@ -292,11 +291,12 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
 // ===========  Copy of area.inc.hxx  ===========
 // ==============================================
 
+
 template<class NextT>
 BindingConstraints<NextT>::~BindingConstraints()
 {
-    // Releasing the memory occupied by the areas
-    delete[] pAreas;
+    //// Releasing the memory occupied by the areas
+    //delete[] pAreas;
 }
 
 template<class NextT>
@@ -308,295 +308,266 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     // Reserving the memory
     // pAreas = new NextType[pAreaCount];
 
-    /*
     // For each area...
-    uint tick = 6;
-    uint oldPercent = 0;
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        // Instancing a new set of variables of the area
-        auto& n = pAreas[i];
-        auto* currentArea = study.areas.byIndex[i];
-        if (!(--tick))
-        {
-            uint newPercent = ((i * 100u) / pAreaCount);
-            if (newPercent != oldPercent)
-            {
-                logs.info() << "Allocating resources " << ((i * 100u) / pAreaCount) << "%";
-                oldPercent = newPercent;
-            }
-            // Reset the tick
-            tick = 6;
-        }
+    //uint tick = 6;
+    //uint oldPercent = 0;
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //{
+    //    // Instancing a new set of variables of the area
+    //    auto& n = pAreas[i];
+    //    auto* currentArea = study.areas.byIndex[i];
+    //    if (!(--tick))
+    //    {
+    //        uint newPercent = ((i * 100u) / pAreaCount);
+    //        if (newPercent != oldPercent)
+    //        {
+    //            logs.info() << "Allocating resources " << ((i * 100u) / pAreaCount) << "%";
+    //            oldPercent = newPercent;
+    //        }
+    //        // Reset the tick
+    //        tick = 6;
+    //    }
 
-        // Initialize the variables
-        // From the study
-        n.initializeFromStudy(study);
-        // From the area
-        n.initializeFromArea(&study, currentArea);
-        // Does current output variable appears non applicable in areas' output files, not
-        // districts'. Note that digest gather area and district results.
-        n.broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
+    //    // Initialize the variables
+    //    // From the study
+    //    n.initializeFromStudy(study);
+    //    // From the area
+    //    n.initializeFromArea(&study, currentArea);
+    //    // Does current output variable appears non applicable in areas' output files, not
+    //    // districts'. Note that digest gather area and district results.
+    //    n.broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
 
-        // For each current area's variable, getting the print status, that is :
-        // is variable's column(s) printed in output (areas) reports ?
-        n.getPrintStatusFromStudy(study);
+    //    // For each current area's variable, getting the print status, that is :
+    //    // is variable's column(s) printed in output (areas) reports ?
+    //    n.getPrintStatusFromStudy(study);
 
-        // It is needed that the whole memory is flushed to swap
-        // Some intermediate are not flush and it may lead
-        // to an excessive unused amount of memory
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-    }
-    */
+    //    // It is needed that the whole memory is flushed to swap
+    //    // Some intermediate are not flush and it may lead
+    //    // to an excessive unused amount of memory
+    //    if (Antares::Memory::swapSupport)
+    //        Antares::memory.flushAll();
+    //}
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::simulationBegin()
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        pAreas[i].simulationBegin();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-    }
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //{
+    //    pAreas[i].simulationBegin();
+    //    if (Antares::Memory::swapSupport)
+    //        Antares::memory.flushAll();
+    //}
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::simulationEnd()
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        pAreas[i].simulationEnd();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-    }
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //{
+    //    pAreas[i].simulationEnd();
+    //    if (Antares::Memory::swapSupport)
+    //        Antares::memory.flushAll();
+    //}
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachArea(State& state, uint numSpace)
 {
-    /*
-    // For each area...
-    state.study.areas.each([&](Data::Area& area) {
-        state.area = &area; // the current area
+    //// For each area...
+    //state.study.areas.each([&](Data::Area& area) {
+    //    state.area = &area; // the current area
 
-        // Initializing the state for the current area
-        state.initFromAreaIndex(area.index, numSpace);
+    //    // Initializing the state for the current area
+    //    state.initFromAreaIndex(area.index, numSpace);
 
-        // Variables
-        auto& variablesForArea = pAreas[area.index];
-        variablesForArea.hourForEachArea(state, numSpace);
+    //    // Variables
+    //    auto& variablesForArea = pAreas[area.index];
+    //    variablesForArea.hourForEachArea(state, numSpace);
 
-        // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
-        {
-            // Intiializing the state for the current thermal cluster
-            state.initFromThermalClusterIndex(j, numSpace);
-            // Variables
-            variablesForArea.hourForEachThermalCluster(state, numSpace);
+    //    // For each thermal cluster
+    //    for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+    //    {
+    //        // Intiializing the state for the current thermal cluster
+    //        state.initFromThermalClusterIndex(j, numSpace);
+    //        // Variables
+    //        variablesForArea.hourForEachThermalCluster(state, numSpace);
 
-        } // for each thermal cluster
+    //    } // for each thermal cluster
 
-        // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
-        {
-            // Intitializing the state for the current thermal cluster
-            state.initFromRenewableClusterIndex(j, numSpace);
-            // Variables
-            variablesForArea.hourForEachRenewableCluster(state, numSpace);
-        } // for each renewable cluster
+    //    // For each renewable cluster
+    //    for (uint j = 0; j != area.renewable.clusterCount(); ++j)
+    //    {
+    //        // Intitializing the state for the current thermal cluster
+    //        state.initFromRenewableClusterIndex(j, numSpace);
+    //        // Variables
+    //        variablesForArea.hourForEachRenewableCluster(state, numSpace);
+    //    } // for each renewable cluster
 
-        // All links
-        auto end = area.links.end();
-        for (auto i = area.links.begin(); i != end; ++i)
-        {
-            state.link = i->second;
-            // Variables
-            variablesForArea.hourForEachLink(state, numSpace);
-        }
-        }); // for each area
-    */
+    //    // All links
+    //    auto end = area.links.end();
+    //    for (auto i = area.links.begin(); i != end; ++i)
+    //    {
+    //        state.link = i->second;
+    //        // Variables
+    //        variablesForArea.hourForEachLink(state, numSpace);
+    //    }
+    //    }); // for each area
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::weekForEachArea(State& state, uint numSpace)
 {
-    /*
-    // For each area...
-    state.study.areas.each([&](Data::Area& area) {
-        state.area = &area; // the current area
+    //// For each area...
+    //state.study.areas.each([&](Data::Area& area) {
+    //    state.area = &area; // the current area
 
-        // Initializing the state for the current area
-        state.initFromAreaIndex(area.index, numSpace);
+    //    // Initializing the state for the current area
+    //    state.initFromAreaIndex(area.index, numSpace);
 
-        auto& variablesForArea = pAreas[area.index];
+    //    auto& variablesForArea = pAreas[area.index];
 
-        // DTG MRG
-        state.dispatchableMargin
-            = variablesForArea
-            .retrieveHourlyResultsForCurrentYear<Economy::VCardDispatchableGenMargin>(numSpace);
+    //    // DTG MRG
+    //    state.dispatchableMargin
+    //        = variablesForArea
+    //        .retrieveHourlyResultsForCurrentYear<Economy::VCardDispatchableGenMargin>(numSpace);
 
-        variablesForArea.weekForEachArea(state, numSpace);
+    //    variablesForArea.weekForEachArea(state, numSpace);
 
-        // NOTE
-        // currently, the event is not broadcasted to thermal
-        // clusters and links
-        }); // for each area
-    */
+    //    // NOTE
+    //    // currently, the event is not broadcasted to thermal
+    //    // clusters and links
+    //    }); // for each area
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].yearBegin(year, numSpace);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].yearBegin(year, numSpace);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
 {
-    /*
-    // For each area...
-    state.study.areas.each([&](Data::Area& area) {
-        state.area = &area; // the current area
+    //// For each area...
+    //state.study.areas.each([&](Data::Area& area) {
+    //    state.area = &area; // the current area
 
-        // Initializing the state for the current area
-        state.initFromAreaIndex(area.index, numSpace);
+    //    // Initializing the state for the current area
+    //    state.initFromAreaIndex(area.index, numSpace);
 
-        // Variables
-        auto& variablesForArea = pAreas[area.index];
+    //    // Variables
+    //    auto& variablesForArea = pAreas[area.index];
 
-        // For each thermal cluster
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
-        {
-            state.thermalCluster = area.thermal.clusters[j];
-            state.yearEndResetThermal();
+    //    // For each thermal cluster
+    //    for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+    //    {
+    //        state.thermalCluster = area.thermal.clusters[j];
+    //        state.yearEndResetThermal();
 
-            // Variables
-            variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+    //        // Variables
+    //        variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
 
-            // Building the end of year
-            state.yearEndBuildFromThermalClusterIndex(j, numSpace);
+    //        // Building the end of year
+    //        state.yearEndBuildFromThermalClusterIndex(j, numSpace);
 
-            // Variables
-            variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
-        } // for each thermal cluster
+    //        // Variables
+    //        variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
+    //    } // for each thermal cluster
 
-        // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
-        {
-            state.renewableCluster = area.renewable.clusters[j];
-            state.yearEndResetRenewable();
+    //    // For each renewable cluster
+    //    for (uint j = 0; j != area.renewable.clusterCount(); ++j)
+    //    {
+    //        state.renewableCluster = area.renewable.clusters[j];
+    //        state.yearEndResetRenewable();
 
-            // Variables
-            variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
-        } // for each renewable cluster
-        });   // for each area
-    */
+    //        // Variables
+    //        variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+    //    } // for each renewable cluster
+    //    });   // for each area
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        // Broadcast to all areas
-        pAreas[i].yearEnd(year, numSpace);
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //{
+    //    // Broadcast to all areas
+    //    pAreas[i].yearEnd(year, numSpace);
 
-        // Flush all memory into the swap files
-        // This is mandatory for big studies with numerous areas
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-    }
-    */
+    //    // Flush all memory into the swap files
+    //    // This is mandatory for big studies with numerous areas
+    //    if (Antares::Memory::swapSupport)
+    //        Antares::memory.flushAll();
+    //}
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
     unsigned int nbYearsForCurrentSummary)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-    {
-        // Broadcast to all areas
-        pAreas[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-    }
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //{
+    //    // Broadcast to all areas
+    //    pAreas[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    //}
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::weekBegin(State& state)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].weekBegin(state);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].weekBegin(state);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::weekEnd(State& state)
 {
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].weekEnd(state);
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].weekEnd(state);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].hourBegin(hourInTheYear);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].hourBegin(hourInTheYear);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachLink(State& state, uint numSpace)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].hourForEachLink(state, numSpace);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].hourForEachLink(state, numSpace);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachThermalCluster(State& state, uint numSpace)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].hourForEachThermalCluster(state, numSpace);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].hourForEachThermalCluster(state, numSpace);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].hourEnd(state, hourInTheYear);
-    */
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].hourEnd(state, hourInTheYear);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
-    /*
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].beforeYearByYearExport(year, numSpace);
+    //for (uint i = 0; i != pAreaCount; ++i)
+    //    pAreas[i].beforeYearByYearExport(year, numSpace);
 
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Memory::swapSupport)
-        memory.flushAll();
-    */
+    //// Flush all memory into the swap files
+    //// (only if the support is available)
+    //if (Memory::swapSupport)
+    //    memory.flushAll();
 }
+
 
 } // namespace Variable
 } // namespace Solver
