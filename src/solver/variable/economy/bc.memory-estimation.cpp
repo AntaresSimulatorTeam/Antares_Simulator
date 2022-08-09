@@ -31,6 +31,7 @@
 //#define NEXTTYPE Economy::VariablesPerBindingConstraints
 //#include "../area.memory-estimation.inc.hxx"
 
+using next_type = Solver::Variable::Economy::VariablesPerBindingConstraints;
 
 using namespace Yuni;
 
@@ -41,41 +42,21 @@ namespace Solver
 namespace Variable
 {
 template<>
-uint64 BindingConstraints<Economy::VariablesPerBindingConstraints>::memoryUsage() const
+uint64 BindingConstraints<next_type>::memoryUsage() const
 {
     Yuni::uint64 result = 0;
-    // for (unsigned int i = 0; i != pAreaCount; ++i)
-    //{
-    //    result += sizeof(NextType) + sizeof(void*); // overhead vector
-    //    result += pAreas[i].memoryUsage();
-    //}
+    // gp : to be completed
+    // gp : Take example on the body of :
+    // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const
     return result;
 }
 
 template<>
-void BindingConstraints<Economy::VariablesPerBindingConstraints>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+void BindingConstraints<next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    // auto end = u.study.areas.end();
-    // for (auto area = u.study.areas.begin(); area != end; ++area)
-    //{
-    //    u.area = area->second;
-
-    //    u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
-    //    u.overheadDiskSpaceForSingleAreaOrLink();
-
-    //    // year-by-year
-    //    if (!u.gatheringInformationsForInput)
-    //    {
-    //        if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-    //        {
-    //            for (unsigned int i = 0; i != u.years; ++i)
-    //                u.overheadDiskSpaceForSingleAreaOrLink();
-    //        }
-    //    }
-    //    // next
-    //    NextType::EstimateMemoryUsage(u);
-    //}
-    // u.area = nullptr;
+    // gp : to be completed
+    // gp : Take example on the body of :
+    // gp :     void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 }
 
 } // namespace Variable
