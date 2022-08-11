@@ -166,6 +166,12 @@ public:
         NextType::initializeFromStudy(study);
     }
 
+    template<class R>
+    static void InitializeResultsFromStudy(R& results, Data::Study& study)
+    {
+        VariableAccessorType::InitializeAndReset(results, study);
+    }
+
     void setBindConstraint(Data::BindingConstraintRTI* bc)
     {
         associatedBC_ = bc;
@@ -227,7 +233,7 @@ public:
         // Storing a reference to the state, useful in method called later.
         state_ = &state;
 
-        // For daily and weekly binding constraints, getting marginal price
+        // For daily binding constraints, getting daily marginal price
         if (associatedBC_->type == Data::BindingConstraint::typeDaily)
         {
             int dayInTheYear = state_->weekInTheYear * 7;
@@ -242,12 +248,25 @@ public:
             }
         }
 
+        // For weekly binding constraints, getting weekly marginal price
         if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
         {
             uint weekInTheYear = state_->weekInTheYear;
-            pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear]
-              -= state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+            double weeklyValue
+              = -state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                   .variablesDuales[0];
+
+            pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
+
+            // Even if not printed for weekly BC, we need daily values as : (weekly values) / 7
+            double dailyValue = weeklyValue / 7;
+
+            int dayInTheYear = state_->weekInTheYear * 7;
+            for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+            {
+                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = dailyValue;
+                dayInTheYear++;
+            }
         }
     }
 
