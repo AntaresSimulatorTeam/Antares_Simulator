@@ -26,6 +26,8 @@
 */
 #pragma once
 
+#include <math.h>
+
 #include "../variable.h"
 #include "antares/study/constraint/constraint.h"
 
@@ -200,7 +202,9 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute all statistics for the current year (daily,weekly,monthly)
+        // Compute statistics for the current year depending on 
+        // the BC type (hourly, daily, weekly)
+
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
             pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
 
@@ -307,7 +311,7 @@ public:
                                       unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA = AncestorType::isNonApplicable;
+        results.isCurrentVarNA[0] = precision >= pow(2, associatedBC_->type - 1);
 
         if (AncestorType::isPrinted[0])
         {
