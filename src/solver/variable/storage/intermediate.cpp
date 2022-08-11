@@ -247,12 +247,6 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
     uint i;
     uint j;
     double d;
-
-    year = 0.;
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
-    {
-        year += day[i];
-    }
     
     // months
     uint indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
@@ -270,6 +264,11 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
     }
 
     // Year
+    year = 0.;
+    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    {
+        year += day[i];
+    }
     year /= pRange->hour[Data::rangeCount];
 }
 
@@ -277,14 +276,6 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
 void IntermediateValues::computeAnnualAveragesFromDailyValues()
 {
     uint i;
-    uint j;
-    double d;
-
-    year = 0.;
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
-    {
-        year += day[i];
-    }
 
     // weeks
     for (i = 0; i != maxWeeksInAYear; ++i)
@@ -294,23 +285,7 @@ void IntermediateValues::computeAnnualAveragesFromDailyValues()
     for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
         week[i] /= pRuntimeInfo->simulationDaysPerWeek[i];
 
-    // months
-    uint indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
-    for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
-    {
-        d = 0.;
-        uint daysInMonth = calendar->months[i].days;
-        for (j = 0; j != daysInMonth; ++j)
-        {
-            assert(indx < 7 * 53 + 1);
-            d += day[indx];
-            ++indx;
-        }
-        month[i] = d / pRuntimeInfo->simulationDaysPerMonth[i];
-    }
-
-    // Year
-    year /= pRange->hour[Data::rangeCount];
+    computeAnnualAveragesFromWeeklyValues();
 }
 
 
