@@ -28,37 +28,5 @@
 #include <antares/study/memory-usage.h>
 #include "all.h"
 
-//#define NEXTTYPE Economy::VariablesPerBindingConstraints
-//#include "../area.memory-estimation.inc.hxx"
-
-using next_type = Solver::Variable::Economy::VariablesPerBindingConstraints;
-
-using namespace Yuni;
-
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-template<>
-uint64 BindingConstraints<next_type>::memoryUsage() const
-{
-    Yuni::uint64 result = 0;
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const
-    return result;
-}
-
-template<>
-void BindingConstraints<next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-{
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-}
-
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+using bc_next_type = Solver::Variable::Economy::VariablesPerBindingConstraints;
+#include "../bc.memory-estimation.inc.hxx"

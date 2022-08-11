@@ -236,12 +236,14 @@ public:
     {
         LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
         BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary); // gp : need this call ?
     }
 
     void weekBegin(State& state)
     {
         LeftType::weekBegin(state);
         RightType::weekBegin(state);
+        BindConstType::weekBegin(state);
     }
 
     void weekForEachArea(State& state, unsigned int numSpace)

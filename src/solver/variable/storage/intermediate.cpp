@@ -241,6 +241,16 @@ void IntermediateValues::computeAVGstatisticsForCurrentYear()
     year /= pRange->hour[Data::rangeCount];
 }
 
+void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
+{
+
+}
+
+void IntermediateValues::computeAnnualAveragesFromDailyValues()
+{
+    
+}
+
 void IntermediateValues::computeProbabilitiesForTheCurrentYear()
 {
     uint i;

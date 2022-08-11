@@ -39,7 +39,7 @@ struct VCardAllBindingConstraints
     //! Caption
     static const char* Caption()
     {
-        return "Binding consatraints";
+        return "Binding constraints";
     }
     //! Unit
     static const char* Unit()
@@ -217,10 +217,10 @@ public:
                                 const Data::AreaLink* link);
 
 private:
-    //! Area list
-    NextType* pAreas;
+    //! Binding constraints variables chained in a static list
+    NextType* pBindConstraints = nullptr;
     //! The number of areas
-    uint pAreaCount;
+    uint pBCcount;
 
 }; // class Areas
 

@@ -27,6 +27,7 @@
 #pragma once
 
 #include "../variable.h"
+#include "antares/study/constraint/constraint.h"
 
 namespace Antares
 {
@@ -56,21 +57,17 @@ struct VCardBindingConstMarginCost
     }
 
     //! The expecte results
-    typedef Results<
-        R::AllYears::Average<       // The average values thoughout all years
-        R::AllYears::StdDeviation<  // The standard deviation values throughout all years
-        R::AllYears::Min<           // The minimum values thoughout all years
-        R::AllYears::Max<           // The maximum values thoughout all years
-        >>>>>
+    typedef Results<R::AllYears::Average< // The average values thoughout all years
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values thoughout all years
+          R::AllYears::Max<               // The maximum values thoughout all years
+            >>>>>
       ResultsType;
-
-    //! The VCard to look for for calculating spatial aggregates
-    typedef VCardBindingConstMarginCost VCardForSpatialAggregate;
 
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::area,
+        categoryDataLevel = Category::bindingConstraint,
         //! File level (provided by the type of the results)
         categoryFileLevel = ResultsType::categoryFile & (Category::bc),
         //! Precision (views)
@@ -80,20 +77,15 @@ struct VCardBindingConstMarginCost
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable
-        columnCount = Category::dynamicColumns,
-        //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
-        spatialAggregateMode = Category::spatialAggregateEachYear,
-        spatialAggregatePostProcessing = 0,
+        columnCount = 1,
         //! Intermediate values
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
         isPossiblyNonApplicable = 0,
     };
 
-    typedef IntermediateValues IntermediateValuesDeepType;
-    typedef IntermediateValues* IntermediateValuesBaseType;
-    typedef IntermediateValuesBaseType* IntermediateValuesType;
+    typedef IntermediateValues IntermediateValuesBaseType;
+    typedef IntermediateValues* IntermediateValuesType;
 
 }; // class VCard
 
@@ -101,13 +93,12 @@ struct VCardBindingConstMarginCost
     Marginal cost associated to binding constraints :
     Suppose that the BC is hourly,
     - if binding constraint is not saturated (rhs is not reached) for a given hour, the value is 0;
-    - if binding constraint is saturated (rhs is reached), the value is the total benefit (€/MW) for the system
-      that would result in increasing the BC's rhs of 1 MW.
+    - if binding constraint is saturated (rhs is reached), the value is the total benefit (€/MW) for
+   the system that would result in increasing the BC's rhs of 1 MW.
 */
 template<class NextT = Container::EndOfList>
 class BindingConstMarginCost
- : public Variable::
-     IVariable<BindingConstMarginCost<NextT>, NextT, VCardBindingConstMarginCost>
+ : public Variable::IVariable<BindingConstMarginCost<NextT>, NextT, VCardBindingConstMarginCost>
 {
 public:
     //! Type of the next static variable
@@ -115,8 +106,7 @@ public:
     //! VCard
     typedef VCardBindingConstMarginCost VCardType;
     //! Ancestor
-    typedef Variable::IVariable<BindingConstMarginCost<NextT>, NextT, VCardType>
-      AncestorType;
+    typedef Variable::IVariable<BindingConstMarginCost<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -152,109 +142,68 @@ public:
     }
 
 public:
-    BindingConstMarginCost() :
-     pValuesForTheCurrentYear(nullptr), pSize(0)
+    BindingConstMarginCost() : pValuesForTheCurrentYear(nullptr)
     {
     }
 
     ~BindingConstMarginCost()
     {
-        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            delete[] pValuesForTheCurrentYear[numSpace];
         delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
     {
-        // gp : do we use this function ?
-        // Next
+        pNbYearsParallel = study.maxNbYearsInParallel;
+
+        // Statistics thoughout all years
+        InitializeResultsFromStudy(AncestorType::pResults, study);
+
+        // Intermediate values
+        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
+        for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
+            pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
+
         NextType::initializeFromStudy(study);
     }
 
-    void initializeFromArea(Data::Study* study, Data::Area* area)
+    void setBindConstraint(Data::BindingConstraintRTI* bc)
     {
-        // Get the number of years in parallel
-        pNbYearsParallel = study->maxNbYearsInParallel;
-        pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
-        
-        // Get the area
-        // pSize = area->thermal.clusterCount();
-        pSize = 0; // gp : set the size
-        if (pSize)
-        {
-            AncestorType::pResults.resize(pSize);
+        associatedBC_ = bc;
 
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                pValuesForTheCurrentYear[numSpace]
-                  = new VCardType::IntermediateValuesDeepType[pSize];
+        // In case the current class is followed by another class related to a binding
+        // constraint in the higher level static list, we'll have to add :
+        //      NextType::setBindConstraint(bc);
+    }
 
-            // Minimum power values of the cluster for the whole year - from the solver in the
-            // accurate mode not to be displayed in the output \todo think of a better place like
-            // the DispatchableMarginForAllAreas done at the beginning of the year
-
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-                for (unsigned int i = 0; i != pSize; ++i)
-                    pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
-
-            // to automatically flush the memory from times to times
-            unsigned int autoflush = 5;
-            for (unsigned int i = 0; i != pSize; ++i)
-            {
-                AncestorType::pResults[i].initializeFromStudy(*study);
-                AncestorType::pResults[i].reset();
-
-                if (!--autoflush)
-                {
-                    autoflush = 5;
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
-                }
-            }
-        }
-        else
-        {
-            for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
-            {
-                pValuesForTheCurrentYear[numSpace] = nullptr;
-            }
-
-            AncestorType::pResults.clear();
-        }
-        // Next
-        NextType::initializeFromArea(study, area);
+    void setBindConstraintGlobalNumber(uint bcNumber)
+    {
+        bindConstraintGlobalNumber_ = bcNumber;
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
-        for (unsigned int i = 0; i != pSize; ++i)
-        {
-            pValuesForTheCurrentYear[numSpace][i].reset();
-        }
+        pValuesForTheCurrentYear[numSpace].reset();
+
+        // Store the year memory space for further use
+        yearMemorySpace_ = numSpace;
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Merge all results for all thermal clusters
-        {
-            // to automatically flush the memory from times to times
-            unsigned int autoflush = 5;
+        // Compute all statistics for the current year (daily,weekly,monthly)
+        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+            pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
 
-            for (unsigned int i = 0; i < pSize; ++i)
-            {
-                // Compute all statistics for the current year (daily,weekly,monthly)
-                pValuesForTheCurrentYear[numSpace][i].computeStatisticsForTheCurrentYear();
+        if (associatedBC_->type == Data::BindingConstraint::typeDaily)
+            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromDailyValues();
 
-                if (!--autoflush)
-                {
-                    autoflush = 5;
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
-                }
-            }
-        }
+        if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
+            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromWeeklyValues();
+
         // Next variable
         NextType::yearEnd(year, numSpace);
     }
@@ -264,20 +213,53 @@ public:
     {
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
         {
-            for (unsigned int i = 0; i < pSize; ++i)
-            {
-                // Merge all those values with the global results
-                AncestorType::pResults[i].merge(numSpaceToYear[numSpace],
-                                                pValuesForTheCurrentYear[numSpace][i]);
-            }
+            // Merge all those values with the global results
+            AncestorType::pResults.merge(numSpaceToYear[numSpace] /*year*/,
+                                         pValuesForTheCurrentYear[numSpace]);
         }
 
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
+    void weekBegin(State& state)
+    {
+        // Storing a reference to the state, useful in method called later.
+        state_ = &state;
+
+        // For daily and weekly binding constraints, getting marginal price
+        if (associatedBC_->type == Data::BindingConstraint::typeDaily)
+        {
+            int dayInTheYear = state_->weekInTheYear * 7;
+            for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
+            {
+                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] 
+                    -= state_->problemeHebdo
+                       ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                       .variablesDuales[dayInTheWeek];
+
+                dayInTheYear++;
+            }
+        }
+
+        if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
+        {
+            uint weekInTheYear = state_->weekInTheYear;
+            pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear]
+              -= state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                  .variablesDuales[0];
+        }
+    }
+
     void hourBegin(unsigned int hourInTheYear)
     {
+        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+        {
+            pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
+              -= state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                   .variablesDuales[state_->hourInTheWeek];
+        }
+
         // Next variable
         NextType::hourBegin(hourInTheYear);
     }
@@ -297,19 +279,8 @@ public:
       unsigned int column,
       unsigned int numSpace) const
     {
-        return pValuesForTheCurrentYear[numSpace][column].hour;
+        return pValuesForTheCurrentYear[numSpace].hour;
     }
-
-    /*
-    inline Yuni::uint64 memoryUsage() const
-    {
-        Yuni::uint64 r = (sizeof(IntermediateValues) * pSize + IntermediateValues::MemoryUsage())
-                         * pNbYearsParallel;
-        r += sizeof(double) * pSize * maxHoursInAYear * pNbYearsParallel;
-        r += AncestorType::memoryUsage();
-        return r;
-    }
-    */
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
@@ -321,25 +292,21 @@ public:
 
         if (AncestorType::isPrinted[0])
         {
-            assert(NULL != results.data.area);
-            // const auto& thermal = results.data.area->thermal;
-
             // Write the data for the current year
-            for (uint i = 0; i < pSize; ++i)
-            {
-                // Write the data for the current year
-                // results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
-                pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
-                  results, fileLevel, precision);
-            }
+            results.variableCaption = VCardType::Caption();
+            pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
+              results, fileLevel, precision);
         }
     }
 
 private:
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
-    unsigned int pSize;
     unsigned int pNbYearsParallel;
+    Data::BindingConstraintRTI* associatedBC_ = nullptr;
+    State* state_ = nullptr;
+    uint yearMemorySpace_ = 0;
+    uint bindConstraintGlobalNumber_ = 0;
 
 }; // class BindingConstMarginCost
 
@@ -347,4 +314,3 @@ private:
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-

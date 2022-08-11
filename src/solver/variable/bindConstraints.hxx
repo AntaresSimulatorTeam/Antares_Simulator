@@ -26,6 +26,9 @@
 */
 #pragma once
 
+#include <vector>
+#include <utility>
+#include "antares/study/constraint/constraint.h"
 
 namespace Antares
 {
@@ -54,17 +57,17 @@ inline void BindingConstraints<NextT>::initializeFromAreaLink(Data::Study*, Data
 
 template<class NextT>
 inline void BindingConstraints<NextT>::initializeFromThermalCluster(Data::Study*,
-                                                       Data::Area*,
-                                                       Data::ThermalCluster*)
+                                                                    Data::Area*,
+                                                                    Data::ThermalCluster*)
 {
     // This method should not be called at this point
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+                                                  int dataLevel,
+                                                  int fileLevel,
+                                                  int precision) const
 {
     /*
     int count_int = count;
@@ -115,10 +118,10 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
 
 template<class NextT>
 void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
-                                           uint numSpace) const
+                                                        int dataLevel,
+                                                        int fileLevel,
+                                                        int precision,
+                                                        uint numSpace) const
 {
     /*
     int count_int = count;
@@ -170,7 +173,9 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void BindingConstraints<NextT>::buildDigest(SurveyResults& results,
+                                            int digestLevel,
+                                            int dataLevel) const
 {
     /*
     int count_int = count;
@@ -241,7 +246,9 @@ inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O&)
 
 template<class NextT>
 template<class SearchVCardT, class O>
-inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace)
+inline void BindingConstraints<NextT>::computeSpatialAggregateWith(O& out,
+                                                                   const Data::Area* area,
+                                                                   uint numSpace)
 {
     /*
     assert(NULL != area);
@@ -286,32 +293,66 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
     // pAreas[link->from->index].template retrieveResultsForLink<VCardToFindT>(result, link);
 }
 
-
 // ==============================================
 // ===========  Copy of area.inc.hxx  ===========
 // ==============================================
 
-
 template<class NextT>
 BindingConstraints<NextT>::~BindingConstraints()
 {
-    //// Releasing the memory occupied by the areas
-    //delete[] pAreas;
+    // Releasing the memory occupied by the binding constraints
+    if (pBindConstraints != nullptr)
+        delete[] pBindConstraints;
+}
+
+inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBindingConstraints(
+  Data::Study& study)
+{
+    std::vector<std::pair<Data::BindingConstraintRTI*, uint>> bindConstListToReturn;
+    Data::BindingConstraintRTI* allBindConst = study.runtime->bindingConstraint;
+    for (uint k = 0; k < study.runtime->bindingConstraintCount; k++)
+    {
+        // We pick inequality binding constraints only.
+        if (allBindConst[k].type == Data::BindingConstraint::opLess
+            || allBindConst[k].type == Data::BindingConstraint::opGreater)
+        {
+            std::pair<Data::BindingConstraintRTI*, uint> bc_pair(&(allBindConst[k]), k);
+            bindConstListToReturn.push_back(bc_pair);
+        }
+    }
+    return bindConstListToReturn;
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    // The total number of areas
-    // pAreaCount = study.areas.size();
+    // This actually a vector of pairs where :
+    //  - first element of a pair is a pointer to a inequality binding constraint
+    //  - second element of a pair is the number of the previous BC in the runtime list of BCs.
+    std::vector<std::pair<Data::BindingConstraintRTI*, uint>> InequalityBCs
+      = getInequalityBindingConstraints(study);
+
+    // The total number of inequality binding constraints count
+    // (we don't count BCs with equality sign)
+    pBCcount = (uint)InequalityBCs.size();
 
     // Reserving the memory
-    // pAreas = new NextType[pAreaCount];
+    if (pBCcount > 0)
+        pBindConstraints = new NextType[pBCcount];
+
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        NextType& bc = pBindConstraints[i];
+
+        bc.initializeFromStudy(study);
+        bc.setBindConstraint(InequalityBCs[i].first);
+        bc.setBindConstraintGlobalNumber(InequalityBCs[i].second);
+    }
 
     // For each area...
-    //uint tick = 6;
-    //uint oldPercent = 0;
-    //for (uint i = 0; i != pAreaCount; ++i)
+    // uint tick = 6;
+    // uint oldPercent = 0;
+    // for (uint i = 0; i != pAreaCount; ++i)
     //{
     //    // Instancing a new set of variables of the area
     //    auto& n = pAreas[i];
@@ -352,7 +393,7 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 template<class NextT>
 void BindingConstraints<NextT>::simulationBegin()
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
+    // for (uint i = 0; i != pAreaCount; ++i)
     //{
     //    pAreas[i].simulationBegin();
     //    if (Antares::Memory::swapSupport)
@@ -363,7 +404,7 @@ void BindingConstraints<NextT>::simulationBegin()
 template<class NextT>
 void BindingConstraints<NextT>::simulationEnd()
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
+    // for (uint i = 0; i != pAreaCount; ++i)
     //{
     //    pAreas[i].simulationEnd();
     //    if (Antares::Memory::swapSupport)
@@ -375,7 +416,7 @@ template<class NextT>
 void BindingConstraints<NextT>::hourForEachArea(State& state, uint numSpace)
 {
     //// For each area...
-    //state.study.areas.each([&](Data::Area& area) {
+    // state.study.areas.each([&](Data::Area& area) {
     //    state.area = &area; // the current area
 
     //    // Initializing the state for the current area
@@ -419,7 +460,7 @@ template<class NextT>
 void BindingConstraints<NextT>::weekForEachArea(State& state, uint numSpace)
 {
     //// For each area...
-    //state.study.areas.each([&](Data::Area& area) {
+    // state.study.areas.each([&](Data::Area& area) {
     //    state.area = &area; // the current area
 
     //    // Initializing the state for the current area
@@ -443,15 +484,15 @@ void BindingConstraints<NextT>::weekForEachArea(State& state, uint numSpace)
 template<class NextT>
 void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].yearBegin(year, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].yearBegin(year, numSpace);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSpace)
 {
     //// For each area...
-    //state.study.areas.each([&](Data::Area& area) {
+    // state.study.areas.each([&](Data::Area& area) {
     //    state.area = &area; // the current area
 
     //    // Initializing the state for the current area
@@ -483,7 +524,8 @@ void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSp
     //        state.yearEndResetRenewable();
 
     //        // Variables
-    //        variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
+    //        variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year,
+    //        numSpace);
     //    } // for each renewable cluster
     //    });   // for each area
 }
@@ -491,85 +533,78 @@ void BindingConstraints<NextT>::yearEndBuild(State& state, uint year, uint numSp
 template<class NextT>
 void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //{
-    //    // Broadcast to all areas
-    //    pAreas[i].yearEnd(year, numSpace);
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        // Broadcast to all constraints
+        pBindConstraints[i].yearEnd(year, numSpace);
 
-    //    // Flush all memory into the swap files
-    //    // This is mandatory for big studies with numerous areas
-    //    if (Antares::Memory::swapSupport)
-    //        Antares::memory.flushAll();
-    //}
+        // Flush all memory into the swap files
+        // This is mandatory for big studies with numerous constraints
+        if (Antares::Memory::swapSupport)
+            Antares::memory.flushAll();
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
-    unsigned int nbYearsForCurrentSummary)
+                                               unsigned int nbYearsForCurrentSummary)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //{
-    //    // Broadcast to all areas
-    //    pAreas[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-    //}
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        // Broadcast to all constraints
+        pBindConstraints[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+    }
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::weekBegin(State& state)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].weekBegin(state);
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].weekBegin(state);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::weekEnd(State& state)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].weekEnd(state);
+    // gp : in case we need it
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].weekEnd(state);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourBegin(uint hourInTheYear)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].hourBegin(hourInTheYear);
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].hourBegin(hourInTheYear);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachLink(State& state, uint numSpace)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].hourForEachLink(state, numSpace);
+    // Does nothing for now : each variable associated to a binding constraint in
+    // NextT don't need to deal with links
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourForEachThermalCluster(State& state, uint numSpace)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].hourForEachThermalCluster(state, numSpace);
+    // Does nothing for now : each variable associated to a binding constraint in
+    // NextT don't need to deal with thermal clusters
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].hourEnd(state, hourInTheYear);
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].hourEnd(state, hourInTheYear);
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::beforeYearByYearExport(uint year, uint numSpace)
 {
-    //for (uint i = 0; i != pAreaCount; ++i)
-    //    pAreas[i].beforeYearByYearExport(year, numSpace);
-
-    //// Flush all memory into the swap files
-    //// (only if the support is available)
-    //if (Memory::swapSupport)
-    //    memory.flushAll();
+    // Does nothing, not even call the next type counterpart function.
 }
-
 
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
-
