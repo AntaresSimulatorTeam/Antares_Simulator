@@ -1055,7 +1055,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
+        GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_load", timer.get_duration());
     }
@@ -1063,7 +1063,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
+        GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_solar", timer.get_duration());
     }
@@ -1071,7 +1071,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesWind>(study, year);
+        GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_wind", timer.get_duration());
     }
@@ -1079,7 +1079,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
+        GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_hydro", timer.get_duration());
     }

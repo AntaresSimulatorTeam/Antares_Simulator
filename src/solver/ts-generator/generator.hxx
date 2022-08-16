@@ -38,12 +38,16 @@ namespace TSGenerator
 {
 // forward declaration
 // Hydro - see hydro.cpp
-bool GenerateHydroTimeSeries(Data::Study& study, uint year);
+bool GenerateHydroTimeSeries(Data::Study& study,
+                             uint year,
+                             Antares::Solver::IResultWriter::Ptr writer);
 
 template<>
-inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year)
+inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
+                                                      uint year,
+                                                      Antares::Solver::IResultWriter::Ptr writer)
 {
-    return GenerateHydroTimeSeries(study, year);
+    return GenerateHydroTimeSeries(study, year, writer);
 }
 
 // --- TS Generators using XCast ---
