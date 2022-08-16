@@ -31,6 +31,7 @@
 #include <antares/logs.h>
 #include <antares/date.h>
 #include <antares/benchmarking.h>
+#include <ensure_queue_started.h>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
 #include "../aleatoire/alea_fonctions.h"
@@ -331,6 +332,9 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info();
         logs.info() << " Only the preprocessors are enabled.";
+
+        EnsureQueueStartedIfNeeded ensure(pResultWriter, qs);
+
         regenerateTimeSeries(0);
 
         // Destroy the TS Generators if any
@@ -415,12 +419,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     // The writer might need the job queue, after it's been stopped
     // this is the case e.g if synthesis == true (writing mc-all)
     // Don't restart the queue if the writer doesn't need it
-    const bool restartQueue = !qs.started() && pResultWriter->needsTheJobQueue();
-    if (restartQueue)
-    {
-        qs.start();
-    }
-
+    
     assert(!settings.noOutput);
     assert(!settings.tsGeneratorsOnly);
 
@@ -432,6 +431,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     }
     else
     {
+        EnsureQueueStartedIfNeeded ensure(pResultWriter, qs);
+
         // Flush all memory into the swap files
         // The check is required to avoid to create an instance of `Antares::Memory`
         if (Antares::Memory::swapSupport)
@@ -466,11 +467,6 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
               synthesis, newPath, numSpace, pResultWriter);
         else
             logs.fatal() << "impossible to create `" << newPath << "`";
-    }
-    if (restartQueue)
-    {
-        qs.wait(qseIdle);
-        qs.stop();
     }
 }
 
