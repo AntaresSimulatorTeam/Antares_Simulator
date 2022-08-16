@@ -179,11 +179,6 @@ public:
     NoAreaInsideAdqPatchMode();
 };
 
-class CreatingTimeMeasurementFile : public LoadingError
-{
-public:
-    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
-};
 class IncompatibleOutputOptions : public LoadingError
 {
 public:

@@ -1,5 +1,4 @@
 #include <antares/logs.h>
-#include <antares/timeelapsed.h>
 
 #include "zip_writer.h"
 
@@ -27,11 +26,7 @@ ZipWriteJob::ZipWriteJob(ZipWriter& writer,
 
 void ZipWriteJob::onExecute()
 {
-    TimeElapsed::Timer timer_wait("[zip] Waiting", "[zip] Waited", true);
     std::lock_guard<std::mutex> guard(pZipMutex);
-    timer_wait.stop();
-    TimeElapsed::Timer timer_write(
-      "[zip] Writing " + pEntryPath, "[zip] Wrote " + pEntryPath + " ", true);
     mz_zip_file file_info;
     memset(&file_info, 0, sizeof(file_info));
     file_info.filename = pEntryPath.c_str();
@@ -40,7 +35,6 @@ void ZipWriteJob::onExecute()
     file_info.modified_date = file_info.creation_date = time(0);
     mz_zip_writer_entry_open(pZipHandle, &file_info);
     mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
-    timer_write.stop();
 }
 
 // Class ZipWriter

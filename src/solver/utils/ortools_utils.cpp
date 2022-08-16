@@ -9,6 +9,8 @@
 
 using namespace operations_research;
 
+const char* const XPRESS_PARAMS = "THREADS 1 SCALING 0";
+
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
                               const double* bMax,
@@ -97,6 +99,24 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
+static void tuneSolverSpecificOptions(MPSolver* solver,
+                                      MPSolver::OptimizationProblemType solverType)
+{
+    if (!solver)
+        return;
+
+    switch (solverType)
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
+        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
+        break;
+    // Add solver-specific options here
+    default:
+        break;
+    }
+}
+
 namespace Antares
 {
 namespace Optimization
@@ -112,6 +132,8 @@ MPSolver* convert_to_MPSolver(
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
+
+    tuneSolverSpecificOptions(solver, solverType);
 
     // Create the variables and set objective cost.
     transferVariables(solver,
