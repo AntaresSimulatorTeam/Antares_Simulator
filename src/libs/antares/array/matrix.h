@@ -493,15 +493,21 @@ public:
     //! Just-in-time informations
     mutable JIT::Informations* jit;
 
-private:
     struct PredicateIdentity
     {
-        template<class U>
+        template<class U = Type>
         inline U operator()(const U& value) const
         {
             return value;
         }
     };
+
+    template<class PredicateT>
+    void saveToBuffer(std::string& data,
+                      uint precision,
+                      bool print_dimensions,
+                      PredicateT& predicate,
+                      bool saveEvenIfAllZero) const;
 
 private:
     /*!
@@ -528,13 +534,6 @@ private:
                              bool print_dimensions,
                              PredicateT& predicate,
                              bool saveEvenIfAllZero) const;
-
-    template<class PredicateT>
-    void saveToBuffer(std::string& data,
-                      uint precision,
-                      bool print_dimensions,
-                      PredicateT& predicate,
-                      bool saveEvenIfAllZero) const;
 
     bool loadFromBuffer(const AnyString& filename,
                         BufferType& data,

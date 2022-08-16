@@ -17,15 +17,21 @@ namespace Antares
 namespace Solver
 {
 // Class ZipWriteJob
-ZipWriteJob::ZipWriteJob(ZipWriter& writer,
-                         const std::string& entryPath,
-                         Yuni::Clob& content,
-                         Benchmarking::IDurationCollector* duration_collector) :
-  pZipHandle(writer.pZipHandle), pZipMutex(writer.pZipMutex), pEntryPath(entryPath), pContent(std::move(content)), pDurationCollector(duration_collector)
+template<class ContentT>
+ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
+                                   const std::string& entryPath,
+                                   ContentT& content,
+                                   Benchmarking::IDurationCollector* duration_collector) :
+ pZipHandle(writer.pZipHandle),
+ pZipMutex(writer.pZipMutex),
+ pEntryPath(entryPath),
+ pContent(std::move(content)),
+ pDurationCollector(duration_collector)
 {
 }
 
-void ZipWriteJob::onExecute()
+template<class ContentT>
+void ZipWriteJob<ContentT>::onExecute()
 {
     mz_zip_file file_info;
 
@@ -39,7 +45,7 @@ void ZipWriteJob::onExecute()
     file_info.zip64 = MZ_ZIP64_FORCE;
     file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
     file_info.modified_date = file_info.creation_date = time(0);
-    Benchmarking::Timer timer_write;    
+    Benchmarking::Timer timer_write;
     mz_zip_writer_entry_open(pZipHandle, &file_info);
     mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
     timer_write.stop();
@@ -47,8 +53,12 @@ void ZipWriteJob::onExecute()
 }
 
 // Class ZipWriter
-ZipWriter::ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath, Benchmarking::IDurationCollector* duration_collector) :
-  pQueueService(qs), pArchivePath(std::string(archivePath) + ".zip"), pDurationCollector(duration_collector)
+ZipWriter::ZipWriter(Yuni::Job::QueueService& qs,
+                     const char* archivePath,
+                     Benchmarking::IDurationCollector* duration_collector) :
+ pQueueService(qs),
+ pArchivePath(std::string(archivePath) + ".zip"),
+ pDurationCollector(duration_collector)
 {
     mz_zip_writer_create(&pZipHandle);
     mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0);
@@ -64,8 +74,16 @@ ZipWriter::~ZipWriter()
 
 void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    pQueueService.add(new ZipWriteJob(*this, entryPath, entryContent, pDurationCollector),
-                      Yuni::Job::priorityLow);
+    pQueueService.add(
+      new ZipWriteJob<Yuni::Clob>(*this, entryPath, entryContent, pDurationCollector),
+      Yuni::Job::priorityLow);
+}
+
+void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
+{
+    pQueueService.add(
+      new ZipWriteJob<std::string>(*this, entryPath, entryContent, pDurationCollector),
+      Yuni::Job::priorityLow);
 }
 
 bool ZipWriter::needsTheJobQueue() const

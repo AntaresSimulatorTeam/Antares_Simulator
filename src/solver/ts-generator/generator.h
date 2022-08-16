@@ -31,6 +31,7 @@
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <i_writer.h>
 #include "xcast/xcast.h"
 
 namespace Antares
@@ -48,7 +49,8 @@ bool GenerateTimeSeries(Data::Study& study, uint year);
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
-                               bool refresh);
+                               bool refresh,
+                               Antares::Solver::IResultWriter::Ptr writer);
 
 /*!
 ** \brief Destroy all TS Generators

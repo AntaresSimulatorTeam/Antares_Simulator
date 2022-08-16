@@ -16,12 +16,13 @@ namespace Antares
 namespace Solver
 {
 class ZipWriter;
+template<class ContentT>
 class ZipWriteJob final : public Yuni::Job::IJob
 {
 public:
     ZipWriteJob(ZipWriter& writer,
                 const std::string& entryPath,
-                Yuni::Clob& content,
+                ContentT& content,
                 Benchmarking::IDurationCollector* duration_collector);
     virtual void onExecute() override;
 
@@ -33,7 +34,7 @@ private:
     // Entry path for the new file within the zip archive
     const std::string pEntryPath;
     // Content of the new file
-    Yuni::Clob pContent;
+    ContentT pContent;
     // Benchmarking. How long do we wait ? How long does the zip write take ?
     Benchmarking::IDurationCollector* pDurationCollector;
 };
@@ -41,11 +42,15 @@ private:
 class ZipWriter : public IResultWriter
 {
 public:
-    ZipWriter(Yuni::Job::QueueService& qs, const char* archivePath, Benchmarking::IDurationCollector* duration_collector);
+    ZipWriter(Yuni::Job::QueueService& qs,
+              const char* archivePath,
+              Benchmarking::IDurationCollector* duration_collector);
     ~ZipWriter();
     void addJob(const std::string& entryPath, Yuni::Clob& entryContent) override;
+    void addJob(const std::string& entryPath, std::string& entryContent) override;
     bool needsTheJobQueue() const override;
-    friend class ZipWriteJob;
+    friend class ZipWriteJob<Yuni::Clob>;
+    friend class ZipWriteJob<std::string>;
 
 private:
     // Queue where jobs will be appended

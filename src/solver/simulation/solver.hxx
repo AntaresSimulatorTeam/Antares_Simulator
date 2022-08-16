@@ -265,7 +265,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pDurationCollector(duration_collector),
- pResultWriter(resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
+ pResultWriter(
+   resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -1086,7 +1087,8 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
         Benchmarking::Timer timer;
-        GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
+        GenerateThermalTimeSeries(
+          study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_thermal", timer.get_duration());
     }

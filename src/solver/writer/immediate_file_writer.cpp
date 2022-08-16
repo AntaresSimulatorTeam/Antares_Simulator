@@ -40,8 +40,16 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addJob(const std::string& entryPath,
-                                       Yuni::Clob& entryContent)
+void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
+{
+    Yuni::String output;
+    output << pOutputFolder << Yuni::IO::Separator << entryPath.c_str();
+    createDirectoryHierarchy(pOutputFolder, entryPath.c_str());
+    IOFileSetContent(output, entryContent);
+}
+
+// Write to file immediately, creating directories if needed
+void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
     Yuni::String output;
     output << pOutputFolder << Yuni::IO::Separator << entryPath.c_str();
