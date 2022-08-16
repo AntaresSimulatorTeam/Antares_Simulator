@@ -58,8 +58,12 @@ enum
     mu = Data::XCast::dataCoeffMu,
 };
 
-XCast::XCast(Data::Study& study, Data::TimeSeries ts) :
- study(study), timeSeriesType(ts), pNeverInitialized(true), pAccuracyOnCorrelation(false)
+XCast::XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer) :
+ study(study),
+ timeSeriesType(ts),
+ pNeverInitialized(true),
+ pAccuracyOnCorrelation(false),
+ pWriter(writer)
 {
 }
 
@@ -85,21 +89,18 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
         String filename;
         output.reserve(study.folderOutput.size() + 80);
 
-        output << study.folderOutput << SEP << "ts-generator" << SEP << predicate.timeSeriesName()
-               << SEP << "mc-" << year;
+        output << "ts-generator" << SEP << predicate.timeSeriesName() << SEP << "mc-" << year;
         filename.reserve(output.size() + 80);
 
-        if (IO::Directory::Create(output))
-        {
-            study.areas.each([&](Data::Area& area) {
-                filename.clear() << output << SEP << area.id << ".txt";
-                predicate.matrix(area).saveToCSVFile(filename);
+        study.areas.each([&](Data::Area& area) {
+            filename.clear() << output << SEP << area.id << ".txt";
+            std::string buffer;
+            predicate.matrix(area).saveToBuffer(buffer);
 
-                ++progression;
-            });
-        }
-        else
-            logs.error() << "Impossible to create the directory '" << output << "'";
+            pWriter->addJob(filename.c_str(), buffer);
+
+            ++progression;
+        });
     }
 }
 
