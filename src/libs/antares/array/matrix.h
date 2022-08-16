@@ -502,12 +502,8 @@ public:
         }
     };
 
-    template<class PredicateT>
     void saveToBuffer(std::string& data,
-                      uint precision,
-                      bool print_dimensions,
-                      PredicateT& predicate,
-                      bool saveEvenIfAllZero) const;
+                      uint precision = 6) const;
 
 private:
     /*!
@@ -535,13 +531,19 @@ private:
                              PredicateT& predicate,
                              bool saveEvenIfAllZero) const;
 
+    template<class PredicateT>
+    void saveToBuffer(std::string& data,
+                      uint precision,
+                      bool print_dimensions,
+                      PredicateT& predicate,
+                      bool saveEvenIfAllZero) const;
+
     bool loadFromBuffer(const AnyString& filename,
                         BufferType& data,
                         uint minWidth,
                         uint maxHeight,
                         const int fixedSize,
                         uint options);
-
     /*!
     ** \brief Make sure that all JIT Data are loaded into memory
     */

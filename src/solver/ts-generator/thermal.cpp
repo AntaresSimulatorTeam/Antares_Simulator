@@ -176,8 +176,7 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         };
 
         std::string buffer;
-        Matrix<>::PredicateIdentity identity;
-        cluster.series->series.saveToBuffer(buffer, precision, false, identity, true);
+        cluster.series->series.saveToBuffer(buffer, precision);
 
         pWriter->addJob(pTempFilename.c_str(), buffer);
     }
