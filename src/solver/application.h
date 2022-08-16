@@ -3,7 +3,7 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
 #include <yuni/core/string.h>
@@ -50,7 +50,7 @@ public:
     */
     void resetProcessPriority() const;
 
-    void saveElapsedTime();
+    void writeExectutionInfo();
 
 private:
     /*!
@@ -87,8 +87,10 @@ private:
     int pArgc;
     char** pArgv;
 
-    TimeElapsed::ContentHandler pTimeElapsedContentHandler;
-    TimeElapsed::Timer pTotalTimer;
+    // Benchmarking
+    Benchmarking::Timer pTotalTimer;
+    Benchmarking::DurationCollector pDurationCollector;
+    Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

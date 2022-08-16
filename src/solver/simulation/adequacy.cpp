@@ -69,6 +69,18 @@ Adequacy::~Adequacy()
     }
 }
 
+Benchmarking::OptimizationInfo Adequacy::getOptimizationInfo() const
+{
+    const uint numSpace = 0;
+    const auto& Pb = pProblemesHebdo[numSpace]->ProblemeAResoudre;
+    Benchmarking::OptimizationInfo optInfo;
+
+    optInfo.nbVariables = Pb->NombreDeVariables;
+    optInfo.nbConstraints = Pb->NombreDeContraintes;
+    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    return optInfo;
+}
+
 void Adequacy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 {
     pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;

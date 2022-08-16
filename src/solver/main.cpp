@@ -124,7 +124,7 @@ int main(int argc, char** argv)
 
     application.execute();
 
-    application.saveElapsedTime();
+    application.writeExectutionInfo();
 
     FreeUTF8Arguments(argc, argv);
 
