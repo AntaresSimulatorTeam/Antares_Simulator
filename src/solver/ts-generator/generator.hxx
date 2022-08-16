@@ -40,12 +40,12 @@ namespace TSGenerator
 // Hydro - see hydro.cpp
 bool GenerateHydroTimeSeries(Data::Study& study,
                              uint year,
-                             Antares::Solver::IResultWriter::Ptr writer);
+                             IResultWriter::Ptr writer);
 
 template<>
 inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
                                                       uint year,
-                                                      Antares::Solver::IResultWriter::Ptr writer)
+                                                      IResultWriter::Ptr writer)
 {
     return GenerateHydroTimeSeries(study, year, writer);
 }

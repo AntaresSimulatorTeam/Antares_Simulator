@@ -44,13 +44,13 @@ namespace TSGenerator
 ** \brief Regenerate the time-series
 */
 template<enum Data::TimeSeries T>
-bool GenerateTimeSeries(Data::Study& study, uint year, Antares::Solver::IResultWriter::Ptr writer);
+bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer);
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
                                bool refresh,
-                               Antares::Solver::IResultWriter::Ptr writer);
+                               IResultWriter::Ptr writer);
 
 /*!
 ** \brief Destroy all TS Generators

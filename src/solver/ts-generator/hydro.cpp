@@ -87,7 +87,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 
 bool GenerateHydroTimeSeries(Data::Study& study,
                              uint currentYear,
-                             Antares::Solver::IResultWriter::Ptr writer)
+                             IResultWriter::Ptr writer)
 {
     logs.info() << "Generating the hydro time-series";
 
