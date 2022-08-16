@@ -265,7 +265,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pDurationCollector(duration_collector),
- pResultWriter(resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs))
+ pResultWriter(resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
 {
     // Ask to the interface to show the messages
     logs.info();
