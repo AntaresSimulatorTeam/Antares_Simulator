@@ -4,22 +4,23 @@ namespace Antares
 {
 namespace Solver
 {
-EnsureQueueStartedIfNeeded::EnsureQueueStartedIfNeeded(IResultWriter::Ptr writer,
-                                                       Yuni::Job::QueueService& qs) :
+EnsureQueueStartedIfNeeded::EnsureQueueStartedIfNeeded(
+  IResultWriter* writer,
+  std::shared_ptr<Yuni::Job::QueueService> qs) :
  qs(qs)
 {
-    startQueue = !qs.started() && writer->needsTheJobQueue();
+    startQueue = !qs->started() && writer->needsTheJobQueue();
     if (startQueue)
     {
-        qs.start();
+        qs->start();
     }
 }
 EnsureQueueStartedIfNeeded::~EnsureQueueStartedIfNeeded()
 {
     if (startQueue)
     {
-        qs.wait(Yuni::qseIdle);
-        qs.stop();
+        qs->wait(Yuni::qseIdle);
+        qs->stop();
     }
 }
 } // namespace Solver

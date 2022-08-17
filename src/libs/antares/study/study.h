@@ -794,16 +794,6 @@ private:
     //! Load all layers
     bool saveLayers(const AnyString& filename);
     void loadLayers(const AnyString& filename);
-    //! \name Disabled items
-    //@{
-    //! List of all disabled areas
-    // DisabledAreaList         pDisabledAreaList;
-    //! List of all disabled area links
-    // DisabledAreaLinkList     pDisabledAreaLinkList;
-    //! List of all disabled thermal clusters
-    // DisabledThermalClusterList pDisabledThermalClusterList;
-    //@}
-
 }; // class Study
 
 /*!

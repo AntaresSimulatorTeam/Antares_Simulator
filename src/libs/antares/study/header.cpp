@@ -198,6 +198,7 @@ bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
 {
     IniFile ini;
     internalCopySettingsToIni(ini, upgradeVersion);
+    // TODO use writer
     return ini.save(filename);
 }
 

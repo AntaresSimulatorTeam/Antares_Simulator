@@ -757,6 +757,7 @@ bool Study::prepareOutput()
     if (parameters.noOutput or not usedByTheSolver)
         return true;
 
+    // TODO : use writer
     // avoid creating the same output twice
     if (IO::Exists(folderOutput))
     {
@@ -774,12 +775,15 @@ bool Study::prepareOutput()
     logs.info() << "  Output folder : " << folderOutput;
 
     // Settings
+    // TODO : use writer
     buffer.clear() << folderOutput << SEP << "about-the-study";
     IO::Directory::Create(buffer);
 
+    // TODO : use writer
     if (not simulation.saveToFolder(buffer))
         return false;
 
+    // TODO : use writer
     // Write the header as a reminder too
     buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "study.ini";
     header.saveToFile(buffer, false);
@@ -787,6 +791,7 @@ bool Study::prepareOutput()
     // copying the generaldata.ini
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     String dest;
+    // TODO : use writer
     dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
     if (IO::errNone != IO::File::Copy(buffer, dest))
         logs.error() << "impossible to copy " << dest;

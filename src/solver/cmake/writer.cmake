@@ -23,7 +23,7 @@ target_include_directories(result_writer PUBLIC
 
 target_link_libraries(result_writer
                       PRIVATE
-                      libantares-core # We only need yuni-static-core, but it can't be included directly. TODO
+                      libantares-core
                       MINIZIP::minizip)
 
 

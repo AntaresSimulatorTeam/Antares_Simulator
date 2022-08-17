@@ -6,7 +6,7 @@ namespace Solver
 {
 IResultWriter::Ptr resultWriterFactory(Antares::Data::ResultFormat fmt,
                                        const YString& folderOutput,
-                                       Yuni::Job::QueueService& qs,
+                                       std::shared_ptr<Yuni::Job::QueueService> qs,
                                        Benchmarking::IDurationCollector* duration_collector)
 {
     using namespace Antares::Data;

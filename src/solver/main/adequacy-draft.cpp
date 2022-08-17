@@ -49,6 +49,7 @@ void Application::runSimulationInAdequacyDraftMode()
         timer.stop();
         pDurationCollector.addDuration("synthesis_export", timer.get_duration());
     }
+    this->pResultWriter = simulation.pResultWriter;
 }
 
 } // namespace Solver

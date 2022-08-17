@@ -67,7 +67,7 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, 
+    ISimulation(Data::Study& study,
                 const ::Settings& settings,
                 Benchmarking::IDurationCollector* duration_collector);
     //! Destructor
@@ -179,12 +179,11 @@ private:
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 
-    //! Result writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter;
-
 public:
     //! The queue service that runs every set of parallel years
-    Yuni::Job::QueueService qs;
+    std::shared_ptr<Yuni::Job::QueueService> qs;
+    //! Result writer
+    Antares::Solver::IResultWriter::Ptr pResultWriter;
 }; // class ISimulation
 
 } // namespace Simulation

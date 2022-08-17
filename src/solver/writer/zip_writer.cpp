@@ -1,6 +1,7 @@
 #include <antares/logs.h>
 
 #include "zip_writer.h"
+#include "ensure_queue_started.h"
 
 extern "C"
 {
@@ -53,7 +54,7 @@ void ZipWriteJob<ContentT>::onExecute()
 }
 
 // Class ZipWriter
-ZipWriter::ZipWriter(Yuni::Job::QueueService& qs,
+ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
                      Benchmarking::IDurationCollector* duration_collector) :
  pQueueService(qs),
@@ -74,16 +75,27 @@ ZipWriter::~ZipWriter()
 
 void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    pQueueService.add(
+    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
+    pQueueService->add(
       new ZipWriteJob<Yuni::Clob>(*this, entryPath, entryContent, pDurationCollector),
       Yuni::Job::priorityLow);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
-    pQueueService.add(
+    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
+    pQueueService->add(
       new ZipWriteJob<std::string>(*this, entryPath, entryContent, pDurationCollector),
       Yuni::Job::priorityLow);
+}
+
+void ZipWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
+{
+    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
+    std::string buffer;
+    entryContent.saveToString(buffer);
+    pQueueService->add(new ZipWriteJob<std::string>(*this, entryPath, buffer, pDurationCollector),
+                       Yuni::Job::priorityLow);
 }
 
 bool ZipWriter::needsTheJobQueue() const

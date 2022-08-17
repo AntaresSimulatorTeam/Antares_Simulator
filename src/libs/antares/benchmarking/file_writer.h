@@ -9,7 +9,7 @@ class FileWriter
 {
 public:
     FileWriter(FileContent& fileContent);
-    virtual void flush() = 0;
+    virtual void saveToBuffer(std::string& buffer) const = 0;
 
 protected:
     // Member data
@@ -19,11 +19,8 @@ protected:
 class iniFilewriter final : public FileWriter
 {
 public:
-    explicit iniFilewriter(Yuni::String& filePath, FileContent& fileContent);
-    void flush() override;
-private:
-    Yuni::String& filePath_;
+    explicit iniFilewriter(FileContent& fileContent);
+    void saveToBuffer(std::string& buffer) const override;
 };
 
 } // namespace Benchmarking
-

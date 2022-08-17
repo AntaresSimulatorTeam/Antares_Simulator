@@ -39,22 +39,35 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 {
 }
 
+static Yuni::String prepareDirectoryHierarchy(const YString& root, const std::string& entryPath)
+{
+    Yuni::String output;
+    output << root << Yuni::IO::Separator << entryPath.c_str();
+    createDirectoryHierarchy(root, entryPath.c_str());
+    return output;
+}
+
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    Yuni::String output;
-    output << pOutputFolder << Yuni::IO::Separator << entryPath.c_str();
-    createDirectoryHierarchy(pOutputFolder, entryPath.c_str());
+    auto output = prepareDirectoryHierarchy(pOutputFolder, entryPath);
     IOFileSetContent(output, entryContent);
 }
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
-    Yuni::String output;
-    output << pOutputFolder << Yuni::IO::Separator << entryPath.c_str();
-    createDirectoryHierarchy(pOutputFolder, entryPath.c_str());
+    auto output = prepareDirectoryHierarchy(pOutputFolder, entryPath);
     IOFileSetContent(output, entryContent);
+}
+
+// Write to file immediately, creating directories if needed
+void ImmediateFileResultWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
+{
+    auto output = prepareDirectoryHierarchy(pOutputFolder, entryPath);
+    std::string buffer;
+    entryContent.saveToString(buffer);
+    IOFileSetContent(output, buffer);
 }
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const

@@ -556,6 +556,9 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
+    if (!pResultWriter)
+        return;
+
     // Info collectors : they retrieve data from study and simulation
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
     Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
@@ -568,9 +571,11 @@ void Application::writeExectutionInfo()
 
     // Flush previous info into a record file
     Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
-    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
-    ini_file_writer.flush();
+    filePath.clear() << "execution_info.ini";
+    Benchmarking::iniFilewriter ini_file_writer(file_content);
+    std::string content;
+    ini_file_writer.saveToBuffer(content);
+    pResultWriter->addJob(filePath.c_str(), content);
 }
 
 Application::~Application()

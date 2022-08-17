@@ -16,6 +16,7 @@ public:
     // Write to file immediately, creating directories if needed
     void addJob(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addJob(const std::string& entryPath, std::string& entryContent) override;
+    void addJob(const std::string& entryPath, Antares::IniFile& entryContent) override;
     bool needsTheJobQueue() const override;
 
 private:

@@ -10,11 +10,12 @@ namespace Solver
 class EnsureQueueStartedIfNeeded
 {
 public:
-    explicit EnsureQueueStartedIfNeeded(IResultWriter::Ptr writer, Yuni::Job::QueueService& qs);
+    explicit EnsureQueueStartedIfNeeded(IResultWriter* writer,
+                                        std::shared_ptr<Yuni::Job::QueueService> qs);
     ~EnsureQueueStartedIfNeeded();
 
 private:
-    Yuni::Job::QueueService& qs;
+    std::shared_ptr<Yuni::Job::QueueService> qs;
     bool startQueue;
 };
 } // namespace Solver

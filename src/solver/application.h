@@ -6,6 +6,8 @@
 #include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
+#include <i_writer.h>
+
 #include <yuni/core/string.h>
 
 namespace Antares
@@ -91,6 +93,9 @@ private:
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
+
+    // Result writer
+    IResultWriter::Ptr pResultWriter = nullptr;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

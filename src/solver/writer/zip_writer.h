@@ -42,19 +42,20 @@ private:
 class ZipWriter : public IResultWriter
 {
 public:
-    ZipWriter(Yuni::Job::QueueService& qs,
+    ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
               const char* archivePath,
               Benchmarking::IDurationCollector* duration_collector);
     ~ZipWriter();
     void addJob(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addJob(const std::string& entryPath, std::string& entryContent) override;
+    void addJob(const std::string& entryPath, Antares::IniFile& entryContent) override;
     bool needsTheJobQueue() const override;
     friend class ZipWriteJob<Yuni::Clob>;
     friend class ZipWriteJob<std::string>;
 
 private:
     // Queue where jobs will be appended
-    Yuni::Job::QueueService& pQueueService;
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
     // Prevent concurrent writes to the zip file
     std::mutex pZipMutex;
     // minizip-ng requires a void* as a zip handle.

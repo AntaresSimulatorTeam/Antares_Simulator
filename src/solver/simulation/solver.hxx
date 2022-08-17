@@ -31,7 +31,6 @@
 #include <antares/logs.h>
 #include <antares/date.h>
 #include <antares/benchmarking.h>
-#include <ensure_queue_started.h>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
 #include "../aleatoire/alea_fonctions.h"
@@ -266,6 +265,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pAnnualCostsStatistics(study),
  pDurationCollector(duration_collector),
+ qs(std::make_shared<Yuni::Job::QueueService>()),
  pResultWriter(
    resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
 {
@@ -332,8 +332,6 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info();
         logs.info() << " Only the preprocessors are enabled.";
-
-        EnsureQueueStartedIfNeeded ensure(pResultWriter, qs);
 
         regenerateTimeSeries(0);
 
@@ -431,8 +429,6 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     }
     else
     {
-        EnsureQueueStartedIfNeeded ensure(pResultWriter, qs);
-
         // Flush all memory into the swap files
         // The check is required to avoid to create an instance of `Antares::Memory`
         if (Antares::Memory::swapSupport)
@@ -1553,7 +1549,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         // If the result writer uses the job queue, add one more thread for it
         if (pResultWriter->needsTheJobQueue())
             numThreads++;
-        qs.maximumThreadCount(numThreads);
+        qs->maximumThreadCount(numThreads);
     }
 
     // Loop over sets of parallel years
@@ -1619,27 +1615,27 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
             // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
 
-            qs.add(new yearJob<ImplementationType>(this,
-                                                   y,
-                                                   set_it->yearFailed,
-                                                   set_it->isFirstPerformedYearOfASet,
-                                                   pFirstSetParallelWithAPerformedYearWasRun,
-                                                   numSpace,
-                                                   randomForParallelYears,
-                                                   performCalculations,
-                                                   study,
-                                                   state,
-                                                   pYearByYear,
-                                                   pDurationCollector));
+            qs->add(new yearJob<ImplementationType>(this,
+                                                    y,
+                                                    set_it->yearFailed,
+                                                    set_it->isFirstPerformedYearOfASet,
+                                                    pFirstSetParallelWithAPerformedYearWasRun,
+                                                    numSpace,
+                                                    randomForParallelYears,
+                                                    performCalculations,
+                                                    study,
+                                                    state,
+                                                    pYearByYear,
+                                                    pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);
 
-        qs.start();
+        qs->start();
 
-        qs.wait(Yuni::qseIdle);
-        qs.stop();
+        qs->wait(Yuni::qseIdle);
+        qs->stop();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
