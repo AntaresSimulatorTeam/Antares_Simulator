@@ -68,6 +68,14 @@ bool Simulation::saveToFolder(const AnyString& folder) const
     return false;
 }
 
+void Simulation::saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const
+{
+    String b = folder;
+    b << SEP << "comments.txt";
+    std::string comments_copy = comments.c_str();
+    writer->addJob(b.c_str(), comments_copy);
+}
+
 bool Simulation::loadFromFolder(const StudyLoadOptions& options)
 {
     if (!options.loadOnlyNeeded)

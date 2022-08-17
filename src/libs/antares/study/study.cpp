@@ -32,6 +32,7 @@
 #include <yuni/io/file.h>
 #include <yuni/datetime/timestamp.h>
 
+#include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
 
@@ -143,6 +144,11 @@ void Study::clear()
     ClearAndShrink(inputExtension);
 
     gotFatalError = false;
+}
+
+void Study::setWriter(Solver::IResultWriter::Ptr writer)
+{
+  pResultWriter = writer;
 }
 
 void Study::createAsNew()
@@ -718,12 +724,12 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
 bool Study::prepareOutput()
 {
-    sint64 now = DateTime::Now();
+    pStartTime = DateTime::Now();
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
     folderOutput.clear() << folder << SEP << "output" << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", now, false);
+    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", pStartTime, false);
 
     switch (parameters.mode)
     {
@@ -773,49 +779,74 @@ bool Study::prepareOutput()
     }
 
     logs.info() << "  Output folder : " << folderOutput;
-
-    // Settings
-    // TODO : use writer
-    buffer.clear() << folderOutput << SEP << "about-the-study";
-    IO::Directory::Create(buffer);
-
-    // TODO : use writer
-    if (not simulation.saveToFolder(buffer))
-        return false;
-
-    // TODO : use writer
-    // Write the header as a reminder too
-    buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "study.ini";
-    header.saveToFile(buffer, false);
-
-    // copying the generaldata.ini
-    buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
-    String dest;
-    // TODO : use writer
-    dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
-    if (IO::errNone != IO::File::Copy(buffer, dest))
-        logs.error() << "impossible to copy " << dest;
-
-    // antares-output.info
-    buffer.clear() << folderOutput << SEP << "info.antares-output";
-    IO::File::Stream f(buffer, IO::OpenMode::write | IO::OpenMode::truncate);
-    if (f.opened())
-    {
-        String nowstr;
-        DateTime::TimestampToString(nowstr, "%Y.%m.%d - %H:%M", now);
-        f << "[general]";
-        f << "\nversion = " << (uint)Data::versionLatest;
-        f << "\nname = " << simulation.name;
-        f << "\nmode = " << StudyModeToCString(parameters.mode);
-        f << "\ndate = " << nowstr;
-        f << "\ntitle = " << nowstr;
-        f << "\ntimestamp = " << now;
-        f << "\n\n";
-    }
-    else
-        logs.error() << "I/O: impossible to write " << buffer;
-
     return true;
+}
+
+void Study::saveMiscFilesIntoOutput()
+{
+  String path;
+  path.reserve(1024);
+
+  path.clear() << "about-the-study";
+  simulation.saveUsingWriter(pResultWriter, path);
+
+  // Write the header as a reminder too
+  path.clear() << "about-the-study" << SEP << "study.ini";
+  Antares::IniFile header_ini;
+  header.CopySettingsToIni(header_ini, false);
+  pResultWriter->addJob(path.c_str(), header_ini);
+
+  // copying the generaldata.ini
+  // Input : absolute path
+  path.clear() << folderSettings << SEP << "generaldata.ini";
+  logs.notice() << path;
+  std::string generaldata_buffer;
+  Yuni::IO::File::LoadFromFile(generaldata_buffer, path);
+
+  String dest;
+  // Output : relative path (resolution handled by pResultWriter->addJob)
+  dest << "about-the-study" << SEP << "parameters.ini";
+  pResultWriter->addJob(dest.c_str(), generaldata_buffer);
+
+  // antares-output.info
+  path.clear() << "info.antares-output";
+  std::ostringstream f;
+  String startTimeStr;
+  DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
+  f << "[general]";
+  f << "\nversion = " << (uint)Data::versionLatest;
+  f << "\nname = " << simulation.name;
+  f << "\nmode = " << StudyModeToCString(parameters.mode);
+  f << "\ndate = " << startTimeStr;
+  f << "\ntitle = " << startTimeStr;
+  f << "\ntimestamp = " << pStartTime;
+  f << "\n\n";
+  auto output = f.str();
+  pResultWriter->addJob(path.c_str(), output);
+
+  if (usedByTheSolver and !parameters.noOutput)
+  {
+      // Write all available areas as a reminder
+      {
+        Yuni::Clob buffer;
+        path.clear() << "about-the-study" << SEP << "areas.txt";
+        for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
+          {
+            if (setsOfAreas.hasOutput(i->first))
+              buffer << "@ " << i->first << "\r\n";
+          }
+        areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+        pResultWriter->addJob(path.c_str(), buffer);
+      }
+
+      // Write all available links as a reminder
+      {
+        path.clear() << "about-the-study" << SEP << "links.txt";
+        Yuni::Clob buffer;
+        areas.saveLinkListToBuffer(buffer);
+        pResultWriter->addJob(path.c_str(), buffer);
+      }
+  }
 }
 
 Area* Study::areaAdd(const AreaName& name)

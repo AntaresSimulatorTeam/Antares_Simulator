@@ -486,7 +486,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    bool saveLinkListToFile(const AnyString& filename) const;
+    void saveLinkListToBuffer(Yuni::Clob& buffer) const;
 
     /*!
     ** \brief Preload all areas which have been invalidated

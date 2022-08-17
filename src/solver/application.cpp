@@ -377,6 +377,10 @@ void Application::execute()
         break;
     }
 
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->setWriter(pResultWriter);
+    pStudy->saveMiscFilesIntoOutput();
+
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
 

@@ -164,7 +164,7 @@ public:
     ** \param forTheSolver True to indicate that the study will be used for a simulation
     **   Consequently some preparations / shortcuts should be done
     */
-    explicit Study(bool forTheSolver = false);
+    Study(bool forTheSolver = false);
     //! Destructor
     virtual ~Study();
     //@}
@@ -371,6 +371,8 @@ public:
     ** \brief Prepare the output where the results of the simulation will be written
     */
     bool prepareOutput();
+
+    void saveMiscFilesIntoOutput();
 
     /*!
     ** \brief Initialize the progress meter
@@ -580,6 +582,8 @@ public:
     ** Should be call then all inforation is suplied in to the thermal clusters.
     */
     void computePThetaInfForThermalClusters() const;
+
+    void setWriter(Solver::IResultWriter::Ptr writer);
 
     //! Header (general information about the study)
     StudyHeader header;
@@ -794,6 +798,9 @@ private:
     //! Load all layers
     bool saveLayers(const AnyString& filename);
     void loadLayers(const AnyString& filename);
+    //! Result writer, required to write residual files (comments, about-the-study, etc.)
+    Solver::IResultWriter::Ptr pResultWriter = nullptr;
+    Yuni::sint64 pStartTime;
 }; // class Study
 
 /*!
