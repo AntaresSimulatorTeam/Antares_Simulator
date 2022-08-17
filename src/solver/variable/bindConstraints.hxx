@@ -170,6 +170,13 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
           results, dataLevel, fileLevel, precision, numSpace);
     }
     */
+
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        NextType& bc = pBindConstraints[i];
+
+        bc.buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+    }
 }
 
 template<class NextT>
@@ -313,8 +320,7 @@ inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBi
     for (uint k = 0; k < study.runtime->bindingConstraintCount; k++)
     {
         // We pick inequality binding constraints only.
-        if (allBindConst[k].type == Data::BindingConstraint::opLess
-            || allBindConst[k].type == Data::BindingConstraint::opGreater)
+        if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
         {
             std::pair<Data::BindingConstraintRTI*, uint> bc_pair(&(allBindConst[k]), k);
             bindConstListToReturn.push_back(bc_pair);

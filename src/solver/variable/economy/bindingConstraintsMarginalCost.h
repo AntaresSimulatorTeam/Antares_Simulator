@@ -202,7 +202,7 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        // Compute statistics for the current year depending on 
+        // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
 
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
@@ -243,8 +243,8 @@ public:
             int dayInTheYear = state_->weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] 
-                    -= state_->problemeHebdo
+                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear]
+                  -= state_->problemeHebdo
                        ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                        .variablesDuales[dayInTheWeek];
 
@@ -258,7 +258,7 @@ public:
             uint weekInTheYear = state_->weekInTheYear;
             double weeklyValue
               = -state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                  .variablesDuales[0];
+                   .variablesDuales[0];
 
             pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
 
@@ -305,24 +305,30 @@ public:
         return pValuesForTheCurrentYear[numSpace].hour;
     }
 
-    void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
-                                      unsigned int numSpace) const
+    void localBuildAnnualSurveyReport(
+      SurveyResults& results,
+      int fileLevel,
+      int precision /* printed results : hourly, daily, weekly, ...*/,
+      unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA[0] = precision >= pow(2, associatedBC_->type - 1);
+        results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
 
         if (AncestorType::isPrinted[0])
         {
             // Write the data for the current year
-            results.variableCaption = VCardType::Caption();
+            results.variableCaption = getBindConstraintCaption();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
     }
 
 private:
+    std::string getBindConstraintCaption() const
+    {
+        return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
+    }
+
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
