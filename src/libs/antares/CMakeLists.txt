@@ -339,9 +339,8 @@ set(SRC_BENCHMARKING
     benchmarking/info_collectors.h
     benchmarking/info_collectors.cpp
 	benchmarking/file_content.h
+	benchmarking/file_content.hxx
     benchmarking/file_content.cpp
-	benchmarking/file_writer.h
-	benchmarking/file_writer.cpp
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 

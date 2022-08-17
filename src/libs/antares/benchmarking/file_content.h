@@ -19,6 +19,9 @@ public:
     void addItemToSection(const std::string& section, const std::string& key, const std::string& value);
     void addDurationItem(const std::string& name, unsigned int duration, int nbCalls);
 
+    template<class DestT>
+    DestT to();
+
 private:
     // Data of the file content
     std::map<std::string,                           // Sections as keys
@@ -26,6 +29,6 @@ private:
              sections_;
 
 };
-
 } // namespace Benchmarking
 
+#include "file_content.hxx"

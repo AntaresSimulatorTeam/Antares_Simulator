@@ -570,12 +570,9 @@ void Application::writeExectutionInfo()
     simulation_info_collector.toFileContent(file_content);
 
     // Flush previous info into a record file
-    Yuni::String filePath;
-    filePath.clear() << "execution_info.ini";
-    Benchmarking::iniFilewriter ini_file_writer(file_content);
-    std::string content;
-    ini_file_writer.saveToBuffer(content);
-    pResultWriter->addJob(filePath.c_str(), content);
+    const std::string exec_info_path = "execution_info.ini";
+    auto content = file_content.to<Antares::IniFile>();
+    pResultWriter->addJob(exec_info_path, content);
 }
 
 Application::~Application()
