@@ -537,6 +537,8 @@ public:
             float thresholdInitiate;
             //! Threshold to display Local Matching Rule violations
             float thresholdDisplayViolations;
+            //! Include hurdle cost in CSR cost function
+            bool includeHurdleCost;
         };
         CurtailmentSharing curtailmentSharing;
 

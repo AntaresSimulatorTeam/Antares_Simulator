@@ -102,7 +102,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
-                    << " Hour:" << w * 168 + hourInWeek + 1;
+                    << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
         hourlyCsrProblem.run(w, state.year);
     }

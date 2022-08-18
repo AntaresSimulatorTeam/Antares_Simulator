@@ -249,6 +249,7 @@ void Parameters::resetAdqPatchParameters()
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
     adqPatch.saveIntermediateResults = false;
+    adqPatch.curtailmentSharing.includeHurdleCost = false;
     resetThresholdsAdqPatch();
 }
 
@@ -684,6 +685,9 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     // Price taking order
     if (key == "price-taking-order")
         return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
+    // Include Hurdle Cost
+    if (key == "include-hurdle-cost-csr")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
         return value.to<float>(d.adqPatch.curtailmentSharing.thresholdInitiate);
@@ -1818,6 +1822,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("save-intermediate-results", adqPatch.saveIntermediateResults);
         section->add("price-taking-order",
                      PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
+        section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
                      adqPatch.curtailmentSharing.thresholdInitiate);

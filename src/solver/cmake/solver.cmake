@@ -53,6 +53,12 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.cpp
 		optimisation/adequacy_patch.h
 		optimisation/adequacy_patch.cpp
+		optimisation/adequacy_patch_csr/solve_problem.cpp
+		optimisation/adequacy_patch_csr/set_variable_boundaries.cpp
+		optimisation/adequacy_patch_csr/set_problem_cost_function.cpp
+		optimisation/adequacy_patch_csr/construct_problem_variables.cpp
+		optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp
+		optimisation/adequacy_patch_csr/construct_problem_constraints_LHS.cpp
 
         utils/ortools_utils.h
 		utils/ortools_utils.cpp
