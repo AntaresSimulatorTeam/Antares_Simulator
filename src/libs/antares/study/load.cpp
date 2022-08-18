@@ -26,7 +26,7 @@
 */
 #include <fstream>
 #include "study.h"
-#include "../timeelapsed.h"
+#include "../benchmarking.h"
 #include "../array/correlation.h"
 #include "../inifile/inifile.h"
 #include "scenario-builder/sets.h"
