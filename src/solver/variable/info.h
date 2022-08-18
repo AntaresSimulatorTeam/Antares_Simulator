@@ -576,6 +576,19 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     }
 
     template<class VCardType>
+    static SurveyResults::CaptionType getCaption(SurveyResults& results)
+    {
+        if (VCardType::categoryDataLevel & Category::bindingConstraint)
+        {
+            // In case the current output variable is associated to a BC, its caption is
+            // already set in the output variable class.
+            return results.variableCaption;
+        }
+        
+        return VCardType::Caption();
+    }
+
+    template<class VCardType>
     static void BuildSurveyReport(SurveyResults& results,
                                   const Type& container,
                                   int dataLevel,
@@ -584,7 +597,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         if (*results.isPrinted)
         {
-            results.variableCaption = VCardType::Caption();
+            results.variableCaption = getCaption<VCardType>(results);
             container.template buildSurveyReport<ResultsT, VCardType>(
               results, container, dataLevel, fileLevel, precision);
         }

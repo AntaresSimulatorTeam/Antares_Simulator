@@ -44,7 +44,7 @@ struct VCardBindingConstMarginCost
     //! Caption
     static const char* Caption()
     {
-        return "MARG. COST by BC";
+        return "BC. MARG. COST";
     }
     //! Unit
     static const char* Unit()
@@ -83,7 +83,7 @@ struct VCardBindingConstMarginCost
         //! Intermediate values
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
+        isPossiblyNonApplicable = 1,
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;
@@ -312,7 +312,7 @@ public:
       unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
+        results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
         if (AncestorType::isPrinted[0])
         {
@@ -323,12 +323,42 @@ public:
         }
     }
 
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        // Building syntheses results
+        // ------------------------------
+
+        // And only if we match the current data level _and_ precision level
+        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
+            && (precision & VCardType::precision))
+        {
+            results.isPrinted = isPrinted;
+            results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
+            results.variableCaption = getBindConstraintCaption();
+
+            VariableAccessorType::template BuildSurveyReport<VCardType>(
+              results, pResults, dataLevel, fileLevel, precision);
+        }
+    }
+
 private:
+    // Private methods
+    // ---------------
     std::string getBindConstraintCaption() const
     {
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
+    bool isCurrentOutputNonApplicable(int precision) const
+    {
+        return precision < pow(2, associatedBC_->type - 1);
+    }
+
+    // Private data mambers
+    // ----------------------
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;

@@ -235,7 +235,7 @@ public:
                         unsigned int nbYearsForCurrentSummary)
     {
         LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
         BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary); // gp : need this call ?
     }
 

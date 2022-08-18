@@ -114,6 +114,16 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
         pAreas[area.index].buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
     */
+    bool bcDataLevel = dataLevel & Category::bindingConstraint;
+    if (not bcDataLevel)
+        return;
+
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        NextType& bc = pBindConstraints[i];
+
+        bc.buildSurveyReport(results, dataLevel, fileLevel, precision);
+    }
 }
 
 template<class NextT>
@@ -170,6 +180,10 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
           results, dataLevel, fileLevel, precision, numSpace);
     }
     */
+
+    bool bcDataLevel = dataLevel & Category::bindingConstraint;
+    if (not bcDataLevel)
+        return;
 
     for (uint i = 0; i != pBCcount; ++i)
     {
