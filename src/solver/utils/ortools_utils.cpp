@@ -220,6 +220,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numS
     std::stringstream buffer;
     buffer << study.folderOutput << Yuni::IO::Separator << "problem-" << year << "-" << week << "-"
            << n << ".mps";
+    // TODO use generic writer
     solver->Write(buffer.str());
 }
 

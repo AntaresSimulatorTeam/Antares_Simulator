@@ -504,7 +504,8 @@ public:
     */
     std::string createFileIntoOutputWithExtension(const YString& prefix,
                                                   const YString& extension,
-                                                  uint numSpace) const;
+                                                  uint numSpace,
+                                                  int n = 0) const;
 
     //! \name
     //@{

@@ -281,6 +281,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+
+    study.setWriter(pResultWriter);
 }
 
 template<class Impl>
@@ -417,7 +419,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     // The writer might need the job queue, after it's been stopped
     // this is the case e.g if synthesis == true (writing mc-all)
     // Don't restart the queue if the writer doesn't need it
-    
+
     assert(!settings.noOutput);
     assert(!settings.tsGeneratorsOnly);
 

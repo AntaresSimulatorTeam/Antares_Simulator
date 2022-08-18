@@ -19,9 +19,9 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
 static void printHeader(Clob& Flot, int NombreDeVariables, int NombreDeContraintes)
 {
-  Flot.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
-  Flot.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
-  Flot.appendFormat("NAME          Pb Solve\n");
+    Flot.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
+    Flot.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
+    Flot.appendFormat("NAME          Pb Solve\n");
 }
 
 static void printColumnsObjective(Clob& Flot,
@@ -142,8 +142,6 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     int* NumeroDeContrainte;
     int* Csui;
 
-
-
     for (ilMax = -1, Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
         if ((Pb->IndicesDebutDeLigne[Cnt] + Pb->NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
@@ -203,10 +201,6 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     free(Cder);
 
-    auto study = Data::Study::Current::Get();
-        
-    auto filename = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
-
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
     Flot.appendFormat("ROWS\n");
@@ -229,9 +223,9 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
         else
         {
             Flot.appendFormat(
-                    "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
-                    "partie des sens reconnus\n",
-                    Pb->Sens[Cnt]);
+              "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
+              "partie des sens reconnus\n",
+              Pb->Sens[Cnt]);
             AntaresSolverEmergencyShutdown();
         }
     }
@@ -246,14 +240,11 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    const auto filename
+      = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
+    auto writer = study->getWriter();
+    writer->addJob(filename, Flot);
 
     free(Cdeb);
     free(NumeroDeContrainte);
@@ -264,13 +255,8 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 {
     Clob Flot;
     int Var;
-    
 
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
-
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
-
 
     printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
@@ -290,17 +276,14 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    const auto filename
+      = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
+    auto writer = study->getWriter();
+    writer->addJob(filename, Flot);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, int n)
 {
     Clob Flot;
     int Cnt;
@@ -400,9 +383,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 
     free(Cder);
 
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
-
     printHeader(Flot, NombreDeVariables, NombreDeContraintes);
 
     Flot.appendFormat("ROWS\n");
@@ -445,14 +425,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 
     Flot.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    auto filename = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
+    auto writer = study->getWriter();
+    writer->addJob(filename, Flot);
 
     free(Cdeb);
     free(NumeroDeContrainte);

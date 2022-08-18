@@ -51,7 +51,6 @@ void Application::runSimulationInAdequacyMode()
 
         this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
-    this->pResultWriter = simulation.pResultWriter;
 }
 } // namespace Solver
 } // namespace Antares

@@ -260,14 +260,14 @@ RESOLUTION:
 
     if (ProblemeHebdo->ExportMPS == OUI_ANTARES && !ProblemeHebdo->SplitExportedMPS)
     {
+        int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
         if (ortoolsUsed)
         {
-            int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
             ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
         }
         else
         {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
+            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, n);
         }
     }
 
@@ -369,14 +369,14 @@ RESOLUTION:
         // ExportMPS option
         if (ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
         {
+            int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
             if (ortoolsUsed)
             {
-                int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
                 ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
             }
             else
             {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
+                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace, n);
             }
         }
 
@@ -390,4 +390,22 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
+    Yuni::Clob Flot;
+    double CoutOptimalDeLaSolution;
+    PROBLEME_HEBDO* Probleme;
+
+    Probleme = (PROBLEME_HEBDO*)Prob;
+
+    CoutOptimalDeLaSolution = 0.;
+    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
+        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    else
+        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+
+    Flot.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
+
+    auto study = Data::Study::Current::Get();
+    auto filename = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
+    auto writer = study->getWriter();
+    writer->addJob(filename, Flot);
 }

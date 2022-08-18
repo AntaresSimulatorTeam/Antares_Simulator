@@ -39,43 +39,25 @@ namespace Data
 {
 std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                      const YString& extension,
-                                                     uint numSpace) const
+                                                     uint numSpace,
+                                                     int n) const
 {
-    static std::map<YString, int> count;
-
     // Empty log entry
     logs.info();
-
-    // Preparing the filename where to write the MPS file
-    String buffer;
-    buffer.reserve(folderOutput.size() + 15);
-    buffer << this->folderOutput;
-
-    if (not IO::Directory::Create(buffer))
-    {
-        logs.error() << "I/O Error: Impossible to create the folder `" << buffer << "'";
-        logs.info() << "Aborting now.";
-        return nullptr;
-    }
 
     String outputFile;
     outputFile << prefix << "-"; // problem ou criterion
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
 
-    // TODO test if file already exists
-    if (false)
+    if (n != 0)
     {
-        count[prefix]++;
-        outputFile << "-" << count[prefix] << "." << extension;
-    }
-    else
-    {
-        count[prefix] = 0;
-        outputFile << "." << extension;
+        outputFile << "-" << n;
     }
 
-    logs.info() << "Solver output File: `" << outputFile << "'";
+    outputFile << "." << extension;
+
+    logs.info() << "Solver output file: `" << outputFile << "'";
     return outputFile.c_str();
 }
 

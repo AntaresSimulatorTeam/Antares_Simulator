@@ -378,7 +378,6 @@ void Application::execute()
     }
 
     // Save about-the-study files (comments, notes, etc.)
-    pStudy->setWriter(pResultWriter);
     pStudy->saveMiscFilesIntoOutput();
 
     // Importing Time-Series if asked
@@ -560,7 +559,8 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    if (!pResultWriter)
+    auto writer = pStudy->getWriter();
+    if (!writer)
         return;
 
     // Info collectors : they retrieve data from study and simulation
@@ -576,7 +576,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     auto content = file_content.to<Antares::IniFile>();
-    pResultWriter->addJob(exec_info_path, content);
+    writer->addJob(exec_info_path, content);
 }
 
 Application::~Application()

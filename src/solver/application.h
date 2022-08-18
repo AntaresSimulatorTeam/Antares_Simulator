@@ -93,9 +93,6 @@ private:
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
-
-    // Result writer
-    IResultWriter::Ptr pResultWriter = nullptr;
 }; // class Application
 } // namespace Solver
 } // namespace Antares
