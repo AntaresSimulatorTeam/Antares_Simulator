@@ -584,6 +584,7 @@ public:
     void computePThetaInfForThermalClusters() const;
 
     void setWriter(Solver::IResultWriter::Ptr writer);
+    Solver::IResultWriter::Ptr getWriter() const;
 
     //! Header (general information about the study)
     StudyHeader header;

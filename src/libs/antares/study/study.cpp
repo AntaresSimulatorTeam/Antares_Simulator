@@ -151,6 +151,11 @@ void Study::setWriter(Solver::IResultWriter::Ptr writer)
   pResultWriter = writer;
 }
 
+Solver::IResultWriter::Ptr Study::getWriter() const
+{
+  return pResultWriter;
+}
+
 void Study::createAsNew()
 {
     inputExtension = "txt";

@@ -62,6 +62,7 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
  pDurationCollector(duration_collector)
 {
     mz_zip_writer_create(&pZipHandle);
+    // TODO : check existence of file
     mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0);
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);
