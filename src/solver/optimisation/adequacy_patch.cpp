@@ -64,7 +64,7 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     }
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType)
 {
     switch (ExtremityNodeAdequacyPatchType)

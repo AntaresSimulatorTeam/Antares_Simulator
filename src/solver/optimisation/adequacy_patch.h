@@ -58,7 +58,7 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
- LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType);
+ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
