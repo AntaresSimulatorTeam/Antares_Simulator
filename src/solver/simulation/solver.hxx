@@ -263,7 +263,6 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
- pAnnualCostsStatistics(study),
  pDurationCollector(duration_collector),
  qs(std::make_shared<Yuni::Job::QueueService>()),
  pResultWriter(
@@ -1683,7 +1682,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     if (not study.parameters.adequacyDraft())
     {
         pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput();
+        pAnnualCostsStatistics.writeToOutput(pResultWriter);
     }
 }
 
