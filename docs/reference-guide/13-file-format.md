@@ -1,6 +1,13 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.4.0
+### Input
+In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
+
+### Output
+If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**.
+
 ## v8.3.0
 ### Input
 In file **settings/generaldata.ini**, add section `adequacy patch`, with properties
