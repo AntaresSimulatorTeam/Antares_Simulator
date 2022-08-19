@@ -40,7 +40,7 @@ adequacy-patch-mode = outside
 * If `include-split-exported-mps` is set to `true`, create splitted MPS files in the output folder
 * Add file **time_measurement.txt**, containing performance data
 
-NOTE : **period** can be any of the following
+NOTE: **period** can be any of the following
 
 * `hourly`
 * `daily`
