@@ -745,7 +745,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                  this);
 
     it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to zero (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
+      &menu, wxID_ANY, wxT("set to null (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncIgnorePhysical>),
