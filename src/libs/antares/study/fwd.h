@@ -138,12 +138,12 @@ enum TransmissionCapacities
     tncIgnore,
     //! Transmission capacities are infinite (aka Copper Plate)
     tncInfinite,
-    //! Transmission capacities are infinite only for physical links (not virtual)
-    //! Global property only, cannot be used for individual links
-    tncInfinitePhysical,
     //! Transmission capacities are ignored only for physical links
     //! Global property only, cannot be used for individual links
-    tncIgnorePhysical
+    tncIgnorePhysical,
+    //! Transmission capacities are infinite only for physical links (not virtual)
+    //! Global property only, cannot be used for individual links
+    tncInfinitePhysical
 }; // enum TransmissionCapacities
 
 /*!

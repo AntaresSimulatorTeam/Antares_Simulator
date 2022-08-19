@@ -716,7 +716,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                           wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncEnabled>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncEnabled>),
                  nullptr,
                  this);
 
@@ -724,7 +724,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to null"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncIgnore>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncIgnore>),
                  nullptr,
                  this);
 
@@ -732,7 +732,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to infinite"), "images/16x16/infinity.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncInfinite>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncInfinite>),
                  nullptr,
                  this);
 
@@ -740,7 +740,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to infinite (physical links)"), "images/16x16/infinity.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncInfinitePhysical>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncInfinitePhysical>),
                  nullptr,
                  this);
 
@@ -748,7 +748,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to null (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncIgnorePhysical>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncIgnorePhysical>),
                  nullptr,
                  this);
 }
@@ -853,19 +853,24 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     }
 }
 
-template<int Capacity>
-void Optimization::onSelectTransportCapacity(wxCommandEvent&)
+void Optimization::setTransmissionCapacity(Data::TransmissionCapacities newCapacity)
 {
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.transmissionCapacities != Capacity)
+        if (study->parameters.transmissionCapacities != newCapacity)
         {
-            study->parameters.transmissionCapacities = static_cast<Data::TransmissionCapacities>(Capacity);
+            study->parameters.transmissionCapacities = newCapacity;
             refresh();
             MarkTheStudyAsModified();
         }
     }
+}
+
+template<int newCapacity>
+void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
+{
+    setTransmissionCapacity(static_cast<Data::TransmissionCapacities>(newCapacity));
 }
 
 void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)
