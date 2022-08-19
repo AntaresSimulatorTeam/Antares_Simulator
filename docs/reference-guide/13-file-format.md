@@ -5,8 +5,8 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ### Input
 In file **settings/generaldata.ini**, in section `optimization`, add 2 values for existing property `transmission-capacities` [str]:
 
-* `false-physical`
-* `infinite-physical`
+* `false-physical` sets the capacity of physical links to 0
+* `infinite-physical` sets the capacity of physical links to infinity
 
 The default value, `true`, remains unchanged.
 
