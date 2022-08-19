@@ -352,6 +352,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
         s.trim();
 
         Data::TransmissionCapacities tc;
+        // NOTE : tncIgnorePhysical and tncInfinitePhysical don't make sense here
         if (s == "enabled")
             tc = Data::tncEnabled;
         else if (s == "set to null")

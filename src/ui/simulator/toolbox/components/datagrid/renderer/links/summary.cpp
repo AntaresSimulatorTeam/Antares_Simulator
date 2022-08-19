@@ -112,6 +112,9 @@ wxString Summary::cellValue(int x, int y) const
             return wxT("set to null");
         case Data::tncInfinite:
             return wxT("set to infinite");
+        // NOTE : tncIgnorePhysical and tncInfinitePhysical don't make sense here
+        default:
+            return wxEmptyString;
         }
     }
     return wxEmptyString;

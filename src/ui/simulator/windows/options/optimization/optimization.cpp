@@ -120,6 +120,14 @@ static void ResetButton(Component::Button* button, Data::TransmissionCapacities 
         button->image("images/16x16/infinity.png");
         button->caption(wxT("set to infinite"));
         break;
+    case Data::tncInfinitePhysical:
+        button->image("images/16x16/infinity.png");
+        button->caption(wxT("set to infinite (physical links)"));
+        break;
+    case Data::tncIgnorePhysical:
+        button->image("images/16x16/light_orange.png");
+        button->caption(wxT("set to null (physical links)"));
+        break;
     }
 }
 
@@ -708,7 +716,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                           wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInclude),
+                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncEnabled>),
                  nullptr,
                  this);
 
@@ -716,7 +724,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to null"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapIgnore),
+                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncIgnore>),
                  nullptr,
                  this);
 
@@ -724,7 +732,23 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to infinite"), "images/16x16/infinity.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInfinite),
+                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncInfinite>),
+                 nullptr,
+                 this);
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("set to infinite (physical links)"), "images/16x16/infinity.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncInfinitePhysical>),
+                 nullptr,
+                 this);
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("set to zero (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectTransportCapacity<Data::tncIgnorePhysical>),
                  nullptr,
                  this);
 }
@@ -829,42 +853,15 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     }
 }
 
-void Optimization::onSelectTransCapInclude(wxCommandEvent&)
+template<int Capacity>
+void Optimization::onSelectTransportCapacity(wxCommandEvent&)
 {
     auto study = Data::Study::Current::Get();
     if (!(!study))
     {
-        if (study->parameters.transmissionCapacities != Data::tncEnabled)
+        if (study->parameters.transmissionCapacities != Capacity)
         {
-            study->parameters.transmissionCapacities = Data::tncEnabled;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
-void Optimization::onSelectTransCapIgnore(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncIgnore)
-        {
-            study->parameters.transmissionCapacities = Data::tncIgnore;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
-void Optimization::onSelectTransCapInfinite(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncInfinite)
-        {
-            study->parameters.transmissionCapacities = Data::tncInfinite;
+            study->parameters.transmissionCapacities = static_cast<Data::TransmissionCapacities>(Capacity);
             refresh();
             MarkTheStudyAsModified();
         }

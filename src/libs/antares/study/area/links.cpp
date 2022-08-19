@@ -238,13 +238,16 @@ static TransmissionCapacities overridePhysical(TransmissionCapacities tncGlobal,
 {
     switch (tncGlobal)
     {
-    case tncInfinitePhysical:
+    case tncInfinitePhysical: // Use 'infinity' only for physical links
         return tncInfinite;
-    case tncIgnorePhysical:
+    case tncIgnorePhysical: // Use '0' only for physical links
         return tncIgnore;
-    case tncEnabled:
+    case tncEnabled: // Use the local property for all links, including physical links
         return tncLocal;
+
     default:
+    case tncInfinite: // Use 'infinity' for all links, including physical links
+    case tncIgnore: // Use '0' for all links, including physical links
         return tncGlobal;
     }
 }
@@ -254,12 +257,15 @@ static TransmissionCapacities overrideVirtual(TransmissionCapacities tncGlobal,
 {
     switch (tncGlobal)
     {
-    case tncInfinitePhysical:
-    case tncIgnorePhysical:
-    case tncEnabled:
-        return tncLocal;
+    case tncEnabled: // Use local value for all links
+    case tncInfinitePhysical: // Use 'infinity' only for physical links
+    case tncIgnorePhysical: // Use '0' only for physicql links
+        return tncLocal; // Use the local property
+
     default:
-        return tncGlobal;
+    case tncIgnore: // Use '0' for all links, including virtual links
+    case tncInfinite: // Use 'infinity' for all links, including virtual links
+        return tncGlobal; // Use the global property
     }
 }
 

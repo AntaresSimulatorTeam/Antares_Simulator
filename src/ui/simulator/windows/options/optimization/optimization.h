@@ -78,9 +78,8 @@ private:
     void onSelectSimplexDay(wxCommandEvent& evt);
     void onSelectSimplexWeek(wxCommandEvent& evt);
 
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
+    template<int>
+    void onSelectTransportCapacity(wxCommandEvent&);
 
     void onSelectLinkTypeLocal(wxCommandEvent& evt);
     void onSelectLinkTypeAC(wxCommandEvent& evt);
