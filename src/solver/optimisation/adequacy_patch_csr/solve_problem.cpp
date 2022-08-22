@@ -189,8 +189,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     PROBLEME_POINT_INTERIEUR Probleme;
     setInteriorPointProblem(ProblemeAResoudre, Probleme);
     PI_Quamin(&Probleme); // resolution
-    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-    if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
+    if (Probleme.ExistenceDUneSolution == OUI_PI)
     {
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
         return true;
