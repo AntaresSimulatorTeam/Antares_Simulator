@@ -221,12 +221,12 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(ui
 std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
                                                                             uint numSpace)
 {
-    float threshold
+    double threshold
       = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
-        if ((int)sumENS[i] > threshold)
+        if (sumENS[i] > threshold)
         {
             triggerCsrSet.insert(i);
         }

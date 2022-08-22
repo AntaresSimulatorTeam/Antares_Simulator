@@ -136,7 +136,7 @@ void setNTCbounds(double& Xmax,
 
 double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
-    float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
     double densNew;
     double ensInit;
