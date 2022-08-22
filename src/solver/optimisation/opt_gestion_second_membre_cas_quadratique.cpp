@@ -25,8 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-const double csrSolverRelaxationRHS = 1e-3;
-
 #include "opt_structure_probleme_a_resoudre.h"
 
 #include "../simulation/simulation.h"
