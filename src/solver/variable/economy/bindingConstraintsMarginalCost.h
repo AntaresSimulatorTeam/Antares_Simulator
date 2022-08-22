@@ -335,7 +335,7 @@ public:
         if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
             && (precision & VCardType::precision))
         {
-            results.isPrinted = isPrinted;
+            results.isPrinted = AncestorType::isPrinted;
             results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
             results.variableCaption = getBindConstraintCaption();
 
