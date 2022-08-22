@@ -98,18 +98,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 
-    const std::set<int> hoursRequiringCurtailmentSharing
-      = getHoursRequiringCurtailmentSharing(numSpace);
-    for (int hourInWeek : hoursRequiringCurtailmentSharing)
-    {
-        logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
-                    << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
-        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
-        hourlyCsrProblem.run(w, state.year);
-    }
-    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
-    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
-                << ".Total LMR violation:" << totalLmrViolation;
+    solveCSR(state, numSpace, w);
 }
 
 // No adequacy patch
@@ -238,6 +227,23 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 {
     vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
+}
+
+void AdequacyPatchOptimization::solveCSR(Variable::State& state, uint numSpace, uint w)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    const std::set<int> hoursRequiringCurtailmentSharing
+      = getHoursRequiringCurtailmentSharing(numSpace);
+    for (int hourInWeek : hoursRequiringCurtailmentSharing)
+    {
+        logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
+                    << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
+        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
+        hourlyCsrProblem.run(w, state.year);
+    }
+    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
+    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
+                << ".Total LMR violation:" << totalLmrViolation;
 }
 
 bool Economy::year(Progression::Task& progression,

@@ -60,6 +60,7 @@ class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 public:
     AdequacyPatchOptimization();
     void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) override;
+    void solveCSR(Variable::State& state, uint numSpace, uint w);
 
     vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
     std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
