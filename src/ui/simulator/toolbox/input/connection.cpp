@@ -188,10 +188,9 @@ static void addUpstreamDownstream(wxTreeItemId& rootId,
             {
                 wxTreeItemId id;
                 // Foreach Interconnection for the area
-                const Data::AreaLink::Map::iterator end = area->links.end();
-                for (Data::AreaLink::Map::iterator i = area->links.begin(); i != end; ++i)
+                for (auto it : area->links)
                 {
-                    Data::AreaLink* lnk = i->second;
+                    Data::AreaLink* lnk = it.second;
 
                     if (lnk->isVisibleOnLayer(layerID))
                     {
