@@ -128,7 +128,7 @@ void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
 }
 
-void CSR_DEBUG_BLAH(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void CSR_DEBUG_HANDLE(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     int Var;
 
@@ -177,7 +177,7 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
       << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 
 #ifndef NDEBUG
-    CSR_DEBUG_BLAH(ProblemeAResoudre);
+    CSR_DEBUG_HANDLE(ProblemeAResoudre);
 #endif
 }
 
