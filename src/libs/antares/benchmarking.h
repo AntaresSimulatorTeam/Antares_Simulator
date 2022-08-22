@@ -24,11 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_TIMEELAPSED_H__
-#define __ANTARES_LIBS_TIMEELAPSED_H__
+#ifndef __ANTARES_LIBS_BENCHMARKING_H__
+#define __ANTARES_LIBS_BENCHMARKING_H__
 
-#include "timeelapsed/timer.h"
-#include "timeelapsed/content_handler.h"
-#include "timeelapsed/csv_writer.h"
+#include "benchmarking/timer.h"
+#include "benchmarking/info_collectors.h"
+#include "benchmarking/file_writer.h"
 
-#endif // __ANTARES_LIBS_TIMEELAPSED_H__
+#endif // __ANTARES_LIBS_BENCHMARKING_H__

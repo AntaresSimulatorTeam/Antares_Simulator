@@ -53,8 +53,8 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     switch (OriginNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return getNTCtoZeroStatusOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                     setToZeroNTCfromOutToIn_AdqPatch);
+        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType);
+
     case physicalAreaOutsideAdqPatch:
         return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
                                                       setToZeroNTCfromOutToIn_AdqPatch,
@@ -64,9 +64,8 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     }
 }
 
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch)
+ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
 {
     switch (ExtremityNodeAdequacyPatchType)
     {
