@@ -311,6 +311,9 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
+        if (!(precision & associatedBC_->filterYearByYear_))
+            return;
+        
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
@@ -330,6 +333,8 @@ public:
     {
         // Building syntheses results
         // ------------------------------
+        if (!(precision & associatedBC_->filterSynthesis_))
+            return;
 
         // And only if we match the current data level _and_ precision level
         if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
