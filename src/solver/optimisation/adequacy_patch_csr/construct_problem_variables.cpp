@@ -37,10 +37,11 @@
 
 void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    int NumberOfVariables = 0;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
+    NumberOfVariables = 0;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
@@ -62,7 +63,6 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
             NumberOfVariables++;
         }
     }
-    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
 }
 
 void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
