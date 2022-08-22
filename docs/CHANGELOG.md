@@ -1,6 +1,12 @@
 Antares Changelog
 =================
 
+v8.3.1 (08/2022)
+--------------------
+### New features
+- Add execution-info.ini file, containing execution durations #740 and #803
+- OR-Tools : set solver-specific options for XPRESS (#796)
+
 v8.3.0 (07/2022)
 --------------------
 ### New features
