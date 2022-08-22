@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
