@@ -61,7 +61,7 @@ public:
     AdequacyPatchOptimization();
     void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) override;
     void solveCSR(Variable::State& state, uint numSpace, uint week);
-
+private:
     vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
     std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
     std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
