@@ -340,7 +340,7 @@ public:
             results.variableCaption = getBindConstraintCaption();
 
             VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
-              results, pResults, dataLevel, fileLevel, precision);
+              results, AncestorType::pResults, dataLevel, fileLevel, precision);
         }
     }
 
@@ -354,7 +354,11 @@ private:
 
     bool isCurrentOutputNonApplicable(int precision) const
     {
-        return precision < (1 << associatedBC_->type - 1);
+        // The current marginal prices to print becomes non applicable if they have a precision
+        // (hour, day, week, ...) smaller than the associated binding constraint granularity.
+        // Ex : if the BC is daily and we try to print hourly associated marginal prices,
+        //      then these prices are set to N/A
+        return precision < (1 << (associatedBC_->type - 1));
     }
 
     // Private data mambers
