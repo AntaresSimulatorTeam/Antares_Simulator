@@ -98,7 +98,8 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 
-    std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing(numSpace);
+    const std::set<int> hoursRequiringCurtailmentSharing
+      = getHoursRequiringCurtailmentSharing(numSpace);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
