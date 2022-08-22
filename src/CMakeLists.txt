@@ -188,9 +188,6 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
-option(BUILD_MINIZIP_NG "Build minizip-ng" ON)
-message(STATUS "Build minizip-ng ${BUILD_MINIZIP_NG}")
-
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -275,21 +272,6 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
-endif()
-
-find_package(minizip QUIET)
-if(NOT minizip_FOUND OR BUILD_MINIZIP_NG)
-  FetchContent_Declare(minizip_ng
-    GIT_REPOSITORY "https://github.com/zlib-ng/minizip-ng"
-    GIT_TAG "3.0.6")
-
-  set(MZ_ZSTD "OFF" CACHE INTERNAL "")
-  set(MZ_LZMA "OFF" CACHE INTERNAL "")
-  set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
-  set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
-  set(MZ_WZAES "OFF" CACHE INTERNAL "")
-
-  FetchContent_MakeAvailable(minizip_ng)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
