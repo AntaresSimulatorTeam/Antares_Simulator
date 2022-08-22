@@ -43,6 +43,7 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
+#include "../solver/optimisation/adequacy_patch.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
@@ -237,9 +238,9 @@ void Parameters::resetThresholdsAdqPatch()
 {
     // Initialize all thresholds values for adequacy patch
     adqPatch.curtailmentSharing.thresholdInitiate
-      = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
+      = defaultValueThresholdInitiateCurtailmentSharingRule;
     adqPatch.curtailmentSharing.thresholdDisplayViolations
-      = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
+      = defaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::resetAdqPatchParameters()
