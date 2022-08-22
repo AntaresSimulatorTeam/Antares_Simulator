@@ -111,10 +111,9 @@ double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint week
 ** **
 ** ** \param A A vector
 ** ** \param B An array
-** ** \param num An integer
 ** ** \return
 ** */
-void addArray(std::vector<double>& A, double* B, int num);
+void addArray(std::vector<double>& A, double* B);
 
 } // end namespace Antares
 } // end namespace Data

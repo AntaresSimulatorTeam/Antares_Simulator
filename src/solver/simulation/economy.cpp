@@ -212,8 +212,7 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(ui
             addArray(sumENS,
                      pProblemesHebdo[numSpace]
                        ->ResultatsHoraires[area]
-                       ->ValeursHorairesDeDefaillancePositive,
-                     nbHoursInAWeek);
+                       ->ValeursHorairesDeDefaillancePositive);
     }
     return sumENS;
 }
