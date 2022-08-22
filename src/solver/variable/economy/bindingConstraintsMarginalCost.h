@@ -339,7 +339,7 @@ public:
             results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
             results.variableCaption = getBindConstraintCaption();
 
-            VariableAccessorType::template BuildSurveyReport<VCardType>(
+            VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
               results, pResults, dataLevel, fileLevel, precision);
         }
     }
@@ -354,7 +354,7 @@ private:
 
     bool isCurrentOutputNonApplicable(int precision) const
     {
-        return precision < pow(2, associatedBC_->type - 1);
+        return precision < (1 << associatedBC_->type - 1);
     }
 
     // Private data mambers
