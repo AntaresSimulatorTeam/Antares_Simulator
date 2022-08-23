@@ -128,14 +128,10 @@ namespace Benchmarking
     void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
     {
         const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
-        std::string ortoolsSolver;
+        std::string ortoolsSolver = "none";
         if (ortoolsUsed)
         {
             ortoolsSolver = Enum::toString<OrtoolsSolver>(study_.parameters.ortoolsEnumUsed);
-        }
-        else
-        {
-             ortoolsSolver = "none";
         }
         file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
     }
