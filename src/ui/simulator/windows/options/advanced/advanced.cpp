@@ -899,7 +899,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmin),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMin>),
                  nullptr,
                  this);
 
@@ -908,7 +908,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNClow),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncLow>),
                  nullptr,
                  this);
 
@@ -918,7 +918,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCaverage),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncAvg>),
                  nullptr,
                  this);
 
@@ -927,7 +927,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNChigh),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
                  nullptr,
                  this);
 
@@ -936,12 +936,12 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmax),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMax>),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectNC(Data::NumberOfCoresMode ncMode)
+void AdvancedParameters::onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMode)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -957,29 +957,10 @@ void AdvancedParameters::onSelectNC(Data::NumberOfCoresMode ncMode)
     }
 }
 
-void AdvancedParameters::onSelectNCmin(wxCommandEvent& /* evt */)
+template<Data::NumberOfCoresMode level>
+void AdvancedParameters::onSelectNumberOfCoresLevel(wxCommandEvent& /* evt */)
 {
-    onSelectNC(Data::ncMin);
-}
-
-void AdvancedParameters::onSelectNClow(wxCommandEvent& /* evt */)
-{
-    onSelectNC(Data::ncLow);
-}
-
-void AdvancedParameters::onSelectNCaverage(wxCommandEvent& /* evt */)
-{
-    onSelectNC(Data::ncAvg);
-}
-
-void AdvancedParameters::onSelectNChigh(wxCommandEvent& /* evt */)
-{
-    onSelectNC(Data::ncHigh);
-}
-
-void AdvancedParameters::onSelectNCmax(wxCommandEvent& /* evt */)
-{
-    onSelectNC(Data::ncMax);
+    onSelectNumberOfCoresLevel(level);
 }
 
 void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*)

@@ -103,14 +103,11 @@ private:
     void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
-    void onSelectNCmin(wxCommandEvent& evt);
-    void onSelectNClow(wxCommandEvent& evt);
-    void onSelectNCaverage(wxCommandEvent& evt);
-    void onSelectNChigh(wxCommandEvent& evt);
-    void onSelectNCmax(wxCommandEvent& evt);
+    template<Antares::Data::NumberOfCoresMode>
+    void onSelectNumberOfCoresLevel(wxCommandEvent& evt);
 
 private:
-    void onSelectNC(Data::NumberOfCoresMode ncMode);
+    void onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMode);
 
 public:
     void onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*);
