@@ -124,7 +124,6 @@ public:
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        // gp : correct count if needed
         enum
         {
             count
@@ -134,14 +133,6 @@ public:
                  : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        /*
-            gp : estimate memory
-        */
-        NextType::EstimateMemoryUsage(u);
-    }
 
 public:
     BindingConstMarginCost() : pValuesForTheCurrentYear(nullptr)

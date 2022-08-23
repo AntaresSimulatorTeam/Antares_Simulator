@@ -37,18 +37,21 @@ template<>
 uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 {
     Yuni::uint64 result = 0;
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const
+    for (unsigned int i = 0; i != pBCcount; ++i)
+    {
+        result += sizeof(NextType) + sizeof(void*); // overhead vector
+        result += pBindConstraints[i].memoryUsage();
+    }
     return result;
 }
 
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+    // gp : to be done
+
+    // next
+    NextType::EstimateMemoryUsage(u);
 }
 
 } // namespace Variable

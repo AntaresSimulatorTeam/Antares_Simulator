@@ -127,35 +127,15 @@ public:
     //@}
 
     void initializeFromStudy(Data::Study& study);
-    void initializeFromArea(Data::Study*, Data::Area*);
-    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
 
     void simulationBegin();
     void simulationEnd();
-
-    void yearBegin(uint year, uint numSpace);
-    //	void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year);
-    //	void yearEndBuildForEachThermalCluster(State& state, uint year);
-
-    void yearEndBuild(State& state, uint year, uint numSpace);
-
-    void yearEnd(uint year, uint numSpace);
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
 
     void hourBegin(uint hourInTheYear);
-
-    void hourForEachArea(State& state, uint numSpace);
-    void hourForEachLink(State& state, uint numSpace);
-    void hourForEachThermalCluster(State& state, uint numSpace);
-
     void hourEnd(State& state, uint hourInTheYear);
-
-    void weekBegin(State& state);
-    void weekForEachArea(State& state, uint numSpace);
-    void weekEnd(State& state);
 
     void buildSurveyReport(SurveyResults& results,
                            int dataLevel,
@@ -168,53 +148,10 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
-
-    void beforeYearByYearExport(uint year, uint numSpace);
-
     Yuni::uint64 memoryUsage() const;
 
     template<class I>
     static void provideInformations(I& infos);
-
-    template<class V>
-    void yearEndSpatialAggregates(V&, uint, uint)
-    {
-        // do nothing
-    }
-
-    template<class V>
-    void computeSpatialAggregatesSummary(V&, std::map<unsigned int, unsigned int>&, unsigned int)
-    {
-        // do nothing
-    }
-
-    template<class V>
-    void simulationEndSpatialAggregates(V&)
-    {
-        // do nothing
-    }
-
-    template<class VCardSearchT, class O>
-    void computeSpatialAggregateWith(O& out);
-
-    template<class VCardSearchT, class O>
-    void computeSpatialAggregateWith(O& out, const Data::Area* area, uint numSpace);
-
-    template<class VCardToFindT>
-    const double* retrieveHourlyResultsForCurrentYear() const;
-
-    template<class VCardToFindT>
-    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::Area* area);
-
-    template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
-                                          const Data::ThermalCluster* cluster);
-
-    template<class VCardToFindT>
-    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::AreaLink* link);
 
 private:
     //! Binding constraints variables chained in a static list

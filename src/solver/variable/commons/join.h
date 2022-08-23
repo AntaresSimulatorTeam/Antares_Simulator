@@ -186,21 +186,18 @@ public:
     {
         LeftType::simulationBegin();
         RightType::simulationBegin();
-        BindConstType::simulationBegin(); // gp : need this call ?
     }
 
     void simulationEnd()
     {
         LeftType::simulationEnd();
         RightType::simulationEnd();
-        BindConstType::simulationEnd(); // gp : need this call ?
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         LeftType::yearBegin(year, numSpace);
         RightType::yearBegin(year, numSpace);
-        BindConstType::yearBegin(year, numSpace); // gp : need this call ?
     }
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
@@ -221,14 +218,12 @@ public:
     {
         LeftType::yearEndBuild(state, year, numSpace);
         RightType::yearEndBuild(state, year);
-        BindConstType::yearEndBuild(state, year, numSpace); // gp : need this call ?
     }
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
         LeftType::yearEnd(year, numSpace);
         RightType::yearEnd(year, numSpace);
-        BindConstType::yearEnd(year, numSpace); // gp : need this call ?
     }
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
@@ -236,28 +231,25 @@ public:
     {
         LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
         RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
-        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary); // gp : need this call ?
+        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
     void weekBegin(State& state)
     {
         LeftType::weekBegin(state);
         RightType::weekBegin(state);
-        BindConstType::weekBegin(state);
     }
 
     void weekForEachArea(State& state, unsigned int numSpace)
     {
         LeftType::weekForEachArea(state, numSpace);
         RightType::weekForEachArea(state);
-        BindConstType::weekForEachArea(state, numSpace); // gp : need this call ?
     }
 
     void weekEnd(State& state)
     {
         LeftType::weekEnd(state);
         RightType::weekEnd(state);
-        BindConstType::weekEnd(state); // gp : need this call ?
     }
 
     void hourBegin(unsigned int hourInTheYear)
@@ -325,7 +317,6 @@ public:
         // Building the digest
         LeftType ::beforeYearByYearExport(year, numSpace);
         RightType::beforeYearByYearExport(year, numSpace);
-        BindConstType::beforeYearByYearExport(year, numSpace); // gp : need this call ?
     }
 
     template<class SearchVCardT, class O>
@@ -377,7 +368,7 @@ public:
     {
         LeftType ::provideInformations(infos);
         RightType::provideInformations(infos);
-        BindConstType::provideInformations(infos);
+        BindConstType::provideInformations(infos);  // gp : do we need this ?
     }
 
     template<class VCardToFindT>
