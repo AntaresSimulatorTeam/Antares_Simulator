@@ -231,7 +231,7 @@ template<class NextT>
 template<class PredicateT>
 inline void BindingConstraints<NextT>::RetrieveVariableList(PredicateT& predicate)
 {
-    // NextType::RetrieveVariableList(predicate);
+    NextType::RetrieveVariableList(predicate);
 }
 
 template<class NextT>
@@ -365,6 +365,10 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
         NextType& bc = pBindConstraints[i];
 
         bc.initializeFromStudy(study);
+
+        // Does user want to print output results related to the current binding constraint ?
+        bc.getPrintStatusFromStudy(study);
+
         bc.setBindConstraint(InequalityBCs[i].first);
         bc.setBindConstraintGlobalNumber(InequalityBCs[i].second);
     }
