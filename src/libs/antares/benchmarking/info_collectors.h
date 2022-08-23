@@ -41,6 +41,9 @@ private:
     void maxNbYearsInParallelToFileContent(FileContent& file_content);
     void solverVersionToFileContent(FileContent& file_content);
 
+    void ORToolsUsed(FileContent& file_content);
+    void ORToolsSolver(FileContent& file_content);
+
     // Member data
     const Antares::Data::Study& study_;
 };
