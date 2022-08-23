@@ -4,8 +4,8 @@ Antares Changelog
 v8.3.1 (08/2022)
 --------------------
 ### New features
-- Add execution-info.ini file, containing execution durations and study info #740 and #803 #816
-- OR-Tools : set solver-specific options for XPRESS (#796)
+- Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
+- OR-Tools: set solver-specific options for XPRESS #796
 
 ### Bug fixes
 - Fix missing renewable columns in districts (sets of areas) #802
