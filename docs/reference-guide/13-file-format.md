@@ -39,6 +39,8 @@ enabled thermal clusters = 1
 enabled weekly bc = 0
 links = 2
 max parallel years = 1
+ortools solver = xpress
+ortools used = true
 performed years = 1
 unit commitment = fast
 ```
