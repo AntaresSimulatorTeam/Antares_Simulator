@@ -217,21 +217,6 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchIncludeHurdleCostCsr = button;
     }
-    // Select whether the intermediate result before the application of the curtailment sharing is
-    // to be kept in the results
-    {
-        label = Component::CreateLabel(this, wxT("Save intermediate results"));
-        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        onPopup.bind(this,
-                     &AdequacyPatchOptions::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.adqPatch.saveIntermediateResults, wxT("true")));
-        button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnAdequacyPatchSaveIntermediateResults = button;
-    }
     addLabelAdqPatch(this, s, wxT("Thresholds"));
     // Threshold values
     {
@@ -345,10 +330,6 @@ void AdequacyPatchOptions::refresh()
     std::string buttonType = "specify";
     // Include adequacy patch
     updateButton(pBtnAdequacyPatch, study.parameters.adqPatch.enabled, buttonType);
-    // Save intermediate results for adequacy patch
-    updateButton(pBtnAdequacyPatchSaveIntermediateResults,
-                 study.parameters.adqPatch.saveIntermediateResults,
-                 buttonType);
     // Include hurdle cost for CSR
     updateButton(pBtnAdequacyPatchIncludeHurdleCostCsr,
                  study.parameters.adqPatch.curtailmentSharing.includeHurdleCost,

@@ -26,7 +26,7 @@ namespace Benchmarking
 
 	void FileContent::addDurationItem(const string& name, unsigned int duration, int nbCalls)
 	{
-		addItemToSection("Durations", name + "_duration", duration);
-		addItemToSection("Durations", name + "_nb_calls", nbCalls);
+		addItemToSection("durations_ms", name, duration);
+		addItemToSection("number_of_calls", name, nbCalls);
 	}
 }

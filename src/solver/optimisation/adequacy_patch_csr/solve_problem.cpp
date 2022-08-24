@@ -58,7 +58,7 @@ using namespace Antares;
 std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    std::unique_ptr<PROBLEME_POINT_INTERIEUR> Probleme(new PROBLEME_POINT_INTERIEUR());
+    auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
     int ChoixToleranceParDefautSurLAdmissibilite;
     int ChoixToleranceParDefautSurLaStationnarite;
     int ChoixToleranceParDefautSurLaComplementarite;
@@ -189,7 +189,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    uint weekNb,
                    int yearNb)
 {
-    std::unique_ptr<PROBLEME_POINT_INTERIEUR> Probleme
+    auto Probleme
       = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
