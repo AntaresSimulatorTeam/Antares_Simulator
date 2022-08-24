@@ -130,11 +130,18 @@ void ZipWriter::finalize(bool verbose)
 {
     // Prevent new jobs from being submitted
     pState = ZipState::blocking;
+
+    if (!pZipHandle)
+       return;
+
     if (verbose)
         logs.notice() << "Writing results...";
+
     std::lock_guard<std::mutex> guard(pZipMutex);
     mz_zip_writer_close(pZipHandle);
     mz_zip_writer_delete(&pZipHandle);
+    pZipHandle = nullptr;
+
     if (verbose)
         logs.notice() << "Done";
 }
