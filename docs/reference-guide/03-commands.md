@@ -220,7 +220,6 @@ Auxiliary window [Areas] Opens a window in which a choice can be made regarding 
 - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
 - _NTC between physical areas outside adequacy patch (set to null / local values)_
 - _Price taking order (DENS / Load)_
-- _Save intermediate results (false / true)_
 - _Include hurdle cost in CSR optimization (false / true)_
 - _Thresholds:_
 - _Initiate curtailment sharing rule_
