@@ -28,7 +28,7 @@
 
 #include <math.h>
 
-#include "../variable.h"
+#include "../../variable.h"
 #include "antares/study/constraint/constraint.h"
 
 namespace Antares
