@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -136,7 +136,7 @@ void setNTCbounds(double& Xmax,
 
 double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
-    float threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
     double netPositionInit;
     double densNew;
     double ensInit;
@@ -222,9 +222,9 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     return std::make_pair(netPositionInit, densNew);
 }
 
-void addArray(std::vector<double>& A, double* B, int num)
+void addArray(std::vector<double>& A, double* B)
 {
-    for (uint i = 0; i < num; ++i)
+    for (uint i = 0; i < A.size(); ++i)
         A[i] += B[i];
 }
 

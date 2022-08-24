@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -131,9 +131,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
             // 1. The original RHS of bingding constraint
             SecondMembre[Cnt]
               = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
-            // logs.debug() << Cnt << ": Hourly bc: Existing-RHS[" << Cnt
-            //              << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante
-            //              << ")";
 
             // 2. RHS part 2: flow other than 2<->2
             NbInterco
@@ -150,17 +147,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
                 {
                     ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
                     SecondMembre[Cnt] -= ValueOfFlow * Poids;
-                    // logs.debug()
-                    //   << Cnt << ": Hourly bc: IntercoFlow-RHS[" << Cnt
-                    //   << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante << ")"
-                    //   << ". Interco;" + std::to_string(Interco) << ". Between:["
-                    //   << ProblemeHebdo
-                    //        ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
-                    //   << "]-["
-                    //   << ProblemeHebdo
-                    //        ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
-                    //   << "]"
-                    //   << ". ValueOfFlow: " << ValueOfFlow << ". Poids: " << Poids;
                 }
             }
 
@@ -190,11 +176,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
                                ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
                 SecondMembre[Cnt] -= ValueOfVar * Poids;
-                // logs.debug() << Cnt << ": Hourly bc: ThermalCluster-RHS[" << Cnt
-                //              << "] = " << SecondMembre[Cnt] << " (CntCouplante = " << CntCouplante
-                //              << ")"
-                //              << ". Area:" << Area << ", Palier:" << Palier << ", Poids" << Poids
-                //              << ", ValueOfVar:" << ValueOfVar;
             }
             if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
             {
