@@ -90,8 +90,6 @@ template<class NextT>
 template<class I>
 inline void BindingConstraints<NextT>::provideInformations(I& infos)
 {
-    // gp : adapt or remove ?
-    /*
     // Begining of the node
     if (VCardType::nodeDepthForGUI)
     {
@@ -108,7 +106,6 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
         // Next variable in the list
         NextType::template provideInformations<I>(infos);
     }
-    */
 }
 
 template<class NextT>
@@ -168,32 +165,6 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 }
 
 template<class NextT>
-void BindingConstraints<NextT>::simulationBegin()
-{
-    // As output variables related to binding constraints do not overload
-    // IVariable's simulationBegin(), which does nothing, the current function do nothing.
-
-    for (uint i = 0; i != pBCcount; ++i)
-    {
-        NextType& bc = pBindConstraints[i];
-        bc.simulationBegin();
-    }
-}
-
-template<class NextT>
-void BindingConstraints<NextT>::simulationEnd()
-{
-    // As output variables related to binding constraints do not overload
-    // IVariable's simulationBegin(), which does nothing, the current function do nothing.
-
-    for (uint i = 0; i != pBCcount; ++i)
-    {
-        NextType& bc = pBindConstraints[i];
-        bc.simulationEnd();
-    }
-}
-
-template<class NextT>
 void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                                                unsigned int nbYearsForCurrentSummary)
 {
@@ -202,6 +173,33 @@ void BindingConstraints<NextT>::computeSummary(std::map<unsigned int, unsigned i
         // Broadcast to all constraints
         pBindConstraints[i].computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::yearBegin(uint year, uint numSpace)
+{
+    // Broadcast to all binding constraints
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].yearBegin(year, numSpace);
+    }
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::yearEnd(uint year, uint numSpace)
+{
+    // Broadcast to all binding constraints
+    for (uint i = 0; i != pBCcount; ++i)
+    {
+        pBindConstraints[i].yearEnd(year, numSpace);
+    }
+}
+
+template<class NextT>
+void BindingConstraints<NextT>::weekBegin(State& state)
+{
+    for (uint i = 0; i != pBCcount; ++i)
+        pBindConstraints[i].weekBegin(state);
 }
 
 template<class NextT>
@@ -217,7 +215,6 @@ void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
     for (uint i = 0; i != pBCcount; ++i)
         pBindConstraints[i].hourEnd(state, hourInTheYear);
 }
-
 
 } // namespace Variable
 } // namespace Solver

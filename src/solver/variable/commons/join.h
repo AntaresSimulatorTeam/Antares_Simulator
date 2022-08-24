@@ -198,6 +198,7 @@ public:
     {
         LeftType::yearBegin(year, numSpace);
         RightType::yearBegin(year, numSpace);
+        BindConstType::yearBegin(year, numSpace);
     }
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
@@ -224,6 +225,7 @@ public:
     {
         LeftType::yearEnd(year, numSpace);
         RightType::yearEnd(year, numSpace);
+        BindConstType::yearEnd(year, numSpace);
     }
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
@@ -238,6 +240,7 @@ public:
     {
         LeftType::weekBegin(state);
         RightType::weekBegin(state);
+        BindConstType::weekBegin(state);
     }
 
     void weekForEachArea(State& state, unsigned int numSpace)

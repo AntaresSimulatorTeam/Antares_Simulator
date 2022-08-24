@@ -128,11 +128,13 @@ public:
 
     void initializeFromStudy(Data::Study& study);
 
-    void simulationBegin();
-    void simulationEnd();
-
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
+
+    void yearBegin(uint year, uint numSpace);
+    void yearEnd(uint year, uint numSpace);
+
+    void weekBegin(State& state);
 
     void hourBegin(uint hourInTheYear);
     void hourEnd(State& state, uint hourInTheYear);

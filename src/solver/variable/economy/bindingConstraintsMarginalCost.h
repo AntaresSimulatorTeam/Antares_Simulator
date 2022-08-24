@@ -49,7 +49,7 @@ struct VCardBindingConstMarginCost
     //! Unit
     static const char* Unit()
     {
-        return "€/MW";
+        return "Euro";
     }
 
     //! The short description of the variable
@@ -276,12 +276,6 @@ public:
 
         // Next variable
         NextType::hourBegin(hourInTheYear);
-    }
-
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
