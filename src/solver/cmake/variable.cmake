@@ -204,8 +204,8 @@ add_library(libantares-solver-variable-info
 		variable/economy/area.memory-estimation.cpp
 		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
-		variable/economy/bindingConstraints/bc.memory-estimation.cpp
-		variable/adequacy/bindingConstraints/bc.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/surveyresults.h
 		variable/surveyresults/surveyresults.h
 		variable/surveyresults/data.h
@@ -222,8 +222,8 @@ if(BUILD_SWAP)
             variable/economy/area.memory-estimation.cpp
             variable/adequacy-draft/area.memory-estimation.cpp
             variable/adequacy/area.memory-estimation.cpp
-            variable/economy/bindingConstraints/bc.memory-estimation.cpp
-            variable/adequacy/bindingConstraints/bc.memory-estimation.cpp
+            variable/economy/bc.memory-estimation.cpp
+            variable/adequacy/bc.memory-estimation.cpp
             variable/surveyresults.h
             variable/surveyresults/surveyresults.h
             variable/surveyresults/data.h
