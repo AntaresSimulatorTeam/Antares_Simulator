@@ -116,8 +116,7 @@ BindingConstraints<NextT>::~BindingConstraints()
         delete[] pBindConstraints;
 }
 
-inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBindingConstraints(
-  Data::Study& study)
+inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBindingConstraints(const Data::Study& study)
 {
     std::vector<std::pair<Data::BindingConstraintRTI*, uint>> bindConstListToReturn;
     Data::BindingConstraintRTI* allBindConst = study.runtime->bindingConstraint;
@@ -136,7 +135,7 @@ inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBi
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    // This actually a vector of pairs where :
+    // The following instruction gives a vector of pairs where :
     //  - first element of a pair is a pointer to a inequality binding constraint
     //  - second element of a pair is the number of the previous BC in the runtime list of BCs.
     std::vector<std::pair<Data::BindingConstraintRTI*, uint>> InequalityBCs

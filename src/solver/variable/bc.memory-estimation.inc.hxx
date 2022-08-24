@@ -48,10 +48,25 @@ uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    // gp : to be done
+    auto InequalityBindConstraints = getInequalityBindingConstraints(u.study);
+    for (auto bc : InequalityBindConstraints)
+    {
+        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+        u.overheadDiskSpaceForSingleBindConstraint();
 
-    // next
-    NextType::EstimateMemoryUsage(u);
+        // year-by-year
+        if (!u.gatheringInformationsForInput)
+        {
+            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            {
+                for (unsigned int i = 0; i != u.years; ++i)
+                    u.overheadDiskSpaceForSingleBindConstraint();
+            }
+        }
+
+        // next
+        NextType::EstimateMemoryUsage(u);
+    }
 }
 
 } // namespace Variable
