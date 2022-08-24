@@ -84,9 +84,7 @@ ZipWriter::~ZipWriter()
 void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
     if (pState != ZipState::can_receive_data)
-    {
         return;
-    }
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     pQueueService->add(
@@ -97,9 +95,7 @@ void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
     if (pState != ZipState::can_receive_data)
-    {
         return;
-    }
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     pQueueService->add(
@@ -110,9 +106,7 @@ void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
 void ZipWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
 {
     if (pState != ZipState::can_receive_data)
-    {
         return;
-    }
 
     EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     std::string buffer;
@@ -132,7 +126,7 @@ void ZipWriter::finalize(bool verbose)
     pState = ZipState::blocking;
 
     if (!pZipHandle)
-       return;
+        return;
 
     if (verbose)
         logs.notice() << "Writing results...";
