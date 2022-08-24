@@ -4,9 +4,8 @@
 
 using namespace Antares;
 
-void signalCtrl_term(int)
+static void finalizeWrite()
 {
-    logs.notice() << "[signal] received signal SIGTERM. Exiting...";
     auto study = Data::Study::Current::Get();
     if (study)
     {
@@ -15,21 +14,26 @@ void signalCtrl_term(int)
         {
             writer->finalize(true);
         }
+        else
+        {
+            logs.warning() << "Could not finalize write: invalid writer";
+        }
+    }
+    else
+    {
+        logs.warning() << "Could not finalize write: invalid study";
     }
     exit(EXIT_SUCCESS);
+}
+
+void signalCtrl_term(int)
+{
+    logs.notice() << "[signal] received signal SIGTERM. Exiting...";
+    finalizeWrite();
 }
 
 void signalCtrl_int(int)
 {
     logs.notice() << "[signal] received signal SIGINT. Exiting...";
-    auto study = Data::Study::Current::Get();
-    if (study)
-    {
-        auto writer = study->getWriter();
-        if (writer)
-        {
-            writer->finalize(true);
-        }
-    }
-    exit(EXIT_SUCCESS);
+    finalizeWrite();
 }
