@@ -79,9 +79,6 @@
 // By RES plant
 #include "productionByRenewablePlant.h"
 
-// Output variables associated to binding constraints
-#include "bindingConstraintsMarginalCost.h"
-
 // Output variables associated to links
 #include "links/flowLinear.h"
 #include "links/flowLinearAbs.h"
@@ -92,6 +89,9 @@
 #include "links/congestionFeeAbs.h"
 #include "links/marginalCost.h"
 #include "links/congestionProbability.h"
+
+// Output variables associated to binding constraints
+#include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
 namespace Antares
 {

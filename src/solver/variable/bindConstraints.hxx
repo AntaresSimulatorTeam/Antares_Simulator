@@ -312,35 +312,29 @@ BindingConstraints<NextT>::~BindingConstraints()
         delete[] pBindConstraints;
 }
 
-inline std::vector<std::pair<Data::BindingConstraintRTI*, uint>> getInequalityBindingConstraints(
-  Data::Study& study)
+inline std::vector<uint> getInequalityBindConstraintGlobalNumbers(Data::Study& study)
 {
-    std::vector<std::pair<Data::BindingConstraintRTI*, uint>> bindConstListToReturn;
+    std::vector<uint> bindConstGlobalNumbers;
     Data::BindingConstraintRTI* allBindConst = study.runtime->bindingConstraint;
     for (uint k = 0; k < study.runtime->bindingConstraintCount; k++)
     {
-        // We pick inequality binding constraints only.
+        // We pick only inequality binding constraints.
         if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
         {
-            std::pair<Data::BindingConstraintRTI*, uint> bc_pair(&(allBindConst[k]), k);
-            bindConstListToReturn.push_back(bc_pair);
+            bindConstGlobalNumbers.push_back(k);
         }
     }
-    return bindConstListToReturn;
+    return bindConstGlobalNumbers;
 }
 
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    // This actually a vector of pairs where :
-    //  - first element of a pair is a pointer to a inequality binding constraint
-    //  - second element of a pair is the number of the previous BC in the runtime list of BCs.
-    std::vector<std::pair<Data::BindingConstraintRTI*, uint>> InequalityBCs
-      = getInequalityBindingConstraints(study);
+    std::vector<uint> InequalityBCnumbers = getInequalityBindConstraintGlobalNumbers(study);
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
-    pBCcount = (uint)InequalityBCs.size();
+    pBCcount = (uint)InequalityBCnumbers.size();
 
     // Reserving the memory
     if (pBCcount > 0)
@@ -350,9 +344,8 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
     {
         NextType& bc = pBindConstraints[i];
 
+        bc.setBindConstraintGlobalNumber(InequalityBCnumbers[i]);
         bc.initializeFromStudy(study);
-        bc.setBindConstraint(InequalityBCs[i].first);
-        bc.setBindConstraintGlobalNumber(InequalityBCs[i].second);
     }
 
     // For each area...

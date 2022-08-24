@@ -146,7 +146,6 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/lolp.h
 		variable/economy/avail-dispatchable-generation.h
 		variable/economy/dispatchable-generation-margin.h
-		variable/economy/bindingConstraintsMarginalCost.h
 		
 		# Links
 		variable/economy/links/flowLinear.h
@@ -158,6 +157,9 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links/congestionFeeAbs.h
 		variable/economy/links/marginalCost.h
 		variable/economy/links/congestionProbability.h
+		
+		# Binding constraints
+		variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
 		)
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 
@@ -202,8 +204,8 @@ add_library(libantares-solver-variable-info
 		variable/economy/area.memory-estimation.cpp
 		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
-		variable/economy/bc.memory-estimation.cpp
-		variable/adequacy/bc.memory-estimation.cpp
+		variable/economy/bindingConstraints/bc.memory-estimation.cpp
+		variable/adequacy/bindingConstraints/bc.memory-estimation.cpp
 		variable/surveyresults.h
 		variable/surveyresults/surveyresults.h
 		variable/surveyresults/data.h
@@ -220,8 +222,8 @@ if(BUILD_SWAP)
             variable/economy/area.memory-estimation.cpp
             variable/adequacy-draft/area.memory-estimation.cpp
             variable/adequacy/area.memory-estimation.cpp
-            variable/economy/bc.memory-estimation.cpp
-            variable/adequacy/bc.memory-estimation.cpp
+            variable/economy/bindingConstraints/bc.memory-estimation.cpp
+            variable/adequacy/bindingConstraints/bc.memory-estimation.cpp
             variable/surveyresults.h
             variable/surveyresults/surveyresults.h
             variable/surveyresults/data.h

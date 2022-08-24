@@ -44,12 +44,12 @@ struct VCardBindingConstMarginCost
     //! Caption
     static const char* Caption()
     {
-        return "MARG. COST by BC";
+        return "BC. MARG. COST";
     }
     //! Unit
     static const char* Unit()
     {
-        return "€/MW";
+        return "Euro";
     }
 
     //! The short description of the variable
@@ -83,7 +83,7 @@ struct VCardBindingConstMarginCost
         //! Intermediate values
         hasIntermediateValues = 1,
         //! Can this variable be non applicable (0 : no, 1 : yes)
-        isPossiblyNonApplicable = 0,
+        isPossiblyNonApplicable = 1,
     };
 
     typedef IntermediateValues IntermediateValuesBaseType;
@@ -124,7 +124,6 @@ public:
     template<int CDataLevel, int CFile>
     struct Statistics
     {
-        // gp : correct count if needed
         enum
         {
             count
@@ -134,14 +133,6 @@ public:
                  : NextType::template Statistics<CDataLevel, CFile>::count),
         };
     };
-
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)
-    {
-        /*
-            gp : estimate memory
-        */
-        NextType::EstimateMemoryUsage(u);
-    }
 
 public:
     BindingConstMarginCost() : pValuesForTheCurrentYear(nullptr)
@@ -165,6 +156,9 @@ public:
         for (unsigned int numSpace = 0; numSpace < pNbYearsParallel; numSpace++)
             pValuesForTheCurrentYear[numSpace].initializeFromStudy(study);
 
+        // Set the associated binding constraint
+        associatedBC_ = &(study.runtime->bindingConstraint[bindConstraintGlobalNumber_]);
+
         NextType::initializeFromStudy(study);
     }
 
@@ -172,15 +166,6 @@ public:
     static void InitializeResultsFromStudy(R& results, Data::Study& study)
     {
         VariableAccessorType::InitializeAndReset(results, study);
-    }
-
-    void setBindConstraint(Data::BindingConstraintRTI* bc)
-    {
-        associatedBC_ = bc;
-
-        // In case the current class is followed by another class related to a binding
-        // constraint in the higher level static list, we'll have to add :
-        //      NextType::setBindConstraint(bc);
     }
 
     void setBindConstraintGlobalNumber(uint bcNumber)
@@ -287,12 +272,6 @@ public:
         NextType::hourBegin(hourInTheYear);
     }
 
-    void hourForEachArea(State& state, unsigned int numSpace)
-    {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
         NextType::hourEnd(state, hourInTheYear);
@@ -311,8 +290,11 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
+        if (!(precision & associatedBC_->filterYearByYear_))
+            return;
+        
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
+        results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
         if (AncestorType::isPrinted[0])
         {
@@ -323,19 +305,55 @@ public:
         }
     }
 
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        // Building syntheses results
+        // ------------------------------
+        if (!(precision & associatedBC_->filterSynthesis_))
+            return;
+
+        // And only if we match the current data level _and_ precision level
+        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
+            && (precision & VCardType::precision))
+        {
+            results.isPrinted = AncestorType::isPrinted;
+            results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
+            results.variableCaption = getBindConstraintCaption();
+
+            VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
+              results, AncestorType::pResults, dataLevel, fileLevel, precision);
+        }
+    }
+
 private:
+    // Private methods
+    // ---------------
     std::string getBindConstraintCaption() const
     {
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
+    bool isCurrentOutputNonApplicable(int precision) const
+    {
+        // The current marginal prices to print becomes non applicable if they have a precision
+        // (hour, day, week, ...) smaller than the associated binding constraint granularity.
+        // Ex : if the BC is daily and we try to print hourly associated marginal prices,
+        //      then these prices are set to N/A
+        return precision < (1 << (associatedBC_->type - 1));
+    }
+
+    // Private data mambers
+    // ----------------------
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     State* state_ = nullptr;
     uint yearMemorySpace_ = 0;
-    uint bindConstraintGlobalNumber_ = 0;
+    uint bindConstraintGlobalNumber_ = -1;
 
 }; // class BindingConstMarginCost
 
