@@ -604,11 +604,6 @@ enum AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-//! A default threshold value for initiate curtailment sharing rule
-const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
-//! A default threshold value for display local matching rule violations
-const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
-
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares

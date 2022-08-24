@@ -3,15 +3,27 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.3.0
 ### Input
-In file **settings/generaldata.ini**, add section `adequacy patch`, with keys
+In file **settings/generaldata.ini**, add section `adequacy patch`, with properties
 
 * `include-adq-patch` [bool]. Default value = `false`
 * `set-to-null-ntc-from-physical-out-to-physical-in-for-first-step` [bool]. Default value = `true`
 * `set-to-null-ntc-between-physical-out-for-first-step` [bool]. Default value = `true`
 
-In existing section `optimization`, add key `include-split-exported-mps` [bool]. Default value = `false`
+In existing section `optimization`, add property `include-split-exported-mps` [bool]. Default value = `false`
 
 Add variables `DENS` and `Profit by plant`, which may be used for thematic trimming, see file **settings/generaldata.ini**, section `variables selection`.
+
+For each area, add a new file **input/areas/&lt;area&gt;/adequacy_patch.ini** containing a single section `adequacy-patch`. This section contains a single property `adequacy-patch-mode`, that can take values
+
+* `outside`
+* `inside`
+* `virtual`
+
+Example
+```
+[adequacy-patch]
+adequacy-patch-mode = outside
+```
 
 ### Output
 * If `include-adq-patch` is set to `true`, add column `DENS` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)

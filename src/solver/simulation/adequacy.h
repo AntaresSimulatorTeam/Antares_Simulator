@@ -28,6 +28,7 @@
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
 #include <yuni/yuni.h>
+#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/adequacy/all.h"
 #include "../variable/economy/all.h"
@@ -64,6 +65,8 @@ public:
     ~Adequacy();
     //@}
 
+    Benchmarking::OptimizationInfo getOptimizationInfo() const;
+
 public:
     //! Current study
     Data::Study& study;
@@ -98,7 +101,6 @@ protected:
 private:
     bool simplexIsRequired(uint hourInTheYear, uint numSpace) const;
 
-private:
     uint pNbWeeks;
     uint pStartTime;
     uint pNbMaxPerformedYearsInParallel;

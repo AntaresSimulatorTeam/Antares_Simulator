@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 #include <memory>
+#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
@@ -46,7 +47,7 @@ class EconomyWeeklyOptimization
 {
 public:
     using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
-    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) = 0;
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) = 0;
     void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
     static Ptr create(bool adqPatchEnabled);
 
@@ -58,8 +59,9 @@ class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     AdequacyPatchOptimization();
-    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint w) override;
-
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) override;
+    void solveCSR(Variable::State& state, uint numSpace, uint week);
+private:
     vector<double> calculateENSoverAllAreasForEachHour(uint numSpace);
     std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace);
     std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
@@ -69,7 +71,7 @@ class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     NoAdequacyPatchOptimization();
-    void solve(Variable::State&, int, uint numSpace, uint w) override;
+    void solve(Variable::State&, int, uint numSpace, uint week) override;
 };
 
 class Economy
@@ -93,6 +95,8 @@ public:
     //! Destructor
     ~Economy();
     //@}
+
+    Benchmarking::OptimizationInfo getOptimizationInfo() const;
 
 public:
     //! Current study

@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -37,6 +37,10 @@ namespace Data
 {
 namespace AdequacyPatch
 {
+//! A default threshold value for initiate curtailment sharing rule
+const double defaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
+//! A default threshold value for display local matching rule violations
+const double defaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
@@ -55,15 +59,10 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
  *
  * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
  *
- * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
- * (type 1) towards nodes inside adq patch (type 2).
- *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch);
+ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType);
 
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -112,10 +111,9 @@ double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint week
 ** **
 ** ** \param A A vector
 ** ** \param B An array
-** ** \param num An integer
 ** ** \return
 ** */
-void addArray(std::vector<double>& A, double* B, int num);
+void addArray(std::vector<double>& A, double* B);
 
 } // end namespace Antares
 } // end namespace Data

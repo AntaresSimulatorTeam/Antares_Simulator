@@ -505,8 +505,6 @@ struct AdequacyPatchParameters
     float ThresholdDisplayLocalMatchingRuleViolations;
 };
 
-class HOURLY_CSR_PROBLEM;
-
 struct PROBLEME_HEBDO
 {
     /* Business problem */

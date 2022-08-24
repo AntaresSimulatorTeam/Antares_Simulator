@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -55,9 +55,10 @@ extern "C"
 
 using namespace Antares;
 
-void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                             PROBLEME_POINT_INTERIEUR& Probleme)
+std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
+    std::unique_ptr<PROBLEME_POINT_INTERIEUR> Probleme(new PROBLEME_POINT_INTERIEUR());
     int ChoixToleranceParDefautSurLAdmissibilite;
     int ChoixToleranceParDefautSurLaStationnarite;
     int ChoixToleranceParDefautSurLaComplementarite;
@@ -66,40 +67,42 @@ void setInteriorPointProblem(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
     ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
-    Probleme.NombreMaxDIterations = -1;
-    Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
-    Probleme.CoutLineaire = ProblemeAResoudre->CoutLineaire;
-    Probleme.X = ProblemeAResoudre->X;
-    Probleme.Xmin = ProblemeAResoudre->Xmin;
-    Probleme.Xmax = ProblemeAResoudre->Xmax;
-    Probleme.NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme.TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme->NombreMaxDIterations = -1;
+    Probleme->CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
+    Probleme->CoutLineaire = ProblemeAResoudre->CoutLineaire;
+    Probleme->X = ProblemeAResoudre->X;
+    Probleme->Xmin = ProblemeAResoudre->Xmin;
+    Probleme->Xmax = ProblemeAResoudre->Xmax;
+    Probleme->NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
+    Probleme->TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
 
-    Probleme.VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
+    Probleme->VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
 
-    Probleme.NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme.IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme.NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    Probleme.IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
-    Probleme.CoefficientsDeLaMatriceDesContraintes
+    Probleme->NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
+    Probleme->IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
+    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
+    Probleme->IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme->CoefficientsDeLaMatriceDesContraintes
       = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme.Sens = ProblemeAResoudre->Sens;
-    Probleme.SecondMembre = ProblemeAResoudre->SecondMembre;
+    Probleme->Sens = ProblemeAResoudre->Sens;
+    Probleme->SecondMembre = ProblemeAResoudre->SecondMembre;
 
-    Probleme.AffichageDesTraces = NON_PI;
+    Probleme->AffichageDesTraces = NON_PI;
 
-    Probleme.UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
+    Probleme->UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
 
-    Probleme.UtiliserLaToleranceDeStationnariteParDefaut
+    Probleme->UtiliserLaToleranceDeStationnariteParDefaut
       = ChoixToleranceParDefautSurLaStationnarite;
 
-    Probleme.UtiliserLaToleranceDeComplementariteParDefaut
+    Probleme->UtiliserLaToleranceDeComplementariteParDefaut
       = ChoixToleranceParDefautSurLaComplementarite;
 
-    Probleme.CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
 
-    Probleme.CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
-    Probleme.CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+    Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
+    Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+
+    return Probleme;
 }
 
 void setToZeroIfBelowThreshold(double* pt, int Var, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
@@ -128,7 +131,7 @@ void storeInteriorPointResults(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
 }
 
-void CSR_DEBUG_BLAH(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void CSR_DEBUG_HANDLE(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     int Var;
 
@@ -177,7 +180,7 @@ void handleInteriorPointError(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
       << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 
 #ifndef NDEBUG
-    CSR_DEBUG_BLAH(ProblemeAResoudre);
+    CSR_DEBUG_HANDLE(ProblemeAResoudre);
 #endif
 }
 
@@ -186,11 +189,10 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    uint weekNb,
                    int yearNb)
 {
-    PROBLEME_POINT_INTERIEUR Probleme;
-    setInteriorPointProblem(ProblemeAResoudre, Probleme);
-    PI_Quamin(&Probleme); // resolution
-    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-    if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
+    std::unique_ptr<PROBLEME_POINT_INTERIEUR> Probleme
+      = buildInteriorPointProblem(ProblemeAResoudre);
+    PI_Quamin(Probleme.get()); // resolution
+    if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
         return true;
