@@ -54,6 +54,8 @@ public:
 
     void writeExectutionInfo();
 
+    void installSignalHandlers() const;
+
 private:
     /*!
     ** \brief Reset the log filename and open it

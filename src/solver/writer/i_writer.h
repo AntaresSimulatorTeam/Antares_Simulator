@@ -18,6 +18,7 @@ public:
     virtual void addJob(const std::string& entryPath, std::string& entryContent) = 0;
     virtual void addJob(const std::string& entryPath, Antares::IniFile& entryContent) = 0;
     virtual bool needsTheJobQueue() const = 0;
+    virtual void finalize(bool verbose) = 0;
 };
 } // namespace Solver
 } // namespace Antares

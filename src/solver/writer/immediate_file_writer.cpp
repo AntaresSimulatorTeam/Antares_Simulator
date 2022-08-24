@@ -39,6 +39,8 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 {
 }
 
+ImmediateFileResultWriter::~ImmediateFileResultWriter() = default;
+
 static Yuni::String prepareDirectoryHierarchy(const YString& root, const std::string& entryPath)
 {
     Yuni::String output;
@@ -73,6 +75,11 @@ void ImmediateFileResultWriter::addJob(const std::string& entryPath, Antares::In
 bool ImmediateFileResultWriter::needsTheJobQueue() const
 {
     return false;
+}
+
+void ImmediateFileResultWriter::finalize(bool /*verbose*/)
+{
+    // Do nothing
 }
 } // namespace Solver
 } // namespace Antares

@@ -111,6 +111,9 @@ int main(int argc, char** argv)
     argv = AntaresGetUTF8Arguments(argc, argv);
 
     Antares::Solver::Application application;
+
+    application.installSignalHandlers();
+
     try
     {
         application.prepare(argc, argv);

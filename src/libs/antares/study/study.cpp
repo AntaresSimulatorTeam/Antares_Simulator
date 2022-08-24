@@ -148,12 +148,12 @@ void Study::clear()
 
 void Study::setWriter(Solver::IResultWriter::Ptr writer)
 {
-  pResultWriter = writer;
+    pResultWriter = writer;
 }
 
 Solver::IResultWriter::Ptr Study::getWriter() const
 {
-  return pResultWriter;
+    return pResultWriter;
 }
 
 void Study::createAsNew()
@@ -804,7 +804,6 @@ void Study::saveMiscFilesIntoOutput()
   // copying the generaldata.ini
   // Input : absolute path
   path.clear() << folderSettings << SEP << "generaldata.ini";
-  logs.notice() << path;
   std::string generaldata_buffer;
   Yuni::IO::File::LoadFromFile(generaldata_buffer, path);
 
