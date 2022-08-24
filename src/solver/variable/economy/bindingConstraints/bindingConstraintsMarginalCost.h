@@ -219,17 +219,14 @@ public:
 
     void weekBegin(State& state)
     {
-        // Storing a reference to the state, useful in method called later.
-        state_ = &state;
-
         // For daily binding constraints, getting daily marginal price
         if (associatedBC_->type == Data::BindingConstraint::typeDaily)
         {
-            int dayInTheYear = state_->weekInTheYear * 7;
+            int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
                 pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear]
-                  -= state_->problemeHebdo
+                  -= state.problemeHebdo
                        ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                        .variablesDuales[dayInTheWeek];
 
@@ -240,9 +237,9 @@ public:
         // For weekly binding constraints, getting weekly marginal price
         if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
         {
-            uint weekInTheYear = state_->weekInTheYear;
+            uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
-              = -state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+              = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                    .variablesDuales[0];
 
             pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
@@ -250,7 +247,7 @@ public:
             // Even if not printed for weekly BC, we need daily values as : (weekly values) / 7
             double dailyValue = weeklyValue / 7;
 
-            int dayInTheYear = state_->weekInTheYear * 7;
+            int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
                 pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = dailyValue;
@@ -261,19 +258,19 @@ public:
 
     void hourBegin(unsigned int hourInTheYear)
     {
-        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
-        {
-            pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
-              -= state_->problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                   .variablesDuales[state_->hourInTheWeek];
-        }
-
         // Next variable
         NextType::hourBegin(hourInTheYear);
     }
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
+        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+        {
+            pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
+              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                   .variablesDuales[state.hourInTheWeek];
+        }
+
         NextType::hourEnd(state, hourInTheYear);
     }
 
@@ -290,11 +287,9 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
-        if (!(precision & associatedBC_->filterYearByYear_))
-            return;
-        
+       
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
+        results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
 
         if (AncestorType::isPrinted[0])
         {
@@ -305,53 +300,16 @@ public:
         }
     }
 
-    void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
-    {
-        // Building syntheses results
-        // ------------------------------
-        if (!(precision & associatedBC_->filterSynthesis_))
-            return;
-
-        // And only if we match the current data level _and_ precision level
-        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
-            && (precision & VCardType::precision))
-        {
-            results.isPrinted = AncestorType::isPrinted;
-            results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
-            results.variableCaption = getBindConstraintCaption();
-
-            VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
-              results, AncestorType::pResults, dataLevel, fileLevel, precision);
-        }
-    }
-
 private:
-    // Private methods
-    // ---------------
     std::string getBindConstraintCaption() const
     {
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
-    bool isCurrentOutputNonApplicable(int precision) const
-    {
-        // The current marginal prices to print becomes non applicable if they have a precision
-        // (hour, day, week, ...) smaller than the associated binding constraint granularity.
-        // Ex : if the BC is daily and we try to print hourly associated marginal prices,
-        //      then these prices are set to N/A
-        return precision < (1 << (associatedBC_->type - 1));
-    }
-
-    // Private data mambers
-    // ----------------------
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
-    State* state_ = nullptr;
     uint yearMemorySpace_ = 0;
     uint bindConstraintGlobalNumber_ = -1;
 

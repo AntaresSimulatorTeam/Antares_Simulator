@@ -65,9 +65,6 @@
 #include "../economy/lolp.h"
 #include "../economy/max-mrg.h"
 
-// Output variables associated to binding constraints
-#include "../economy/bindingConstraintsMarginalCost.h"
-
 #include "../economy/avail-dispatchable-generation.h"
 #include "../economy/dispatchable-generation-margin.h"
 
@@ -79,6 +76,9 @@
 #include "../economy/links/congestionFeeAbs.h"
 #include "../economy/links/marginalCost.h"
 #include "../economy/links/congestionProbability.h"
+
+// Output variables associated to binding constraints
+#include "../economy/bindingConstraints/bindingConstraintsMarginalCost.h"
 
 // By thermal plant
 #include "../economy/profitByPlant.h"
