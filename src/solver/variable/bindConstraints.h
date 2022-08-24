@@ -121,7 +121,12 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    BindingConstraints();
+    BindingConstraints() = default;
+
+    BindingConstraints(BindingConstraints& other) = delete;
+    BindingConstraints(BindingConstraints&& other) = delete;
+    BindingConstraints const& operator=(BindingConstraints&& other) = delete;
+
     //! Destructor
     ~BindingConstraints();
     //@}

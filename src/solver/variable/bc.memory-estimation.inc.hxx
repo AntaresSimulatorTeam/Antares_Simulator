@@ -36,7 +36,7 @@ namespace Variable
 template<>
 uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 {
-    Yuni::uint64 result = 0;
+    uint64 result = 0;
     // gp : to be completed
     // gp : Take example on the body of :
     // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const

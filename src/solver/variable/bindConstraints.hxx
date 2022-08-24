@@ -37,12 +37,6 @@ namespace Solver
 namespace Variable
 {
 template<class NextT>
-inline BindingConstraints<NextT>::BindingConstraints()
-{
-    // Do nothing
-}
-
-template<class NextT>
 inline void BindingConstraints<NextT>::initializeFromArea(Data::Study*, Data::Area*)
 {
     // Nothing to do here
