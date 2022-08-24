@@ -72,8 +72,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
         problem.adqPatchParams->SetNTCOutsideToOutsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
-        problem.adqPatchParams->SaveIntermediateResults
-          = parameters.adqPatch.saveIntermediateResults;
         problem.adqPatchParams->PriceTakingOrder
           = parameters.adqPatch.curtailmentSharing.priceTakingOrder;
         problem.adqPatchParams->IncludeHurdleCostCsr

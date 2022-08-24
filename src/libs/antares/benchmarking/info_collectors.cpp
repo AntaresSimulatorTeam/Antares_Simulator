@@ -1,7 +1,8 @@
 #include <numeric>
 #include "info_collectors.h"
 #include <antares/config.h>
-#include "antares/study/area/area.h"
+#include <antares/Enum.hpp>
+#include <antares/study/area.h>
 
 using namespace Antares::Data;
 
@@ -19,6 +20,8 @@ namespace Benchmarking
 		unitCommitmentModeToFileContent(file_content);
 		maxNbYearsInParallelToFileContent(file_content);
         solverVersionToFileContent(file_content);
+        ORToolsUsed(file_content);
+        ORToolsSolver(file_content);
 	}
 
 	void StudyInfoCollector::areasCountToFileContent(FileContent& file_content)
@@ -115,6 +118,23 @@ namespace Benchmarking
 
 		file_content.addItemToSection("study", "antares version", version);
 	}
+
+    void StudyInfoCollector::ORToolsUsed(FileContent& file_content)
+    {
+        const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+        file_content.addItemToSection("study", "ortools used", ortoolsUsed ? "true" : "false");
+    }
+
+    void StudyInfoCollector::ORToolsSolver(FileContent& file_content)
+    {
+        const bool& ortoolsUsed = study_.parameters.ortoolsUsed;
+        std::string ortoolsSolver = "none";
+        if (ortoolsUsed)
+        {
+            ortoolsSolver = Enum::toString<OrtoolsSolver>(study_.parameters.ortoolsEnumUsed);
+        }
+        file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
+    }
 
 	// Collecting data optimization problem
 	// -------------------------------------

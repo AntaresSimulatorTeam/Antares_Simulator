@@ -199,50 +199,54 @@ typedef // Prices
                           Common::SpatialAggregate<
                             DispatchableGeneration,
                             Common::SpatialAggregate<
-                              HydroStorage,
+                              RenewableGeneration,
                               Common::SpatialAggregate<
-                                Pumping,
+                                HydroStorage,
                                 Common::SpatialAggregate<
-                                  ReservoirLevel,
+                                  Pumping,
                                   Common::SpatialAggregate<
-                                    Inflows,
+                                    ReservoirLevel,
                                     Common::SpatialAggregate<
-                                      Overflows,
+                                      Inflows,
                                       Common::SpatialAggregate<
-                                        WaterValue,
+                                        Overflows,
                                         Common::SpatialAggregate<
-                                          HydroCost,
+                                          WaterValue,
                                           Common::SpatialAggregate<
-                                            UnsupliedEnergy,
+                                            HydroCost,
                                             Common::SpatialAggregate<
-                                              DomesticUnsuppliedEnergy,
-                                            Common::SpatialAggregate<
-                                              LMRViolations,
+                                              UnsupliedEnergy,
                                               Common::SpatialAggregate<
-                                                SpilledEnergy,
-                                                // LOLD
+                                                DomesticUnsuppliedEnergy,
                                                 Common::SpatialAggregate<
-                                                  LOLD,
+                                                  LMRViolations,
                                                   Common::SpatialAggregate<
-                                                    LOLP,
-
+                                                    SpilledEnergy,
+                                                    // LOLD
                                                     Common::SpatialAggregate<
-                                                      AvailableDispatchGen,
+                                                      LOLD,
                                                       Common::SpatialAggregate<
-                                                        DispatchableGenMargin,
+                                                        LOLP,
+
                                                         Common::SpatialAggregate<
-                                                          Marge,
-
-                                                          // Detail Prices
+                                                          AvailableDispatchGen,
                                                           Common::SpatialAggregate<
-                                                            NonProportionalCost, // MBO 13/05/2014 -
-                                                                                 // refs: #21
-
-                                                            // Number Of Dispatched Units
+                                                            DispatchableGenMargin,
                                                             Common::SpatialAggregate<
-                                                              NbOfDispatchedUnits // MBO 25/02/2016
-                                                                                  // - refs: #55
-                                                              >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                              Marge,
+
+                                                              // Detail Prices
+                                                              Common::SpatialAggregate<
+                                                                NonProportionalCost, // MBO
+                                                                                     // 13/05/2014
+                                                                                     // - refs: #21
+
+                                                                // Number Of Dispatched Units
+                                                                Common::SpatialAggregate<
+                                                                  NbOfDispatchedUnits // MBO
+                                                                                      // 25/02/2016
+                                                                                      // - refs: #55
+                                                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef Variable::Join<

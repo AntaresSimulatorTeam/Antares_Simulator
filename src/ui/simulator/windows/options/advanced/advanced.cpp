@@ -899,7 +899,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmin),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMin>),
                  nullptr,
                  this);
 
@@ -908,7 +908,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNClow),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncLow>),
                  nullptr,
                  this);
 
@@ -918,7 +918,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCaverage),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncAvg>),
                  nullptr,
                  this);
 
@@ -927,7 +927,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNChigh),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
                  nullptr,
                  this);
 
@@ -936,79 +936,31 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmax),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMax>),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectNCmin(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMode)
 {
     if (not Data::Study::Current::Valid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
-    if (study.parameters.nbCores.ncMode != Data::ncMin)
+    if (study->parameters.nbCores.ncMode != ncMode)
     {
-        study.parameters.nbCores.ncMode = Data::ncMin;
+        study->parameters.nbCores.ncMode = ncMode;
+        // Force refresh for study->nbYearsParallelRaw
+        study->getNumberOfCores(false, 1 /* ignored */);
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectNClow(wxCommandEvent& /* evt */)
+template<Data::NumberOfCoresMode level>
+void AdvancedParameters::onSelectNumberOfCoresLevel(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncLow)
-    {
-        study.parameters.nbCores.ncMode = Data::ncLow;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNCaverage(wxCommandEvent& /* evt */)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncAvg)
-    {
-        study.parameters.nbCores.ncMode = Data::ncAvg;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNChigh(wxCommandEvent& /* evt */)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncHigh)
-    {
-        study.parameters.nbCores.ncMode = Data::ncHigh;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNCmax(wxCommandEvent& /* evt */)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncMax)
-    {
-        study.parameters.nbCores.ncMode = Data::ncMax;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNumberOfCoresLevel(level);
 }
 
 void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*)

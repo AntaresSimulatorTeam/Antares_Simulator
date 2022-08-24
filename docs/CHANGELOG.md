@@ -1,6 +1,21 @@
 Antares Changelog
 =================
 
+v8.3.1 (08/2022)
+--------------------
+### New features
+- Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
+- OR-Tools: set solver-specific options for XPRESS #796
+
+### Bug fixes
+- Fix missing renewable columns in districts (sets of areas) #802
+
+### GUI
+- Fix wrong number of cores in the "Run a simulation" window #793
+
+### For developers
+- Bump C++11 to C++17
+
 v8.3.0 (07/2022)
 --------------------
 ### New features
