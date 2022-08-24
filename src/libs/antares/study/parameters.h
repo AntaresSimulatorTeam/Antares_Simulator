@@ -542,9 +542,6 @@ public:
         };
         CurtailmentSharing curtailmentSharing;
 
-        //! Select whether the intermediate result before the application of the curtailment
-        //! sharing is to be kept in the results
-        bool saveIntermediateResults;
         void addExcludedVariables(std::vector<std::string>&) const;
     };
 
