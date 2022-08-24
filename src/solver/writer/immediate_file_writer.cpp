@@ -67,11 +67,7 @@ static bool prepareDirectoryHierarchy(const YString& root, const std::string& en
 void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
     Yuni::String output;
-    if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-    {
-        return;
-    }
-    else
+    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
     {
         IOFileSetContent(output, entryContent);
     }
