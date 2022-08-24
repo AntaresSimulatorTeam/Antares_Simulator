@@ -371,7 +371,7 @@ public:
     {
         LeftType ::provideInformations(infos);
         RightType::provideInformations(infos);
-        BindConstType::provideInformations(infos);  // gp : do we need this ?
+        BindConstType::provideInformations(infos);
     }
 
     template<class VCardToFindT>
