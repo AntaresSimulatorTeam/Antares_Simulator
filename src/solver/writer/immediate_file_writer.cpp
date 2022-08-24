@@ -60,9 +60,7 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 static bool prepareDirectoryHierarchy(const YString& root, const std::string& entryPath, Yuni::String& output)
 {
     output << root << Yuni::IO::Separator << entryPath.c_str();
-    if (!createDirectoryHierarchy(root, entryPath.c_str()))
-        return false;
-    return true;
+    return createDirectoryHierarchy(root, entryPath.c_str());
 }
 
 // Write to file immediately, creating directories if needed
