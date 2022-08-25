@@ -464,7 +464,7 @@ void AdequacyPatchOptions::onPopupMenuSpecify(Component::Button&,
 
 void AdequacyPatchOptions::onSelectModeInclude(wxCommandEvent&)
 {
-    if (pTargetRef and !*pTargetRef)
+    if (pTargetRef && !*pTargetRef)
     {
         *pTargetRef = true;
         MarkTheStudyAsModified();
@@ -475,7 +475,7 @@ void AdequacyPatchOptions::onSelectModeInclude(wxCommandEvent&)
 
 void AdequacyPatchOptions::onSelectModeIgnore(wxCommandEvent&)
 {
-    if (pTargetRef and *pTargetRef)
+    if (pTargetRef && *pTargetRef)
     {
         *pTargetRef = false;
         MarkTheStudyAsModified();
@@ -525,7 +525,7 @@ wxTextCtrl* AdequacyPatchOptions::insertEdit(wxWindow* parent,
 
 void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
 {
-    if (not Data::Study::Current::Valid())
+    if (!Data::Study::Current::Valid())
         return;
     auto& study = *Data::Study::Current::Get();
 
@@ -537,7 +537,7 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         wxStringToString(pThresholdCSRStart->GetValue(), text);
 
         float newthreshold;
-        if (not text.to(newthreshold))
+        if (!text.to(newthreshold))
         {
             logs.error() << "impossible to update the seed for '"
                          << "Initiate curtailment sharing rule"
@@ -560,7 +560,7 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         wxStringToString(pThresholdLMRviolations->GetValue(), text);
 
         float newthreshold;
-        if (not text.to(newthreshold))
+        if (!text.to(newthreshold))
         {
             logs.error() << "impossible to update the seed for '"
                          << "Display local matching rule violations"
