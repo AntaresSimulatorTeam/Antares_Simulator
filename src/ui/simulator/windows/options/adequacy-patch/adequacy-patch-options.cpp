@@ -41,11 +41,7 @@
 using namespace Yuni;
 using namespace Data::AdequacyPatch;
 
-namespace Antares
-{
-namespace Window
-{
-namespace Options
+namespace Antares::Window::Options
 {
 static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* text)
 {
@@ -583,6 +579,4 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
     }
 }
 
-} // namespace Options
-} // namespace Window
-} // namespace Antares
+}
