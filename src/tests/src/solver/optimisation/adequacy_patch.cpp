@@ -49,10 +49,10 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
     return std::make_pair(Xmin, Xmax);
 }
 
-static double flowArea1toArea2_positive = 10;
-static double flowArea1toArea2_negative = -10;
-static double flowArea3toArea1_positive = 30;
-static double flowArea3toArea1_negative = -30;
+static const double flowArea1toArea2_positive = 10;
+static const double flowArea1toArea2_negative = -10;
+static const double flowArea3toArea1_positive = 30;
+static const double flowArea3toArea1_negative = -30;
 
 std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
   bool includeFlowsOutsideAdqPatchToDensNew,
