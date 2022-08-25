@@ -134,7 +134,7 @@ public:
         };
     };
 
-public:
+
     ~LMRViolations()
     {
         delete[] pValuesForTheCurrentYear;
