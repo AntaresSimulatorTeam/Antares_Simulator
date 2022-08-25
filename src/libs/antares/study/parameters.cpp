@@ -207,8 +207,9 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
         return "DENS";
     case AdequacyPatch::AdqPatchPTO::isLoad:
         return "Load";
+    default:
+        return "";
     }
-    return "";
 }
 
 Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
