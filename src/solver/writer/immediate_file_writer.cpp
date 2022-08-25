@@ -14,15 +14,15 @@ static bool createDirectory(const Yuni::String& path)
 {
     using namespace Yuni;
     if (!IO::Directory::Exists(path))
-      {
+    {
         const bool ret = IO::Directory::Create(path);
 
         if (!ret)
-          {
+        {
             Antares::logs.error() << "Error creating directory " << path;
             return false;
-          }
-      }
+        }
+    }
     return true;
 }
 
@@ -57,7 +57,9 @@ ImmediateFileResultWriter::ImmediateFileResultWriter(const char* folderOutput) :
 {
 }
 
-static bool prepareDirectoryHierarchy(const YString& root, const std::string& entryPath, Yuni::String& output)
+static bool prepareDirectoryHierarchy(const YString& root,
+                                      const std::string& entryPath,
+                                      Yuni::String& output)
 {
     output << root << Yuni::IO::Separator << entryPath.c_str();
     return createDirectoryHierarchy(root, entryPath.c_str());
@@ -68,23 +70,15 @@ void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob&
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-    {
         IOFileSetContent(output, entryContent);
-    }
 }
 
 // Write to file immediately, creating directories if needed
 void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
     Yuni::String output;
-    if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
-    {
-        return;
-    }
-    else
-    {
+    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output)
         IOFileSetContent(output, entryContent);
-    }
 }
 
 // Write to file immediately, creating directories if needed
