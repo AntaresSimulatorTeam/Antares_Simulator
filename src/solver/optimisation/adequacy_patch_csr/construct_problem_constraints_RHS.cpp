@@ -164,8 +164,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
                 IndexNumeroDuPalierDispatch
                   = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
 
-                Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                           [IndexNumeroDuPalierDispatch];
                 Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
 
                 ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]

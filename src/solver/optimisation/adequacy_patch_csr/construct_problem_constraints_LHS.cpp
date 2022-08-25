@@ -226,7 +226,6 @@ void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
     std::string NomDeLaContrainte;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
