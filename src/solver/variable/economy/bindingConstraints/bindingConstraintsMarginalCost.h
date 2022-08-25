@@ -311,7 +311,7 @@ private:
         if (!associatedBC_)
         {
             logs.error() << "BC marginal price: output variable refers to no binding constraint";
-            AntaresSolverEmergencyShutdown(EXIT_FAILURE);
+            ::AntaresSolverEmergencyShutdown();
             return;
         }
 
@@ -319,7 +319,7 @@ private:
         {
             logs.error() << "Marginal price associated to BC named '" << associatedBC_->name
                          << "' should own a global BC number";
-            AntaresSolverEmergencyShutdown(EXIT_FAILURE);
+            ::AntaresSolverEmergencyShutdown();
             return;
         }
     }
