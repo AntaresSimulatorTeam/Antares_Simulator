@@ -219,7 +219,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
 
     setBoundsOnENS(ProblemeHebdo, hourlyCsrProblem);
     setBoundsOnSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);
