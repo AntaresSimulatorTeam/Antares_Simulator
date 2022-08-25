@@ -49,7 +49,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS for each area inside adq patch
@@ -82,7 +82,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
     }
 }
 
-void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     double* AdresseDuResultat;
@@ -90,7 +90,7 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM&
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: Spilled Energy for each area inside adq patch
@@ -119,7 +119,7 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM&
     }
 }
 
-void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     double* AdresseDuResultat;
@@ -127,9 +127,8 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
     hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    int* TypeDeVariable;
     double* Xmin;
     double* Xmax;
     Xmin = ProblemeAResoudre->Xmin;
@@ -214,11 +213,10 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 {
     logs.debug() << "[CSR] bounds";
 
-    int Var;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
 
     setBoundsOnENS(ProblemeHebdo, hourlyCsrProblem);
