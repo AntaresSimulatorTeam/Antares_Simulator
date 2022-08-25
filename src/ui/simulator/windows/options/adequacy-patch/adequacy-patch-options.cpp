@@ -281,9 +281,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     Centre(wxBOTH);
 }
 
-AdequacyPatchOptions::~AdequacyPatchOptions()
-{
-}
+AdequacyPatchOptions::~AdequacyPatchOptions() = default;
 
 void AdequacyPatchOptions::onClose(void*)
 {
