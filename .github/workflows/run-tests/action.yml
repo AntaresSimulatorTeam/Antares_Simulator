@@ -23,7 +23,6 @@ runs:
            rm batch.zip
 
   - name: Run tests
-    if: ${{ startsWith(inputs.os, 'centos') }}
     shell: bash
     run: |
            cd _build
