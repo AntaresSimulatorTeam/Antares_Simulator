@@ -104,7 +104,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
  * Calculate total local matching rule violation per one area.

@@ -134,7 +134,7 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
 {
     double totalLmrViolation = 0;
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
