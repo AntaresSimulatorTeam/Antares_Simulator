@@ -70,7 +70,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adequacyPatchRuntimeData.extremityAreaMode.resize(3);
 
     problem.adqPatchParams = std::make_unique<AdequacyPatchParameters>();
-    auto& adqPatchParams = problem.adqPatchParams;
+    const auto& adqPatchParams = problem.adqPatchParams;
 
     problem.ResultatsHoraires = (RESULTATS_HORAIRES**)malloc(1 * sizeof(void*));
     problem.ResultatsHoraires[0] = (RESULTATS_HORAIRES*)malloc(sizeof(RESULTATS_HORAIRES));
@@ -101,7 +101,8 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexSuivantIntercoExtremite[Interco] = -1;
 
     // get results
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
@@ -223,7 +224,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_change_expected_o
 BOOST_AUTO_TEST_CASE(
   calculateAreaFlowBalanceForOneTimeStep_virtual_virtual_NotIncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew) = calculateAreaFlowBalanceForOneTimeStep(
       false, virtualArea, virtualArea, flowArea1toArea2_positive, flowArea3toArea1_positive);
     BOOST_TEST(netPositionInit == 0.0);
@@ -238,7 +240,8 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(
   calculateAreaFlowBalanceForOneTimeStep_inside_virtual_NotIncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(false,
                                                physicalAreaInsideAdqPatch,
@@ -257,7 +260,8 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(
   calculateAreaFlowBalanceForOneTimeStep_inside_outside_NotIncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(false,
                                                physicalAreaInsideAdqPatch,
@@ -276,7 +280,8 @@ BOOST_AUTO_TEST_CASE(
 BOOST_AUTO_TEST_CASE(
   calculateAreaFlowBalanceForOneTimeStep_inside_inside_NotIncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(false,
                                                physicalAreaInsideAdqPatch,
@@ -294,7 +299,8 @@ BOOST_AUTO_TEST_CASE(
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_IncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaInsideAdqPatch,
@@ -312,7 +318,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_Inclu
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_IncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaOutsideAdqPatch,
@@ -330,7 +337,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_Incl
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_IncludeOut_positiveFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaOutsideAdqPatch,
@@ -348,7 +356,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_IncludeOut_negativeFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaInsideAdqPatch,
@@ -366,7 +375,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_Inclu
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_IncludeOut_negativeFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaOutsideAdqPatch,
@@ -384,7 +394,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_Incl
 // DensNew parameter SHOULD include flows from areas outside adq patch
 BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_IncludeOut_negativeFlow)
 {
-    double netPositionInit, densNew;
+    double netPositionInit;
+    double densNew;
     std::tie(netPositionInit, densNew)
       = calculateAreaFlowBalanceForOneTimeStep(true,
                                                physicalAreaOutsideAdqPatch,
