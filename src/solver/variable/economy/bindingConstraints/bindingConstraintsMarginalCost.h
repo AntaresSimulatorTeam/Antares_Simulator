@@ -135,13 +135,12 @@ public:
     };
 
 public:
-    BindingConstMarginCost() : pValuesForTheCurrentYear(nullptr)
-    {
-    }
+    BindingConstMarginCost() = default;
 
     ~BindingConstMarginCost()
     {
-        delete[] pValuesForTheCurrentYear;
+        if (!pValuesForTheCurrentYear)
+            delete[] pValuesForTheCurrentYear;
     }
 
     void initializeFromStudy(Data::Study& study)
@@ -287,7 +286,6 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
-       
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
 
@@ -307,7 +305,7 @@ private:
     }
 
     //! Intermediate values for each year
-    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
+    typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     uint yearMemorySpace_ = 0;
