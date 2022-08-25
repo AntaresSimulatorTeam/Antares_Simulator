@@ -118,7 +118,7 @@ double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
 ** ** \param B An array
 ** ** \return
 ** */
-void addArray(std::vector<double>& A, double* B);
+void addArray(std::vector<double>& A, const double* B);
 
 } // end namespace Antares
 } // end namespace Data

@@ -228,7 +228,7 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
     return std::make_pair(netPositionInit, densNew);
 }
 
-void addArray(std::vector<double>& A, double* B)
+void addArray(std::vector<double>& A, const double* B)
 {
     for (uint i = 0; i < A.size(); ++i)
         A[i] += B[i];
