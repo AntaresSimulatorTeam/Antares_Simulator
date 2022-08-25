@@ -23,10 +23,11 @@ runs:
            rm batch.zip
 
   - name: Run tests
+    if: ${{ startsWith(inputs.os, 'centos') }}
     shell: bash
     run: |
            cd _build
-           ctest -C Release --output-on-failure -R json
+           ctest3 -C Release --output-on-failure -R json
 
   - name: Clean batches
     shell: bash
