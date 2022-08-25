@@ -15,9 +15,7 @@ AdequacyPatchAreaGrid::AdequacyPatchAreaGrid() : pControl(nullptr)
 {
 }
 
-AdequacyPatchAreaGrid::~AdequacyPatchAreaGrid()
-{
-}
+AdequacyPatchAreaGrid::~AdequacyPatchAreaGrid() = default;
 
 bool AdequacyPatchAreaGrid::valid() const
 {
