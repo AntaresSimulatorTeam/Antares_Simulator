@@ -49,7 +49,6 @@ public:
         pControl = control;
     }
 
-public:
     //! An item has been updated
     Yuni::Bind<void()> onTriggerUpdate;
 
