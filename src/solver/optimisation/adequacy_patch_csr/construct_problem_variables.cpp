@@ -95,7 +95,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -150,7 +150,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
 {
     logs.debug() << "[CSR] variable list:";
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
