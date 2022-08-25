@@ -51,7 +51,6 @@ bool AdequacyPatchAreaGrid::cellValue(int, int row, const Yuni::String& value)
 
         bool vir = s == "0" || s == "virtual" || s == "v";
         bool ins = s.to<int>() == 2 || s == "inside" || s == "i";
-        bool out = s.to<int>() == 1 || s == "outside" || s == "o";
 
         if (vir)
             study->areas.byIndex[row]->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
