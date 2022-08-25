@@ -33,7 +33,7 @@
 #include "matrix.h"
 #include <logs.h>
 #include <math.h>
-#include "../timeelapsed.h"
+#include "../benchmarking.h"
 #include "../study/memory-usage.h"
 
 using namespace Yuni;

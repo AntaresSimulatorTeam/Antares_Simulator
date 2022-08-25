@@ -191,10 +191,5 @@ public:
     NoAreaInsideAdqPatchMode();
 };
 
-class CreatingTimeMeasurementFile : public LoadingError
-{
-public:
-    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
-};
 } // namespace Error
 } // namespace Antares
