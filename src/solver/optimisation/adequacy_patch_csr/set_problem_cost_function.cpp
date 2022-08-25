@@ -33,12 +33,37 @@
 
 #include "../solver/optimisation/opt_fonctions.h"
 
+double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
+{
+    double priceTakingOrders = 0.0; // PTO
+    if (ProblemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    {
+        priceTakingOrders
+          = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+            + ProblemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
+    }
+    else if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
+             == Data::AdequacyPatch::AdqPatchPTO::isDens)
+    {
+        priceTakingOrders = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+    }
+
+    if (priceTakingOrders <= 0.0)
+    {
+        // CSR todo a warning that DENS is negative and it is considered for CSR, there
+        // was a check for positive threshold
+        return 0.0;
+    }
+    else
+    {
+        return (1 / (priceTakingOrders * priceTakingOrders));
+    }
+}
+
 void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    double priceTakingOrders = 0.0; // PTO
-    double quadraticCost;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
@@ -58,33 +83,8 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
-                    == Data::AdequacyPatch::AdqPatchPTO::isLoad)
-                {
-                    priceTakingOrders
-                      = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
-                        + ProblemeHebdo->AllMustRunGeneration[hour]
-                            ->AllMustRunGenerationOfArea[area];
-                }
-                else if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
-                         == Data::AdequacyPatch::AdqPatchPTO::isDens)
-                {
-                    priceTakingOrders
-                      = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
-                }
-
-                if (priceTakingOrders <= 0.0)
-                {
-                    // CSR todo a warning that DENS is negative and it is considered for CSR, there
-                    // was a check for positive threshold
-                    quadraticCost = 0.0;
-                }
-                else
-                {
-                    quadraticCost = 1 / (priceTakingOrders * priceTakingOrders);
-                }
-
-                ProblemeAResoudre->CoutQuadratique[Var] = quadraticCost;
+                ProblemeAResoudre->CoutQuadratique[Var]
+                  = calculateQuadraticCost(ProblemeHebdo, hour, area);
                 logs.debug() << Var << ". Quad C = " << ProblemeAResoudre->CoutQuadratique[Var];
             }
         }
