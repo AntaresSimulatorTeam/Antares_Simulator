@@ -87,7 +87,7 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
     case physicalAreaInsideAdqPatch:
         return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOrigineToZero;
     case physicalAreaOutsideAdqPatch:
-        return (setToZeroNTCfromOutToOut_AdqPatch) ? setToZero : leaveLocalValues;
+        return setToZeroNTCfromOutToOut_AdqPatch ? setToZero : leaveLocalValues;
     default:
         return leaveLocalValues;
     }
