@@ -29,13 +29,7 @@
 
 #include "../variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardLMRViolations
 {
@@ -275,9 +269,6 @@ private:
 
 }; // class LMRViolations
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+}
 
 #endif // __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__

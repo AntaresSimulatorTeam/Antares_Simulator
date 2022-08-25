@@ -3,13 +3,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 AdequacyPatchAreaGrid::AdequacyPatchAreaGrid() : pControl(nullptr)
 {
@@ -26,7 +20,7 @@ bool AdequacyPatchAreaGrid::valid() const
 
 int AdequacyPatchAreaGrid::height() const
 {
-    return (not study) ? 0 : gridSize();
+    return (!study) ? 0 : gridSize();
 }
 
 wxString AdequacyPatchAreaGrid::columnCaption(int) const
@@ -141,7 +135,4 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
     return IRenderer::cellStyleConstraintNoWeight;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+}
