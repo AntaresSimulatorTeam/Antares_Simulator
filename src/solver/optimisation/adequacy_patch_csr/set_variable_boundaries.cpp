@@ -93,8 +93,7 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM&
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
-    // variables: Spilled Energy for each area inside adq patch 
-    // todo after debugging transfer this into same area loop as ENS
+    // variables: Spilled Energy for each area inside adq patch
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
@@ -180,12 +179,6 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
             // direct / indirect flow
             Var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-            // CSR Todo?
-            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
-            //                 - ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            // else
-            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
 
             Xmin[Var] = -csrSolverRelaxation;
             Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
@@ -200,12 +193,6 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
 
             Var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            // CSR Todo?
-            // if (TransportCost->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]
-            //                 + ValeursDeNTC->ValeurDeLoopFlowOrigineVersExtremite[Interco];
-            // else
-            //     Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco];
 
             Xmin[Var] = -csrSolverRelaxation;
             Xmax[Var] = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + csrSolverRelaxation;

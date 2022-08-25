@@ -76,7 +76,6 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
-    // todo after debugging transfer this into same area loop as ENS
     logs.debug() << " Spilled Energy  of each area inside adq patch: ";
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {

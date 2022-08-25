@@ -49,15 +49,9 @@ double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
     }
 
     if (priceTakingOrders <= 0.0)
-    {
-        // CSR todo a warning that DENS is negative and it is considered for CSR, there
-        // was a check for positive threshold
         return 0.0;
-    }
     else
-    {
         return (1 / (priceTakingOrders * priceTakingOrders));
-    }
 }
 
 void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
