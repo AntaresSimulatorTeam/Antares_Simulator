@@ -229,7 +229,7 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
-void AdequacyPatchOptimization::solveCSR(Variable::State& state, uint numSpace, uint w)
+void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     const std::set<int> hoursRequiringCurtailmentSharing
