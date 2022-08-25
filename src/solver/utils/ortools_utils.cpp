@@ -101,7 +101,7 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
-static void tuneSolverSpecificOptions(MPSolver* solver)
+static void setDefaultParameters(MPSolver* solver)
 {
     if (!solver)
         return;
@@ -143,7 +143,10 @@ MPSolver* convert_to_MPSolver(
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
 
-    tuneSolverSpecificOptions(solver);
+    if (study.parameters.ortoolsParamsString == "")
+        setDefaultParameters(solver);
+    else
+        solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
 
     // Create the variables and set objective cost.
     transferVariables(solver,
@@ -166,8 +169,6 @@ MPSolver* convert_to_MPSolver(
                    problemeSimplexe->IndicesColonnes,
                    problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
                    problemeSimplexe->NombreDeContraintes);
-
-    solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
 
     if (study.parameters.ortoolsVerbosityOn)
         solver->EnableOutput();
