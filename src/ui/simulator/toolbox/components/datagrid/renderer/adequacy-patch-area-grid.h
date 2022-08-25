@@ -59,7 +59,7 @@ public:
     //! An item has been updated
     Yuni::Bind<void()> onTriggerUpdate;
 
-protected:
+private:
     wxWindow* pControl;
 
 }; // class AdequacyPatchAreaGrid
