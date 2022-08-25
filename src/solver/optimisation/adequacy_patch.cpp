@@ -136,36 +136,42 @@ void setNTCbounds(double& Xmax,
 
 double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb)
 {
-    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
-    double netPositionInit;
-    double densNew;
-    double ensInit;
-    const int numOfHoursInWeek = 168;
     double totalLmrViolation = 0;
-
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
-            for (int hour = 0; hour < numOfHoursInWeek; hour++)
-            {
-                std::tie(netPositionInit, densNew)
-                  = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-
-                ensInit = ProblemeHebdo->ResultatsHoraires[Area]
-                            ->ValeursHorairesDeDefaillancePositive[hour];
-
-                // check LMR violations
-                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-                if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
-                {
-                    ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
-                    totalLmrViolation += (ensInit - densNew);
-                }
-            }
+            totalLmrViolation += LmrViolationArea(ProblemeHebdo,Area);
         }
     }
     return totalLmrViolation;
+}
+
+double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area)
+{
+    const int numOfHoursInWeek = 168;
+    double totalLmrViolationArea = 0;
+    double netPositionInit;
+    double densNew;
+    double ensInit;
+    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+
+    for (int hour = 0; hour < numOfHoursInWeek; hour++)
+    {
+        std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+
+        ensInit
+          = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+
+        // check LMR violations
+        ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
+        if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
+        {
+            ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
+            totalLmrViolationArea += (ensInit - densNew);
+        }
+    }
+    return totalLmrViolationArea;
 }
 
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
