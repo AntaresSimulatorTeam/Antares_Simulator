@@ -98,7 +98,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Cnt;
-    int Area;
     int CntCouplante;
     int Interco;
     int NbInterco;
