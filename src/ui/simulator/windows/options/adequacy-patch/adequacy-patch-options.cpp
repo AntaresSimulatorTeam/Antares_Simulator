@@ -326,7 +326,7 @@ void AdequacyPatchOptions::refresh()
     if (!studyptr)
         return;
     // The current study
-    auto& study = *studyptr;
+    const auto& study = *studyptr;
 
     // Adequacy patch
     std::string buttonType = "specify";
