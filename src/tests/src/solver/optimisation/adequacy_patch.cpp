@@ -69,8 +69,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adequacyPatchRuntimeData.originAreaMode.resize(3);
     problem.adequacyPatchRuntimeData.extremityAreaMode.resize(3);
 
-    problem.adqPatchParams
-      = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+    problem.adqPatchParams = std::make_unique<AdequacyPatchParameters>();
     auto& adqPatchParams = problem.adqPatchParams;
 
     problem.ResultatsHoraires = (RESULTATS_HORAIRES**)malloc(1 * sizeof(void*));
