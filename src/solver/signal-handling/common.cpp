@@ -11,18 +11,12 @@ static void finalizeWrite()
     {
         auto writer = study->getWriter();
         if (writer)
-        {
             writer->finalize(true);
-        }
         else
-        {
             logs.warning() << "Could not finalize write: invalid writer";
-        }
     }
     else
-    {
         logs.warning() << "Could not finalize write: invalid study";
-    }
     exit(EXIT_SUCCESS);
 }
 
