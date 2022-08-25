@@ -270,7 +270,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     sizer->Add(panel, 0, wxALL | wxEXPAND);
 
     // refresh
-    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(AdequacyPatchOptions::onInternalMotion), NULL, this);
+    Connect(GetId(), wxEVT_MOTION, wxMouseEventHandler(AdequacyPatchOptions::onInternalMotion), nullptr, this);
 
     refresh();
     SetSizer(sizer);
