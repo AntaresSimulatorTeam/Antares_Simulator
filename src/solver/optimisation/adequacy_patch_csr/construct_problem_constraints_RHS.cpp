@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-const double csrSolverRelaxationRHS = 1e-3;
-
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 #include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_extern_variables_globales.h"
-
 #include "../solver/optimisation/opt_fonctions.h"
+
+const double csrSolverRelaxationRHS = 1e-3;
 
 void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
