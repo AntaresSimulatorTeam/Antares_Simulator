@@ -23,7 +23,7 @@ public:
     **
     ** \param parent The parent window
     */
-    AdequacyPatchAreas(wxFrame* parent);
+    explicit AdequacyPatchAreas(wxFrame* parent);
     //! Destructor
     virtual ~AdequacyPatchAreas();
     //@}
