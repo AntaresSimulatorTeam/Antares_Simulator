@@ -102,9 +102,7 @@ AdequacyPatchAreas::AdequacyPatchAreas(wxFrame* parent) :
     grid->forceRefresh();
 }
 
-AdequacyPatchAreas::~AdequacyPatchAreas()
-{
-}
+AdequacyPatchAreas::~AdequacyPatchAreas() = default;
 
 void AdequacyPatchAreas::onClose(void*)
 {
