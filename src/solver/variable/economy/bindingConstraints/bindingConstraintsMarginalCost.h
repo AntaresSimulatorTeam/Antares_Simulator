@@ -26,7 +26,7 @@
 */
 #pragma once
 
-#include <math.h>
+#include <cmath>
 
 #include "../../variable.h"
 #include "antares/study/constraint/constraint.h"
@@ -174,6 +174,8 @@ public:
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
+        makeChecksOnAttributes();
+
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
 
@@ -304,12 +306,29 @@ private:
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
+    void makeChecksOnAttributes() const
+    {
+        if (!associatedBC_)
+        {
+            logs.error() << "BC marginal price: output variable refers to no binding constraint";
+            AntaresSolverEmergencyShutdown();
+            return;
+        }
+
+        if (!bindConstraintGlobalNumber_)
+        {
+            logs.error() << "Marginal price associated to BC named '" << associatedBC_->name
+                         << "' should own a global BC number";
+            AntaresSolverEmergencyShutdown();
+            return;
+        }
+    }
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
-    unsigned int pNbYearsParallel;
+    unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     uint yearMemorySpace_ = 0;
-    uint bindConstraintGlobalNumber_ = -1;
+    uint bindConstraintGlobalNumber_ = 0;
 
 }; // class BindingConstMarginCost
 

@@ -244,8 +244,7 @@ void IntermediateValues::computeAVGstatisticsForCurrentYear()
 
 void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
 {
-    uint i;
-    uint j;
+    uint i, j;
     double d;
     
     // months
