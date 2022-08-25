@@ -54,12 +54,12 @@ double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
         return (1 / (priceTakingOrders * priceTakingOrders));
 }
 
-void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS for each area inside adq patch
@@ -85,14 +85,13 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyC
     }
 }
 
-void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    int Interco;
-    COUTS_DE_TRANSPORT* TransportCost;
+    const COUTS_DE_TRANSPORT* TransportCost;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
@@ -103,7 +102,7 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrP
     // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
     // OUI_ANTARES (use hurdle cost option is true). otherwise these members are zero.
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
