@@ -287,7 +287,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
 
 AdequacyPatchOptions::~AdequacyPatchOptions() = default;
 
-void AdequacyPatchOptions::onClose(void*)
+void AdequacyPatchOptions::onClose(const void*)
 {
     Dispatcher::GUI::Close(this);
 }
