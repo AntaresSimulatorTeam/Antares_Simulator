@@ -60,9 +60,17 @@ static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* tex
     sizer->AddSpacer(5);
 }
 
-static void updateButton(Component::Button* button, bool value, std::string buttonType)
+static void updateButton(Component::Button* button, bool value, std::string& buttonType)
 {
-    char type = (buttonType == "ntc") ? 'N' : ((buttonType == "pto") ? 'P' : 'S');
+    char type;
+    if (buttonType == "ntc")
+    {
+        type = 'N';
+    }
+    else
+    {
+        type = (buttonType == "pto") ? 'P' : 'S';
+    }
 
     assert(button != NULL);
     if (value)
@@ -242,10 +250,10 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     sizer->AddSpacer(10);
 
     // Buttons
-    Component::Panel* panel = new Component::Panel(this);
+    auto panel = new Component::Panel(this);
     panel->SetBackgroundColour(defaultBgColor);
-    wxBoxSizer* pnlSizerBtns = new wxBoxSizer(wxHORIZONTAL);
-    wxBoxSizer* pnlSizerBtnsV = new wxBoxSizer(wxVERTICAL);
+    auto pnlSizerBtns = new wxBoxSizer(wxHORIZONTAL);
+    auto pnlSizerBtnsV = new wxBoxSizer(wxVERTICAL);
     panel->SetSizer(pnlSizerBtnsV);
     pnlSizerBtnsV->AddSpacer(8);
     pnlSizerBtnsV->Add(pnlSizerBtns, 1, wxALL | wxEXPAND);
@@ -483,28 +491,24 @@ void AdequacyPatchOptions::onSelectModeIgnore(wxCommandEvent&)
 void AdequacyPatchOptions::onSelectPtoIsDens(wxCommandEvent&)
 {
     auto study = Data::Study::Current::Get();
-    if (!(!study))
+    if ((!(!study))
+        && (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens))
     {
-        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isDens)
-        {
-            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
-            refresh();
-            MarkTheStudyAsModified();
-        }
+        study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
+        refresh();
+        MarkTheStudyAsModified();
     }
 }
 
 void AdequacyPatchOptions::onSelectPtoIsLoad(wxCommandEvent&)
 {
     auto study = Data::Study::Current::Get();
-    if (!(!study))
+    if ((!(!study))
+        && (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad))
     {
-        if (study->parameters.adqPatch.curtailmentSharing.priceTakingOrder != AdqPatchPTO::isLoad)
-        {
-            study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
-            refresh();
-            MarkTheStudyAsModified();
-        }
+        study->parameters.adqPatch.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isLoad;
+        refresh();
+        MarkTheStudyAsModified();
     }
 }
 
