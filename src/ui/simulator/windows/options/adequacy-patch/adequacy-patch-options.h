@@ -52,7 +52,7 @@ public:
     **
     ** \param parent The parent window
     */
-    AdequacyPatchOptions(wxWindow* parent);
+    explicit AdequacyPatchOptions(wxWindow* parent);
     //! Destructor
     virtual ~AdequacyPatchOptions();
     //@}
