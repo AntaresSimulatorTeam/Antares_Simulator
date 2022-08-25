@@ -30,6 +30,7 @@
 
 #include "../../variable.h"
 #include "antares/study/constraint/constraint.h"
+#include "antares/emergency.h"
 
 namespace Antares
 {
@@ -139,7 +140,7 @@ public:
 
     ~BindingConstMarginCost()
     {
-        if (!pValuesForTheCurrentYear)
+        if (pValuesForTheCurrentYear)
             delete[] pValuesForTheCurrentYear;
     }
 
