@@ -14,6 +14,50 @@ Add variable `LMR VIOL.` for each area. Thematic trimming allows to enable/disab
 ### Output
 A variable `LMR VIOL.` is added for each area if `include-adq-patch` is set to `true`.
 
+## v8.3.1
+### Output
+Add file **execution_info.ini**, containing information about the execution time for the various steps of a study, as well as study related information that affects performance.
+
+```ini
+[durations_ms]
+hydro_ventilation = 7
+mc_years = 693
+post_processing = 0
+study_loading = 51
+synthesis_export = 731
+total = 1526
+yby_export = 114
+
+[number_of_calls]
+hydro_ventilation = 1
+mc_years = 1
+post_processing = 1
+study_loading = 1
+synthesis_export = 1
+total = 1
+yby_export = 1
+
+[optimization problem]
+constraints = 1008
+non-zero coefficients = 15894
+variables = 1512
+
+[study]
+antares version = 831
+areas = 3
+enabled bc = 0
+enabled daily bc = 0
+enabled hourly bc = 0
+enabled thermal clusters = 1
+enabled weekly bc = 0
+links = 2
+max parallel years = 1
+ortools solver = xpress
+ortools used = true
+performed years = 1
+unit commitment = fast
+```
+
 ## v8.3.0
 ### Input
 In file **settings/generaldata.ini**, add section `adequacy patch`, with properties

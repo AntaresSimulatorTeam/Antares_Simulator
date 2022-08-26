@@ -498,14 +498,11 @@ struct AdequacyPatchParameters
     bool AdequacyFirstStep;
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
-    bool SaveIntermediateResults;
     bool IncludeHurdleCostCsr;
     AdqPatchPTO PriceTakingOrder;
-    float ThresholdInitiateCurtailmentSharingRule;
-    float ThresholdDisplayLocalMatchingRuleViolations;
+    double ThresholdInitiateCurtailmentSharingRule;
+    double ThresholdDisplayLocalMatchingRuleViolations;
 };
-
-class HOURLY_CSR_PROBLEM;
 
 struct PROBLEME_HEBDO
 {
@@ -731,7 +728,7 @@ private:
     void solveProblem(uint week, int year);
 public:
     void run(uint week, int year);
-public:
+    
     int hourInWeekTriggeredCsr;
     const double belowThisThresholdSetToZero = 1e-3;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;

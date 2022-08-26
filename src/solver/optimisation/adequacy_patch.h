@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -37,6 +37,10 @@ namespace Data
 {
 namespace AdequacyPatch
 {
+//! A default threshold value for initiate curtailment sharing rule
+const double defaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
+//! A default threshold value for display local matching rule violations
+const double defaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
@@ -100,17 +104,21 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 /*!
  * Check local matching rule violation for each area inside adequacy patch.
  */
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo, uint weekNb);
+double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
+
+/*!
+ * Calculate total local matching rule violation per one area.
+ */
+double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
 
 /*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
 ** **
 ** ** \param A A vector
 ** ** \param B An array
-** ** \param num An integer
 ** ** \return
 ** */
-void addArray(std::vector<double>& A, double* B, int num);
+void addArray(std::vector<double>& A, const double* B);
 
 } // end namespace Antares
 } // end namespace Data

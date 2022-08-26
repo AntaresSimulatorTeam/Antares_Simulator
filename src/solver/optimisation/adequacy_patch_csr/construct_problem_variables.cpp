@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -37,10 +37,11 @@
 
 void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    int NumberOfVariables = 0;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
+    NumberOfVariables = 0;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
@@ -62,7 +63,6 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
             NumberOfVariables++;
         }
     }
-    ProblemeAResoudre->NombreDeVariables = NumberOfVariables;
 }
 
 void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
@@ -76,7 +76,6 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
-    // todo after debugging transfer this into same area loop as ENS
     logs.debug() << " Spilled Energy  of each area inside adq patch: ";
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
@@ -96,7 +95,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -151,8 +150,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
 {
     logs.debug() << "[CSR] variable list:";
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);

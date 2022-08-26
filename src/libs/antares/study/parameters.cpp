@@ -43,6 +43,7 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
+#include "../solver/optimisation/adequacy_patch.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
@@ -206,8 +207,9 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
         return "DENS";
     case AdequacyPatch::AdqPatchPTO::isLoad:
         return "Load";
+    default:
+        return "";
     }
-    return "";
 }
 
 Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
@@ -237,9 +239,9 @@ void Parameters::resetThresholdsAdqPatch()
 {
     // Initialize all thresholds values for adequacy patch
     adqPatch.curtailmentSharing.thresholdInitiate
-      = adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule;
+      = defaultValueThresholdInitiateCurtailmentSharingRule;
     adqPatch.curtailmentSharing.thresholdDisplayViolations
-      = adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations;
+      = defaultValueThresholdDisplayLocalMatchingRuleViolations;
 }
 
 void Parameters::resetAdqPatchParameters()
@@ -248,7 +250,6 @@ void Parameters::resetAdqPatchParameters()
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
     adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
-    adqPatch.saveIntermediateResults = false;
     adqPatch.curtailmentSharing.includeHurdleCost = false;
     resetThresholdsAdqPatch();
 }
@@ -680,8 +681,6 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
-    if (key == "save-intermediate-results")
-        return value.to<bool>(d.adqPatch.saveIntermediateResults);
     // Price taking order
     if (key == "price-taking-order")
         return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
@@ -1819,7 +1818,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideOutsideLinks);
-        section->add("save-intermediate-results", adqPatch.saveIntermediateResults);
         section->add("price-taking-order",
                      PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
         section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);

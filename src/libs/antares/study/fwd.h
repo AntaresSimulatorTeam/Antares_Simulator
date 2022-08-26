@@ -595,7 +595,7 @@ enum ntcSetToZeroStatus_AdqPatchStep1
 /*!
 ** \brief Types of Price Taking Order (PTO) for Adequacy Patch
 */
-enum AdqPatchPTO
+enum class AdqPatchPTO
 {
     //! PTO is DENS
     isDens = 0,
@@ -603,11 +603,6 @@ enum AdqPatchPTO
     isLoad
 
 }; // enum AdqPatchPTO
-
-//! A default threshold value for initiate curtailment sharing rule
-const float adqPatchDefaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
-//! A default threshold value for display local matching rule violations
-const float adqPatchDefaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
 
 } // namespace AdequacyPatch
 } // namespace Data
