@@ -3,21 +3,13 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 AdequacyPatchAreaGrid::AdequacyPatchAreaGrid() : pControl(nullptr)
 {
 }
 
-AdequacyPatchAreaGrid::~AdequacyPatchAreaGrid()
-{
-}
+AdequacyPatchAreaGrid::~AdequacyPatchAreaGrid() = default;
 
 bool AdequacyPatchAreaGrid::valid() const
 {
@@ -28,7 +20,7 @@ bool AdequacyPatchAreaGrid::valid() const
 
 int AdequacyPatchAreaGrid::height() const
 {
-    return (not study) ? 0 : gridSize();
+    return (!study) ? 0 : gridSize();
 }
 
 wxString AdequacyPatchAreaGrid::columnCaption(int) const
@@ -53,7 +45,6 @@ bool AdequacyPatchAreaGrid::cellValue(int, int row, const Yuni::String& value)
 
         bool vir = s == "0" || s == "virtual" || s == "v";
         bool ins = s.to<int>() == 2 || s == "inside" || s == "i";
-        bool out = s.to<int>() == 1 || s == "outside" || s == "o";
 
         if (vir)
             study->areas.byIndex[row]->adequacyPatchMode = Data::AdequacyPatch::virtualArea;
@@ -144,7 +135,4 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
     return IRenderer::cellStyleConstraintNoWeight;
 }
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+}
