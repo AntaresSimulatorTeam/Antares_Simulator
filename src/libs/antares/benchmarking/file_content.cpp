@@ -16,11 +16,13 @@ namespace Benchmarking
 
 	void FileContent::addItemToSection(const string& section, const string& key, int value)
 	{
+        std::lock_guard<std::mutex> guard(pMutex);
 		sections_[section][key] = to_string(value);
 	}
 
 	void FileContent::addItemToSection(const string& section, const string& key, const string& value)
 	{
+        std::lock_guard<std::mutex> guard(pMutex);
 		sections_[section][key] = value;
 	}
 
