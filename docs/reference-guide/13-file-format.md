@@ -10,7 +10,7 @@ They constrol which marginal price time granularity is printed, either regarding
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
 
 ### Output
-Still on the binding constraints marginal price results, 2 new folders **bind_const** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
+Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
 * `output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const`
