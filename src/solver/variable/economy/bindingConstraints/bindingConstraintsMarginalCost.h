@@ -30,7 +30,6 @@
 
 #include "../../variable.h"
 #include "antares/study/constraint/constraint.h"
-#include "antares/emergency.h"
 
 namespace Antares
 {
@@ -175,8 +174,6 @@ public:
 
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
-        makeChecksOnAttributes();
-
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
 
@@ -189,9 +186,11 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
+        if (not bcInitialize())
+            return;
+
         // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
-
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
             pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
 
@@ -221,6 +220,9 @@ public:
 
     void weekBegin(State& state)
     {
+        if (not bcInitialize())
+            return;
+
         // For daily binding constraints, getting daily marginal price
         if (associatedBC_->type == Data::BindingConstraint::typeDaily)
         {
@@ -228,9 +230,9 @@ public:
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
                 pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear]
-                  -= state.problemeHebdo
-                       ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                       .variablesDuales[dayInTheWeek];
+                    -= state.problemeHebdo
+                        ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                        .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
             }
@@ -266,11 +268,15 @@ public:
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
+        if (not bcInitialize())
+            return;
+
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
-              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                   .variablesDuales[state.hourInTheWeek];
+                -= state.problemeHebdo
+                    ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                    .variablesDuales[state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);
@@ -307,29 +313,25 @@ private:
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
-    void makeChecksOnAttributes() const
+    bool bcInitialize()
     {
-        if (!associatedBC_)
-        {
-            logs.error() << "BC marginal price: output variable refers to no binding constraint";
-            ::AntaresSolverEmergencyShutdown();
-            return;
-        }
+        return (bindConstraintGlobalNumber_ >= 0) && associatedBC_;
+    }
 
-        if (!bindConstraintGlobalNumber_)
+    void checkInitialization()
+    {
+        if (not bcInitialize())
         {
-            logs.error() << "Marginal price associated to BC named '" << associatedBC_->name
-                         << "' should own a global BC number";
-            ::AntaresSolverEmergencyShutdown();
-            return;
+            logs.error() << "BC marginal price: output variable badly initialized";
         }
     }
+
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     uint yearMemorySpace_ = 0;
-    uint bindConstraintGlobalNumber_ = 0;
+    uint bindConstraintGlobalNumber_ = -1;
 
 }; // class BindingConstMarginCost
 

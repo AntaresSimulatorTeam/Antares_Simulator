@@ -167,7 +167,7 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     for (uint i = 0; i != pBCcount; ++i)
     {
-        NextType& bc = pBindConstraints[i];
+        const NextType& bc = pBindConstraints[i];
 
         bc.buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
@@ -298,14 +298,6 @@ inline void BindingConstraints<NextT>::retrieveResultsForLink(
 // ===========  Copy of area.inc.hxx  ===========
 // ==============================================
 
-template<class NextT>
-BindingConstraints<NextT>::~BindingConstraints()
-{
-    // Releasing the memory occupied by the binding constraints
-    if (pBindConstraints != nullptr)
-        delete[] pBindConstraints;
-}
-
 inline std::vector<uint> getInequalityBindConstraintGlobalNumbers(Data::Study& study)
 {
     std::vector<uint> bindConstGlobalNumbers;
@@ -332,7 +324,9 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 
     // Reserving the memory
     if (pBCcount > 0)
-        pBindConstraints = new NextType[pBCcount];
+    {
+        pBindConstraints.resize(pBCcount);
+    }
 
     for (uint i = 0; i != pBCcount; ++i)
     {

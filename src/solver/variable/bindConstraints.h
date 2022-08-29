@@ -128,7 +128,7 @@ public:
     BindingConstraints const& operator=(BindingConstraints&& other) = delete;
 
     //! Destructor
-    ~BindingConstraints();
+    ~BindingConstraints() = default;
     //@}
 
     void initializeFromStudy(Data::Study& study);
@@ -222,9 +222,9 @@ public:
                                 const Data::AreaLink* link);
 
 private:
-    //! Binding constraints variables chained in a static list
-    NextType* pBindConstraints = nullptr;
-    //! The number of areas
+    // For each binding constraint, output variable static list associated.
+    std::vector<NextType> pBindConstraints;
+    // The number of counted binding constraints
     uint pBCcount;
 
 }; // class Areas
