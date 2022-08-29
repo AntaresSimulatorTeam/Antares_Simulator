@@ -17,11 +17,14 @@ static void transferVariables(MPSolver* solver,
                               const double* costs,
                               int nbVar,
                               const std::vector<std::string>& NomDesVariables,
-                              const std::vector<bool>& VariablesEntieres)
-{
+                              const std::vector<bool>& VariablesEntieres,
+                              int NumeroOptimisation)
+{   
+    
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
+        bool integer = false;
         double min_l = 0.0;
         if (bMin != NULL)
         {
@@ -38,7 +41,9 @@ static void transferVariables(MPSolver* solver,
             varName = NomDesVariables[idxVar];
         }
 
-        const MPVariable* var = solver->MakeVar(min_l, max_l, VariablesEntieres[idxVar], varName);
+        integer = VariablesEntieres[idxVar] && (NumeroOptimisation == 1);
+
+        const MPVariable* var = solver->MakeVar(min_l, max_l, integer, varName);
         objective->SetCoefficient(var, costs[idxVar]);
     }
 }
@@ -130,7 +135,7 @@ MPSolver* convert_to_MPSolver(
     // Define solver used depending on study option
 
     MPSolver::OptimizationProblemType solverType;
-    if (problemeSimplexe->isMIP())
+    if (problemeSimplexe->isMIP() && problemeSimplexe->NumeroOptimisation == 1)
     {
         solverType
           = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
@@ -143,10 +148,14 @@ MPSolver* convert_to_MPSolver(
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
 
-    if (study.parameters.ortoolsParamsString == "")
+    if (study.parameters.ortoolsParamsString.empty())
+    {
         setDefaultParameters(solver);
+    }
     else
+    {
         solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
+    }
 
     // Create the variables and set objective cost.
     transferVariables(solver,
@@ -155,7 +164,8 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
                       problemeSimplexe->NomDesVariables,
-                      problemeSimplexe->VariablesEntieres);
+                      problemeSimplexe->VariablesEntieres,
+                      problemeSimplexe->NumeroOptimisation);
 
     // Create constraints and set coefs
     transferRows(solver,
@@ -192,7 +202,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
-        if (isMIP)
+        if (isMIP && problemeSimplexe->NumeroOptimisation == 1)
         {
             problemeSimplexe->CoutsReduits[idxVar] = 0;
         }
@@ -207,7 +217,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
         auto& row = constraints[idxRow];
-        if (isMIP)
+        if (isMIP && problemeSimplexe->NumeroOptimisation == 1)
         {
             problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = 0;
         }

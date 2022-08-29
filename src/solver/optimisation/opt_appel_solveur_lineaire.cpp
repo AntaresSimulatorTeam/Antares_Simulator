@@ -103,16 +103,21 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     double CoutOpt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
-                                                   ProblemeAResoudre->VariablesEntieres);
+                                                   ProblemeAResoudre->VariablesEntieres,
+                                                   ProblemeAResoudre->NumeroDOptimisation);
     PremierPassage = OUI_ANTARES;
-    MPSolver* solver;
 
-    ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    PROBLEMES_SIMPLEXE* ProblemesSpx;
+    if (Probleme.NumeroOptimisation == 1)
+        ProblemesSpx = ProblemeAResoudre->ProblemesSpx1;
+    else if (Probleme.NumeroOptimisation == 2)
+        ProblemesSpx = ProblemeAResoudre->ProblemesSpx2;
+
+    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)(ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    MPSolver* solver = (MPSolver*)(ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
@@ -136,7 +141,7 @@ RESOLUTION:
             {
                 SPX_LibererProbleme(ProbSpx);
             }
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
+            ProblemesSpx->ProblemeSpx[NumIntervalle] = nullptr;
 
             ProbSpx = nullptr;
             solver = nullptr;
@@ -245,7 +250,7 @@ RESOLUTION:
         solver = ORTOOLS_Simplexe(&Probleme, solver);
         if (solver != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
+            ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
         }
     }
     else
@@ -253,7 +258,7 @@ RESOLUTION:
         ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
         if (ProbSpx != nullptr)
         {
-            ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
         }
     }
     measure.tick();

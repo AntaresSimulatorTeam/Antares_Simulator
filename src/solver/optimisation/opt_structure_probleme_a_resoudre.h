@@ -128,7 +128,8 @@ typedef struct
                                   matrice de base reguliere, et dans ce cas il n'y a pas de solution
                                 */
 
-    PROBLEMES_SIMPLEXE* ProblemesSpx;
+    PROBLEMES_SIMPLEXE* ProblemesSpx1;
+    PROBLEMES_SIMPLEXE* ProblemesSpx2;
 
     int* PositionDeLaVariable; /* Vecteur a passer au Simplexe pour recuperer la base optimale */
     int* ComplementDeLaBase;   /* Vecteur a passer au Simplexe pour recuperer la base optimale */

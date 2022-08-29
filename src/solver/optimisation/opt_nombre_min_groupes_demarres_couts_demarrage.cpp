@@ -206,23 +206,32 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                     NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = (int)ceil(X);
                 }
 
-                OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
-                  ProblemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
-
-                for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
+                if (ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
                 {
-                    if (NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                        < NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo])
-                        NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                          = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                    OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
+                      ProblemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
 
-                    if (PminDUnGroupeDuPalierThermique
-                          * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                        > PuissanceDisponibleDuPalierThermique[PdtHebdo])
-                        PuissanceDisponibleDuPalierThermique[PdtHebdo]
-                          = PminDUnGroupeDuPalierThermique
-                            * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                    for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
+                    {
+                        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
+                            < NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo])
+                            NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
+                              = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+
+                        if (PminDUnGroupeDuPalierThermique
+                              * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
+                            > PuissanceDisponibleDuPalierThermique[PdtHebdo])
+                            PuissanceDisponibleDuPalierThermique[PdtHebdo]
+                              = PminDUnGroupeDuPalierThermique
+                                * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                    }
                 }
+                else
+                {
+                    NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
+                      = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                }
+
             }
         }
     }

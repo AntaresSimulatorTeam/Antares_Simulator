@@ -162,10 +162,15 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     NbIntervalles
       = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
-    ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
-    ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+    ProblemeAResoudre->ProblemesSpx1 = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
+    ProblemeAResoudre->ProblemesSpx1->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
     for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-        ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
+        ProblemeAResoudre->ProblemesSpx1->ProblemeSpx[NumIntervalle] = NULL;
+
+    ProblemeAResoudre->ProblemesSpx2 = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
+    ProblemeAResoudre->ProblemesSpx2->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
+    for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+        ProblemeAResoudre->ProblemesSpx2->ProblemeSpx[NumIntervalle] = NULL;
 
     ProblemeAResoudre->PositionDeLaVariable
       = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
@@ -251,10 +256,15 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
         MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
         MemFree(ProblemeAResoudre->CoutsReduits);
 
-        if (ProblemeAResoudre->ProblemesSpx)
+        if (ProblemeAResoudre->ProblemesSpx1)
         {
-            MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
-            MemFree(ProblemeAResoudre->ProblemesSpx);
+            MemFree(ProblemeAResoudre->ProblemesSpx1->ProblemeSpx);
+            MemFree(ProblemeAResoudre->ProblemesSpx1);
+        }
+        if (ProblemeAResoudre->ProblemesSpx2)
+        {
+            MemFree(ProblemeAResoudre->ProblemesSpx2->ProblemeSpx);
+            MemFree(ProblemeAResoudre->ProblemesSpx2);
         }
 
         MemFree(ProblemeAResoudre->PositionDeLaVariable);
