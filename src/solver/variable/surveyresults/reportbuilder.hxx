@@ -215,13 +215,19 @@ public:
         // Standard - Not related to anything
         if (CDataLevel & Category::standard)
             RunStandard(list, results, numSpace);
+
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
             RunForEachArea(list, results, numSpace);
+
         // Set of Areas
         if (CDataLevel & Category::setOfAreas)
             RunForEachSetOfAreas(list, results, numSpace);
+
+        // Binding constraints level
+        if (CDataLevel & Category::bindingConstraint)
+            RunForEachBindingConstraint(list, results, numSpace);
 
         // Go to the next data level
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
@@ -502,6 +508,83 @@ private:
             if (Antares::Memory::swapSupport)
                 Antares::memory.flushAll();
         }
+    }
+
+    static void RunForEachBindingConstraint(const ListType& list,
+                                            SurveyResults& results,
+                                            unsigned int numSpace)
+    {
+        //using namespace Yuni;
+
+        //// No need to do anything for any area here if no zonal variables were selected.
+        //uint selectedZonalVarsCount
+        //  = results.data.study.parameters.variablesPrintInfo.getNbSelectedZonalVars();
+
+        //// All values related to an area
+        //// Note: A thermal cluster is attached to an area
+        //auto end = results.data.study.areas.end();
+        //for (auto i = results.data.study.areas.begin(); i != end; ++i)
+        //{
+        //    auto& area = *(i->second);
+        //    // Alias to the current area
+        //    results.data.area = &area;
+
+        //    // Skipping the creation of a result directory if it is meant to be empty.
+        //    // ... Getting few indicators value before deciding if we skip the results directory
+        //    // creation.
+        //    bool printingSynthesis = GlobalT; // Are we printing synthesis or year-by-year results ?
+        //    bool filterAllYearByYear = !(area.filterYearByYear & Data::filterAll);
+        //    bool filterAllSynthesis = !(area.filterSynthesis & Data::filterAll);
+
+        //    // ... Do we skip the current area's result directory creation because no results were
+        //    // asked
+        //    //	   in the inspector for the current area ?
+        //    bool skipDirectory = (!printingSynthesis && filterAllYearByYear)
+        //                         || (printingSynthesis && filterAllSynthesis);
+
+        //    // ... Or do we skip the current area's result directory creation because no zonal
+        //    //	   variables were selected ?
+        //    skipDirectory = skipDirectory || !selectedZonalVarsCount;
+
+        //    // Generating the report for each area
+        //    if (CDataLevel & Category::area && !skipDirectory)
+        //    {
+        //        logs.info() << "Exporting results : " << area.name;
+        //        // The new output
+        //        results.data.output.clear();
+        //        results.data.output << results.data.originalOutput << SEP << "areas" << SEP
+        //                            << area.id;
+        //        // Creating the directory
+        //        if (IO::Directory::Create(results.data.output))
+        //            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
+        //              list, results, numSpace);
+        //        else
+        //            logs.error() << "I/O Error: '" << results.data.output
+        //                         << "': impossible to create the folder";
+
+        //        if (Antares::Memory::swapSupport)
+        //            Antares::memory.flushAll();
+        //    }
+        //}
+
+        using namespace Yuni;
+
+        // Generating the report for each binding constraint
+        if (CDataLevel & Category::bindingConstraint)
+        {
+            logs.info() << "Exporting results : binding constraints";
+            // The new output
+            results.data.output.clear();
+            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
+            // Creating the directory
+            if (IO::Directory::Create(results.data.output))
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+            else
+                logs.error() << "I/O Error: '" << results.data.output
+                                << "': impossible to create the folder";
+        }
+
+
     }
 
 }; // class SurveyReportBuilder

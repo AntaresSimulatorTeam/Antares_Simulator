@@ -25,8 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/study/memory-usage.h>
-#include "all.h"
+using namespace Yuni;
 
-using NEXTTYPE = Solver::Variable::Adequacy::VariablesPerArea;
-#include "../area.memory-estimation.inc.hxx"
+namespace Antares
+{
+namespace Solver
+{
+namespace Variable
+{
+template<>
+uint64 BindingConstraints<bc_next_type>::memoryUsage() const
+{
+    uint64 result = 0;
+    // gp : to be completed
+    // gp : Take example on the body of :
+    // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const
+    return result;
+}
+
+template<>
+void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+{
+    // gp : to be completed
+    // gp : Take example on the body of :
+    // gp :     void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+}
+
+} // namespace Variable
+} // namespace Solver
+} // namespace Antares

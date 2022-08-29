@@ -49,10 +49,12 @@ enum DataLevel
     link = 8,
     //! Data that belong to a set
     setOfAreas = 16,
+    // Data belonging to a binding constraint
+    bindingConstraint = 32,
     //! The maximum available level
-    maxDataLevel = 16,
+    maxDataLevel = 32,
     //! All data level
-    allDataLevel = standard | area | thermalAggregate | link | setOfAreas
+    allDataLevel = standard | area | thermalAggregate | link | setOfAreas | bindingConstraint
 };
 
 enum File
