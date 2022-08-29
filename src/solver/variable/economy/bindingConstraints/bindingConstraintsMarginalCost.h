@@ -331,7 +331,7 @@ private:
     unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     uint yearMemorySpace_ = 0;
-    uint bindConstraintGlobalNumber_ = -1;
+    int bindConstraintGlobalNumber_ = -1;
 
 }; // class BindingConstMarginCost
 

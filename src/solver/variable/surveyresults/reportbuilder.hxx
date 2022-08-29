@@ -575,7 +575,7 @@ private:
             logs.info() << "Exporting results : binding constraints";
             // The new output
             results.data.output.clear();
-            results.data.output << results.data.originalOutput << SEP << "bind_const";
+            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
             // Creating the directory
             if (IO::Directory::Create(results.data.output))
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
