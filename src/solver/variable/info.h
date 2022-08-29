@@ -591,6 +591,20 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     }
 
     template<class VCardType>
+    static void BuildSurveyReport_noCaptionUpdate(SurveyResults& results,
+                                                  const Type& container,
+                                                  int dataLevel,
+                                                  int fileLevel,
+                                                  int precision)
+    {
+        if (*results.isPrinted)
+        {
+            container.template buildSurveyReport<ResultsT, VCardType>(
+              results, container, dataLevel, fileLevel, precision);
+        }
+    }
+
+    template<class VCardType>
     static void BuildAnnualSurveyReport(SurveyResults& results,
                                         const Type& container,
                                         int fileLevel,

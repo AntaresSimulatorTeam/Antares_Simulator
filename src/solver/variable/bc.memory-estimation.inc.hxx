@@ -37,18 +37,36 @@ template<>
 uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 {
     uint64 result = 0;
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     uint64 Areas<NEXTTYPE>::memoryUsage() const
+    for (unsigned int i = 0; i != pBCcount; ++i)
+    {
+        result += sizeof(NextType) + sizeof(void*); // overhead vector
+        result += pBindConstraints[i].memoryUsage();
+    }
     return result;
 }
 
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    // gp : to be completed
-    // gp : Take example on the body of :
-    // gp :     void Areas<NEXTTYPE>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
+    auto InequalityBindConstraints = getInequalityBindConstraintGlobalNumbers(u.study);
+    for (auto bc : InequalityBindConstraints)
+    {
+        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+        u.overheadDiskSpaceForSingleBindConstraint();
+
+        // year-by-year
+        if (!u.gatheringInformationsForInput)
+        {
+            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            {
+                for (unsigned int i = 0; i != u.years; ++i)
+                    u.overheadDiskSpaceForSingleBindConstraint();
+            }
+        }
+
+        // next
+        NextType::EstimateMemoryUsage(u);
+    }
 }
 
 } // namespace Variable

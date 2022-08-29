@@ -26,8 +26,6 @@
 */
 #pragma once
 
-#include <cmath>
-
 #include "../../variable.h"
 #include "antares/study/constraint/constraint.h"
 
@@ -295,8 +293,11 @@ public:
       int precision /* printed results : hourly, daily, weekly, ...*/,
       unsigned int numSpace) const
     {
+        if (!(precision & associatedBC_->filterYearByYear_))
+            return;
+        
         // Initializing external pointer on current variable non applicable status
-        results.isCurrentVarNA[0] = precision < pow(2, associatedBC_->type - 1);
+        results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
         if (AncestorType::isPrinted[0])
         {
@@ -307,7 +308,32 @@ public:
         }
     }
 
+    void buildSurveyReport(SurveyResults& results,
+                           int dataLevel,
+                           int fileLevel,
+                           int precision) const
+    {
+        // Building syntheses results
+        // ------------------------------
+        if (!(precision & associatedBC_->filterSynthesis_))
+            return;
+
+        // And only if we match the current data level _and_ precision level
+        if ((dataLevel & VCardType::categoryDataLevel) && (fileLevel & VCardType::categoryFileLevel)
+            && (precision & VCardType::precision))
+        {
+            results.isPrinted = AncestorType::isPrinted;
+            results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
+            results.variableCaption = getBindConstraintCaption();
+
+            VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
+              results, AncestorType::pResults, dataLevel, fileLevel, precision);
+        }
+    }
+
 private:
+    // Private methods
+    // ---------------
     std::string getBindConstraintCaption() const
     {
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
@@ -326,6 +352,17 @@ private:
         }
     }
 
+    bool isCurrentOutputNonApplicable(int precision) const
+    {
+        // The current marginal prices to print becomes non applicable if they have a precision
+        // (hour, day, week, ...) smaller than the associated binding constraint granularity.
+        // Ex : if the BC is daily and we try to print hourly associated marginal prices,
+        //      then these prices are set to N/A
+        return precision < (1 << (associatedBC_->type - 1));
+    }
+
+    // Private data mambers
+    // ----------------------
     //! Intermediate values for each year
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
