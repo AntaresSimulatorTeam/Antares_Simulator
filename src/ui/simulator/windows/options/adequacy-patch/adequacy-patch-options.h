@@ -92,6 +92,7 @@ private:
     Component::Button* pBtnAdequacyPatchIncludeHurdleCostCsr;
     wxTextCtrl* pThresholdCSRStart;
     wxTextCtrl* pThresholdLMRviolations;
+    wxTextCtrl* pThresholdCSRVarBoundsRelaxation;
     bool* pTargetRef;
 
 }; // class AdequacyPatchOptions

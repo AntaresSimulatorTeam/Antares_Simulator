@@ -502,6 +502,7 @@ struct AdequacyPatchParameters
     AdqPatchPTO PriceTakingOrder;
     double ThresholdInitiateCurtailmentSharingRule;
     double ThresholdDisplayLocalMatchingRuleViolations;
+    double ThresholdCSRVarBoundsRelaxation;
 };
 
 struct PROBLEME_HEBDO
@@ -730,12 +731,14 @@ public:
     void run(uint week, int year);
     
     int hourInWeekTriggeredCsr;
-    const double belowThisThresholdSetToZero = 1e-3;
+    double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
     HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
     {
         hourInWeekTriggeredCsr = hourInWeek;
         pWeeklyProblemBelongedTo = pProblemeHebdo;
+        belowThisThresholdSetToZero
+          = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     };
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
