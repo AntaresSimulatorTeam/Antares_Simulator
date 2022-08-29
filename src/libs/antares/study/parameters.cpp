@@ -242,6 +242,8 @@ void Parameters::resetThresholdsAdqPatch()
       = defaultValueThresholdInitiateCurtailmentSharingRule;
     adqPatch.curtailmentSharing.thresholdDisplayViolations
       = defaultValueThresholdDisplayLocalMatchingRuleViolations;
+    adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+      = defaultValueThresholdVarBoundsRelaxation;
 }
 
 void Parameters::resetAdqPatchParameters()
@@ -689,9 +691,11 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<float>(d.adqPatch.curtailmentSharing.thresholdInitiate);
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdInitiate);
     if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<float>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+    if (key == "threshold-csr-variable-bounds-relaxation")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
 
     return false;
 }
@@ -1826,6 +1830,8 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.curtailmentSharing.thresholdInitiate);
         section->add("threshold-display-local-matching-rule-violations",
                      adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        section->add("threshold-csr-variable-bounds-relaxation",
+                     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
 
     // Other preferences

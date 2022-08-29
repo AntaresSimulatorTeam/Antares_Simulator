@@ -80,6 +80,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.adqPatch.curtailmentSharing.thresholdInitiate;
         problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
           = parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations;
+        problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation
+          = parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation;
 
         problem.adequacyPatchRuntimeData.initialize(study);
     }
