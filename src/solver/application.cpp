@@ -5,10 +5,10 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
-#include <antares/timeelapsed.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
+#include "utils/ortools_utils.h"
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -43,6 +43,16 @@ void printVersion()
 #else
     std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
+}
+
+void printSolvers()
+{
+    std::cout << "Available solvers :" << std::endl;
+    OrtoolsUtils utils;
+    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    {
+        std::cout << solver << std::endl;
+    }
 }
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
@@ -173,7 +183,7 @@ namespace Antares
 {
 namespace Solver
 {
-Application::Application() : pTotalTimer("Simulation", "total", true, &pTimeElapsedContentHandler)
+Application::Application()
 {
     resetProcessPriority();
 }
@@ -209,6 +219,12 @@ void Application::prepare(int argc, char* argv[])
     if (options.displayVersion)
     {
         printVersion();
+        return;
+    }
+
+    if (options.listSolvers)
+    {
+        printSolvers();
         return;
     }
 
@@ -270,8 +286,8 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->include.adequacyPatch, pParameters->mode);
-    checkAdqPatchContainsAdqPatchArea(pParameters->include.adequacyPatch, pStudy->areas);
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
     bool tsGenThermal = (0
                          != (pStudy->parameters.timeSeriesToGenerate
@@ -420,14 +436,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
-    TimeElapsed::Timer loadTimer(
-      "Study loading", "study_loading", true, &pTimeElapsedContentHandler);
+    Benchmarking::Timer timer;
+
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
-    loadTimer.stop();
+
+    timer.stop();
+    pDurationCollector.addDuration("study_loading", timer.get_duration());
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -524,16 +542,30 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
-void Application::saveElapsedTime()
+void Application::writeExectutionInfo()
 {
     if (!pStudy)
-       return;
+        return;
 
+    // Last missing duration to get : measure of total simulation duration
     pTotalTimer.stop();
-    pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "time_measurement.txt";
-    TimeElapsed::CSVWriter writer(pStudy->buffer, &pTimeElapsedContentHandler);
-    // Write time data
-    writer.flush();
+    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    // Info collectors : they retrieve data from study and simulation
+    Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
+
+    // Fill file content with data retrieved by collectors
+    Benchmarking::FileContent file_content;
+    pDurationCollector.toFileContent(file_content);
+    study_info_collector.toFileContent(file_content);
+    simulation_info_collector.toFileContent(file_content);
+
+    // Flush previous info into a record file
+    Yuni::String filePath;
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
+    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
+    ini_file_writer.flush();
 }
 
 Application::~Application()

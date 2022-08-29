@@ -30,7 +30,7 @@
 #include <yuni/core/string.h>
 
 #include <antares/study.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include <antares/logs.h>
 #include <antares/emergency.h>
 

@@ -562,10 +562,24 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
+// Adding new files / variables ? Change the values below to avoid maxVariables being too small
+const uint nbVariablesPerDetailThermalCluster = 4;
+/*
+- Production
+- NODU,
+- NP Costs
+- Net profit
+*/
+const uint nbVariablesPerDetailRenewableCluster = 1;
+// Production
+
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
  data(s, o),
- maxVariables(Math::Max<uint>(maxVars, 3 * s.runtime->maxThermalClustersForSingleArea)),
+ maxVariables(Math::Max<uint>(
+   maxVars,
+   nbVariablesPerDetailThermalCluster * s.runtime->maxThermalClustersForSingleArea,
+   nbVariablesPerDetailRenewableCluster * s.runtime->maxRenewableClustersForSingleArea)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr)

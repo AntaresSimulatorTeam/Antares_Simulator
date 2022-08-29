@@ -138,6 +138,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all adequacy patch values
+    */
+    void resetAdqPatchParameters();
 
     /*!
     ** \brief Try to detect then fix any bad value
@@ -416,8 +420,8 @@ public:
         //! a flag to export all mps files
         bool exportMPS;
 
-        //! a flag to use Adequacy patch
-        bool adequacyPatch;
+        //! if MPS files are exported, a flag to split them
+        bool splitExportedMPS;
 
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
@@ -458,7 +462,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -518,7 +522,9 @@ public:
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
         };
+        bool enabled;
         LocalMatching localMatching;
+        void addExcludedVariables(std::vector<std::string>&) const;
     };
 
     AdequacyPatch adqPatch;

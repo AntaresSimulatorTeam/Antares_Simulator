@@ -28,7 +28,7 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/economy.h"
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include <antares/logs.h>
 
 namespace Antares
@@ -39,14 +39,17 @@ void Application::runSimulationInEconomicMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pTimeElapsedContentHandler);
+    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        TimeElapsed::Timer timer("Synthesis export", "synthesis_export", true, &pTimeElapsedContentHandler);
+        Benchmarking::Timer timer;
         simulation.writeResults(/*synthesis:*/ true);
         timer.stop();
+        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
+
+        this->pOptimizationInfo = simulation.getOptimizationInfo();
     }
 }
 } // namespace Solver

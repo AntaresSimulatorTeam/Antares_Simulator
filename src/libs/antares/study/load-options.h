@@ -102,6 +102,9 @@ public:
     //! Display version number and exit
     bool displayVersion = false;
 
+    //! True => display the list of OR-Tools solvers and exit
+    bool listSolvers = false;
+
     //! Simulation mode
     bool forceExpansion = false;
     bool forceEconomy = false;

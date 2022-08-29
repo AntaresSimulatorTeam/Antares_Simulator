@@ -43,8 +43,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
     switch (OriginNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType,
-                                                             SetToZero12LinksForAdequacyPatch);
+        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType);
 
     case physicalAreaOutsideAdqPatch:
         return SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
@@ -56,8 +55,7 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
 }
 
 LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch)
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
 {
     switch (ExtremityNodeAdequacyPatchType)
     {

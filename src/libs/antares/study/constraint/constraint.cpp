@@ -222,14 +222,10 @@ void BindingConstraint::removeAllOffsets()
 
 uint Antares::Data::BindingConstraint::enabledClusterCount() const
 {
-    auto end = pClusterWeights.end();
-    uint enabledClusterNumber = 0;
-    for (auto i = pClusterWeights.begin(); i != end; ++i)
-    {
-        if (i->first->enabled && !i->first->mustrun)
-            ++enabledClusterNumber;
-    }
-    return enabledClusterNumber;
+    return static_cast<uint>(std::count_if(
+      pClusterWeights.begin(), pClusterWeights.end(), [](const clusterWeightMap::value_type& i) {
+          return i.first->enabled && !i.first->mustrun;
+      }));
 }
 
 bool BindingConstraint::removeLink(const AreaLink* lnk)
