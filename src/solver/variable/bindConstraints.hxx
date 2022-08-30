@@ -48,7 +48,7 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
 
     for (uint i = 0; i != pBCcount; ++i)
     {
-        NextType& bc = pBindConstraints[i];
+        const NextType& bc = pBindConstraints[i];
 
         bc.buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
