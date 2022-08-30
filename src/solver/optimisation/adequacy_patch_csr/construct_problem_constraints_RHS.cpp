@@ -147,15 +147,12 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
             int NbClusters
               = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
             int Area;
-            int Palier;
             int IndexNumeroDuPalierDispatch;
             double ValueOfVar;
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays;
 
             for (Index = 0; Index < NbClusters; Index++)
             {
                 Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
-                PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Area];
 
                 IndexNumeroDuPalierDispatch
                   = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];

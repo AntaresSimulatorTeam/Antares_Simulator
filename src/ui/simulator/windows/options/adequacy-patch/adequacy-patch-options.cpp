@@ -56,7 +56,7 @@ static void addLabelAdqPatch(wxWindow* parent, wxSizer* sizer, const wxChar* tex
     sizer->AddSpacer(5);
 }
 
-static void updateButton(Component::Button* button, bool value, std::string const& buttonType)
+static void updateButton(Component::Button* button, bool value, std::string_view buttonType)
 {
     char type;
     if (buttonType == "ntc")

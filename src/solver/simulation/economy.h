@@ -64,7 +64,7 @@ private:
     void solveCSR(const Variable::State& state, uint numSpace, uint week);
     vector<double> calculateENSoverAllAreasForEachHour(uint numSpace) const;
     std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace) const;
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace);
+    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace) const;
 };
 
 class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization

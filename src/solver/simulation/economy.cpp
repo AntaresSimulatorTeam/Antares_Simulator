@@ -223,7 +223,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
     return triggerCsrSet;
 }
 
-std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace)
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
 {
     vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
