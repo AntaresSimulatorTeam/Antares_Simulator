@@ -151,6 +151,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
     logs.debug() << "[CSR] variable list:";
 
     const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
