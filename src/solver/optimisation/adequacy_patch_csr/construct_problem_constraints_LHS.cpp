@@ -218,7 +218,6 @@ void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
     int Interco;
     int NbInterco;
     double Poids;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     std::string NomDeLaContrainte;
