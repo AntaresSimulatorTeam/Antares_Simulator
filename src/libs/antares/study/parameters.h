@@ -538,7 +538,7 @@ public:
             //! Threshold to display Local Matching Rule violations
             double thresholdDisplayViolations;
             //! CSR Variables relaxation threshold
-            double thresholdVarBoundsRelaxation;
+            int thresholdVarBoundsRelaxation;
             //! Include hurdle cost in CSR cost function
             bool includeHurdleCost;
         };
