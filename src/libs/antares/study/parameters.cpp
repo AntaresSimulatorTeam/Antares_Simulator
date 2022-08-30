@@ -695,7 +695,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
     if (key == "threshold-display-local-matching-rule-violations")
         return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
     if (key == "threshold-csr-variable-bounds-relaxation")
-        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
+        return value.to<int>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
 
     return false;
 }

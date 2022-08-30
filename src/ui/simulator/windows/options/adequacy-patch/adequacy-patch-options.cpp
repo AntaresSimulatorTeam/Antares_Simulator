@@ -240,7 +240,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         pThresholdCSRVarBoundsRelaxation
           = insertEdit(this,
                        s,
-                       wxStringFromUTF8("Relax CSR variable boundaries"),
+                       wxStringFromUTF8("Relax CSR variable boundaries (10^-)"),
                        wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
     }
 
@@ -594,11 +594,11 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         String text;
         wxStringToString(pThresholdCSRVarBoundsRelaxation->GetValue(), text);
 
-        float newthreshold;
+        int newthreshold;
         if (!text.to(newthreshold))
         {
             logs.error() << "impossible to update the seed for '"
-                         << "Relax CSR variable boundaries"
+                         << "Relax CSR variable boundaries (10^-)"
                          << "'";
         }
         else
