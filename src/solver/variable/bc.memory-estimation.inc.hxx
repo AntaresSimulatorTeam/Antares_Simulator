@@ -48,25 +48,35 @@ uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    auto InequalityBindConstraints = getInequalityBindConstraintGlobalNumbers(u.study);
-    for (auto bc : InequalityBindConstraints)
+    u.study.bindingConstraints.eachEnabled([&](const Data::BindingConstraint& constraint)
     {
-        u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
-        u.overheadDiskSpaceForSingleBindConstraint();
+        if (constraint.operatorType() == Data::BindingConstraint::opEquality)
+            return;
 
-        // year-by-year
-        if (!u.gatheringInformationsForInput)
+        int bc_count = 1;
+        // If the current binding constraint is double (has operators "<" and ">"), it is counted twice 
+        if (constraint.operatorType() == Data::BindingConstraint::opBoth)
+            bc_count = 2;
+
+        for (int i = 0; i < bc_count; i++)
         {
-            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+            u.overheadDiskSpaceForSingleBindConstraint();
+
+            // year-by-year
+            if (!u.gatheringInformationsForInput)
             {
-                for (unsigned int i = 0; i != u.years; ++i)
-                    u.overheadDiskSpaceForSingleBindConstraint();
+                if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+                {
+                    for (unsigned int i = 0; i != u.years; ++i)
+                        u.overheadDiskSpaceForSingleBindConstraint();
+                }
             }
         }
 
         // next
         NextType::EstimateMemoryUsage(u);
-    }
+    });
 }
 
 } // namespace Variable
