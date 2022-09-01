@@ -98,7 +98,11 @@ of area \\(u\\) in the definition of the monthly and daily primary hydro generat
 	  The hydro storage energy monthly and weekly profiles of each zone \\(z\\) do not depend at all on the local
 	  demand and must-run generation in \\(z\\)
 - \\(L_{z.}^+\\) Time-series of "net" load for zone \\(z\\), defined as: \\(L{z.}^+ = L{z.} - M{z.}\\)
-- \\(L_{z.}\\) Time-series of "weighted" load for zone \\(z\\), defined as:_ \\(L_{z.} = A^t L_{z.}^+\\)
+- \\(L_{z.}\\) Time-series of "weighted" load for zone \\(z\\), defined as:_ \\(L_{z.} = A^t L_{z.}^+\\). 
+
+Note that option `handle-negative-demand` controls the way negative net demands is treated. Negative net demand occurs for example when the load value is low and non-dispatchable generation (wind, solar, etc.) is high.
+- In case its value is `increase-effective-demand` (default), whenever a negative net demand is encountered, all demands are increased by that amount for the month & day. This may lead to zero allocation for the whole month when the net demand is low on that month, even if some hydro generation is required at some timesteps within that month.
+- If the value is `cap-net-demand`, the positive part of the netdemand is taken for each day for each day. This value should be preferred when negative net demand is present within the study.
 
 <ins>All following parameters are related to the generic zone \\(z\\):</ins>
 
