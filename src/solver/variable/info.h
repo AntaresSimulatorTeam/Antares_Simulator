@@ -580,25 +580,15 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
                                   const Type& container,
                                   int dataLevel,
                                   int fileLevel,
-                                  int precision)
+                                  int precision,
+                                  bool updateCaption = true)
     {
         if (*results.isPrinted)
         {
-            results.variableCaption = VCardType::Caption();
-            container.template buildSurveyReport<ResultsT, VCardType>(
-              results, container, dataLevel, fileLevel, precision);
-        }
-    }
-
-    template<class VCardType>
-    static void BuildSurveyReport_noCaptionUpdate(SurveyResults& results,
-                                                  const Type& container,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision)
-    {
-        if (*results.isPrinted)
-        {
+            if (updateCaption)
+            {
+                results.variableCaption = VCardType::Caption();
+            }
             container.template buildSurveyReport<ResultsT, VCardType>(
               results, container, dataLevel, fileLevel, precision);
         }

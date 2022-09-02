@@ -344,8 +344,8 @@ public:
             results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
             results.variableCaption = getBindConstraintCaption();
 
-            VariableAccessorType::template BuildSurveyReport_noCaptionUpdate<VCardType>(
-              results, AncestorType::pResults, dataLevel, fileLevel, precision);
+            VariableAccessorType::template BuildSurveyReport<VCardType>(
+              results, AncestorType::pResults, dataLevel, fileLevel, precision, false);
         }
     }
 
