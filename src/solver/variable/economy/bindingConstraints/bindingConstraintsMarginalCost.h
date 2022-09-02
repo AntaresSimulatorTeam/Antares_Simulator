@@ -189,14 +189,22 @@ public:
 
         // Compute statistics for the current year depending on
         // the BC type (hourly, daily, weekly)
-        if (associatedBC_->type == Data::BindingConstraint::typeHourly)
+        using namespace Data;
+        switch (associatedBC_->type)
+        {
+        case BindingConstraint::typeHourly:
             pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
-
-        if (associatedBC_->type == Data::BindingConstraint::typeDaily)
+            break;
+        case BindingConstraint::typeDaily:
             pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromDailyValues();
-
-        if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
+            break;
+        case BindingConstraint::typeWeekly:
             pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromWeeklyValues();
+            break;
+        case BindingConstraint::typeUnknown:
+        case BindingConstraint::typeMax:
+            break;
+        }
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -222,8 +230,15 @@ public:
             return;
 
         // For daily binding constraints, getting daily marginal price
-        if (associatedBC_->type == Data::BindingConstraint::typeDaily)
+        using namespace Data;
+        switch (associatedBC_->type)
         {
+        case BindingConstraint::typeHourly:
+        case BindingConstraint::typeUnknown:
+        case BindingConstraint::typeMax:
+            return;
+
+        case BindingConstraint::typeDaily:{
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
@@ -234,11 +249,11 @@ public:
 
                 dayInTheYear++;
             }
+            break;
         }
 
         // For weekly binding constraints, getting weekly marginal price
-        if (associatedBC_->type == Data::BindingConstraint::typeWeekly)
-        {
+        case BindingConstraint::typeWeekly:{
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
               = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
@@ -255,6 +270,8 @@ public:
                 pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = dailyValue;
                 dayInTheYear++;
             }
+            break;
+        }
         }
     }
 
