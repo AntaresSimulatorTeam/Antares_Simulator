@@ -344,14 +344,6 @@ private:
         return (bindConstraintGlobalNumber_ >= 0) && associatedBC_;
     }
 
-    void checkInitialization()
-    {
-        if (not bcInitialize())
-        {
-            logs.error() << "BC marginal price: output variable badly initialized";
-        }
-    }
-
     bool isCurrentOutputNonApplicable(int precision) const
     {
         // The current marginal prices to print becomes non applicable if they have a precision
