@@ -49,7 +49,7 @@ template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
     u.study.bindingConstraints.eachEnabled(
-      [&]([[maybe_unused]] const Data::BindingConstraint& constraint) {
+      [&](const Data::BindingConstraint& constraint) {
           if (constraint.operatorType() == Data::BindingConstraint::opEquality)
               return;
 
