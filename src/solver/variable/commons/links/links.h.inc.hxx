@@ -185,8 +185,6 @@ public:
 
     Yuni::uint64 memoryUsage() const;
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-
     template<class I>
     static void provideInformations(I& infos);
 

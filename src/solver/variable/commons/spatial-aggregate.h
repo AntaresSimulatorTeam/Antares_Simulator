@@ -333,22 +333,6 @@ public:
         NextType::template simulationEndSpatialAggregates(allVars, set);
     }
 
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Generate the Digest for the local results (districts part)
-        if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
-        {
-            // Initializing pointer on variable non applicable and print stati arrays to beginning
-            results.isPrinted = AncestorType::isPrinted;
-            results.isCurrentVarNA = AncestorType::isNonApplicable;
-
-            VariableAccessorType::template BuildDigest<typename VCardType::VCardOrigin>(
-              results, AncestorType::pResults, digestLevel, dataLevel);
-        }
-        // Ask to build the digest to the next variable
-        NextType::buildDigest(results, digestLevel, dataLevel);
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,

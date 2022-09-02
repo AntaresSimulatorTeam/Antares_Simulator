@@ -46,99 +46,6 @@ namespace Variable
 {
 namespace Private
 {
-void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     const String& originalOutput,
-                                     String& output,
-                                     const char* title,
-                                     Clob& pFileBuffer,
-                                     const Matrix<>& matrix)
-{
-    // THIS FILE IS DEPRECATED !!!
-    output.clear();
-    output << originalOutput << SEP << "grid" << SEP << "digest.txt";
-
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(output, IO::OpenMode::append);
-    if (not out.opened())
-    {
-        logs.error() << "Digest: " << title << ": Impossible to open the file '" << output
-                     << "' for appending data";
-        return;
-    }
-
-    pFileBuffer = "\n\n\n\n\t";
-    pFileBuffer << title << "\n\t\tFrom...\n\t...To";
-    for (uint y = 0; y != study.areas.size(); ++y)
-    {
-        pFileBuffer << '\t' << study.areas.byIndex[y]->id;
-    }
-    pFileBuffer += '\n';
-    if (pFileBuffer.size() != out.write(pFileBuffer))
-    {
-        logs.error() << "Digest: " << title << ": Impossible to append data to the file '" << output
-                     << "'.";
-        return;
-    }
-
-    char conversionBuffer[256];
-    conversionBuffer[0] = '\t';
-    int sizePrintf;
-
-    uint count = study.areas.size();
-    pFileBuffer.reserve(10 + count * (1 /*tab*/ + 7));
-
-    double v;
-    for (uint y = 0; y != count; ++y)
-    {
-        pFileBuffer = '\t';
-        pFileBuffer += study.areas.byIndex[y]->id;
-        for (uint x = 0; x < count; ++x)
-        {
-            if (x == y)
-            {
-                pFileBuffer += "\tX";
-            }
-            else
-            {
-                v = matrix[x][y];
-                if (Math::NaN(v))
-                    pFileBuffer += "\t--";
-                else
-                {
-                    if (Math::Zero(v))
-                    {
-                        pFileBuffer.append("\t0", 2);
-                    }
-                    else
-                    {
-// The snprintf routine is required since we may not have the ending zero
-// with the standard printf. The conversion may require a bigger buffer.
-#ifdef YUNI_OS_MSVC
-                        sizePrintf = ::sprintf_s(
-                          conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
-#else
-                        sizePrintf = ::snprintf(
-                          conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
-#endif
-                        if (sizePrintf >= 0)
-                            pFileBuffer.append((const char*)conversionBuffer, 1 + sizePrintf);
-                        else
-                            pFileBuffer += "\tERR";
-                    }
-                }
-            }
-        }
-        pFileBuffer += '\n';
-
-        // Write
-        if (pFileBuffer.size() != out.write(pFileBuffer))
-        {
-            logs.error() << "Digest: " << title << ": Impossible to append data to the file '"
-                         << output << "'.";
-        }
-    }
-}
-
 void ExportGridInfosAreas(const Data::Study& study, const String& folder)
 {
     Clob out;
@@ -271,22 +178,6 @@ void SurveyResultsData::exportGridInfosAreas(const String& folder)
 {
     Solver::Variable::Private::ExportGridInfosAreas(study, folder);
 }
-
-bool SurveyResultsData::createDigestFile()
-{
-    output.clear();
-    output << originalOutput << SEP << "grid" << SEP << "digest.txt";
-
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(output, IO::OpenMode::write);
-    if (!out)
-    {
-        logs.error() << "Impossible to open the file '" << output << "' for writing";
-        return false;
-    }
-    return true;
-}
-
 } // namespace Private
 } // namespace Variable
 } // namespace Solver
@@ -587,11 +478,6 @@ SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o
     variableCaption.reserve(10);
 
     data.initialize(maxVariables);
-    // logs.debug() << "  :: survey results: allocating "
-    //	<< (uint64)((data.matrix.memoryUsage() + sizeof(values))
-    //		+ sizeof(double) * maxHoursInAYear * 3
-    //		+ sizeof(PrecisionType) * maxVariables) / 1024
-    //	<< " Ko";
 
     // values
     typedef double* ValueType;
@@ -615,17 +501,6 @@ SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o
     nonApplicableStatus = new bool[maxVariables];
     for (uint i = 0; i != maxVariables; ++i)
         nonApplicableStatus[i] = false;
-
-    uint nbAreas = s.areas.size();
-    uint nbSetsOfAreas = s.areas.size();
-    digestSize = (nbAreas > nbSetsOfAreas) ? nbAreas : nbSetsOfAreas;
-    digestNonApplicableStatus = new bool*[digestSize];
-    for (uint i = 0; i < digestSize; i++)
-    {
-        digestNonApplicableStatus[i] = new bool[maxVariables];
-        for (uint v = 0; v < maxVariables; v++)
-            digestNonApplicableStatus[i][v] = false;
-    }
 }
 
 SurveyResults::~SurveyResults()
@@ -641,120 +516,12 @@ SurveyResults::~SurveyResults()
         delete[] captions[i];
     delete[] precision;
     delete[] nonApplicableStatus;
-    for (uint i = 0; i < digestSize; i++)
-        delete[] digestNonApplicableStatus[i];
-    delete[] digestNonApplicableStatus;
 }
 
 void SurveyResults::resetValuesAtLine(uint j)
 {
     for (uint i = 0; i < maxVariables; i++)
         values[i][j] = 0.;
-}
-
-bool SurveyResults::createDigestFile()
-{
-    return data.createDigestFile();
-}
-
-void SurveyResults::exportDigestAllYears()
-{
-    data.output.clear();
-    data.output << data.originalOutput << SEP << "grid" << SEP << "digest.txt";
-
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(data.output, IO::OpenMode::append);
-    if (not out.opened())
-    {
-        logs.error() << "impossible to open the file '" << data.output << "' for appending data";
-        return;
-    }
-
-    // Clearing the buffer
-    data.fileBuffer.clear();
-
-    // Main Header
-    {
-        data.fileBuffer << "\tdigest\n\tVARIABLES\tAREAS\tLINKS\n";
-        data.fileBuffer << '\t' << data.columnIndex << '\t' << (uint)data.rowCaptions.size();
-        data.fileBuffer.append("\t0\n\n", 4);
-    }
-    // Header - All columns
-    for (uint rowIndex = 0; rowIndex != captionCount; ++rowIndex)
-    {
-        data.fileBuffer += '\t';
-        for (uint i = 0; i != data.columnIndex; ++i)
-        {
-            assert(i < maxVariables);
-            data.fileBuffer += '\t';
-            data.fileBuffer += captions[rowIndex][i];
-        }
-        data.fileBuffer += '\n';
-    }
-
-    char conversionBuffer[128];
-    conversionBuffer[0] = '\t';
-    int sizePrintf;
-
-    auto end = data.rowCaptions.end();
-    uint y = 0;
-    for (auto j = data.rowCaptions.begin(); j != end; ++j, ++y)
-    {
-        // asserts
-        assert(y < maxHoursInAYear);
-
-        data.fileBuffer << '\t' << *j;
-
-        // Loop over results matrix columns
-        for (uint i = 0; i != data.columnIndex; ++i)
-        {
-            assert(i < maxVariables && "i greater can not be greater than maxVariables");
-            assert(y < maxHoursInAYear && "y can not be greater than maxHoursInAYear");
-
-            if (digestNonApplicableStatus[y][i])
-            {
-                data.fileBuffer.append("\tN/A", 4);
-                continue;
-            }
-
-            if (Math::Zero(values[i][y]))
-            {
-                data.fileBuffer.append("\t0", 2);
-            }
-            else
-            {
-// The snprintf routine is required since we may not have the ending zero
-// with the standard printf. The conversion may require a bigger buffer.
-#ifdef YUNI_OS_MSVC
-                sizePrintf = ::sprintf_s(conversionBuffer + 1,
-                                         sizeof(conversionBuffer) - 2,
-                                         precision[i].c_str(),
-                                         values[i][y]);
-#else
-                sizePrintf = ::snprintf(conversionBuffer + 1,
-                                        sizeof(conversionBuffer) - 2,
-                                        precision[i].c_str(),
-                                        values[i][y]);
-#endif
-                if (sizePrintf >= 0)
-                    data.fileBuffer.append((const char*)conversionBuffer, 1 + sizePrintf);
-                else
-                    data.fileBuffer += "\tERR";
-            }
-        }
-
-        // End of line
-        data.fileBuffer += '\n';
-    }
-    data.fileBuffer.append("\n\n", 2);
-
-    out << data.fileBuffer;
-}
-
-void SurveyResults::exportDigestMatrix(const char* title)
-{
-    Private::InternalExportDigestLinksMatrix(
-      data.study, data.originalOutput, data.output, title, data.fileBuffer, data.matrix);
 }
 
 void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)

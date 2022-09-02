@@ -95,7 +95,7 @@ void Areas<NEXTTYPE>::initializeFromStudy(Data::Study& study)
         // From the area
         n.initializeFromArea(&study, currentArea);
         // Does current output variable appears non applicable in areas' output files, not
-        // districts'. Note that digest gather area and district results.
+        // districts'.
         n.broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
 
         // For each current area's variable, getting the print status, that is :

@@ -253,30 +253,6 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-{
-    int count_int = count;
-    bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
-    if (count_int && setOfAreasDataLevel)
-    {
-        // Reset
-        results.data.rowCaptions.clear();
-        results.data.rowCaptions.resize(pSetsOfAreas.size());
-        results.data.area = nullptr;
-        results.data.rowIndex = 0;
-
-        for (auto i = pBegin; i != pEnd; ++i)
-        {
-            results.data.columnIndex = 0;
-            results.data.rowCaptions[results.data.rowIndex].clear()
-              << "@ " << pNames[results.data.rowIndex];
-            (*i)->buildDigest(results, digestLevel, dataLevel);
-            ++results.data.rowIndex;
-        }
-    }
-}
-
-template<class NextT>
 inline Yuni::uint64 SetsOfAreas<NextT>::memoryUsage() const
 {
     Yuni::uint64 result = sizeof(NextType) * pSetsOfAreas.size();

@@ -89,17 +89,8 @@ public:
     */
     void exportGridInfos();
 
-    bool createDigestFile();
-
     // Reset a line of values to zero.
     void resetValuesAtLine(uint);
-
-    /*!
-    ** \brief Export the digest file
-    */
-    void exportDigestAllYears();
-
-    void exportDigestMatrix(const char* title);
 
 public:
     //! Data (not related to the template parameter)
@@ -123,9 +114,6 @@ public:
 
     //! Non applicable status for each column (in the printf format)
     bool* nonApplicableStatus;
-    // Digest file non applicable status ( dim : nb vars x max(nb areas, nb sets of areas) )
-    uint digestSize; // Useful dimension for digest file non applicable statut management.
-    bool** digestNonApplicableStatus;
 
     //! The total number of variables
     const uint maxVariables;

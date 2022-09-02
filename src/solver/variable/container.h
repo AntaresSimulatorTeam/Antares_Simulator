@@ -224,18 +224,10 @@ public:
                                  unsigned int numSpace) const;
 
     /*!
-    ** \brief Ask to all variables to fullfil additional reports (like the digest for example)
-    **
     ** \tparam GlobalT True to write down the results of the simulation, false
     **   for the results of the current year
     */
     void exportSurveyResults(bool global, const Yuni::String& output, unsigned int numSpace);
-
-    /*!
-    ** \brief Ask to all variables to fullfil the digest
-    */
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-    //@}
 
     //! \name Memory management
     //@{

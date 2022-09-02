@@ -103,26 +103,6 @@ void Links::simulationEnd()
     }
 }
 
-void Links::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-{
-    int count_int = count;
-    bool linkDataLevel = dataLevel & Category::link;
-    bool areaDataLevel = dataLevel & Category::area;
-    if (count_int && (linkDataLevel || areaDataLevel))
-    {
-        if (not results.data.area->links.empty())
-        {
-            auto end = results.data.area->links.cend();
-            for (auto i = results.data.area->links.cbegin(); i != end; ++i)
-            {
-                results.data.link = i->second;
-                pLinks[results.data.link->indexForArea].buildDigest(
-                  results, digestLevel, Category::link);
-            }
-        }
-    }
-}
-
 void Links::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)

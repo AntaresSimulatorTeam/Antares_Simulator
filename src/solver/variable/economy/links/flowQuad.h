@@ -234,24 +234,6 @@ public:
         NextType::hourEnd(state, hourInTheYear);
     }
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        if (dataLevel & Category::link)
-        {
-            if (digestLevel & Category::digestFlowQuad)
-            {
-                results.data.matrix
-                  .entry[results.data.link->from->index][results.data.link->with->index]
-                  = AncestorType::pResults.rawdata.allYears;
-                results.data.matrix
-                  .entry[results.data.link->with->index][results.data.link->from->index]
-                  = -AncestorType::pResults.rawdata.allYears;
-            }
-        }
-        // Next
-        NextType::buildDigest(results, digestLevel, dataLevel);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       uint,
       uint) const

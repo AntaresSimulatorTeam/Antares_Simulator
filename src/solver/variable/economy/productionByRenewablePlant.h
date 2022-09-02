@@ -339,12 +339,6 @@ public:
         NextType::hourEnd(state, hourInTheYear);
     }
 
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Ask to build the digest to the next variable
-        NextType::buildDigest(results, digestLevel, dataLevel);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int column,
       unsigned int numSpace) const

@@ -168,8 +168,6 @@ public:
                                  int precision,
                                  unsigned int numSpace) const;
 
-    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
-
     void beforeYearByYearExport(uint year, uint numSpace);
 
     Yuni::uint64 memoryUsage() const;

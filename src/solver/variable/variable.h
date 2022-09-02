@@ -284,8 +284,6 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
-
     /*!
     ** \brief Event triggered before exporting a year-by-year survey report
     */

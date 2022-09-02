@@ -168,36 +168,6 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-{
-    int count_int = count;
-    if (count_int)
-    {
-        if (dataLevel & Category::area)
-        {
-            assert(pAreaCount == results.data.study.areas.size());
-
-            // Reset captions
-            results.data.rowCaptions.clear();
-            results.data.rowCaptions.resize(pAreaCount);
-
-            // For each area
-            // for (uint i = 0; i != results.data.study.areas.byIndex.size(); ++i)
-            for (uint i = 0; i != pAreaCount; ++i)
-            {
-                results.data.area = results.data.study.areas[i];
-                uint index = results.data.area->index;
-                results.data.rowIndex = index;
-                results.data.rowCaptions[index] = results.data.area->id;
-                results.data.columnIndex = 0;
-                results.resetValuesAtLine(i);
-                pAreas[i].buildDigest(results, digestLevel, dataLevel);
-            }
-        }
-    }
-}
-
-template<class NextT>
 template<class PredicateT>
 inline void Areas<NextT>::RetrieveVariableList(PredicateT& predicate)
 {

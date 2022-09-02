@@ -77,7 +77,7 @@ inline IVariable<ChildT, NextT, VCardT>::IVariable()
 
     // Allocation
     // Does current output variable appear non applicable in all output reports (of any kind :
-    // area or district reports, annual or over all years reports, digest, ...) ?
+    // area or district reports, annual or over all years reports, ...) ?
     isNonApplicable = new bool[pColumnCount];
     // Does current output variable column(s) appear in all reports ?
     isPrinted = new bool[pColumnCount];
@@ -429,28 +429,6 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results,
-                                                          int digestLevel,
-                                                          int dataLevel) const
-{
-    // Generate the Digest for the local results (areas part)
-    if (VCardType::columnCount != 0
-        && (VCardType::categoryDataLevel & Category::setOfAreas
-            || VCardType::categoryDataLevel & Category::area
-            || VCardType::categoryDataLevel & Category::link))
-    {
-        // Initializing pointer on variable non applicable and print stati arrays to beginning
-        results.isPrinted = isPrinted;
-        results.isCurrentVarNA = isNonApplicable;
-
-        VariableAccessorType::template BuildDigest<VCardT>(
-          results, pResults, digestLevel, dataLevel);
-    }
-    // Ask to build the digest to the next variable
-    NextType::buildDigest(results, digestLevel, dataLevel);
-}
-
-template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::beforeYearByYearExport(uint year, uint numspace)
 {
     NextType::beforeYearByYearExport(year, numspace);
@@ -561,7 +539,8 @@ template<class VCardToFindT>
 inline const double* IVariable<ChildT, NextT, VCardT>::retrieveHourlyResultsForCurrentYear(
   uint numSpace) const
 {
-    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT
+      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     return (AssignT::Yes)
              ? nullptr
              : NextType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>(numSpace);
@@ -573,7 +552,8 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForArea(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::Area* area)
 {
-    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT,VCardToFindT>::Yes>;
+    using AssignT
+      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForArea<VCardToFindT>(result, area);
@@ -585,7 +565,8 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForThermalCluster(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::ThermalCluster* cluster)
 {
-    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT
+      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForThermalCluster<VCardToFindT>(result, cluster);
@@ -597,7 +578,8 @@ inline void IVariable<ChildT, NextT, VCardT>::retrieveResultsForLink(
   typename Storage<VCardToFindT>::ResultsType** result,
   const Data::AreaLink* link)
 {
-    using AssignT = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
+    using AssignT
+      = RetrieveResultsAssignment<Yuni::Static::Type::StrictlyEqual<VCardT, VCardToFindT>::Yes>;
     AssignT::Do(pResults, result);
     if (!AssignT::Yes)
         NextType::template retrieveResultsForLink<VCardToFindT>(result, link);

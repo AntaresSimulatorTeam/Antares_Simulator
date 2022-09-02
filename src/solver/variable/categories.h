@@ -109,21 +109,6 @@ enum ColumnManagement
 };
 
 /*!
-** \brief Digest levels
-*/
-enum Digest
-{
-    //! No digest
-    digestNone = 0,
-    //! Only all years
-    digestAllYears = 1,
-    //! Flow (linear)
-    digestFlowLinear = 2,
-    //! Flow (Quadratic)
-    digestFlowQuad = 4,
-};
-
-/*!
 ** \brief Spatial clusters (bitwise)
 */
 enum SpatialAggregate

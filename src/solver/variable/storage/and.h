@@ -141,32 +141,6 @@ protected:
           report, results, dataLevel, fileLevel, precision);
     }
 
-    template<class VCardT>
-    void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
-    {
-        if (dataLevel & Category::area && digestLevel & Category::digestAllYears)
-        {
-            assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
-
-            report.captions[0][report.data.columnIndex] = report.variableCaption;
-            report.captions[1][report.data.columnIndex] = VCardT::Unit();
-            report.captions[2][report.data.columnIndex] = "values";
-
-            // Precision
-            report.precision[report.data.columnIndex]
-              = PrecisionToPrintfFormat<VCardT::decimal>::Value();
-            // Value
-            report.values[report.data.columnIndex][report.data.area->index] = andAllYears;
-            // Non applicability
-            report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
-              = *report.isCurrentVarNA;
-
-            ++(report.data.columnIndex);
-        }
-        // Next
-        NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);
-    }
-
     static void EstimateMemoryUsage(Antares::Data::StudyMemoryUsage& u)
     {
         Antares::Memory::EstimateMemoryUsage(sizeof(double), maxHoursInAYear, u, false);

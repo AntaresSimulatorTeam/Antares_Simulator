@@ -60,8 +60,6 @@ public:
 
     void exportGridInfosAreas(const Yuni::String& folder);
 
-    bool createDigestFile();
-
 public:
     //! The current column index
     unsigned int columnIndex;
@@ -97,7 +95,7 @@ public:
     //! Captions for rows
     Yuni::String::Vector rowCaptions;
 
-    //! A multi-purposes matrix (mainly used for the digest)
+    //! A multi-purposes matrix
     Matrix<double, double> matrix;
 
     unsigned int rowIndex;
@@ -105,16 +103,6 @@ public:
     Yuni::Clob fileBuffer;
 
 }; // class SurveyResultsData
-
-/*!
-** \brief Append the data of a matrix (about links variables) to the digest file
-*/
-void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     const Yuni::String& originalOutput,
-                                     Yuni::String& output,
-                                     const char* title,
-                                     Yuni::Clob& pFileBuffer,
-                                     const Matrix<>& matrix);
 
 void ExportGridInfosAreas(const Data::Study& study, const Yuni::String& folder);
 

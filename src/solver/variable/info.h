@@ -161,25 +161,6 @@ struct VariableAccessor
         return result;
     }
 
-    template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
-    {
-        for (uint i = 0; i != ColumnCountT; ++i)
-        {
-            if (*results.isPrinted)
-            {
-                results.variableCaption = VCardT::Multiple::Caption(i);
-                container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
-            }
-            // Shift to the next internal variable's non applicable status and print status
-            results.isCurrentVarNA++;
-            results.isPrinted++;
-        }
-    }
-
     template<class VCardType>
     static void BuildSurveyReport(SurveyResults& results,
                                   const Type& container,
@@ -366,23 +347,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         return result;
     }
 
-    template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
-    {
-        if (*results.isPrinted)
-        {
-            const Data::PartThermal& thermal = results.data.area->thermal;
-            for (uint i = 0; i != container.size(); ++i)
-            {
-                results.variableCaption = thermal.clusters[i]->name();
-                container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
-            }
-        }
-    }
-
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
         assert(results.data.area && "Area is NULL");
@@ -562,19 +526,6 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         return container.memoryUsage();
     }
 
-    template<class VCardT>
-    static void BuildDigest(SurveyResults& results,
-                            const Type& container,
-                            int digestLevel,
-                            int dataLevel)
-    {
-        if (*results.isPrinted)
-        {
-            results.variableCaption = VCardT::Caption();
-            container.template buildDigest<VCardT>(results, digestLevel, dataLevel);
-        }
-    }
-
     template<class VCardType>
     static void BuildSurveyReport(SurveyResults& results,
                                   const Type& container,
@@ -690,12 +641,6 @@ struct VariableAccessor<ResultsT, Category::noColumn>
 
     template<class VCardType>
     static void BuildAnnualSurveyReport(SurveyResults&, const Type&, int, int)
-    {
-        // Do nothing
-    }
-
-    template<class VCardT>
-    static void BuildDigest(SurveyResults&, const Type&, int, int)
     {
         // Do nothing
     }

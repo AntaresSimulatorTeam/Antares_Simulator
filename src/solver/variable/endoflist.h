@@ -240,10 +240,6 @@ public:
     {
     }
 
-    static void buildDigest(SurveyResults&, int, int)
-    {
-    }
-
     static void beforeYearByYearExport(uint /*year*/, uint)
     {
     }

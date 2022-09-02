@@ -291,16 +291,8 @@ public:
         RightType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Building the digest
-        LeftType ::buildDigest(results, digestLevel, dataLevel);
-        RightType::buildDigest(results, digestLevel, dataLevel);
-    }
-
     void beforeYearByYearExport(uint year, uint numSpace)
     {
-        // Building the digest
         LeftType ::beforeYearByYearExport(year, numSpace);
         RightType::beforeYearByYearExport(year, numSpace);
     }

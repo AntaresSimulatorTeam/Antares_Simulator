@@ -88,13 +88,6 @@ public:
                            int fileLevel,
                            int precision) const;
 
-    template<class VCardT>
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-    {
-        // Next
-        DecoratorType::template buildDigest<VCardT>(results, digestLevel, dataLevel);
-    }
-
     Yuni::uint64 memoryUsage() const
     {
         return DecoratorType::memoryUsage();

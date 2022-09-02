@@ -312,20 +312,6 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
-{
-    // Reset
-    results.data.columnIndex = 0;
-    results.data.thermalCluster = nullptr;
-    results.data.area = nullptr;
-    results.data.link = nullptr;
-    results.variableCaption.clear();
-
-    // Building the digest
-    NextType::buildDigest(results, digestLevel, dataLevel);
-}
-
-template<class NextT>
 inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
     u.requiredMemoryForOutput += sizeof(ListType);
@@ -368,11 +354,6 @@ void List<NextT>::exportSurveyResults(bool global,
 
         // Exporting the Grid (information about the study)
         survey->exportGridInfos();
-
-        // Exporting the digest
-        // The digest must be exported after the real report because some values
-        // are computed at this moment.
-        Builder::RunDigest(*this, *survey);
     }
     else
     {

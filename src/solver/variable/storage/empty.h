@@ -70,12 +70,6 @@ protected:
         // Does nothing
     }
 
-    template<class VCardT>
-    static void buildDigest(SurveyResults&, int, int)
-    {
-        // Does nothing
-    }
-
     static Yuni::uint64 memoryUsage()
     {
         return 0;

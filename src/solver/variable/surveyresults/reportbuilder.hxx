@@ -227,49 +227,6 @@ public:
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
     }
 
-    static void RunDigest(const ListType& list, SurveyResults& results)
-    {
-        logs.info() << "Exporting digest...";
-        logs.debug() << " . Digest, truncating file";
-        if (results.createDigestFile())
-        {
-            // Digest: Summary for All years
-            logs.debug() << " . Digest, annual";
-
-            // Digest file : areas part
-            list.buildDigest(results, Category::digestAllYears, Category::area);
-            results.exportDigestAllYears();
-
-            // Degest file : districts part
-            list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
-            results.exportDigestAllYears();
-
-            if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
-            {
-                // Digest: Flow linear (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
-                {
-                    logs.debug() << " . Digest, flow linear";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowLinear, Category::area);
-                    results.exportDigestMatrix("Links (FLOW LIN.)");
-                }
-
-                // Digest: Flow Quad (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
-                {
-                    logs.debug() << " . Digest, flow quad";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowQuad, Category::area);
-                    results.exportDigestMatrix("Links (FLOW QUAD.)");
-                }
-            }
-
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
-        }
-    }
-
 private:
     static void RunStandard(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
