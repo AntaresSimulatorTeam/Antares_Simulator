@@ -32,7 +32,7 @@ jobs:
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Pre-requisites
       shell: cmd
@@ -87,15 +87,14 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
 
-    - name: Install dependencies
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - name: Recover pip dependencies from cache
+      uses: actions/setup-python@v4
       with:
         architecture: 'x64'
         python-version: '3.10.6'
         cache: 'pip' # caching pip dependencies
 
-    - name: Install pip dependencies
+    - name: Install pip dependencies if necessary
       run: pip install -r src/tests/examples/requirements.txt
 
     - name: Init submodule
