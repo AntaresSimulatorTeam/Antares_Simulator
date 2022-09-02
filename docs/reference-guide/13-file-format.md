@@ -3,7 +3,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.4.0
 ### Input
-    In section advanced parameters, file **settings/generaldata.ini**, in section `advanced-parameters`, add property `handle-negative-demand` [str]. Values can be
+In section advanced parameters, file **settings/generaldata.ini**, in section `advanced-parameters`, add property `handle-negative-demand` [str]. Values can be
 
 * `increase-effective-demand` (default)
 * `cap-net-demand`
