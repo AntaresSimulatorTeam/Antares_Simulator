@@ -184,7 +184,7 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        if (not bcInitialize())
+        if (not isInitialized())
             return;
 
         // Compute statistics for the current year depending on
@@ -218,7 +218,7 @@ public:
 
     void weekBegin(State& state)
     {
-        if (not bcInitialize())
+        if (not isInitialized())
             return;
 
         // For daily binding constraints, getting daily marginal price
@@ -266,7 +266,7 @@ public:
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
-        if (not bcInitialize())
+        if (not isInitialized())
             return;
 
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
@@ -339,7 +339,7 @@ private:
         return associatedBC_->name + " (" + associatedBC_->operatorType + ")";
     }
 
-    bool bcInitialize()
+    bool isInitialized()
     {
         return (bindConstraintGlobalNumber_ >= 0) && associatedBC_;
     }
