@@ -87,6 +87,10 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
 
+    - name: Remove Python 3.10_x86
+      run: rm -rf "C:/hostedtoolcache/windows/Python/3.10.6/x86/"
+      shell: bash
+
     - name: Install dependencies
       run: |
           py -3.10 -m pip install --upgrade pip
