@@ -238,14 +238,15 @@ public:
         case BindingConstraint::typeMax:
             return;
 
-        case BindingConstraint::typeDaily:{
+        case BindingConstraint::typeDaily:
+        {
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
                 pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear]
-                    -= state.problemeHebdo
-                        ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                        .variablesDuales[dayInTheWeek];
+                  -= state.problemeHebdo
+                       ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                       .variablesDuales[dayInTheWeek];
 
                 dayInTheYear++;
             }
@@ -253,7 +254,8 @@ public:
         }
 
         // For weekly binding constraints, getting weekly marginal price
-        case BindingConstraint::typeWeekly:{
+        case BindingConstraint::typeWeekly:
+        {
             uint weekInTheYear = state.weekInTheYear;
             double weeklyValue
               = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
@@ -289,9 +291,8 @@ public:
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
         {
             pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
-                -= state.problemeHebdo
-                    ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
-                    .variablesDuales[state.hourInTheWeek];
+              -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
+                   .variablesDuales[state.hourInTheWeek];
         }
 
         NextType::hourEnd(state, hourInTheYear);
@@ -312,7 +313,7 @@ public:
     {
         if (!(precision & associatedBC_->filterYearByYear_))
             return;
-        
+
         // Initializing external pointer on current variable non applicable status
         results.isCurrentVarNA[0] = isCurrentOutputNonApplicable(precision);
 
@@ -368,14 +369,14 @@ private:
         // (hour, day, week, ...) smaller than the associated binding constraint granularity.
         // Ex : if the BC is daily and we try to print hourly associated marginal prices,
         //      then these prices are set to N/A
-        switch(associatedBC_->type)
+        switch (associatedBC_->type)
         {
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
             return true;
         default:
-          const auto precision_bc = 1 << (associatedBC_->type - 1);
-          return precision < precision_bc;
+            const auto precision_bc = 1 << (associatedBC_->type - 1);
+            return precision < precision_bc;
         }
     }
 
