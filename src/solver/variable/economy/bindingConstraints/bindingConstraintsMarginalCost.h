@@ -346,11 +346,20 @@ private:
 
     bool isCurrentOutputNonApplicable(int precision) const
     {
+        using namespace Antares::Data;
         // The current marginal prices to print becomes non applicable if they have a precision
         // (hour, day, week, ...) smaller than the associated binding constraint granularity.
         // Ex : if the BC is daily and we try to print hourly associated marginal prices,
         //      then these prices are set to N/A
-        return precision < (1 << (associatedBC_->type - 1));
+        switch(associatedBC_->type)
+        {
+        case BindingConstraint::typeUnknown:
+        case BindingConstraint::typeMax:
+            return true;
+        default:
+          const auto precision_bc = 1 << (associatedBC_->type - 1);
+          return precision < precision_bc;
+        }
     }
 
     // Private data mambers
