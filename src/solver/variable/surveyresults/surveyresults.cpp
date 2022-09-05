@@ -584,11 +584,13 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
 
     const auto max = [](uint a, uint b, uint c, uint d) -> uint { return std::max({a, b, c, d}); };
 
-    return max(
-      maxVars,
-      nbVariablesPerDetailThermalCluster * runtime->maxThermalClustersForSingleArea,
-      nbVariablesPerDetailRenewableCluster * runtime->maxRenewableClustersForSingleArea,
-      nbVariablesPerInequalityBindingConstraint * runtime->bindingConstraintGlobalNumbers.size());
+    return max(maxVars,
+               static_cast<uint>(nbVariablesPerDetailThermalCluster
+                                 * runtime->maxThermalClustersForSingleArea),
+               static_cast<uint>(nbVariablesPerDetailRenewableCluster
+                                 * runtime->maxRenewableClustersForSingleArea),
+               static_cast<uint>(nbVariablesPerInequalityBindingConstraint
+                                 * runtime->bindingConstraintGlobalNumbers.size()));
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
