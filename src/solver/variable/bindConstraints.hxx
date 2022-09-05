@@ -42,9 +42,8 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int fileLevel,
                                                   int precision) const
 {
-    bool bcDataLevel = dataLevel & Category::bindingConstraint;
-    if (not bcDataLevel)
-        return;
+   if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+       return;
 
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -61,8 +60,7 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         int precision,
                                                         uint numSpace) const
 {
-    bool bcDataLevel = dataLevel & Category::bindingConstraint;
-    if (not bcDataLevel)
+    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
         return;
 
     for (uint i = 0; i != pBCcount; ++i)
