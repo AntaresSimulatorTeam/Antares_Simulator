@@ -582,7 +582,7 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
     const uint nbVariablesPerInequalityBindingConstraint = 1;
     // Marginal price
 
-    const auto max = [](uint a, uint b, uint c, uint d) -> uint { return std::max({a, b, c, d}); };
+    const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
 
     return max(maxVars,
                static_cast<uint>(nbVariablesPerDetailThermalCluster
