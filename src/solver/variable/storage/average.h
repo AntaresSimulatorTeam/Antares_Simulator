@@ -142,8 +142,11 @@ protected:
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {
-        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
-            && digestLevel & Category::digestAllYears)
+        const bool isCluster = (VCardT::categoryFileLevel & Category::de)
+                               || (VCardT::categoryFileLevel & Category::de_res);
+        const bool isDigest = digestLevel & Category::digestAllYears;
+        if ((dataLevel & Category::area || dataLevel & Category::setOfAreas) && isDigest
+            && !isCluster)
         {
             assert(report.data.columnIndex < report.maxVariables && "Column index out of bounds");
 
