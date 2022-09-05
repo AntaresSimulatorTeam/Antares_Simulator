@@ -102,25 +102,10 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
     }
 }
 
-inline std::vector<uint> getInequalityBindConstraintGlobalNumbers(const Data::Study& study)
-{
-    std::vector<uint> bindConstGlobalNumbers;
-    Data::BindingConstraintRTI* allBindConst = study.runtime->bindingConstraint;
-    for (uint k = 0; k < study.runtime->bindingConstraintCount; k++)
-    {
-        // We pick only inequality binding constraints.
-        if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
-        {
-            bindConstGlobalNumbers.push_back(k);
-        }
-    }
-    return bindConstGlobalNumbers;
-}
-
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    std::vector<uint> InequalityBCnumbers = getInequalityBindConstraintGlobalNumbers(study);
+    const std::vector<uint>& InequalityBCnumbers = study.runtime->bindingConstraintGlobalNumbers;
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)

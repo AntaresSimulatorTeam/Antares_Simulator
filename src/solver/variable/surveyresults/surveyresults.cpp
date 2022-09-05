@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
@@ -562,24 +563,38 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-// Adding new files / variables ? Change the values below to avoid maxVariables being too small
-const uint nbVariablesPerDetailThermalCluster = 4;
-/*
-- Production
-- NODU,
-- NP Costs
-- Net profit
-*/
-const uint nbVariablesPerDetailRenewableCluster = 1;
-// Production
+uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime)
+{
+    if (!runtime)
+        return maxVars;
+
+    // Adding new files / variables ? Change the values below to avoid maxVariables being too small
+    const uint nbVariablesPerDetailThermalCluster = 4;
+    /*
+      - Production
+      - NODU,
+      - NP Costs
+      - Net profit
+    */
+    const uint nbVariablesPerDetailRenewableCluster = 1;
+    // Production
+
+    const uint nbVariablesPerInequalityBindingConstraint = 1;
+    // Marginal price
+
+    const auto max = [](uint a, uint b, uint c, uint d) -> uint { return std::max({a, b, c, d}); };
+
+    return max(
+      maxVars,
+      nbVariablesPerDetailThermalCluster * runtime->maxThermalClustersForSingleArea,
+      nbVariablesPerDetailRenewableCluster * runtime->maxRenewableClustersForSingleArea,
+      nbVariablesPerInequalityBindingConstraint * runtime->bindingConstraintGlobalNumbers.size());
+}
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
  data(s, o),
- maxVariables(Math::Max<uint>(
-   maxVars,
-   nbVariablesPerDetailThermalCluster * s.runtime->maxThermalClustersForSingleArea,
-   nbVariablesPerDetailRenewableCluster * s.runtime->maxRenewableClustersForSingleArea)),
+ maxVariables(initializeMaxVariables(maxVars, s.runtime)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr)

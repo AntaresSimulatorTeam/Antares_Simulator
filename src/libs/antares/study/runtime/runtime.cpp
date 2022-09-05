@@ -539,6 +539,8 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Binding constraints
     initializeBindingConstraints(study.bindingConstraints);
+    // We need to store the indices of '<' and '>' BC for output variables
+    initializeInequalityBindingConstraints();
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
@@ -659,6 +661,19 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
     this->maxRenewableClustersForSingleArea
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
+}
+
+void StudyRuntimeInfos::initializeInequalityBindingConstraints()
+{
+    const Data::BindingConstraintRTI* allBindConst = this->bindingConstraint;
+    for (uint k = 0; k < this->bindingConstraintCount; k++)
+    {
+        // We pick only inequality binding constraints.
+        if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
+        {
+            bindingConstraintGlobalNumbers.push_back(k);
+        }
+    }
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const

@@ -175,6 +175,9 @@ public:
     //! The maximum number of renewable clusters for each area
     size_t maxRenewableClustersForSingleArea = 0;
 
+    //! The global indices for inequality ('<' or '>') binding constraints
+    std::vector<uint> bindingConstraintGlobalNumbers;
+
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     /*!
     ** \brief Flag to know if the hydro cost should be infinite
@@ -221,6 +224,7 @@ private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     void initializeMaxClusters(const Study& study);
+    void initializeInequalityBindingConstraints();
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
