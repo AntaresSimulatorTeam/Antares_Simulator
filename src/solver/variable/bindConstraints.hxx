@@ -42,8 +42,8 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int fileLevel,
                                                   int precision) const
 {
-   if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
-       return;
+    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
+        return;
 
     for (uint i = 0; i != pBCcount; ++i)
     {
@@ -103,7 +103,8 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    const std::vector<uint>& InequalityBCnumbers = study.runtime->bindingConstraintGlobalNumbers;
+    const std::vector<uint> InequalityBCnumbers
+      = study.runtime->getIndicesForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)

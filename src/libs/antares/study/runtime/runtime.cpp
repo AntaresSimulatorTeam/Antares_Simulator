@@ -539,8 +539,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Binding constraints
     initializeBindingConstraints(study.bindingConstraints);
-    // We need to store the indices of '<' and '>' BC for output variables
-    initializeInequalityBindingConstraints();
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
@@ -663,17 +661,34 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
-void StudyRuntimeInfos::initializeInequalityBindingConstraints()
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
 {
-    const Data::BindingConstraintRTI* allBindConst = this->bindingConstraint;
-    for (uint k = 0; k < this->bindingConstraintCount; k++)
+    return bc.operatorType == '<' || bc.operatorType == '>';
+}
+
+uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
+{
+    auto firstBC = this->bindingConstraint;
+    auto lastBC = firstBC + this->bindingConstraintCount;
+    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
+}
+
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+{
+    auto firstBC = this->bindingConstraint;
+    auto lastBC = firstBC + this->bindingConstraintCount;
+
+    std::vector<uint> indices;
+    uint index = 0;
+    for (auto bc = firstBC; bc < lastBC; bc++)
     {
-        // We pick only inequality binding constraints.
-        if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
+        if (isBindingConstraintTypeInequality(*bc))
         {
-            bindingConstraintGlobalNumbers.push_back(k);
+            indices.push_back(index);
         }
+        index++;
     }
+    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const

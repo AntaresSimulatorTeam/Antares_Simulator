@@ -123,6 +123,10 @@ public:
     */
     bool loadFromStudy(Study& study);
 
+    // Inequality binding constraints
+    uint getNumberOfInequalityBindingConstraints() const;
+    std::vector<uint> getIndicesForInequalityBindingConstraints() const;
+
 public:
     //! The number of years to process
     uint nbYears;
@@ -224,7 +228,6 @@ private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
     void initializeMaxClusters(const Study& study);
-    void initializeInequalityBindingConstraints();
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);

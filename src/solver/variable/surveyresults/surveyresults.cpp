@@ -593,7 +593,7 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
                static_cast<uint>(nbVariablesPerDetailRenewableCluster
                                  * runtime->maxRenewableClustersForSingleArea),
                static_cast<uint>(nbVariablesPerInequalityBindingConstraint
-                                 * runtime->bindingConstraintGlobalNumbers.size()));
+                                 * runtime->getNumberOfInequalityBindingConstraints()));
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
