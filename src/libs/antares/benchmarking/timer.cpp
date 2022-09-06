@@ -25,31 +25,33 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../application.h"
-#include "../simulation/solver.h"
-#include "../simulation/adequacy-draft.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include "timer.h"
+#include <yuni/core/system/gettimeofday.h>
 
-namespace Antares
-{
-namespace Solver
-{
-void Application::runSimulationInAdequacyDraftMode()
-{
-    // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
-    simulation.run();
+using namespace Yuni;
 
-    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
-    {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
-    }
+static inline sint64 MilliSecTimer()
+{
+    Yuni::timeval tv;
+    YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);
+    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
 
-} // namespace Solver
-} // namespace Antares
+namespace Benchmarking
+{
+Timer::Timer()
+{
+    startTime_ = MilliSecTimer();
+}
+
+void Timer::stop()
+{
+    duration_ = MilliSecTimer() - startTime_;
+}
+
+int64_t Timer::get_duration()
+{
+    return duration_;
+}
+
+} // namespace Benchmarking

@@ -25,31 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../application.h"
-#include "../simulation/solver.h"
-#include "../simulation/adequacy-draft.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include <antares/study/memory-usage.h>
+#include "all.h"
 
-namespace Antares
-{
-namespace Solver
-{
-void Application::runSimulationInAdequacyDraftMode()
-{
-    // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
-    simulation.run();
-
-    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
-    {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
-    }
-}
-
-} // namespace Solver
-} // namespace Antares
+using bc_next_type = Solver::Variable::Economy::VariablesPerBindingConstraints;
+#include "../bc.memory-estimation.inc.hxx"

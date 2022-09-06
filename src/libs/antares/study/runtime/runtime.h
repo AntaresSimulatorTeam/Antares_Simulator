@@ -83,6 +83,8 @@ public:
     Matrix<double> bounds;
     BindingConstraint::Type type;
     char operatorType;
+    uint filterYearByYear_ = filterAll;
+    uint filterSynthesis_ = filterAll;
 
     uint linkCount;
     double* linkWeight;
