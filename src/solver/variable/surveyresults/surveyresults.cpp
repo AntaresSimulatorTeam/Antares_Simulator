@@ -569,6 +569,9 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
         return maxVars;
 
     // Adding new files / variables ? Change the values below to avoid maxVariables being too small
+
+    // TODO: count those variables at compile time / runtime
+    // using e.g VCardT::categoryDataLevel
     const uint nbVariablesPerDetailThermalCluster = 4;
     /*
       - Production
