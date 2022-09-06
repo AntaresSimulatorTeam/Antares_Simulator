@@ -679,14 +679,13 @@ std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints()
     auto lastBC = firstBC + this->bindingConstraintCount;
 
     std::vector<uint> indices;
-    uint index = 0;
     for (auto bc = firstBC; bc < lastBC; bc++)
     {
         if (isBindingConstraintTypeInequality(*bc))
         {
+            uint index = std::distance(firstBC, bc);
             indices.push_back(index);
         }
-        index++;
     }
     return indices;
 }
