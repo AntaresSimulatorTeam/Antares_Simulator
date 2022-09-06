@@ -30,6 +30,7 @@
 #include "../variable.h"
 #include "../area.h"
 #include "../setofareas.h"
+#include "../bindConstraints.h"
 
 #include "co2.h"
 #include "price.h"
@@ -78,6 +79,7 @@
 // By RES plant
 #include "productionByRenewablePlant.h"
 
+// Output variables associated to links
 #include "links/flowLinear.h"
 #include "links/flowLinearAbs.h"
 #include "links/loopFlow.h"
@@ -87,6 +89,9 @@
 #include "links/congestionFeeAbs.h"
 #include "links/marginalCost.h"
 #include "links/congestionProbability.h"
+
+// Output variables associated to binding constraints
+#include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
 namespace Antares
 {
@@ -156,8 +161,8 @@ typedef          // Prices
                                <NbOfDispatchedUnits                   // Number of Units Dispatched
                                 <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
                                  <ProfitByPlant
-                                  // Links
-                                  <Variable::Economy::Links // All links
+                                    // Links
+                                    <Variable::Economy::Links // All links
                                    >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
@@ -244,11 +249,22 @@ typedef // Prices
                                                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
+    
+
+typedef          
+    BindingConstMarginCost<   // Marginal cost for a binding constraint
+        Container::EndOfList    // End of variable list
+    >
+  
+    VariablesPerBindingConstraints;
+
 typedef Variable::Join<
   // Variables for each area / links attached to the areas
   Variable::Areas<VariablesPerArea>,
   // Variables for each set of areas
-  Variable::SetsOfAreas<VariablesPerSetOfAreas>>
+  Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+  // Variables for each binding constraint
+  Variable::BindingConstraints<VariablesPerBindingConstraints>>
   ItemList;
 
 /*!
