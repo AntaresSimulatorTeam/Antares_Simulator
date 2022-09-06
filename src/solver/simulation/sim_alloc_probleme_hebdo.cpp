@@ -338,7 +338,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraintCount * sizeof(int));
     }
 
-    for (k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
+    const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
+    problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
+      bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
+
+    for (k = 0; k < (int)bindingConstraintCount; k++)
     {
         problem.MatriceDesContraintesCouplantes[k]
           = (CONTRAINTES_COUPLANTES*)MemAlloc(sizeof(CONTRAINTES_COUPLANTES));
@@ -367,6 +371,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+
+        // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
+        unsigned int nbTimeSteps;
+        switch (study.runtime->bindingConstraint[k].type)
+        {
+            using namespace Antares::Data;
+        case BindingConstraint::typeHourly:
+            nbTimeSteps = 168;
+            break;
+        case BindingConstraint::typeDaily:
+            nbTimeSteps = 7;
+            break;
+        case BindingConstraint::typeWeekly:
+            nbTimeSteps = 1;
+            break;
+        default:
+            nbTimeSteps = 0;
+            break;
+        }
+        if (nbTimeSteps > 0)
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales
+              = (double*)MemAlloc(nbTimeSteps * sizeof(double));
+        }
+        else
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales = nullptr;
+        }
     }
 
     for (k = 0; k < (int)nbPays; k++)
@@ -739,8 +771,12 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch);
 
         MemFree(problem.MatriceDesContraintesCouplantes[k]);
+
+        if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
+            MemFree(problem.ResultatsContraintesCouplantes[k].variablesDuales);
     }
     MemFree(problem.MatriceDesContraintesCouplantes);
+    MemFree(problem.ResultatsContraintesCouplantes);
 
     for (int k = 0; k < (int)nbPays; ++k)
     {

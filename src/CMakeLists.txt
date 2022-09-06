@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  0)
+set(ANTARES_VERSION_REVISION  1)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
@@ -32,6 +32,8 @@ include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 17)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)

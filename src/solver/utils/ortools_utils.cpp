@@ -99,13 +99,12 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
-static void tuneSolverSpecificOptions(MPSolver* solver,
-                                      MPSolver::OptimizationProblemType solverType)
+static void tuneSolverSpecificOptions(MPSolver* solver)
 {
     if (!solver)
         return;
 
-    switch (solverType)
+    switch (solver->ProblemType())
     {
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
     case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
@@ -133,7 +132,7 @@ MPSolver* convert_to_MPSolver(
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
 
-    tuneSolverSpecificOptions(solver, solverType);
+    tuneSolverSpecificOptions(solver);
 
     // Create the variables and set objective cost.
     transferVariables(solver,
