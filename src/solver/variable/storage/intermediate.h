@@ -103,6 +103,12 @@ public:
     */
     void computeAVGstatisticsForCurrentYear();
 
+    // From daily, compute weekly, monthly and yearly averages for the current year
+    void computeAnnualAveragesFromDailyValues();
+
+    // From weekly, compute monthly and yearly averages for the current year
+    void computeAnnualAveragesFromWeeklyValues();
+
     /*!
     ** \brief Compute probabilities for the current year
     */
