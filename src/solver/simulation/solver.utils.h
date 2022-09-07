@@ -45,33 +45,33 @@ namespace Simulation
 {
 struct setOfParallelYears
 {
-    // Un lot d'année à exécuter en parallèle.
-    // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
+    // Un lot d'annï¿½e ï¿½ exï¿½cuter en parallï¿½le.
+    // En fonction d'une ï¿½ventuelle play-list, certaines seront jouï¿½es et d'autres non.
 
 public:
-    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
-    // play-list "trouée")
+    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouï¿½es en cas de
+    // play-list "trouï¿½e")
     std::vector<unsigned int> yearsIndices;
 
-    // Une annee doit-elle être rejouée ?
+    // Une annee doit-elle ï¿½tre rejouï¿½e ?
     std::map<uint, bool> yearFailed;
 
-    // Associe le numero d'une année jouée à l'indice de l'espace
+    // Associe le numero d'une annï¿½e jouï¿½e ï¿½ l'indice de l'espace
     std::map<unsigned int, unsigned int> performedYearToSpace;
 
-    // L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
+    // L'inverse : pour une annï¿½e jouï¿½e, associe l'indice de l'espace au numero de l'annï¿½e
     std::map<unsigned int, unsigned int> spaceToPerformedYear;
 
-    // Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
+    // Pour chaque annï¿½e, est-elle la premiï¿½re ï¿½ devoir ï¿½tre jouï¿½e dans son lot d'annï¿½es ?
     std::map<unsigned int, bool> isFirstPerformedYearOfASet;
 
-    // Pour chaque année du lot, est-elle jouée ou non ?
+    // Pour chaque annï¿½e du lot, est-elle jouï¿½e ou non ?
     std::map<unsigned int, bool> isYearPerformed;
 
-    // Nbre d'années en parallele vraiment jouées pour ce lot
+    // Nbre d'annï¿½es en parallele vraiment jouï¿½es pour ce lot
     unsigned int nbPerformedYears;
 
-    // Nbre d'années en parallele jouées ou non pour ce lot
+    // Nbre d'annï¿½es en parallele jouï¿½es ou non pour ce lot
     unsigned int nbYears;
 
     // Regenere-t-on des times series avant de jouer les annees du lot courant
@@ -89,7 +89,9 @@ public:
      costStdDeviation(0.),
      costMin(std::numeric_limits<double>::max()),
      costMax(0.),
-     nbPerformedYears(0){};
+     nbPerformedYears(0){
+         costs.resize(0);
+     };
 
     void setNbPerformedYears(uint n)
     {
@@ -99,6 +101,8 @@ public:
 
     void addCost(const double cost)
     {
+        costs.emplace_back(cost);
+
         // Average
         costAverage += cost / nbPerformedYears;
 
@@ -119,6 +123,7 @@ public:
 
 public:
     // System costs statistics
+    std::vector<double> costs;
     double costAverage;
     double costStdDeviation;
     double costMin;
@@ -187,12 +192,17 @@ private:
     void writeSystemCostToOutput()
     {
         Yuni::IO::File::Stream file;
+        int i;
         if (file.open(systemCostFilename, Yuni::IO::OpenMode::append))
         {
             file << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
             file << "STD : " << round_to_closer_int(systemCost.costStdDeviation) << "\n";
             file << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
             file << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
+            for (i = 0; i<systemCost.costs.size(); i++)
+            {
+                file << round_to_closer_int(systemCost.costs[i]) << "\n";
+            }
         }
     };
 
