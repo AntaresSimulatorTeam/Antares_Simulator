@@ -232,7 +232,8 @@ private:
     wxPGProperty* pPGThClusterStartupCost;
     wxPGProperty* pPGThClusterOperatingCost;
     wxPGProperty* pPGThClusterRandomSpread;
-
+    wxPGProperty* pPGThClusterVariableOMcost;
+    
     wxPGProperty* pPGThClusterMinStablePower;
     wxPGProperty* pPGThClusterMinUpTime;
     wxPGProperty* pPGThClusterMinDownTime;

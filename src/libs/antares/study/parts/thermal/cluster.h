@@ -331,6 +331,8 @@ public:
     double startupCost;
     //! Market bid cost (euros/MWh)
     double marketBidCost;
+    //! Variable O&M cost (euros/MWh)
+    double variableomcost;
     //@}
 
     //! Minimum number of group

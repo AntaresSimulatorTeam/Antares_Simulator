@@ -536,6 +536,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
     pPGThClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
+    pPGThClusterVariableOMcost = P_FLOAT("Variable O\u0026M cost (\u20AC/MWh)", "cluster.variableomcost");
 
     pPGThClusterReliabilityModel
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
@@ -964,6 +965,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);
         Accumulator<PClusterStartupCost>::Apply(pPGThClusterStartupCost, data->ThClusters);
         Accumulator<PClusterRandomSpread>::Apply(pPGThClusterRandomSpread, data->ThClusters);
+        Accumulator<PClusterVariableOMcost>::Apply(pPGThClusterVariableOMcost, data->ThClusters);
         // Override global TS generation setting, per cluster
         Accumulator<PClusterDoGenerateTS>::Apply(pPGThClusterDoGenerateTS, data->ThClusters);
 

@@ -984,6 +984,19 @@ struct PClusterFixedCost
     }
 };
 
+struct PClusterVariableOMcost
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->variableomcost;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
 struct PClusterMinStablePower
 {
     using Type = double;

@@ -138,6 +138,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
+ variableomcost(0.),
  fixedCost(0.),
  startupCost(0.),
  marketBidCost(0.),
@@ -184,6 +185,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
+ variableomcost(0.),
  fixedCost(0.),
  startupCost(0.),
  marketBidCost(0.),
@@ -286,6 +288,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     costgeneration = cluster.costgeneration;
     marginalCost = cluster.marginalCost;
     spreadCost = cluster.spreadCost;
+    variableomcost = cluster.variableomcost;
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
@@ -525,6 +528,7 @@ void Data::ThermalCluster::reset()
     fixedCost = 0.;
     startupCost = 0.;
     marketBidCost = 0.;
+    variableomcost = 0.;
 
     // group{min,max}
     groupMinCount = 0;
@@ -640,6 +644,13 @@ bool Data::ThermalCluster::integrityCheck()
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                      << ": The spread must be positive or null";
         spreadCost = 0.;
+        ret = false;
+    }
+    if (variableomcost < 0.)
+    {
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The variable O&M cost must be positive or null";
+        variableomcost = 0.;
         ret = false;
     }
 
