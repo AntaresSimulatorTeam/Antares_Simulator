@@ -30,11 +30,7 @@
 #include <utility>
 #include "antares/study/constraint/constraint.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 template<class NextT>
 void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
@@ -42,8 +38,7 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
                                                   int fileLevel,
                                                   int precision) const
 {
-    bool bcDataLevel = dataLevel & Category::bindingConstraint;
-    if (not bcDataLevel)
+    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
         return;
 
     for (uint i = 0; i != pBCcount; ++i)
@@ -61,8 +56,7 @@ void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                                         int precision,
                                                         uint numSpace) const
 {
-    bool bcDataLevel = dataLevel & Category::bindingConstraint;
-    if (not bcDataLevel)
+    if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
         return;
 
     for (uint i = 0; i != pBCcount; ++i)
@@ -102,25 +96,11 @@ inline void BindingConstraints<NextT>::provideInformations(I& infos)
     }
 }
 
-inline std::vector<uint> getInequalityBindConstraintGlobalNumbers(const Data::Study& study)
-{
-    std::vector<uint> bindConstGlobalNumbers;
-    Data::BindingConstraintRTI* allBindConst = study.runtime->bindingConstraint;
-    for (uint k = 0; k < study.runtime->bindingConstraintCount; k++)
-    {
-        // We pick only inequality binding constraints.
-        if (allBindConst[k].operatorType == '<' || allBindConst[k].operatorType == '>')
-        {
-            bindConstGlobalNumbers.push_back(k);
-        }
-    }
-    return bindConstGlobalNumbers;
-}
-
 template<class NextT>
 void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
 {
-    std::vector<uint> InequalityBCnumbers = getInequalityBindConstraintGlobalNumbers(study);
+    const std::vector<uint> InequalityBCnumbers
+      = study.runtime->getIndicesForInequalityBindingConstraints();
 
     // The total number of inequality binding constraints count
     // (we don't count BCs with equality sign)
@@ -195,7 +175,4 @@ void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
     for (uint i = 0; i != pBCcount; ++i)
         pBindConstraints[i].hourEnd(state, hourInTheYear);
 }
-
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable

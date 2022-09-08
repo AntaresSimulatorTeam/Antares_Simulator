@@ -661,6 +661,35 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
+{
+    return bc.operatorType == '<' || bc.operatorType == '>';
+}
+
+uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
+}
+
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*bc))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
+}
+
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
 {
     logs.info();
