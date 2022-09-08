@@ -715,6 +715,22 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
         return true;
     }
+    if (name == "cluster.efficiency")
+    {
+        const double d = value.GetDouble();
+        if (d < 0.)
+        {
+            for (; i != end; ++i)
+                (*i)->efficiency = 0.;
+            pFrame.delayApply();
+        }
+        else
+        {
+            for (; i != end; ++i)
+                (*i)->efficiency = d;
+        }
+        return true;
+    }
 
     // MBO 15/04/2014
     // New scheme when editing thermal clusters costs from the inspector

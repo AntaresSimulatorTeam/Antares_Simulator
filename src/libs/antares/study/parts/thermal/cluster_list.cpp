@@ -394,6 +394,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     }
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
+    if (p->key == "efficiency")
+        return p->value.to<double>(cluster.efficiency);
     if (p->key == "fixed-cost")
         return p->value.to<double>(cluster.fixedCost);
     if (p->key == "flexibility")
@@ -719,6 +721,10 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             // spinning
             if (not Math::Zero(c.spinning))
                 s->add("spinning", c.spinning);
+
+            // efficiency
+            if (c.efficiency != 100.0)
+                s->add("efficiency", c.efficiency);
 
             // volatility
             if (not Math::Zero(c.forcedVolatility))

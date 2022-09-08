@@ -258,6 +258,9 @@ public:
     //! Spinning (%)
     double spinning;
 
+    //! Efficiency (%)
+    double efficiency;
+
     //! Forced Volatility
     double forcedVolatility;
     //! Planned volatility
