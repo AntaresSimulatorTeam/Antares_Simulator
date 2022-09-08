@@ -179,9 +179,6 @@ public:
     //! The maximum number of renewable clusters for each area
     size_t maxRenewableClustersForSingleArea = 0;
 
-    //! The global indices for inequality ('<' or '>') binding constraints
-    std::vector<uint> bindingConstraintGlobalNumbers;
-
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
     /*!
     ** \brief Flag to know if the hydro cost should be infinite
