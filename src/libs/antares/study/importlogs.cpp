@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <string>
 #include <yuni/yuni.h>
 #include "study.h"
 #include "../logs.h"
@@ -41,17 +42,7 @@ void Study::importLogsToOutputFolder() const
     if (!logs.logfile())
         return;
 
-    String path;
-    path.reserve(this->folderOutput.size() + 20);
-
-    // Double check: Since this method might be call after some memory starvation,
-    // we should make sure that we have a valid buffer
-    if (!path.data())
-    {
-        logs.error() << "I/O Error: Impossible to create the folder '" << path << "'";
-        return;
-    }
-    path << "simulation.log";
+    std::string logPath("simulation.log");
     String from;
     IO::Normalize(from, logs.logfile());
 
@@ -70,19 +61,16 @@ void Study::importLogsToOutputFolder() const
         break;
     case IO::errNotFound:
         logs.error() << from << ": file does not exist";
-        path.clear().shrink();
         break;
     case IO::errReadFailed:
         logs.error() << "Read failed '" << from << "'";
-        path.clear().shrink();
         break;
     default:
-        logs.error() << "Impossible to read '" << from << "' to '" << path << "'";
-        path.clear().shrink();
+        logs.error() << "Impossible to read '" << from << "' to '" << logPath << "'";
         break;
     }
 
-    pResultWriter->addJob(path.c_str(), log_buffer);
+    pResultWriter->addJob(logPath, log_buffer);
 
     if (System::windows)
     {
