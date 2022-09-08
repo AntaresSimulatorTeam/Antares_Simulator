@@ -226,6 +226,7 @@ private:
     wxPGProperty* pPGThClusterSpinning;
     wxPGProperty* pPGThClusterEfficiency;
 
+    wxPGProperty* pPGThClusterCostGeneration;
     wxPGProperty* pPGThClusterMarginalCost;
     wxPGProperty* pPGThClusterFixedCost;
     wxPGProperty* pPGThClusterStartupCost;

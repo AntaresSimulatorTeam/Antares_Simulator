@@ -382,6 +382,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "annuityinvestment")
         return p->value.to<uint>(cluster.annuityInvestment);
+    if (p->key == "costgeneration")
+        return p->value.to(cluster.costgeneration);
     if (p->key == "dailyminimumcapacity")
     {
         double d = p->value.to<double>();
@@ -739,6 +741,8 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("law.planned", c.plannedLaw);
 
             // costs
+            if (c.costgeneration != setManually)
+                s->add("costgeneration", c.costgeneration);            
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))
