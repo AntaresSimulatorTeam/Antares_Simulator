@@ -38,6 +38,7 @@
 #include "../daily2/h2o2_j_donnees_mensuelles.h"
 #include "../daily2/h2o2_j_fonctions.h"
 #include "../../simulation/sim_extern_variables_globales.h"
+#include <sstream>
 #include <cassert>
 #include <limits>
 #include <variable/state.h>
@@ -118,8 +119,7 @@ struct DebugData
 
     void writeTurb(const String& filename, uint y) const
     {
-        Yuni::Clob buffer;
-        String path;
+        std::ostringstream buffer, path;
         path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << filename;
 
         buffer << "\tTurbine\t\t\tOPP\t\t\t\tTurbine Cible\tDLE\t\t\t\tDLN\n";
@@ -130,7 +130,8 @@ struct DebugData
                    << data.DLE[day] << '\t' << data.DLN[day];
             buffer << '\n';
         }
-        pWriter->addJob(path.c_str(), buffer);
+        auto buffer_str = buffer.str();
+        pWriter->addJob(path.str(), buffer_str);
     }
 
     void writeDailyDebugData(const Date::Calendar& calendar,
@@ -138,11 +139,9 @@ struct DebugData
                              uint y,
                              const Data::AreaName& areaName) const
     {
-        Yuni::Clob buffer;
-        String path;
-        path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "daily." << areaName
+        std::ostringstream buffer, path;
+        path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "daily." << areaName.c_str()
              << ".txt";
-        ;
 
         buffer << "\tNiveau init : " << data.MOL[initReservoirLvlMonth] << "\n";
         for (uint month = 0; month != 12; ++month)
@@ -159,7 +158,7 @@ struct DebugData
 
             buffer << "\n";
             buffer << "-------------\n";
-            buffer << monthName << "\n";
+            buffer << monthName.c_str() << "\n";
             buffer << "-------------\n";
             buffer << "\t\t\tNiveauMin\tApports\t\tTurbMax\t\tTurbCible\tTurbCible "
                       "MAJ\tNiveaux D\tNiveaux F\tTurbines\t";
@@ -199,7 +198,8 @@ struct DebugData
                 dayMonth++;
             }
         }
-        pWriter->addJob(path.c_str(), buffer);
+        auto buffer_str = buffer.str();
+        pWriter->addJob(path.str(), buffer_str);
     }
 };
 
@@ -241,6 +241,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     std::shared_ptr<DebugData> debugData(nullptr);
 
     if (study.parameters.hydroDebug)
+    {
         debugData = std::make_shared<DebugData>(study.getWriter(),
                                                 data,
                                                 valgen,
@@ -250,6 +251,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                                                 dtg,
                                                 lowLevel,
                                                 reservoirCapacity);
+    }
+
     for (uint month = 0; month != 12; ++month)
     {
         auto daysPerMonth = study.calendar.months[month].days;
