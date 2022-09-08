@@ -37,10 +37,10 @@ namespace Antares
 {
 namespace Data
 {
-std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
+std::string Study::getFilenameWithExtension(const YString& prefix,
                                                      const YString& extension,
                                                      uint numSpace,
-                                                     int n) const
+                                                     int optNumber) const
 {
     // Empty log entry
     logs.info();
@@ -50,9 +50,9 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
 
-    if (n != 0)
+    if (optNumber != 0)
     {
-        outputFile << "-" << n;
+        outputFile << "-" << optNumber;
     }
 
     outputFile << "." << extension;

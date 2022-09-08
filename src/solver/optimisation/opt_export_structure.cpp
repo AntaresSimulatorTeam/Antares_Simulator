@@ -77,7 +77,7 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                               ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
                               ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
         }
-        auto filename = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
+        auto filename = study.getFilenameWithExtension("interco", "txt", numSpace);
         auto writer = study.getWriter();
         writer->addJob(filename, Flot);
     }
@@ -90,7 +90,7 @@ void OPT_ExportAreaName(const Antares::Data::Study& study,
     // Area name are exported only once for first year
     if (ProblemeHebdo->firstWeekOfSimulation)
     {
-        auto filename = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
+        auto filename = study.getFilenameWithExtension("area", "txt", numSpace);
         Yuni::Clob Flot;
         for (uint i = 0; i < study.areas.size(); ++i)
         {
@@ -144,7 +144,7 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
                          uint numSpace)
 {
     Yuni::Clob Flot;
-    auto filename = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
+    auto filename = study.getFilenameWithExtension(fileName, fileExtension, numSpace);
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());

@@ -502,7 +502,7 @@ public:
     **
     ** \return a FILE structure (which may be null if any error occured)
     */
-    std::string createFileIntoOutputWithExtension(const YString& prefix,
+    std::string getFilenameWithExtension(const YString& prefix,
                                                   const YString& extension,
                                                   uint numSpace,
                                                   int n = 0) const;
