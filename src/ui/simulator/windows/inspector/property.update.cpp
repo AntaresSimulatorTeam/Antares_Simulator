@@ -888,6 +888,22 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
         return true;
     }
+    if (name == "cluster.variableomcost")
+    {
+        const double d = value.GetDouble();
+        if (d < 0.)
+        {
+            for (; i != end; ++i)
+                (*i)->variableomcost = 0.;
+            pFrame.delayApply();
+        }
+        else
+        {
+            for (; i != end; ++i)
+                (*i)->variableomcost = d;
+        }
+        return true;
+    }
     if (name == "cluster.forcedvolatility")
     {
         double d = value.GetDouble();

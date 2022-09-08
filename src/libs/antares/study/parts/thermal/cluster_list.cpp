@@ -504,6 +504,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to(cluster.plannedVolatility);
     if (p->key == "volatility.forced")
         return p->value.to(cluster.forcedVolatility);
+    if (p->key == "variableomcost")
+        return p->value.to<double>(cluster.variableomcost);
     if (p->key == "weeklyminimumcapacity")
     {
         double d = p->value.to<double>();
@@ -753,6 +755,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("startup-cost", Math::Round(c.startupCost, 3));
             if (not Math::Zero(c.marketBidCost))
                 s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
+            if (not Math::Zero(c.variableomcost))
+                s->add("variableomcost", Math::Round(c.variableomcost,3));
+
 
             // groun{min,max}
             if (not Math::Zero(c.groupMinCount))
