@@ -30,11 +30,7 @@
 #include <utility>
 #include "antares/study/constraint/constraint.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 template<class NextT>
 void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
@@ -179,7 +175,4 @@ void BindingConstraints<NextT>::hourEnd(State& state, uint hourInTheYear)
     for (uint i = 0; i != pBCcount; ++i)
         pBindConstraints[i].hourEnd(state, hourInTheYear);
 }
-
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
