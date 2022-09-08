@@ -668,22 +668,22 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& 
 
 uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
 {
-    const auto firstBC = this->bindingConstraint;
-    const auto lastBC = firstBC + this->bindingConstraintCount;
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
     return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
 }
 
 std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
 {
-    const auto firstBC = this->bindingConstraint;
-    const auto lastBC = firstBC + this->bindingConstraintCount;
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)
     {
         if (isBindingConstraintTypeInequality(*bc))
         {
-            uint index = static_cast<uint>(std::distance(firstBC, bc));
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
             indices.push_back(index);
         }
     }
