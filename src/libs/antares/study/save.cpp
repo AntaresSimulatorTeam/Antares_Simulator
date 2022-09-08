@@ -26,7 +26,7 @@
 */
 
 #include "study.h"
-#include "../timeelapsed.h"
+#include "../benchmarking.h"
 #include "../array/correlation.h"
 #include "scenario-builder/sets.h"
 #include <yuni/core/string/wstring.h>

@@ -225,6 +225,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
     //! \name Associate data */
@@ -347,6 +349,8 @@ private:
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
 
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
+
 /*!
 ** \brief A list of areas
 **
@@ -386,6 +390,8 @@ public:
     using reverse_iterator = Area::Map::reverse_iterator;
     //! A const iterator
     using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    //! Key-value type
+    using value_type = Area::Map::value_type;
 
 public:
     //! \name Constructor & Destructor

@@ -222,14 +222,10 @@ void BindingConstraint::removeAllOffsets()
 
 uint Antares::Data::BindingConstraint::enabledClusterCount() const
 {
-    auto end = pClusterWeights.end();
-    uint enabledClusterNumber = 0;
-    for (auto i = pClusterWeights.begin(); i != end; ++i)
-    {
-        if (i->first->enabled && !i->first->mustrun)
-            ++enabledClusterNumber;
-    }
-    return enabledClusterNumber;
+    return static_cast<uint>(std::count_if(
+      pClusterWeights.begin(), pClusterWeights.end(), [](const clusterWeightMap::value_type& i) {
+          return i.first->enabled && !i.first->mustrun;
+      }));
 }
 
 bool BindingConstraint::removeLink(const AreaLink* lnk)
@@ -564,6 +560,16 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
                 pOperator = BindingConstraint::StringToOperator(p->value);
                 continue;
             }
+            if (p->key == "filter-year-by-year")
+            {
+                pFilterYearByYear = stringIntoDatePrecision(p->value);
+                continue;
+            }
+            if (p->key == "filter-synthesis")
+            {
+                pFilterSynthesis = stringIntoDatePrecision(p->value);
+                continue;
+            }
             if (p->key == "comments")
             {
                 pComments = p->value;
@@ -818,6 +824,8 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
     env.section->add("enabled", pEnabled);
     env.section->add("type", TypeToCString(pType));
     env.section->add("operator", OperatorToCString(pOperator));
+    env.section->add("filter-year-by-year", datePrecisionIntoString(pFilterYearByYear));
+    env.section->add("filter-synthesis", datePrecisionIntoString(pFilterSynthesis));
 
     if (not pComments.empty())
         env.section->add("comments", pComments);
@@ -1300,6 +1308,16 @@ void BindingConstraint::enabled(bool v)
 void BindingConstraint::operatorType(BindingConstraint::Operator o)
 {
     pOperator = o;
+}
+
+uint BindingConstraint::yearByYearFilter() const
+{
+    return pFilterYearByYear;
+}
+
+uint BindingConstraint::synthesisFilter() const
+{
+    return pFilterSynthesis;
 }
 
 bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)

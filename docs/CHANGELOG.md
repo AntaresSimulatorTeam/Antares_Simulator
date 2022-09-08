@@ -1,6 +1,60 @@
 Antares Changelog
 =================
 
+v8.3.1 (08/2022)
+--------------------
+### New features
+- Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
+- OR-Tools: set solver-specific options for XPRESS #796
+
+### Bug fixes
+- Fix missing renewable columns in districts (sets of areas) #802
+
+### GUI
+- Fix wrong number of cores in the "Run a simulation" window #793
+
+### For developers
+- Bump C++11 to C++17
+
+v8.3.0 (07/2022)
+--------------------
+### New features
+- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
+- Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
+- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631(*)
+- Add option to enable the splitting of exported MPS files. This feature is intended to be used by Antares Xpansion.
+- Add --list-solvers command-line argument, to list linear solvers available through OR-Tools
+- Measure the execution duration for every computation step, store the durations in a dedicated file #546
+
+(*) May not work with the Sirius solver. Consider using other solvers through OR-Tools
+
+### Bug fixes
+- Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
+- Fix logging of performed MC years when running jobs in parallel #680
+- Fix a crash occuring in studies where an area contains 100+ thermal clusters (#753)
+- Load & check prepro data only if needed (#754)
+- Fix possible loss of data if adq-patch is disabled (#738)
+- UI For property update for adq-patch mode, allow batch edit (#747)
+- UI - Fix GUI freeze when using multiple map layers (#721)
+
+### For developers
+- Display the git commit-id in the logs for debugging & diagnosis purposes #698
+- Code cleaning in hydro heuristic #671
+- Use antares-deps 2.0.2, which now excludes OR-Tools #684
+- Fetch OR-Tools directly, allowing more flexibility on the flavor (XPRESS/Sirius/etc.) #684
+- Code cleaning #663 #665 #666 #687 #725 #667 #668 #730
+
+### Misc. improvements
+- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
+- Upgrade examples 8.1 -> 8.3 (#733)
+
+v8.2.2 (04/2022)
+--------------------
+### Bug fixes
+- Fix solver crash on parsing command-line parameters #624
+### GUI
+- Fix crash occuring when switching to the links panel #658
+
 v8.2.1 (03/2022)
 --------------------
 ### Bug fixes

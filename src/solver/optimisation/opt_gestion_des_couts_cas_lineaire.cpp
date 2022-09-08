@@ -244,10 +244,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
             {
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo->CoutDeDefaillancePositive[Pays];
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-                ProblemeAResoudre->CoutLineaire[Var] /= COEFF_GROSSES_VARIABLES;
-#endif
             }
 
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays];
@@ -255,10 +251,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
             {
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-                ProblemeAResoudre->CoutLineaire[Var] /= COEFF_GROSSES_VARIABLES;
-#endif
             }
 
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
@@ -267,10 +259,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
             {
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays];
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-                ProblemeAResoudre->CoutLineaire[Var] /= COEFF_GROSSES_VARIABLES;
-#endif
             }
         }
 
