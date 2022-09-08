@@ -111,6 +111,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  minDownTime(1),
  spinning(0.),
  co2(0.),
+ efficiency(100.0),
  forcedVolatility(0.),
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
@@ -155,6 +156,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  minDownTime(1),
  spinning(0.),
  co2(0.),
+ efficiency(100.0),
  forcedVolatility(0.),
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
@@ -249,6 +251,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     spinning = cluster.spinning;
     // co2
     co2 = cluster.co2;
+    // efficiency
+    efficiency = cluster.efficiency;
 
     // volatility
     forcedVolatility = cluster.forcedVolatility;
@@ -482,6 +486,8 @@ void Data::ThermalCluster::reset()
     spinning = 0.;
     // co2
     co2 = 0.;
+    // efficiency
+    efficiency = 100.0;
 
     // volatility
     forcedVolatility = 0.;
@@ -593,6 +599,17 @@ bool Data::ThermalCluster::integrityCheck()
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                      << ": The co2 must be positive or null";
         co2 = 0;
+        ret = false;
+    }
+    if (efficiency < 0. or efficiency > 100.)
+    {
+        if (efficiency < 0.)
+            efficiency = 0;
+        else
+            efficiency = 100.;
+        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                     << ": The efficiency must be within the range [0,+100] (rounded to " << efficiency
+                     << ')';
         ret = false;
     }
     if (spreadCost < 0.)

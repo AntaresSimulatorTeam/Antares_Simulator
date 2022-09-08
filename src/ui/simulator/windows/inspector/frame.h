@@ -224,6 +224,7 @@ private:
     wxPGProperty* pPGThClusterLawForced;
     wxPGProperty* pPGThClusterLawPlanned;
     wxPGProperty* pPGThClusterSpinning;
+    wxPGProperty* pPGThClusterEfficiency;
 
     wxPGProperty* pPGThClusterMarginalCost;
     wxPGProperty* pPGThClusterFixedCost;

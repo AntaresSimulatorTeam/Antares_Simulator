@@ -874,6 +874,19 @@ struct PClusterSpinning
     }
 };
 
+struct PClusterEfficiency
+{
+    using Type = double;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return cluster->efficiency;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return DoubleToWxString(v);
+    }
+};
+
 struct PClusterSpinningColor
 {
     static wxColor TextColor(Data::ThermalCluster* cluster)

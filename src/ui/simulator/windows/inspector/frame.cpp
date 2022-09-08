@@ -525,7 +525,10 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterSpinning = P_FLOAT("Spinning (%)", "cluster.spinning");
     pPGThClusterSpinning->SetAttribute(wxPG_ATTR_MAX, 99.99);
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
-
+    pPGThClusterEfficiency = P_FLOAT("Efficiency (%)", "cluster.efficiency");
+    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
+    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MIN, 0.0);
+    
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
     pPGThClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
@@ -943,6 +946,8 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterSpinning>::Apply(pPGThClusterSpinning, data->ThClusters);
         // CO2
         Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
+        // Efficiency
+        Accumulator<PClusterEfficiency>::Apply(pPGThClusterEfficiency, data->ThClusters); //###
         // Volatility
         Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned,
                                                       data->ThClusters);

@@ -268,6 +268,9 @@ public:
     //! CO2  / MWh
     double co2;
 
+    //! Efficiency (%)
+    double efficiency;
+
     //! Forced Volatility
     double forcedVolatility;
     //! Planned volatility

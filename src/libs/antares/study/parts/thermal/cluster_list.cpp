@@ -414,6 +414,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     {
         if (p->key == "enabled")
             return p->value.to<bool>(cluster.enabled);
+        if (p->key == "efficiency")
+            return p->value.to<double>(cluster.efficiency);
         break;
     }
 
@@ -783,6 +785,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             // co2
             if (not Math::Zero(c.co2))
                 s->add("co2", c.co2);
+            // efficiency
+            if (c.efficiency != 100.0)
+                s->add("efficiency", c.efficiency);
 
             // volatility
             if (not Math::Zero(c.forcedVolatility))
