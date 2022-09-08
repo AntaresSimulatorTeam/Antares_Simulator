@@ -68,6 +68,25 @@ bool Into<Antares::Data::ThermalLaw>::Perform(AnyString string, TargetType& out)
     return false;
 }
 
+bool Into<Antares::Data::CostGeneration>::Perform(AnyString string, TargetType& out)
+{
+    string.trim();
+    if (string.empty())
+        return false;
+
+    if (string.equalsInsensitive("setManually"))
+    {
+        out = Antares::Data::setManually;
+        return true;
+    }
+    if (string.equalsInsensitive("useCostTimeseries"))
+    {
+        out = Antares::Data::useCostTimeseries;
+        return true;
+    }
+    return false;
+}
+
 bool Into<Antares::Data::LocalTSGenerationBehavior>::Perform(AnyString string, TargetType& out)
 {
     string.trim();
@@ -116,6 +135,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
  plannedLaw(thermalLawUniform),
+ costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
  fixedCost(0.),
@@ -161,6 +181,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
  plannedLaw(thermalLawUniform),
+ costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
  fixedCost(0.),
@@ -262,6 +283,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     plannedLaw = cluster.plannedLaw;
 
     // costs
+    costgeneration = cluster.costgeneration;
     marginalCost = cluster.marginalCost;
     spreadCost = cluster.spreadCost;
     fixedCost = cluster.fixedCost;
@@ -497,6 +519,7 @@ void Data::ThermalCluster::reset()
     forcedLaw = thermalLawUniform;
 
     // costs
+    costgeneration = setManually;
     marginalCost = 0.;
     spreadCost = 0.;
     fixedCost = 0.;

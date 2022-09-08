@@ -932,6 +932,19 @@ struct PClusterRandomSpread
     }
 };
 
+struct PClusterCostGeneration
+{
+    using Type = uint;
+    static Type Value(const Data::ThermalCluster* cluster)
+    {
+        return (uint)cluster->costgeneration;
+    }
+    static wxString ConvertToString(const Type v)
+    {
+        return (v < costgenerationCount) ? costgeneration[v] : nullptr;
+    }
+};
+
 struct PClusterMarginalCost
 {
     using Type = double;

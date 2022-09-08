@@ -731,7 +731,26 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
         return true;
     }
+    if (name == "cluster.costgeneration")
+    {
+        long index = value.GetLong();
+        Data::CostGeneration costgeneration = Data::setManually;
 
+        switch (index)
+        {
+        case 0:
+            costgeneration = Data::setManually;
+            break;
+        case 1:
+            costgeneration = Data::useCostTimeseries;
+            break;
+        default:
+            return false;
+        }
+        for (; i != end; ++i)
+            (*i)->costgeneration = costgeneration;
+        return true;
+    }
     // MBO 15/04/2014
     // New scheme when editing thermal clusters costs from the inspector
     // * Forbid values > 5.e4 and limit them to 5.e4

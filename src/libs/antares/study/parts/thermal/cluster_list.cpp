@@ -394,6 +394,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     {
         if (p->key == "co2")
             return p->value.to<double>(cluster.co2);
+        if (p->key == "costgeneration")
+            return p->value.to(cluster.costgeneration);
         break;
     }
     case 'd':
@@ -802,6 +804,8 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("law.planned", c.plannedLaw);
 
             // costs
+            if (c.costgeneration != setManually)
+                s->add("costgeneration", c.costgeneration);            
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))

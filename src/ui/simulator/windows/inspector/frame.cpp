@@ -530,6 +530,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MIN, 0.0);
     
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
+    pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
     pPGThClusterFixedCost = P_FLOAT("Fixed (\u20AC/hour)", "cluster.opcost_fixed");
     pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
@@ -947,7 +948,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         // CO2
         Accumulator<PClusterCO2>::Apply(pPGThClusterCO2, data->ThClusters);
         // Efficiency
-        Accumulator<PClusterEfficiency>::Apply(pPGThClusterEfficiency, data->ThClusters); //###
+        Accumulator<PClusterEfficiency>::Apply(pPGThClusterEfficiency, data->ThClusters);
         // Volatility
         Accumulator<PClusterVolatilityPlanned>::Apply(pPGThClusterVolatilityPlanned,
                                                       data->ThClusters);
@@ -957,6 +958,7 @@ void Frame::apply(const InspectorData::Ptr& data)
         Accumulator<PClusterLawPlanned>::Apply(pPGThClusterLawPlanned, data->ThClusters);
         Accumulator<PClusterLawForced>::Apply(pPGThClusterLawForced, data->ThClusters);
         // Costs
+        Accumulator<PClusterCostGeneration>::Apply(pPGThClusterCostGeneration, data->ThClusters);
         Accumulator<PClusterMarginalCost>::Apply(pPGThClusterMarginalCost, data->ThClusters);
         Accumulator<PClusterReference>::Apply(pPGThClusterOperatingCost, data->ThClusters);
         Accumulator<PClusterFixedCost>::Apply(pPGThClusterFixedCost, data->ThClusters);

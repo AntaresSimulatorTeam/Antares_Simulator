@@ -58,6 +58,12 @@ enum ThermalModulation
     thermalModulationMax
 };
 
+enum CostGeneration
+{
+    setManually = 0,
+    useCostTimeseries
+};
+
 enum class LocalTSGenerationBehavior
 {
     useGlobalParameter = 0,
@@ -312,6 +318,9 @@ public:
     // SP >=0 or in [0.005;50000]
     //
     //@{
+
+    //! Cost generation
+    CostGeneration costgeneration = setManually;    
     //! Marginal cost (euros/MWh)
     double marginalCost;
     //! Spread (euros/MWh)
