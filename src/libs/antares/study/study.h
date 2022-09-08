@@ -494,19 +494,6 @@ public:
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
 
-    //! \name Simulation output Files creation
-    //@{
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    std::string getFilenameWithExtension(const YString& prefix,
-                                                  const YString& extension,
-                                                  uint numSpace,
-                                                  int n = 0) const;
-
     //! \name
     //@{
     /*!
