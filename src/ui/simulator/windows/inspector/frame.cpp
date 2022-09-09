@@ -527,7 +527,6 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
     pPGThClusterEfficiency = P_FLOAT("Efficiency (%)", "cluster.efficiency");
     pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
-    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MIN, 0.0);
     
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
     pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
