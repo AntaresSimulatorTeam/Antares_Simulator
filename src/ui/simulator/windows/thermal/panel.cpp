@@ -48,6 +48,8 @@ namespace Thermal
 Panel::Panel(Component::Notebook* parent) :
  Component::Panel(parent),
  pageThermalTimeSeries(nullptr),
+ pageThermalTimeSeriesFuelCost(nullptr),
+ pageThermalTimeSeriesCO2Cost(nullptr),
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
  pNotebookThermalCluster(nullptr),
@@ -121,6 +123,16 @@ Panel::Panel(Component::Notebook* parent) :
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
           wxT("Time-Series"));
+
+        pageThermalTimeSeriesFuelCost = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
+          wxT("Fuel Cost"));
+
+        pageThermalTimeSeriesCO2Cost = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
+          wxT("CO2 Cost"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);
