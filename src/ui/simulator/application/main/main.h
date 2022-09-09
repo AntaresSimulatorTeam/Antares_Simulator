@@ -733,6 +733,7 @@ private:
 
     Component::Notebook::Page* pageThermalClusterList;
     Component::Notebook::Page* pageThermalTimeSeries;
+    Component::Notebook::Page* pageThermalTimeSeriesFuelCost;
     Component::Notebook::Page* pageThermalPrepro;
     Component::Notebook::Page* pageThermalCommon;
 

@@ -254,6 +254,7 @@ ApplWnd::ApplWnd() :
  pageWindCorrelation(nullptr),
  pageThermalClusterList(nullptr),
  pageThermalTimeSeries(nullptr),
+ pageThermalTimeSeriesFuelCost(nullptr),
  pageThermalPrepro(nullptr),
  pageThermalCommon(nullptr),
  pageRenewableClusterList(nullptr),

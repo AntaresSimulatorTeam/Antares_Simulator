@@ -394,6 +394,26 @@ protected:
 };
 
 // ----------------------
+//   Fuel Cost
+// ----------------------
+class TimeSeriesThermalClusterFuelCost final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesThermalClusterFuelCost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+
+    virtual ~TimeSeriesThermalClusterFuelCost();
+
+protected:
+    void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
+    {
+        return;
+        //matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL); //pengbotodo
+    }
+
+    void onStudyClosed() override;
+};
+
+// ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
 

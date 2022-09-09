@@ -334,6 +334,30 @@ void TimeSeriesThermalCluster::onStudyClosed()
 }
 
 // ----------------------
+//   Fuel Cost
+// ----------------------
+
+TimeSeriesThermalClusterFuelCost::TimeSeriesThermalClusterFuelCost(
+  wxWindow* control,
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onThermalClusterChanged.connect(
+          this, &TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged);
+}
+
+TimeSeriesThermalClusterFuelCost::~TimeSeriesThermalClusterFuelCost()
+{
+}
+
+void TimeSeriesThermalClusterFuelCost::onStudyClosed()
+{
+    internalThermalClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+// ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
 

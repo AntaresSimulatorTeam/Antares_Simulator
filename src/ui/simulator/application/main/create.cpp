@@ -641,6 +641,8 @@ void ApplWnd::createNBThermal()
     pNotebook->add(panel, wxT("thermal"), wxT("Thermal"));
 
     pageThermalTimeSeries = panel->pageThermalTimeSeries;
+    pageThermalTimeSeriesFuelCost = panel->pageThermalTimeSeriesFuelCost;
+
     pageThermalPrepro = panel->pageThermalPrepro;
     pageThermalCommon = panel->pageThermalCommon;
     pageThermalClusterList = panel->pageThermalClusterList;

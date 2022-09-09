@@ -58,6 +58,8 @@ public:
 public:
     //! The page related to the cluster's timeseries
     Component::Notebook::Page* pageThermalTimeSeries;
+    Component::Notebook::Page* pageThermalTimeSeriesFuelCost;
+
     //! The page related to the cluster's ts-generator data
     Component::Notebook::Page* pageThermalPrepro;
     //! The page related to the cluster's properties
