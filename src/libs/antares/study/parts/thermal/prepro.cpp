@@ -63,10 +63,9 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
     {
         String buffer;
         buffer.clear() << folder << SEP << "data.txt";
-        return data.saveToCSVFile(buffer, /*decimal*/ 6);
         String buffer2;
         buffer2.clear() << folder << SEP << "fuelcostdata.txt";
-        return fuelcostdata.saveToCSVFile(buffer2, /*decimal*/ 6);        
+        return data.saveToCSVFile(buffer, /*decimal*/ 6) and fuelcostdata.saveToCSVFile(buffer2);        
     }
     return false;
 }
@@ -155,14 +154,17 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                                        Matrix<>::optFixedSize,
                                        &study.dataBuffer)
                   and ret;
-            buffer.clear() << folder << SEP << "fuelcostdata.txt";
-            ret = fuelcostdata.loadFromCSVFile(buffer,
-                                       thermalPreproMax,
-                                       DAYS_PER_YEAR,
-                                       Matrix<>::optFixedSize,
+
+            auto& buffer2 = study.bufferLoadingTS;
+            buffer2.clear() << folder << SEP << "fuelcostdata.txt";
+            ret = fuelcostdata.loadFromCSVFile(buffer2,
+                                       1, //thermalPreproMax,
+                                       HOURS_PER_YEAR, //DAYS_PER_YEAR,
+                                       Matrix<>::optImmediate,
                                        &study.dataBuffer)
                   and ret;            
-
+            if (study.usedByTheSolver && study.parameters.derated)
+                fuelcostdata.averageTimeseries();
         }
     }
 
@@ -278,7 +280,7 @@ void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
     {
         data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);
-        fuelcostdata.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
+        fuelcostdata.estimateMemoryUsage(u, true, 1, HOURS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);        
     }
 }
@@ -286,7 +288,7 @@ void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
 void PreproThermal::reset()
 {
     data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
-    fuelcostdata.reset(thermalPreproMax, DAYS_PER_YEAR, true);
+    fuelcostdata.reset(1, HOURS_PER_YEAR, true);
 
     auto& colFoDuration = data[foDuration];
     auto& colPoDuration = data[poDuration];
