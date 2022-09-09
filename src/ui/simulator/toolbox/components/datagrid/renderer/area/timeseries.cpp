@@ -357,6 +357,10 @@ void TimeSeriesThermalClusterFuelCost::onStudyClosed()
     AncestorType::onStudyClosed();
 }
 
+void TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
+{
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->prepro->fuelcostdata) : NULL);
+}
 // ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------

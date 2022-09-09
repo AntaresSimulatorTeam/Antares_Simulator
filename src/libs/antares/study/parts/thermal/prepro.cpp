@@ -53,6 +53,8 @@ void PreproThermal::copyFrom(const PreproThermal& rhs)
     itsThermalCluster = rhs.itsThermalCluster;
     data = rhs.data;
     rhs.data.unloadFromMemory();
+    fuelcostdata =rhs.fuelcostdata;
+    rhs.fuelcostdata.unloadFromMemory();
 }
 
 bool PreproThermal::saveToFolder(const AnyString& folder)
@@ -62,6 +64,9 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
         String buffer;
         buffer.clear() << folder << SEP << "data.txt";
         return data.saveToCSVFile(buffer, /*decimal*/ 6);
+        String buffer2;
+        buffer2.clear() << folder << SEP << "fuelcostdata.txt";
+        return fuelcostdata.saveToCSVFile(buffer2, /*decimal*/ 6);        
     }
     return false;
 }
@@ -150,6 +155,14 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                                        Matrix<>::optFixedSize,
                                        &study.dataBuffer)
                   and ret;
+            buffer.clear() << folder << SEP << "fuelcostdata.txt";
+            ret = fuelcostdata.loadFromCSVFile(buffer,
+                                       thermalPreproMax,
+                                       DAYS_PER_YEAR,
+                                       Matrix<>::optFixedSize,
+                                       &study.dataBuffer)
+                  and ret;            
+
         }
     }
 
@@ -250,12 +263,13 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::invalidate(bool reload) const
 {
-    return data.invalidate(reload);
+    return data.invalidate(reload) || fuelcostdata.invalidate(reload);
 }
 
 void PreproThermal::markAsModified() const
 {
     data.markAsModified();
+    fuelcostdata.markAsModified();
 }
 
 void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
@@ -264,12 +278,15 @@ void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
     {
         data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);
+        fuelcostdata.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
+        u.requiredMemoryForInput += sizeof(PreproThermal);        
     }
 }
 
 void PreproThermal::reset()
 {
     data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
+    fuelcostdata.reset(thermalPreproMax, DAYS_PER_YEAR, true);
 
     auto& colFoDuration = data[foDuration];
     auto& colPoDuration = data[poDuration];

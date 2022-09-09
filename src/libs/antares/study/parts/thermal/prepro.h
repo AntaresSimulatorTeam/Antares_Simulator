@@ -120,6 +120,7 @@ public:
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
     Matrix<> data;
+    Matrix<> fuelcostdata;
     // Parent thermal cluster
     std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
 }; // class PreproThermal
