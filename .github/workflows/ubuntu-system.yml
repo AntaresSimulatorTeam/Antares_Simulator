@@ -17,6 +17,10 @@ jobs:
       artifact_name: pdf-doc
 
   build:
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools }})
+    env:
+      XPRESSDIR: ${{ github.workspace }}/xpressmp813
+      ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ${{ matrix.os }}
     needs: doc_generation
@@ -25,6 +29,8 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
+        ortools: [ON, OFF]
+
 
     steps:
     - uses: actions/checkout@v2
@@ -73,9 +79,32 @@ jobs:
       run: |
            git submodule update --init --recursive src
 
+    - name: Download XPRESS if needed
+      if: ${{ matrix.ortools == 'ON' }}
+      run: |
+        source /opt/rh/rh-git227/enable
+        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+
+    - name: Download OR-Tools if needed
+      if: ${{ matrix.ortools == 'ON' }}
+      id: ortools
+      run: |
+          if [ "${{ matrix.ortools }}" == "ON" ]; then
+            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
+            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_shared_xprs.zip
+            unzip -q ortools.zip
+            rm ortools.zip
+
+            echo "::set-output name=flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
+            echo "::set-output name=label::-ortools-xpress"
+          else
+            echo "::set-output name=flags::"
+            echo "::set-output name=label::"
+          fi
+
     - name: Configure
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
            
     - name: Build
       run: |
@@ -131,12 +160,12 @@ jobs:
     - name: Installer archive upload
       uses: actions/upload-artifact@v2
       with:
-        name: antares-ubuntu-archive
+        name: antares-ubuntu-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
         
     - name: Installer deb upload
       uses: actions/upload-artifact@v2
       with:
-        name: antares-ubuntu-deb
+        name: antares-ubuntu-deb${{ steps.ortools.outputs.label }}
         path: _build/*.deb
 
