@@ -144,13 +144,6 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
-    - name: Run short-tests
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests
-        os: ${{ matrix.test-platform }}
-
     - name: NSIS Installer creation
       shell: bash
       run: |
@@ -177,14 +170,6 @@ jobs:
       with:
         name: antares-windows-archive
         path: _build/*.zip
-
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
 
     - name: Run short-tests
       continue-on-error: true
