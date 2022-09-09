@@ -35,6 +35,8 @@ inline void PreproThermal::flush()
 {
 #ifdef ANTARES_SWAP_SUPPORT
     data.flush();
+    fuelcost.flush();
+    co2cost.flush();
 #endif
 }
 

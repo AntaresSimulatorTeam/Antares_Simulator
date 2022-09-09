@@ -628,14 +628,11 @@ bool Data::ThermalCluster::integrityCheck()
         co2 = 0;
         ret = false;
     }
-    if (efficiency < 0. or efficiency > 100.)
+    if (efficiency <= 0. or efficiency > 100.)
     {
-        if (efficiency < 0.)
-            efficiency = 0;
-        else
-            efficiency = 100.;
+        efficiency = 100.;
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The efficiency must be within the range [0,+100] (rounded to " << efficiency
+                     << ": The efficiency must be within the range (0,+100] (rounded to " << efficiency
                      << ')';
         ret = false;
     }

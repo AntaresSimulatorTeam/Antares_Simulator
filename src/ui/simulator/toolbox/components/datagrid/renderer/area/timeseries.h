@@ -408,6 +408,20 @@ protected:
 };
 
 // ----------------------
+//   CO2 Cost
+// ----------------------
+class TimeSeriesThermalClusterCO2Cost final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesThermalClusterCO2Cost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
+    virtual ~TimeSeriesThermalClusterCO2Cost();
+
+protected:
+    void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
+    void onStudyClosed() override;
+};
+
+// ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
 

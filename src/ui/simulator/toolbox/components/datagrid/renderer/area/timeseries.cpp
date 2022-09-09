@@ -359,8 +359,39 @@ void TimeSeriesThermalClusterFuelCost::onStudyClosed()
 
 void TimeSeriesThermalClusterFuelCost::internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
 {
-    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->prepro->fuelcostdata) : NULL);
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->prepro->fuelcost) : NULL);
 }
+
+
+// ----------------------
+//   CO2 Cost
+// ----------------------
+
+TimeSeriesThermalClusterCO2Cost::TimeSeriesThermalClusterCO2Cost(
+  wxWindow* control,
+  Toolbox::InputSelector::ThermalCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onThermalClusterChanged.connect(
+          this, &TimeSeriesThermalClusterCO2Cost::internalThermalClusterChanged);
+}
+
+TimeSeriesThermalClusterCO2Cost::~TimeSeriesThermalClusterCO2Cost()
+{
+}
+
+void TimeSeriesThermalClusterCO2Cost::onStudyClosed()
+{
+    internalThermalClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+void TimeSeriesThermalClusterCO2Cost::internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
+{
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->prepro->co2cost) : NULL);
+}
+
 // ----------------------
 //   RENEWABLE CLUSTERS
 // ----------------------
