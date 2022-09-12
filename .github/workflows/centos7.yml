@@ -31,6 +31,9 @@ jobs:
       with:
         fetch-depth: 0
 
+    - uses: actions/checkout@master
+      if: github.event.release
+
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v1.1.2
