@@ -147,7 +147,7 @@ jobs:
 
     - name: Installer .tar.gz creation release
       if: IS_RELEASE
-        run: |
+      run: |
            cd _build
            cpack3 -G TGZ
 
