@@ -27,12 +27,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-      if: github.event.push
+#      if: github.event.push
       with:
         fetch-depth: 0
 
-    - uses: actions/checkout@master
-      if: github.event.release
+#    - uses: actions/checkout@master
+#      if: github.event.release
 
     - name: Get changed files
       id: changed-files
