@@ -275,7 +275,10 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
 
     MPSolverParameters params;
 
-
+    if (!(Probleme->StatutDesVariables.empty() || Probleme->StatutDesContraintes.empty()))
+    {
+        solver->SetStartingLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+    }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {

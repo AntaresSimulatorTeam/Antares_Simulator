@@ -586,6 +586,9 @@ struct PROBLEME_HEBDO
     RESULTATS_HORAIRES** ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
 
+    std::vector<int> StatutVariables;
+    std::vector<int> StatutContraintes;
+
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
 

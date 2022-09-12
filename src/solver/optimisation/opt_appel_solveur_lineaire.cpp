@@ -207,6 +207,9 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
+    Probleme.StatutDesVariables = ProblemeHebdo->StatutVariables;
+    Probleme.StatutDesContraintes = ProblemeHebdo->StatutContraintes;
+
     if (PremierPassage == NON_ANTARES)
         Probleme.FaireDuScaling = NON_SPX;
     if (PremierPassage == OUI_ANTARES)
@@ -346,6 +349,9 @@ RESOLUTION:
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
+
+        ProblemeHebdo->StatutVariables = Probleme.StatutDesVariables;
+        ProblemeHebdo->StatutContraintes = Probleme.StatutDesContraintes;
 
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
         {
