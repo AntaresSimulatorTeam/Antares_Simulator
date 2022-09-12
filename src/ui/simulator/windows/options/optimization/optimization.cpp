@@ -320,7 +320,7 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnSpinningReserve = button;
     }
-    // Export mps
+    // Export MPS
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
         button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
@@ -333,6 +333,20 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnExportMPS = button;
+    }
+    // Split exported MPS
+    {
+        label = Component::CreateLabel(this, wxT("Split exported mps"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuSpecify,
+                     PopupInfo(study.parameters.include.splitExportedMPS, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnSplitExportedMPS = button;
     }
     // Unfeasible problem behavior
     {
@@ -379,7 +393,7 @@ Optimization::Optimization(wxWindow* parent) :
         button->menu(true);
         onPopup.bind(this,
                      &Optimization::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.include.adequacyPatch, wxT("true")));
+                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -503,7 +517,8 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.primary = true;
             study.parameters.include.reserve.spinning = true;
             study.parameters.include.exportMPS = false;
-            study.parameters.include.adequacyPatch = false;
+            study.parameters.include.splitExportedMPS = false;
+            study.parameters.adqPatch.enabled = false;
             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
             study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
@@ -553,8 +568,10 @@ void Optimization::refresh()
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
     ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
+    // Split exported MPS
+    ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
     // Adequacy patch
-    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.include.adequacyPatch);
+    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.adqPatch.enabled);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
     ResetButtonAdequacyPatch(pBtnAdqPatchOutsideInside,

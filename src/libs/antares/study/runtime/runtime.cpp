@@ -29,6 +29,7 @@
 #include "runtime.h"
 #include "../parameters.h"
 #include "../../date.h"
+#include <algorithm>
 #include <limits>
 #include <functional>
 #include "../../emergency.h"
@@ -179,6 +180,8 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     }
     logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
     rti.name = b.name().c_str();
+    rti.filterYearByYear_ = b.yearByYearFilter();
+    rti.filterSynthesis_ = b.synthesisFilter();
     rti.linkCount = b.linkCount();
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
@@ -436,7 +439,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbDaysPerYear(0),
  nbMonthsPerYear(0),
  parameters(nullptr),
- mode(),
  interconnectionsCount(0),
  areaLink(nullptr),
  timeseriesNumberYear(nullptr),
@@ -444,7 +446,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
- maxThermalClustersForSingleArea(0),
 #ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
  hydroCostByAreaShouldBeInfinite(nullptr),
  globalMaximumCost(0.),
@@ -527,6 +528,9 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
+    // Max number of thermal/renewable clusters
+    initializeMaxClusters(study);
+
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
@@ -602,13 +606,98 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
+namespace CompareAreasByNumberOfClusters
+{
+// Compare areas by number of thermal clusters
+struct thermal
+{
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
+    {
+        assert(a.second);
+        assert(b.second);
+        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
+    }
+    size_t getNbClusters(const Area* area) const
+    {
+        assert(area);
+        return area->thermal.clusterCount();
+    }
+};
+// Compare areas by number of renewable clusters
+struct renewable
+{
+    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
+    {
+        assert(a.second);
+        assert(b.second);
+        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
+    }
+    size_t getNbClusters(const Area* area) const
+    {
+        assert(area);
+        return area->renewable.clusterCount();
+    }
+};
+} // namespace CompareAreasByNumberOfClusters
+
+template<class CompareGetT>
+static size_t maxNumberOfClusters(const Study& study)
+{
+    CompareGetT cmp;
+    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
+    if (pairWithMostClusters != study.areas.end())
+    {
+        auto area = pairWithMostClusters->second;
+        return cmp.getNbClusters(area);
+    }
+    return 0;
+}
+
+void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
+{
+    this->maxThermalClustersForSingleArea
+      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
+    this->maxRenewableClustersForSingleArea
+      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
+{
+    return bc.operatorType == '<' || bc.operatorType == '>';
+}
+
+uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
+}
+
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*bc))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
+}
+
+void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
 {
     logs.info();
     logs.info() << "Optimizing the thermal clusters in 'must-run' mode...";
 
     // The number of thermal clusters in 'must-run' mode
     uint count = 0;
+
     // each area...
     for (uint a = 0; a != study.areas.size(); ++a)
     {
@@ -616,9 +705,6 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study)
         area.thermal.prepareAreaWideIndexes();
         if (mode != stdmAdequacyDraft)
             count += area.thermal.prepareClustersInMustRunMode();
-
-        if (area.thermal.clusterCount() > maxThermalClustersForSingleArea)
-            maxThermalClustersForSingleArea = area.thermal.clusterCount();
     }
 
     switch (count)
