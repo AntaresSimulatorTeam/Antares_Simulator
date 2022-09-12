@@ -83,36 +83,19 @@ ZipWriter::~ZipWriter()
 
 void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    if (pState != ZipState::can_receive_data)
-        return;
-
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    pQueueService->add(
-      new ZipWriteJob<Yuni::Clob>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow);
+    addJobHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
-    if (pState != ZipState::can_receive_data)
-        return;
-
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    pQueueService->add(
-      new ZipWriteJob<std::string>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow);
+    addJobHelper<std::string>(entryPath, entryContent);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
 {
-    if (pState != ZipState::can_receive_data)
-        return;
-
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     std::string buffer;
     entryContent.saveToString(buffer);
-    pQueueService->add(new ZipWriteJob<std::string>(*this, entryPath, buffer, pDurationCollector),
-                       Yuni::Job::priorityLow);
+    addJobHelper<std::string>(entryPath, buffer);
 }
 
 bool ZipWriter::needsTheJobQueue() const

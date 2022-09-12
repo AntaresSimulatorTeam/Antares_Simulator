@@ -76,6 +76,12 @@ private:
     const std::string pArchivePath;
     // Benchmarking. Passed to jobs
     Benchmarking::IDurationCollector* pDurationCollector;
+
+private:
+    template<class ContentType>
+    void addJobHelper(const std::string& entryPath, ContentType& entryContent);
 };
 } // namespace Solver
 } // namespace Antares
+
+#include "zip_writer.hxx"
