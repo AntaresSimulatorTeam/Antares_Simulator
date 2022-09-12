@@ -75,7 +75,7 @@ struct VCardBindingConstMarginCost
         //! Indentation (GUI)
         nodeDepthForGUI = +0,
         //! Decimal precision
-        decimal = 0,
+        decimal = 2,
         //! Number of columns used by the variable
         columnCount = 1,
         //! Intermediate values
