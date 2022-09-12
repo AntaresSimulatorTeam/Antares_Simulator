@@ -173,7 +173,7 @@ void Connections::internalBuildSubControls()
     sizer->Layout();
 }
 
-static void addUpstreamDownstream(wxTreeItemId& rootId,
+static void addUpstreamDownstream(const wxTreeItemId& rootId,
                                   wxTreeCtrl* listbox,
                                   const Data::AreaList& areas,
                                   size_t layerID)
@@ -181,17 +181,14 @@ static void addUpstreamDownstream(wxTreeItemId& rootId,
     auto localRootId = listbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
     listbox->SetItemBold(localRootId, true);
     {
-        for (const auto& namedArea : areas)
+        for (const auto [links, area] : areas)
         {
-            Data::Area* area = namedArea.second;
             if (area->isVisibleOnLayer(layerID))
             {
                 wxTreeItemId id;
                 // Foreach Interconnection for the area
-                for (auto it : area->links)
+                for (const auto& [unused, lnk] : area->links)
                 {
-                    Data::AreaLink* lnk = it.second;
-
                     if (lnk->isVisibleOnLayer(layerID))
                     {
                         if (!id)
@@ -219,7 +216,7 @@ static void addUpstreamDownstream(wxTreeItemId& rootId,
     }
 }
 
-static void addByArea(wxTreeItemId& rootId,
+static void addByArea(const wxTreeItemId& rootId,
                       wxTreeCtrl* listbox,
                       const Data::AreaList& areas,
                       size_t layerID)
@@ -240,9 +237,8 @@ static void addByArea(wxTreeItemId& rootId,
         Data::Area* area = namedArea.second;
         if (area->isVisibleOnLayer(layerID))
         {
-            for (const auto& namedLink : area->links)
+            for (const auto& [unused, lnk] : area->links)
             {
-                Data::AreaLink* lnk = namedLink.second;
                 if (lnk->isVisibleOnLayer(layerID))
                 {
                     areaToListOfLinks[area->name].push_back(lnk);
@@ -252,27 +248,26 @@ static void addByArea(wxTreeItemId& rootId,
         }
     }
     // 2. Create nodes, etc.
-    // std::pair<Data::AreaName, std::vector<Data::AreaLink*>> al;
-    for (const auto& al : areaToListOfLinks)
+    for (const auto& [area, links] : areaToListOfLinks)
     {
         // Reference to the area
         wxTreeItemId id;
         // Foreach Interconnection for the area
-        auto count = al.second.size();
-        for (auto lnk : al.second)
+        auto count = links.size();
+        for (auto lnk : links)
         {
             if (!id)
             {
                 // We have to create the item corresponding to the area
                 id = listbox->AppendItem(localRootId,
-                                         wxString() << wxT(' ') << wxStringFromUTF8(al.first)
+                                         wxString() << wxT(' ') << wxStringFromUTF8(area)
                                                     << wxT(" (") << count << wxT(')'),
                                          1,
                                          1);
                 listbox->SetItemBold(id, true);
             }
 
-            const bool isAreaOriginOfLink = (al.first == lnk->from->name);
+            const bool isAreaOriginOfLink = (area == lnk->from->name);
             // Adding the item for the interconnection
             listbox->AppendItem(
               id, /*parent*/
