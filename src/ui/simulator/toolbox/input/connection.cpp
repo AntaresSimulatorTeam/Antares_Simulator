@@ -232,11 +232,11 @@ static void addByArea(const wxTreeItemId& rootId,
     // 1. Build hierarchy
     std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
     // AreaName area1 -> {Link* lnk1, Link* lnk2, ...}
-    for (const auto& [unused, area] : areas)
+    for (const auto& [unused1, area] : areas)
     {
         if (area->isVisibleOnLayer(layerID))
         {
-            for (const auto& [unused, lnk] : area->links)
+            for (const auto& [unused2, lnk] : area->links)
             {
                 if (lnk->isVisibleOnLayer(layerID))
                 {
