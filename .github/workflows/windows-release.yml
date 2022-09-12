@@ -64,7 +64,6 @@ jobs:
       with:
         architecture: 'x64'
         python-version: '3.10.6'
-        cache: 'pip' # caching pip dependencies
 
     - name : Install deps with VCPKG
       run: |
