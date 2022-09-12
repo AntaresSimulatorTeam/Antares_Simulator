@@ -282,7 +282,11 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload) || fuelcost.forceReload(reload) || co2cost.forceReload(reload);
+    bool ret = true;
+    ret = data.forceReload(reload) && ret;
+    ret = fuelcost.forceReload(reload) && ret;
+    ret = co2cost.forceReload(reload) && ret;
+    return ret;
 }
 
 void PreproThermal::markAsModified() const
