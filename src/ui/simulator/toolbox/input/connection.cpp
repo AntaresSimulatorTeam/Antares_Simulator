@@ -181,7 +181,7 @@ static void addUpstreamDownstream(const wxTreeItemId& rootId,
     auto localRootId = listbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
     listbox->SetItemBold(localRootId, true);
     {
-        for (const auto [links, area] : areas)
+        for (const auto& [links, area] : areas)
         {
             if (area->isVisibleOnLayer(layerID))
             {
@@ -232,9 +232,8 @@ static void addByArea(const wxTreeItemId& rootId,
     // 1. Build hierarchy
     std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
     // AreaName area1 -> {Link* lnk1, Link* lnk2, ...}
-    for (const auto& namedArea : areas)
+    for (const auto& [unused, area] : areas)
     {
-        Data::Area* area = namedArea.second;
         if (area->isVisibleOnLayer(layerID))
         {
             for (const auto& [unused, lnk] : area->links)
