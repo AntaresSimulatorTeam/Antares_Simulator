@@ -101,10 +101,10 @@ wxString ThermalClusterCommonModulation::cellValue(int x, int y) const
             return DoubleToWxString(Math::Round((*pMatrix)[Data::thermalMinGenModulation][y], 3));
         case (Data::thermalModulationCost + Data::thermalModulationMax):
             return DoubleToWxString(
-              Math::Round((*pMatrix)[Data::thermalModulationCost][y] * pCluster->marginalCost, 2));
+              Math::Round((*pMatrix)[Data::thermalModulationCost][y] * pCluster->marginalCostPerHour[y], 3));         
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
             return DoubleToWxString(Math::Round(
-              (*pMatrix)[Data::thermalModulationMarketBid][y] * pCluster->marketBidCost, 2));
+              (*pMatrix)[Data::thermalModulationMarketBid][y] * pCluster->marketBidCostPerHour[y], 3));     
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
             return DoubleToWxString(Math::Round(
               (*pMatrix)[Data::thermalModulationCapacity][y] * pCluster->nominalCapacity, 2));
@@ -133,9 +133,9 @@ double ThermalClusterCommonModulation::cellNumericValue(int x, int y) const
         case Data::thermalMinGenModulation:
             return (*pMatrix)[Data::thermalMinGenModulation][y];
         case (Data::thermalModulationCost + Data::thermalModulationMax):
-            return (*pMatrix)[Data::thermalModulationCost][y] * pCluster->marginalCost;
+            return (*pMatrix)[Data::thermalModulationCost][y] * pCluster->marginalCostPerHour[y];
         case (Data::thermalModulationMarketBid + Data::thermalModulationMax):
-            return (*pMatrix)[Data::thermalModulationMarketBid][y] * pCluster->marketBidCost;
+            return (*pMatrix)[Data::thermalModulationMarketBid][y] * pCluster->marketBidCostPerHour[y];
         case (Data::thermalModulationCapacity + Data::thermalModulationMax):
             return (*pMatrix)[Data::thermalModulationCapacity][y] * pCluster->nominalCapacity;
         case (Data::thermalMinGenModulation + Data::thermalModulationMax):

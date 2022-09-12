@@ -154,7 +154,7 @@ public:
     ** The formula is : TS[i,j] = TS[i,j] * (1 - Spinning / 100)
     */
     void calculationOfSpinning();
-
+    void calculationOfMarketBidPerHourAndMarginalCostPerHour();
     /*!
     ** \brief Calculation of spinning (reverse)
     **
@@ -372,6 +372,15 @@ public:
     ** 8760 (HOURS_PER_YEAR) array
     */
     double* productionCost;
+
+    /*!
+    ** \brief Market Bid Cost Per Hour
+    */ 
+    std::vector<double> marketBidCostPerHour;
+    /*!
+    ** \brief Marginal Cost Per Hour
+    */     
+    std::vector<double> marginalCostPerHour;
 
     /*!
     ** \brief The number of units used the last hour in the simulation

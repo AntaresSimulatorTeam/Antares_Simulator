@@ -39,6 +39,8 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         u.requiredMemoryForInput += sizeof(void*);
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // marketBidCostPerHour
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // marginalCostPerHour
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
         cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
 
@@ -323,12 +325,22 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
 
                     // alias to the production cost
                     double* prodCost = cluster->productionCost;
-                    // alias to the marginal cost
-                    double marginalCost = cluster->marginalCost;
+
                     // Production cost
                     auto& modulation = cluster->modulation[thermalModulationCost];
-                    for (uint h = 0; h != cluster->modulation.height; ++h)
-                        prodCost[h] = marginalCost * modulation[h];
+                    if(cluster->costgeneration == Data::setManually)
+                    {
+                        // alias to the marginal cost
+                        double marginalCost = cluster->marginalCost;                        
+                        for (uint h = 0; h != cluster->modulation.height; ++h)
+                            prodCost[h] = marginalCost * modulation[h];
+                    }
+                    else
+                    {
+                        std::vector<double> marginalCostPerHour = cluster->marginalCostPerHour;
+                        for (uint h = 0; h != cluster->modulation.height; ++h)
+                            prodCost[h] = marginalCostPerHour[h] * modulation[h];
+                    }
 
                     if (not study.parameters.include.thermal.minStablePower)
                         cluster->minStablePower = 0.;
@@ -914,6 +926,8 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                 // checking NPO max
                 result = c.prepro->normalizeAndCheckNPO();
             }
+
+            c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
 
             ret = result and ret;
         }

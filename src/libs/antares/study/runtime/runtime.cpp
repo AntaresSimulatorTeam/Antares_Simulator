@@ -107,6 +107,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
+
         area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
             area.scratchpad[numSpace] = new AreaScratchpad(r, area);

@@ -146,6 +146,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
+ marketBidCostPerHour(HOURS_PER_YEAR, 0),
+ marginalCostPerHour(HOURS_PER_YEAR, 0),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -193,6 +195,8 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
+ marketBidCostPerHour(HOURS_PER_YEAR, 0.0),
+ marginalCostPerHour(HOURS_PER_YEAR, 0.0),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -292,6 +296,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
+    marketBidCostPerHour = cluster.marketBidCostPerHour;
+    marginalCostPerHour = cluster.marginalCostPerHour;
 
     // group {min,max}
     groupMinCount = cluster.groupMinCount;
@@ -463,6 +469,27 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
+
+void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
+{
+    if (costgeneration == Data::setManually || !prepro || efficiency <= 0.0)
+    {
+        std::fill(marketBidCostPerHour.begin(), marketBidCostPerHour.end(), marketBidCost);
+        std::fill(marginalCostPerHour.begin(), marginalCostPerHour.end(), marginalCost);
+        return;
+    }
+    else //costgeneration == Data::useCostTimeseries
+    {
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+        {
+            marketBidCostPerHour[hour] = prepro->fuelcost[0][hour] * 3600 / efficiency + co2 * prepro->co2cost[0][hour] + variableomcost;
+            marginalCostPerHour[hour] = marketBidCostPerHour[hour];           
+        }
+        return;
+    }
+}
+
+
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
     assert(this->series);
@@ -529,7 +556,8 @@ void Data::ThermalCluster::reset()
     startupCost = 0.;
     marketBidCost = 0.;
     variableomcost = 0.;
-
+    std::fill(marketBidCostPerHour.begin(), marketBidCostPerHour.end(), 0.0);
+    std::fill(marginalCostPerHour.begin(), marginalCostPerHour.end(), 0.0);
     // group{min,max}
     groupMinCount = 0;
     groupMaxCount = 0;

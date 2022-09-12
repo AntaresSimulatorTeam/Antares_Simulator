@@ -167,7 +167,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                 ret = fuelcost.loadFromCSVFile(buffer,
                                         1,
                                         HOURS_PER_YEAR,
-                                        Matrix<>::optImmediate,
+                                        Matrix<>::optFixedSize | Matrix<>::optImmediate,
                                         &study.dataBuffer)
                     and ret;
                 if (study.usedByTheSolver && study.parameters.derated)
@@ -178,7 +178,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
             if(IO::File::Exists(buffer))
             {
                 ret = co2cost.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, 
-                                    Matrix<>::optImmediate, &study.dataBuffer) 
+                                    Matrix<>::optFixedSize | Matrix<>::optImmediate, &study.dataBuffer) 
                                     and ret;
                 if (study.usedByTheSolver && study.parameters.derated)
                     co2cost.averageTimeseries();                  

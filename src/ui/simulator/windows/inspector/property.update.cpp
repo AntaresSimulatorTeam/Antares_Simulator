@@ -721,7 +721,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->efficiency = 0.;
+                (*i)->efficiency = 100.0;
             pFrame.delayApply();
         }
         else
@@ -740,15 +740,25 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         {
         case 0:
             costgeneration = Data::setManually;
+            EnableProperty(pFrame.pPGThClusterMarginalCost);
+            EnableProperty(pFrame.pPGThClusterOperatingCost);
             break;
         case 1:
             costgeneration = Data::useCostTimeseries;
+            DisableProperty(pFrame.pPGThClusterMarginalCost); //disable onPropertyChanging
+            DisableProperty(pFrame.pPGThClusterOperatingCost);
             break;
         default:
             return false;
         }
         for (; i != end; ++i)
-            (*i)->costgeneration = costgeneration;
+        {
+            (*i)->costgeneration = costgeneration;    
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); //update     
+        }
+        // Notify
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();        
         return true;
     }
     // MBO 15/04/2014
@@ -781,7 +791,11 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
 
         for (; i != end; ++i)
+        {
             (*i)->marginalCost = d;
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+        }
+        
         pFrame.delayApply();
         // Notify
         OnStudyThermalClusterCommonSettingsChanged();
@@ -860,7 +874,10 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         }
 
         for (; i != end; ++i)
+        {
             (*i)->marketBidCost = d;
+            (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+        }
         pFrame.delayApply();
 
         // Notify
