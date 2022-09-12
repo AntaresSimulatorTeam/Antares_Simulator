@@ -121,6 +121,18 @@ Economy::~Economy()
     }
 }
 
+Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
+{
+    const uint numSpace = 0;
+    const auto& Pb = pProblemesHebdo[numSpace]->ProblemeAResoudre;
+    Benchmarking::OptimizationInfo optInfo;
+
+    optInfo.nbVariables = Pb->NombreDeVariables;
+    optInfo.nbConstraints = Pb->NombreDeContraintes;
+    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    return optInfo;
+}
+
 void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 {
     pNbMaxPerformedYearsInParallel = nbMaxPerformedYearsInParallel;
@@ -152,7 +164,7 @@ bool Economy::simulationBegin()
         }
 
         weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.include.adequacyPatch);
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
 
         SIM_InitialisationResultats();
     }

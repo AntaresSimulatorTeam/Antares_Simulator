@@ -24,44 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_LIBS_BENCHMARKING_H__
+#define __ANTARES_LIBS_BENCHMARKING_H__
 
-#include <yuni/yuni.h>
-#include "timer.h"
-#include "content_handler.h"
-#include "../logs.h"
-#include <math.h>
-#include <yuni/core/system/gettimeofday.h>
+#include "benchmarking/timer.h"
+#include "benchmarking/info_collectors.h"
+#include "benchmarking/file_writer.h"
 
-using namespace Yuni;
-
-static inline sint64 MilliSecTimer()
-{
-    Yuni::timeval tv;
-    YUNI_SYSTEM_GETTIMEOFDAY(&tv, nullptr);
-    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
-}
-
-namespace TimeElapsed
-{
-void Timer::stop()
-{
-    const sint64 delta_ms = MilliSecTimer() - pStartTime;
-    if (verbose)
-    {
-        Antares::logs.info() << logText << " done (" << delta_ms << " ms)";
-    }
-    if (pContentHandler)
-    {
-        pContentHandler->append(fileText, delta_ms);
-    }
-}
-
-Timer::Timer(const AnyString& logText,
-             const AnyString& fileText,
-             bool verbose,
-             ContentHandler* handler) :
-  fileText(fileText), logText(logText), verbose(verbose), pContentHandler(handler)
-{
-    pStartTime = MilliSecTimer();
-}
-} // namespace TimeElapsed
+#endif // __ANTARES_LIBS_BENCHMARKING_H__

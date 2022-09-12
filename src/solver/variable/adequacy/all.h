@@ -30,6 +30,7 @@
 #include "../variable.h"
 #include "../area.h"
 #include "../setofareas.h"
+#include "../bindConstraints.h"
 
 #include "../economy/co2.h"
 #include "../economy/price.h"
@@ -75,6 +76,9 @@
 #include "../economy/links/congestionFeeAbs.h"
 #include "../economy/links/marginalCost.h"
 #include "../economy/links/congestionProbability.h"
+
+// Output variables associated to binding constraints
+#include "../economy/bindingConstraints/bindingConstraintsMarginalCost.h"
 
 // By thermal plant
 #include "../economy/profitByPlant.h"
@@ -220,11 +224,22 @@ typedef // Prices
                                                             Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
+
+typedef 
+    Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
+        Container::EndOfList    // End of variable list
+    >
+
+  VariablesPerBindingConstraints;
+
+
 typedef Variable::Join<
   // Variables for each area / links attached to the areas
   Variable::Areas<VariablesPerArea>,
   // Variables for each set of areas
-  Variable::SetsOfAreas<VariablesPerSetOfAreas>>
+  Variable::SetsOfAreas<VariablesPerSetOfAreas>,
+  // Variables for each binding constraint
+  Variable::BindingConstraints<VariablesPerBindingConstraints>>
   ItemList;
 
 /*!
