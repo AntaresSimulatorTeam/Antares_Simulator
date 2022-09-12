@@ -45,7 +45,7 @@ jobs:
 
     - name: Read antares-deps version
       id: antares-deps-version
-      if: ${{ IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
+      if: ${{ env.IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
       uses: notiz-dev/github-action-json-property@release
       with:
         path: 'antares-deps-version.json'
@@ -53,7 +53,7 @@ jobs:
 
     - name: Docker file push
       id: docker_push
-      if: ${{ IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
+      if: ${{ env.IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
