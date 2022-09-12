@@ -28,8 +28,8 @@ jobs:
     steps:
     - uses: actions/checkout@master
       if: github.event.push
-        with:
-          fetch-depth: 0
+      with:
+        fetch-depth: 0
 
     - name: Get changed files
       id: changed-files
@@ -98,6 +98,12 @@ jobs:
       run: |
           git submodule update --init --recursive src .
 
+    - name: Download XPRESS if needed
+      if: ${{ matrix.ortools == 'ON' }}
+      run: |
+        source /opt/rh/rh-git227/enable
+        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+
     - name: Download OR-Tools if needed
       if: ${{ matrix.ortools == 'ON' }}
       id: ortools
@@ -120,3 +126,85 @@ jobs:
       with:
         name: pdf-doc
         path: docs/ref_guides
+
+
+    - name: Configure release
+      if: github.event.release
+      run: |
+           source /opt/rh/devtoolset-9/enable
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
+
+    - name: Configure push
+      if: github.event.push
+      run: |
+           source /opt/rh/devtoolset-9/enable
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
+
+    - name: Build
+      run: |
+           source /opt/rh/devtoolset-9/enable
+           source /opt/rh/rh-git227/enable
+           cmake3 --build _build --config Release -j2
+
+    - name: Installer .rpm creation release
+      if: github.event.release
+      run: |
+           cd _build
+           cpack3 -G RPM
+
+    - name: Installer .tar.gz creation release
+      if: github.event.release
+      run: |
+           cd _build
+           cpack3 -G TGZ
+
+    - name: Installer archive upload release
+      if: github.event.release
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-centos7-archive${{ steps.ortools.outputs.label }}
+        path: _build/*.tar.gz
+
+    - name: Installer rpm upload release
+      if: github.event.release
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
+        path: _build/*.rpm
+
+
+    - name: Installer .rpm creation push
+      if: github.event.push
+      run: |
+           cd _build
+           cpack3 -G RPM
+           export RPM_NAME=$(ls *.rpm)
+           echo "RPM_NAME=${RPM_NAME}" >> $GITHUB_ENV
+           echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
+
+    - name: .tar.gz creation push
+      if: github.event.push
+      run: |
+           cd _build
+           cpack3 -G TGZ
+           export TGZ_NAME=$(ls *.tar.gz)
+           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
+           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
+
+    - name: Upload .rpm push
+      if: github.event.push
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.RPM_NAME}}
+        asset_name: ${{env.RPM_NAME_WITH_SUFFIX}}
+        asset_content_type: application/octet-stream
+
+    - name: Upload .tar.gz push
+      if: github.event.push
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.TGZ_NAME}}
+        asset_name: ${{env.TGZ_NAME_WITH_SUFFIX}}
+        asset_content_type: application/octet-stream
