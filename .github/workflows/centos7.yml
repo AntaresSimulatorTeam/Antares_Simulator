@@ -14,6 +14,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
 
 jobs:
 
@@ -27,12 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-#      if: github.event.push
-      with:
-        fetch-depth: 0
-
-#    - uses: actions/checkout@master
-#      if: github.event.release
 
     - name: Get changed files
       id: changed-files
@@ -44,12 +40,12 @@ jobs:
 
     - name: Get branch name
       id: branch_name
-      if: github.event.release
+      if: IS_RELEASE
       uses: tj-actions/branch-names@v5
 
     - name: Read antares-deps version
       id: antares-deps-version
-      if: github.event.release || steps.changed-files.outputs.modified_files != ''
+      if: ${{ IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
       uses: notiz-dev/github-action-json-property@release
       with:
         path: 'antares-deps-version.json'
@@ -57,7 +53,7 @@ jobs:
 
     - name: Docker file push
       id: docker_push
-      if: github.event.release || steps.changed-files.outputs.modified_files != ''
+      if: ${{ IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
@@ -96,7 +92,7 @@ jobs:
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-      if: github.event.release
+      if: IS_RELEASE
 
     - name: Init submodule
       run: |
@@ -132,17 +128,10 @@ jobs:
         path: docs/ref_guides
 
 
-    - name: Configure release
-      if: github.event.release
+    - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
            cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
-
-    - name: Configure push
-      if: github.event.push
-      run: |
-           source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
 
     - name: Build
       run: |
@@ -151,26 +140,26 @@ jobs:
            cmake3 --build _build --config Release -j2
 
     - name: Installer .rpm creation release
-      if: github.event.release
+      if: IS_RELEASE
       run: |
            cd _build
            cpack3 -G RPM
 
     - name: Installer .tar.gz creation release
-      if: github.event.release
-      run: |
+      if: IS_RELEASE
+        run: |
            cd _build
            cpack3 -G TGZ
 
     - name: Installer archive upload release
-      if: github.event.release
+      if: IS_RELEASE
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
 
     - name: Installer rpm upload release
-      if: github.event.release
+      if: IS_RELEASE
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
@@ -178,7 +167,7 @@ jobs:
 
 
     - name: Installer .rpm creation push
-      if: github.event.push
+      if: IS_PUSH
       run: |
            cd _build
            cpack3 -G RPM
@@ -187,7 +176,7 @@ jobs:
            echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
 
     - name: .tar.gz creation push
-      if: github.event.push
+      if: IS_PUSH
       run: |
            cd _build
            cpack3 -G TGZ
@@ -196,7 +185,7 @@ jobs:
            echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
 
     - name: Upload .rpm push
-      if: github.event.push
+      if: IS_PUSH
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
@@ -205,7 +194,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload .tar.gz push
-      if: github.event.push
+      if: IS_PUSH
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
