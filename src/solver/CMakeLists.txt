@@ -75,6 +75,7 @@ macro(solver_app name swap)
         application.cpp
 
         signal-handling/common.h
+        signal-handling/public.h
         signal-handling/common.cpp
         signal-handling/linux.cpp
         signal-handling/windows.cpp

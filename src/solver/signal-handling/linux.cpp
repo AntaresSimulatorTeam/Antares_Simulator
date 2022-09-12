@@ -3,15 +3,13 @@
 #include "common.h"
 #include "../application.h"
 
-namespace Antares
+namespace Antares::Solver
 {
-namespace Solver
-{
-void Application::installSignalHandlers() const
+void initializeSignalHandlers()
 {
     std::signal(SIGTERM, signalCtrl_term);
     std::signal(SIGINT, signalCtrl_int);
 }
-} // namespace Solver
-} // namespace Antares
+}// namespace Antares::Solver
+
 #endif

@@ -19,14 +19,11 @@ BOOL WINAPI ConsoleHandler(DWORD dwType)
     return TRUE;
 }
 
-namespace Antares
+namespace Antares::Solver
 {
-namespace Solver
-{
-void Application::installSignalHandlers() const
+void initializeSignalHandlers()
 {
     SetConsoleCtrlHandler((PHANDLER_ROUTINE)ConsoleHandler, TRUE);
 }
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
 #endif
