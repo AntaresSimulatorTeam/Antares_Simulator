@@ -87,7 +87,7 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
 
-    - name: Recover pip dependencies from cache
+    - name: Setup Python 3.10
       uses: actions/setup-python@v4
       with:
         architecture: 'x64'
