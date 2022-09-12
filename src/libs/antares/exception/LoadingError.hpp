@@ -179,10 +179,17 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
-class CreatingTimeMeasurementFile : public LoadingError
+class IncompatibleStudyModeForAdqPatch : public LoadingError
 {
 public:
-    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
+    IncompatibleStudyModeForAdqPatch();
 };
+
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
 } // namespace Error
 } // namespace Antares

@@ -31,10 +31,9 @@
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
+#include "../../libs/antares/study/study.h"
 
-#define GROSSES_VARIABLES NON_ANTARES
-#define COEFF_GROSSES_VARIABLES 100
-
+#include <memory>
 #include <yuni/core/math.h>
 
 typedef struct
@@ -65,10 +64,7 @@ typedef struct
     int* NumeroDeVariableDefaillanceNegativeDown;
     int* NumeroDeVariableDefaillanceNegativeAny;
 
-    int* NumeroDeGrosseVariableDefaillancePositive;
-    int* NumeroDeGrosseVariableDefaillanceNegative;
     int* NumeroDeVariableDefaillanceEnReserve;
-    int* NumeroDeGrosseVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
     int* NumeroDeVariablesVariationHydALaBaisseUp;
@@ -172,6 +168,11 @@ typedef struct
 
 typedef struct
 {
+    double* variablesDuales;
+} RESULTATS_CONTRAINTES_COUPLANTES;
+
+typedef struct
+{
     double* TotalDemandOfMarketPool;
 } DEMAND_MARKET_POOL;
 
@@ -252,7 +253,6 @@ typedef struct
     double* TailleUnitaireDUnGroupeDuPalierThermique;
     double* PminDuPalierThermiquePendantUneHeure;
     double* PminDuPalierThermiquePendantUnJour;
-    double* PminDuPalierThermiquePendantUneSemaine;
     int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
 
@@ -316,6 +316,31 @@ typedef struct
     double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+
+class AdequacyPatchRuntimeData
+{
+private:
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+
+public:
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaType;
+    std::vector<adqPatchParamsMode> extremityAreaType;
+    void initialize(Antares::Data::Study& study)
+    {
+        for (uint i = 0; i != study.areas.size(); ++i)
+        {
+            auto& area = *(study.areas[i]);
+            areaMode.push_back(area.adequacyPatchMode);
+        }
+        for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+        {
+            auto& link = *(study.runtime->areaLink[i]);
+            originAreaType.push_back(link.from->adequacyPatchMode);
+            extremityAreaType.push_back(link.with->adequacyPatchMode);
+        }
+    }
+};
 
 class computeTimeStepLevel
 {
@@ -423,6 +448,7 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
+    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -468,6 +494,13 @@ typedef struct
 {
     double* CoutsMarginauxHorairesDeLaReserveParZone;
 } COUTS_MARGINAUX_ZONES_DE_RESERVE;
+
+struct AdequacyPatchParameters
+{
+    bool AdequacyFirstStep;
+    bool SetNTCOutsideToInsideToZero;
+    bool SetNTCOutsideToOutsideToZero;
+};
 
 struct PROBLEME_HEBDO
 {
@@ -522,12 +555,14 @@ struct PROBLEME_HEBDO
 
     int NombreDeContraintesCouplantes;
     CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
+    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes;
 
     SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
     char ReinitOptimisation;
 
     char ExportMPS;
+    bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 
@@ -576,6 +611,10 @@ struct PROBLEME_HEBDO
     optimizationStatistics optimizationStatistics_FirstOptim;
     optimizationStatistics optimizationStatistics_SecondOptim;
 
+    /* Adequacy Patch */
+    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
+    AdequacyPatchRuntimeData adequacyPatchRuntimeData;
+
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -596,7 +635,6 @@ struct PROBLEME_HEBDO
     double* tempsResolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
-
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;

@@ -36,6 +36,7 @@
 #include "../parts/thermal/cluster.h"
 #include "../../array/matrix.h"
 #include "../../inifile/inifile.h"
+#include "antares/study/filter.h"
 #include <vector>
 #include <set>
 
@@ -383,6 +384,9 @@ public:
     void operatorType(Operator o);
     //@}
 
+    uint yearByYearFilter() const;
+    uint synthesisFilter() const;
+
     //! \name Enabled / Disabled
     //@{
     //! Get if the binding constraint is enabled
@@ -499,6 +503,10 @@ private:
     Type pType;
     //! Operator
     Operator pOperator;
+    //! Print binding constraint's marginal prices of any year for which time step granularity ?
+    uint pFilterYearByYear = filterAll;
+    //! Print binding constraint's marginal prices synthesis for which time step granularity ?
+    uint pFilterSynthesis = filterAll;
     //! Enabled / Disabled
     bool pEnabled;
     //! Comments

@@ -70,7 +70,8 @@ static std::string availableOrToolsSolversString()
     return availableSolverListStr;
 }
 
-std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::StudyLoadOptions& options)
+std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
+                                             Antares::Data::StudyLoadOptions& options)
 {
     settings.reset();
 
@@ -196,10 +197,13 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings, Antares::Data::
     // --pid
     parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
 
+    // --list-solvers
+    parser->addFlag(
+      options.listSolvers, 'l', "list-solvers", "List available OR-Tools solvers, then exit.");
     // --version
 
     parser->addFlag(
-      options.displayVersion, 'v', "version", "Print the version of the solver and exit");
+      options.displayVersion, 'v', "version", "Print the version of antares-solver and exit");
 
     // The last argument is the study folder.
     // Unlike all other arguments, it does not need to be given after a --flag.

@@ -238,18 +238,10 @@ RESOLUTION:
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
 
-    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
-    //		- Only for first optimization
-    //		- If mode Xpansion is asked
-    //		- For time beeing, only for simplex, without use of ortools
-
     Probleme.NombreDeContraintesCoupes = 0;
 
-    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
-    // - Only for first optimization week
-    // - If mode Xpansion is asked
-    // - For time beeing, only for simplex, without use of ortools
-    if (ProblemeHebdo->Expansion)
+    // Write the fixed and variable part of the optimization problem, into the MPS format.
+    if (ProblemeHebdo->ExportMPS == OUI_ANTARES && ProblemeHebdo->SplitExportedMPS)
     {
         if (ProblemeHebdo->firstWeekOfSimulation)
             OPT_dump_spx_fixed_part(&Probleme, numSpace);
@@ -278,7 +270,7 @@ RESOLUTION:
     solveTime = measure.duration_ms();
     optimizationStatistics_object->addSolveTime(solveTime);
 
-    if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
+    if (ProblemeHebdo->ExportMPS == OUI_ANTARES && !ProblemeHebdo->SplitExportedMPS)
     {
         if (ortoolsUsed)
         {

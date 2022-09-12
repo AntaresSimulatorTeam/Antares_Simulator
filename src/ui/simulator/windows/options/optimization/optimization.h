@@ -98,6 +98,7 @@ private:
     void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuAdequacyPatch(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 
     void onInternalMotion(wxMouseEvent&);
 
@@ -115,6 +116,10 @@ private:
     Component::Button* pBtnSimplexOptimizationRange;
 
     Component::Button* pBtnExportMPS;
+    Component::Button* pBtnSplitExportedMPS;
+    Component::Button* pBtnAdequacyPatch;
+    Component::Button* pBtnAdqPatchOutsideInside;
+    Component::Button* pBtnAdqPatchOutsideOutside;
     Component::Button* pBtnUnfeasibleProblemBehavior;
     bool* pTargetRef;
 

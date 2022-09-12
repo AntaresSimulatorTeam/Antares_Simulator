@@ -28,5 +28,5 @@
 #include <antares/study/memory-usage.h>
 #include "all.h"
 
-#define NEXTTYPE Adequacy::VariablesPerArea
+using NEXTTYPE = Solver::Variable::Adequacy::VariablesPerArea;
 #include "../area.memory-estimation.inc.hxx"

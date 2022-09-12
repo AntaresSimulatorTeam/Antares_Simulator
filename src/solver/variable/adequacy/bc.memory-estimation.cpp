@@ -24,11 +24,10 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_TIMEELAPSED_H__
-#define __ANTARES_LIBS_TIMEELAPSED_H__
 
-#include "timeelapsed/timer.h"
-#include "timeelapsed/content_handler.h"
-#include "timeelapsed/csv_writer.h"
+#include <antares/study/memory-usage.h>
+#include "all.h"
 
-#endif // __ANTARES_LIBS_TIMEELAPSED_H__
+using bc_next_type = Solver::Variable::Adequacy::VariablesPerBindingConstraints;
+
+#include "../bc.memory-estimation.inc.hxx"

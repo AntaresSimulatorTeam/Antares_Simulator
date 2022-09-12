@@ -142,10 +142,10 @@ void AllVariablesPrintInfo::resetInfoIterator() const
 bool AllVariablesPrintInfo::setPrintStatus(string varname, bool printStatus)
 {
     /*
-            From the position of the iterator on the print info collection, shifting right until
-            reaching the print info associated to 'varname' argument. Then setting the good print
-       info object with 'printStatus' argument. If searched variable print info not found, returning
-       'false' meaing we have an error.
+        From the position of the iterator on the print info collection, shifting right until
+        reaching the print info associated to 'varname' argument. Then setting the good print
+        info object with 'printStatus' argument. If searched variable print info not found, returning
+        'false' meaing we have an error.
     */
     std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
 
@@ -238,11 +238,11 @@ void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 {
     /*
-            Among all reports a study can create, which is the one that contains the largest
-            number of columns and especially what is this number ?
-            If there are some unselected variables, the previous number is reduced.
-            This number is a rough over-estimation, not the exact maximum number a report can
-       contain.
+        Among all reports a study can create, which is the one that contains the largest
+        number of columns and especially what is this number ?
+        If there are some unselected variables, the previous number is reduced.
+        This number is a rough over-estimation, not the exact maximum number a report can
+        contain.
     */
 
     uint CFileLevel = 1;

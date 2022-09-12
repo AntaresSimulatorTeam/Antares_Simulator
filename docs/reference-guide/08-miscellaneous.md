@@ -565,4 +565,4 @@ The Renewable window can be filled out with the different renewable clusters ins
 
 [^19]: If the playlist is full, these years have numbers # (k-1)B+1 ,…., #kB
 
-[^20]: Described in the note "Optimization Problems Formulation"
+[^20]: Described in the note "Optimization Problems Formulation" 

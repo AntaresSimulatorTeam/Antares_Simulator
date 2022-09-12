@@ -59,7 +59,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.BruitSurCoutHydraulique[p] = (double*)MemAlloc(8784 * sizeof(double));
 
     problem.NomsDesPays = (const char**)MemAlloc(nbPays * sizeof(char*));
-
     problem.PaysExtremiteDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.PaysOrigineDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.CoutDeTransport = (COUTS_DE_TRANSPORT**)MemAlloc(linkCount * sizeof(void*));
@@ -238,14 +237,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny
           = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillancePositive
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceNegative
-          = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceEnReserve
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
@@ -345,7 +338,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraintCount * sizeof(int));
     }
 
-    for (k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
+    const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
+    problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
+      bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
+
+    for (k = 0; k < (int)bindingConstraintCount; k++)
     {
         problem.MatriceDesContraintesCouplantes[k]
           = (CONTRAINTES_COUPLANTES*)MemAlloc(sizeof(CONTRAINTES_COUPLANTES));
@@ -374,6 +371,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+
+        // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
+        unsigned int nbTimeSteps;
+        switch (study.runtime->bindingConstraint[k].type)
+        {
+            using namespace Antares::Data;
+        case BindingConstraint::typeHourly:
+            nbTimeSteps = 168;
+            break;
+        case BindingConstraint::typeDaily:
+            nbTimeSteps = 7;
+            break;
+        case BindingConstraint::typeWeekly:
+            nbTimeSteps = 1;
+            break;
+        default:
+            nbTimeSteps = 0;
+            break;
+        }
+        if (nbTimeSteps > 0)
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales
+              = (double*)MemAlloc(nbTimeSteps * sizeof(double));
+        }
+        else
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales = nullptr;
+        }
     }
 
     for (k = 0; k < (int)nbPays; k++)
@@ -396,8 +421,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
-          = (double*)MemAlloc(nbPaliers * sizeof(double));
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine
           = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
           = (double*)MemAlloc(nbPaliers * sizeof(double));
@@ -460,6 +483,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
+        problem.ResultatsHoraires[k]->ValeursHorairesDENS
+          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown
@@ -591,7 +616,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     uint nbPays = study.areas.size();
 
     MemFree(problem.NomsDesPays);
-
     MemFree(problem.PaysExtremiteDeLInterconnexion);
     MemFree(problem.PaysOrigineDeLInterconnexion);
     MemFree(problem.IndexDebutIntercoOrigine);
@@ -655,13 +679,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeDown);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillancePositive);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceNegative);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceEnReserve);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
         MemFree(
@@ -756,15 +774,18 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch);
 
         MemFree(problem.MatriceDesContraintesCouplantes[k]);
+
+        if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
+            MemFree(problem.ResultatsContraintesCouplantes[k].variablesDuales);
     }
     MemFree(problem.MatriceDesContraintesCouplantes);
+    MemFree(problem.ResultatsContraintesCouplantes);
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure);
-        MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine);
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour);
         MemFree(problem.PaliersThermiquesDuPays[k]->minUpDownTime);
         MemFree(problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique);
@@ -848,6 +869,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny);

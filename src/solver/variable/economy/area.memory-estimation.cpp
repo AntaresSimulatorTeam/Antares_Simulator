@@ -28,5 +28,5 @@
 #include <antares/study/memory-usage.h>
 #include "all.h"
 
-#define NEXTTYPE Economy::VariablesPerArea
+using NEXTTYPE = Solver::Variable::Economy::VariablesPerArea;
 #include "../area.memory-estimation.inc.hxx"
