@@ -96,6 +96,7 @@ jobs:
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
+      if: github.event.release
 
     - name: Init submodule
       run: |
