@@ -17,6 +17,8 @@ env:
   IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
 
+jobs:
+
   doc_generation:
     uses: ./.github/workflows/build-userguide.yml
     with:
