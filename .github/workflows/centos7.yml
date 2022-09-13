@@ -14,8 +14,8 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  env.IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
-  env.IS_PUSH: ${{ github.event_name == 'push' }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
 
 jobs:
 
@@ -42,7 +42,7 @@ jobs:
 
     - name: Get branch name
       id: branch_name
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
       uses: tj-actions/branch-names@v5
 
     - name: Read antares-deps version
@@ -94,7 +94,7 @@ jobs:
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
 
     - name: Init submodule
       run: |
@@ -142,26 +142,26 @@ jobs:
            cmake3 --build _build --config Release -j2
 
     - name: Installer .rpm creation release
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
       run: |
            cd _build
            cpack3 -G RPM
 
     - name: Installer .tar.gz creation release
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
       run: |
            cd _build
            cpack3 -G TGZ
 
     - name: Installer archive upload release
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
 
     - name: Installer rpm upload release
-      if: env.IS_RELEASE
+      if: $IS_RELEASE
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
@@ -169,7 +169,7 @@ jobs:
 
 
     - name: Installer .rpm creation push
-      if: env.IS_PUSH
+      if: $IS_PUSH
       run: |
            cd _build
            cpack3 -G RPM
@@ -178,7 +178,7 @@ jobs:
            echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
 
     - name: .tar.gz creation push
-      if: env.IS_PUSH
+      if: $IS_PUSH
       run: |
            cd _build
            cpack3 -G TGZ
@@ -187,7 +187,7 @@ jobs:
            echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
 
     - name: Upload .rpm push
-      if: env.IS_PUSH
+      if: $IS_PUSH
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
@@ -196,7 +196,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload .tar.gz push
-      if: env.IS_PUSH
+      if: $IS_PUSH
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
