@@ -77,7 +77,7 @@ void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob&
 void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
     Yuni::String output;
-    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output)
+    if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
         IOFileSetContent(output, entryContent);
 }
 
