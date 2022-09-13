@@ -42,12 +42,12 @@ jobs:
 
     - name: Get branch name
       id: branch_name
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
       uses: tj-actions/branch-names@v5
 
     - name: Read antares-deps version
       id: antares-deps-version
-      if: ${{ env.IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
+      if: ${{ env.IS_RELEASE == "true" || steps.changed-files.outputs.modified_files != '' }}
       uses: notiz-dev/github-action-json-property@release
       with:
         path: 'antares-deps-version.json'
@@ -55,7 +55,7 @@ jobs:
 
     - name: Docker file push
       id: docker_push
-      if: ${{ env.IS_RELEASE || steps.changed-files.outputs.modified_files != '' }}
+      if: ${{ env.IS_RELEASE == "true" || steps.changed-files.outputs.modified_files != '' }}
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
         ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
@@ -94,7 +94,7 @@ jobs:
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
 
     - name: Init submodule
       run: |
@@ -142,26 +142,26 @@ jobs:
            cmake3 --build _build --config Release -j2
 
     - name: Installer .rpm creation release
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
       run: |
            cd _build
            cpack3 -G RPM
 
     - name: Installer .tar.gz creation release
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
       run: |
            cd _build
            cpack3 -G TGZ
 
     - name: Installer archive upload release
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
 
     - name: Installer rpm upload release
-      if: ${{ env.IS_RELEASE }}
+      if: ${{ env.IS_RELEASE == "true" }}
       uses: actions/upload-artifact@v2
       with:
         name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
@@ -169,7 +169,7 @@ jobs:
 
 
     - name: Installer .rpm creation push
-      if: ${{ env.IS_PUSH }}
+      if: ${{ env.IS_PUSH == "true" }}
       run: |
            cd _build
            cpack3 -G RPM
@@ -178,7 +178,7 @@ jobs:
            echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
 
     - name: .tar.gz creation push
-      if: ${{ env.IS_PUSH }}
+      if: ${{ env.IS_PUSH == "true" }}
       run: |
            cd _build
            cpack3 -G TGZ
@@ -187,7 +187,7 @@ jobs:
            echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
 
     - name: Upload .rpm push
-      if: ${{ env.IS_PUSH }}
+      if: ${{ env.IS_PUSH == "true" }}
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
@@ -196,7 +196,7 @@ jobs:
         asset_content_type: application/octet-stream
 
     - name: Upload .tar.gz push
-      if: ${{ env.IS_PUSH }}
+      if: ${{ env.IS_PUSH == "true" }}
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
