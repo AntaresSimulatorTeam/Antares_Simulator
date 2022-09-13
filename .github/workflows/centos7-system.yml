@@ -107,7 +107,7 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DBUILD_ORTOOLS=ON -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DBUILD_ORTOOLS=ON -DXPRESS_ROOT=${{ env.XPRESSDIR }} -DUSE_XPRESS=${{ matrix.ortools }}
 
     - name: Build
       run: |
