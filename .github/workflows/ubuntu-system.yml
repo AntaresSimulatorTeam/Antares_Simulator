@@ -34,7 +34,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    
+
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1
 
@@ -48,7 +48,7 @@ jobs:
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
-      with: 
+      with:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
 
@@ -57,7 +57,7 @@ jobs:
       with:
         name: pdf-doc
         path: docs/ref_guides
-        
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
@@ -69,12 +69,12 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: 3.x
-          
+
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
           pip3 install -r src/tests/examples/requirements.txt
-           
+
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
@@ -82,7 +82,6 @@ jobs:
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools == 'ON' }}
       run: |
-        source /opt/rh/rh-git227/enable
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
     - name: Download OR-Tools if needed
@@ -105,7 +104,7 @@ jobs:
     - name: Configure
       run: |
            cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
-           
+
     - name: Build
       run: |
            cmake --build _build --config release -j2
@@ -151,18 +150,18 @@ jobs:
       run: |
            cd _build
            cpack -G DEB
-           
+
     - name: Installer .tar.gz creation
       run: |
            cd _build
            cpack -G TGZ
-           
+
     - name: Installer archive upload
       uses: actions/upload-artifact@v2
       with:
         name: antares-ubuntu-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
-        
+
     - name: Installer deb upload
       uses: actions/upload-artifact@v2
       with:
