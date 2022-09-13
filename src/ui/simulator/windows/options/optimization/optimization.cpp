@@ -856,14 +856,11 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
 void Optimization::setTransmissionCapacity(Data::TransmissionCapacities newCapacity)
 {
     auto study = Data::Study::Current::Get();
-    if (!(!study))
+    if (study && study->parameters.transmissionCapacities != newCapacity)
     {
-        if (study->parameters.transmissionCapacities != newCapacity)
-        {
-            study->parameters.transmissionCapacities = newCapacity;
-            refresh();
-            MarkTheStudyAsModified();
-        }
+        study->parameters.transmissionCapacities = newCapacity;
+        refresh();
+        MarkTheStudyAsModified();
     }
 }
 
