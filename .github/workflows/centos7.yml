@@ -29,6 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
+      with:
+        fetch-depth: 2
 
     - name: Get changed files
       id: changed-files
