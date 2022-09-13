@@ -245,10 +245,9 @@ static TransmissionCapacities overridePhysical(TransmissionCapacities tncGlobal,
     case tncInfinitePhysical: // Use 'infinity' only for physical links
         return tncInfinite;
 
+    // tncIgnore, tncInfinite
     default:
-    case tncIgnore: // Use '0' for all links, including physical links
-    case tncInfinite: // Use 'infinity' for all links, including physical links
-        return tncGlobal;
+        return tncGlobal; // Use the global property
     }
 }
 
@@ -262,9 +261,8 @@ static TransmissionCapacities overrideVirtual(TransmissionCapacities tncGlobal,
     case tncInfinitePhysical: // Use 'infinity' only for physical links
         return tncLocal; // Use the local property
 
+    // tncIgnore, tncInfinite
     default:
-    case tncIgnore: // Use '0' for all links, including virtual links
-    case tncInfinite: // Use 'infinity' for all links, including virtual links
         return tncGlobal; // Use the global property
     }
 }
@@ -275,13 +273,15 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
 {
     switch (assetType)
     {
+    // Physical
     case atAC:
     case atDC:
     case atGas:
     case atOther:
         transmissionCapacities = overridePhysical(tncGlobal, transmissionCapacities);
         break;
-    case atVirt:
+    // Virtual
+    default:
         transmissionCapacities = overrideVirtual(tncGlobal, transmissionCapacities);
         break;
     }
