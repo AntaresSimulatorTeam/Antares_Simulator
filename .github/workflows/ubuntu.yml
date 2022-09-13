@@ -1,0 +1,245 @@
+name: Ubuntu CI (push and/or release)
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
+
+  build:
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools }})
+    env:
+      XPRESSDIR: ${{ github.workspace }}/xpressmp813
+      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+
+
+    runs-on: ${{ matrix.os }}
+    needs: doc_generation
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        test-platform: [ubuntu-20.04]
+        ortools: [ON, OFF]
+
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+      if: ${{ env.IS_RELEASE == 'true' }}
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+      if: ${{ env.IS_PUSH == 'true' }}
+
+    - name: Install libraries
+      run: |
+           sudo apt-get update
+           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+           sudo apt-get install libboost-test-dev
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+
+
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        os-full-name: Ubuntu-20.04
+
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Init submodule
+      run: |
+           git submodule update --init --recursive src
+
+    - name: Download XPRESS if needed
+      if: ${{ matrix.ortools == 'ON' }}
+      run: |
+        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+
+    - name: Download OR-Tools if needed
+      if: ${{ matrix.ortools == 'ON' }}
+      id: ortools
+      run: |
+          if [ "${{ matrix.ortools }}" == "ON" ]; then
+            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
+            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_shared_xprs.zip
+            unzip -q ortools.zip
+            rm ortools.zip
+
+            echo "::set-output name=flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
+            echo "::set-output name=label::-ortools-xpress"
+          else
+            echo "::set-output name=flags::"
+            echo "::set-output name=label::"
+          fi
+
+    - name: Configure push
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
+    - name: Configure release
+      if: ${{ env.IS_RELEASE == 'true' }}
+      run: |
+           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
+
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2
+
+    - name: Run unfeasibility-related tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R unfeasible
+
+    - name: Run adq-patch related test
+      if: ${{ env.IS_PUSH == 'true' }}
+
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run tests about infinity on BCs RHS
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
+
+    - name: Run short-tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run medium-tests
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
+
+    - name: Installer .deb creation
+      run: |
+           cd _build
+           cpack -G DEB
+           export DEB_NAME=$(ls *.deb)
+           echo "DEB_NAME=$DEB_NAME" >> $GITHUB_ENV
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+           export TGZ_NAME=$(ls *.tar.gz)
+           echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
+
+
+    - name: Installer archive upload push
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-ubuntu-archive${{ steps.ortools.outputs.label }}
+        path: _build/*.tar.gz
+
+    - name: Installer deb upload push
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-ubuntu-deb${{ steps.ortools.outputs.label }}
+        path: _build/*.deb
+
+
+    - name: Upload .deb release
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.DEB_NAME}}
+        asset_name: ${{env.DEB_NAME}}
+        asset_content_type: application/octet-stream
+
+    - name: Upload .tar.gz release
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: actions/upload-release-asset@v1.0.2
+      with:
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: _build/${{env.TGZ_NAME}}
+        asset_name: ${{env.TGZ_NAME}}
+        asset_content_type: application/octet-stream

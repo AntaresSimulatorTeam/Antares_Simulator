@@ -1,4 +1,4 @@
-name: Centos7 CI (release and push)
+name: Centos7 CI (push and/or release)
 
 on:
   release:
