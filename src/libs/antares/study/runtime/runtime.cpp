@@ -180,6 +180,8 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     }
     logs.debug() << "copying constraint " << rti.operatorType << ' ' << b.name();
     rti.name = b.name().c_str();
+    rti.filterYearByYear_ = b.yearByYearFilter();
+    rti.filterSynthesis_ = b.synthesisFilter();
     rti.linkCount = b.linkCount();
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
@@ -657,6 +659,35 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
     this->maxRenewableClustersForSingleArea
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
+{
+    return bc.operatorType == '<' || bc.operatorType == '>';
+}
+
+uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
+}
+
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*bc))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const
