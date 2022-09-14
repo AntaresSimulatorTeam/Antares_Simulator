@@ -86,7 +86,8 @@ jobs:
 
     - name: Init submodule
       run: |
-          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init --recursive src/antares-deps
+          git submodule update --init --recursive src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
