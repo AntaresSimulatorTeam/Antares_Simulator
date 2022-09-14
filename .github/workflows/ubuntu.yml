@@ -25,7 +25,7 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools }})
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
@@ -86,7 +86,7 @@ jobs:
 
     - name: Init submodule
       run: |
-           git submodule update --init --recursive src
+          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
