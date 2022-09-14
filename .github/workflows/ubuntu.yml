@@ -150,13 +150,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Run tests about infinity on BCs RHS
-      if: ${{ env.IS_PUSH == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-v830
-        os: ${{ matrix.test-platform }}
+    # - name: Run tests about infinity on BCs RHS
+    #   if: ${{ env.IS_PUSH == 'true' }}
+    #   uses: ./.github/workflows/run-tests
+    #   with:
+    #     simtest-tag: ${{steps.simtest-version.outputs.prop}}
+    #     batch-name: valid-v830
+    #     os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
