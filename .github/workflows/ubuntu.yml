@@ -38,7 +38,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
-        ortools: [ON, OFF]
+        ortools-xpress: [ON, OFF]
 
 
     steps:
@@ -89,15 +89,15 @@ jobs:
            git submodule update --init --recursive src
 
     - name: Download XPRESS if needed
-      if: ${{ matrix.ortools == 'ON' }}
+      if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
     - name: Download OR-Tools if needed
-      if: ${{ matrix.ortools == 'ON' }}
+      if: ${{ matrix.ortools-xpress == 'ON' }}
       id: ortools
       run: |
-          if [ "${{ matrix.ortools }}" == "ON" ]; then
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
             wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_shared_xprs.zip
             unzip -q ortools.zip
@@ -123,11 +123,11 @@ jobs:
       run: |
            cmake --build _build --config release -j2
 
-    # - name: Run unfeasibility-related tests
-    #   if: ${{ env.IS_PUSH == 'true' }}
-    #   run: |
-    #        cd _build
-    #        ctest -C Release --output-on-failure -R unfeasible
+    - name: Run unfeasibility-related tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run adq-patch related test
       if: ${{ env.IS_PUSH == 'true' }}
@@ -136,11 +136,11 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R test-adq-patch
 
-    # - name: Run unit and end-to-end tests
-    #   if: ${{ env.IS_PUSH == 'true' }}
-    #   run: |
-    #        cd _build
-    #        ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
     # simtest
     - name: Read simtest version
@@ -150,13 +150,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    # - name: Run tests about infinity on BCs RHS
-    #   if: ${{ env.IS_PUSH == 'true' }}
-    #   uses: ./.github/workflows/run-tests
-    #   with:
-    #     simtest-tag: ${{steps.simtest-version.outputs.prop}}
-    #     batch-name: valid-v830
-    #     os: ${{ matrix.test-platform }}
+    - name: Run tests about infinity on BCs RHS
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}

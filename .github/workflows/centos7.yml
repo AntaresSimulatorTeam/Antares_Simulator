@@ -1,16 +1,16 @@
 name: Centos7 CI (push and/or release)
 
-# on:
-#   release:
-#     types: [created]
-#   push:
-#     branches:
-#       - develop
-#       - feature/*
-#       - features/*
-#       - fix/*
-#       - release/*
-#       - doc/*
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -82,7 +82,7 @@ jobs:
     container: 'antaresrte/rte-antares:centos7-simulator'
     strategy:
       matrix:
-        ortools: [ON, OFF]
+        ortools-xpress: [ON, OFF]
 
     steps:
     - uses: nelonoel/branch-name@v1.0.1
@@ -98,19 +98,19 @@ jobs:
 
     - name: Init submodule
       run: |
-          git submodule update --init --recursive src .
+          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
-      if: ${{ matrix.ortools == 'ON' }}
+      if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
         source /opt/rh/rh-git227/enable
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
     - name: Download OR-Tools if needed
-      if: ${{ matrix.ortools == 'ON' }}
+      if: ${{ matrix.ortools-xpress == 'ON' }}
       id: ortools
       run: |
-          if [ "${{ matrix.ortools }}" == "ON" ]; then
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
             wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.2/ortools_cxx_centos7_shared_xprs.zip
             unzip -q ortools.zip
@@ -147,11 +147,14 @@ jobs:
            cd _build
            cpack3 -G RPM
 
-    - name: Installer .tar.gz creation push
-      if: ${{ env.IS_PUSH == 'true' }}
+    - name: .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
+           export TGZ_NAME=$(ls *.tar.gz)
+           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
+           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
+
 
     - name: Installer archive upload push
       if: ${{ env.IS_PUSH == 'true' }}
@@ -160,16 +163,7 @@ jobs:
         name: antares-centos7-archive${{ steps.ortools.outputs.label }}
         path: _build/*.tar.gz
 
-    - name: Installer rpm upload push
-      if: ${{ env.IS_PUSH == 'true' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
-        path: _build/*.rpm
-
-
-    - name: Installer .rpm creation release
-      if: ${{ env.IS_RELEASE == 'true' }}
+    - name: Installer .rpm creation
       run: |
            cd _build
            cpack3 -G RPM
@@ -177,14 +171,13 @@ jobs:
            echo "RPM_NAME=${RPM_NAME}" >> $GITHUB_ENV
            echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
 
-    - name: .tar.gz creation release
-      if: ${{ env.IS_RELEASE == 'true' }}
-      run: |
-           cd _build
-           cpack3 -G TGZ
-           export TGZ_NAME=$(ls *.tar.gz)
-           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
-           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
+    - name: Installer rpm upload push
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
+        path: _build/*.rpm
+
 
     - name: Upload .rpm release
       if: ${{ env.IS_RELEASE == 'true' }}
