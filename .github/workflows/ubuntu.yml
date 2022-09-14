@@ -123,11 +123,11 @@ jobs:
       run: |
            cmake --build _build --config release -j2
 
-    - name: Run unfeasibility-related tests
-      if: ${{ env.IS_PUSH == 'true' }}
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R unfeasible
+    # - name: Run unfeasibility-related tests
+    #   if: ${{ env.IS_PUSH == 'true' }}
+    #   run: |
+    #        cd _build
+    #        ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run adq-patch related test
       if: ${{ env.IS_PUSH == 'true' }}

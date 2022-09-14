@@ -1,14 +1,14 @@
 name: Ubuntu CI (pre-compiled)
 
-on:
-  push:
-    branches:
-      - develop
-      - feature/*
-      - features/*
-      - fix/*
-      - release/*
-      - doc/*
+# on:
+#   push:
+#     branches:
+#       - develop
+#       - feature/*
+#       - features/*
+#       - fix/*
+#       - release/*
+#       - doc/*
 jobs:
 
   doc_generation:
