@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
 #include <yuni/yuni.h>
 #include <antares/study/study.h>
 #include <antares/study/memory-usage.h>
@@ -553,16 +554,38 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-// Adding new files / variables ? Change the values below to avoid maxVariables being too small
-const uint nbVariablesPerDetailThermalCluster = 4;
-/*
-- Production
-- NODU,
-- NP Costs
-- Net profit
-*/
-const uint nbVariablesPerDetailRenewableCluster = 1;
-// Production
+uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime)
+{
+    if (!runtime)
+        return maxVars;
+
+    // Adding new files / variables ? Change the values below to avoid maxVariables being too small
+
+    // TODO: count those variables at compile time / runtime
+    // using e.g VCardT::categoryDataLevel
+    const uint nbVariablesPerDetailThermalCluster = 4;
+    /*
+      - Production
+      - NODU,
+      - NP Costs
+      - Net profit
+    */
+    const uint nbVariablesPerDetailRenewableCluster = 1;
+    // Production
+
+    const uint nbVariablesPerInequalityBindingConstraint = 1;
+    // Marginal price
+
+    const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
+
+    return max(maxVars,
+               static_cast<uint>(nbVariablesPerDetailThermalCluster
+                                 * runtime->maxThermalClustersForSingleArea),
+               static_cast<uint>(nbVariablesPerDetailRenewableCluster
+                                 * runtime->maxRenewableClustersForSingleArea),
+               nbVariablesPerInequalityBindingConstraint
+                 * runtime->getNumberOfInequalityBindingConstraints());
+}
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(uint maxVars,
@@ -570,10 +593,7 @@ SurveyResults::SurveyResults(uint maxVars,
                              const String& o,
                              IResultWriter::Ptr writer) :
  data(s, o),
- maxVariables(Math::Max<uint>(
-   maxVars,
-   nbVariablesPerDetailThermalCluster * s.runtime->maxThermalClustersForSingleArea,
-   nbVariablesPerDetailRenewableCluster * s.runtime->maxRenewableClustersForSingleArea)),
+ maxVariables(initializeMaxVariables(maxVars, s.runtime)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),

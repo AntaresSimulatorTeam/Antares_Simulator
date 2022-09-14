@@ -9,14 +9,12 @@ template<>
 inline Antares::IniFile FileContent::to<Antares::IniFile>()
 {
     Antares::IniFile ini;
-    auto it_section = this->firstSection();
-    // Loop on sections
-    for (; it_section != this->endSections(); it_section++)
+    for (const auto& [sectionName, content] : *this)
     {
-        auto* section = ini.addSection(it_section->first);
         // Loop on properties
-        for (const auto& line : it_section->second)
-            section->add(line.first, line.second);
+        auto* section = ini.addSection(sectionName);
+        for (const auto& [key, value]  : content)
+            section->add(key, value);
     }
     return ini;
 }

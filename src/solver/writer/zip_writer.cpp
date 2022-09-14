@@ -25,6 +25,7 @@ ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
                                    Benchmarking::IDurationCollector* duration_collector) :
  pZipHandle(writer.pZipHandle),
  pZipMutex(writer.pZipMutex),
+ pState(writer.pState),
  pEntryPath(entryPath),
  pContent(std::move(content)),
  pDurationCollector(duration_collector)
@@ -34,6 +35,12 @@ ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
 template<class ContentT>
 void ZipWriteJob<ContentT>::onExecute()
 {
+    // Don't write data if finalize() has been called
+    if (pState != ZipState::can_receive_data)
+    {
+        return;
+    }
+
     mz_zip_file file_info;
 
     Benchmarking::Timer timer_wait;
@@ -58,6 +65,7 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
                      const char* archivePath,
                      Benchmarking::IDurationCollector* duration_collector) :
  pQueueService(qs),
+ pState(ZipState::can_receive_data),
  pArchivePath(std::string(archivePath) + ".zip"),
  pDurationCollector(duration_collector)
 {
@@ -70,38 +78,50 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 
 ZipWriter::~ZipWriter()
 {
-    mz_zip_writer_close(pZipHandle);
-    mz_zip_writer_delete(&pZipHandle);
+    this->finalize(false);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    pQueueService->add(
-      new ZipWriteJob<Yuni::Clob>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow);
+    addJobHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
 {
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
-    pQueueService->add(
-      new ZipWriteJob<std::string>(*this, entryPath, entryContent, pDurationCollector),
-      Yuni::Job::priorityLow);
+    addJobHelper<std::string>(entryPath, entryContent);
 }
 
 void ZipWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
 {
-    EnsureQueueStartedIfNeeded ensureQueue(this, pQueueService);
     std::string buffer;
     entryContent.saveToString(buffer);
-    pQueueService->add(new ZipWriteJob<std::string>(*this, entryPath, buffer, pDurationCollector),
-                       Yuni::Job::priorityLow);
+    addJobHelper<std::string>(entryPath, buffer);
 }
 
 bool ZipWriter::needsTheJobQueue() const
 {
     return true;
 }
+
+void ZipWriter::finalize(bool verbose)
+{
+    // Prevent new jobs from being submitted
+    pState = ZipState::blocking;
+
+    if (!pZipHandle)
+        return;
+
+    if (verbose)
+        logs.notice() << "Writing results...";
+
+    std::lock_guard<std::mutex> guard(pZipMutex);
+    mz_zip_writer_close(pZipHandle);
+    mz_zip_writer_delete(&pZipHandle);
+    pZipHandle = nullptr;
+
+    if (verbose)
+        logs.notice() << "Done";
+}
+
 } // namespace Solver
 } // namespace Antares

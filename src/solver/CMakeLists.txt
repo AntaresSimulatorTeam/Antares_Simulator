@@ -71,7 +71,14 @@ macro(solver_app name swap)
 		mps/mps_global.c
 		${SRCS}
 		main.cpp
-        application.h application.cpp
+        application.h
+        application.cpp
+
+        signal-handling/common.h
+        signal-handling/public.h
+        signal-handling/common.cpp
+        signal-handling/linux.cpp
+        signal-handling/windows.cpp
 	)
 	
 	set(ANTARES_SOLVER_LIBS		

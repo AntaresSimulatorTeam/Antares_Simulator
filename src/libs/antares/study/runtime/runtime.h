@@ -83,6 +83,8 @@ public:
     Matrix<double> bounds;
     BindingConstraint::Type type;
     char operatorType;
+    uint filterYearByYear_ = filterAll;
+    uint filterSynthesis_ = filterAll;
 
     uint linkCount;
     double* linkWeight;
@@ -120,6 +122,10 @@ public:
     ** \brief Reset internal data according a given study
     */
     bool loadFromStudy(Study& study);
+
+    // Inequality binding constraints
+    uint getNumberOfInequalityBindingConstraints() const;
+    std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 public:
     //! The number of years to process
