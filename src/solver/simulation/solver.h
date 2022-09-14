@@ -175,13 +175,13 @@ private:
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualCostsStatistics;
-    
+
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 
 public:
     //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> qs;
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter;
 }; // class ISimulation
