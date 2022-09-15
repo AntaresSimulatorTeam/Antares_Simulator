@@ -348,7 +348,8 @@ RESOLUTION:
             logs.error() << ex.what();
         }
 
-        mps_writer->runIfNeeded();
+        auto mps_writer_on_error = createMPSwriterOnError(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+        mps_writer_on_error->runIfNeeded();
 
         return false;
     }

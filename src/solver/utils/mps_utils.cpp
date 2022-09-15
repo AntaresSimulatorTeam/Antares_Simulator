@@ -517,21 +517,44 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory(
     {
         return std::make_unique<splitMPSwriter>(named_splx_problem, thread_number, is_simulation_1st_week);
     }
-    else if (ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
+    if (ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
     {
         return std::make_unique<fullOrToolsMPSwriter>(solver, currentOptimNumber, thread_number);
     }
-    else if (not ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
+    if (not ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
     {
         return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
     }
-    else if (export_mps_on_error && not export_mps)
-    {
-        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
-    }
-    else
+
+    return std::make_unique<nullMPSwriter>();
+}
+
+
+std::unique_ptr<I_MPS_writer> createMPSwriterOnError(
+    PROBLEME_HEBDO* ProblemeHebdo,
+    int NumIntervalle,
+    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+    bool ortoolsUsed,
+    MPSolver* solver,
+    uint thread_number)
+{
+    int currentOptimNumber = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+    bool export_mps = ProblemeHebdo->ExportMPS;
+    bool export_mps_on_error = ProblemeHebdo->exportMPSOnError;
+
+    if (not export_mps_on_error || export_mps)
     {
         return std::make_unique<nullMPSwriter>();
     }
-}
 
+    if (ortoolsUsed)
+    {
+        return std::make_unique<fullOrToolsMPSwriter>(solver, currentOptimNumber, thread_number);
+    }
+    if (not ortoolsUsed)
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
+    }
+
+    return std::make_unique<nullMPSwriter>();
+}
