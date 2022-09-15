@@ -571,9 +571,6 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
-    void setWriter(Solver::IResultWriter::Ptr writer);
-    Solver::IResultWriter::Ptr getWriter() const;
-
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -730,6 +727,8 @@ public:
     mutable YString bufferLoadingTS;
     //@}
 
+    //! Result writer, required to write residual files (comments, about-the-study, etc.)
+    Solver::IResultWriter::Ptr resultWriter = nullptr;
 public:
     //! \name TS Generators
     //@{
@@ -787,8 +786,6 @@ private:
     //! Load all layers
     bool saveLayers(const AnyString& filename);
     void loadLayers(const AnyString& filename);
-    //! Result writer, required to write residual files (comments, about-the-study, etc.)
-    Solver::IResultWriter::Ptr pResultWriter = nullptr;
     Yuni::sint64 pStartTime;
 }; // class Study
 

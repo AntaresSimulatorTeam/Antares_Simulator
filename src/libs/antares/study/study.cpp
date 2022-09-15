@@ -146,16 +146,6 @@ void Study::clear()
     gotFatalError = false;
 }
 
-void Study::setWriter(Solver::IResultWriter::Ptr writer)
-{
-    pResultWriter = writer;
-}
-
-Solver::IResultWriter::Ptr Study::getWriter() const
-{
-    return pResultWriter;
-}
-
 void Study::createAsNew()
 {
     inputExtension = "txt";
@@ -793,13 +783,13 @@ void Study::saveMiscFilesIntoOutput()
   path.reserve(1024);
 
   path.clear() << "about-the-study";
-  simulation.saveUsingWriter(pResultWriter, path);
+  simulation.saveUsingWriter(resultWriter, path);
 
   // Write the header as a reminder too
   path.clear() << "about-the-study" << SEP << "study.ini";
   Antares::IniFile header_ini;
   header.CopySettingsToIni(header_ini, false);
-  pResultWriter->addJob(path.c_str(), header_ini);
+  resultWriter->addJob(path.c_str(), header_ini);
 
   // copying the generaldata.ini
   // Input : absolute path
@@ -810,7 +800,7 @@ void Study::saveMiscFilesIntoOutput()
   String dest;
   // Output : relative path (resolution handled by pResultWriter->addJob)
   dest << "about-the-study" << SEP << "parameters.ini";
-  pResultWriter->addJob(dest.c_str(), generaldata_buffer);
+  resultWriter->addJob(dest.c_str(), generaldata_buffer);
 
   // antares-output.info
   path.clear() << "info.antares-output";
@@ -826,7 +816,7 @@ void Study::saveMiscFilesIntoOutput()
   f << "\ntimestamp = " << pStartTime;
   f << "\n\n";
   auto output = f.str();
-  pResultWriter->addJob(path.c_str(), output);
+  resultWriter->addJob(path.c_str(), output);
 
   if (usedByTheSolver and !parameters.noOutput)
   {
@@ -840,7 +830,7 @@ void Study::saveMiscFilesIntoOutput()
               buffer << "@ " << i->first << "\r\n";
           }
         areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-        pResultWriter->addJob(path.c_str(), buffer);
+        resultWriter->addJob(path.c_str(), buffer);
       }
 
       // Write all available links as a reminder
@@ -848,7 +838,7 @@ void Study::saveMiscFilesIntoOutput()
         path.clear() << "about-the-study" << SEP << "links.txt";
         Yuni::Clob buffer;
         areas.saveLinkListToBuffer(buffer);
-        pResultWriter->addJob(path.c_str(), buffer);
+        resultWriter->addJob(path.c_str(), buffer);
       }
   }
 }

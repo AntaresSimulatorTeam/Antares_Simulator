@@ -559,7 +559,8 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    auto writer = pStudy->getWriter();
+    auto writer = pStudy->resultWriter;
+    // If no writer is available, we can't write
     if (!writer)
         return;
 

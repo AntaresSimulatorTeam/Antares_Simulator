@@ -80,7 +80,7 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                               ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
         }
         auto filename = getFilenameWithExtension("interco", "txt", numSpace);
-        auto writer = study.getWriter();
+        auto writer = study.resultWriter;
         writer->addJob(filename, Flot);
     }
 }
@@ -98,7 +98,7 @@ void OPT_ExportAreaName(const Antares::Data::Study& study,
         {
             Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
         }
-        auto writer = study.getWriter();
+        auto writer = study.resultWriter;
         writer->addJob(filename, Flot);
     }
 }
@@ -151,6 +151,6 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
     {
         Flot.appendFormat("%s\n", line.c_str());
     }
-    auto writer = study.getWriter();
+    auto writer = study.resultWriter;
     writer->addJob(filename, Flot);
 }
