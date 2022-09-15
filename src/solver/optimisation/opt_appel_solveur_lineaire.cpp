@@ -229,14 +229,10 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    // Write the fixed and variable part of the optimization problem, into the MPS format.
-    if (ProblemeHebdo->ExportMPS == OUI_ANTARES && ProblemeHebdo->SplitExportedMPS)
-    {
-        if (ProblemeHebdo->firstWeekOfSimulation)
-            OPT_dump_spx_fixed_part(&Probleme, numSpace);
-
-        OPT_dump_spx_variable_part(&Probleme, numSpace);
-    }
+    // We create the MPS writer here (and not at the beginning of the current function) because
+    // MPS writer uses the solver, whose address can be updated earlier in the function.
+    auto mps_writer = mpsWriterFactory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    mps_writer->runIfNeeded();
 
     TimeMeasurement measure;
     if (ortoolsUsed)
@@ -257,19 +253,6 @@ RESOLUTION:
     }
     measure.tick();
     ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
-
-    if (ProblemeHebdo->ExportMPS == OUI_ANTARES && !ProblemeHebdo->SplitExportedMPS)
-    {
-        if (ortoolsUsed)
-        {
-            int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-            ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
-        }
-        else
-        {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
-        }
-    }
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
 
@@ -365,20 +348,7 @@ RESOLUTION:
             logs.error() << ex.what();
         }
 
-        // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
-        // ExportMPS option
-        if (ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
-        {
-            if (ortoolsUsed)
-            {
-                int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-                ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
-            }
-            else
-            {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
-            }
-        }
+        mps_writer->runIfNeeded();
 
         return false;
     }

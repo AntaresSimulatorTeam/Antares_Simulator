@@ -5,8 +5,6 @@
 
 #include "mps_utils.h"
 
-using namespace Antares;
-using namespace Antares::Data;
 
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
@@ -441,3 +439,98 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 
     fclose(Flot);
 }
+
+
+// --------------------
+// Full mps writing
+// --------------------
+fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint thread_number) :
+    named_splx_problem_(named_splx_problem),
+    thread_number_(thread_number)
+{}
+void fullMPSwriter::runIfNeeded()
+{
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_, thread_number_);
+}
+
+// ---------------------------------
+// Full mps writing by or-tools
+// ---------------------------------
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(
+        MPSolver* solver, 
+        int currentOptimNumber, 
+        uint thread_number) :
+    solver_(solver), 
+    currentOptimNumber_(currentOptimNumber), 
+    thread_number_(thread_number)
+{}
+void fullOrToolsMPSwriter::runIfNeeded()
+{
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, currentOptimNumber_);
+}
+
+
+// ---------------------------------
+// mps written under split form
+// ---------------------------------
+splitMPSwriter::splitMPSwriter(
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
+        uint thread_nb, 
+        bool simu_1st_week) :
+    named_splx_problem_(named_splx_problem), 
+    thread_nb_(thread_nb), 
+    simu_1st_week_(simu_1st_week)
+{}
+
+void splitMPSwriter::runIfNeeded()
+{
+    if (simu_1st_week_)
+        OPT_dump_spx_fixed_part(named_splx_problem_, thread_nb_);
+
+    OPT_dump_spx_variable_part(named_splx_problem_, thread_nb_);
+}
+
+
+static bool doWeExportMPS(bool export_mps, int currentOptimNumber)
+{
+    // Argument currentOptimNumber is not involved yet in the return value
+    // but will be soon
+    return export_mps;
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory(
+            PROBLEME_HEBDO* ProblemeHebdo,
+            int NumIntervalle,
+            PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+            bool ortoolsUsed,
+            MPSolver* solver,
+            uint thread_number)
+{
+    int currentOptimNumber = ProblemeHebdo->numeroOptimisation[NumIntervalle];
+    bool export_mps = ProblemeHebdo->ExportMPS;
+    bool split_mps = ProblemeHebdo->SplitExportedMPS;
+    bool export_mps_on_error = ProblemeHebdo->exportMPSOnError;
+    bool is_simulation_1st_week = ProblemeHebdo->firstWeekOfSimulation;
+
+    if (doWeExportMPS(export_mps, currentOptimNumber) && split_mps)
+    {
+        return std::make_unique<splitMPSwriter>(named_splx_problem, thread_number, is_simulation_1st_week);
+    }
+    else if (ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
+    {
+        return std::make_unique<fullOrToolsMPSwriter>(solver, currentOptimNumber, thread_number);
+    }
+    else if (not ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
+    }
+    else if (export_mps_on_error && not export_mps)
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
+    }
+    else
+    {
+        return std::make_unique<nullMPSwriter>();
+    }
+}
+
