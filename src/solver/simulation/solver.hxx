@@ -264,8 +264,7 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pDurationCollector(duration_collector),
- pQueueService(std::make_shared<Yuni::Job::QueueService>()),
- pResultWriter(study.resultWriter)
+ pQueueService(std::make_shared<Yuni::Job::QueueService>())
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -279,6 +278,10 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+
+    // Initialize writer
+    study.resultWriter = resultWriterFactory(study.parameters.resultFormat, study.folderOutput, pQueueService, duration_collector);
+    pResultWriter = study.resultWriter;
 }
 
 template<class Impl>
