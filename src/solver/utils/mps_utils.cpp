@@ -466,6 +466,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(
 {}
 void fullOrToolsMPSwriter::runIfNeeded()
 {
+    // Make or-tools print the MPS files leads to a crash ! 
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, currentOptimNumber_);
 }
 
