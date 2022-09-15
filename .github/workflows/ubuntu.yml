@@ -90,7 +90,7 @@ jobs:
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
           ls -la src/tests/resources/Antares_Simulator_Tests/
           ls -la src/tests/resources/Antares_Simulator_Tests/specific-tests/
-          ls -la src/tests/resources/Antares_Simulator_Tests/specific-tests/unfeasible-problem
+          ls -la src/tests/resources/Antares_Simulator_Tests/specific-tests/unfeasible-problem/unfeasible_problem_01
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
