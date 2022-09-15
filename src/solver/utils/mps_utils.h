@@ -30,16 +30,13 @@ class I_MPS_writer
 {
 public:
 	I_MPS_writer() = default;
-	~I_MPS_writer() = default;
 	virtual void runIfNeeded() = 0;
-
 };
 
-class fullMPSwriter : public I_MPS_writer
+class fullMPSwriter final : public I_MPS_writer
 {
 public:
 	fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint thread_number);
-	~fullMPSwriter() = default;
 	void runIfNeeded();
 private:
 	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -60,10 +57,9 @@ private:
 class splitMPSwriter : public I_MPS_writer
 {
 public:
-	splitMPSwriter::splitMPSwriter(
-		PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
-		uint thread_nb, 
-		bool simu_1st_week);
+	splitMPSwriter(	PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
+					uint thread_nb, 
+					bool simu_1st_week);
 
 	void runIfNeeded();
 private:
