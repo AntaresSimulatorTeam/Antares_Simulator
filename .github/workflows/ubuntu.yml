@@ -88,6 +88,7 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
+          ls -la /home/payetvin/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/
           ls -la /home/payetvin/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/specific-tests/
           ls -la /home/payetvin/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/specific-tests/unfeasible-problem
 
