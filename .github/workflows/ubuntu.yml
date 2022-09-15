@@ -96,6 +96,7 @@ jobs:
       if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+        ls -la ${{ env.XPRESSDIR }}
 
     - name: Download OR-Tools if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
