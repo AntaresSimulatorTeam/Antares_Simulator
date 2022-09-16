@@ -88,9 +88,6 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
-          ls -la src/tests/resources/Antares_Simulator_Tests/
-          ls -la src/tests/resources/Antares_Simulator_Tests/specific-tests/
-          ls -la src/tests/resources/Antares_Simulator_Tests/specific-tests/unfeasible-problem/unfeasible_problem_01
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
@@ -98,27 +95,28 @@ jobs:
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
         ls -la ${{ env.XPRESSDIR }}
 
-    - name: Download OR-Tools if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
-      id: ortools
+    - name: Config OR-Tools URL
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip"
+          else
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
+          fi
+
+    - name: Download OR-Tools
+      id: ortools
+      run: |
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip
+            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
             unzip -q ortools.zip
             rm ortools.zip
-
-            echo "::set-output name=flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
             echo "::set-output name=label::-ortools-xpress"
-          else
-            echo "::set-output name=flags::"
-            echo "::set-output name=label::"
-          fi
 
     - name: Configure push
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
+           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+
     - name: Configure release
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
