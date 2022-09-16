@@ -266,7 +266,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     return ret;
 }
 
-bool Study::saveLayers(const AnyString& filename)
+bool LayerData::saveLayers(const AnyString& filename)
 {
     IO::File::Stream file;
     if (file.openRW(filename))

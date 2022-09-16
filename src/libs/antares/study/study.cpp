@@ -81,8 +81,8 @@ Study::Study(bool forTheSolver) :
  runtime(nullptr),
  // state(nullptr),
  uiinfo(nullptr),
- activeLayerID(0),
- showAllLayer(true),
+ //LayerData class constructor
+ LayerData(0, true),
  gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {

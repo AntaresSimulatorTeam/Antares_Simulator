@@ -61,7 +61,29 @@ namespace Data
 /*!
 ** \brief Antares Study
 */
-class Study final : public Yuni::NonCopyable<Study>, public IObject
+
+class LayerData
+{
+public:
+    LayerData(size_t activeLayer, bool showLayer) :
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
+        {}
+
+    //! \name Layers
+    //@{
+    //! All available layers
+    std::map<size_t, std::string> layers;
+    //@}
+    size_t activeLayerID;
+    bool showAllLayer;
+protected:
+    bool saveLayers(const AnyString& filename);
+    void loadLayers(const AnyString& filename);
+};
+
+
+class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -747,13 +769,6 @@ public:
     void* cacheTSGenerator[timeSeriesCount];
     //@}
 
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
     /*!
     ** \brief
     */
@@ -791,9 +806,6 @@ protected:
     //@}
 
 private:
-    //! Load all layers
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
     //! \name Disabled items
     //@{
     //! List of all disabled areas

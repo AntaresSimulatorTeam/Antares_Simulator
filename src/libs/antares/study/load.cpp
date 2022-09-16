@@ -456,7 +456,7 @@ bool Study::reloadXCastData()
     return ret;
 }
 
-void Study::loadLayers(const AnyString& filename)
+void LayerData::loadLayers(const AnyString& filename)
 {
     IniFile ini;
     if (std::ifstream(filename.c_str()).good()) // check if file exists
