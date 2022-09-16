@@ -458,7 +458,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        if (IO::Directory::Create(newPath))
+        if (IO::Directory::Create(newPath) && pResultWriter)
             ImplementationType::variables.exportSurveyResults(
               synthesis, newPath, numSpace, pResultWriter);
         else
@@ -1041,6 +1041,11 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
+    if (!pResultWriter)
+    {
+        logs.warning() << "No writer is available to write generated time-series";
+        return;
+    }
 
     using namespace Solver::TSGenerator;
     // Load
@@ -1547,7 +1552,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter->needsTheJobQueue())
+        if (pResultWriter && pResultWriter->needsTheJobQueue())
             numThreads++;
         pQueueService->maximumThreadCount(numThreads);
     }
@@ -1678,7 +1683,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft())
+    if (not study.parameters.adequacyDraft() && pResultWriter)
     {
         pAnnualCostsStatistics.endStandardDeviations();
         pAnnualCostsStatistics.writeToOutput(pResultWriter);

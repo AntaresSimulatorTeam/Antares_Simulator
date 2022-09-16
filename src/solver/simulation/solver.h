@@ -183,7 +183,7 @@ public:
     //! The queue service that runs every set of parallel years
     std::shared_ptr<Yuni::Job::QueueService> pQueueService;
     //! Result writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter;
+    Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 }; // class ISimulation
 
 } // namespace Simulation
