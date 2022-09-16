@@ -70,7 +70,6 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver) :
- //LayerData class constructor
  LayerData(0, true),
  simulation(*this),
  maxNbYearsInParallel(0),

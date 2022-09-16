@@ -47,6 +47,7 @@
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
+#include "layerdata.h"
 
 #include <memory>
 
@@ -61,27 +62,6 @@ namespace Data
 /*!
 ** \brief Antares Study
 */
-
-class LayerData
-{
-public:
-    LayerData(size_t activeLayer, bool showLayer) :
-        activeLayerID(activeLayer),
-        showAllLayer(showLayer)
-        {}
-
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
-protected:
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
-};
-
 
 class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
