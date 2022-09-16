@@ -104,7 +104,7 @@ jobs:
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_shared_xprs.zip
+            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip
             unzip -q ortools.zip
             rm ortools.zip
 
