@@ -737,6 +737,7 @@ public:
 
     //! Result writer, required to write residual files (comments, about-the-study, etc.)
     Solver::IResultWriter::Ptr resultWriter = nullptr;
+
 public:
     //! \name TS Generators
     //@{

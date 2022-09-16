@@ -605,7 +605,7 @@ enum LinkCapacityForAdequacyPatchFirstStep
 
 namespace Benchmarking
 {
-    class IDurationCollector;
+class IDurationCollector;
 }
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__
