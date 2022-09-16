@@ -465,6 +465,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+    // Initialize the result writer
+    study.prepareWriter(&pDurationCollector);
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())

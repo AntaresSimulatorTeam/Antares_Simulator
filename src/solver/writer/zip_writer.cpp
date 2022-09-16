@@ -46,7 +46,8 @@ void ZipWriteJob<ContentT>::onExecute()
     Benchmarking::Timer timer_wait;
     std::lock_guard<std::mutex> guard(pZipMutex); // Wait
     timer_wait.stop();
-    pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
+    if (pDurationCollector)
+        pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
 
     memset(&file_info, 0, sizeof(file_info));
     file_info.filename = pEntryPath.c_str();
@@ -57,7 +58,9 @@ void ZipWriteJob<ContentT>::onExecute()
     mz_zip_writer_entry_open(pZipHandle, &file_info);
     mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
     timer_write.stop();
-    pDurationCollector->addDuration("zip_write", timer_write.get_duration());
+
+    if (pDurationCollector)
+        pDurationCollector->addDuration("zip_write", timer_write.get_duration());
 }
 
 // Class ZipWriter

@@ -48,6 +48,7 @@
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
+#include <writer_factory.h>
 
 using namespace Yuni;
 
@@ -85,7 +86,8 @@ Study::Study(bool forTheSolver) :
  activeLayerID(0),
  showAllLayer(true),
  gotFatalError(false),
- usedByTheSolver(forTheSolver)
+ pQueueService(std::make_shared<Yuni::Job::QueueService>())
+ usedByTheSolver(forTheSolver),
 {
     // TS generators
     for (uint i = 0; i != timeSeriesCount; ++i)
@@ -1618,6 +1620,11 @@ void Study::computePThetaInfForThermalClusters() const
                                         * cluster->unitCount * cluster->nominalCapacity;
         }
     }
+}
+
+void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+{
+    resultWriter = Solver::resultWriterFactory(parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,

@@ -31,6 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/noncopyable.h>
+#include <yuni/job/queue/service.h>
+
+#include <i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"
@@ -571,6 +574,8 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
+    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
+
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -726,6 +731,9 @@ public:
     //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
     mutable YString bufferLoadingTS;
     //@}
+
+    //! The queue service that runs every set of parallel years
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
 
     //! Result writer, required to write residual files (comments, about-the-study, etc.)
     Solver::IResultWriter::Ptr resultWriter = nullptr;
