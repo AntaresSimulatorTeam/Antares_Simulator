@@ -1,13 +1,14 @@
 name: Windows CI (VCPKG and pre-compiled)
 
-# on:
-#   push:
-#     branches:
-#       - develop
-#       - feature/*
-#       - features/*
-#       - fix/*
-      # - release/*
+on:
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+
 jobs:
   doc_generation:
     uses: ./.github/workflows/build-userguide.yml

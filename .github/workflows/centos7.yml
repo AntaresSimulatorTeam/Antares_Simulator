@@ -1,16 +1,16 @@
 name: Centos7 CI (push and/or release)
 
-# on:
-#   release:
-#     types: [created]
-#   push:
-#     branches:
-#       - develop
-#       - feature/*
-#       - features/*
-#       - fix/*
-#       - release/*
-#       - doc/*
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
