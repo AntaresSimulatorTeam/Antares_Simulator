@@ -77,25 +77,6 @@ public:
 	}
 };
 
-
-/*
-std::unique_ptr<I_MPS_writer> mpsWriterFactory(
-			PROBLEME_HEBDO* ProblemeHebdo,
-			int NumIntervalle,
-			PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-			bool ortoolsUsed,
-			MPSolver* solver,
-			uint thread_number);
-
-std::unique_ptr<I_MPS_writer> createMPSwriterOnError(
-			PROBLEME_HEBDO* ProblemeHebdo,
-			int NumIntervalle,
-			PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-			bool ortoolsUsed,
-			MPSolver* solver,
-			uint thread_number);
-*/
-
 class mpsWriterFactory
 {
 public:
