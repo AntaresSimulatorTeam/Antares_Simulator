@@ -23,10 +23,13 @@ jobs:
       SONAR_SERVER_URL: "https://sonarcloud.io"
 
     steps:
-    
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1
 
       - name: Cache SonarCloud packages and analysis
         uses: actions/cache@v3
@@ -45,7 +48,7 @@ jobs:
           mkdir -p $HOME/.sonar
           curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          
+
       - name: Download and setup build-wrapper
         shell: bash
         env:
@@ -54,7 +57,7 @@ jobs:
         run: |
           curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
-          
+
       - name: Set build-wrapper and sonar-scanner paths
         run: |
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
@@ -70,10 +73,10 @@ jobs:
       - name: Read antares-deps version
         id: antares-deps-version
         uses: notiz-dev/github-action-json-property@release
-        with: 
+        with:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
-        
+
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
         with:
@@ -85,7 +88,7 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.8
-          
+
       - name: Install gcovr
         run: sudo pip install gcovr
 
@@ -100,7 +103,7 @@ jobs:
 
       - name: Configure
         run: |
-             cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=../install -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+             cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=../install -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
       - name: Build
         run: build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
