@@ -10,7 +10,7 @@ project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
 
 set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
+set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
