@@ -126,7 +126,6 @@ jobs:
     - name: Build
       run: |
            cmake --build _build --config release -j2
-           ccache -s
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}

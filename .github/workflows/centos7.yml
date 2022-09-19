@@ -143,7 +143,6 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config Release -j2
-           ccache -s
 
     - name: Installer .rpm creation push
       if: ${{ env.IS_PUSH == 'true' }}
