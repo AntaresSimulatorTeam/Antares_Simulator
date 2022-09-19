@@ -50,7 +50,7 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
 
     - name: ccache
-      uses: hendrikmuhs/ccache-action@v1
+      uses: hendrikmuhs/ccache-action@v1.2
       if: ${{ env.IS_PUSH == 'true' }}
 
     - name: Install libraries
