@@ -70,6 +70,7 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver) :
+ LayerData(0, true),
  simulation(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
@@ -81,8 +82,6 @@ Study::Study(bool forTheSolver) :
  runtime(nullptr),
  // state(nullptr),
  uiinfo(nullptr),
- activeLayerID(0),
- showAllLayer(true),
  gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
