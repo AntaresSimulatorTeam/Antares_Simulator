@@ -491,70 +491,66 @@ void splitMPSwriter::runIfNeeded()
     OPT_dump_spx_variable_part(named_splx_problem_, thread_nb_);
 }
 
-
-static bool doWeExportMPS(bool export_mps, int currentOptimNumber)
+mpsWriterFactory::mpsWriterFactory(
+        PROBLEME_HEBDO* ProblemeHebdo,
+        int NumIntervalle,
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+        bool ortoolsUsed,
+        MPSolver* solver,
+        uint thread_number) :
+    pb_hebdo_(ProblemeHebdo),
+    num_intervalle_(NumIntervalle),
+    named_splx_problem_(named_splx_problem),
+    ortools_used_(ortoolsUsed),
+    solver_(solver),
+    thread_number_(thread_number)
 {
-    // Argument currentOptimNumber is not involved yet in the return value
+    current_optim_number_ = pb_hebdo_->numeroOptimisation[num_intervalle_];
+    export_mps_ = pb_hebdo_->ExportMPS;
+    export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
+    split_mps_ = pb_hebdo_->SplitExportedMPS;
+    is_first_week_of_year_ = pb_hebdo_->firstWeekOfSimulation;
+}
+
+bool mpsWriterFactory::doWeExportMPS()
+{
+    // Current optimization number is not involved yet in the return value
     // but will be soon
-    return export_mps;
+    return export_mps_;
 }
 
-std::unique_ptr<I_MPS_writer> mpsWriterFactory(
-            PROBLEME_HEBDO* ProblemeHebdo,
-            int NumIntervalle,
-            PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-            bool ortoolsUsed,
-            MPSolver* solver,
-            uint thread_number)
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
 {
-    int currentOptimNumber = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-    bool export_mps = ProblemeHebdo->ExportMPS;
-    bool split_mps = ProblemeHebdo->SplitExportedMPS;
-    bool export_mps_on_error = ProblemeHebdo->exportMPSOnError;
-    bool is_simulation_1st_week = ProblemeHebdo->firstWeekOfSimulation;
-
-    if (doWeExportMPS(export_mps, currentOptimNumber) && split_mps)
+    if (doWeExportMPS() && split_mps_)
     {
-        return std::make_unique<splitMPSwriter>(named_splx_problem, thread_number, is_simulation_1st_week);
+        return std::make_unique<splitMPSwriter>(named_splx_problem_, thread_number_, is_first_week_of_year_);
     }
-    if (ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
+    if (doWeExportMPS() && not split_mps_)
     {
-        return std::make_unique<fullOrToolsMPSwriter>(solver, currentOptimNumber, thread_number);
-    }
-    if (not ortoolsUsed && doWeExportMPS(export_mps, currentOptimNumber) && not split_mps)
-    {
-        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
+        return createFullmpsWriter();
     }
 
     return std::make_unique<nullMPSwriter>();
 }
 
-
-std::unique_ptr<I_MPS_writer> createMPSwriterOnError(
-    PROBLEME_HEBDO* ProblemeHebdo,
-    int NumIntervalle,
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-    bool ortoolsUsed,
-    MPSolver* solver,
-    uint thread_number)
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
 {
-    int currentOptimNumber = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-    bool export_mps = ProblemeHebdo->ExportMPS;
-    bool export_mps_on_error = ProblemeHebdo->exportMPSOnError;
-
-    if (not export_mps_on_error || export_mps)
+    if (export_mps_on_error_ && not export_mps_)
     {
-        return std::make_unique<nullMPSwriter>();
-    }
-
-    if (ortoolsUsed)
-    {
-        return std::make_unique<fullOrToolsMPSwriter>(solver, currentOptimNumber, thread_number);
-    }
-    if (not ortoolsUsed)
-    {
-        return std::make_unique<fullMPSwriter>(named_splx_problem, thread_number);
+        return createFullmpsWriter();
     }
 
     return std::make_unique<nullMPSwriter>();
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+{
+    if (ortools_used_)
+    {
+        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_, thread_number_);
+    }
+    else
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem_, thread_number_);
+    }
 }

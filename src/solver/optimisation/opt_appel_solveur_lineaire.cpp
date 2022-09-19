@@ -230,8 +230,9 @@ RESOLUTION:
     Probleme.NombreDeContraintesCoupes = 0;
 
     // We create the MPS writer here (and not at the beginning of the current function) because
-    // MPS writer uses the solver, whose address can be updated earlier in the function.
-    auto mps_writer = mpsWriterFactory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    // MPS writer uses the solver that can be updated earlier in the function.
+    mpsWriterFactory mps_writer_factory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded();
 
     TimeMeasurement measure;
@@ -348,7 +349,7 @@ RESOLUTION:
             logs.error() << ex.what();
         }
 
-        auto mps_writer_on_error = createMPSwriterOnError(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
         mps_writer_on_error->runIfNeeded();
 
         return false;

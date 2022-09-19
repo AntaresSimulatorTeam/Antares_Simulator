@@ -78,6 +78,7 @@ public:
 };
 
 
+/*
 std::unique_ptr<I_MPS_writer> mpsWriterFactory(
 			PROBLEME_HEBDO* ProblemeHebdo,
 			int NumIntervalle,
@@ -93,3 +94,37 @@ std::unique_ptr<I_MPS_writer> createMPSwriterOnError(
 			bool ortoolsUsed,
 			MPSolver* solver,
 			uint thread_number);
+*/
+
+class mpsWriterFactory
+{
+public:
+	mpsWriterFactory(
+		PROBLEME_HEBDO* ProblemeHebdo,
+		int NumIntervalle,
+		PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+		bool ortoolsUsed,
+		MPSolver* solver,
+		uint thread_number);
+
+	std::unique_ptr<I_MPS_writer> create();
+	std::unique_ptr<I_MPS_writer> createOnOptimizationError();
+
+private:
+	// Member functions...
+	std::unique_ptr<I_MPS_writer> createFullmpsWriter();
+	bool doWeExportMPS();
+
+	// Member data...
+	PROBLEME_HEBDO* pb_hebdo_ = nullptr;
+	int num_intervalle_;
+	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
+	bool ortools_used_;
+	MPSolver* solver_ = nullptr;
+	uint thread_number_;
+	int current_optim_number_;
+	bool export_mps_;
+	bool export_mps_on_error_;
+	bool split_mps_;
+	bool is_first_week_of_year_;
+};
