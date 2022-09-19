@@ -88,7 +88,6 @@ jobs:
       run: |
           git submodule update --init src/antares-deps
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
-          ccache -s
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
@@ -127,6 +126,7 @@ jobs:
     - name: Build
       run: |
            cmake --build _build --config release -j2
+           ccache -s
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}

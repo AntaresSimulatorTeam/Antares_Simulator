@@ -32,6 +32,10 @@ jobs:
       with:
         fetch-depth: 2
 
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1
+      if: ${{ env.IS_PUSH == 'true' }}
+
     - name: Get changed files
       id: changed-files
       uses: tj-actions/changed-files@v1.1.2
@@ -133,12 +137,13 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+           cmake3 -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
     - name: Build
       run: |
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config Release -j2
+           ccache -s
 
     - name: Installer .rpm creation push
       if: ${{ env.IS_PUSH == 'true' }}

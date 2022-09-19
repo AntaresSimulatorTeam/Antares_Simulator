@@ -106,7 +106,9 @@ jobs:
              cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=../install -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
 
       - name: Build
-        run: build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
+        run: |
+             build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
+             ccache -s
 
       - name: Test and generate coverage
         continue-on-error: true
