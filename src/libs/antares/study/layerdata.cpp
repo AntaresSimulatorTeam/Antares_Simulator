@@ -85,11 +85,9 @@ bool LayerData::saveLayers(const AnyString& filename)
     {
         CString<256, true> data;
         data << "[layers]\n";
-        for (auto iterator = layers.begin(); iterator != layers.end(); iterator++)
-        {
-            data << iterator->first << " = " << iterator->second;
-            data << '\n';
-        }
+
+        for (const auto& [key, value] : layers)
+            data << key << " = " << value << '\n';
 
         data << "[activeLayer]\n";
         data << "activeLayerID"
