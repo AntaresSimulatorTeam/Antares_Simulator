@@ -106,22 +106,24 @@ jobs:
         source /opt/rh/rh-git227/enable
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
 
+    - name: Config OR-Tools URL
+      run: |
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
+          else
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          fi
+
     - name: Download OR-Tools if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
       id: ortools
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.2/ortools_cxx_centos7_shared_xprs.zip
+            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
             unzip -q ortools.zip
             rm ortools.zip
-
-            echo "::set-output name=flags::-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}"
             echo "::set-output name=label::-ortools-xpress"
-          else
-            echo "::set-output name=flags::"
-            echo "::set-output name=label::"
-          fi
 
     - name: Download userguide
       uses: actions/download-artifact@v2
@@ -133,8 +135,7 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF ${{ steps.ortools.outputs.flags }}
-
+           cmake3 -B _build -S src -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
     - name: Build
       run: |
            source /opt/rh/devtoolset-9/enable
