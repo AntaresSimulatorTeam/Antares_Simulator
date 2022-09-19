@@ -110,8 +110,10 @@ jobs:
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
+            echo "::set-output name=label::-ortools-xpress"
           else
             echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
+            echo "::set-output name=label::"
           fi
 
     - name: Download OR-Tools
@@ -121,7 +123,6 @@ jobs:
             wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
             unzip -q ortools.zip
             rm ortools.zip
-            echo "::set-output name=label::-ortools-xpress"
 
     - name: Download userguide
       uses: actions/download-artifact@v2
