@@ -96,10 +96,6 @@ jobs:
       uses: bruceadams/get-release@v1.2.0
       if: ${{ env.IS_RELEASE == 'true' }}
 
-    - name: ccache
-      uses: hendrikmuhs/ccache-action@v1.2
-      if: ${{ env.IS_PUSH == 'true' }}
-
     - name: Init submodule
       run: |
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
@@ -143,6 +139,7 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config Release -j2
+           ccache -s
 
     - name: Installer .rpm creation push
       if: ${{ env.IS_PUSH == 'true' }}
