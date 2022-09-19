@@ -36,9 +36,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 
 void LayerData::loadLayers(const AnyString& filename)
@@ -114,5 +112,4 @@ bool LayerData::saveLayers(const AnyString& filename)
     return false;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

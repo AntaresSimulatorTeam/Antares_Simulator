@@ -29,9 +29,7 @@
 
 #include <map>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Antares Study
@@ -57,7 +55,6 @@ protected:
     void loadLayers(const AnyString& filename);
 };
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif /* __ANTARES_LIBS_STUDY_LAYERDATA_H__ */
