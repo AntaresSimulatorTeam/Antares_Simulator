@@ -24,6 +24,6 @@ target_include_directories(result_writer PUBLIC
 target_link_libraries(result_writer
                       PRIVATE
                       libantares-core
-                      MINIZIP::minizip)
+                      MINIZIP::minizip-ng)
 
 
