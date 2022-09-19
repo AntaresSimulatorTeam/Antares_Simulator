@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
 #define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
+#include <string>
 #include <map>
 
 namespace Antares::Data

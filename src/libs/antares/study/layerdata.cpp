@@ -42,55 +42,50 @@ namespace Antares::Data
 void LayerData::loadLayers(const AnyString& filename)
 {
     IniFile ini;
-    if (std::ifstream(filename.c_str()).good()) // check if file exists
-        if (ini.open(filename))
+    if (std::ifstream(filename.c_str()).good() && ini.open(filename) ) // check if file exists
+    {
+        // The section
+        if (auto* section = ini.find("layers"); section)
         {
-            // The section
-            auto* section = ini.find("layers");
-            if (section)
+            size_t key;
+            CString<50, false> value;
+
+            for (auto* p = section->firstProperty; p; p = p->next)
             {
-                size_t key;
-                CString<50, false> value;
+                // We convert the key and the value into the lower case format,
+                // since several tests will be done with these string */
+                key = p->key.to<size_t>();
+                value = p->value;
 
-                for (auto* p = section->firstProperty; p; p = p->next)
-                {
-                    // We convert the key and the value into the lower case format,
-                    // since several tests will be done with these string */
-                    key = p->key.to<size_t>();
-                    value = p->value;
-
-                    layers[key] = value.to<std::string>();
-                }
-
-                section = ini.find("activeLayer");
-                if (section)
-                {
-                    auto* p = section->firstProperty;
-                    activeLayerID = p->value.to<size_t>();
-
-                    p = p->next;
-
-                    if (p)
-                        showAllLayer = p->value.to<bool>();
-                }
-                return;
+                layers[key] = value.to<std::string>();
             }
 
-            logs.warning() << ": The section `layers` can not be found";
+            section = ini.find("activeLayer");
+            if (section)
+            {
+                auto* p = section->firstProperty;
+                activeLayerID = p->value.to<size_t>();
+
+                p = p->next;
+
+                if (p)
+                    showAllLayer = p->value.to<bool>();
+            }
             return;
         }
+
+        logs.warning() << ": The section `layers` can not be found";
+        return;
+    }
 }
 
 bool LayerData::saveLayers(const AnyString& filename)
 {
-    IO::File::Stream file;
-    if (file.openRW(filename))
+    if (IO::File::Stream file; file.openRW(filename))
     {
         CString<256, true> data;
         data << "[layers]\n";
-        for (std::map<size_t, std::string>::iterator iterator = layers.begin();
-             iterator != layers.end();
-             iterator++)
+        for (auto iterator = layers.begin(); iterator != layers.end(); iterator++)
         {
             data << iterator->first << " = " << iterator->second;
             data << '\n';
