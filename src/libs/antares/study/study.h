@@ -785,17 +785,6 @@ protected:
     void reduceMemoryUsage();
     //@}
 
-private:
-    //! \name Disabled items
-    //@{
-    //! List of all disabled areas
-    // DisabledAreaList         pDisabledAreaList;
-    //! List of all disabled area links
-    // DisabledAreaLinkList     pDisabledAreaLinkList;
-    //! List of all disabled thermal clusters
-    // DisabledThermalClusterList pDisabledThermalClusterList;
-    //@}
-
 }; // class Study
 
 /*!
