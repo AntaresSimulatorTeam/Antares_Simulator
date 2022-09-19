@@ -114,11 +114,9 @@ jobs:
             echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
           fi
 
-    - name: Download OR-Tools if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
+    - name: Download OR-Tools
       id: ortools
       run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
             wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
             unzip -q ortools.zip
@@ -130,7 +128,6 @@ jobs:
       with:
         name: pdf-doc
         path: docs/ref_guides
-
 
     - name: Configure
       run: |
