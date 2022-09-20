@@ -97,6 +97,7 @@ private:
     void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
     void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuExportStatus(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuAdequacyPatch(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 

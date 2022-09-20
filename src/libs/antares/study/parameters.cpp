@@ -311,7 +311,7 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.splitExportedMPS = false;
     include.exportStructure = false;
 
@@ -561,8 +561,16 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        try
+        {
+            d.include.exportMPS = Enum::fromString<mpsExportStatus>(string);
+        }
+    }
+
+
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
@@ -1579,8 +1587,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
-        logs.info() << "  :: ignoring export mps";
+    //if (!include.exportMPS)
+    //    logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
     if (!adqPatch.enabled)
@@ -1745,7 +1753,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        // section->add("include-exportmps", include.exportMPS);
         section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 

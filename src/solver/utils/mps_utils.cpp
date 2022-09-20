@@ -441,6 +441,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
 }
 
 
+
 // --------------------
 // Full mps writing
 // --------------------

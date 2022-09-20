@@ -568,6 +568,7 @@ macro(ADD_ANTARES_CORE name)
 	target_include_directories(libantares-core${name}
 			PUBLIC
 				${CMAKE_SOURCE_DIR}/ext/yuni/src
+				${CMAKE_SOURCE_DIR}/solver	# To easily get to "mps_utils.h"
 				${CMAKE_SOURCE_DIR}/libs
 				${CMAKE_SOURCE_DIR}/libs/antares/logs
 			)

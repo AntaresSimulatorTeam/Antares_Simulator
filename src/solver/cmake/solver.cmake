@@ -62,6 +62,8 @@ set(RTESOLVER_OPT
 
         utils/mps_utils.h
         utils/mps_utils.cpp
+		utils/mps_export_flag.h
+		utils/mps_export_flag.cpp
 	)
 
 

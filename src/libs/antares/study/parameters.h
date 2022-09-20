@@ -39,6 +39,7 @@
 #include "fwd.h"
 #include "variable-print-info.h"
 
+#include "utils/mps_export_flag.h"
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/OrtoolsSolver.hpp>
 
@@ -417,8 +418,8 @@ public:
             bool minUPTime;
         } thermal;
 
-        //! a flag to export all mps files
-        bool exportMPS;
+        //! Flag to export mps files
+        mpsExportStatus exportMPS;
 
         //! if MPS files are exported, a flag to split them
         bool splitExportedMPS;
