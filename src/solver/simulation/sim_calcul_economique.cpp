@@ -94,7 +94,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
-    // problem.ExportMPS = study.parameters.include.exportMPS;
+    problem.ExportMPS = study.parameters.include.exportMPS;
     problem.SplitExportedMPS = study.parameters.include.splitExportedMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);

@@ -39,7 +39,6 @@
 #include "fwd.h"
 #include "variable-print-info.h"
 
-#include "utils/mps_export_flag.h"
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 #include <antares/study/OrtoolsSolver.hpp>
 

@@ -85,6 +85,12 @@ private:
     void onSelectLinkTypeLocal(wxCommandEvent& evt);
     void onSelectLinkTypeAC(wxCommandEvent& evt);
 
+    void onSelectExportMPS(const Data::mpsExportStatus& mps_export_status);
+    void onSelectNoMPSexport(wxCommandEvent& evt);
+    void onSelectExportMPSfirstOptimization(wxCommandEvent&);
+    void onSelectExportMPSsecondOptimization(wxCommandEvent&);
+    void onSelectExportMPSbothOptimizations(wxCommandEvent&);
+
     void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);

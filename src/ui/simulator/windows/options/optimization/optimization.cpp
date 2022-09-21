@@ -37,7 +37,6 @@
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
-#include "solver/utils/mps_utils.h"
 
 using namespace Yuni;
 
@@ -325,7 +324,7 @@ Optimization::Optimization(wxWindow* parent) :
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
 
-        const mpsExportStatus& defaultValue = mpsExportStatus::NO_EXPORT;
+        const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
         button = new Component::Button( this, 
                                         mpsExportStatusToString(defaultValue), 
                                         mpsExportIcon(defaultValue));
@@ -521,7 +520,7 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.strategic = true;
             study.parameters.include.reserve.primary = true;
             study.parameters.include.reserve.spinning = true;
-            study.parameters.include.exportMPS = mpsExportStatus::NO_EXPORT;
+            study.parameters.include.exportMPS = Data::mpsExportStatus::NO_EXPORT;
             study.parameters.include.splitExportedMPS = false;
             study.parameters.adqPatch.enabled = false;
             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
@@ -572,7 +571,8 @@ void Optimization::refresh()
     // Spinning reserve
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
-    ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
+    pBtnExportMPS->image(Data::mpsExportIcon(study.parameters.include.exportMPS));
+    pBtnExportMPS->caption(Data::mpsExportStatusToString(study.parameters.include.exportMPS));
     // Split exported MPS
     ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
     // Adequacy patch
@@ -738,9 +738,10 @@ void Optimization::onPopupMenuExportStatus(Component::Button&, wxMenu& menu, voi
 {
     // Create the item for no mps export
     {
-        const mpsExportStatus& value = mpsExportStatus::NO_EXPORT;
+        const Data::mpsExportStatus& value = Data::mpsExportStatus::NO_EXPORT;
         wxMenuItem* it = Menu::CreateItem(
-                        &menu, 
+                        &menu,
+                        wxID_ANY,
                         mpsExportStatusToString(value), 
                         mpsExportIcon(value), 
                         wxEmptyString);
@@ -753,9 +754,10 @@ void Optimization::onPopupMenuExportStatus(Component::Button&, wxMenu& menu, voi
 
     // Create the item to export mps associated to first optimization
     {
-        const mpsExportStatus& value = mpsExportStatus::EXPORT_FIRST_OPIM;
+        const Data::mpsExportStatus& value = Data::mpsExportStatus::EXPORT_FIRST_OPIM;
         wxMenuItem* it = Menu::CreateItem(
                         &menu,
+                        wxID_ANY,
                         mpsExportStatusToString(value),
                         mpsExportIcon(value),
                         wxEmptyString);
@@ -768,9 +770,10 @@ void Optimization::onPopupMenuExportStatus(Component::Button&, wxMenu& menu, voi
 
     // Create the item to export mps associated to second optimization
     {
-        const mpsExportStatus& value = mpsExportStatus::EXPORT_SECOND_OPIM;
+        const Data::mpsExportStatus& value = Data::mpsExportStatus::EXPORT_SECOND_OPIM;
         wxMenuItem* it = Menu::CreateItem(
                         &menu,
+                        wxID_ANY,
                         mpsExportStatusToString(value),
                         mpsExportIcon(value),
                         wxEmptyString);
@@ -783,15 +786,16 @@ void Optimization::onPopupMenuExportStatus(Component::Button&, wxMenu& menu, voi
 
     // Create the item to export mps associated to both optimizations
     {
-        const mpsExportStatus& value = mpsExportStatus::EXPORT_BOTH_OPTIMS;
+        const Data::mpsExportStatus& value = Data::mpsExportStatus::EXPORT_BOTH_OPTIMS;
         wxMenuItem* it = Menu::CreateItem(
                         &menu,
+                        wxID_ANY,
                         mpsExportStatusToString(value),
                         mpsExportIcon(value),
                         wxEmptyString);
         menu.Connect(it->GetId(),
             wxEVT_COMMAND_MENU_SELECTED,
-            wxCommandEventHandler(Optimization::onSelectExportMPSbothOptimization),
+            wxCommandEventHandler(Optimization::onSelectExportMPSbothOptimizations),
             nullptr,
             this);
     }
@@ -996,7 +1000,7 @@ void Optimization::onSelectLinkTypeAC(wxCommandEvent&)
 // -----------------------------------
 // On select methods for MPS export
 // -----------------------------------
-void Optimization::onSelectExportMPS(const mpsExportStatus& mps_export_status)
+void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_status)
 {
     auto study = Data::Study::Current::Get();
     if (!(!study))
@@ -1012,22 +1016,22 @@ void Optimization::onSelectExportMPS(const mpsExportStatus& mps_export_status)
 
 void Optimization::onSelectNoMPSexport(wxCommandEvent&)
 {
-    onSelectExportMPS(mpsExportStatus::NO_EXPORT);
+    onSelectExportMPS(Data::mpsExportStatus::NO_EXPORT);
 }
 
 void Optimization::onSelectExportMPSfirstOptimization(wxCommandEvent&)
 {
-    onSelectExportMPS(mpsExportStatus::EXPORT_FIRST_OPIM);
+    onSelectExportMPS(Data::mpsExportStatus::EXPORT_FIRST_OPIM);
 }
 
 void Optimization::onSelectExportMPSsecondOptimization(wxCommandEvent&)
 {
-    onSelectExportMPS(mpsExportStatus::EXPORT_SECOND_OPIM);
+    onSelectExportMPS(Data::mpsExportStatus::EXPORT_SECOND_OPIM);
 }
 
-void Optimization::onSelectExportMPSbothOptimization(wxCommandEvent&)
+void Optimization::onSelectExportMPSbothOptimizations(wxCommandEvent&)
 {
-    onSelectExportMPS(mpsExportStatus::EXPORT_BOTH_OPTIMS);
+    onSelectExportMPS(Data::mpsExportStatus::EXPORT_BOTH_OPTIMS);
 }
 
 // ----------------------------------------------------

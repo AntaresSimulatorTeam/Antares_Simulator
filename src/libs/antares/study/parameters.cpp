@@ -564,12 +564,15 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "include-exportmps")
     {
-        try
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
-            d.include.exportMPS = Enum::fromString<mpsExportStatus>(string);
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                << ". Reset to no MPS export.";
+            return false;
         }
+        return true;
     }
-
 
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
@@ -1587,8 +1590,8 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    //if (!include.exportMPS)
-    //    logs.info() << "  :: ignoring export mps";
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
+        logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
     if (!adqPatch.enabled)
@@ -1753,7 +1756,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        // section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
         section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
