@@ -116,12 +116,26 @@ jobs:
     - name: Configure push
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
-           cmake -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF-DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+           cmake -B _build -S src \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache\
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache\
+           -DDEPS_INSTALL_DIR=./rte-antares-deps-Release\
+           -DCMAKE_PREFIX_PATH=../install\
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON \
+           -DBUILD_not_system=OFF \
+           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Configure release
       if: ${{ env.IS_RELEASE == 'true' }}
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCMAKE_PREFIX_PATH=../install -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src \
+           -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
+           -DCMAKE_PREFIX_PATH=../install \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON \
+           -DBUILD_not_system=OFF
 
     - name: Build
       run: |

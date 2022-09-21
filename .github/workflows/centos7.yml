@@ -133,7 +133,16 @@ jobs:
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
-           cmake3 -B _build -S src -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DDEPS_INSTALL_DIR=/rte-antares-deps-Release -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+           cmake3 -B _build -S src \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON \
+           -DBUILD_not_system=OFF \
+           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+
     - name: Build
       run: |
            source /opt/rh/devtoolset-9/enable
