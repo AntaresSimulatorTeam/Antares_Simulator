@@ -332,7 +332,7 @@ Optimization::Optimization(wxWindow* parent) :
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this,
-                     &Optimization::onPopupMenuExportStatus);
+                     &Optimization::onPopupMenuExportMPSstatus);
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -734,7 +734,7 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                  this);
 }
 
-void Optimization::onPopupMenuExportStatus(Component::Button&, wxMenu& menu, void*)
+void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
 {
     // Create the item for no mps export
     {

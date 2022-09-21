@@ -428,9 +428,9 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     CString<24, false> v = value;
     v.trim();
     v.toLower();
-    if (v == "both-optims" || v == "true")   // Case "true" : For Compatibily with old versions
+    if (v == "both-optims" || v == "true")   // Case "true" : for compatibily with older study versions
         return mpsExportStatus::EXPORT_BOTH_OPTIMS;
-    if (v == "none" || v == "false")   // Case "false" : For Compatibily with old versions
+    if (v == "none" || v == "false")   // Case "false" : for compatibily with older study versions
         return mpsExportStatus::NO_EXPORT;
     if (v == "optim-1")
         return mpsExportStatus::EXPORT_FIRST_OPIM;
@@ -453,10 +453,7 @@ const char* mpsExportIcon(const mpsExportStatus& mps_export_status)
     case mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return "images/16x16/light_green.png";
     default:
-        //throw AssertionError(
-        //    "Invalid MPS export status icon : "
-        //    + std::to_string(static_cast<unsigned long>(mps_export_status)));
-        return "";
+        return "images/16x16/light_orange.png";
     }
 }
 

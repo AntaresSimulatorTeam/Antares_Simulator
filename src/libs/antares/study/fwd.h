@@ -550,7 +550,7 @@ enum class mpsExportStatus : int
     EXPORT_FIRST_OPIM = 1,
     EXPORT_SECOND_OPIM = 2,
     EXPORT_BOTH_OPTIMS = 3,
-    UNKNOWN_EXPORT = 4  // gp : use it everywhere it's needed
+    UNKNOWN_EXPORT = 4
 };
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
