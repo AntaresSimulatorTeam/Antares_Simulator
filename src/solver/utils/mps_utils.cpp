@@ -523,7 +523,7 @@ bool mpsWriterFactory::doWeExportMPS()
 {
     if (export_mps_ == Data::mpsExportStatus::EXPORT_BOTH_OPTIMS)
         return true;
-    if ((int)export_mps_ == current_optim_number_)
+    if (static_cast<int>(export_mps_) == current_optim_number_)
         return true;
     return false;
 }

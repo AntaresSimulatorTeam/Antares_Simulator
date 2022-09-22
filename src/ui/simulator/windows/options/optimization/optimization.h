@@ -86,10 +86,13 @@ private:
     void onSelectLinkTypeAC(wxCommandEvent& evt);
 
     void onSelectExportMPS(const Data::mpsExportStatus& mps_export_status);
-    void onSelectNoMPSexport(wxCommandEvent& evt);
-    void onSelectExportMPSfirstOptimization(wxCommandEvent&);
-    void onSelectExportMPSsecondOptimization(wxCommandEvent&);
-    void onSelectExportMPSbothOptimizations(wxCommandEvent&);
+
+    template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+    void onSelectExportMPS(wxCommandEvent&);
+
+    template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+    void createMPSexportItemIntoMenu(wxMenu& menu);
+
 
     void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
@@ -131,6 +134,31 @@ private:
     bool* pTargetRef;
 
 }; // class Optimization
+
+
+template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+void Optimization::onSelectExportMPS(wxCommandEvent&)
+{
+    Optimization::onSelectExportMPS(MPS_EXPORT_STATUS);
+}
+
+template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
+{
+    const Data::mpsExportStatus& value = MPS_EXPORT_STATUS;
+    wxMenuItem* it = Menu::CreateItem(
+        &menu,
+        wxID_ANY,
+        mpsExportStatusToString(value),
+        mpsExportIcon(value),
+        wxEmptyString);
+
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
+        nullptr,
+        this);
+}
 
 } // namespace Options
 } // namespace Window
