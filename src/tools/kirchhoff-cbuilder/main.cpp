@@ -31,6 +31,8 @@
 #include <antares/study.h>
 #include <antares/logs.h>
 
+#include "../../solver/constraints-builder/cbuilder.h"
+
 using namespace Yuni;
 using namespace Antares;
 

@@ -27,7 +27,7 @@ set(KIRCHHOFF_CBUILDER_LIBS
 	${CMAKE_THREADS_LIBS_INIT}
 )
 
-target_link_libraries(cbuilder PRIVATE libantares-solver-constraints-builder)
+target_link_libraries(${execname} PRIVATE libantares-solver-constraints-builder)
 target_link_libraries(${execname} PRIVATE ${KIRCHHOFF_CBUILDER_LIBS} )
 
 import_std_libs(${execname})
