@@ -282,7 +282,6 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristic;
@@ -723,17 +722,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -985,6 +973,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1104,7 +1096,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1756,7 +1747,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
