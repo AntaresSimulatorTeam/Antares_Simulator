@@ -65,9 +65,9 @@ public:
 
 	void runIfNeeded();
 private:
-	uint thread_nb_;
 	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
 	int current_optim_number_;
+	uint thread_nb_;
 	bool simu_1st_week_;
 };
 

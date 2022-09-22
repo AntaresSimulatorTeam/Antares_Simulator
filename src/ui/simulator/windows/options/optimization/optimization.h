@@ -146,12 +146,11 @@ void Optimization::onSelectExportMPS(wxCommandEvent&)
 template<Data::mpsExportStatus MPS_EXPORT_STATUS>
 void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
 {
-    const Data::mpsExportStatus& value = MPS_EXPORT_STATUS;
-    wxMenuItem* it = Menu::CreateItem(
+    const wxMenuItem* it = Menu::CreateItem(
         &menu,
         wxID_ANY,
-        mpsExportStatusToString(value),
-        mpsExportIcon(value),
+        mpsExportStatusToString(MPS_EXPORT_STATUS),
+        mpsExportIcon(MPS_EXPORT_STATUS),
         wxEmptyString);
 
     menu.Connect(it->GetId(),

@@ -363,7 +363,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     int NumeroDeLIntervalle)
 {
     FILE* Flot;
-    PROBLEME_HEBDO* Probleme = (PROBLEME_HEBDO*)Prob;;
+    const PROBLEME_HEBDO* Probleme = (PROBLEME_HEBDO*)Prob;
     
     double CoutOptimalDeLaSolution = 0.;
     int numeroOptimisation = Probleme->numeroOptimisation[NumeroDeLIntervalle];
