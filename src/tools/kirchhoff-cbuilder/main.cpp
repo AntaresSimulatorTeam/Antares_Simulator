@@ -30,6 +30,7 @@
 #include <antares/utils.h>
 #include <antares/study.h>
 #include <antares/logs.h>
+#include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"
 
@@ -38,6 +39,23 @@ using namespace Antares;
 
 int main(int argc, char* argv[])
 {
+    if (argc < 2)
+    {
+        logs.error() << "Not enough arguments, exiting";
+        logs.error() << "args: study_path, option_path";
+        return 1;
+    }
+
+    std::string studyPath(argv[1]);
+    std::string optionPath(argv[2]);
+
+    if (!studyPath || !optionPath)
+    {
+        logs.error() << "Error converting strings, exiting";
+        return 1;
+    }
+
+    Data::Study study(true);
 
     return 0;
 }
