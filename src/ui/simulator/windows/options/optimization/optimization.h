@@ -28,10 +28,11 @@
 #define __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
 
 #include <antares/wx-wrapper.h>
-#include "../../../toolbox/components/button.h"
+#include "toolbox/components/button.h"
 #include <wx/dialog.h>
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include "application/menus.h"
 
 namespace Antares
 {

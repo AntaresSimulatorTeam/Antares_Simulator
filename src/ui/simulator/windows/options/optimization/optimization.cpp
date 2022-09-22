@@ -33,7 +33,6 @@
 #include "../../../toolbox/create.h"
 #include "../../../toolbox/resources.h"
 #include "../../../application/study.h"
-#include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
