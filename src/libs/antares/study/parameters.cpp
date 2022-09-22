@@ -979,9 +979,7 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
 
     if (key == "shedding-strategy") // Was never used
-    {
         return true;
-    }
 
     // deprecated
     if (key == "thresholdmin")
