@@ -341,11 +341,12 @@ RESOLUTION:
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
+
+        ProblemeHebdo->StatutVariables = Probleme.StatutDesVariables;
+        ProblemeHebdo->StatutContraintes = Probleme.StatutDesContraintes;
         
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
         {
-            ProblemeHebdo->StatutVariables = Probleme.StatutDesVariables;
-            ProblemeHebdo->StatutContraintes = Probleme.StatutDesContraintes;
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }
