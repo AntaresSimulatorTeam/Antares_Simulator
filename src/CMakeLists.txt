@@ -190,6 +190,9 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
+option(BUILD_MINIZIP "Build minizip" OFF)
+message(STATUS "Build minizip ${BUILD_MINIZIP}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -277,6 +280,25 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
 endif()
 
 find_package(minizip)
+
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "3.0.6")
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(DMZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(DMZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(DMZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(DMZ_WZAES "OFF" CACHE INTERNAL "")
+    set(DMZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(DMZ_ICONV "OFF" CACHE INTERNAL "")
+
+    FetchContent_Declare(minizip
+    GIT_REPOSITORY ${MZ_REPOSITORY}
+    GIT_TAG ${MZ_TAG})
+
+    FetchContent_MakeAvailable(minizip)
+endif()
+
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
 if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets) 
     #Add cmake directory to CMAKE_MODULE_PATH to use specific FindwxWidgets package needed for vcpkg
