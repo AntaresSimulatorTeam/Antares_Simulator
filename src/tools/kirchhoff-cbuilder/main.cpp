@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2022 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -39,7 +39,7 @@ using namespace Antares;
 
 int main(int argc, char* argv[])
 {
-    if (argc < 2)
+    if (argc < 3)
     {
         logs.error() << "Not enough arguments, exiting";
         logs.error() << "args: study_path, option_path";
@@ -47,15 +47,33 @@ int main(int argc, char* argv[])
     }
 
     std::string studyPath(argv[1]);
-    std::string optionPath(argv[2]);
+    std::string kirchhoffOptionPath(argv[2]);
 
-    if (!studyPath || !optionPath)
+    auto study = std::make_shared<Data::Study>(true);
+
+    Data::StudyLoadOptions options;
+    options.loadOnlyNeeded = false;
+    if (!study->loadFromFolder(studyPath, options))
     {
-        logs.error() << "Error converting strings, exiting";
+        logs.error() << "Couldn't load study from file, exiting";
         return 1;
     }
 
-    Data::Study study(true);
+    logs.info();
+    study->ensureDataAreAllInitialized();
+
+    logs.info() << "The study is loaded.";
+
+    Data::Study::Current::Set(study);
+    JIT::enabled = true;
+
+    CBuilder constraintBuilder(study);
+    constraintBuilder.completeFromStudy();
+    constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath);
+
+    const bool result = constraintBuilder.runConstraintsBuilder();
+
+    logs.info() << "Result: " << result;
 
     return 0;
 }
