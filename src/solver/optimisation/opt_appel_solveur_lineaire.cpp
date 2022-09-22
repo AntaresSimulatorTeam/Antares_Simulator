@@ -149,8 +149,8 @@ RESOLUTION:
             solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
-            Probleme.StatutDesContraintes.clear();
-            Probleme.StatutDesVariables.clear();
+            ProblemeHebdo->StatutContraintes.clear();
+            ProblemeHebdo->StatutVariables.clear();
         }
         else
         {
