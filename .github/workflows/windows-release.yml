@@ -28,6 +28,8 @@ jobs:
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -92,6 +94,8 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
 
     # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule

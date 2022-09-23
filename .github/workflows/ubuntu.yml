@@ -67,12 +67,23 @@ jobs:
         prop_path: 'antares_deps_version'
 
 
+    - name: Config OR-Tools URL
+      run: |
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
+            echo "::set-output name=label::-ortools-xpress"
+          else
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "::set-output name=label::"
+          fi
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-        os-full-name: Ubuntu-20.04
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLSDIR}}
 
     - name: Set up Python
       uses: actions/setup-python@v1
@@ -94,24 +105,6 @@ jobs:
       run: |
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
         ls -la ${{ env.XPRESSDIR }}
-
-    - name: Config OR-Tools URL
-      run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
-            echo "::set-output name=label::-ortools-xpress"
-          else
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-            echo "::set-output name=label::"
-          fi
-
-    - name: Download OR-Tools
-      id: ortools
-      run: |
-            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
-            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
-            unzip -q ortools.zip
-            rm ortools.zip
 
     - name: Configure push
       run: |

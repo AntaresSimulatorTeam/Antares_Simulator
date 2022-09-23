@@ -11,13 +11,16 @@ inputs:
     description: 'build type'
     required: false
     default: 'Release'
-  ortools-tag:
-    description: 'OR-Tools tag'
+  ortools-url:
+    description: 'URL for OR-Tools'
+    required: true
+  ortools-dir:
+    description: 'Destination directory for OR-Tools'
     required: true
 
 runs:
   using: "composite"
-  steps:
+  steps: 
   - name: Download & extract antares-deps
     shell: bash
     run: |
@@ -25,15 +28,10 @@ runs:
            unzip rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.zip
            rm -rf rte-antares-deps-${{inputs.os}}-${{inputs.buildtype}}.zip
 
-  - name: Read OR-Tools tag
-    shell: bash
-    run: |
-           TAG=$(cat "${{ github.workspace }}/ortools_tag")
-           echo "ortools-tag=${TAG}" >> ${GITHUB_ENV}
-
   - name: Download & extract OR-Tools
     shell: bash
     run: |
-           wget https://github.com/rte-france/or-tools/releases/download/${{ env.ortools-tag }}/ortools_cxx_${{ inputs.os }}_static_sirius.zip -O ortools.zip
+           cd ${{inputs.ortools-dir}}
+           wget ${{inputs.ortools-url}} -O ortools.zip
            unzip ortools.zip
            rm ortools.zip
