@@ -210,6 +210,7 @@ jobs:
            cpack -G DEB
            export DEB_NAME=$(ls *.deb)
            echo "DEB_NAME=$DEB_NAME" >> $GITHUB_ENV
+           echo "DEB_NAME_WITH_SUFFIX=${TGZ_NAME/.deb/${{ steps.ortools.outputs.label }}.deb}" >> $GITHUB_ENV
 
     - name: .tar.gz creation
       run: |
@@ -217,7 +218,7 @@ jobs:
            cpack -G TGZ
            export TGZ_NAME=$(ls *.tar.gz)
            echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
-
+           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
 
     - name: Installer archive upload push
       if: ${{ env.IS_PUSH == 'true' }}
@@ -240,7 +241,7 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.DEB_NAME}}
-        asset_name: ${{env.DEB_NAME}}
+        asset_name: ${{env.DEB_NAME_WITH_SUFFIX}}
         asset_content_type: application/octet-stream
 
     - name: Upload .tar.gz release
@@ -249,5 +250,5 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: _build/${{env.TGZ_NAME}}
-        asset_name: ${{env.TGZ_NAME}}
+        asset_name: ${{env.TGZ_NAME_WITH_SUFFIX}}
         asset_content_type: application/octet-stream
