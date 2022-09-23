@@ -31,8 +31,8 @@ runs:
   - name: Download & extract OR-Tools
     shell: bash
     run: |
-           mkdir ${{inputs.ortools-dir}}
-           cd ${{inputs.ortools-dir}}
+           mkdir "${{inputs.ortools-dir}}"
+           cd "${{inputs.ortools-dir}}"
            wget ${{inputs.ortools-url}} -O ortools.zip
            unzip ortools.zip
            rm ortools.zip
