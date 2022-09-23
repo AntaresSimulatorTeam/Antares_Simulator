@@ -21,6 +21,9 @@ jobs:
       SONAR_SCANNER_VERSION: 4.7.0.2747 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
+
 
     steps:
 
@@ -82,7 +85,8 @@ jobs:
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
-          ortools-url: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Set up Python
         uses: actions/setup-python@v1
