@@ -177,7 +177,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
 }
 
-bool checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
+void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
 {
     if (ortoolsUsed && splitExportedMPS)
     {
@@ -298,7 +298,7 @@ void Application::prepare(int argc, char* argv[])
     checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
     bool tsGenThermal
-      = (0 != (pParameters.timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
 
