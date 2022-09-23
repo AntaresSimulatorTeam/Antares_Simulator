@@ -282,15 +282,17 @@ endif()
 find_package(minizip)
 
 if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    # Repository + tag
     set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
     set(MZ_TAG "3.0.6")
+    # CMake flags
     set(MZ_LZMA "OFF" CACHE INTERNAL "")
-    set(DMZ_ZSTD "OFF" CACHE INTERNAL "")
-    set(DMZ_BZIP2 "OFF" CACHE INTERNAL "")
-    set(DMZ_PKCRYPT "OFF" CACHE INTERNAL "")
-    set(DMZ_WZAES "OFF" CACHE INTERNAL "")
-    set(DMZ_OPENSSL "OFF" CACHE INTERNAL "")
-    set(DMZ_ICONV "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
 
     FetchContent_Declare(minizip
     GIT_REPOSITORY ${MZ_REPOSITORY}
