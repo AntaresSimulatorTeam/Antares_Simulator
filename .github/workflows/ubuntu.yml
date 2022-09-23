@@ -117,10 +117,10 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cmake -B _build -S src \
-           -DCMAKE_C_COMPILER_LAUNCHER=ccache\
-           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache\
-           -DDEPS_INSTALL_DIR=./rte-antares-deps-Release\
-           -DCMAKE_PREFIX_PATH=../install\
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
+           -DCMAKE_PREFIX_PATH=../install \
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
