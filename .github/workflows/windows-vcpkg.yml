@@ -90,7 +90,7 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
-        ortools-path: ${{env.ORTOOLS_PATH}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
