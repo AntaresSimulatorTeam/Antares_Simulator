@@ -179,5 +179,10 @@ public:
     NoAreaInsideAdqPatchMode();
 };
 
+class InvalidParametersORTools_SplitMPS : public LoadingError
+{
+public:
+    InvalidParametersORTools_SplitMPS();
+};
 } // namespace Error
 } // namespace Antares
