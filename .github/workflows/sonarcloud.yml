@@ -113,7 +113,7 @@ jobs:
              -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
              -DCODE_COVERAGE=ON \
              -DCMAKE_BUILD_TYPE=release \
-             -DCMAKE_PREFIX_PATH=../install \
+             -DCMAKE_PREFIX_PATH=../install;${{ env.ORTOOLS_DIR }}/install \
              -DBUILD_TESTING=ON \
              -DBUILD_not_system=OFF
 

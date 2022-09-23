@@ -28,7 +28,7 @@ jobs:
     name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
-      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
 
     runs-on: ${{ matrix.os }}
@@ -83,7 +83,7 @@ jobs:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
         ortools-url: ${{env.ORTOOLS_URL}}
-        ortools-dir: ${{env.ORTOOLSDIR}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
       uses: actions/setup-python@v1
@@ -115,7 +115,7 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+           -DCMAKE_PREFIX_PATH=../install;${{ env.ORTOOLS_DIR }}/install \
            -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Build
