@@ -39,6 +39,7 @@ using namespace Antares;
 
 int main(int argc, char* argv[])
 {
+    logs.applicationName("kirchhoff-cbuilder");
     if (argc < 3)
     {
         logs.error() << "Not enough arguments, exiting";
@@ -49,10 +50,19 @@ int main(int argc, char* argv[])
     std::string studyPath(argv[1]);
     std::string kirchhoffOptionPath(argv[2]);
 
-    auto study = std::make_shared<Data::Study>(true);
+    auto study = std::make_shared<Data::Study>();
+    auto areas = std::make_shared<Data::AreaList>(*study);
+    study->header.version = 830;
 
     Data::StudyLoadOptions options;
     options.loadOnlyNeeded = false;
+
+    study->folderInput = studyPath + "/input";
+    study->inputExtension = "txt";
+
+    /* areas->loadFromFolder(options); */
+    logs.info() << "Areas loaded.";
+
     if (!study->loadFromFolder(studyPath, options))
     {
         logs.error() << "Couldn't load study from file, exiting";
@@ -63,7 +73,6 @@ int main(int argc, char* argv[])
     study->ensureDataAreAllInitialized();
 
     logs.info() << "The study is loaded.";
-
     Data::Study::Current::Set(study);
     JIT::enabled = true;
 
