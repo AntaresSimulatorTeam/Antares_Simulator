@@ -264,9 +264,11 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pDurationCollector(duration_collector),
- qs(std::make_shared<Yuni::Job::QueueService>()),
- pResultWriter(
-   resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
+ pQueueService(std::make_shared<Yuni::Job::QueueService>()),
+ pResultWriter(resultWriterFactory(study.parameters.resultFormat,
+                                   study.folderOutput,
+                                   pQueueService,
+                                   duration_collector))
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -1550,7 +1552,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
         // If the result writer uses the job queue, add one more thread for it
         if (pResultWriter->needsTheJobQueue())
             numThreads++;
-        qs->maximumThreadCount(numThreads);
+        pQueueService->maximumThreadCount(numThreads);
     }
 
     // Loop over sets of parallel years
@@ -1612,31 +1614,33 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // If the year has not to be rerun, we skip the computation of the year. 
-            // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
-            // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
+            // If the year has not to be rerun, we skip the computation of the year.
+            // Note that, when we enter for the first time in the "for" loop, all years of the set
+            // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
+            // continue;
 
-            qs->add(new yearJob<ImplementationType>(this,
-                                                    y,
-                                                    set_it->yearFailed,
-                                                    set_it->isFirstPerformedYearOfASet,
-                                                    pFirstSetParallelWithAPerformedYearWasRun,
-                                                    numSpace,
-                                                    randomForParallelYears,
-                                                    performCalculations,
-                                                    study,
-                                                    state,
-                                                    pYearByYear,
-                                                    pDurationCollector));
+            pQueueService->add(
+              new yearJob<ImplementationType>(this,
+                                              y,
+                                              set_it->yearFailed,
+                                              set_it->isFirstPerformedYearOfASet,
+                                              pFirstSetParallelWithAPerformedYearWasRun,
+                                              numSpace,
+                                              randomForParallelYears,
+                                              performCalculations,
+                                              study,
+                                              state,
+                                              pYearByYear,
+                                              pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);
 
-        qs->start();
+        pQueueService->start();
 
-        qs->wait(Yuni::qseIdle);
-        qs->stop();
+        pQueueService->wait(Yuni::qseIdle);
+        pQueueService->stop();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
