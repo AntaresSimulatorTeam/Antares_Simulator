@@ -1052,12 +1052,6 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
-    if (!pResultWriter)
-    {
-        logs.warning() << "No writer is available to write generated time-series";
-        return;
-    }
-
     using namespace Solver::TSGenerator;
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
