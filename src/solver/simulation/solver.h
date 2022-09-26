@@ -185,7 +185,6 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 }; // class ISimulation
-
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

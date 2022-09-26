@@ -39,11 +39,14 @@
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
 #include <antares/memory/memory.h>
+#include <antares/exception/InitializationError.hpp>
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+
+
 
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
@@ -264,7 +267,8 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
  pDurationCollector(duration_collector),
- pQueueService(study.pQueueService)
+ pQueueService(study.pQueueService),
+ pResultWriter(study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -279,8 +283,15 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 
-    // Result writer
-    pResultWriter = study.resultWriter;
+    if (!pQueueService)
+    {
+        throw Solver::Initialization::Error::NoQueueService();
+    }
+
+    if (!pResultWriter)
+    {
+        throw Solver::Initialization::Error::NoResultWriter();
+    }
 }
 
 template<class Impl>
