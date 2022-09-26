@@ -123,7 +123,7 @@ jobs:
 
     - name: Remove OR-Tools install directory to free some disk space
       shell: bash
-      run: rm -rf ../install
+      run: rm -rf ${{ORTOOLS_DIR}}
 
     - name: Remove antares-deps to free some disk space
       shell: bash
