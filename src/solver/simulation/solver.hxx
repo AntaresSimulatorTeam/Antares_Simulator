@@ -1621,22 +1621,24 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // If the year has not to be rerun, we skip the computation of the year. 
-            // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
-            // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
+            // If the year has not to be rerun, we skip the computation of the year.
+            // Note that, when we enter for the first time in the "for" loop, all years of the set
+            // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
+            // continue;
 
-            pQueueService->add(new yearJob<ImplementationType>(this,
-                                                    y,
-                                                    set_it->yearFailed,
-                                                    set_it->isFirstPerformedYearOfASet,
-                                                    pFirstSetParallelWithAPerformedYearWasRun,
-                                                    numSpace,
-                                                    randomForParallelYears,
-                                                    performCalculations,
-                                                    study,
-                                                    state,
-                                                    pYearByYear,
-                                                    pDurationCollector));
+            pQueueService->add(
+              new yearJob<ImplementationType>(this,
+                                              y,
+                                              set_it->yearFailed,
+                                              set_it->isFirstPerformedYearOfASet,
+                                              pFirstSetParallelWithAPerformedYearWasRun,
+                                              numSpace,
+                                              randomForParallelYears,
+                                              performCalculations,
+                                              study,
+                                              state,
+                                              pYearByYear,
+                                              pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 

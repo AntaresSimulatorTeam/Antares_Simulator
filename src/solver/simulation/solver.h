@@ -175,7 +175,7 @@ private:
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualCostsStatistics;
-    
+
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 

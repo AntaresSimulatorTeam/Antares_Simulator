@@ -335,7 +335,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     writer->addJob(filename, buffer);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, unsigned int n)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, uint n)
 {
     Clob buffer;
     int Cnt;
