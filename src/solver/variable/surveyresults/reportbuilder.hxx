@@ -215,13 +215,19 @@ public:
         // Standard - Not related to anything
         if (CDataLevel & Category::standard)
             RunStandard(list, results, numSpace);
+
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
             RunForEachArea(list, results, numSpace);
+
         // Set of Areas
         if (CDataLevel & Category::setOfAreas)
             RunForEachSetOfAreas(list, results, numSpace);
+
+        // Binding constraints level
+        if (CDataLevel & Category::bindingConstraint)
+            RunForEachBindingConstraint(list, results, numSpace);
 
         // Go to the next data level
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
@@ -502,6 +508,30 @@ private:
             if (Antares::Memory::swapSupport)
                 Antares::memory.flushAll();
         }
+    }
+
+    static void RunForEachBindingConstraint(const ListType& list,
+                                            SurveyResults& results,
+                                            unsigned int numSpace)
+    {
+        using namespace Yuni;
+
+        // Generating the report for each binding constraint
+        if (CDataLevel & Category::bindingConstraint)
+        {
+            logs.info() << "Exporting results : binding constraints";
+            // The new output
+            results.data.output.clear();
+            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
+            // Creating the directory
+            if (IO::Directory::Create(results.data.output))
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+            else
+                logs.error() << "I/O Error: '" << results.data.output
+                                << "': impossible to create the folder";
+        }
+
+
     }
 
 }; // class SurveyReportBuilder

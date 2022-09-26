@@ -432,23 +432,6 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
 */
 PowerFluctuations StringToPowerFluctuations(const AnyString& text);
 
-enum SheddingStrategy
-{
-    shsShareMargins = 0,
-    shsShareSheddings,
-    shsUnknown,
-};
-
-/*!
-** \brief Convert a global shedding strategy into a text
-*/
-const char* SheddingStrategyToCString(SheddingStrategy strategy);
-
-/*!
-** \brief Convert a text into a global shedding strategy
-*/
-SheddingStrategy StringToSheddingStrategy(const AnyString& text);
-
 enum SheddingPolicy
 {
     shpShavePeaks = 0,

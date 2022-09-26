@@ -24,14 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_INC_LINK_H__
-#define __SOLVER_VARIABLE_INC_LINK_H__
+#pragma once
 
-// NOTE : template includes are used here to reduce template instanciation
-// which still seems to be really cpu/memory consuming
-
-#include "../../state.h"
-#include <vector>
+#include "state.h"
 
 namespace Antares
 {
@@ -39,20 +34,19 @@ namespace Solver
 {
 namespace Variable
 {
-namespace LINK_NAMESPACE
-{
-struct VCardAllLinks
+struct VCardAllBindingConstraints
 {
     //! Caption
     static const char* Caption()
     {
-        return "Links";
+        return "Binding constraints";
     }
     //! Unit
     static const char* Unit()
     {
         return "";
     }
+
     //! The short description of the variable
     static const char* Description()
     {
@@ -60,43 +54,42 @@ struct VCardAllLinks
     }
 
     //! The expecte results
-    using ResultsType = Results<>;
+    typedef Results<> ResultsType;
 
     enum
     {
         //! Data Level
-        categoryDataLevel = Category::link,
+        categoryDataLevel = Category::bindingConstraint,
         //! File level (provided by the type of the results)
-        categoryFileLevel = ResultsType::categoryFile,
+        categoryFileLevel = ResultsType::categoryFile & Category::bc,
         //! Indentation (GUI)
         nodeDepthForGUI = +1,
         //! Number of columns used by the variable (One ResultsType per column)
         columnCount = 0,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateSum,
+        spatialAggregate = Category::noSpatialAggregate,
         //! Intermediate values
         hasIntermediateValues = 0,
     };
 
-}; // class VCard
+}; // class VCardAllBindingConstraints
 
-class Links //: public Variable::IVariable<Links<NextT>, NextT, VCardAllLinks>
+template<class NextT = Container::EndOfList>
+class BindingConstraints
 {
 public:
     //! Type of the next static variable
-    using NextType = VariablePerLink;
+    typedef NextT NextType;
     //! VCard
-    using VCardType = VCardAllLinks;
-    //! Ancestor
-    // using AncestorType = Variable::IVariable<Links<NextT>, NextT, VCardType>;
+    typedef VCardAllBindingConstraints VCardType;
 
     //! List of expected results
-    using ResultsType = VCardType::ResultsType;
+    typedef typename VCardType::ResultsType ResultsType;
 
     enum
     {
         //! How many items have we got
-        count = NextType::count,
+        count = NextT::count,
     };
 
     template<int CDataLevel, int CFile>
@@ -112,7 +105,7 @@ public:
     /*!
     ** \brief Try to estimate the memory footprint that the solver will require to make a simulation
     */
-    static void EstimateMemoryUsage(Data::StudyMemoryUsage&);
+    static void EstimateMemoryUsage(Data::StudyMemoryUsage& u);
 
     /*!
     ** \brief Retrieve the list of all individual variables
@@ -126,47 +119,29 @@ public:
     //! \name Constructor & Destructor
     //@{
     /*!
-    ** \brief Default constructor
+    ** \brief Default Constructor
     */
-    Links();
+    BindingConstraints() = default;
+
+    BindingConstraints(BindingConstraints& other) = delete;
+    BindingConstraints(BindingConstraints&& other) = delete;
+    BindingConstraints const& operator=(BindingConstraints&& other) = delete;
+
     //! Destructor
-    ~Links();
+    ~BindingConstraints() = default;
     //@}
 
     void initializeFromStudy(Data::Study& study);
-    void initializeFromArea(Data::Study*, Data::Area*);
-    void initializeFromThermalCluster(Data::Study*, Data::Area*, Data::ThermalCluster*);
-    void initializeFromAreaLink(Data::Study*, Data::AreaLink*);
-
-    void broadcastNonApplicability(bool applyNonApplicable);
-    void getPrintStatusFromStudy(Data::Study& study);
-
-    void simulationBegin();
-    void simulationEnd();
-
-    void yearBegin(uint year, unsigned int numSpace);
-
-    void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
-    void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
-
-    void yearEndBuild(State& state, uint year);
-
-    void yearEnd(uint year, uint numSpace);
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary);
 
+    void yearBegin(uint year, uint numSpace);
+    void yearEnd(uint year, uint numSpace);
+
     void weekBegin(State& state);
 
-    void weekForEachArea(State& state, uint numSpace);
-    void weekEnd(State& state);
-
     void hourBegin(uint hourInTheYear);
-    void hourForEachArea(State& state, uint numSpace);
-    void hourForEachLink(State& state, uint numSpace);
-    void hourForEachThermalCluster(State& state, uint numSpace);
-    void hourForEachRenewableCluster(State& state, uint numSpace);
-
     void hourEnd(State& state, uint hourInTheYear);
 
     void buildSurveyReport(SurveyResults& results,
@@ -180,61 +155,22 @@ public:
                                  int precision,
                                  uint numSpace) const;
 
-    void beforeYearByYearExport(uint year, uint numSpace);
-
     Yuni::uint64 memoryUsage() const;
-
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
 
     template<class I>
     static void provideInformations(I& infos);
 
-    template<class VCardToFindT>
-    inline const double* retrieveHourlyResultsForCurrentYear(uint) const
-    {
-        return nullptr;
-    }
+private:
+    // For each binding constraint, output variable static list associated.
+    std::vector<NextType> pBindConstraints;
+    // The number of counted binding constraints
+    uint pBCcount;
 
-    template<class VCardToFindT>
-    void retrieveResultsForArea(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::Area*)
-    {
-        *result = NULL;
-    }
+}; // class Areas
 
-    template<class VCardToFindT>
-    void retrieveResultsForThermalCluster(typename Storage<VCardToFindT>::ResultsType** result,
-                                          const Data::ThermalCluster*)
-    {
-        *result = NULL;
-    }
-
-    template<class VCardToFindT>
-    void retrieveResultsForLink(typename Storage<VCardToFindT>::ResultsType** result,
-                                const Data::AreaLink* link)
-    {
-        pLinks[link->indexForArea].template retrieveResultsForLink<VCardToFindT>(result, link);
-    }
-
-    template<class SearchVCardT, class O>
-    void computeSpatialAggregateWith(O&, uint)
-    {
-        // Do nothing
-    }
-
-public:
-    //! Area list
-    NextType* pLinks;
-    //! The total number of links
-    uint pLinkCount;
-
-}; // class Links
-
-} // namespace LINK_NAMESPACE
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#include "links.hxx.inc.hxx"
+#include "bindConstraints.hxx"
 
-#endif // __SOLVER_VARIABLE_INC_LINK_H__

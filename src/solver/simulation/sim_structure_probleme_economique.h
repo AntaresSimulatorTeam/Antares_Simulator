@@ -168,6 +168,11 @@ typedef struct
 
 typedef struct
 {
+    double* variablesDuales;
+} RESULTATS_CONTRAINTES_COUPLANTES;
+
+typedef struct
+{
     double* TotalDemandOfMarketPool;
 } DEMAND_MARKET_POOL;
 
@@ -550,6 +555,7 @@ struct PROBLEME_HEBDO
 
     int NombreDeContraintesCouplantes;
     CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
+    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes;
 
     SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */

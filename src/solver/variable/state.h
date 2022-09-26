@@ -137,11 +137,6 @@ public:
     */
     void yearEndResetThermal();
 
-    /*!
-    ** \brief Reset renewable internal data for end of year calculations
-    */
-    void yearEndResetRenewable();
-
 public:
     //! Current year
     unsigned int year;
@@ -220,7 +215,6 @@ public:
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
-    double renewableClusterProductionForYear[Variable::maxHoursInAYear];
 
     //! Dispatchable margin for the current area (valid only from weekForEachArea)
     const double* dispatchableMargin;
