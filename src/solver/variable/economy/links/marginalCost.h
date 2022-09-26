@@ -79,7 +79,7 @@ struct VCardMarginalCost
         //! Number of columns used by the variable (One ResultsType per column)
         columnCount = 1,
         //! The Spatial aggregation
-        spatialAggregate = Category::spatialAggregateAverage,
+        spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
         spatialAggregatePostProcessing = 0,
         //! Intermediate values
