@@ -117,7 +117,7 @@ struct DebugData
         CoutTotal.fill(0);
     }
 
-    void writeTurb(const String& filename, uint y) const
+    void writeTurb(const std::string filename, uint y) const
     {
         std::ostringstream buffer, path;
         path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << filename;
@@ -415,8 +415,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
         if (debugData)
         {
-            String filename;
-            filename << "daily." << area.name << ".txt";
+            const auto filename = std::string("daily.") + area.name.c_str() + ".txt";
             debugData->writeTurb(filename, y);
         }
     }
