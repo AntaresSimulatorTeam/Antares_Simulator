@@ -388,9 +388,6 @@ void Application::execute()
         AntaresSolverEmergencyShutdown(); // no return
     }
 
-    // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveMiscFilesIntoOutput();
-
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
 
@@ -478,6 +475,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     }
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
+
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveMiscFilesIntoOutput();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
