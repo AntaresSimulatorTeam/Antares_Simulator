@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2022 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,38 +24,13 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
-#define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
-#include <string>
-#include <map>
+#ifndef __KIRCHHOFF_CBUILDER_H__
+#define __KIRCHHOFF_CBUILDER_H__
 
-namespace Antares::Data
-{
-/*!
-** \brief Antares Study
-*/
+static void NotEnoughMemory();
 
-class LayerData
-{
-public:
-    LayerData(size_t activeLayer, bool showLayer) :
-        activeLayerID(activeLayer),
-        showAllLayer(showLayer)
-        {}
+bool initResources(int argc, char* argv[]);
+bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath);
 
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
-
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
-};
-
-} // namespace Antares::Data
-
-#endif /* __ANTARES_LIBS_STUDY_LAYERDATA_H__ */
+#endif // __KIRCHHOFF_CBUILDER_H__
