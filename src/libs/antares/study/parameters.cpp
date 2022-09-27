@@ -111,7 +111,7 @@ static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
     CString<24, false> s = text;
     s.trim();
     s.toLower();
-    if (s == "files")
+    if (s == "txt-files")
     {
         out = legacyFilesDirectories;
         return true;
@@ -137,7 +137,7 @@ static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat f
         section->add(name, "zip");
         break;
     default:
-        section->add(name, "files");
+        section->add(name, "txt-files");
     }
 }
 
