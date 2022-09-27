@@ -407,6 +407,6 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     auto study = Data::Study::Current::Get();
     auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle] - 1;
     auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
-    auto writer = study->getWriter();
+    auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 }

@@ -244,60 +244,53 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
         }
 #endif
-
-        if (study.parameters.hydroDebug)
+        auto writer = study.resultWriter;
+        if (study.parameters.hydroDebug && writer)
         {
-            String folder;
-            folder << study.folderOutput << SEP << "debug" << SEP << "solver" << SEP << (1 + y);
-            if (IO::Directory::Create(folder))
+            std::ostringstream buffer, path;
+            path << "debug" << SEP << "solver" << SEP << (1 + y) << SEP << "monthly." << area.name
+                 << ".txt";
+
+            if (area.hydro.reservoirManagement)
+                buffer << "Initial Reservoir Level\t" << lvi << "\n";
+            else
+                buffer << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
+            buffer << "\n";
+
+            auto writeSolutionCost = [&buffer](const std::string& caption, double cost) {
+                auto precision = buffer.precision();
+                buffer << caption << std::fixed << std::setprecision(13) << cost;
+                buffer << std::setprecision(precision) << std::defaultfloat;
+            };
+            writeSolutionCost("Solution cost : ", solutionCost);
+            writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
+            buffer << "\n\n";
+
+            buffer << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
+                   << "\tTurbined"
+                   << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
+            for (uint month = 0; month != 12; ++month)
             {
-                String filename = folder;
-                filename << SEP << "monthly." << area.name << ".txt";
-                IO::File::Stream file;
-                if (file.openRW(filename))
-                {
-                    if (area.hydro.reservoirManagement)
-                        file << "Initial Reservoir Level\t" << lvi << "\n";
-                    else
-                        file << "Initial Reservoir Level : unrelevant (no reservoir mgmt)\n";
-                    file << "\n";
+                uint realmonth = (initReservoirLvlMonth + month) % 12;
 
-                    auto writeSolutionCost = [&file](const std::string& caption, double cost)
-                                             {
-                                               std::stringstream stream;
-                                               stream << caption << std::fixed << std::setprecision(13) << cost;
-                                               std::string cs = stream.str();
-                                               file << cs << "\n";
-                                             };
-                    writeSolutionCost("Solution cost : ", solutionCost);
-                    writeSolutionCost("Solution cost (noised) : ", solutionCostNoised);
-                    file << "\n\n";
+                uint simulationMonth = study.calendar.mapping.months[realmonth];
 
-                    file << '\t' << "\tInflows" << '\t' << "\tTarget Gen."
-                         << "\tTurbined"
-                         << "\tLevels" << '\t' << "\tLvl min" << '\t' << "\tLvl max\n";
-                    for (uint month = 0; month != 12; ++month)
-                    {
-                        uint realmonth = (initReservoirLvlMonth + month) % 12;
+                uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
 
-                        uint simulationMonth = study.calendar.mapping.months[realmonth];
+                auto monthName = study.calendar.text.months[simulationMonth].name;
 
-                        uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
-
-                        auto monthName = study.calendar.text.months[simulationMonth].name;
-
-                        file << monthName[0] << monthName[1] << monthName[2] << '\t';
-                        file << '\t';
-                        file << data.inflows[realmonth] << '\t';
-                        file << data.MTG[realmonth] << '\t';
-                        file << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
-                        file << data.MOL[realmonth] << '\t';
-                        file << minLvl[firstDay] << '\t';
-                        file << maxLvl[firstDay] << '\t';
-                        file << '\n';
-                    }
-                }
+                buffer << monthName[0] << monthName[1] << monthName[2] << '\t';
+                buffer << '\t';
+                buffer << data.inflows[realmonth] << '\t';
+                buffer << data.MTG[realmonth] << '\t';
+                buffer << data.MOG[realmonth] / area.hydro.reservoirCapacity << '\t';
+                buffer << data.MOL[realmonth] << '\t';
+                buffer << minLvl[firstDay] << '\t';
+                buffer << maxLvl[firstDay] << '\t';
+                buffer << '\n';
             }
+            auto content = buffer.str();
+            writer->addJob(path.str(), content);
         }
     });
 }

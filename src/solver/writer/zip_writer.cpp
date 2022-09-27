@@ -57,7 +57,8 @@ void ZipWriteJob<ContentT>::onExecute()
     Benchmarking::Timer timer_wait;
     std::lock_guard<std::mutex> guard(pZipMutex); // Wait
     timer_wait.stop();
-    pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
+    if (pDurationCollector)
+        pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
 
     Benchmarking::Timer timer_write;
 
@@ -74,7 +75,9 @@ void ZipWriteJob<ContentT>::onExecute()
     }
 
     timer_write.stop();
-    pDurationCollector->addDuration("zip_write", timer_write.get_duration());
+
+    if (pDurationCollector)
+        pDurationCollector->addDuration("zip_write", timer_write.get_duration());
 }
 
 // Class ZipWriter

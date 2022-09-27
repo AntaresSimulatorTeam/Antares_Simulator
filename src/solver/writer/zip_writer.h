@@ -75,7 +75,7 @@ private:
     // Absolute path to the archive
     const std::string pArchivePath;
     // Benchmarking. Passed to jobs
-    Benchmarking::IDurationCollector* pDurationCollector;
+    Benchmarking::IDurationCollector* pDurationCollector = nullptr;
 
 private:
     template<class ContentType>
