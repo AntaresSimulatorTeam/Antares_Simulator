@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <antares/resources/resources.h>
+#include <antares/sys/policy.h>
 #include <antares/version.h>
 #include <antares/locale.h>
 #include <antares/utils.h>
@@ -33,13 +35,19 @@
 #include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"
+#include "../../solver/application.h"
 
 using namespace Yuni;
 using namespace Antares;
 
+static void NotEnoughMemory()
+{
+    logs.fatal() << "Not enough memory. aborting.";
+}
+
 int main(int argc, char* argv[])
 {
-    logs.applicationName("kirchhoff-cbuilder");
+    logs.applicationName("k-cbuild");
     if (argc < 3)
     {
         logs.error() << "Not enough arguments, exiting";
@@ -49,6 +57,25 @@ int main(int argc, char* argv[])
 
     std::string studyPath(argv[1]);
     std::string kirchhoffOptionPath(argv[2]);
+
+
+    std::set_new_handler(&NotEnoughMemory);
+
+    if (not memory.initialize())
+        return EXIT_FAILURE;
+
+    // locale
+    InitializeDefaultLocale();
+
+    LocalPolicy::Open();
+    LocalPolicy::CheckRootPrefix(argv[0]);
+
+    Resources::Initialize(argc, argv, true);
+
+    /* Antares::Solver::Application application; */
+    /* application.prepare(argc, argv); */
+
+///// BASE ////////
 
     auto study = std::make_shared<Data::Study>();
     auto areas = std::make_shared<Data::AreaList>(*study);
@@ -60,29 +87,50 @@ int main(int argc, char* argv[])
     study->folderInput = studyPath + "/input";
     study->inputExtension = "txt";
 
-    /* areas->loadFromFolder(options); */
+    areas->loadFromFolder(options);
     logs.info() << "Areas loaded.";
 
-    if (!study->loadFromFolder(studyPath, options))
-    {
-        logs.error() << "Couldn't load study from file, exiting";
-        return 1;
-    }
+    /* if (!study->loadFromFolder(studyPath, options)) */
+    /* { */
+    /*     logs.error() << "Couldn't load study from file, exiting"; */
+    /*     return 1; */
+    /* } */
 
-    logs.info();
-    study->ensureDataAreAllInitialized();
+    /* study->ensureDataAreAllInitialized(); */
 
-    logs.info() << "The study is loaded.";
-    Data::Study::Current::Set(study);
-    JIT::enabled = true;
+    /* logs.info() << "The study is loaded."; */
+    /* Data::Study::Current::Set(study); */
+    /* JIT::enabled = true; */
 
-    CBuilder constraintBuilder(study);
-    constraintBuilder.completeFromStudy();
-    constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath);
+    /* CBuilder constraintBuilder(study); */
+    /* constraintBuilder.completeFromStudy(); */
+    /* constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath); */
 
-    const bool result = constraintBuilder.runConstraintsBuilder();
+    /* const bool result = constraintBuilder.runConstraintsBuilder(); */
 
-    logs.info() << "Result: " << result;
+    /* logs.info() << "Result: " << result; */
+
+
+
+
+
+////// REPLICA APPLICATION ///////
+
+   /* Data::StudyLoadOptions options; */
+    /* options.usedByTheSolver = false; */
+    /* options.loadOnlyNeeded = false; */
+    /* options.studyFolder = studyPath; */
+
+    /* Resources::WriteRootFolderToLogs(); */
+    /* logs.info() << "  :: log filename: " << logs.logfile(); */
+
+    /* auto pStudy = std::make_shared<Antares::Data::Study>(true /1* for the solver *1/); */
+
+    /* Data::Study::Current::Set(pStudy); */
+    /* auto pParameters = &(pStudy->parameters); */
+
+    /* readDataForTheStudy(options); */
+
 
     return 0;
 }
