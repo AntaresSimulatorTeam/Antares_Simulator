@@ -138,6 +138,23 @@ static void ResetButton(Component::Button* button, Data::LinkType value)
     }
 }
 
+const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
+{
+    switch (mps_export_status)
+    {
+    case Data::mpsExportStatus::NO_EXPORT:
+        return "images/16x16/light_orange.png";
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return "images/16x16/light_green.png";
+    default:
+        return "images/16x16/light_orange.png";
+    }
+}
+
 Optimization::Optimization(wxWindow* parent) :
  wxDialog(parent,
           wxID_ANY,
@@ -570,7 +587,7 @@ void Optimization::refresh()
     // Spinning reserve
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
-    pBtnExportMPS->image(Data::mpsExportIcon(study.parameters.include.exportMPS));
+    pBtnExportMPS->image(mpsExportIcon(study.parameters.include.exportMPS));
     pBtnExportMPS->caption(Data::mpsExportStatusToString(study.parameters.include.exportMPS));
     // Split exported MPS
     ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);

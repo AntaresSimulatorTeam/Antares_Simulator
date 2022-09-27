@@ -555,7 +555,6 @@ enum class mpsExportStatus : int
 
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
 mpsExportStatus stringToMPSexportStatus(const AnyString& value);
-const char* mpsExportIcon(const mpsExportStatus& mps_export_status);
 
 } // namespace Data
 } // namespace Antares

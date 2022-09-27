@@ -440,22 +440,5 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
 
-const char* mpsExportIcon(const mpsExportStatus& mps_export_status)
-{
-    switch (mps_export_status)
-    {
-    case mpsExportStatus::NO_EXPORT:
-        return "images/16x16/light_orange.png";
-    case mpsExportStatus::EXPORT_FIRST_OPIM:
-        return "images/16x16/light_green.png";
-    case mpsExportStatus::EXPORT_SECOND_OPIM:
-        return "images/16x16/light_green.png";
-    case mpsExportStatus::EXPORT_BOTH_OPTIMS:
-        return "images/16x16/light_green.png";
-    default:
-        return "images/16x16/light_orange.png";
-    }
-}
-
 } // namespace Data
 } // namespace Antares

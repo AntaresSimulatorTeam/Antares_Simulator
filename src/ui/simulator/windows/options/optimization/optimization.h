@@ -86,6 +86,7 @@ private:
     void onSelectLinkTypeLocal(wxCommandEvent& evt);
     void onSelectLinkTypeAC(wxCommandEvent& evt);
 
+    // Export MPS functions
     void onSelectExportMPS(const Data::mpsExportStatus& mps_export_status);
 
     template<Data::mpsExportStatus MPS_EXPORT_STATUS>
@@ -94,7 +95,7 @@ private:
     template<Data::mpsExportStatus MPS_EXPORT_STATUS>
     void createMPSexportItemIntoMenu(wxMenu& menu);
 
-
+    // Unfeasible behavior problem functions
     void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
@@ -136,6 +137,7 @@ private:
 
 }; // class Optimization
 
+const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status);
 
 template<Data::mpsExportStatus MPS_EXPORT_STATUS>
 void Optimization::onSelectExportMPS(wxCommandEvent&)
