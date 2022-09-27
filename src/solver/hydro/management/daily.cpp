@@ -242,7 +242,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     if (study.parameters.hydroDebug)
     {
-        debugData = std::make_shared<DebugData>(study.getWriter(),
+        debugData = std::make_shared<DebugData>(study.resultWriter,
                                                 data,
                                                 valgen,
                                                 srcinflows,

@@ -244,7 +244,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
             assert(!Math::Infinite(data.MOL[realmonth]) && "infinite value detected for MOL");
         }
 #endif
-        auto writer = study.getWriter();
+        auto writer = study.resultWriter;
         if (study.parameters.hydroDebug && writer)
         {
             std::ostringstream buffer, path;
