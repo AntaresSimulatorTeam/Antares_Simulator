@@ -482,7 +482,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<double>(area->hydro.interDailyBreakdown) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
