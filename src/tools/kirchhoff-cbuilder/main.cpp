@@ -35,7 +35,6 @@
 #include <string>
 
 #include "../../solver/constraints-builder/cbuilder.h"
-#include "../../solver/application.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -58,13 +57,10 @@ int main(int argc, char* argv[])
     std::string studyPath(argv[1]);
     std::string kirchhoffOptionPath(argv[2]);
 
-
     std::set_new_handler(&NotEnoughMemory);
-
     if (not memory.initialize())
         return EXIT_FAILURE;
 
-    // locale
     InitializeDefaultLocale();
 
     LocalPolicy::Open();
@@ -72,35 +68,48 @@ int main(int argc, char* argv[])
 
     Resources::Initialize(argc, argv, true);
 
-    /* Antares::Solver::Application application; */
-    /* application.prepare(argc, argv); */
-
-///// BASE ////////
-
     auto study = std::make_shared<Data::Study>();
-    auto areas = std::make_shared<Data::AreaList>(*study);
     study->header.version = 830;
+    study->folder = studyPath;
+    study->folderInput = studyPath + "/input";
+    study->inputExtension = "txt";
 
     Data::StudyLoadOptions options;
     options.loadOnlyNeeded = false;
 
-    study->folderInput = studyPath + "/input";
-    study->inputExtension = "txt";
-
-    areas->loadFromFolder(options);
+    auto areas = std::make_shared<Data::AreaList>(*study);
+    if(!areas->loadFromFolder(options))
+    {
+        logs.error() << "Areas loading failed";
+        return 1;
+    }
     logs.info() << "Areas loaded.";
+
+
+    study->loadLayers(studyPath + "layers/layers.ini");
+    logs.info() << "active layer ID: " << study->activeLayerID;
+
+
+    if (!study->bindingConstraints.loadFromFolder(*study,
+        options, studyPath + "input/bindingconstraints/"))
+    {
+        logs.error() << "Binding constraints loading failed";
+        return 1;
+    }
+    logs.info() << "Binding constraints loaded.";
+
+
+    Data::Study::Current::Set(study);
 
     /* if (!study->loadFromFolder(studyPath, options)) */
     /* { */
     /*     logs.error() << "Couldn't load study from file, exiting"; */
     /*     return 1; */
     /* } */
-
     /* study->ensureDataAreAllInitialized(); */
 
-    /* logs.info() << "The study is loaded."; */
-    /* Data::Study::Current::Set(study); */
-    /* JIT::enabled = true; */
+    logs.info() << "The study is loaded.";
+    JIT::enabled = true;
 
     /* CBuilder constraintBuilder(study); */
     /* constraintBuilder.completeFromStudy(); */
@@ -109,8 +118,6 @@ int main(int argc, char* argv[])
     /* const bool result = constraintBuilder.runConstraintsBuilder(); */
 
     /* logs.info() << "Result: " << result; */
-
-
 
 
 

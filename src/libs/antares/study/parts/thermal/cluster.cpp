@@ -611,7 +611,6 @@ bool Data::ThermalCluster::integrityCheck()
         ret = MatrixTestForPositiveValues(buffer.c_str(), &modulation) and ret;
     }
 
-    logs.info() << "cluster integrity OK";
     // la valeur minStablePower should not be modified
     /*
     if (minStablePower > nominalCapacity)
