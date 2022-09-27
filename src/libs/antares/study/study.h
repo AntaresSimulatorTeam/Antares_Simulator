@@ -31,6 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/noncopyable.h>
+#include <yuni/job/queue/service.h>
+
+#include <i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"
@@ -494,19 +497,6 @@ public:
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
 
-    //! \name Simulation output Files creation
-    //@{
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    std::string createFileIntoOutputWithExtension(const YString& prefix,
-                                                  const YString& extension,
-                                                  uint numSpace,
-                                                  int n = 0) const;
-
     //! \name
     //@{
     /*!
@@ -584,8 +574,7 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
-    void setWriter(Solver::IResultWriter::Ptr writer);
-    Solver::IResultWriter::Ptr getWriter() const;
+    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
 
     //! Header (general information about the study)
     StudyHeader header;
@@ -743,6 +732,12 @@ public:
     mutable YString bufferLoadingTS;
     //@}
 
+    //! The queue service that runs every set of parallel years
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+
+    //! Result writer, required to write residual files (comments, about-the-study, etc.)
+    Solver::IResultWriter::Ptr resultWriter = nullptr;
+
 public:
     //! \name TS Generators
     //@{
@@ -800,8 +795,6 @@ private:
     //! Load all layers
     bool saveLayers(const AnyString& filename);
     void loadLayers(const AnyString& filename);
-    //! Result writer, required to write residual files (comments, about-the-study, etc.)
-    Solver::IResultWriter::Ptr pResultWriter = nullptr;
     Yuni::sint64 pStartTime;
 }; // class Study
 

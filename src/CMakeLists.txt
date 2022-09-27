@@ -3,14 +3,14 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  0)
+set(ANTARES_VERSION_REVISION  1)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
 
 set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
+set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
@@ -32,6 +32,8 @@ include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 17)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -188,8 +190,8 @@ message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
-option(BUILD_MINIZIP_NG "Build minizip-ng" ON)
-message(STATUS "Build minizip-ng ${BUILD_MINIZIP_NG}")
+option(BUILD_MINIZIP "Build minizip" OFF)
+message(STATUS "Build minizip ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -277,19 +279,27 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_MakeAvailable(ortools)
 endif()
 
-find_package(minizip QUIET)
-if(NOT minizip_FOUND OR BUILD_MINIZIP_NG)
-  FetchContent_Declare(minizip_ng
-    GIT_REPOSITORY "https://github.com/zlib-ng/minizip-ng"
-    GIT_TAG "3.0.6")
+find_package(minizip)
 
-  set(MZ_ZSTD "OFF" CACHE INTERNAL "")
-  set(MZ_LZMA "OFF" CACHE INTERNAL "")
-  set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
-  set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
-  set(MZ_WZAES "OFF" CACHE INTERNAL "")
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    # Repository + tag
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "3.0.6")
+    # CMake flags
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+    set(MZ_CODE_COVERAGE "ON" CACHE INTERNAL "")
 
-  FetchContent_MakeAvailable(minizip_ng)
+    FetchContent_Declare(minizip
+    GIT_REPOSITORY ${MZ_REPOSITORY}
+    GIT_TAG ${MZ_TAG})
+
+    FetchContent_MakeAvailable(minizip)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt

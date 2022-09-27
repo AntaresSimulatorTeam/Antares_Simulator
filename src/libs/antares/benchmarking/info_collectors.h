@@ -41,6 +41,9 @@ private:
     void maxNbYearsInParallelToFileContent(FileContent& file_content);
     void solverVersionToFileContent(FileContent& file_content);
 
+    void ORToolsUsed(FileContent& file_content);
+    void ORToolsSolver(FileContent& file_content);
+
     // Member data
     const Antares::Data::Study& study_;
 };
@@ -82,7 +85,7 @@ public:
     void addDuration(const std::string& name, int64_t duration) override;
 
 private:
-    map<string, vector<int64_t>> duration_items_;
+    std::map<std::string, std::vector<int64_t>> duration_items_;
 
     // Durations can be added in a context of multi-threading, so we need to protect
     // these additions from thread concurrency

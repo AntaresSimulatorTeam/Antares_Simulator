@@ -39,11 +39,14 @@
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
 #include <antares/memory/memory.h>
+#include <antares/exception/InitializationError.hpp>
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+
+
 
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
@@ -263,11 +266,9 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
- pAnnualCostsStatistics(study),
  pDurationCollector(duration_collector),
- qs(std::make_shared<Yuni::Job::QueueService>()),
- pResultWriter(
-   resultWriterFactory(study.parameters.resultFormat, study.folderOutput, qs, duration_collector))
+ pQueueService(study.pQueueService),
+ pResultWriter(study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -282,7 +283,15 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
 
-    study.setWriter(pResultWriter);
+    if (!pQueueService)
+    {
+        throw Solver::Initialization::Error::NoQueueService();
+    }
+
+    if (!pResultWriter)
+    {
+        throw Solver::Initialization::Error::NoResultWriter();
+    }
 }
 
 template<class Impl>
@@ -460,7 +469,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        if (IO::Directory::Create(newPath))
+        if (IO::Directory::Create(newPath) && pResultWriter)
             ImplementationType::variables.exportSurveyResults(
               synthesis, newPath, numSpace, pResultWriter);
         else
@@ -1043,7 +1052,6 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
-
     using namespace Solver::TSGenerator;
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
@@ -1549,9 +1557,9 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter->needsTheJobQueue())
+        if (pResultWriter && pResultWriter->needsTheJobQueue())
             numThreads++;
-        qs->maximumThreadCount(numThreads);
+        pQueueService->maximumThreadCount(numThreads);
     }
 
     // Loop over sets of parallel years
@@ -1613,31 +1621,33 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // If the year has not to be rerun, we skip the computation of the year. 
-            // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
-            // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
+            // If the year has not to be rerun, we skip the computation of the year.
+            // Note that, when we enter for the first time in the "for" loop, all years of the set
+            // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
+            // continue;
 
-            qs->add(new yearJob<ImplementationType>(this,
-                                                    y,
-                                                    set_it->yearFailed,
-                                                    set_it->isFirstPerformedYearOfASet,
-                                                    pFirstSetParallelWithAPerformedYearWasRun,
-                                                    numSpace,
-                                                    randomForParallelYears,
-                                                    performCalculations,
-                                                    study,
-                                                    state,
-                                                    pYearByYear,
-                                                    pDurationCollector));
+            pQueueService->add(
+              new yearJob<ImplementationType>(this,
+                                              y,
+                                              set_it->yearFailed,
+                                              set_it->isFirstPerformedYearOfASet,
+                                              pFirstSetParallelWithAPerformedYearWasRun,
+                                              numSpace,
+                                              randomForParallelYears,
+                                              performCalculations,
+                                              study,
+                                              state,
+                                              pYearByYear,
+                                              pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);
 
-        qs->start();
+        pQueueService->start();
 
-        qs->wait(Yuni::qseIdle);
-        qs->stop();
+        pQueueService->wait(Yuni::qseIdle);
+        pQueueService->stop();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
@@ -1680,10 +1690,10 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft())
+    if (not study.parameters.adequacyDraft() && pResultWriter)
     {
         pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput();
+        pAnnualCostsStatistics.writeToOutput(pResultWriter);
     }
 }
 

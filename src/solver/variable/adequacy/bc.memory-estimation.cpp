@@ -25,41 +25,9 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "study.h"
-#include "../files/files.h"
-#include "../logs.h"
+#include <antares/study/memory-usage.h>
+#include "all.h"
 
-using namespace Yuni;
+using bc_next_type = Solver::Variable::Adequacy::VariablesPerBindingConstraints;
 
-#define SEP IO::Separator
-
-namespace Antares
-{
-namespace Data
-{
-std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
-                                                     const YString& extension,
-                                                     uint numSpace,
-                                                     int n) const
-{
-    // Empty log entry
-    logs.info();
-
-    String outputFile;
-    outputFile << prefix << "-"; // problem ou criterion
-    outputFile << (runtime->currentYear[numSpace] + 1) << "-"
-               << (runtime->weekInTheYear[numSpace] + 1);
-
-    if (n != 0)
-    {
-        outputFile << "-" << n;
-    }
-
-    outputFile << "." << extension;
-
-    logs.info() << "Solver output file: `" << outputFile << "'";
-    return outputFile.c_str();
-}
-
-} // namespace Data
-} // namespace Antares
+#include "../bc.memory-estimation.inc.hxx"

@@ -10,6 +10,8 @@
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 
+#include <antares/exception/InitializationError.hpp>
+
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
@@ -214,7 +216,7 @@ void Application::prepare(int argc, char* argv[])
 
     // Parse the command line arguments
     if (!parser->operator()(argc, argv))
-        throw Error::CommandLineArguments(parser->errors());
+        throw Antares::Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
@@ -360,7 +362,7 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-
+    try {
     // Run the simulation
     switch (pStudy->runtime->mode)
     {
@@ -375,6 +377,15 @@ void Application::execute()
         break;
     default:
         break;
+    }
+    }
+    catch (Solver::Initialization::Error::NoResultWriter e) {
+        logs.error() << "No result writer";
+        AntaresSolverEmergencyShutdown(); // no return
+    }
+    catch (Solver::Initialization::Error::NoQueueService e) {
+        logs.error() << "No queue service";
+        AntaresSolverEmergencyShutdown(); // no return
     }
 
     // Save about-the-study files (comments, notes, etc.)
@@ -465,6 +476,8 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+    // Initialize the result writer
+    study.prepareWriter(&pDurationCollector);
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
@@ -559,7 +572,8 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    auto writer = pStudy->getWriter();
+    auto writer = pStudy->resultWriter;
+    // If no writer is available, we can't write
     if (!writer)
         return;
 

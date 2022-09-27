@@ -1,6 +1,6 @@
 {
   "name": "antares-simulator",
-  "version-string": "8.3.0",
+  "version-string": "8.3.1",
   "dependencies": [
     "wxwidgets",
     "boost-test"

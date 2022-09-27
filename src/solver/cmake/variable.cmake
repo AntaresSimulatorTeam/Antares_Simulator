@@ -16,6 +16,8 @@ set(SRC_VARIABLE
 		variable/area.inc.hxx
 		variable/setofareas.h
 		variable/setofareas.hxx
+		variable/bindConstraints.h
+		variable/bindConstraints.hxx
 		variable/constants.h
 		variable/categories.h
 		variable/surveyresults.h
@@ -97,6 +99,7 @@ set(SRC_VARIABLE_ADEQUACY
 		variable/adequacy/all.h
 		variable/adequacy/area.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/adequacy/links.h
 		variable/adequacy/links.cpp
 		variable/adequacy/spilledEnergy.h
@@ -111,6 +114,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links.cpp
 		variable/economy/area.cpp
 		variable/economy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
 		variable/economy/co2.h
@@ -153,6 +157,9 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links/congestionFeeAbs.h
 		variable/economy/links/marginalCost.h
 		variable/economy/links/congestionProbability.h
+		
+		# Binding constraints
+		variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
 		)
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
 
@@ -197,6 +204,8 @@ add_library(libantares-solver-variable-info
 		variable/economy/area.memory-estimation.cpp
 		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/surveyresults.h
 		variable/surveyresults/surveyresults.h
 		variable/surveyresults/data.h
@@ -213,6 +222,8 @@ if(BUILD_SWAP)
             variable/economy/area.memory-estimation.cpp
             variable/adequacy-draft/area.memory-estimation.cpp
             variable/adequacy/area.memory-estimation.cpp
+            variable/economy/bc.memory-estimation.cpp
+            variable/adequacy/bc.memory-estimation.cpp
             variable/surveyresults.h
             variable/surveyresults/surveyresults.h
             variable/surveyresults/data.h

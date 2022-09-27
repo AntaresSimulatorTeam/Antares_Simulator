@@ -390,7 +390,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
-    Yuni::Clob Flot;
+    Yuni::Clob buffer;
     double CoutOptimalDeLaSolution;
     PROBLEME_HEBDO* Probleme;
 
@@ -402,10 +402,11 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
-    Flot.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
     auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    auto writer = study->getWriter();
-    writer->addJob(filename, Flot);
+    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle] - 1;
+    auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
+    auto writer = study->resultWriter;
+    writer->addJob(filename, buffer);
 }

@@ -33,6 +33,8 @@
 
 #include "opt_export_structure.h"
 
+#include "../utils/mps_utils.h"
+
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
@@ -77,8 +79,8 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                               ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
                               ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
         }
-        auto filename = study.createFileIntoOutputWithExtension("interco", "txt", numSpace);
-        auto writer = study.getWriter();
+        auto filename = getFilenameWithExtension("interco", "txt", numSpace);
+        auto writer = study.resultWriter;
         writer->addJob(filename, Flot);
     }
 }
@@ -90,13 +92,13 @@ void OPT_ExportAreaName(const Antares::Data::Study& study,
     // Area name are exported only once for first year
     if (ProblemeHebdo->firstWeekOfSimulation)
     {
-        auto filename = study.createFileIntoOutputWithExtension("area", "txt", numSpace);
+        auto filename = getFilenameWithExtension("area", "txt", numSpace);
         Yuni::Clob Flot;
         for (uint i = 0; i < study.areas.size(); ++i)
         {
             Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
         }
-        auto writer = study.getWriter();
+        auto writer = study.resultWriter;
         writer->addJob(filename, Flot);
     }
 }
@@ -144,11 +146,11 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
                          uint numSpace)
 {
     Yuni::Clob Flot;
-    auto filename = study.createFileIntoOutputWithExtension(fileName, fileExtension, numSpace);
+    auto filename = getFilenameWithExtension(fileName, fileExtension, numSpace);
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());
     }
-    auto writer = study.getWriter();
+    auto writer = study.resultWriter;
     writer->addJob(filename, Flot);
 }
