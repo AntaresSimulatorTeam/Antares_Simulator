@@ -594,7 +594,7 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
-    Simulation simulation;
+    SimulationMetadata simulationMetadata;
 
     // Used in GUI and solver
     // ----------------------

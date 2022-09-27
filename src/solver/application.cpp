@@ -439,7 +439,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationMetadata.name = pSettings.simulationName;
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -481,7 +481,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationMetadata.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();

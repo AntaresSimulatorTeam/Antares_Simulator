@@ -42,11 +42,11 @@ namespace Antares
 {
 namespace Data
 {
-Simulation::Simulation(Study& study) : pStudy(study)
+SimulationMetadata::SimulationMetadata(Study& study) : pStudy(study)
 {
 }
 
-bool Simulation::saveToFolder(const AnyString& folder) const
+bool SimulationMetadata::saveToFolder(const AnyString& folder) const
 {
     String b;
     b.reserve(folder.size() + 20);
@@ -68,7 +68,7 @@ bool Simulation::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-void Simulation::saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const
+void SimulationMetadata::saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const
 {
     String b = folder;
     b << SEP << "comments.txt";
@@ -76,7 +76,7 @@ void Simulation::saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyStr
     writer->addJob(b.c_str(), comments_copy);
 }
 
-bool Simulation::loadFromFolder(const StudyLoadOptions& options)
+bool SimulationMetadata::loadFromFolder(const StudyLoadOptions& options)
 {
     if (!options.loadOnlyNeeded)
     {
@@ -87,7 +87,7 @@ bool Simulation::loadFromFolder(const StudyLoadOptions& options)
     return true;
 }
 
-Yuni::uint64 Simulation::memoryUsage() const
+Yuni::uint64 SimulationMetadata::memoryUsage() const
 {
     return name.capacity() + comments.capacity();
 }

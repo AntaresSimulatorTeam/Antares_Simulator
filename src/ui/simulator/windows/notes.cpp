@@ -380,7 +380,7 @@ void Notes::saveToStudy()
     // Saving the content into an XML file...
     pRichEdit->SaveFile(wxStringFromUTF8(pTempFile), wxRICHTEXT_TYPE_XML);
     // ... and reloading it
-    IO::File::LoadFromFile(study->simulation.comments, pTempFile);
+    IO::File::LoadFromFile(study->simulationMetadata.comments, pTempFile);
 }
 
 void Notes::connectToNotification()
@@ -415,14 +415,14 @@ void Notes::loadFromStudy()
     if (not pLocked)
     {
         pLocked = true;
-        if (study.simulation.comments.empty())
+        if (study.simulationMetadata.comments.empty())
         {
             pRichEdit->Clear();
         }
         else
         {
             // <?xml ?
-            if (study.simulation.comments.startsWith("<?xml "))
+            if (study.simulationMetadata.comments.startsWith("<?xml "))
             {
                 // XML Version
                 // It seems that the file is a XML one. We have to use the
@@ -431,7 +431,7 @@ void Notes::loadFromStudy()
                 // temporary file and to load it...
 
                 // logs.info() << " notes: exporting to " << s;
-                if (IO::File::SetContent(pTempFile, study.simulation.comments))
+                if (IO::File::SetContent(pTempFile, study.simulationMetadata.comments))
                 {
                     if (!pRichEdit->LoadFile(wxStringFromUTF8(pTempFile), wxRICHTEXT_TYPE_XML))
                         logs.error() << "Impossible to load the comments file";
@@ -445,7 +445,7 @@ void Notes::loadFromStudy()
             else
             {
                 // Txt version
-                pRichEdit->SetValue(wxStringFromUTF8(study.simulation.comments));
+                pRichEdit->SetValue(wxStringFromUTF8(study.simulationMetadata.comments));
             }
         }
         pLocked = false;
