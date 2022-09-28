@@ -36,10 +36,11 @@ public:
 class fullMPSwriter final : public I_MPS_writer
 {
 public:
-	fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint thread_number);
+	fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, int currentOptimNumber, uint thread_number);
 	void runIfNeeded();
 private:
 	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
+	int current_optim_number_;
 	uint thread_number_;
 };
 
@@ -50,21 +51,23 @@ public:
 	void runIfNeeded();
 private:
 	MPSolver* solver_ = nullptr;
-	int currentOptimNumber_;
+	int current_optim_number_;
 	uint thread_number_;
 };
 
 class splitMPSwriter : public I_MPS_writer
 {
 public:
-	splitMPSwriter(	PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
-					uint thread_nb, 
+	splitMPSwriter(	PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+					int currentOptimNumber,
+					uint thread_nb,
 					bool simu_1st_week);
 
 	void runIfNeeded();
 private:
-	uint thread_nb_;
 	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
+	int current_optim_number_;
+	uint thread_nb_;
 	bool simu_1st_week_;
 };
 
@@ -104,7 +107,7 @@ private:
 	MPSolver* solver_ = nullptr;
 	uint thread_number_;
 	int current_optim_number_;
-	bool export_mps_;
+	Data::mpsExportStatus export_mps_;
 	bool export_mps_on_error_;
 	bool split_mps_;
 	bool is_first_week_of_year_;

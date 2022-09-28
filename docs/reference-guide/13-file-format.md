@@ -2,14 +2,27 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
 ## v8.4.0
-### Input
+### Writing MPS files
+MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
+Now user can choose to print :
+- no MPS file,
+- MPS files related to the first opimization,
+- MPS files related to the second opimization,
+- MPS files related to the both opimizations.
+
+In the **generaldata.ini** input file, corresponding values for **include-exportmps** are : **none**, **optim-1**, **optim-2**, **both-optims**.
+
+Compatibility with existing values is ensured (**true** = **both-optims**, **false**=**none**)
+
+### Marginal price of a binding constraint
+**Input** :
 In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
 They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 * `filter-year-by-year`. Default value = hourly, daily, weekly, monthly, annual
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
 
-### Output
+**Output** :
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
