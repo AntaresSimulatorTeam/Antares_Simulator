@@ -24,9 +24,38 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
+#define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
-#include <antares/study/memory-usage.h>
-#include "all.h"
+#include <string>
+#include <map>
 
-using NEXTTYPE = Solver::Variable::Adequacy::VariablesPerArea;
-#include "../area.memory-estimation.inc.hxx"
+namespace Antares::Data
+{
+/*!
+** \brief Antares Study
+*/
+
+class LayerData
+{
+public:
+    LayerData(size_t activeLayer, bool showLayer) :
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
+        {}
+
+    //! \name Layers
+    //@{
+    //! All available layers
+    std::map<size_t, std::string> layers;
+    //@}
+    size_t activeLayerID;
+    bool showAllLayer;
+protected:
+    bool saveLayers(const AnyString& filename);
+    void loadLayers(const AnyString& filename);
+};
+
+} // namespace Antares::Data
+
+#endif /* __ANTARES_LIBS_STUDY_LAYERDATA_H__ */

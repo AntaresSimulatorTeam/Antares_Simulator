@@ -27,14 +27,10 @@
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <algorithm>
-#include <iostream>
+#include <tuple>   // std::tuple
+#include <list>    // std::list
+#include <sstream> // std::stringstream
 
-#include <sstream>
-
-#ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#endif
 #include "../constants.h"
 #include "parameters.h"
 #include "../inifile.h"
@@ -286,7 +282,6 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristic;
@@ -738,17 +733,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -1000,6 +984,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1119,7 +1107,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1173,35 +1160,23 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
 void Parameters::fixRefreshIntervals()
 {
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    using T = std::
+      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
+                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
+                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
+                                            {refreshIntervalWind, timeSeriesWind, "wind"},
+                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
+
+    for (const auto& [refreshInterval, ts, label] : timeSeriesToCheck)
     {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
+        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
+        {
+            refreshInterval = 1;
+            logs.error() << "The " << label
+                         << " time-series must be refreshed but the interval is equal to 0. "
+                            "Auto-Reset to a safe value (1).";
+        }
     }
 }
 
@@ -1783,7 +1758,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));

@@ -224,36 +224,6 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
     return "";
 }
 
-SheddingStrategy StringToSheddingStrategy(const AnyString& text)
-{
-    if (!text)
-        return shsUnknown;
-
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
-    if (s == "share margins")
-        return shsShareMargins;
-    if (s == "share sheddings")
-        return shsShareSheddings;
-
-    return shsUnknown;
-}
-
-const char* SheddingStrategyToCString(SheddingStrategy strategy)
-{
-    switch (strategy)
-    {
-    case shsShareMargins:
-        return "share margins";
-    case shsShareSheddings:
-        return "share sheddings";
-    case shsUnknown:
-        return "";
-    }
-    return "";
-}
-
 SheddingPolicy StringToSheddingPolicy(const AnyString& text)
 {
     if (!text)

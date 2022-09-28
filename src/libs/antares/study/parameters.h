@@ -434,8 +434,6 @@ public:
     // Shedding
     struct
     {
-        //! Shedding strategy
-        SheddingStrategy strategy;
         //! Shedding policy
         SheddingPolicy policy;
     } shedding;
