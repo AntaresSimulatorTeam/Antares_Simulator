@@ -1,3 +1,4 @@
+#include <memory>
 #include <antares/logs.h>
 
 #include "zip_writer.h"
@@ -31,24 +32,41 @@ ZipWriteJob<ContentT>::ZipWriteJob(ZipWriter& writer,
 {
 }
 
+static std::unique_ptr<mz_zip_file> createInfo(const std::string& entryPath)
+{
+    auto info = std::make_unique<mz_zip_file>();
+    memset(info.get(), 0, sizeof(mz_zip_file));
+    info->filename = entryPath.c_str();
+    info->zip64 = MZ_ZIP64_FORCE;
+    info->compression_method = MZ_COMPRESS_METHOD_DEFLATE;
+    info->modified_date = info->creation_date = std::time(0);
+    return info;
+}
+
 template<class ContentT>
 void ZipWriteJob<ContentT>::onExecute()
 {
-    mz_zip_file file_info;
+    auto file_info = createInfo(pEntryPath);
 
     Benchmarking::Timer timer_wait;
     std::lock_guard<std::mutex> guard(pZipMutex); // Wait
     timer_wait.stop();
     pDurationCollector->addDuration("zip_wait", timer_wait.get_duration());
 
-    memset(&file_info, 0, sizeof(file_info));
-    file_info.filename = pEntryPath.c_str();
-    file_info.zip64 = MZ_ZIP64_FORCE;
-    file_info.compression_method = MZ_COMPRESS_METHOD_DEFLATE;
-    file_info.modified_date = file_info.creation_date = time(0);
     Benchmarking::Timer timer_write;
-    mz_zip_writer_entry_open(pZipHandle, &file_info);
-    mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
+
+    if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
+    {
+        logs.error() << "Error opening entry " << pEntryPath << " (" << ret << ")";
+    }
+
+    int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
+    if (static_cast<unsigned int>(bw) != pContent.size())
+    {
+        logs.error() << "Error writing entry " << pEntryPath << "(written = " << bw
+                     << ", size = " << pContent.size() << ")";
+    }
+
     timer_write.stop();
     pDurationCollector->addDuration("zip_write", timer_write.get_duration());
 }
@@ -62,14 +80,20 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
  pDurationCollector(duration_collector)
 {
     mz_zip_writer_create(&pZipHandle);
-    mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0);
+    if (int32_t ret = mz_zip_writer_open_file(pZipHandle, pArchivePath.c_str(), 0, 0); ret != MZ_OK)
+    {
+        logs.error() << "Error opening zip file " << pArchivePath << " (" << ret << ")";
+    }
     // TODO : make level of compression configurable
     mz_zip_writer_set_compress_level(pZipHandle, MZ_COMPRESS_LEVEL_FAST);
 }
 
 ZipWriter::~ZipWriter()
 {
-    mz_zip_writer_close(pZipHandle);
+    if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK)
+    {
+        logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
+    }
     mz_zip_writer_delete(&pZipHandle);
 }
 

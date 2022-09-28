@@ -5,15 +5,12 @@ on:
     branches:
       - main
       - develop
-      - features/*
-      - feature/*
-      - fix/*
       - release/*
+  pull_request:
 
 jobs:
   sonarcloud:
     name: SonarCloud
-
     runs-on: ${{ matrix.os }}
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
@@ -21,7 +18,7 @@ jobs:
         os: [ubuntu-20.04]
 
     env:
-      SONAR_SCANNER_VERSION: 4.6.1.2450 # Find the latest version in the "Linux" link on this page:
+      SONAR_SCANNER_VERSION: 4.7.0.2747 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
 
@@ -32,12 +29,12 @@ jobs:
           fetch-depth: 0
 
       - name: Cache SonarCloud packages and analysis
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: sonarcloud-cache
         with:
           path: ~/.sonar
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          key: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
+          restore-keys: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
 
       - name: Download and setup sonar-scanner
         shell: bash
