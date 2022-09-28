@@ -521,11 +521,17 @@ mpsWriterFactory::mpsWriterFactory(
 
 bool mpsWriterFactory::doWeExportMPS()
 {
-    if (export_mps_ == Data::mpsExportStatus::EXPORT_BOTH_OPTIMS)
+    switch (export_mps_)
+    {
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return true;
-    if (static_cast<int>(export_mps_) == current_optim_number_)
-        return true;
-    return false;
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return current_optim_number_ == PREMIERE_OPTIMISATION;
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return current_optim_number_ == DEUXIEME_OPTIMISATION;
+    default:
+        return false;
+    }
 }
 
 std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
