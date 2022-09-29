@@ -282,6 +282,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
               = (pbPalier.PmaxDUnGroupeDuPalierThermique[l] < cluster.minStablePower)
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[l]
                   : cluster.minStablePower;
+
+            pbPalier.TailleDeLaBandeDeReservePrimaire[l] = cluster.primaryReserve;
         }
 
         NombrePaliers += area.thermal.list.size();

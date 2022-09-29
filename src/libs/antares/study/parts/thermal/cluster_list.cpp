@@ -533,6 +533,11 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             return p->value.to<double>(cluster.marketBidCost);
         break;
     }
+    case 'p':
+    {
+        if (p->key == "primary-reserve")
+            return p->value.to<double>(cluster.primaryReserve);
+    }
     case 's':
     {
         if (p->key == "spread-cost")

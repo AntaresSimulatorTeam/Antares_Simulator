@@ -265,6 +265,9 @@ public:
     //! Spinning (%)
     double spinning;
 
+    //! En pourcentage de Pmax-Pmin
+    double primaryReserve;
+
     //! CO2  / MWh
     double co2;
 

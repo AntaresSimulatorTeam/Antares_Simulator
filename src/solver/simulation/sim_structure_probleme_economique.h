@@ -268,6 +268,9 @@ typedef struct
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
+
+    double* TailleDeLaBandeDeReservePrimaire; 
+
 } PALIERS_THERMIQUES;
 
 typedef struct

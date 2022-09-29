@@ -448,6 +448,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique
           = (int*)MemAlloc(nbPaliers * sizeof(int));
 
+        problem.PaliersThermiquesDuPays[k]->TailleDeLaBandeDeReservePrimaire
+          = (double*)MemAlloc(nbPaliers * sizeof(double));
+
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise
           = (double*)MemAllocMemset(7 * sizeof(double));
         problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour
@@ -804,6 +807,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(
           problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique);
         MemFree(problem.PaliersThermiquesDuPays[k]->DureeMinimaleDArretDUnGroupeDuPalierThermique);
+
+        MemFree(problem.PaliersThermiquesDuPays[k]->TailleDeLaBandeDeReservePrimaire);
 
         MemFree(problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParIntervalleOptimise);
         MemFree(problem.CaracteristiquesHydrauliques[k]->CntEnergieH2OParJour);
