@@ -567,6 +567,75 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
+    //Toute unité fournissant de la réserve doit être démarrée
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    {
+        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+
+        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        {
+            Palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+
+            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            {
+                CorrespondanceCntNativesCntOptim
+                  = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+                CorrespondanceCntNativesCntOptim
+                  ->NumeroDeContrainteDesNombresDeGroupesEnReserve[Palier]
+                  = -1;
+
+                CorrespondanceVarNativesVarOptim
+                  = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+
+                NombreDeTermes = 0;
+                if (Simulation == NON_ANTARES)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = 1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                else
+                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                
+                if (Simulation == NON_ANTARES)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = -1.0;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                else
+                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+
+                if (Simulation == NON_ANTARES)
+                {
+                    if (NombreDeTermes > 1)
+                    {
+                        CorrespondanceCntNativesCntOptim
+                          ->NumeroDeContrainteDesNombresDeGroupesEnReserve[Palier]
+                          = ProblemeAResoudre->NombreDeContraintes;
+
+                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+                    }
+                }
+                else
+                    ProblemeAResoudre->NombreDeContraintes += 1;
+
+            }
+        }
+    }
+
     if (Simulation == OUI_ANTARES)
         ProblemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
           = NbTermesContraintesPourLesCoutsDeDemarrage;

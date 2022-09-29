@@ -79,6 +79,8 @@ typedef struct
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
+    int* NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve;
+
 } CORRESPONDANCES_DES_VARIABLES;
 
 typedef struct
@@ -97,6 +99,9 @@ typedef struct
     int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     int* NumeroDeContrainteDesNiveauxPays;
+
+    int* NumeroDeContrainteDesReservesPays;
+    int* NumeroDeContrainteDesNombresDeGroupesEnReserve;
 
 } CORRESPONDANCES_DES_CONTRAINTES;
 

@@ -268,6 +268,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
+        problem.CorrespondanceVarNativesVarOptim[k]
+          ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve
+          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
+
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
@@ -697,6 +701,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                   ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
+
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]
+                  ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve);
 
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);

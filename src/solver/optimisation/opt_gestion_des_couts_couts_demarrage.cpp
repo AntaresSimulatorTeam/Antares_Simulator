@@ -101,6 +101,11 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
                     CoutLineaire[Var]
                       = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
                 }
+
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                    CoutLineaire[Var] = 0;
             }
         }
     }
