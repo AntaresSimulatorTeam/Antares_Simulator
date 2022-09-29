@@ -5,8 +5,6 @@
 
 #include "mps_utils.h"
 
-using namespace Antares;
-using namespace Antares::Data;
 
 #ifdef _MSC_VER
 #define SNPRINTF sprintf_s
@@ -129,7 +127,7 @@ static void printRHS(FILE* Flot, int NombreDeContraintes, const double* SecondMe
     }
 }
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
 {
     FILE* Flot;
     int Cnt;
@@ -202,7 +200,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     free(Cder);
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace);
+    Flot = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", numSpace, currentOptimNumber);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
@@ -253,7 +251,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     fclose(Flot);
 }
 
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
 {
     FILE* Flot;
     int Var;
@@ -261,7 +259,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace);
+    Flot = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", numSpace, currentOptimNumber);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
@@ -287,7 +285,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     fclose(Flot);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumber, uint numSpace)
 {
     FILE* Flot;
     int Cnt;
@@ -388,7 +386,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     free(Cder);
 
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace);
+    Flot = study->createFileIntoOutputWithExtension("problem", "mps", numSpace, currentOptimNumber);
 
     if (!Flot)
         AntaresSolverEmergencyShutdown(2);
@@ -440,4 +438,134 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace)
     free(Csui);
 
     fclose(Flot);
+}
+
+
+
+// --------------------
+// Full mps writing
+// --------------------
+fullMPSwriter::fullMPSwriter(
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
+        int currentOptimNumber, 
+        uint thread_number) :
+    named_splx_problem_(named_splx_problem),
+    current_optim_number_(currentOptimNumber),
+    thread_number_(thread_number)
+{}
+void fullMPSwriter::runIfNeeded()
+{
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_, current_optim_number_, thread_number_);
+}
+
+// ---------------------------------
+// Full mps writing by or-tools
+// ---------------------------------
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(
+        MPSolver* solver, 
+        int currentOptimNumber, 
+        uint thread_number) :
+    solver_(solver), 
+    current_optim_number_(currentOptimNumber),
+    thread_number_(thread_number)
+{}
+void fullOrToolsMPSwriter::runIfNeeded()
+{
+    // Make or-tools print the MPS files leads to a crash ! 
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_);
+}
+
+
+// ---------------------------------
+// mps written under split form
+// ---------------------------------
+splitMPSwriter::splitMPSwriter(
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+        int currentOptimNumber,
+        uint thread_nb, 
+        bool simu_1st_week) :
+    named_splx_problem_(named_splx_problem),
+    current_optim_number_(currentOptimNumber),
+    thread_nb_(thread_nb), 
+    simu_1st_week_(simu_1st_week)
+{}
+
+void splitMPSwriter::runIfNeeded()
+{
+    if (simu_1st_week_)
+        OPT_dump_spx_fixed_part(named_splx_problem_, current_optim_number_, thread_nb_);
+
+    OPT_dump_spx_variable_part(named_splx_problem_, current_optim_number_, thread_nb_);
+}
+
+mpsWriterFactory::mpsWriterFactory(
+        PROBLEME_HEBDO* ProblemeHebdo,
+        int NumIntervalle,
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+        bool ortoolsUsed,
+        MPSolver* solver,
+        uint thread_number) :
+    pb_hebdo_(ProblemeHebdo),
+    num_intervalle_(NumIntervalle),
+    named_splx_problem_(named_splx_problem),
+    ortools_used_(ortoolsUsed),
+    solver_(solver),
+    thread_number_(thread_number)
+{
+    current_optim_number_ = pb_hebdo_->numeroOptimisation[num_intervalle_];
+    export_mps_ = pb_hebdo_->ExportMPS;
+    export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
+    split_mps_ = pb_hebdo_->SplitExportedMPS;
+    is_first_week_of_year_ = pb_hebdo_->firstWeekOfSimulation;
+}
+
+bool mpsWriterFactory::doWeExportMPS()
+{
+    switch (export_mps_)
+    {
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return true;
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return current_optim_number_ == PREMIERE_OPTIMISATION;
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return current_optim_number_ == DEUXIEME_OPTIMISATION;
+    default:
+        return false;
+    }
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
+{
+    if (doWeExportMPS() && split_mps_)
+    {
+        return std::make_unique<splitMPSwriter>(named_splx_problem_, current_optim_number_, thread_number_, is_first_week_of_year_);
+    }
+    if (doWeExportMPS() && not split_mps_)
+    {
+        return createFullmpsWriter();
+    }
+
+    return std::make_unique<nullMPSwriter>();
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
+{
+    if (export_mps_on_error_ && not doWeExportMPS())
+    {
+        return createFullmpsWriter();
+    }
+
+    return std::make_unique<nullMPSwriter>();
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+{
+    if (ortools_used_)
+    {
+        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_, thread_number_);
+    }
+    else
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem_, current_optim_number_, thread_number_);
+    }
 }

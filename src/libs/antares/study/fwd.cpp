@@ -370,5 +370,45 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
     return "";
 }
 
+
+std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
+{
+    switch (mps_export_status)
+    {
+    case mpsExportStatus::NO_EXPORT:
+        return "none";
+    case mpsExportStatus::EXPORT_FIRST_OPIM:
+        return "optim-1";
+    case mpsExportStatus::EXPORT_SECOND_OPIM:
+        return "optim-2";
+    case mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return "both-optims";
+    default:
+        return "unknown status";
+    }
+}
+
+mpsExportStatus stringToMPSexportStatus(const AnyString& value)
+{
+    if (!value)
+    {
+        return mpsExportStatus::UNKNOWN_EXPORT;
+    }
+
+    CString<24, false> v = value;
+    v.trim();
+    v.toLower();
+    if (v == "both-optims" || v == "true")   // Case "true" : for compatibily with older study versions
+        return mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    if (v == "none" || v == "false")   // Case "false" : for compatibily with older study versions
+        return mpsExportStatus::NO_EXPORT;
+    if (v == "optim-1")
+        return mpsExportStatus::EXPORT_FIRST_OPIM;
+    if (v == "optim-2")
+        return mpsExportStatus::EXPORT_SECOND_OPIM;
+
+    return mpsExportStatus::UNKNOWN_EXPORT;
+}
+
 } // namespace Data
 } // namespace Antares
