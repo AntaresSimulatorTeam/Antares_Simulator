@@ -120,8 +120,6 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
     }
     logs.info() << "Areas loaded.";
 
-    logs.notice() << study->areas.byIndex[0]->links[study->areas.byIndex[1]->id];
-
     study->loadLayers(studyPath + "layers/layers.ini");
     logs.info() << "active layer ID: " << study->activeLayerID;
 
