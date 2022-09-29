@@ -139,6 +139,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
         problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
+        problem.DemandeDeReservePrimaire[i] = area.primaryReserveDemand;
+
         problem.DefaillanceNegativeUtiliserPMinThermique[i]
           = ((anoOtherDispatchPower & area.nodalOptimization) != 0) ? OUI_ANTARES : NON_ANTARES;
         problem.DefaillanceNegativeUtiliserHydro[i]

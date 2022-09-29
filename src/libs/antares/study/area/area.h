@@ -298,6 +298,8 @@ public:
     double spreadSpilledEnergyCost;
     //@}
 
+    double primaryReserveDemand;
+
     //! \name Output filtering
     //@{
     //! Print results for the area in the simulation synthesis

@@ -1118,6 +1118,18 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                     CString<30, false> tmp;
                     tmp = p->key;
                     tmp.toLower();
+
+                    if (tmp == "primary-reserve-demand")
+                    {
+                        if (!p->value.to<double>(area.primaryReserveDemand))
+                        {
+                            area.primaryReserveDemand = 0.;
+                            logs.warning()
+                              << area.name << ": invalid primary reserve demand";
+                        }
+                        continue;
+                    }
+
                     if (tmp == "non-dispatchable-power")
                     {
                         if (value)
