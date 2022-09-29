@@ -52,6 +52,8 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       if: ${{ env.IS_PUSH == 'true' }}
+      with:
+          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
 
     - name: Install libraries
       run: |
@@ -123,12 +125,14 @@ jobs:
            cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run adq-patch related test
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
 
       run: |
@@ -136,6 +140,7 @@ jobs:
            ctest -C Release --output-on-failure -R test-adq-patch
 
     - name: Run unit and end-to-end tests
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
@@ -150,6 +155,7 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -158,6 +164,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -166,6 +173,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
+      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -174,6 +182,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
+      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -182,6 +191,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
+      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -190,6 +200,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
+      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:

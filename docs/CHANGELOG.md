@@ -1,6 +1,40 @@
 Antares Changelog
 =================
 
+v8.3.2 (09/2022)
+--------------------
+### Output aggregation change
+- Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average (#881).
+
+### New features
+- Add new BC marginal price output variable (#801)
+- Add Antares logo in solver logs (#861)
+
+### GUI
+- In the "Links" panel, replace "Flat" view by "By area" view (#755)
+
+### Bug fixes
+- Fix segfault when more than 9 renewable clusters are present in an area (#869)
+- Fix segfault related to the digest occurring when many thermal clusters are present (#852)
+- Statistics: use std::mutex / std::atomic<> to prevent concurrent writes (#838)
+- Allow more than 100 thermal clusters (#886)
+- Fix warning in hydro.ini loading function (#883)
+- MPS for the 1st optimization were erased by the one related to the 2nd optimization. Fixed (#863).
+### For developers
+- Simplify day ahead reserve condition (#777)
+- Remove unused "shedding strategy" (#788)
+- Refactor Layers by adding a LayerData class (#866)
+- Output variables: remove useless methods for renewable clusters (#869)
+- Restore notifications from Sonar (#828)
+- Restore tests in the CI (Windows only) (#850)
+- Add OR-Tools+XPRESS to Ubuntu CI and merge files for centos CI (#859)
+- Simplify Parameters::fixRefreshIntervals, clean headers (#832)
+- Simplify tuneSolverSpecificOptions (#829)
+
+### Documentation
+- Input and output format due to addition of BC marginal prices (#836)
+- Fix e-mail address and website (#834)
+
 v8.3.1 (08/2022)
 --------------------
 ### New features
