@@ -57,6 +57,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int t1;
     double PminDUnGroupeDuPalierThermique;
     double PmaxDUnGroupeDuPalierThermique;
+    double TailleDeLaReservePrimaire;
     int NbTermesContraintesPourLesCoutsDeDemarrage;
     int Var;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -634,6 +635,63 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             }
         }
+    }
+
+    //La demande de réserve doit être couverte
+    for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+    {
+        CorrespondanceCntNativesCntOptim
+            = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+        CorrespondanceCntNativesCntOptim
+            ->NumeroDeContrainteDesReservesPays[Palier] 
+            = -1;
+        NombreDeTermes = 0;
+
+        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            
+            for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            {
+                Palier
+                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                TailleDeLaReservePrimaire 
+                  = PaliersThermiquesDuPays->TailleDeLaBandeDeReservePrimaire[Index];
+
+                CorrespondanceVarNativesVarOptim
+                  = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+
+                if (Simulation == NON_ANTARES)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = TailleDeLaReservePrimaire;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                else
+                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+
+            }
+        }
+
+        if (Simulation == NON_ANTARES)
+        {
+            if (NombreDeTermes > 1)
+            {
+                CorrespondanceCntNativesCntOptim
+                    ->NumeroDeContrainteDesReservesPays[Palier]
+                    = ProblemeAResoudre->NombreDeContraintes;
+
+                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                    ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+            }
+        }
+        else
+            ProblemeAResoudre->NombreDeContraintes += 1;
     }
 
     if (Simulation == OUI_ANTARES)

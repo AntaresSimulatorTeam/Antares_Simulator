@@ -549,6 +549,8 @@ struct PROBLEME_HEBDO
     double* CoutDeDefaillanceNegative;
     double* CoutDeDefaillanceEnReserve;
 
+    double* DemandeDeReservePrimaire;
+
     PALIERS_THERMIQUES** PaliersThermiquesDuPays;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques;
     /* Optimization problem */

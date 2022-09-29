@@ -63,6 +63,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
     int k;
     int t1;
 
+    double DemandeDeReservePrimaire;
+
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
 
@@ -149,6 +151,23 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                     }
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
                 }
+            }
+        }
+
+        for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsPourUneOptimisation; PdtHebdo++)
+        {
+            CorrespondanceCntNativesCntOptim
+                  = ProblemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
+
+            Cnt = CorrespondanceCntNativesCntOptim
+                    ->NumeroDeContrainteDesReservesPays[Palier];
+            DemandeDeReservePrimaire = ProblemeHebdo
+                                        ->DemandeDeReservePrimaire[Palier];
+            
+            if (Cnt >= 0)
+            {
+                SecondMembre[Cnt] = DemandeDeReservePrimaire;
+                AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
             }
         }
     }
