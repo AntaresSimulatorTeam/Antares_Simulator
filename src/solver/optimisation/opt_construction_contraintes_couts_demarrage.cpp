@@ -88,6 +88,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
               = PaliersThermiquesDuPays->PminDUnGroupeDuPalierThermique[Index];
             PmaxDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index];
+            TailleDeLaReservePrimaire 
+              = PaliersThermiquesDuPays->TailleDeLaBandeDeReservePrimaire[Index];
             Palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
 
@@ -119,6 +121,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (Var >= 0)
                     {
                         Pi[NombreDeTermes] = -PmaxDUnGroupeDuPalierThermique;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                else
+                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+
+                if (Simulation == NON_ANTARES)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = TailleDeLaReservePrimaire;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
                     }
@@ -160,6 +176,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (Var >= 0)
                     {
                         Pi[NombreDeTermes] = -PminDUnGroupeDuPalierThermique;
+                        Colonne[NombreDeTermes] = Var;
+                        NombreDeTermes++;
+                    }
+                }
+                else
+                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+
+                if (Simulation == NON_ANTARES)
+                {
+                    Var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                    if (Var >= 0)
+                    {
+                        Pi[NombreDeTermes] = -TailleDeLaReservePrimaire;
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
                     }
