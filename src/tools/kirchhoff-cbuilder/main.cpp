@@ -62,13 +62,18 @@ int main(int argc, char* argv[])
 
     initComponents(study, studyPath);
 
-    /* CBuilder constraintBuilder(study); */
-    /* constraintBuilder.completeFromStudy(); */
-    /* constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath); */
+    CBuilder constraintBuilder(study);
+    logs.info() << "CBuilder created";
 
-    /* const bool result = constraintBuilder.runConstraintsBuilder(); */
+    constraintBuilder.completeFromStudy();
+    logs.info() << "CBuilder completed study";
 
-    /* logs.info() << "Result: " << result; */
+    constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath);
+    logs.info() << "CBuilder completed file";
+
+    const bool result = constraintBuilder.runConstraintsBuilder();
+
+    logs.info() << "Result: " << result;
 
 
     return 0;
@@ -111,20 +116,21 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
     if(!study->areas.loadFromFolder(options))
     {
         logs.error() << "Areas loading failed";
-        return 1;
+        return false;
     }
     logs.info() << "Areas loaded.";
 
+    logs.notice() << study->areas.byIndex[0]->links[study->areas.byIndex[1]->id];
 
     study->loadLayers(studyPath + "layers/layers.ini");
     logs.info() << "active layer ID: " << study->activeLayerID;
 
 
     if (!study->bindingConstraints.loadFromFolder(*study,
-        options, studyPath + "input/bindingconstraints/"))
+        options, studyPath + "/input/bindingconstraints/"))
     {
         logs.error() << "Binding constraints loading failed";
-        return 1;
+        return false;
     }
     logs.info() << "Binding constraints loaded.";
 
