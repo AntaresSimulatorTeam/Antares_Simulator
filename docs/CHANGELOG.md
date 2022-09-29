@@ -3,6 +3,9 @@ Antares Changelog
 
 v8.3.2 (09/2022)
 --------------------
+### Output aggregation change
+- Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average.
+
 ### New features
 - Add new BC marginal price output variable (#801)
 - Add Antares logo in solver logs (#861)
