@@ -523,8 +523,26 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
 */
 DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
 
+
+// ------------------------
+// MPS export status
+// ------------------------
+enum class mpsExportStatus : int
+{
+    NO_EXPORT = 0,
+    EXPORT_FIRST_OPIM = 1,
+    EXPORT_SECOND_OPIM = 2,
+    EXPORT_BOTH_OPTIMS = 3,
+    UNKNOWN_EXPORT = 4
+};
+
+std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
+mpsExportStatus stringToMPSexportStatus(const AnyString& value);
+
 } // namespace Data
 } // namespace Antares
+
+
 
 namespace Antares
 {

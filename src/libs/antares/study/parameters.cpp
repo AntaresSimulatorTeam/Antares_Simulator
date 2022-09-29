@@ -306,7 +306,7 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.splitExportedMPS = false;
     include.exportStructure = false;
 
@@ -556,8 +556,19 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
+        {
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                << ". Reset to no MPS export.";
+            return false;
+        }
+        return true;
+    }
+
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
@@ -1554,7 +1565,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
@@ -1720,7 +1731,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
         section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 

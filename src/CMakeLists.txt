@@ -272,6 +272,9 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
 endif()

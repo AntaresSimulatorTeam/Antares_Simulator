@@ -39,7 +39,8 @@ namespace Data
 {
 FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                const YString& extension,
-                                               uint numSpace) const
+                                               uint numSpace,
+                                               const int currentOptimNumber) const
 {
     static std::map<YString, int> count;
 
@@ -62,6 +63,9 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
     outputFile << prefix << "-"; // problem ou criterion
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
+
+    if (currentOptimNumber)
+        outputFile << "--optim-nb-" << currentOptimNumber;
 
     buffer.clear() << this->folderOutput << SEP << outputFile;
 
