@@ -24,9 +24,7 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
-
     steps:
-
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
