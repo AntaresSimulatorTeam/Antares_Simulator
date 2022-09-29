@@ -31,8 +31,8 @@ jobs:
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
-      with:
-          key: sonarcloud
+        with:
+          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
 
       - name: Cache SonarCloud packages and analysis
         uses: actions/cache@v3
