@@ -94,10 +94,13 @@ bool CBuilder::update(bool applyCheckBox)
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        // Try to open link data files
-        YString dataFilename = link->parameters.jit->sourceFilename;
-        if (!link->loadTimeSeries(*pStudy, dataFilename))
-            return false;
+        // Try to open link data files (GUI only)
+        if (link->parameters.jit)
+        {
+            YString dataFilename = link->parameters.jit->sourceFilename;
+            if (!link->loadTimeSeries(*pStudy, dataFilename))
+                return false;
+        }
     }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
@@ -305,10 +308,12 @@ bool CBuilder::deletePreviousConstraints()
         Data::AreaLink* link = linkInfo->ptr;
 
         // Try to open link data files
-        YString dataFilename = link->parameters.jit->sourceFilename;
-        if (!link->loadTimeSeries(*pStudy, dataFilename))
-            return false;
-
+        if (link->parameters.jit)
+        {
+            YString dataFilename = link->parameters.jit->sourceFilename;
+            if (!link->loadTimeSeries(*pStudy, dataFilename))
+                return false;
+        }
         link->useLoopFlow = false;
         link->usePST = false;
     }
