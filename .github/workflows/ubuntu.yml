@@ -155,6 +155,7 @@ jobs:
 
     - name: Rename .deb file
       run: |
+           cd _build
            DEB_NAME=$(ls *.deb)
            DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ steps.ortools.outputs.label }}.deb}
            mv "${DEB_NAME} ${DEB_NAME_WITH_SUFFIX}"
@@ -166,6 +167,7 @@ jobs:
 
     - name: Rename .tgz file
       run: |
+           cd _build
            TGZ_NAME=$(ls *.tar.gz)
            TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}
            mv "${TGZ_NAME} ${TGZ_NAME_WITH_SUFFIX}"
