@@ -30,6 +30,11 @@ jobs:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
+    outputs:
+        deb: ${{steps.archive_info.outputs.deb}}
+        tgz: ${{steps.archive_info.outputs.tgz}}
+        is_release: ${{steps.release_flag.outputs.is_release}}
+        os: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
     needs: doc_generation
@@ -44,10 +49,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.0
-      if: ${{ env.IS_RELEASE == 'true' }}
+    - name: Export release flag
+      id: release_flag
+      run: |
+        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -223,35 +228,52 @@ jobs:
            echo "TGZ_NAME=$TGZ_NAME" >> $GITHUB_ENV
            echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
 
+    - name: Export archive info
+      id: archive_info
+      run: |
+        echo "::set-output name=tgz::$TGZ_NAME_WITH_SUFFIX"
+        echo "::set-output name=deb::$DEB_NAME_WITH_SUFFIX"
+
     - name: Installer archive upload push
-      if: ${{ env.IS_PUSH == 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: ${{env.TGZ_NAME_WITH_SUFFIX}}
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
-      if: ${{ env.IS_PUSH == 'true' }}
       uses: actions/upload-artifact@v2
       with:
         name: ${{env.DEB_NAME_WITH_SUFFIX}}
         path: _build/*.deb
 
+    publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ${{needs.build.outputs.os}}
+    if: ${{needs.build.outputs.is_release == 'true'}}
+    steps:
+
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
+      if: ${{ env.IS_RELEASE == 'true' }}
+
+    - uses: actions/download-artifact@v3
+      with:
+        name: ${{needs.build.outputs.deb}}
 
     - name: Upload .deb release
-      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.DEB_NAME}}
-        asset_name: ${{env.DEB_NAME_WITH_SUFFIX}}
+        asset_path: ${{needs.build.outputs.deb}}
+        asset_name: ${{needs.build.outputs.deb}}
         asset_content_type: application/octet-stream
 
     - name: Upload .tar.gz release
-      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.TGZ_NAME}}
-        asset_name: ${{env.TGZ_NAME_WITH_SUFFIX}}
+        asset_path: ${{needs.build.outputs.tgz}}
+        asset_name: ${{needs.build.outputs.tgz}}
         asset_content_type: application/octet-stream
