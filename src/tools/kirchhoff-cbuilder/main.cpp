@@ -72,9 +72,14 @@ int main(int argc, char* argv[])
     logs.info() << "CBuilder completed file";
 
     const bool result = constraintBuilder.runConstraintsBuilder();
-
     logs.info() << "Result: " << result;
 
+    /* IniFile ini(studyPath); */
+    /* auto* section = ini.addSection("input"); */
+    /* section->add("include-constraints", true); */
+    /* ini.save(studyPath + "input/bindingconstraints.ini"); */
+
+    study->bindingConstraints.saveToFolder(studyPath + "input/bindingconstraints");
 
     return 0;
 }
