@@ -184,13 +184,12 @@ jobs:
         name: ${{env.DEB_NAME_WITH_SUFFIX}}
         path: _build/*.deb
 
-    publish_assets:
+  publish_assets:
     name: Publish assets
     needs: build
     runs-on: ${{needs.build.outputs.os}}
     if: ${{needs.build.outputs.is_release == 'true'}}
     steps:
-
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
