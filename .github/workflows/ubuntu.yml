@@ -196,6 +196,7 @@ jobs:
       if: ${{ env.IS_RELEASE == 'true' }}
 
     - uses: actions/download-artifact@v3
+      name: Download DEB archive
       with:
         name: ${{needs.build.outputs.deb}}
 
@@ -206,6 +207,11 @@ jobs:
         asset_path: ${{needs.build.outputs.deb}}
         asset_name: ${{needs.build.outputs.deb}}
         asset_content_type: application/octet-stream
+
+    - uses: actions/download-artifact@v3
+      name: Download TGZ archive
+      with:
+        name: ${{needs.build.outputs.tgz}}
 
     - name: Upload .tar.gz release
       uses: actions/upload-release-asset@v1.0.2
