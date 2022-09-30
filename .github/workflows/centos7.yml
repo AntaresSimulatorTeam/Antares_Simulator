@@ -75,6 +75,9 @@ jobs:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
+    outputs:
+        is_release: ${{steps.release_flag.outputs.is_release}}
+
     runs-on: ubuntu-latest
     needs:
       - docker_publish
@@ -91,10 +94,10 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
 
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.0
-      if: ${{ env.IS_RELEASE == 'true' }}
+    - name: Export release flag
+      id: release_flag
+      run: |
+        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
 
     - name: Init submodule
       run: |
@@ -110,10 +113,10 @@ jobs:
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
-            echo "::set-output name=label::-ortools-xpress"
+            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
           else
             echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
-            echo "::set-output name=label::"
+            echo "LABEL=" >> $GITHUB_ENV
           fi
 
     - name: Download OR-Tools
@@ -150,58 +153,55 @@ jobs:
            cmake3 --build _build --config Release -j2
            ccache -s
 
-    - name: Installer .rpm creation push
-      if: ${{ env.IS_PUSH == 'true' }}
+    - name: Installer .rpm creation
       run: |
            cd _build
            cpack3 -G RPM
+
+    - name: Rename .rpm file
+      run: |
+           cd _build
+           RPM_NAME=$(ls *.rpm)
+           RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ env.LABEL }}.rpm}
+           mv "${RPM_NAME}" "${RPM_NAME_WITH_SUFFIX}" || true
 
     - name: .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
-           export TGZ_NAME=$(ls *.tar.gz)
-           echo "TGZ_NAME=${TGZ_NAME}" >> $GITHUB_ENV
-           echo "TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}" >> $GITHUB_ENV
-
-
-    - name: Installer archive upload push
-      if: ${{ env.IS_PUSH == 'true' }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: antares-centos7-archive${{ steps.ortools.outputs.label }}
-        path: _build/*.tar.gz
-
-    - name: Installer .rpm creation
+    
+    - name: Rename .tgz file
       run: |
            cd _build
-           cpack3 -G RPM
-           export RPM_NAME=$(ls *.rpm)
-           echo "RPM_NAME=${RPM_NAME}" >> $GITHUB_ENV
-           echo "RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ steps.ortools.outputs.label }}.rpm}" >> $GITHUB_ENV
+           TGZ_NAME=$(ls *.tar.gz)
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
+           mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
-    - name: Installer rpm upload push
-      if: ${{ env.IS_PUSH == 'true' }}
+    - name: Installer TGZ push
       uses: actions/upload-artifact@v2
       with:
-        name: antares-centos7-rpm${{ steps.ortools.outputs.label }}
+        path: _build/*.tar.gz
+
+    - name: Installer RPM push
+      uses: actions/upload-artifact@v2
+      with:
         path: _build/*.rpm
 
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{needs.build.outputs.is_release == 'true'}}
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
 
-    - name: Upload .rpm release
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.RPM_NAME}}
-        asset_name: ${{env.RPM_NAME_WITH_SUFFIX}}
-        asset_content_type: application/octet-stream
+    - name: List artifacts
+      run: ls -R
 
-    - name: Upload .tar.gz release
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: actions/upload-release-asset@v1.0.2
+    - name: Publish assets
+      uses: alexellis/upload-assets@0.3.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.TGZ_NAME}}
-        asset_name: ${{env.TGZ_NAME_WITH_SUFFIX}}
-        asset_content_type: application/octet-stream
+          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'
