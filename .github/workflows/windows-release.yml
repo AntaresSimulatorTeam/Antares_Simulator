@@ -137,46 +137,6 @@ jobs:
       shell: bash
       run: rm -rf ${{ github.workspace }}/src/tests/resources/Antares_Simulator_Tests
 
-    # simtest
-    - name: Read simtest version
-      id: simtest-version
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'simtest.json'
-        prop_path: 'version'
-
-    - name: Run medium-tests
-      uses: ./.github/workflows/run-tests
-      continue-on-error: true
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: medium-tests
-        os: ${{ matrix.test-platform }}
-
-    - name: Run long-tests-1
-      uses: ./.github/workflows/run-tests
-      continue-on-error: true
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-1
-        os: ${{ matrix.test-platform }}
-
-    - name: Run long-tests-2
-      uses: ./.github/workflows/run-tests
-      continue-on-error: true
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-2
-        os: ${{ matrix.test-platform }}
-
-    - name: Run long-tests-3
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: long-tests-3
-        os: ${{ matrix.test-platform }}
-
     - name: .zip creation
       shell: bash
       run: |
