@@ -203,7 +203,7 @@ jobs:
            cpack -G DEB
            export DEB_NAME=$(ls *.deb)
            echo "DEB_NAME=$DEB_NAME" >> $GITHUB_ENV
-           echo "DEB_NAME_WITH_SUFFIX=${TGZ_NAME/.deb/${{ steps.ortools.outputs.label }}.deb}" >> $GITHUB_ENV
+           echo "DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ steps.ortools.outputs.label }}.deb}" >> $GITHUB_ENV
 
     - name: .tar.gz creation
       run: |
@@ -217,14 +217,14 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       uses: actions/upload-artifact@v2
       with:
-        name: antares-ubuntu-archive${{ steps.ortools.outputs.label }}
+        name: ${{env.TGZ_NAME_WITH_SUFFIX}}
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
       if: ${{ env.IS_PUSH == 'true' }}
       uses: actions/upload-artifact@v2
       with:
-        name: antares-ubuntu-deb${{ steps.ortools.outputs.label }}
+        name: ${{env.DEB_NAME_WITH_SUFFIX}}
         path: _build/*.deb
 
 
