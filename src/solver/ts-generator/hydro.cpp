@@ -58,6 +58,7 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
 
         hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
+        hydroseries.mingen.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.count = tsCount;
     });
 }
@@ -71,11 +72,13 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 
         hydroseries.ror.roundAllEntries();
         hydroseries.storage.roundAllEntries();
+        hydroseries.mingen.roundAllEntries();
 
         if (derated)
         {
             hydroseries.ror.averageTimeseries();
             hydroseries.storage.averageTimeseries();
+            hydroseries.mingen.averageTimeseries();
         }
     });
 }
@@ -298,23 +301,31 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         {
             logs.info() << "Archiving the hydro time-series";
             String output;
-            study.areas.each([&](const Data::Area& area) {
-                study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
-                                     << currentYear << SEP << area.id;
+            study.areas.each(
+              [&](const Data::Area& area)
+              {
+                  study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
+                                       << currentYear << SEP << area.id;
 
-                {
-                    std::string ror_buffer;
-                    output.clear() << study.buffer << SEP << "ror.txt";
-                    writer->addEntryFromBuffer(output.c_str(), ror_buffer);
-                }
+                  {
+                      std::string ror_buffer;
+                      output.clear() << study.buffer << SEP << "ror.txt";
+                      writer->addEntryFromBuffer(output.c_str(), ror_buffer);
+                  }
 
-                {
-                    std::string storage_buffer;
-                    output.clear() << study.buffer << SEP << "storage.txt";
-                    writer->addEntryFromBuffer(output.c_str(), storage_buffer);
-                }
-                ++progression;
-            });
+                  {
+                      std::string storage_buffer;
+                      output.clear() << study.buffer << SEP << "storage.txt";
+                      writer->addEntryFromBuffer(output.c_str(), storage_buffer);
+                  }
+
+                  {
+                      std::string mingen_buffer;
+                      output.clear() << study.buffer << SEP << "mingen.txt";
+                      writer->addEntryFromBuffer(output.c_str(), mingen_buffer);
+                  }
+                  ++progression;
+              });
         }
     }
 

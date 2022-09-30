@@ -96,6 +96,8 @@ static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, 
     e.add(buffer);
     buffer.clear() << "input/hydro/series/" << id << "/mod.txt";
     e.add(buffer);
+    buffer.clear() << "input/hydro/series/" << id << "/mingen.txt";
+    e.add(buffer);    
     buffer.clear() << "input/hydro/allocation/" << id << ".ini";
     p.add(buffer);
     buffer.clear() << "input/hydro/prepro/" << id;

@@ -60,7 +60,8 @@ bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& fold
         ret = ror.saveToCSVFile(buffer, 0) && ret;
         buffer.clear() << folder << SEP << areaID << SEP << "mod.txt";
         ret = storage.saveToCSVFile(buffer, 0) && ret;
-
+        buffer.clear() << folder << SEP << areaID << SEP << "mingen.txt";
+        ret = mingen.saveToCSVFile(buffer, 0) && ret;
         return ret;
     }
     return false;
@@ -191,9 +192,19 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         if (enabledModeIsChanged)
             JIT::enabled = true; // Back to the previous loading mode.
     }
-
     if (ror.width > count)
         count = ror.width;
+
+    if (study.header.version >= 830)
+    {
+        buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
+        ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    }
+    else
+    {
+        mingen.reset(0, HOURS_PER_YEAR);
+        mingen.markAsModified();
+    }
 
     if (study.usedByTheSolver)
     {
@@ -201,8 +212,9 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
         {
             logs.error() << "Hydro: `" << areaID
                          << "`: empty matrix detected. Fixing it with default values";
-            ror.reset(1, DAYS_PER_YEAR);
+            ror.reset(1, HOURS_PER_YEAR);
             storage.reset(1, DAYS_PER_YEAR);
+            mingen.reset(0, HOURS_PER_YEAR);
         }
         else
         {
@@ -245,12 +257,41 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                           << "Impossible to find the area `" << areaID << "` to invalidate it";
                 }
             }
+
+            if(mingen.width != count)
+            {
+                if(mingen.width > 1)
+                {
+                    logs.fatal() << "Hydro: `" << areaID
+                                    << "`: The matrices Minimum Generation must "
+                                    "has the same number of time-series as ROR and hydro-storage.";
+                    study.gotFatalError = true; 
+                }
+                else
+                {
+                    mingen.resizeWithoutDataLost(count, mingen.height);
+                    for (uint x = 1; x < count; ++x)
+                        mingen.pasteToColumn(x, mingen[0]);
+                    Area* areaToInvalidate = study.areas.find(areaID);
+                    if (areaToInvalidate)
+                    {
+                        areaToInvalidate->invalidateJIT = true;
+                        logs.info()
+                          << "  '" << areaID << "': The hydro minimum generation data have been normalized to "
+                          << count << " timeseries";
+                    }
+                    else
+                        logs.error()
+                          << "Impossible to find the area `" << areaID << "` to invalidate it";                                   
+                }
+            }
         }
 
         if (study.parameters.derated)
         {
             ror.averageTimeseries();
             storage.averageTimeseries();
+            mingen.averageTimeseries();
             count = 1;
         }
     }
@@ -265,6 +306,7 @@ bool DataSeriesHydro::forceReload(bool reload) const
     bool ret = true;
     ret = ror.forceReload(reload) && ret;
     ret = storage.forceReload(reload) && ret;
+    ret = mingen.forceReload(reload) && ret;
     return ret;
 }
 
@@ -272,6 +314,7 @@ void DataSeriesHydro::markAsModified() const
 {
     ror.markAsModified();
     storage.markAsModified();
+    mingen.markAsModified();
 }
 
 void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
@@ -283,11 +326,13 @@ void DataSeriesHydro::estimateMemoryUsage(StudyMemoryUsage& u) const
     {
         ror.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
         storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, 12);
+        mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
     }
     else
     {
         ror.estimateMemoryUsage(u);
         storage.estimateMemoryUsage(u);
+        mingen.estimateMemoryUsage(u);
     }
 }
 
@@ -295,12 +340,13 @@ void DataSeriesHydro::reset()
 {
     ror.reset(1, HOURS_PER_YEAR);
     storage.reset(1, DAYS_PER_YEAR);
+    mingen.reset(1, HOURS_PER_YEAR);
     count = 1;
 }
 
 uint64 DataSeriesHydro::memoryUsage() const
 {
-    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
+    return sizeof(double) + ror.memoryUsage() + storage.memoryUsage() + mingen.memoryUsage();
 }
 
 void DataSeriesHydro::AdjustMonth(const Study& study,
