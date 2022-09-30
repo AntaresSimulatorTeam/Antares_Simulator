@@ -300,6 +300,40 @@ protected:
     }
 };
 
+
+class TimeSeriesHydroMinGen final : public ATimeSeries
+{
+public:
+    using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
+
+public:
+    TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
+     ATimeSeries(control, notifier)
+    {
+    }
+    virtual ~TimeSeriesHydroMinGen()
+    {
+        destroyBoundEvents();
+    }
+
+    virtual Date::Precision precision()
+    {
+        return Date::hourly;
+    }
+
+    virtual uint maxHeightResize() const
+    {
+        return HOURS_PER_YEAR;
+    }
+
+protected:
+    virtual void internalAreaChanged(Antares::Data::Area* area)
+    {
+        matrix((area && Data::Study::Current::Valid()) ? &(area->hydro.series->mingen) : NULL);
+        Renderer::ARendererArea::internalAreaChanged(area);
+    }
+};
+
 // =========================
 // Clusters ...
 // =========================
