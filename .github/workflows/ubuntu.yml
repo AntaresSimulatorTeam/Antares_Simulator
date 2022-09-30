@@ -24,7 +24,7 @@ jobs:
     with:
       artifact_name: pdf-doc
 
-  build-${{matrix.ortools-xpress}}:
+  build:
     name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
@@ -186,9 +186,9 @@ jobs:
 
   publish_assets:
     name: Publish assets
-    needs: build-ON
-    runs-on: ${{needs.build-ON.outputs.os}}
-    if: ${{needs.build-ON.outputs.is_release == 'true'}}
+    needs: build
+    runs-on: ${{needs.build.outputs.os}}
+    if: ${{needs.build.outputs.is_release == 'true'}}
     steps:
     - name: Get release
       id: get_release
@@ -198,25 +198,25 @@ jobs:
     - uses: actions/download-artifact@v3
       name: Download DEB archive
       with:
-        name: ${{needs.build-ON.outputs.deb}}
+        name: ${{needs.build.outputs.deb}}
 
     - name: Upload .deb release
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${{needs.build-ON.outputs.deb}}
-        asset_name: ${{needs.build-ON.outputs.deb}}
+        asset_path: ${{needs.build.outputs.deb}}
+        asset_name: ${{needs.build.outputs.deb}}
         asset_content_type: application/octet-stream
 
     - uses: actions/download-artifact@v3
       name: Download TGZ archive
       with:
-        name: ${{needs.build-ON.outputs.tgz}}
+        name: ${{needs.build.outputs.tgz}}
 
     - name: Upload .tar.gz release
       uses: actions/upload-release-asset@v1.0.2
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${{needs.build-ON.outputs.tgz}}
-        asset_name: ${{needs.build-ON.outputs.tgz}}
+        asset_path: ${{needs.build.outputs.tgz}}
+        asset_name: ${{needs.build.outputs.tgz}}
         asset_content_type: application/octet-stream
