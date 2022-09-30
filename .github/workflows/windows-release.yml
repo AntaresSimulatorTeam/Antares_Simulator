@@ -97,6 +97,9 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
+    - name: Install pip dependencies if necessary
+      run: pip install -r src/tests/examples/requirements.txt
+
     # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule
       run: |
