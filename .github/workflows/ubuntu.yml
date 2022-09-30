@@ -75,10 +75,10 @@ jobs:
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
-            echo "::set-output name=label::-ortools-xpress"
+            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
           else
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-            echo "::set-output name=label::"
+            echo "LABEL=" >> $GITHUB_ENV
           fi
 
     - name: Download pre-compiled librairies
@@ -157,7 +157,7 @@ jobs:
       run: |
            cd _build
            DEB_NAME=$(ls *.deb)
-           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ steps.ortools.outputs.label }}.deb}
+           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ env.LABEL }}.deb}
            mv "${DEB_NAME}" "${DEB_NAME_WITH_SUFFIX}" || true
 
     - name: .tar.gz creation
@@ -169,7 +169,7 @@ jobs:
       run: |
            cd _build
            TGZ_NAME=$(ls *.tar.gz)
-           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ steps.ortools.outputs.label }}.tar.gz}
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer archive upload push
