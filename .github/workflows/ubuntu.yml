@@ -189,9 +189,6 @@ jobs:
       run: ls -R
 
     - name: Publish assets
-      uses: softprops/action-gh-release@v1
+      uses: alexellis/upload-assets@0.3.0
       with:
-        fail_on_unmatched_files: false
-        files: |
-          - */*.tar.gz
-          - */*.deb
+          asset_paths: '["*/*.tar.gz", "*/*.deb"]'
