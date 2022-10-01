@@ -1753,7 +1753,7 @@ void AreaList::removeHydroTimeseries()
     each([&](Data::Area& area) {
         area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
         area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
-        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
+        area.hydro.series->mingen.reset(0, HOURS_PER_YEAR);
         area.hydro.series->count = 1;
     });
 }
