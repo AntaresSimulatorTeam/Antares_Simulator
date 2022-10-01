@@ -9,6 +9,7 @@ v8.3.2 (09/2022)
 ### New features
 - Add new BC marginal price output variable (#801)
 - Add Antares logo in solver logs (#861)
+- Add XPRESS-compatible assets for Ubuntu. Windows coming soon.
 
 ### GUI
 - In the "Links" panel, replace "Flat" view by "By area" view (#755)
@@ -20,6 +21,7 @@ v8.3.2 (09/2022)
 - Allow more than 100 thermal clusters (#886)
 - Fix warning in hydro.ini loading function (#883)
 - MPS for the 1st optimization were erased by the one related to the 2nd optimization. Fixed (#863).
+
 ### For developers
 - Simplify day ahead reserve condition (#777)
 - Remove unused "shedding strategy" (#788)
