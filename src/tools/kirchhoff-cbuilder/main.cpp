@@ -74,12 +74,7 @@ int main(int argc, char* argv[])
     const bool result = constraintBuilder.runConstraintsBuilder();
     logs.info() << "Result: " << result;
 
-    /* IniFile ini(studyPath); */
-    /* auto* section = ini.addSection("input"); */
-    /* section->add("include-constraints", true); */
-    /* ini.save(studyPath + "input/bindingconstraints.ini"); */
-
-    study->bindingConstraints.saveToFolder(studyPath + "input/bindingconstraints");
+    study->bindingConstraints.saveToFolder(studyPath + "/input/bindingconstraints");
 
     return 0;
 }
@@ -109,7 +104,9 @@ bool initResources(int argc, char* argv[])
 
 bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
 {
-    study->header.version = 830;
+	study->header.version = study->header.ReadVersionFromFile(studyPath + "/study.antares");
+    /* study->header.version = 830; */
+	logs.notice() << study->header.version;
     study->folder = studyPath;
     study->folderInput = studyPath + "/input";
     study->inputExtension = "txt";

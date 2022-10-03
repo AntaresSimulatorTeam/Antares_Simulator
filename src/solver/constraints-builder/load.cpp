@@ -29,7 +29,7 @@
 #include "../../config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
-//#include <wx/wx.h> // bourrin -> ? modifier
+//#include <wx/wx.h> // bourrin -> à modifier
 //#include "../../ui/simulator/application/study.h"
 
 using namespace Yuni;
@@ -40,19 +40,14 @@ namespace Antares
 {
 bool CBuilder::completeFromStudy()
 {
-    auto c = 0;
     uint nCount(1);
     const Data::Area::Map::iterator end = pStudy->areas.end();
     for (Data::Area::Map::iterator i = pStudy->areas.begin(); i != end; ++i)
     {
-        auto d = 0;
-        logs.info() << "c : " << c++;
         Data::Area& area = *(i->second);
         const Data::AreaLink::Map::iterator end = area.links.end();
         for (Data::AreaLink::Map::iterator j = area.links.begin(); j != end; ++j)
         {
-            /* logs.notice() << area.links[0]; */
-            logs.info() << "d : " << d++;
             // for all links of the study
             // check if it has been enabled in the INI File
             linkInfo* k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
