@@ -451,6 +451,8 @@ typedef struct
 
     double* NombreDeGroupesQuiTombentEnPanneDuPalier;
 
+    double* NombreDeGroupesFournissantDeLaReserve;
+
 } PRODUCTION_THERMIQUE_OPTIMALE;
 
 typedef struct

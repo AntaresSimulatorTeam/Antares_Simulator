@@ -269,7 +269,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
@@ -600,6 +599,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               = (double*)MemAlloc(nbPaliers * sizeof(double));
             problem.ResultatsHoraires[k]->ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
+            problem.ResultatsHoraires[k]->ProductionThermique[j]->NombreDeGroupesFournissantDeLaReserve
+              = (double*)MemAlloc(nbPaliers * sizeof(double));              
             problem.ResultatsHoraires[k]
               ->ProductionThermique[j]
               ->NombreDeGroupesQuiDemarrentDuPalier
@@ -927,6 +928,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
             MemFree(problem.ResultatsHoraires[k]
                       ->ProductionThermique[j]
                       ->NombreDeGroupesQuiTombentEnPanneDuPalier);
+            MemFree(problem.ResultatsHoraires[k]
+                      ->ProductionThermique[j]
+                      ->NombreDeGroupesFournissantDeLaReserve);
             MemFree(problem.ResultatsHoraires[k]->ProductionThermique[j]);
         }
         MemFree(problem.ResultatsHoraires[k]->ProductionThermique);
