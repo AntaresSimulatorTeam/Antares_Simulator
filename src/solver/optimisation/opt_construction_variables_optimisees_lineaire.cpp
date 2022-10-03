@@ -112,17 +112,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             NombreDeVariables++;
-
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
-                NombreDeVariables++;
-            }
-            else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays] = -1;
+            
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays]
+              = NombreDeVariables;
+            ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+              = VARIABLE_BORNEE_INFERIEUREMENT;
+            NombreDeVariables++;
         }
 
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)

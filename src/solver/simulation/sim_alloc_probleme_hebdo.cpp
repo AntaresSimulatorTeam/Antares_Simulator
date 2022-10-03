@@ -281,6 +281,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
           = (int*)MemAlloc(nbPays * sizeof(int));
 
+        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesReservesPays
+          = (int*)MemAlloc(nbPays * sizeof(int));
+        problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNombresDeGroupesEnReserve
+          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
+
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone
@@ -713,6 +718,10 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays);
+
+        MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesReservesPays);
+        MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNombresDeGroupesEnReserve);
+
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]
                   ->NumeroDeContraintePourEviterLesChargesFictives);
 

@@ -157,12 +157,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
         for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsPourUneOptimisation; PdtHebdo++)
         {
             CorrespondanceCntNativesCntOptim
-                  = ProblemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
+                  = ProblemeHebdo->CorrespondanceCntNativesCntOptim[PdtHebdo];
 
             Cnt = CorrespondanceCntNativesCntOptim
-                    ->NumeroDeContrainteDesReservesPays[Palier];
+                    ->NumeroDeContrainteDesReservesPays[Pays];
             DemandeDeReservePrimaire = ProblemeHebdo
-                                        ->DemandeDeReservePrimaire[Palier];
+                                        ->DemandeDeReservePrimaire[Pays];
             
             if (Cnt >= 0)
             {

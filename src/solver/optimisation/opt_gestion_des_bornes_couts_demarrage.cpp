@@ -150,6 +150,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                         ->ProductionThermique[PdtHebdo]
                                         ->NombreDeGroupesQuiTombentEnPanneDuPalier[Index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
+                Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                Xmin[Var] = 0;
             }
         }
     }

@@ -668,28 +668,40 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     }
 
     //La demande de réserve doit être couverte
-    for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
-        CorrespondanceCntNativesCntOptim
-            = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
-        CorrespondanceCntNativesCntOptim
-            ->NumeroDeContrainteDesReservesPays[Palier] 
-            = -1;
-        NombreDeTermes = 0;
-
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
         {
+            CorrespondanceCntNativesCntOptim
+                = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+            CorrespondanceCntNativesCntOptim
+                ->NumeroDeContrainteDesReservesPays[Pays] 
+                = -1;
+            NombreDeTermes = 0;
+            CorrespondanceVarNativesVarOptim
+                = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+
+            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+            }
+            else
+                NbTermesContraintesPourLesCoutsDeDemarrage++;
+
+
             PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
             
             for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
             {
                 Palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                    = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
                 TailleDeLaReservePrimaire 
-                  = PaliersThermiquesDuPays->TailleDeLaBandeDeReservePrimaire[Index];
+                    = PaliersThermiquesDuPays->TailleDeLaBandeDeReservePrimaire[Index];
 
-                CorrespondanceVarNativesVarOptim
-                  = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+
 
                 if (Simulation == NON_ANTARES)
                 {
@@ -706,22 +718,21 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     NbTermesContraintesPourLesCoutsDeDemarrage++;
 
             }
-        }
-
-        if (Simulation == NON_ANTARES)
-        {
-            if (NombreDeTermes > 1)
+            if (Simulation == NON_ANTARES)
             {
-                CorrespondanceCntNativesCntOptim
-                    ->NumeroDeContrainteDesReservesPays[Palier]
-                    = ProblemeAResoudre->NombreDeContraintes;
+                if (NombreDeTermes > 1)
+                {
+                    CorrespondanceCntNativesCntOptim
+                        ->NumeroDeContrainteDesReservesPays[Pays]
+                        = ProblemeAResoudre->NombreDeContraintes;
 
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                    ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                        ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+                }
             }
-        }
-        else
-            ProblemeAResoudre->NombreDeContraintes += 1;
+            else
+                ProblemeAResoudre->NombreDeContraintes += 1;
+        }        
     }
 
     if (Simulation == OUI_ANTARES)
