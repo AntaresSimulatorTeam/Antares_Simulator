@@ -24,6 +24,6 @@ add_library(libantares-solver-constraints-builder
 
 target_link_libraries(libantares-solver-constraints-builder PRIVATE libantares-core)
 		
-set_target_properties(libantares-solver-constraints-builder PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
+# set_target_properties(libantares-solver-constraints-builder PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
 
 
