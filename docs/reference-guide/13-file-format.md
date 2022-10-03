@@ -1,7 +1,7 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
-## v8.4.0
+## v8.3.2
 ### Writing MPS files
 MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
 Now user can choose to print :
