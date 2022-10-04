@@ -1061,10 +1061,10 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             if ((*i)->parameters.derated && years != 1)
             {
                 error = true;
-                (*i)->parameters.years(1);
+                (*i)->parameters.resetPlaylist(1);
             }
             else
-                (*i)->parameters.years(years);
+                (*i)->parameters.resetPlaylist(years);
         }
         if (error)
         {

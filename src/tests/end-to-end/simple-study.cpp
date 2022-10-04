@@ -51,7 +51,7 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
 {
 	//Define study parameters
 	pStudy->parameters.reset();
-	pStudy->parameters.years(nbYears);
+	pStudy->parameters.resetPlaylist(nbYears);
 
 	//Prepare parameters for simulation
 	Data::StudyLoadOptions options;

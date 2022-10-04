@@ -82,9 +82,9 @@ public:
     //@}
 
     /*!
-    ** \brief Assign a new number of MC years
+    ** \brief Reset the playlist (played years and associated years)
     */
-    void years(uint y);
+    void resetPlaylist(uint nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -561,6 +561,8 @@ private:
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
     //! Save the internal settings into an INI file
     void saveToINI(IniFile& ini) const;
+
+    void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
