@@ -60,8 +60,17 @@ int main(int argc, char* argv[])
 
     auto study = std::make_shared<Data::Study>();
 
-    initComponents(study, studyPath);
+    if (!initComponents(study, studyPath))
+        return EXIT_FAILURE;
 
+    runKirchhoffConstraints(study, studyPath, kirchhoffOptionPath);
+
+    return 0;
+}
+
+bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
+    std::string studyPath, std::string kirchhoffOptionPath)
+{
     CBuilder constraintBuilder(study);
     logs.info() << "CBuilder created";
 
@@ -76,8 +85,9 @@ int main(int argc, char* argv[])
 
     study->bindingConstraints.saveToFolder(studyPath + "/input/bindingconstraints");
 
-    return 0;
+    return result;
 }
+
 
 static void NotEnoughMemory()
 {
@@ -104,9 +114,7 @@ bool initResources(int argc, char* argv[])
 
 bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
 {
-	study->header.version = study->header.ReadVersionFromFile(studyPath + "/study.antares");
-    /* study->header.version = 830; */
-	logs.notice() << study->header.version;
+    study->header.version = study->header.ReadVersionFromFile(studyPath + "/study.antares");
     study->folder = studyPath;
     study->folderInput = studyPath + "/input";
     study->inputExtension = "txt";
@@ -114,7 +122,6 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
     Data::StudyLoadOptions options;
     options.loadOnlyNeeded = false;
 
-    /* auto areas = std::make_shared<Data::AreaList>(*study); */
     if(!study->areas.loadFromFolder(options))
     {
         logs.error() << "Areas loading failed";
