@@ -48,6 +48,8 @@
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
 
+#include <string>
+
 using namespace Yuni;
 
 namespace Antares
@@ -320,10 +322,10 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataThermalPrepro(this);
 }
 
-std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
+
+void Study::computeRawNbParallelYear()
 {
     std::map<std::string, uint> table;
-
     uint nbLogicalCores = Yuni::System::CPU::Count();
     if (!nbLogicalCores)
         logs.fatal() << "Number of logical cores available is 0.";
@@ -423,11 +425,6 @@ std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
         break;
     }
 
-    return table;
-}
-
-void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
-{
     /*
             Getting the number of parallel years based on the number
             of cores level.
@@ -435,9 +432,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             one type of time series is generated)
     */
 
-    std::map<std::string, uint> table = getRawNumberCoresPerLevel();
-
     // Getting the number of parallel years based on the number of cores level.
+
     switch (parameters.nbCores.ncMode)
     {
     case ncMin:
@@ -460,11 +456,13 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         break;
     }
 
-    maxNbYearsInParallel = nbYearsParallelRaw;
+}
 
-    // In case solver option '--force-parallel n' is used, previous computation is overridden.
-    if (forceParallel)
-        maxNbYearsInParallel = nbYearsParallelForced;
+uint Study::getNbYearsParallelRaw() const {
+    return nbYearsParallelRaw;
+}
+
+uint Study::computeTimeSeriesParallelYearsLimit(){
 
     // Limiting the number of parallel years by the smallest refresh span
     auto& p = parameters;
@@ -479,13 +477,13 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         TSlimit = (p.refreshIntervalWind < TSlimit) ? p.refreshIntervalWind : TSlimit;
     if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
         TSlimit = (p.refreshIntervalThermal < TSlimit) ? p.refreshIntervalThermal : TSlimit;
+    return TSlimit;
+    
+}
 
-    if (TSlimit < maxNbYearsInParallel)
-        maxNbYearsInParallel = TSlimit;
+std::vector<std::vector<uint>> Study::computeMinNbYearsInParallelYearSet(){
 
-    // Limiting the number of parallel years by the total number of years
-    if (p.nbYears < maxNbYearsInParallel)
-        maxNbYearsInParallel = p.nbYears;
+    auto& p = parameters;
 
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
@@ -547,6 +545,63 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         else
             buildNewSet = false;
     } // End of loop over years
+    
+    return setsOfParallelYears;
+
+}
+
+void Study::setGUIMinMaxNbYearsInParallel(const uint min, const uint max){
+    minNbYearsInParallel_save = min;
+    maxNbYearsInParallel_save = max;
+}
+
+bool Study::allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>> setsOfParallelYears){
+
+    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
+        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
+    {
+        uint currentSetSize = (uint)setsOfParallelYears[0].size();
+        if (setsOfParallelYears.size() > 1)
+        {
+            for (uint s = 1; s < setsOfParallelYears.size(); s++)
+            {
+                if (setsOfParallelYears[s].size() != currentSetSize)
+                {
+                    return false;
+                }
+            }
+        }
+    } // End if hot start
+    return true;
+}
+
+void Study::computeNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
+{
+    /*
+            Getting the number of parallel years based on the number
+            of cores level.
+            This number is limited by the smallest refresh span (if at least
+            one type of time series is generated)
+    */
+    computeRawNbParallelYear();
+
+    maxNbYearsInParallel = getNbYearsParallelRaw();
+
+    // In case solver option '--force-parallel n' is used, previous computation is overridden.
+    if (forceParallel)
+        maxNbYearsInParallel = nbYearsParallelForced;
+
+    uint TSlimit = computeTimeSeriesParallelYearsLimit();
+    if (TSlimit < maxNbYearsInParallel)
+        maxNbYearsInParallel = TSlimit;
+    
+    auto& p = parameters;
+
+    // Limiting the number of parallel years by the total number of years
+    if (p.nbYears < maxNbYearsInParallel)
+        maxNbYearsInParallel = p.nbYears;
+
+    auto setsOfParallelYears = computeMinNbYearsInParallelYearSet();
 
     // Now finding the smallest size among all sets.
     minNbYearsInParallel = maxNbYearsInParallel;
@@ -562,7 +617,7 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled
     // by user.
-    minNbYearsInParallel_save = minNbYearsInParallel;
+    // minNbYearsInParallel_save = minNbYearsInParallel;
 
     // The max number of years to run in parallel is limited by the max number years in a set of
     // parallel years. This latter number can be limited by the smallest interval between 2 refresh
@@ -578,26 +633,12 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
     // GUI : storing max nb of parallel years (in a set of parallel years) in case parallel mode is
     // enabled.
     //		 Useful for RAM estimation.
-    maxNbYearsInParallel_save = maxNbYearsInParallel;
+    setGUIMinMaxNbYearsInParallel(minNbYearsInParallel, maxNbYearsOverAllSets);
 
     // Here we answer the question (useful only if hydro hot start is asked) : do all sets of
     // parallel years have the same size ?
-    if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
-    {
-        uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        if (setsOfParallelYears.size() > 1)
-        {
-            for (uint s = 1; s < setsOfParallelYears.size(); s++)
-            {
-                if (setsOfParallelYears[s].size() != currentSetSize)
-                {
-                    parameters.allSetsHaveSameSize = false;
-                    break;
-                }
-            }
-        }
-    } // End if hot start
+
+    parameters.allSetsHaveSameSize = allSetsParallelYearsHaveSameSize(setsOfParallelYears);
 }
 
 bool Study::checkHydroHotStart()

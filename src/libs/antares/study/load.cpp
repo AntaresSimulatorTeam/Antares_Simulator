@@ -39,6 +39,9 @@ namespace Antares
 {
 namespace Data
 {
+
+constexpr int MATRIX_BUFFER_4MB = 4 * 1024 * 1024;
+
 bool Study::internalLoadHeader(const String& path)
 {
     // Header
@@ -93,7 +96,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     inputExtensionCompatibility();
 
     // Reserving enough space in buffer to avoid several calls to realloc
-    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
+    this->dataBuffer.reserve(MATRIX_BUFFER_4MB); // For matrices, reserving 4Mo
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
@@ -115,33 +118,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
     loadLayers(buffer);
 
-    if (usedByTheSolver and not options.prepareOutput)
-    {
-        parameters.noOutput = true;
-        parameters.yearByYear = false;
-        parameters.timeSeriesToArchive = 0;
-        parameters.storeTimeseriesNumbers = false;
-        parameters.synthesis = false;
-    }
-
-    if (options.loadOnlyNeeded and !parameters.timeSeriesToGenerate)
-        // Nothing to refresh
-        parameters.timeSeriesToRefresh = 0;
-
-    // We can not run the simulation if the study folder is not in the latest
-    // version and that we would like to re-importe the generated timeseries
-    if (usedByTheSolver)
-    {
-        // We have time-series to import
-        if (parameters.timeSeriesToImport and (uint) header.version != (uint)versionLatest)
-        {
-            logs.error() << "Stochastic TS stored in input : study must be upgraded to "
-                         << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            gotFatalError = true;
-            // it is useless to continue at this point
-            return false;
-        }
-    }
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
@@ -153,7 +129,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // -------------------------
     // Getting the number of logical cores to use before loading and creating the areas :
     // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+    computeNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
 #ifdef ANTARES_SWAP_SUPPORT
     // In case of swap support, MC years parallel computing is forbidden.
@@ -222,23 +198,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         }
     }
 
-    // calendar update
-    if (usedByTheSolver)
-        calendar.reset(parameters, /*force leapyear:*/ false);
-    else
-        calendar.reset(parameters);
-
-    calendarOutput.reset(parameters);
-
-    // In case hydro hot start is enabled, check all conditions are met.
-    // (has to be called after areas load and calendar building)
-    if (usedByTheSolver && !checkHydroHotStart())
-        return false;
-
-    // Reducing memory footprint
-    reduceMemoryUsage();
-
-    return ret;
+    return initializeInternalData(options);
 }
 
 void Study::inputExtensionCompatibility()
@@ -317,92 +277,6 @@ bool Study::internalLoadBindingConstraints(const StudyLoadOptions& options)
     return (!r and options.loadOnlyNeeded) ? false : r;
 }
 
-class SetHandlerAreas
-{
-public:
-    SetHandlerAreas(Study& study) : pStudy(study)
-    {
-    }
-
-    void clear(Study::SingleSetOfAreas& set)
-    {
-        set.clear();
-    }
-
-    uint size(Study::SingleSetOfAreas& set)
-    {
-        return (uint)set.size();
-    }
-
-    bool add(Study::SingleSetOfAreas& set, const String& value)
-    {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
-        if (area)
-        {
-            set.insert(area);
-            return true;
-        }
-        return false;
-    }
-
-    bool add(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
-    {
-        if (!otherSet.empty())
-        {
-            auto end = otherSet.end();
-            for (auto i = otherSet.begin(); i != end; ++i)
-                set.insert(*i);
-        }
-        return true;
-    }
-
-    bool remove(Study::SingleSetOfAreas& set, const String& value)
-    {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
-        if (area)
-        {
-            set.erase(area);
-            return true;
-        }
-        return false;
-    }
-
-    bool remove(Study::SingleSetOfAreas& set, const Study::SingleSetOfAreas& otherSet)
-    {
-        if (!otherSet.empty())
-        {
-            auto end = otherSet.end();
-            for (auto i = otherSet.begin(); i != end; ++i)
-            {
-                set.erase(*i);
-            }
-        }
-        return true;
-    }
-
-    bool applyFilter(Study::SingleSetOfAreas& set, const String& value)
-    {
-        if (value == "add-all")
-        {
-            auto end = pStudy.areas.end();
-            for (auto i = pStudy.areas.begin(); i != end; ++i)
-                set.insert(i->second);
-            return true;
-        }
-
-        if (value == "remove-all")
-        {
-            set.clear();
-            return true;
-        }
-        return false;
-    }
-
-private:
-    Study& pStudy;
-
-}; // class SetHandlerAreas
-
 bool Study::internalLoadSets()
 {
     // Set of areas
@@ -415,15 +289,12 @@ bool Study::internalLoadSets()
     // Load the rules
     if (setsOfAreas.loadFromFile(buffer))
     {
-        // Apply the rules
-        SetHandlerAreas handler(*this);
-        setsOfAreas.rebuildAllFromRules(handler);
-        // Write the results into the logs
-        setsOfAreas.dumpToLogs(logs);
-        return true;
+        initializeSetsData();
+        return true;        
     }
 
     logs.warning() << "Impossible to load the sets of areas";
+
     return false;
 }
 

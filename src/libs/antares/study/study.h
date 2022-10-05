@@ -96,6 +96,8 @@ public:
     using FileExtension = Yuni::CString<8, false>;
 
 public:
+
+    friend class StudyWrapper;
     /*!
     ** \brief Operations related to the global current study
     **
@@ -462,7 +464,32 @@ public:
     *"max").
     **
     */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
+    void computeRawNbParallelYear();
+
+    /*!
+    ** \brief Gets the raw number of parallel years
+    */
+    uint getNbYearsParallelRaw() const;
+
+    /*!
+    ** \brief Computes the limit parallel years number by the smallest refresh span
+    */
+    uint computeTimeSeriesParallelYearsLimit();
+
+    /*!
+    ** \brief Computes the minimum number of years in a set of parallel years.
+    */
+    std::vector<std::vector<uint>> computeMinNbYearsInParallelYearSet();
+
+    /*!
+    ** \brief Sets the min and max number of parallel years for the UI.
+    */
+    void setGUIMinMaxNbYearsInParallel(const uint max, const uint min);
+
+    /*!
+    ** \brief True if all sets have the same size.
+    */
+    bool allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>> setsOfParallelYears);
 
     /*!
     ** \brief Computes number of cores
@@ -470,7 +497,7 @@ public:
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
-    void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
+    void computeNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
 
     /*!
     ** \brief In case hydro hot start is enabled, checking all conditions are met.
@@ -777,6 +804,9 @@ protected:
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}
+
+    bool initializeInternalData(const StudyLoadOptions& options);
+    void initializeSetsData();
 
     //! \name Misc
     //@{
