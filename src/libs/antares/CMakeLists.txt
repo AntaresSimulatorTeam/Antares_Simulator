@@ -469,6 +469,7 @@ set(SRC
 	study/memory-usage.cpp
 	study/importlogs.cpp
 	study/load.cpp
+	study/load-data.cpp
 	study/save.cpp
 	study/study.extra.cpp
 	study/version.h

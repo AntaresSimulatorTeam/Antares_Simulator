@@ -194,14 +194,14 @@ void Study::createAsNew()
     reduceMemoryUsage();
 }
 
-void Study::reduceMemoryUsage()
+void Study::reduceMemoryUsage() //KVR memory management? 
 {
     ClearAndShrink(buffer);
     ClearAndShrink(dataBuffer);
     ClearAndShrink(bufferLoadingTS);
 }
 
-void StudyEnsureDataLoadPrepro(Study* s)
+void StudyEnsureDataLoadPrepro(Study* s) //KVR allocation
 {
     AreaListEnsureDataLoadPrepro(&s->areas);
 }
@@ -256,7 +256,7 @@ void StudyEnsureDataThermalPrepro(Study* s)
     AreaListEnsureDataThermalPrepro(&s->areas);
 }
 
-uint64 Study::memoryUsage() const
+uint64 Study::memoryUsage() const //memory management
 {
     return folder.capacity()
            // Folders paths
@@ -277,7 +277,7 @@ uint64 Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-void Study::ensureDataAreInitializedAccordingParameters()
+void Study::ensureDataAreInitializedAccordingParameters() //allocation
 {
     StudyEnsureDataLoadTimeSeries(this);
     StudyEnsureDataSolarTimeSeries(this);
@@ -320,10 +320,11 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataThermalPrepro(this);
 }
 
-std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
-{
-    std::map<std::string, uint> table;
 
+void Study::setRawNbParallelYear()
+{
+    // Set logical cores table -> KVR ToDo: to put in an utils file or class
+    std::map<std::string, uint> table;
     uint nbLogicalCores = Yuni::System::CPU::Count();
     if (!nbLogicalCores)
         logs.fatal() << "Number of logical cores available is 0.";
@@ -423,11 +424,6 @@ std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
         break;
     }
 
-    return table;
-}
-
-void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
-{
     /*
             Getting the number of parallel years based on the number
             of cores level.
@@ -435,9 +431,8 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
             one type of time series is generated)
     */
 
-    std::map<std::string, uint> table = getRawNumberCoresPerLevel();
-
     // Getting the number of parallel years based on the number of cores level.
+    // KVR this could be another map and be set in getRawNumberCoresPerLevel
     switch (parameters.nbCores.ncMode)
     {
     case ncMin:
@@ -460,14 +455,16 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         break;
     }
 
-    maxNbYearsInParallel = nbYearsParallelRaw;
+}
 
-    // In case solver option '--force-parallel n' is used, previous computation is overridden.
-    if (forceParallel)
-        maxNbYearsInParallel = nbYearsParallelForced;
+uint Study::getNbYearsParallelRaw() const {
+    return nbYearsParallelRaw;
+}
+
+uint Study::computeTimeSeriesParallelYearsLimit(){
 
     // Limiting the number of parallel years by the smallest refresh span
-    auto& p = parameters;
+    auto& p = parameters; // KVR WHY THO???? readability???
     uint TSlimit = UINT_MAX;
     if ((p.timeSeriesToGenerate & timeSeriesLoad) && (p.timeSeriesToRefresh & timeSeriesLoad))
         TSlimit = p.refreshIntervalLoad;
@@ -479,13 +476,13 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         TSlimit = (p.refreshIntervalWind < TSlimit) ? p.refreshIntervalWind : TSlimit;
     if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
         TSlimit = (p.refreshIntervalThermal < TSlimit) ? p.refreshIntervalThermal : TSlimit;
+    return TSlimit;
+    
+}
 
-    if (TSlimit < maxNbYearsInParallel)
-        maxNbYearsInParallel = TSlimit;
+std::vector<std::vector<uint>> Study::computeMinNbYearsInParallelYearSet(){
 
-    // Limiting the number of parallel years by the total number of years
-    if (p.nbYears < maxNbYearsInParallel)
-        maxNbYearsInParallel = p.nbYears;
+    auto& p = parameters;
 
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
@@ -547,6 +544,38 @@ void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParalle
         else
             buildNewSet = false;
     } // End of loop over years
+    
+    return setsOfParallelYears;
+
+}
+
+void Study::getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced) //KVR: single responsibility not respected, could be splitted
+{
+    /*
+            Getting the number of parallel years based on the number
+            of cores level.
+            This number is limited by the smallest refresh span (if at least
+            one type of time series is generated)
+    */
+    logs.info() << "******************* KVR Study::getNumberOfCores ************************";
+
+    maxNbYearsInParallel = getNbYearsParallelRaw();
+
+    // In case solver option '--force-parallel n' is used, previous computation is overridden.
+    if (forceParallel)
+        maxNbYearsInParallel = nbYearsParallelForced;
+
+    uint TSlimit = computeTimeSeriesParallelYearsLimit();
+    if (TSlimit < maxNbYearsInParallel)
+        maxNbYearsInParallel = TSlimit;
+    
+    auto& p = parameters;
+
+    // Limiting the number of parallel years by the total number of years
+    if (p.nbYears < maxNbYearsInParallel)
+        maxNbYearsInParallel = p.nbYears;
+
+    std::vector<std::vector<uint>> setsOfParallelYears = computeMinNbYearsInParallelYearSet();
 
     // Now finding the smallest size among all sets.
     minNbYearsInParallel = maxNbYearsInParallel;
@@ -743,7 +772,7 @@ bool Study::prepareOutput()
 
     // Temporary buffer
     String buffer;
-    buffer.reserve(1024);
+    buffer.reserve(1024); //KVR magic number
 
     // Folder output
     if (not simulation.name.empty())

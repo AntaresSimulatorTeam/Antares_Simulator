@@ -184,7 +184,7 @@ public:
     ** This method does not have any effect except modifying
     ** internal variables (`folder`, `folderInput`, ...).
     */
-    void relocate(AnyString newFolder);
+    void relocate(AnyString newFolder); //KVR saver?
 
     /*!
     ** \brief Load a study from a folder
@@ -192,7 +192,7 @@ public:
     ** \param path The path where data are located
     ** \return True if succeeded, false otherwise
     */
-    bool loadFromFolder(const AnyString& path, const StudyLoadOptions& options);
+    bool loadFromFolder(const AnyString& path, const StudyLoadOptions& options); // KVR: loader
 
     /*!
     ** \brief Clear all ressources held by the study
@@ -215,14 +215,14 @@ public:
     ** \param folder The folder where to write data
     ** \return True if succeeded, false otherwise
     */
-    bool saveToFolder(const AnyString& newfolder);
+    bool saveToFolder(const AnyString& newfolder); //KVR: saver
 
     /*!
     ** \brief Reset the folder icon (Windows only)
     **
     ** \return True if the operation succeeded
     */
-    bool resetFolderIcon() const;
+    bool resetFolderIcon() const; //KVR why is this part of the study???
     //@}
 
     //! \name Invalidate
@@ -233,12 +233,12 @@ public:
     ** Mark all JIT structures as invalidated. This will force the loading of missing
     ** data in memory and it will force the rewritten of any matrix.
     */
-    bool invalidate(bool reload = false) const;
+    bool invalidate(bool reload = false) const; // KVR: loader
 
     /*!
     ** \brief Mark the whole study as modified
     */
-    void markAsModified() const;
+    void markAsModified() const; // KVR: study is the observable, everything modified here are observers
     //@}
 
     //! \name Areas
@@ -250,7 +250,7 @@ public:
     ** \param basename The root base name
     ** \return True if a new name has been found, false otherwise
     */
-    bool areaFindNameForANewArea(AreaName& out, const AreaName& basename);
+    bool areaFindNameForANewArea(AreaName& out, const AreaName& basename); // KVR: can area management be taken out of here?
 
     /*!
     ** \brief Add an area and make all required initialization
@@ -302,7 +302,7 @@ public:
     ** \param lnk The link. The pointer will no longer be valid after the call to this routine
     ** \return True if the operation succeeded, false otherwise
     */
-    bool linkDelete(AreaLink* lnk);
+    bool linkDelete(AreaLink* lnk); //KVR: same for link
     //@}
 
     //! \name Renewable/thermal clusters
@@ -462,7 +462,13 @@ public:
     *"max").
     **
     */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
+    // std::map<std::string, uint> getRawNumberCoresPerLevel();
+
+    void setRawNbParallelYear();
+    uint getNbYearsParallelRaw() const;
+    uint computeTimeSeriesParallelYearsLimit();
+    std::vector<std::vector<uint>> computeMinNbYearsInParallelYearSet();
+
 
     /*!
     ** \brief Computes number of cores
@@ -777,6 +783,9 @@ protected:
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}
+
+    bool initializeInternalData(const StudyLoadOptions& options);
+    void initializeSetsData();
 
     //! \name Misc
     //@{
