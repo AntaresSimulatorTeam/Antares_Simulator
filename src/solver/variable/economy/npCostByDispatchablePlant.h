@@ -42,7 +42,7 @@ struct VCardNonProportionalCostByDispatchablePlant
     //! Caption
     static const char* Caption()
     {
-        return "NP Cost by plant";
+        return "Number of units in reserve mode";
     }
     //! Unit
     static const char* Unit()
@@ -256,6 +256,20 @@ public:
         NextType::yearBegin(year, numSpace);
     }
 
+    void yearEndBuildPrepareDataForEachThermalCluster(State& state,
+                                                      uint year,
+                                                      unsigned int numSpace)
+    {
+        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
+        {
+            state.thermalClusterReserveUnitsCountForYear[i] += static_cast<uint>(
+              pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
+        }
+
+        // Next variable
+        NextType::yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
+    }
+
     void yearEndBuildForEachThermalCluster(State& state, uint year, unsigned int numSpace)
     {
         // Get end year calculations
@@ -264,7 +278,7 @@ public:
              ++i)
         {
             pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]
-              = state.thermalClusterNonProportionalCostForYear[i];
+              = state.thermalClusterReserveUnitsCountForYear[i];
         }
 
         // Next variable
@@ -332,11 +346,10 @@ public:
 
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
-        // Total Non Proportional cost for this hour
-        // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-        // += production for the current thermal dispatchable cluster
-        //	(state.thermalClusterNonProportionalCost);
+        // Production for this hour
+        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
+          .hour[state.hourInTheYear]
+          = state.thermalClusterNumberReserve;
 
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

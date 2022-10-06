@@ -113,12 +113,19 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucHeuristicAccurate
                 || unitCommitmentMode
                      == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
+            {
                 thermalClusterNumberON
                   = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
                                         ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
+                thermalClusterNumberReserve = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
+                                                ->NombreDeGroupesFournissantDeLaReserve[thermalCluster->index]);
+            }
             else
+            {
                 thermalClusterNumberON
                   = 0; // Economy Fast or Adequacy -- will be calculated during the smoothing
+                thermalClusterNumberReserve = 0;
+            }
         }
 
         // The operating cost, for a single cluster of a single area

@@ -681,12 +681,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
             CorrespondanceVarNativesVarOptim
                 = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
 
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
-            if (Var >= 0)
+            if (Simulation == NON_ANTARES) 
             {
-                Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
-                NombreDeTermes++;
+                Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                }
             }
             else
                 NbTermesContraintesPourLesCoutsDeDemarrage++;

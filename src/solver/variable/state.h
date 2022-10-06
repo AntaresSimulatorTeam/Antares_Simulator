@@ -196,6 +196,9 @@ public:
     //! Number of groups turned ON by cluster for the current hour in the year with the
     //! ucHeuristicAccurate or ucMILP modes
     uint thermalClusterNumberON;
+
+    uint thermalClusterNumberReserve;
+    
     //! Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup;
     //! Minimum power of the cluster for the current hour in the year
@@ -206,6 +209,8 @@ public:
     //! Number of unit dispatched for all clusters for the whole year for ucHeuristicFast (fast
     //! heuristic), ucHeuristicAccurate (accurate heuristic) or ucMILP (MILP resolution)
     uint thermalClusterDispatchedUnitsCountForYear[Variable::maxHoursInAYear];
+
+    uint thermalClusterReserveUnitsCountForYear[Variable::maxHoursInAYear];
 
     //! Thermal operating cost for the current thermal cluster for the whole year
     double thermalClusterOperatingCostForYear[Variable::maxHoursInAYear];
