@@ -247,6 +247,7 @@ typedef struct
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
 
+    int* NombreMinDeGroupesFournissantDeLaReserve;
 } PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
 
 typedef struct

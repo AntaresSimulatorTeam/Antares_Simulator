@@ -262,7 +262,7 @@ public:
     {
         for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
         {
-            state.thermalClusterReserveUnitsCountForYear[i] += static_cast<uint>(
+            state.thermalClusterReserveUnitsCountForYear[i] = static_cast<uint>(
               pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex].hour[i]);
         }
 

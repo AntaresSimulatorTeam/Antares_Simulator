@@ -154,7 +154,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesFournissantDeLaReserve[Palier];
                 Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
-                Xmin[Var] = 0;
+                Xmin[Var] = PuissanceDisponibleEtCout->NombreMinDeGroupesFournissantDeLaReserve[PdtHebdo];
 
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]

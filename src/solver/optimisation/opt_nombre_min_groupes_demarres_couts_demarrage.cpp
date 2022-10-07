@@ -227,9 +227,19 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                     }
                 }
                 else
-                {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                      = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                { 
+
+                    int* NombreMinDeGroupesFournissantDeLaReserve
+                      = PuissanceDisponibleEtCout[Index]->NombreMinDeGroupesFournissantDeLaReserve;
+
+                    for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
+                    {
+                        NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
+                          = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+
+                        NombreMinDeGroupesFournissantDeLaReserve[PdtHebdo]
+                          = ProductionThermique[PdtHebdo]->NombreDeGroupesFournissantDeLaReserve[Index];
+                    }
                 }
 
             }

@@ -580,6 +580,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
             problem.PaliersThermiquesDuPays[k]
               ->PuissanceDisponibleEtCout[j]
+              ->NombreMinDeGroupesFournissantDeLaReserve
+              = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+
+            problem.PaliersThermiquesDuPays[k]
+              ->PuissanceDisponibleEtCout[j]
               ->CoutHoraireDuPalierThermiqueUp
               = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
             problem.PaliersThermiquesDuPays[k]
@@ -879,6 +884,11 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
             MemFree(problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
                       ->NombreMinDeGroupesEnMarcheDuPalierThermique);
+
+            MemFree(problem.PaliersThermiquesDuPays[k]
+                      ->PuissanceDisponibleEtCout[j]
+                      ->NombreMinDeGroupesFournissantDeLaReserve);
+
             MemFree(problem.PaliersThermiquesDuPays[k]
                       ->PuissanceDisponibleEtCout[j]
                       ->CoutHoraireDuPalierThermiqueUp);
