@@ -311,11 +311,6 @@ void SIM_InitialisationResultats()
             interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
         }
     }
-
-    for (uint i = 0; i < study.runtime->bindingConstraintCount; i++)
-    {
-        memset(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-    }
 }
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,

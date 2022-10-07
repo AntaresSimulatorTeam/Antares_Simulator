@@ -62,16 +62,6 @@ static void AllocateResultsForEconomicMode(void)
         rpNtc->VariablesDualesMoyennes = (double*)MemAlloc(sizeOfDoubleHours);
         rpNtc->RenteHoraire = (double*)MemAlloc(sizeOfDoubleHours);
     }
-
-    ResultatsParContrainteCouplante = (RESULTATS_PAR_CONTRAINTE_COUPLANTE**)MemAlloc(
-      study.runtime->bindingConstraintCount * sizeof(void*));
-    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
-    {
-        ResultatsParContrainteCouplante[i] = (RESULTATS_PAR_CONTRAINTE_COUPLANTE*)MemAlloc(
-          sizeof(RESULTATS_PAR_CONTRAINTE_COUPLANTE));
-        ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes
-          = (double*)MemAlloc(sizeOfDoubleHours);
-    }
 }
 
 static void DeallocateResultsForEconomicMode(void)
@@ -99,14 +89,6 @@ static void DeallocateResultsForEconomicMode(void)
     }
     MemFree(ResultatsParInterconnexion);
     ResultatsParInterconnexion = NULL;
-
-    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
-    {
-        MemFree(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes);
-        MemFree(ResultatsParContrainteCouplante[i]);
-    }
-    MemFree(ResultatsParContrainteCouplante);
-    ResultatsParContrainteCouplante = NULL;
 }
 
 void SIM_AllocationTableaux()

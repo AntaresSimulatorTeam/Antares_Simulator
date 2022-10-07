@@ -49,6 +49,5 @@ extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;
 /* Resultats */
 /*-Economique-*/
 extern RESULTATS_PAR_INTERCONNEXION** ResultatsParInterconnexion;
-extern RESULTATS_PAR_CONTRAINTE_COUPLANTE** ResultatsParContrainteCouplante;
 
 #endif /* __SOLVER_SIMULATION_EXTERN_H__ */
