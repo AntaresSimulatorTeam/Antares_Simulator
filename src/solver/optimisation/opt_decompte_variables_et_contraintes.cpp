@@ -86,10 +86,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 
         ProblemeAResoudre->NombreDeVariables += 2;
 
-        if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-        {
             ProblemeAResoudre->NombreDeVariables += 1;
-        }
     }
     ProblemeAResoudre->NombreDeVariables *= NombreDePasDeTempsPourUneOptimisation;
 
