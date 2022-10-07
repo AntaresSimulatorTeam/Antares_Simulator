@@ -1607,11 +1607,6 @@ void Parameters::years(uint y)
     resetYearsWeigth();
 }
 
-StudyError Parameters::checkIntegrity() const
-{
-    return stErrNone;
-}
-
 void Parameters::saveToINI(IniFile& ini) const
 {
     // -- General --
