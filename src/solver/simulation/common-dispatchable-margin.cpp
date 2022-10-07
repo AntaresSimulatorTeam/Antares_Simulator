@@ -46,7 +46,6 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
 {
     assert(study.parameters.mode == Data::stdmEconomy);
     const uint nbHours = 168;
-    (void)nbHours;
 
     study.areas.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
