@@ -42,16 +42,15 @@ namespace Simulation
 void DispatchableMarginForAllAreas(const Data::Study& study,
                                    PROBLEME_HEBDO& problem,
                                    uint numSpace,
-                                   uint hourInYear,
-                                   uint nbHour)
+                                   uint hourInYear)
 {
     assert(study.parameters.mode == Data::stdmEconomy);
-    assert(nbHour == 168);
-    (void)nbHour;
+    const uint nbHours = 168;
+    (void)nbHours;
 
     study.areas.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
-        for (uint i = 0; i != 168; ++i)
+        for (uint i = 0; i != nbHours; ++i)
             dtgmrg[i] = 0.;
 
         if (not area.thermal.list.empty())
@@ -67,9 +66,9 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                 auto& matrix = cluster.series->series;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
-                assert(hourInYear + 168 <= matrix.height && "index out of bounds");
+                assert(hourInYear + nbHours <= matrix.height && "index out of bounds");
 
-                for (uint y = 0; y != 168; ++y)
+                for (uint y = 0; y != nbHours; ++y)
                 {
                     double production = hourlyResults.ProductionThermique[y]
                                           ->ProductionThermiqueDuPalier[cluster.index];
