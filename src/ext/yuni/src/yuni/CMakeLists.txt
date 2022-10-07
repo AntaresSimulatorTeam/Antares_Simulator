@@ -31,7 +31,7 @@ include("${CMAKE_CURRENT_SOURCE_DIR}/../cmake/common-settings.cmake")
 include("${CMAKE_CURRENT_SOURCE_DIR}/../cmake/modules.cmake")
 
 
-
+set(CMAKE_CXX_STANDARD 17)
 
 if(YUNI_MODULE_CORE)
 	# The header yuni.h must be available
