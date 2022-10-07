@@ -219,10 +219,17 @@ void Application::prepare(int argc, char* argv[])
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
     auto parser = CreateParser(pSettings, options);
-
     // Parse the command line arguments
-    if (!parser->operator()(argc, argv))
+    auto ret = parser->operator()(argc, argv);
+    switch (ret)
+    {
+        using namespace Yuni::GetOpt;
+    case ReturnCode::ERROR:
         throw Error::CommandLineArguments(parser->errors());
+        break;
+    case ReturnCode::HELP:
+        return;
+    }
 
     if (options.displayVersion)
     {

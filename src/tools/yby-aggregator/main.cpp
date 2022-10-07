@@ -328,7 +328,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
         bool optVersion = false;
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-        if (!options(argc, argv))
+        if (options(argc, argv) == GetOpt::ReturnCode::ERROR)
         {
             LocalPolicy::Close();
             AntaresSolverEmergencyShutdown(options.errors() ? 1 : 0);

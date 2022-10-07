@@ -23,6 +23,14 @@ namespace GetOpt
 ** \brief A command line options parser
 ** \ingroup Core
 */
+// Return codes
+enum class ReturnCode
+{
+    OK,
+    ERROR,
+    HELP
+};
+
 class YUNI_DECL Parser final
 {
 public:
@@ -159,7 +167,7 @@ public:
     ** \param argv The list of arguments
     ** \return False if the program should abort
     */
-    bool operator()(int argc, char* argv[]);
+    ReturnCode operator()(int argc, char* argv[]);
     //@}
 
     //! \name Help usage

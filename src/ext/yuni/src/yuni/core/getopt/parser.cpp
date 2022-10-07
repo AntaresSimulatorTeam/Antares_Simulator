@@ -75,7 +75,7 @@ public:
     /*!
     ** \brief parse the command line
     */
-    bool operator()(int argc, char* argv[]);
+    GetOpt::ReturnCode operator()(int argc, char* argv[]);
 
 private:
     //! An option has not been found
@@ -160,8 +160,9 @@ void Context::parameterIsMissing(const char* name)
     STD_CERR << "Error: The parameter for `" << name << "` is missing" << std::endl;
 }
 
-bool Context::operator()(int argc, char* argv[])
+GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
 {
+    using namespace GetOpt;
     while (pTokenIndex < argc)
     {
         arg = argv[pTokenIndex];
@@ -185,7 +186,7 @@ bool Context::operator()(int argc, char* argv[])
                     if (*arg == 'h' or *arg == '?')
                     {
                         pParser.helpUsage(argv[0]);
-                        return false;
+                        return ReturnCode::HELP;
                     }
                     optionIsUnknown(arg);
                 }
@@ -199,7 +200,7 @@ bool Context::operator()(int argc, char* argv[])
             ++arg;
             ++arg;
             if ('\0' == *arg) // End of options
-                return (0 == pParser.pErrors);
+                return (0 == pParser.pErrors) ? ReturnCode::OK : ReturnCode::ERROR;
 
             if ((sub = strchr(arg, '=')))
             {
@@ -221,7 +222,7 @@ bool Context::operator()(int argc, char* argv[])
                         if (0 == ::strcmp(buffer.c_str(), "help"))
                         {
                             pParser.helpUsage(argv[0]);
-                            return false;
+                            return ReturnCode::HELP;
                         }
                         optionIsUnknown(buffer.c_str());
                     }
@@ -245,7 +246,7 @@ bool Context::operator()(int argc, char* argv[])
                     if (0 == ::strcmp(arg, "help"))
                     {
                         pParser.helpUsage(argv[0]);
-                        return false;
+                        return ReturnCode::HELP;
                     }
                     optionIsUnknown(arg);
                 }
@@ -268,7 +269,7 @@ bool Context::operator()(int argc, char* argv[])
         ++pTokenIndex;
     }
 
-    return (0 == pParser.pErrors);
+    return (0 == pParser.pErrors) ? ReturnCode::OK : ReturnCode::ERROR;
 }
 
 } // namespace GetOptImpl
@@ -334,7 +335,7 @@ void Parser::clear()
     pRemains = nullptr;
 }
 
-bool Parser::operator()(int argc, char* argv[])
+GetOpt::ReturnCode Parser::operator()(int argc, char* argv[])
 {
     Private::GetOptImpl::Context context(*this);
     return context(argc, argv);
