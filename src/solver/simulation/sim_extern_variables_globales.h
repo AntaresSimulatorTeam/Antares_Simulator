@@ -34,9 +34,6 @@
 /* Structures Donnees lues a partir de fichiers */
 extern DONNEES_PAR_PAYS** DonneesParPays;
 
-/* Donnees simples lues a partir du fichier donnees_generales.txt */
-extern char AppelEnModeSimulateur;
-
 /* Valeurs generees de maniere aleatoire */
 extern VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 extern NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;

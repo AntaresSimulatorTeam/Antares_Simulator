@@ -35,7 +35,6 @@ char* Positionnement;
 char* PositionnementSV;
 char* LigneACompter;
 char* LigneLue;
-char AppelEnModeSimulateur;
 
 VALEURS_GENEREES_PAR_PAYS*** ValeursGenereesParPays;
 NUMERO_CHRONIQUES_TIREES_PAR_PAYS*** NumeroChroniquesTireesParPays;

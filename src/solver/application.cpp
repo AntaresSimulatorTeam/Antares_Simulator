@@ -432,9 +432,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
-    // Init the global variable for backward compatibility
-    AppelEnModeSimulateur = OUI_ANTARES;
-
     // Name of the simulation
     if (!pSettings.simulationName.empty())
         study.simulation.name = pSettings.simulationName;
