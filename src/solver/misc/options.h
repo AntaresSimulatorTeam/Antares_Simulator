@@ -59,8 +59,6 @@ public:
     bool noOutput;
     //! Progression
     bool displayProgression;
-    //! Swap folder
-    Yuni::String swap;
 
     Yuni::String PID;
 

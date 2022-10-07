@@ -466,19 +466,6 @@ void Panel::executeAggregator()
     // Time interval
     cmd << " -t hourly -t daily -t weekly -t monthly -t annual";
 
-    // Temp folder
-    String cacheFolder = Antares::memory.cacheFolder();
-    if (not cacheFolder.empty())
-    {
-        if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
-            cacheFolder.removeLast();
-        if (not cacheFolder.empty())
-        {
-            cmd << " --swap-folder=";
-            AppendWithQuotes(cmd, cacheFolder);
-        }
-    }
-
     auto* exec = new Toolbox::Process::Execute();
     exec->title(wxT("Extracting data from the output"));
     exec->subTitle(wxT("Running..."));

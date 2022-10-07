@@ -201,17 +201,6 @@ void Application::prepare(int argc, char* argv[])
     WriteHostInfoIntoLogs();
     logs.info();
 
-#ifdef ANTARES_SWAP_SUPPORT
-    // Changing the swap folder
-    if (!pSettings.swap.empty())
-    {
-        logs.info() << "  memory pool: scratch folder:" << pSettings.swap;
-        Antares::memory.cacheFolder(pSettings.swap);
-    }
-    else
-        logs.info() << "  memory pool: scratch folder:" << Antares::memory.cacheFolder();
-#endif
-
     // Initialize the main structures for the simulation
     // Logs
     Resources::WriteRootFolderToLogs();
