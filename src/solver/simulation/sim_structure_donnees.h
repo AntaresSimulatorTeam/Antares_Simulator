@@ -92,22 +92,6 @@ typedef struct
 
 typedef struct
 {
-    double* VariableDuale;
-} CONTCOUPL_PAR_ANNEE_SIMULEE;
-
-typedef struct
-{
-    double* VariablesDualesMoyennes;
-    CONTCOUPL_PAR_ANNEE_SIMULEE** ParSituation;
-} RESULTATS_PAR_CONTRAINTE_COUPLANTE;
-
-typedef struct
-{
-    double* VariableDuale;
-} INTERCO_PAR_ANNEE_SIMULEE;
-
-typedef struct
-{
     double* TransitMoyen;
     double* TransitMinimum;
     int* TransitMinimumNo;
@@ -117,7 +101,6 @@ typedef struct
     double* TransitMoyenRecalculQuadratique;
     double* VariablesDualesMoyennes;
     double* TransitAnnuel;
-    INTERCO_PAR_ANNEE_SIMULEE** ParSituation;
     double* RenteHoraire;
 } RESULTATS_PAR_INTERCONNEXION;
 
