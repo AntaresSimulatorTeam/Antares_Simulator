@@ -74,6 +74,9 @@ public:
     ~ISimulation();
     //@}
 
+    // Check that the writer is valid
+    void checkWriter() const;
+
     /*!
     ** \brief Run the simulation
     */
