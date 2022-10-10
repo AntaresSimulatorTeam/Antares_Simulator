@@ -73,6 +73,8 @@ static inline void FreeAndNil(T*& pointer)
 
 Study::Study(bool forTheSolver) :
  simulationMetadata(*this),
+ LayerData(0, true),
+ simulation(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
  nbYearsParallelRaw(0),
@@ -83,8 +85,6 @@ Study::Study(bool forTheSolver) :
  runtime(nullptr),
  // state(nullptr),
  uiinfo(nullptr),
- activeLayerID(0),
- showAllLayer(true),
  gotFatalError(false),
  pQueueService(std::make_shared<Yuni::Job::QueueService>()),
  usedByTheSolver(forTheSolver)

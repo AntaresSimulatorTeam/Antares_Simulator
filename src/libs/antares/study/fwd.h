@@ -432,23 +432,6 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
 */
 PowerFluctuations StringToPowerFluctuations(const AnyString& text);
 
-enum SheddingStrategy
-{
-    shsShareMargins = 0,
-    shsShareSheddings,
-    shsUnknown,
-};
-
-/*!
-** \brief Convert a global shedding strategy into a text
-*/
-const char* SheddingStrategyToCString(SheddingStrategy strategy);
-
-/*!
-** \brief Convert a text into a global shedding strategy
-*/
-SheddingStrategy StringToSheddingStrategy(const AnyString& text);
-
 enum SheddingPolicy
 {
     shpShavePeaks = 0,
@@ -548,8 +531,26 @@ enum ResultFormat
     // Store outputs inside a single zip archive
     zipArchive
 };
+
+// ------------------------
+// MPS export status
+// ------------------------
+enum class mpsExportStatus : int
+{
+    NO_EXPORT = 0,
+    EXPORT_FIRST_OPIM = 1,
+    EXPORT_SECOND_OPIM = 2,
+    EXPORT_BOTH_OPTIMS = 3,
+    UNKNOWN_EXPORT = 4
+};
+
+std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
+mpsExportStatus stringToMPSexportStatus(const AnyString& value);
+
 } // namespace Data
 } // namespace Antares
+
+
 
 namespace Antares
 {

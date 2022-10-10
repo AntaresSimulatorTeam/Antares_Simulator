@@ -1,0 +1,207 @@
+name: Centos7 CI (push and/or release)
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
+
+jobs:
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
+
+  docker_publish:
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+      with:
+        fetch-depth: 2
+
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@v1.1.2
+      with:
+        files: |
+          docker/centos7-basic-requirements
+          antares-deps-version.json
+
+    - name: Get branch name
+      id: branch_name
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: tj-actions/branch-names@v5
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      if: ${{ env.IS_RELEASE == 'true' || steps.changed-files.outputs.modified_files != '' }}
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+
+    - name: Docker file push
+      id: docker_push
+      if: ${{ env.IS_RELEASE == 'true' || steps.changed-files.outputs.modified_files != '' }}
+      uses: elgohr/Publish-Docker-Github-Action@master
+      env:
+        ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
+      with:
+        name: antaresrte/rte-antares
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker
+        dockerfile: centos7-basic-requirements
+        cache: true
+        tags: centos7-simulator
+        buildargs: ANTARES_DEPS_VERSION
+
+  build:
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    env:
+      XPRESSDIR: ${{ github.workspace }}/xpressmp813
+      ORTOOLSDIR: ${{ github.workspace }}/or-tools
+
+    outputs:
+        is_release: ${{steps.release_flag.outputs.is_release}}
+
+    runs-on: ubuntu-latest
+    needs:
+      - docker_publish
+      - doc_generation
+    container: 'antaresrte/rte-antares:centos7-simulator'
+    strategy:
+      matrix:
+        ortools-xpress: [ON, OFF]
+
+    steps:
+    - uses: nelonoel/branch-name@v1.0.1
+
+    - name: Checkout
+      run: |
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
+
+    - name: Export release flag
+      id: release_flag
+      run: |
+        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
+
+    - name: Init submodule
+      run: |
+          git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+
+    - name: Download XPRESS if needed
+      if: ${{ matrix.ortools-xpress == 'ON' }}
+      run: |
+        source /opt/rh/rh-git227/enable
+        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+
+    - name: Config OR-Tools URL
+      run: |
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
+            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
+          else
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
+            echo "LABEL=" >> $GITHUB_ENV
+          fi
+
+    - name: Download OR-Tools
+      id: ortools
+      run: |
+            mkdir -p ${{ env.ORTOOLSDIR }} && cd ${{ env.ORTOOLSDIR }}
+            wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
+            unzip -q ortools.zip
+            rm ortools.zip
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
+
+    - name: Configure
+      run: |
+           source /opt/rh/devtoolset-9/enable
+           cmake3 -B _build -S src \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DDEPS_INSTALL_DIR=/rte-antares-deps-Release \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON \
+           -DBUILD_not_system=OFF \
+           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
+           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+
+    - name: Build
+      run: |
+           source /opt/rh/devtoolset-9/enable
+           source /opt/rh/rh-git227/enable
+           cmake3 --build _build --config Release -j2
+           ccache -s
+
+    - name: Installer .rpm creation
+      run: |
+           cd _build
+           cpack3 -G RPM
+
+    - name: Rename .rpm file
+      run: |
+           cd _build
+           RPM_NAME=$(ls *.rpm)
+           RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ env.LABEL }}.rpm}
+           mv "${RPM_NAME}" "${RPM_NAME_WITH_SUFFIX}" || true
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack3 -G TGZ
+    
+    - name: Rename .tgz file
+      run: |
+           cd _build
+           TGZ_NAME=$(ls *.tar.gz)
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
+           mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
+
+    - name: Installer TGZ push
+      uses: actions/upload-artifact@v2
+      with:
+        path: _build/*.tar.gz
+
+    - name: Installer RPM push
+      uses: actions/upload-artifact@v2
+      with:
+        path: _build/*.rpm
+
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{needs.build.outputs.is_release == 'true'}}
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+
+    - name: List artifacts
+      run: ls -R
+
+    - name: Publish assets
+      uses: alexellis/upload-assets@0.3.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: '["*/*.tar.gz", "*/*.rpm"]'

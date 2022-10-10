@@ -28,6 +28,8 @@ jobs:
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -92,6 +94,11 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
+
+    - name: Install pip dependencies if necessary
+      run: pip install -r src/tests/examples/requirements.txt
 
     # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule
@@ -104,7 +111,14 @@ jobs:
     - name: Configure with VCPKG
       shell: bash
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH="../install" -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src \
+           -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
+           -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
+           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON  \
+           -DBUILD_not_system=OFF
 
     - name: Build
       run: |
@@ -112,7 +126,7 @@ jobs:
 
     - name: Remove OR-Tools install directory to free some disk space
       shell: bash
-      run: rm -rf ../install
+      run: rm -rf ${{env.ORTOOLS_DIR}}
 
     - name: Remove antares-deps to free some disk space
       shell: bash
@@ -133,6 +147,7 @@ jobs:
 
     - name: Run medium-tests
       uses: ./.github/workflows/run-tests
+      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
@@ -140,6 +155,7 @@ jobs:
 
     - name: Run long-tests-1
       uses: ./.github/workflows/run-tests
+      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
@@ -147,12 +163,14 @@ jobs:
 
     - name: Run long-tests-2
       uses: ./.github/workflows/run-tests
+      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
+      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
