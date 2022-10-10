@@ -379,6 +379,7 @@ void Application::execute()
         break;
     }
     }
+    // TODO : make an interface class for ISimulation, check writer & queue before runSimulationIn<XXX>Mode()
     catch (Solver::Initialization::Error::NoResultWriter e) {
         logs.error() << "No result writer";
         AntaresSolverEmergencyShutdown(); // no return

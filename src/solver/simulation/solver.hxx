@@ -282,7 +282,12 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+}
 
+template<class Impl>
+inline void ISimulation<Impl>::checkWriter() const
+{
+    // The zip writer needs a queue service (async mutexed write)
     if (!pQueueService)
     {
         throw Solver::Initialization::Error::NoQueueService();
@@ -469,11 +474,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        if (IO::Directory::Create(newPath) && pResultWriter)
-            ImplementationType::variables.exportSurveyResults(
-              synthesis, newPath, numSpace, pResultWriter);
-        else
-            logs.fatal() << "impossible to create `" << newPath << "`";
+        ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace, pResultWriter);
     }
 }
 
