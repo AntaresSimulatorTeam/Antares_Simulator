@@ -209,7 +209,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     buffer.clear() << folder << SEP << "settings" << SEP << "simulations";
     ret = IO::Directory::Create(buffer) and ret;
     buffer.clear() << folder << SEP << "settings";
-    ret = simulationMetadata.saveToFolder(buffer) and ret;
+    ret = simulationComments.saveToFolder(buffer) and ret;
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     ret = parameters.saveToFile(buffer) and ret;
 

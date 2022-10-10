@@ -38,7 +38,7 @@ namespace Data
 /*!
 ** \brief Set of settings for a simulation
 */
-class SimulationMetadata final
+class SimulationComments final
 {
 public:
     //! \name Constructor & Destructor
@@ -46,9 +46,9 @@ public:
     /*!
     ** \brief Default constructor
     */
-    SimulationMetadata(Study& study);
+    SimulationComments(Study& study);
     //! Destructor
-    ~SimulationMetadata()
+    ~SimulationComments()
     {
     }
     //@}
@@ -79,7 +79,7 @@ public:
 private:
     Study& pStudy;
 
-}; // class SimulationMetadata
+}; // class SimulationComments
 
 } // namespace Data
 } // namespace Antares

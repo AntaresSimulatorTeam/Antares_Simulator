@@ -98,7 +98,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
-    if (not simulationMetadata.loadFromFolder(options))
+    if (not simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;

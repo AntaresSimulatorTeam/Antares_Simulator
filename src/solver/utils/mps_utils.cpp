@@ -56,19 +56,18 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      int optNumber)
 {
     auto study = Data::Study::Current::Get();
-    String outputFile;
-    outputFile << prefix << "-"; // problem ou criterion
-    outputFile << (study->runtime->currentYear[numSpace] + 1) << "-"
-               << (study->runtime->weekInTheYear[numSpace] + 1);
+    std::string outputFile;
+    outputFile.append(prefix.c_str()).append("-") // problem ou criterion
+      .append(std::to_string(study->runtime->currentYear[numSpace] + 1)).append("-")
+      .append(std::to_string(study->runtime->weekInTheYear[numSpace] + 1));
 
-    if (optNumber != 0)
-    {
-        outputFile << "-" << optNumber;
-    }
+    if (optNumber)
+       outputFile.append("--optim-nb-").append(std::to_string(optNumber));
 
-    outputFile << "." << extension;
+    outputFile.append(extension.c_str());
 
-    return outputFile.c_str();
+    logs.info() << "Solver output File: `" << outputFile << "'";
+    return outputFile;
 }
 
 static void printHeader(Clob& buffer, int NombreDeVariables, int NombreDeContraintes)
@@ -183,7 +182,7 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
     }
 }
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Cnt;
@@ -255,10 +254,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
 
     free(Cder);
 
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", currentOptimNumber, numSpace);
-
-    printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
+    printHeader(buffer, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
     buffer.appendFormat("ROWS\n");
     buffer.appendFormat(" N  OBJECTIF\n");
@@ -298,7 +294,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    const auto filename = getFilenameWithExtension("problem-fixed-part", "mps", numSpace);
+    auto filename = getFilenameWithExtension("problem-fixed-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 
@@ -307,14 +303,11 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
     free(Csui);
 }
 
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Var;
     char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
-
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", currentOptimNumber, numSpace);
 
     printHeader(buffer, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
@@ -335,12 +328,12 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNum
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    const auto filename = getFilenameWithExtension("problem-variable-part", "mps", numSpace);
+    auto filename = getFilenameWithExtension("problem-variable-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumber, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Cnt;
@@ -441,9 +434,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
     free(Cder);
 
     printHeader(buffer, NombreDeVariables, NombreDeContraintes);
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem", "mps", currentOptimNumber, numSpace);
-
     buffer.appendFormat("ROWS\n");
     buffer.appendFormat(" N  OBJECTIF\n");
 
@@ -487,8 +477,8 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
 
     buffer.appendFormat("ENDATA\n");
 
-    auto filename = getFilenameWithExtension("problem", "mps", numSpace, n);
     auto study = Data::Study::Current::Get();
+    auto filename = getFilenameWithExtension("problem", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 
@@ -504,10 +494,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
 // --------------------
 fullMPSwriter::fullMPSwriter(
         PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
-        int currentOptimNumber, 
+        int optNumber, 
         uint thread_number) :
     named_splx_problem_(named_splx_problem),
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_number_(thread_number)
 {}
 void fullMPSwriter::runIfNeeded()
@@ -520,10 +510,10 @@ void fullMPSwriter::runIfNeeded()
 // ---------------------------------
 fullOrToolsMPSwriter::fullOrToolsMPSwriter(
         MPSolver* solver, 
-        int currentOptimNumber, 
+        int optNumber, 
         uint thread_number) :
     solver_(solver), 
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_number_(thread_number)
 {}
 void fullOrToolsMPSwriter::runIfNeeded()
@@ -538,11 +528,11 @@ void fullOrToolsMPSwriter::runIfNeeded()
 // ---------------------------------
 splitMPSwriter::splitMPSwriter(
         PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-        int currentOptimNumber,
+        int optNumber,
         uint thread_nb, 
         bool simu_1st_week) :
     named_splx_problem_(named_splx_problem),
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_nb_(thread_nb), 
     simu_1st_week_(simu_1st_week)
 {}

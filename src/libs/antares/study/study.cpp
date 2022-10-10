@@ -72,9 +72,8 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver) :
- simulationMetadata(*this),
+ simulationComments(*this),
  LayerData(0, true),
- simulation(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
  nbYearsParallelRaw(0),
@@ -268,7 +267,7 @@ uint64 Study::memoryUsage() const
            + buffer.capacity() + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
-           + simulationMetadata.memoryUsage()
+           + simulationComments.memoryUsage()
            // parameters
            + parameters.memoryUsage()
            // Areas
@@ -750,10 +749,10 @@ bool Study::prepareOutput()
     buffer.reserve(1024);
 
     // Folder output
-    if (not simulationMetadata.name.empty())
+    if (not simulationComments.name.empty())
     {
         buffer.clear();
-        TransformNameIntoID(simulationMetadata.name, buffer);
+        TransformNameIntoID(simulationComments.name, buffer);
         folderOutput << '-' << buffer;
     }
 
@@ -785,7 +784,7 @@ void Study::saveMiscFilesIntoOutput()
   path.reserve(1024);
 
   path.clear() << "about-the-study";
-  simulationMetadata.saveUsingWriter(resultWriter, path);
+  simulationComments.saveUsingWriter(resultWriter, path);
 
   // Write the header as a reminder too
   path.clear() << "about-the-study" << SEP << "study.ini";
@@ -811,7 +810,7 @@ void Study::saveMiscFilesIntoOutput()
   DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
   f << "[general]";
   f << "\nversion = " << (uint)Data::versionLatest;
-  f << "\nname = " << simulationMetadata.name;
+  f << "\nname = " << simulationComments.name;
   f << "\nmode = " << StudyModeToCString(parameters.mode);
   f << "\ndate = " << startTimeStr;
   f << "\ntitle = " << startTimeStr;

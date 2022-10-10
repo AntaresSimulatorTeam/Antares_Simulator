@@ -141,7 +141,7 @@ void Study::estimateMemoryUsageForInput(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (dataBuffer.chunkSize * 2u); // estimation
 
     // Simulation
-    u.requiredMemoryForInput += simulationMetadata.memoryUsage();
+    u.requiredMemoryForInput += simulationComments.memoryUsage();
     // Areas
     areas.estimateMemoryUsage(u);
 

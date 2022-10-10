@@ -499,19 +499,6 @@ public:
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
 
-    //! \name Simulation output Files creation
-    //@{
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    std::string createFileIntoOutputWithExtension(const YString& prefix,
-                                                  const YString& extension,
-                                                  uint currentOptimNumber,
-                                                  uint numSpace) const;
-
     //! \name
     //@{
     /*!
@@ -609,8 +596,9 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
-    SimulationMetadata simulationMetadata;
-
+    SimulationComments simulationComments;
+  
+    Yuni::sint64 pStartTime;
     // Used in GUI and solver
     // ----------------------
     // Maximum number of years in a set of parallel years.
