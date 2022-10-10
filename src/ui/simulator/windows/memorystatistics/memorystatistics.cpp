@@ -503,7 +503,6 @@ void MemoryStatistics::refreshInformation()
 
             {
                 Data::StudyMemoryUsage m(*study);
-                m.swappingSupport = true;
                 m.estimate();
                 s.clear();
 
@@ -513,7 +512,7 @@ void MemoryStatistics::refreshInformation()
                                 << (m.requiredMemoryForInput / (1024 * 1024))
                                 << "Mo, output: " << (m.requiredMemoryForOutput / (1024 * 1024))
                                 << "Mo,   disk: " << (m.requiredDiskSpace / (1024 * 1024))
-                                << "Mo (with swap support)";
+                                << "Mo";
                 }
 
                 s << wxT("~ ") << NormalizeAmountOfMemory(m.requiredMemory) << wxT(" Mo");

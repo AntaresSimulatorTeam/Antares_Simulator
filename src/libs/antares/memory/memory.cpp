@@ -625,43 +625,11 @@ void Memory::EstimateMemoryUsage(size_t bytes,
     size_t total = bytes * count;
     if (duplicateForParallelYears)
         total = total * u.nbYearsParallel;
-    if (u.swappingSupport)
-    {
-        if (total < minimalAllocationSize)
-        {
-            if (u.gatheringInformationsForInput)
-                u.requiredMemoryForInput += total;
-            else
-                u.requiredMemoryForOutput += total;
-        }
-        else
-        {
-            // counting the number of blocks required by the swap file
-            // to store all `bytes`
-            uint nbBlocks = 0;
-            do
-            {
-                total -= (total < (size_t)blockSize) ? total : (size_t)blockSize;
-                ++nbBlocks;
-            } while (total);
 
-            // Disk
-            u.requiredDiskSpaceForSwap += nbBlocks * blockSize;
-
-            // Memory overhead
-            if (u.gatheringInformationsForInput)
-                u.requiredMemoryForInput += (sizeof(Mapping) + sizeof(void*) + sizeof(void*));
-            else
-                u.requiredMemoryForOutput += (sizeof(Mapping) + sizeof(void*) + sizeof(void*));
-        }
-    }
+    if (u.gatheringInformationsForInput)
+        u.requiredMemoryForInput += total;
     else
-    {
-        if (u.gatheringInformationsForInput)
-            u.requiredMemoryForInput += total;
-        else
-            u.requiredMemoryForOutput += total;
-    }
+        u.requiredMemoryForOutput += total;
 }
 
 void Memory::displayInfo() const
