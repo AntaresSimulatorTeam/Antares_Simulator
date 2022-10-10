@@ -282,7 +282,12 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
         pYearByYear = false;
 
     pHydroHotStart = (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart);
+}
 
+template<class Impl>
+inline void ISimulation<Impl>::checkWriter() const
+{
+    // The zip writer needs a queue service (async mutexed write)
     if (!pQueueService)
     {
         throw Solver::Initialization::Error::NoQueueService();
@@ -469,11 +474,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        if (IO::Directory::Create(newPath) && pResultWriter)
-            ImplementationType::variables.exportSurveyResults(
-              synthesis, newPath, numSpace, pResultWriter);
-        else
-            logs.fatal() << "impossible to create `" << newPath << "`";
+        ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace, pResultWriter);
     }
 }
 
@@ -1557,7 +1558,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter && pResultWriter->needsTheJobQueue())
+        if (pResultWriter->needsTheJobQueue())
             numThreads++;
         pQueueService->maximumThreadCount(numThreads);
     }
@@ -1690,7 +1691,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft() && pResultWriter)
+    if (not study.parameters.adequacyDraft())
     {
         pAnnualCostsStatistics.endStandardDeviations();
         pAnnualCostsStatistics.writeToOutput(pResultWriter);
