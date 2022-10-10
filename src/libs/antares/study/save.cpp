@@ -209,7 +209,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     buffer.clear() << folder << SEP << "settings" << SEP << "simulations";
     ret = IO::Directory::Create(buffer) and ret;
     buffer.clear() << folder << SEP << "settings";
-    ret = simulation.saveToFolder(buffer) and ret;
+    ret = simulationComments.saveToFolder(buffer) and ret;
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     ret = parameters.saveToFile(buffer) and ret;
 
@@ -264,37 +264,6 @@ bool Study::saveToFolder(const AnyString& newfolder)
     ret = IO::Directory::Create(buffer) and ret;
 
     return ret;
-}
-
-bool Study::saveLayers(const AnyString& filename)
-{
-    IO::File::Stream file;
-    if (file.openRW(filename))
-    {
-        CString<256, true> data;
-        data << "[layers]\n";
-        for (std::map<size_t, std::string>::iterator iterator = layers.begin();
-             iterator != layers.end();
-             iterator++)
-        {
-            data << iterator->first << " = " << iterator->second;
-            data << '\n';
-        }
-
-        data << "[activeLayer]\n";
-        data << "activeLayerID"
-             << " = " << activeLayerID;
-        data << '\n';
-        data << "showAllLayer"
-             << " = " << showAllLayer;
-
-        file << data;
-
-        return true;
-    }
-
-    logs.error() << "I/O error: impossible to write " << filename;
-    return false;
 }
 
 } // namespace Data

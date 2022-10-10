@@ -56,19 +56,18 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      int optNumber)
 {
     auto study = Data::Study::Current::Get();
-    String outputFile;
-    outputFile << prefix << "-"; // problem ou criterion
-    outputFile << (study->runtime->currentYear[numSpace] + 1) << "-"
-               << (study->runtime->weekInTheYear[numSpace] + 1);
+    std::string outputFile;
+    outputFile.append(prefix.c_str()).append("-") // problem ou criterion
+      .append(std::to_string(study->runtime->currentYear[numSpace] + 1)).append("-")
+      .append(std::to_string(study->runtime->weekInTheYear[numSpace] + 1));
 
-    if (optNumber != 0)
-    {
-        outputFile << "-" << optNumber;
-    }
+    if (optNumber)
+       outputFile.append("--optim-nb-").append(std::to_string(optNumber));
 
-    outputFile << "." << extension;
+    outputFile.append(extension.c_str());
 
-    return outputFile.c_str();
+    logs.info() << "Solver output File: `" << outputFile << "'";
+    return outputFile;
 }
 
 static void printHeader(Clob& buffer, int NombreDeVariables, int NombreDeContraintes)
@@ -183,7 +182,7 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
     }
 }
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Cnt;
@@ -295,7 +294,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    const auto filename = getFilenameWithExtension("problem-fixed-part", "mps", numSpace);
+    auto filename = getFilenameWithExtension("problem-fixed-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 
@@ -304,11 +303,10 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     free(Csui);
 }
 
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Var;
-
     char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
     printHeader(buffer, Pb->NombreDeVariables, Pb->NombreDeContraintes);
@@ -330,12 +328,12 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace)
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    const auto filename = getFilenameWithExtension("problem-variable-part", "mps", numSpace);
+    auto filename = getFilenameWithExtension("problem-variable-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, uint n)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace)
 {
     Clob buffer;
     int Cnt;
@@ -436,7 +434,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, uint n
     free(Cder);
 
     printHeader(buffer, NombreDeVariables, NombreDeContraintes);
-
     buffer.appendFormat("ROWS\n");
     buffer.appendFormat(" N  OBJECTIF\n");
 
@@ -480,12 +477,142 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, uint numSpace, uint n
 
     buffer.appendFormat("ENDATA\n");
 
-    auto filename = getFilenameWithExtension("problem", "mps", numSpace, n);
     auto study = Data::Study::Current::Get();
+    auto filename = getFilenameWithExtension("problem", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
     writer->addJob(filename, buffer);
 
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
+}
+
+
+
+// --------------------
+// Full mps writing
+// --------------------
+fullMPSwriter::fullMPSwriter(
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
+        int optNumber, 
+        uint thread_number) :
+    named_splx_problem_(named_splx_problem),
+    current_optim_number_(optNumber),
+    thread_number_(thread_number)
+{}
+void fullMPSwriter::runIfNeeded()
+{
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_, current_optim_number_, thread_number_);
+}
+
+// ---------------------------------
+// Full mps writing by or-tools
+// ---------------------------------
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(
+        MPSolver* solver, 
+        int optNumber, 
+        uint thread_number) :
+    solver_(solver), 
+    current_optim_number_(optNumber),
+    thread_number_(thread_number)
+{}
+void fullOrToolsMPSwriter::runIfNeeded()
+{
+    // Make or-tools print the MPS files leads to a crash ! 
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_);
+}
+
+
+// ---------------------------------
+// mps written under split form
+// ---------------------------------
+splitMPSwriter::splitMPSwriter(
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+        int optNumber,
+        uint thread_nb, 
+        bool simu_1st_week) :
+    named_splx_problem_(named_splx_problem),
+    current_optim_number_(optNumber),
+    thread_nb_(thread_nb), 
+    simu_1st_week_(simu_1st_week)
+{}
+
+void splitMPSwriter::runIfNeeded()
+{
+    if (simu_1st_week_)
+        OPT_dump_spx_fixed_part(named_splx_problem_, current_optim_number_, thread_nb_);
+
+    OPT_dump_spx_variable_part(named_splx_problem_, current_optim_number_, thread_nb_);
+}
+
+mpsWriterFactory::mpsWriterFactory(
+        PROBLEME_HEBDO* ProblemeHebdo,
+        int NumIntervalle,
+        PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+        bool ortoolsUsed,
+        MPSolver* solver,
+        uint thread_number) :
+    pb_hebdo_(ProblemeHebdo),
+    num_intervalle_(NumIntervalle),
+    named_splx_problem_(named_splx_problem),
+    ortools_used_(ortoolsUsed),
+    solver_(solver),
+    thread_number_(thread_number)
+{
+    current_optim_number_ = pb_hebdo_->numeroOptimisation[num_intervalle_];
+    export_mps_ = pb_hebdo_->ExportMPS;
+    export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
+    split_mps_ = pb_hebdo_->SplitExportedMPS;
+    is_first_week_of_year_ = pb_hebdo_->firstWeekOfSimulation;
+}
+
+bool mpsWriterFactory::doWeExportMPS()
+{
+    switch (export_mps_)
+    {
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return true;
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return current_optim_number_ == PREMIERE_OPTIMISATION;
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return current_optim_number_ == DEUXIEME_OPTIMISATION;
+    default:
+        return false;
+    }
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::create()
+{
+    if (doWeExportMPS() && split_mps_)
+    {
+        return std::make_unique<splitMPSwriter>(named_splx_problem_, current_optim_number_, thread_number_, is_first_week_of_year_);
+    }
+    if (doWeExportMPS() && not split_mps_)
+    {
+        return createFullmpsWriter();
+    }
+
+    return std::make_unique<nullMPSwriter>();
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createOnOptimizationError()
+{
+    if (export_mps_on_error_ && not doWeExportMPS())
+    {
+        return createFullmpsWriter();
+    }
+
+    return std::make_unique<nullMPSwriter>();
+}
+
+std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
+{
+    if (ortools_used_)
+    {
+        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_, thread_number_);
+    }
+    else
+    {
+        return std::make_unique<fullMPSwriter>(named_splx_problem_, current_optim_number_, thread_number_);
+    }
 }

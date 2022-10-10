@@ -98,7 +98,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
-    if (not simulation.loadFromFolder(options))
+    if (not simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;
@@ -426,48 +426,6 @@ bool Study::reloadXCastData()
         ret = area.wind.prepro->loadFromFolder(*this, buffer) and ret;
     });
     return ret;
-}
-
-void Study::loadLayers(const AnyString& filename)
-{
-    IniFile ini;
-    if (std::ifstream(filename.c_str()).good()) // check if file exists
-        if (ini.open(filename))
-        {
-            // The section
-            auto* section = ini.find("layers");
-            if (section)
-            {
-                size_t key;
-                CString<50, false> value;
-
-                for (auto* p = section->firstProperty; p; p = p->next)
-                {
-                    // We convert the key and the value into the lower case format,
-                    // since several tests will be done with these string */
-                    key = p->key.to<size_t>();
-                    value = p->value;
-
-                    layers[key] = value.to<std::string>();
-                }
-
-                section = ini.find("activeLayer");
-                if (section)
-                {
-                    auto* p = section->firstProperty;
-                    activeLayerID = p->value.to<size_t>();
-
-                    p = p->next;
-
-                    if (p)
-                        showAllLayer = p->value.to<bool>();
-                }
-                return;
-            }
-
-            logs.warning() << ": The section `layers` can not be found";
-            return;
-        }
 }
 
 } // namespace Data

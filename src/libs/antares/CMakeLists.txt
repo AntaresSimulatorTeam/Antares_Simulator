@@ -477,6 +477,8 @@ set(SRC
 	study/output.cpp
 	study/output.h
 	study/output.hxx
+	study/layerdata.cpp
+	study/layerdata.h
 
 	# progression
 	study/progression/progression.h

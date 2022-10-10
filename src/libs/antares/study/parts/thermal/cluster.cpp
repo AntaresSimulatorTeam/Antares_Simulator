@@ -570,12 +570,6 @@ bool Data::ThermalCluster::integrityCheck()
         nominalCapacityWithSpinning = 0.;
         ret = false;
     }
-    if (unitCount > 100)
-    {
-        logs.error() << "Thermal cluster " << pID << ": The variable `unitCount` must be < 100";
-        unitCount = 100;
-        ret = false;
-    }
     if (spinning < 0. or spinning > 100.)
     {
         if (spinning < 0.)

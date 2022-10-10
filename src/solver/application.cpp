@@ -179,6 +179,14 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
 }
 
+void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
+{
+    if (ortoolsUsed && splitExportedMPS)
+    {
+        throw Error::InvalidParametersORTools_SplitMPS();
+    }
+}
+
 } // namespace
 
 namespace Antares
@@ -291,11 +299,12 @@ void Application::prepare(int argc, char* argv[])
     checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
     checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
-    bool tsGenThermal = (0
-                         != (pStudy->parameters.timeSeriesToGenerate
-                             & Antares::Data::TimeSeries::timeSeriesThermal));
+    bool tsGenThermal
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkSplitMPSWithORTOOLS(pParameters->ortoolsUsed, pParameters->include.splitExportedMPS);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
@@ -389,9 +398,6 @@ void Application::execute()
         AntaresSolverEmergencyShutdown(); // no return
     }
 
-    // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveMiscFilesIntoOutput();
-
     // Importing Time-Series if asked
     pStudy->importTimeseriesIntoInput();
 
@@ -443,7 +449,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -480,9 +486,12 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
 
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveMiscFilesIntoOutput();
+
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();

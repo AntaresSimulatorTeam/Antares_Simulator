@@ -173,6 +173,114 @@ void Connections::internalBuildSubControls()
     sizer->Layout();
 }
 
+static void addUpstreamDownstream(const wxTreeItemId& rootId,
+                                  wxTreeCtrl* listbox,
+                                  const Data::AreaList& areas,
+                                  size_t layerID)
+{
+    auto localRootId = listbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
+    listbox->SetItemBold(localRootId, true);
+    {
+        for (const auto& [links, area] : areas)
+        {
+            if (area->isVisibleOnLayer(layerID))
+            {
+                wxTreeItemId id;
+                // Foreach Interconnection for the area
+                for (const auto& [unused, lnk] : area->links)
+                {
+                    if (lnk->isVisibleOnLayer(layerID))
+                    {
+                        if (!id)
+                        {
+                            // We have to create the item corresponding to the area
+                            id = listbox->AppendItem(
+                              localRootId,
+                              wxString() << wxT(' ') << wxStringFromUTF8(area->name) << wxT(' '),
+                              1,
+                              1);
+                            listbox->SetItemBold(id, true);
+                        }
+                        // Adding the item for the interconnection
+                        listbox->AppendItem(
+                          id, /*parent*/
+                          // caption
+                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
+                          0,
+                          0,
+                          new TreeLeaf(lnk));
+                    }
+                }
+            }
+        }
+    }
+}
+
+static void addByArea(const wxTreeItemId& rootId,
+                      wxTreeCtrl* listbox,
+                      const Data::AreaList& areas,
+                      size_t layerID)
+{
+    // Root Node
+    auto localRootId = listbox->AppendItem(rootId, wxString(wxT("By area")), 2);
+    listbox->SetItemBold(localRootId, true);
+
+    // For each area, list the links related to it. For each link, the area is either
+    // its origin or extremity.
+    using ListOfLinks = std::vector<Data::AreaLink*>;
+
+    // 1. Build hierarchy
+    std::map<Data::AreaName, ListOfLinks> areaToListOfLinks;
+    // AreaName area1 -> {Link* lnk1, Link* lnk2, ...}
+    for (const auto& [unused1, area] : areas)
+    {
+        if (area->isVisibleOnLayer(layerID))
+        {
+            for (const auto& [unused2, lnk] : area->links)
+            {
+                if (lnk->isVisibleOnLayer(layerID))
+                {
+                    areaToListOfLinks[area->name].push_back(lnk);
+                    areaToListOfLinks[lnk->with->name].push_back(lnk);
+                }
+            }
+        }
+    }
+    // 2. Create nodes, etc.
+    for (const auto& [area, links] : areaToListOfLinks)
+    {
+        // Reference to the area
+        wxTreeItemId id;
+        // Foreach Interconnection for the area
+        auto count = links.size();
+        for (auto lnk : links)
+        {
+            if (!id)
+            {
+                // We have to create the item corresponding to the area
+                id = listbox->AppendItem(localRootId,
+                                         wxString() << wxT(' ') << wxStringFromUTF8(area)
+                                                    << wxT(" (") << count << wxT(')'),
+                                         1,
+                                         1);
+                listbox->SetItemBold(id, true);
+            }
+
+            const bool isAreaOriginOfLink = (area == lnk->from->name);
+            // Adding the item for the interconnection
+            listbox->AppendItem(
+              id, /*parent*/
+              // caption
+              wxString() << wxT(' ')
+                         << wxStringFromUTF8(isAreaOriginOfLink ? lnk->with->name : lnk->from->name)
+                         << wxT(' '),
+              0,
+              0,
+              new TreeLeaf(lnk));
+        }
+    }
+}
+
 void Connections::update()
 {
     assert(pListbox);
@@ -212,88 +320,12 @@ void Connections::update()
     // The current ROOT node ID
     wxTreeItemId rootId = pListbox->AddRoot(wxString(wxT("Links")));
     pListbox->SetItemBold(rootId, true);
-    wxTreeItemId localRootId;
 
     // UPSTREAM / DOWNSTREEAM
-    // Root Node
-    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Upstream / Downstream")), 2);
-    pListbox->SetItemBold(localRootId, true);
-    {
-        const Data::Area::Map::iterator end = study.areas.end();
-        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
-        {
-            // Reference to the area
-            Data::Area& area = *(i->second);
-            if (area.isVisibleOnLayer(layerID))
-            {
-                wxTreeItemId id;
-                // Foreach Interconnection for the area
-                const Data::AreaLink::Map::iterator end = area.links.end();
-                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-                {
-                    Data::AreaLink* lnk = i->second;
+    addUpstreamDownstream(rootId, pListbox, study.areas, layerID);
 
-                    if (lnk->isVisibleOnLayer(layerID))
-                    {
-                        if (!id)
-                        {
-                            // We have to create the item corresponding to the area
-                            id = pListbox->AppendItem(
-                              localRootId,
-                              wxString() << wxT(' ') << wxStringFromUTF8(area.name) << wxT(' '),
-                              1,
-                              1);
-                            pListbox->SetItemBold(id, true);
-                        }
-                        // Adding the item for the interconnection
-                        /* wxTreeItemId itemID = */ pListbox->AppendItem(
-                          id, /*parent*/
-                          // caption
-                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-                          0,
-                          0,
-                          new TreeLeaf(lnk));
-                    }
-                }
-            }
-        }
-    }
-
-    // Flat
-    // Root Node
-    localRootId = pListbox->AppendItem(rootId, wxString(wxT("Flat")), 2);
-    pListbox->SetItemBold(localRootId, true);
-    {
-        const Data::Area::Map::iterator end = study.areas.end();
-        for (Data::Area::Map::iterator i = study.areas.begin(); i != end; ++i)
-        {
-            // Reference to the area
-            Data::Area& area = *(i->second);
-
-            if (area.isVisibleOnLayer(layerID))
-            {
-                // Foreach Interconnection for the area
-                const Data::AreaLink::Map::iterator end = area.links.end();
-                for (Data::AreaLink::Map::iterator i = area.links.begin(); i != end; ++i)
-                {
-                    Data::AreaLink* lnk = i->second;
-
-                    if (lnk->isVisibleOnLayer(layerID))
-                    {
-                        // Adding the item for the interconnection
-                        /*wxTreeItemId itemID = */ pListbox->AppendItem(
-                          localRootId, /*parent*/
-                          // caption
-                          wxString() << wxT(' ') << wxStringFromUTF8(lnk->from->name) << wxT(" / ")
-                                     << wxStringFromUTF8(lnk->with->name) << wxT(' '),
-                          0,
-                          0,
-                          new TreeLeaf(lnk));
-                    }
-                }
-            }
-        }
-    }
+    // By area
+    addByArea(rootId, pListbox, study.areas, layerID);
 
     // Expand all items and subitems
     pListbox->SetQuickBestSize(true);
@@ -388,7 +420,6 @@ void Connections::onMapLayerRemoved(const wxString* text)
         if (pLayerFilter->GetCount() == 1 && GetSizer()->IsShown(pLayerFilter))
             GetSizer()->Hide(pLayerFilter);
     }
-    /*wxStringToString(*text, pLastResearch);*/
     Dispatcher::GUI::Post(this, &Connections::update);
 }
 
