@@ -261,6 +261,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
     GIT_REPOSITORY "https://github.com/rte-france/or-tools"
     GIT_TAG ${ORTOOLS_TAG}
+    GIT_SHALLOW TRUE
     )
 
   # Pass options to OR-Tools's CMake
