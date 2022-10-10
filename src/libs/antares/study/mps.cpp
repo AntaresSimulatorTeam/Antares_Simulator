@@ -39,6 +39,7 @@ namespace Data
 {
 std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                      const YString& extension,
+                                                     uint currentOptimNumber,
                                                      uint numSpace) const
 {
     static std::map<YString, int> count;
@@ -63,17 +64,8 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
                << (runtime->weekInTheYear[numSpace] + 1);
 
-    // TODO test if file already exists
-    if (false)
-    {
-        count[prefix]++;
-        outputFile << "-" << count[prefix] << "." << extension;
-    }
-    else
-    {
-        count[prefix] = 0;
-        outputFile << "." << extension;
-    }
+    if (currentOptimNumber)
+        outputFile << "--optim-nb-" << currentOptimNumber;
 
     logs.info() << "Solver output File: `" << outputFile << "'";
     return outputFile.c_str();

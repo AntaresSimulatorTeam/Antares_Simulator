@@ -47,6 +47,7 @@
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
+#include "layerdata.h"
 
 #include <memory>
 
@@ -61,7 +62,8 @@ namespace Data
 /*!
 ** \brief Antares Study
 */
-class Study final : public Yuni::NonCopyable<Study>, public IObject
+
+class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -502,6 +504,7 @@ public:
     */
     std::string createFileIntoOutputWithExtension(const YString& prefix,
                                                   const YString& extension,
+                                                  uint currentOptimNumber,
                                                   uint numSpace) const;
 
     //! \name
@@ -747,13 +750,6 @@ public:
     void* cacheTSGenerator[timeSeriesCount];
     //@}
 
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
     /*!
     ** \brief
     */
@@ -790,10 +786,6 @@ protected:
     void reduceMemoryUsage();
     //@}
 
-private:
-    //! Load all layers
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
 }; // class Study
 
 /*!

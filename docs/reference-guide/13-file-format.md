@@ -6,30 +6,42 @@ This is a list of all recent changes that came with new Antares Simulator featur
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 
-#### Marginal cost for binding constraints
-In file **input/bindingconstraints/bindingconstraints.ini**, add properties `filter-year-by-year` and `filter-synthesis` that can take values `hourly`, `daily`, `weekly`, `monthly` and `annual`, possibly multiple values.
+#### Result format
+If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
+
+## v8.3.2
+### Writing MPS files
+MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
+Now user can choose to print :
+* no MPS file,
+* MPS files related to the first opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
+* MPS files related to the second opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
+* MPS files related to the both opimizations.
+
+In the **generaldata.ini** input file, corresponding values for **include-exportmps** are : **none**, **optim-1**, **optim-2**, **both-optims**.
+
+Compatibility with existing values is maintained (**true** = **both-optims**, **false**=**none**).
+
+### Marginal price of a binding constraint
+#### Input
+In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
+They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 * `filter-year-by-year`. Default value = hourly, daily, weekly, monthly, annual
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
-
-### Output
-#### Result format
-If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
-In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
-They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 #### Marginal cost for binding constraints
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
-* `output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const`
-* `output/yyyymmdd-hhmmeco/economy/mc-all/bind_const`
+* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const**
+* **output/yyyymmdd-hhmmeco/economy/mc-all/bind_const**
 
 These folders are meant to contain results of any kind regarding binding constraints marginal price (year by year or synthesis).
 
 Examples of output files inside these folders :
-* `binding-constraints-hourly.txt`
-* `binding-constraints-weekly.txt`
+* **binding-constraints-hourly.txt**
+* **binding-constraints-weekly.txt**
 
 ## v8.3.1
 ### Output
