@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 }
 
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-    std::string studyPath, std::string kirchhoffOptionPath)
+    std::string & studyPath, std::string & kirchhoffOptionPath)
 {
     bool result = true;
     CBuilder constraintBuilder(study);
@@ -116,7 +116,7 @@ static void NotEnoughMemory()
 bool initResources(int argc, char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
-    if (not memory.initialize())
+    if (!memory.initialize())
     {
         logs.error() << "Failed to initialize memory.";
         return false;
@@ -133,9 +133,9 @@ bool initResources(int argc, char* argv[])
     return true;
 }
 
-bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
+bool initComponents(std::shared_ptr<Data::Study> study, std::string &studyPath)
 {
-    study->header.version = study->header.ReadVersionFromFile(studyPath + "/study.antares");
+    study->header.version = Data::StudyHeader::ReadVersionFromFile(studyPath + "/study.antares");
     study->folder = studyPath;
     study->folderInput = studyPath + "/input";
     study->inputExtension = "txt";

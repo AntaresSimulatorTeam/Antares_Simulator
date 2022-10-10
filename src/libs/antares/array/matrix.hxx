@@ -1178,7 +1178,6 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
         for (uint x = 0; x != width; ++x)
         {
             ++autoflush;
-            /* auto& column = entry[x]; */
             for (uint y = 0; y != height; ++y)
             {
                 if (not Yuni::Math::Zero((T)predicate((*this)[x][y])))
