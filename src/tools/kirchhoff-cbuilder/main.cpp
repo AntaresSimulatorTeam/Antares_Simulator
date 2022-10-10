@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 }
 
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-    std::string & studyPath, std::string & kirchhoffOptionPath)
+    std::string const & studyPath, std::string const & kirchhoffOptionPath)
 {
     bool result = true;
     CBuilder constraintBuilder(study);
@@ -107,7 +107,6 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     return result;
 }
 
-
 static void NotEnoughMemory()
 {
     logs.fatal() << "Not enough memory. aborting.";
@@ -123,7 +122,6 @@ bool initResources(int argc, char* argv[])
     }
 
     InitializeDefaultLocale();
-
     if (!LocalPolicy::Open())
         return false;
 
@@ -133,7 +131,7 @@ bool initResources(int argc, char* argv[])
     return true;
 }
 
-bool initComponents(std::shared_ptr<Data::Study> study, std::string &studyPath)
+bool initComponents(std::shared_ptr<Data::Study> study, std::string const &studyPath)
 {
     study->header.version = Data::StudyHeader::ReadVersionFromFile(studyPath + "/study.antares");
     study->folder = studyPath;
