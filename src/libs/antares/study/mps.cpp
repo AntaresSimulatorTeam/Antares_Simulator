@@ -42,8 +42,6 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                      uint currentOptimNumber,
                                                      uint numSpace) const
 {
-    static std::map<YString, int> count;
-
     // Empty log entry
     logs.info();
 
@@ -51,13 +49,6 @@ std::string Study::createFileIntoOutputWithExtension(const YString& prefix,
     String buffer;
     buffer.reserve(folderOutput.size() + 15);
     buffer << this->folderOutput;
-
-    if (not IO::Directory::Create(buffer))
-    {
-        logs.error() << "I/O Error: Impossible to create the folder `" << buffer << "'";
-        logs.info() << "Aborting now.";
-        return nullptr;
-    }
 
     String outputFile;
     outputFile << prefix << "-"; // problem ou criterion
