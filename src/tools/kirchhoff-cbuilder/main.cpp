@@ -47,23 +47,30 @@ int main(int argc, char* argv[])
     logs.applicationName("k-cbuild");
     if (argc < 3)
     {
-        logs.error() << "Not enough arguments, exiting";
+        logs.error() << "Not enough arguments, exiting.";
         logs.error() << "args: study_path, option_path";
-        return 1;
+        return EXIT_FAILURE;
     }
 
     std::string studyPath(argv[1]);
     std::string kirchhoffOptionPath(argv[2]);
 
     if (!initResources(argc, argv))
+    {
+        logs.error() << "Init resources failed.";
         return EXIT_FAILURE;
+    }
 
     auto study = std::make_shared<Data::Study>();
 
     if (!initComponents(study, studyPath))
+    {
+        logs.error() << "Init components failed.";
         return EXIT_FAILURE;
+    }
 
-    runKirchhoffConstraints(study, studyPath, kirchhoffOptionPath);
+    if (!runKirchhoffConstraints(study, studyPath, kirchhoffOptionPath))
+        return EXIT_FAILURE;
 
     return 0;
 }
@@ -71,19 +78,31 @@ int main(int argc, char* argv[])
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     std::string studyPath, std::string kirchhoffOptionPath)
 {
+    bool result = true;
     CBuilder constraintBuilder(study);
     logs.info() << "CBuilder created";
 
-    constraintBuilder.completeFromStudy();
-    logs.info() << "CBuilder completed study";
+    result = constraintBuilder.completeFromStudy() && result;
+    result = constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath) && result;
 
-    constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath);
-    logs.info() << "CBuilder completed file";
+    if (!result)
+    {
+        logs.error() << "CBuilder init went wrong, aborting.";
+        return false;
+    }
 
-    const bool result = constraintBuilder.runConstraintsBuilder();
-    logs.info() << "Result: " << result;
+    logs.info() << "CBuilder completed study and option file.";
 
-    study->bindingConstraints.saveToFolder(studyPath + "/input/bindingconstraints");
+    result = constraintBuilder.runConstraintsBuilder();
+    if (!result)
+    {
+        logs.error() << "Run constraints failed.";
+        return false;
+    }
+
+    result = study->bindingConstraints.saveToFolder(studyPath + "/input/bindingconstraints");
+    if (!result)
+        logs.error() << "Save to folder failed";
 
     return result;
 }
@@ -99,13 +118,15 @@ bool initResources(int argc, char* argv[])
     std::set_new_handler(&NotEnoughMemory);
     if (not memory.initialize())
     {
-        logs.error() << "Failed to initialize memory";
+        logs.error() << "Failed to initialize memory.";
         return false;
     }
 
     InitializeDefaultLocale();
 
-    LocalPolicy::Open();
+    if (!LocalPolicy::Open())
+        return false;
+
     LocalPolicy::CheckRootPrefix(argv[0]);
 
     Resources::Initialize(argc, argv, true);
@@ -130,8 +151,7 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
     logs.info() << "Areas loaded.";
 
     study->loadLayers(studyPath + "layers/layers.ini");
-    logs.info() << "active layer ID: " << study->activeLayerID;
-
+    logs.debug() << "active layer ID: " << study->activeLayerID;
 
     if (!study->bindingConstraints.loadFromFolder(*study,
         options, studyPath + "/input/bindingconstraints/"))
@@ -143,8 +163,7 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string studyPath)
 
     Data::Study::Current::Set(study);
 
-    logs.info() << "The study is loaded.";
-    JIT::enabled = true;
+    logs.notice() << studyPath << " is loaded.";
 
     return true;
 }
