@@ -534,9 +534,11 @@ public:
             //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
             Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
             //! Threshold to initiate curtailment sharing rule
-            float thresholdInitiate;
+            double thresholdInitiate;
             //! Threshold to display Local Matching Rule violations
-            float thresholdDisplayViolations;
+            double thresholdDisplayViolations;
+            //! CSR Variables relaxation threshold
+            int thresholdVarBoundsRelaxation;
             //! Include hurdle cost in CSR cost function
             bool includeHurdleCost;
         };

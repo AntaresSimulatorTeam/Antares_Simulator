@@ -30,8 +30,6 @@
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
 
-const double csrSolverRelaxationRHS = 1e-3;
-
 void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Cnt;
@@ -96,6 +94,7 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
                                    const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    double csrSolverRelaxationRHS = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     int Cnt;
     int Interco;
     int NbInterco;

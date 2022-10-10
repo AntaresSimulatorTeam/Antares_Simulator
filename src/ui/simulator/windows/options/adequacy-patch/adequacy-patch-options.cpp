@@ -226,6 +226,7 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
     {
         pThresholdCSRStart = nullptr;
         pThresholdLMRviolations = nullptr;
+        pThresholdCSRVarBoundsRelaxation = nullptr;
         pThresholdCSRStart
           = insertEdit(this,
                        s,
@@ -235,6 +236,11 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
           = insertEdit(this,
                        s,
                        wxStringFromUTF8("Display local matching rule violations"),
+                       wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
+        pThresholdCSRVarBoundsRelaxation
+          = insertEdit(this,
+                       s,
+                       wxStringFromUTF8("Relax CSR variable boundaries (10^-)"),
                        wxCommandEventHandler(AdequacyPatchOptions::onEditThresholds));
     }
 
@@ -360,7 +366,12 @@ void AdequacyPatchOptions::refresh()
               wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
-              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+              wxString()
+              << study.parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        if (pThresholdCSRVarBoundsRelaxation)
+            pThresholdCSRVarBoundsRelaxation->SetValue(
+              wxString()
+              << study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
 }
 
@@ -577,6 +588,30 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         }
         return;
     }
-}
 
+    if (pThresholdCSRVarBoundsRelaxation && id == pThresholdCSRVarBoundsRelaxation->GetId())
+    {
+        String text;
+        wxStringToString(pThresholdCSRVarBoundsRelaxation->GetValue(), text);
+
+        int newthreshold;
+        if (!text.to(newthreshold))
+        {
+            logs.error() << "impossible to update the seed for '"
+                         << "Relax CSR variable boundaries (10^-)"
+                         << "'";
+        }
+        else
+        {
+            if (newthreshold
+                != study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation)
+            {
+                study.parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+                  = newthreshold;
+                MarkTheStudyAsModified();
+            }
+        }
+        return;
+    }
 }
+} // namespace Antares::Window::Options

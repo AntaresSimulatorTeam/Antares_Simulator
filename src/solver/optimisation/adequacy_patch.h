@@ -41,6 +41,8 @@ namespace AdequacyPatch
 const double defaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
 //! A default threshold value for display local matching rule violations
 const double defaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
+//! CSR Variables relaxation threshold
+const int defaultValueThresholdVarBoundsRelaxation = 3;
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
