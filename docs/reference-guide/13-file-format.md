@@ -6,6 +6,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 
+### Output
 #### Result format
 If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
 
