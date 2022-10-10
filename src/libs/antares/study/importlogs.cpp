@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <string>
 #include <yuni/yuni.h>
 #include "study.h"
 #include "../logs.h"
@@ -41,22 +42,7 @@ void Study::importLogsToOutputFolder() const
     if (!logs.logfile())
         return;
 
-    String buffer;
-    buffer.reserve(this->folderOutput.size() + 20);
-
-    // Double check: Since this method might be call after some memory starvation,
-    // we should make sure that we have a valid buffer
-    if (!buffer.data())
-    {
-        logs.error() << "I/O Error: Impossible to create the folder '" << buffer << "'";
-        return;
-    }
-    buffer << this->folderOutput;
-    if (not IO::Directory::Create(buffer))
-        return;
-
-    buffer << IO::Separator << "simulation.log";
-    logs.info() << " Writing log file: " << buffer;
+    std::string logPath("simulation.log");
     String from;
     IO::Normalize(from, logs.logfile());
 
@@ -67,23 +53,24 @@ void Study::importLogsToOutputFolder() const
         logs.closeLogfile();
     }
 
-    switch (IO::File::Copy(from, buffer))
+    Yuni::Clob log_buffer;
+    // Handle errors
+    switch (IO::File::LoadFromFile(log_buffer, from))
     {
     case IO::errNone:
         break;
-    case IO::errOverwriteNotAllowed:
-        logs.error() << from << ": File already exists";
-        buffer.clear().shrink();
+    case IO::errNotFound:
+        logs.error() << from << ": file does not exist";
         break;
-    case IO::errMemoryLimit:
-        logs.error() << "Hard limit reached: Impossible to copy '" << from << "'";
-        buffer.clear().shrink();
+    case IO::errReadFailed:
+        logs.error() << "Read failed '" << from << "'";
         break;
     default:
-        logs.error() << "Impossible to copy '" << from << "' to '" << buffer << "'";
-        buffer.clear().shrink();
+        logs.error() << "Impossible to read '" << from << "' to '" << logPath << "'";
         break;
     }
+
+    pResultWriter->addJob(logPath, log_buffer);
 
     if (System::windows)
     {
