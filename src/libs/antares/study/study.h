@@ -377,7 +377,7 @@ public:
     */
     bool prepareOutput();
 
-    void saveMiscFilesIntoOutput();
+    void saveAboutTheStudy();
 
     /*!
     ** \brief Initialize the progress meter

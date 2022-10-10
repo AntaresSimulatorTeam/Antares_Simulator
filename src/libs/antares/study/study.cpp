@@ -778,7 +778,7 @@ bool Study::prepareOutput()
     return true;
 }
 
-void Study::saveMiscFilesIntoOutput()
+void Study::saveAboutTheStudy()
 {
   String path;
   path.reserve(1024);

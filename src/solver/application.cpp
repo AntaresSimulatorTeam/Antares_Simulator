@@ -486,7 +486,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     study.prepareWriter(&pDurationCollector);
 
     // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveMiscFilesIntoOutput();
+    pStudy->saveAboutTheStudy();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
