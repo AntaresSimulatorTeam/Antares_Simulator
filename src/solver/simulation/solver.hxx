@@ -1558,7 +1558,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     {
         int numThreads = pNbMaxPerformedYearsInParallel;
         // If the result writer uses the job queue, add one more thread for it
-        if (pResultWriter->needsTheJobQueue())
+        if (pResultWriter && pResultWriter->needsTheJobQueue())
             numThreads++;
         pQueueService->maximumThreadCount(numThreads);
     }
@@ -1691,7 +1691,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft())
+    if (not study.parameters.adequacyDraft() && pResultWriter)
     {
         pAnnualCostsStatistics.endStandardDeviations();
         pAnnualCostsStatistics.writeToOutput(pResultWriter);
