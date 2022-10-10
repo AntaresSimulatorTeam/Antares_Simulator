@@ -786,22 +786,27 @@ void Study::saveMiscFilesIntoOutput()
   path.clear() << "about-the-study";
   simulationComments.saveUsingWriter(resultWriter, path);
 
-  // Write the header as a reminder too
-  path.clear() << "about-the-study" << SEP << "study.ini";
-  Antares::IniFile header_ini;
-  header.CopySettingsToIni(header_ini, false);
-  resultWriter->addJob(path.c_str(), header_ini);
+  // Write the header as a reminder
+  {
+      path.clear() << "about-the-study" << SEP << "study.ini";
+      Antares::IniFile ini;
+      header.CopySettingsToIni(ini, false);
+      resultWriter->addJob(path.c_str(), ini);
+  }
 
-  // copying the generaldata.ini
-  // Input : absolute path
-  path.clear() << folderSettings << SEP << "generaldata.ini";
-  std::string generaldata_buffer;
-  Yuni::IO::File::LoadFromFile(generaldata_buffer, path);
+  // Write parameters.ini
+  {
+      String dest;
+      dest << "about-the-study" << SEP << "parameters.ini";
 
-  String dest;
-  // Output : relative path (resolution handled by pResultWriter->addJob)
-  dest << "about-the-study" << SEP << "parameters.ini";
-  resultWriter->addJob(dest.c_str(), generaldata_buffer);
+      Antares::IniFile ini;
+      parameters.saveToINI(ini);
+
+      std::string buffer;
+      ini.saveToString(buffer);
+
+      resultWriter->addJob(dest.c_str(), buffer);
+  }
 
   // antares-output.info
   path.clear() << "info.antares-output";

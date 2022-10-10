@@ -204,6 +204,9 @@ public:
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
 
+    //! Save the internal settings into an INI file
+    void saveToINI(IniFile& ini) const;
+
 public:
     //! \name Mode
     //@{
@@ -561,8 +564,6 @@ public:
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
-    //! Save the internal settings into an INI file
-    void saveToINI(IniFile& ini) const;
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
