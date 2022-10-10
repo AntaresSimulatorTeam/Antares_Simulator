@@ -317,7 +317,6 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristic;
@@ -342,7 +341,7 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.splitExportedMPS = false;
     include.exportStructure = false;
 
@@ -595,8 +594,19 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
+        {
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                << ". Reset to no MPS export.";
+            return false;
+        }
+        return true;
+    }
+
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
@@ -761,17 +771,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -1023,6 +1022,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1142,7 +1145,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1601,7 +1603,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
@@ -1768,7 +1770,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
         section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
@@ -1795,7 +1797,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));

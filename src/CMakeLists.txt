@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  1)
+set(ANTARES_VERSION_REVISION  2)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
@@ -275,6 +275,9 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
 endif()
