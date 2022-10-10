@@ -728,7 +728,7 @@ private:
     void solveProblem(uint week, int year);
 public:
     void run(uint week, int year);
-public:
+    
     int hourInWeekTriggeredCsr;
     const double belowThisThresholdSetToZero = 1e-3;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;

@@ -191,7 +191,7 @@ bool Economy::simulationBegin()
     return true;
 }
 
-vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace)
+vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
@@ -207,7 +207,7 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(ui
 }
 
 std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
-                                                                            uint numSpace)
+                                                                            uint numSpace) const
 {
     double threshold
       = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
@@ -223,13 +223,13 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
     return triggerCsrSet;
 }
 
-std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace)
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
 {
     vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
-void AdequacyPatchOptimization::solveCSR(Variable::State& state, uint numSpace, uint w)
+void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     const std::set<int> hoursRequiringCurtailmentSharing
@@ -241,7 +241,7 @@ void AdequacyPatchOptimization::solveCSR(Variable::State& state, uint numSpace, 
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
         hourlyCsrProblem.run(w, state.year);
     }
-    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo, w);
+    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo);
     logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
                 << ".Total LMR violation:" << totalLmrViolation;
 }

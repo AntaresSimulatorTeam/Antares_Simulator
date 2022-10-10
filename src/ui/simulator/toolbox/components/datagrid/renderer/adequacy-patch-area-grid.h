@@ -5,21 +5,15 @@
 #include "../renderer.h"
 #include "../../../../application/study.h"
 
-namespace Antares
-{
-namespace Component
-{
-namespace Datagrid
-{
-namespace Renderer
+namespace Antares::Component::Datagrid::Renderer
 {
 class AdequacyPatchAreaGrid : public IRenderer
 {
 public:
     AdequacyPatchAreaGrid();
-    virtual ~AdequacyPatchAreaGrid();
+    ~AdequacyPatchAreaGrid() override;
 
-    virtual int width() const
+    int width() const override
     {
         return 1;
     }
@@ -37,36 +31,32 @@ public:
 
     virtual bool cellValue(int x, int y, const Yuni::String& value);
 
-    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    void resetColors(int, int, wxColour&, wxColour&) const override
     {
         // Do nothing
     }
 
     virtual bool valid() const;
 
-    virtual uint maxWidthResize() const
+    uint maxWidthResize() const override
     {
         return 0;
     }
-    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+    IRenderer::CellStyle cellStyle(int col, int row) const override;
 
     void control(wxWindow* control)
     {
         pControl = control;
     }
 
-public:
     //! An item has been updated
     Yuni::Bind<void()> onTriggerUpdate;
 
-protected:
+private:
     wxWindow* pControl;
 
 }; // class AdequacyPatchAreaGrid
 
-} // namespace Renderer
-} // namespace Datagrid
-} // namespace Component
-} // namespace Antares
+}
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_ADEQUACY_PATCH_AREAS_GRID_H__

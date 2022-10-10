@@ -25,14 +25,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-const double csrSolverRelaxationRHS = 1e-3;
-
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
-
 #include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_extern_variables_globales.h"
-
 #include "../solver/optimisation/opt_fonctions.h"
+
+const double csrSolverRelaxationRHS = 1e-3;
 
 void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
@@ -65,7 +63,6 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourl
 void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int Cnt;
-    int Area;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
@@ -76,7 +73,7 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
     // ] – spillage(node A) = ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
-    for (Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
@@ -96,12 +93,10 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 }
 
 void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
-                                   HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                   const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Cnt;
-    int Area;
-    int CntCouplante;
     int Interco;
     int NbInterco;
     double Poids;
@@ -110,15 +105,14 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     double* SecondMembre = ProblemeAResoudre->SecondMembre;
-    CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
-    CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
+    const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     std::map<int, int> bingdingConstraintNumber
       = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
 
     // constraint:
     // user defined Binding constraints between transmission flows
     // and/or power generated from generating units.
-    for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+    for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         if (bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end())
@@ -154,21 +148,16 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
             int NbClusters
               = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
             int Area;
-            int Palier;
             int IndexNumeroDuPalierDispatch;
             double ValueOfVar;
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays;
 
             for (Index = 0; Index < NbClusters; Index++)
             {
                 Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
-                PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Area];
 
                 IndexNumeroDuPalierDispatch
                   = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
 
-                Palier = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
-                           [IndexNumeroDuPalierDispatch];
                 Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
 
                 ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]

@@ -76,7 +76,6 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
-    // todo after debugging transfer this into same area loop as ENS
     logs.debug() << " Spilled Energy  of each area inside adq patch: ";
     for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
     {
@@ -96,7 +95,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -151,7 +150,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
 {
     logs.debug() << "[CSR] variable list:";
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
