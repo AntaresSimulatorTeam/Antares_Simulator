@@ -417,7 +417,7 @@ inline bool Memory::Null(const Antares::Memory::Array<T>& out)
 }
 #else
 template<class T>
-inline bool Memory::Null(const T*& out)
+inline bool Memory::Null(const T* out)
 {
     return !out;
 }

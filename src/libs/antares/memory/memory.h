@@ -277,7 +277,7 @@ public:
 
         static const T* NullValue()
         {
-            return NULL;
+            return nullptr;
         }
 #endif
     };
@@ -339,7 +339,7 @@ public:
     static bool Null(const Antares::Memory::Array<T>& out);
 #else
     template<class T>
-    static bool Null(const T*& out);
+    static bool Null(const T* out);
 #endif
 
 #ifdef ANTARES_SWAP_SUPPORT
