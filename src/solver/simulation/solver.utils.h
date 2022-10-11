@@ -199,7 +199,7 @@ private:
         buffer << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
         buffer << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
 
-        writer->addJob(systemCostFilename, buffer);
+        writer->addEntry(systemCostFilename, buffer);
     }
 
     void writeCriterionCostsToOutput(IResultWriter::Ptr writer)
@@ -215,7 +215,7 @@ private:
         buffer << to_scientific(criterionCost2.costMin) << "\n";
         buffer << to_scientific(criterionCost2.costMax) << "\n";
 
-        writer->addJob(criterionsCostsFilename, buffer);
+        writer->addEntry(criterionsCostsFilename, buffer);
     }
 
     void writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
@@ -226,7 +226,7 @@ private:
         buffer << "MIN (ms) : " << optimizationTime.costMin << "\n";
         buffer << "MAX (ms) : " << optimizationTime.costMax << "\n";
 
-        writer->addJob(optimizationTimeFilename, buffer);
+        writer->addEntry(optimizationTimeFilename, buffer);
     }
 
 public:

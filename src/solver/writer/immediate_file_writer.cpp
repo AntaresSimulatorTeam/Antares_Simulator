@@ -68,7 +68,7 @@ static bool prepareDirectoryHierarchy(const YString& root,
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
+void ImmediateFileResultWriter::addEntry(const std::string& entryPath, Yuni::Clob& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
@@ -76,7 +76,7 @@ void ImmediateFileResultWriter::addJob(const std::string& entryPath, Yuni::Clob&
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string& entryContent)
+void ImmediateFileResultWriter::addEntry(const std::string& entryPath, std::string& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
@@ -84,12 +84,12 @@ void ImmediateFileResultWriter::addJob(const std::string& entryPath, std::string
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
+void ImmediateFileResultWriter::addEntry(const std::string& entryPath, Antares::IniFile& entryContent)
 {
     std::string buffer;
     entryContent.saveToString(buffer);
     // Re-use existing method
-    this->addJob(entryPath, buffer);
+    this->addEntry(entryPath, buffer);
 }
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const

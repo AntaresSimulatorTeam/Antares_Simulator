@@ -600,7 +600,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     auto content = file_content.to<Antares::IniFile>();
-    writer->addJob(exec_info_path, content);
+    writer->addEntry(exec_info_path, content);
 }
 
 Application::~Application()

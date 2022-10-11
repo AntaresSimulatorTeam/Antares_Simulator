@@ -108,21 +108,21 @@ ZipWriter::~ZipWriter()
     mz_zip_writer_delete(&pZipHandle);
 }
 
-void ZipWriter::addJob(const std::string& entryPath, Yuni::Clob& entryContent)
+void ZipWriter::addEntry(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    addJobHelper<Yuni::Clob>(entryPath, entryContent);
+    addEntryHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addJob(const std::string& entryPath, std::string& entryContent)
+void ZipWriter::addEntry(const std::string& entryPath, std::string& entryContent)
 {
-    addJobHelper<std::string>(entryPath, entryContent);
+    addEntryHelper<std::string>(entryPath, entryContent);
 }
 
-void ZipWriter::addJob(const std::string& entryPath, Antares::IniFile& entryContent)
+void ZipWriter::addEntry(const std::string& entryPath, Antares::IniFile& entryContent)
 {
     std::string buffer;
     entryContent.saveToString(buffer);
-    addJobHelper<std::string>(entryPath, buffer);
+    addEntryHelper<std::string>(entryPath, buffer);
 }
 
 bool ZipWriter::needsTheJobQueue() const

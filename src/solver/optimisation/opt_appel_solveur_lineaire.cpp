@@ -380,5 +380,5 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle] - 1;
     auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
     auto writer = study->resultWriter;
-    writer->addJob(filename, buffer);
+    writer->addEntry(filename, buffer);
 }

@@ -81,7 +81,7 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
         }
         auto filename = getFilenameWithExtension("interco", "txt", numSpace);
         auto writer = study.resultWriter;
-        writer->addJob(filename, Flot);
+        writer->addEntry(filename, Flot);
     }
 }
 
@@ -99,7 +99,7 @@ void OPT_ExportAreaName(const Antares::Data::Study& study,
             Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
         }
         auto writer = study.resultWriter;
-        writer->addJob(filename, Flot);
+        writer->addEntry(filename, Flot);
     }
 }
 
@@ -152,5 +152,5 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
         Flot.appendFormat("%s\n", line.c_str());
     }
     auto writer = study.resultWriter;
-    writer->addJob(filename, Flot);
+    writer->addEntry(filename, Flot);
 }

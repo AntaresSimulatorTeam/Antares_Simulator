@@ -70,7 +70,7 @@ void Study::importLogsToOutputFolder() const
         break;
     }
 
-    resultWriter->addJob(logPath, log_buffer);
+    resultWriter->addEntry(logPath, log_buffer);
 
     if (System::windows)
     {

@@ -296,7 +296,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint nu
     auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem-fixed-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
-    writer->addJob(filename, buffer);
+    writer->addEntry(filename, buffer);
 
     free(Cdeb);
     free(NumeroDeContrainte);
@@ -330,7 +330,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint
     auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem-variable-part", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
-    writer->addJob(filename, buffer);
+    writer->addEntry(filename, buffer);
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace)
@@ -480,7 +480,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint n
     auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem", "mps", optNumber, numSpace);
     auto writer = study->resultWriter;
-    writer->addJob(filename, buffer);
+    writer->addEntry(filename, buffer);
 
     free(Cdeb);
     free(NumeroDeContrainte);

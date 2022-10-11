@@ -791,7 +791,7 @@ void Study::saveAboutTheStudy()
       path.clear() << "about-the-study" << SEP << "study.ini";
       Antares::IniFile ini;
       header.CopySettingsToIni(ini, false);
-      resultWriter->addJob(path.c_str(), ini);
+      resultWriter->addEntry(path.c_str(), ini);
   }
 
   // Write parameters.ini
@@ -805,7 +805,7 @@ void Study::saveAboutTheStudy()
       std::string buffer;
       ini.saveToString(buffer);
 
-      resultWriter->addJob(dest.c_str(), buffer);
+      resultWriter->addEntry(dest.c_str(), buffer);
   }
 
   // antares-output.info
@@ -822,7 +822,7 @@ void Study::saveAboutTheStudy()
   f << "\ntimestamp = " << pStartTime;
   f << "\n\n";
   auto output = f.str();
-  resultWriter->addJob(path.c_str(), output);
+  resultWriter->addEntry(path.c_str(), output);
 
   if (usedByTheSolver and !parameters.noOutput)
   {
@@ -836,7 +836,7 @@ void Study::saveAboutTheStudy()
               buffer << "@ " << i->first << "\r\n";
           }
         areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-        resultWriter->addJob(path.c_str(), buffer);
+        resultWriter->addEntry(path.c_str(), buffer);
       }
 
       // Write all available links as a reminder
@@ -844,7 +844,7 @@ void Study::saveAboutTheStudy()
         path.clear() << "about-the-study" << SEP << "links.txt";
         Yuni::Clob buffer;
         areas.saveLinkListToBuffer(buffer);
-        resultWriter->addJob(path.c_str(), buffer);
+        resultWriter->addEntry(path.c_str(), buffer);
       }
   }
 }
