@@ -209,6 +209,7 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
+    // Sauvegarde d'une base initiale pour la resolution
     Probleme.StatutDesVariables = ProblemeHebdo->StatutVariables;
     Probleme.StatutDesContraintes = ProblemeHebdo->StatutContraintes;
 
@@ -343,12 +344,13 @@ RESOLUTION:
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
-
-        ProblemeHebdo->StatutVariables = Probleme.StatutDesVariables;
-        ProblemeHebdo->StatutContraintes = Probleme.StatutDesContraintes;
         
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
         {
+            // On ne sauvegarde la base qu'apres la premiere optim 
+            ProblemeHebdo->StatutVariables.swap(Probleme.StatutDesVariables);
+            ProblemeHebdo->StatutContraintes.swap(Probleme.StatutDesContraintes);
+            
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }

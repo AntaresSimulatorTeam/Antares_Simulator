@@ -54,7 +54,7 @@ source_group("simulation" FILES ${SRC_SIMULATION})
 add_library(libantares-solver-simulation
 		${SRC_SIMULATION}  )
 
-target_link_libraries(libantares-solver-simulation PRIVATE libantares-core)
+target_link_libraries(libantares-solver-simulation PRIVATE libantares-core ortools::ortools)
 
 if(BUILD_SWAP)
 

@@ -33,6 +33,7 @@
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 
+#include <ortools/linear_solver/linear_solver.h>
 #include <memory>
 #include <yuni/core/math.h>
 
@@ -625,8 +626,8 @@ struct PROBLEME_HEBDO
     RESULTATS_HORAIRES** ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
 
-    std::vector<int> StatutVariables;
-    std::vector<int> StatutContraintes;
+    std::vector<MPSolver::BasisStatus> StatutVariables;
+    std::vector<MPSolver::BasisStatus> StatutContraintes;
 
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
