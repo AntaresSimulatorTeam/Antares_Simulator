@@ -604,4 +604,9 @@ enum LinkCapacityForAdequacyPatchFirstStep
 } // namespace Data
 } // namespace Antares
 
+namespace Benchmarking
+{
+class IDurationCollector;
+}
+
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

@@ -74,6 +74,9 @@ public:
     ~ISimulation();
     //@}
 
+    // Check that the writer is valid
+    void checkWriter() const;
+
     /*!
     ** \brief Run the simulation
     */
@@ -181,11 +184,10 @@ private:
 
 public:
     //! The queue service that runs every set of parallel years
-    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
     //! Result writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter;
+    Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 }; // class ISimulation
-
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

@@ -40,6 +40,7 @@ void Application::runSimulationInAdequacyDraftMode()
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
     SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    simulation.checkWriter();
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
@@ -49,7 +50,6 @@ void Application::runSimulationInAdequacyDraftMode()
         timer.stop();
         pDurationCollector.addDuration("synthesis_export", timer.get_duration());
     }
-    this->pResultWriter = simulation.pResultWriter;
 }
 
 } // namespace Solver

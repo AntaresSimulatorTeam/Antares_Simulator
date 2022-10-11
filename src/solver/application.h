@@ -54,6 +54,8 @@ public:
 
     void writeExectutionInfo();
 
+    void installSignalHandlers() const;
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -93,9 +95,6 @@ private:
     Benchmarking::Timer pTotalTimer;
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
-
-    // Result writer
-    IResultWriter::Ptr pResultWriter = nullptr;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

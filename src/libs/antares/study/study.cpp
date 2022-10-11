@@ -32,6 +32,7 @@
 #include <yuni/io/file.h>
 #include <yuni/datetime/timestamp.h>
 
+#include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
 
@@ -47,6 +48,7 @@
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
+#include <writer_factory.h>
 
 using namespace Yuni;
 
@@ -70,8 +72,8 @@ static inline void FreeAndNil(T*& pointer)
 }
 
 Study::Study(bool forTheSolver) :
+ simulationComments(*this),
  LayerData(0, true),
- simulation(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
  nbYearsParallelRaw(0),
@@ -83,6 +85,7 @@ Study::Study(bool forTheSolver) :
  // state(nullptr),
  uiinfo(nullptr),
  gotFatalError(false),
+ pQueueService(std::make_shared<Yuni::Job::QueueService>()),
  usedByTheSolver(forTheSolver)
 {
     // TS generators
@@ -264,7 +267,7 @@ uint64 Study::memoryUsage() const
            + buffer.capacity() + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
-           + simulation.memoryUsage()
+           + simulationComments.memoryUsage()
            // parameters
            + parameters.memoryUsage()
            // Areas
@@ -717,12 +720,12 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
 bool Study::prepareOutput()
 {
-    sint64 now = DateTime::Now();
+    pStartTime = DateTime::Now();
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
     folderOutput.clear() << folder << SEP << "output" << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", now, false);
+    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", pStartTime, false);
 
     switch (parameters.mode)
     {
@@ -746,10 +749,10 @@ bool Study::prepareOutput()
     buffer.reserve(1024);
 
     // Folder output
-    if (not simulation.name.empty())
+    if (not simulationComments.name.empty())
     {
         buffer.clear();
-        TransformNameIntoID(simulation.name, buffer);
+        TransformNameIntoID(simulationComments.name, buffer);
         folderOutput << '-' << buffer;
     }
 
@@ -772,49 +775,78 @@ bool Study::prepareOutput()
     }
 
     logs.info() << "  Output folder : " << folderOutput;
-
-    // Settings
-    // TODO : use writer
-    buffer.clear() << folderOutput << SEP << "about-the-study";
-    IO::Directory::Create(buffer);
-
-    // TODO : use writer
-    if (not simulation.saveToFolder(buffer))
-        return false;
-
-    // TODO : use writer
-    // Write the header as a reminder too
-    buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "study.ini";
-    header.saveToFile(buffer, false);
-
-    // copying the generaldata.ini
-    buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
-    String dest;
-    // TODO : use writer
-    dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
-    if (IO::errNone != IO::File::Copy(buffer, dest))
-        logs.error() << "impossible to copy " << dest;
-
-    // antares-output.info
-    buffer.clear() << folderOutput << SEP << "info.antares-output";
-    IO::File::Stream f(buffer, IO::OpenMode::write | IO::OpenMode::truncate);
-    if (f.opened())
-    {
-        String nowstr;
-        DateTime::TimestampToString(nowstr, "%Y.%m.%d - %H:%M", now);
-        f << "[general]";
-        f << "\nversion = " << (uint)Data::versionLatest;
-        f << "\nname = " << simulation.name;
-        f << "\nmode = " << StudyModeToCString(parameters.mode);
-        f << "\ndate = " << nowstr;
-        f << "\ntitle = " << nowstr;
-        f << "\ntimestamp = " << now;
-        f << "\n\n";
-    }
-    else
-        logs.error() << "I/O: impossible to write " << buffer;
-
     return true;
+}
+
+void Study::saveAboutTheStudy()
+{
+  String path;
+  path.reserve(1024);
+
+  path.clear() << "about-the-study";
+  simulationComments.saveUsingWriter(resultWriter, path);
+
+  // Write the header as a reminder
+  {
+      path.clear() << "about-the-study" << SEP << "study.ini";
+      Antares::IniFile ini;
+      header.CopySettingsToIni(ini, false);
+      resultWriter->addJob(path.c_str(), ini);
+  }
+
+  // Write parameters.ini
+  {
+      String dest;
+      dest << "about-the-study" << SEP << "parameters.ini";
+
+      Antares::IniFile ini;
+      parameters.saveToINI(ini);
+
+      std::string buffer;
+      ini.saveToString(buffer);
+
+      resultWriter->addJob(dest.c_str(), buffer);
+  }
+
+  // antares-output.info
+  path.clear() << "info.antares-output";
+  std::ostringstream f;
+  String startTimeStr;
+  DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
+  f << "[general]";
+  f << "\nversion = " << (uint)Data::versionLatest;
+  f << "\nname = " << simulationComments.name;
+  f << "\nmode = " << StudyModeToCString(parameters.mode);
+  f << "\ndate = " << startTimeStr;
+  f << "\ntitle = " << startTimeStr;
+  f << "\ntimestamp = " << pStartTime;
+  f << "\n\n";
+  auto output = f.str();
+  resultWriter->addJob(path.c_str(), output);
+
+  if (usedByTheSolver and !parameters.noOutput)
+  {
+      // Write all available areas as a reminder
+      {
+        Yuni::Clob buffer;
+        path.clear() << "about-the-study" << SEP << "areas.txt";
+        for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
+          {
+            if (setsOfAreas.hasOutput(i->first))
+              buffer << "@ " << i->first << "\r\n";
+          }
+        areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+        resultWriter->addJob(path.c_str(), buffer);
+      }
+
+      // Write all available links as a reminder
+      {
+        path.clear() << "about-the-study" << SEP << "links.txt";
+        Yuni::Clob buffer;
+        areas.saveLinkListToBuffer(buffer);
+        resultWriter->addJob(path.c_str(), buffer);
+      }
+  }
 }
 
 Area* Study::areaAdd(const AreaName& name)
@@ -1592,6 +1624,12 @@ void Study::computePThetaInfForThermalClusters() const
                                         * cluster->unitCount * cluster->nominalCapacity;
         }
     }
+}
+
+void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+{
+    resultWriter = Solver::resultWriterFactory(
+      parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,

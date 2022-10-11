@@ -33,6 +33,8 @@
 
 #include "opt_export_structure.h"
 
+#include "../utils/mps_utils.h"
+
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs
 ////////////////////////////////////////////////////////////////////
@@ -66,14 +68,39 @@ void OPT_ExportInterco(const Antares::Data::Study& study,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace)
 {
-  // TODO
+    // Interco are exported only once for first year
+    if (ProblemeHebdo->firstWeekOfSimulation)
+    {
+        Yuni::Clob Flot;
+        for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
+        {
+            Flot.appendFormat("%d %d %d\n",
+                              i,
+                              ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
+                              ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+        }
+        auto filename = getFilenameWithExtension("interco", "txt", numSpace);
+        auto writer = study.resultWriter;
+        writer->addJob(filename, Flot);
+    }
 }
 
 void OPT_ExportAreaName(const Antares::Data::Study& study,
                         PROBLEME_HEBDO* ProblemeHebdo,
                         uint numSpace)
 {
-  // TODO
+    // Area name are exported only once for first year
+    if (ProblemeHebdo->firstWeekOfSimulation)
+    {
+        auto filename = getFilenameWithExtension("area", "txt", numSpace);
+        Yuni::Clob Flot;
+        for (uint i = 0; i < study.areas.size(); ++i)
+        {
+            Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
+        }
+        auto writer = study.resultWriter;
+        writer->addJob(filename, Flot);
+    }
 }
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
@@ -118,5 +145,12 @@ void OPT_ExportVariables(const Antares::Data::Study& study,
                          const std::string& fileExtension,
                          uint numSpace)
 {
-  // TODO
+    Yuni::Clob Flot;
+    auto filename = getFilenameWithExtension(fileName, fileExtension, numSpace);
+    for (auto const& line : varname)
+    {
+        Flot.appendFormat("%s\n", line.c_str());
+    }
+    auto writer = study.resultWriter;
+    writer->addJob(filename, Flot);
 }

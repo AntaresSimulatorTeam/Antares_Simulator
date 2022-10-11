@@ -10,6 +10,8 @@
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 
+#include <antares/exception/InitializationError.hpp>
+
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
@@ -222,7 +224,7 @@ void Application::prepare(int argc, char* argv[])
 
     // Parse the command line arguments
     if (!parser->operator()(argc, argv))
-        throw Error::CommandLineArguments(parser->errors());
+        throw Antares::Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
@@ -369,7 +371,7 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-
+    try {
     // Run the simulation
     switch (pStudy->runtime->mode)
     {
@@ -384,6 +386,16 @@ void Application::execute()
         break;
     default:
         break;
+    }
+    }
+    // TODO : make an interface class for ISimulation, check writer & queue before runSimulationIn<XXX>Mode()
+    catch (Solver::Initialization::Error::NoResultWriter e) {
+        logs.error() << "No result writer";
+        AntaresSolverEmergencyShutdown(); // no return
+    }
+    catch (Solver::Initialization::Error::NoQueueService e) {
+        logs.error() << "No queue service";
+        AntaresSolverEmergencyShutdown(); // no return
     }
 
     // Importing Time-Series if asked
@@ -437,7 +449,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -471,10 +483,15 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+    // Initialize the result writer
+    study.prepareWriter(&pDurationCollector);
+
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveAboutTheStudy();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();
@@ -565,7 +582,9 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
-    if (!pResultWriter)
+    auto writer = pStudy->resultWriter;
+    // If no writer is available, we can't write
+    if (!writer)
         return;
 
     // Info collectors : they retrieve data from study and simulation
@@ -581,7 +600,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     auto content = file_content.to<Antares::IniFile>();
-    pResultWriter->addJob(exec_info_path, content);
+    writer->addJob(exec_info_path, content);
 }
 
 Application::~Application()

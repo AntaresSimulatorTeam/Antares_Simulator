@@ -17,14 +17,67 @@ using namespace Yuni;
 
 constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
-static void printHeader(Clob& Flot, int NombreDeVariables, int NombreDeContraintes)
+/*
+** Copyright 2007-2018 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** There are special exceptions to the terms and conditions of the
+** license as they are applied to this software. View the full text of
+** the exceptions in file COPYING.txt in the directory of this software
+** distribution
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+**
+** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+*/
+#include <antares/study.h>
+#include <string>
+
+using namespace Yuni;
+
+#define SEP IO::Separator
+
+std::string getFilenameWithExtension(const YString& prefix,
+                                     const YString& extension,
+                                     uint numSpace,
+                                     int optNumber)
 {
-  Flot.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
-  Flot.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
-  Flot.appendFormat("NAME          Pb Solve\n");
+    auto study = Data::Study::Current::Get();
+    std::string outputFile;
+    outputFile.append(prefix.c_str()).append("-") // problem ou criterion
+      .append(std::to_string(study->runtime->currentYear[numSpace] + 1)).append("-")
+      .append(std::to_string(study->runtime->weekInTheYear[numSpace] + 1));
+
+    if (optNumber)
+       outputFile.append("--optim-nb-").append(std::to_string(optNumber));
+
+    outputFile.append(extension.c_str());
+
+    logs.info() << "Solver output File: `" << outputFile << "'";
+    return outputFile;
 }
 
-static void printColumnsObjective(Clob& Flot,
+static void printHeader(Clob& buffer, int NombreDeVariables, int NombreDeContraintes)
+{
+    buffer.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
+    buffer.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
+    buffer.appendFormat("NAME          Pb Solve\n");
+}
+
+static void printColumnsObjective(Clob& buffer,
                                   int NombreDeVariables,
                                   const int* NumeroDeContrainte,
                                   const double* CoefficientsDeLaMatriceDesContraintes,
@@ -32,47 +85,47 @@ static void printColumnsObjective(Clob& Flot,
                                   const int* Csui,
                                   const double* CoutLineaire)
 {
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
     int il;
 
-    Flot.appendFormat("COLUMNS\n");
+    buffer.appendFormat("COLUMNS\n");
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
         if (CoutLineaire && CoutLineaire[Var] != 0.0)
         {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
-            Flot.appendFormat("    C%07d  OBJECTIF  %s\n", Var, buffer);
+            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
+            buffer.appendFormat("    C%07d  OBJECTIF  %s\n", Var, printBuffer);
         }
 
         il = Cdeb[Var];
         while (il >= 0)
         {
-            SNPRINTF(buffer,
+            SNPRINTF(printBuffer,
                      OPT_APPEL_SOLVEUR_BUFFER_SIZE,
                      "%-.10lf",
                      CoefficientsDeLaMatriceDesContraintes[il]);
-            Flot.appendFormat("    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], buffer);
+            buffer.appendFormat("    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], printBuffer);
             il = Csui[il];
         }
     }
 }
 
-static void printBounds(Clob& Flot,
+static void printBounds(Clob& buffer,
                         int NombreDeVariables,
                         const int* TypeDeBorneDeLaVariable,
                         const double* Xmin,
                         const double* Xmax)
 {
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    Flot.appendFormat("BOUNDS\n");
+    buffer.appendFormat("BOUNDS\n");
 
     for (int Var = 0; Var < NombreDeVariables; Var++)
     {
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
         {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-            Flot.appendFormat(" FX BNDVALUE  C%07d  %s\n", Var, buffer);
+            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+            buffer.appendFormat(" FX BNDVALUE  C%07d  %s\n", Var, printBuffer);
             continue;
         }
 
@@ -80,58 +133,58 @@ static void printBounds(Clob& Flot,
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                Flot.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, buffer);
+                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                buffer.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, printBuffer);
             }
 
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-            Flot.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, buffer);
+            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+            buffer.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, printBuffer);
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
         {
             if (Xmin[Var] != 0.0)
             {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                Flot.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, buffer);
+                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
+                buffer.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, printBuffer);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
         {
-            Flot.appendFormat(" MI BNDVALUE  C%07d\n", Var);
+            buffer.appendFormat(" MI BNDVALUE  C%07d\n", Var);
             if (Xmax[Var] != 0.0)
             {
-                SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-                Flot.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, buffer);
+                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
+                buffer.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, printBuffer);
             }
         }
 
         if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
         {
-            Flot.appendFormat(" FR BNDVALUE  C%07d\n", Var);
+            buffer.appendFormat(" FR BNDVALUE  C%07d\n", Var);
         }
     }
 }
 
-static void printRHS(Clob& Flot, int NombreDeContraintes, const double* SecondMembre)
+static void printRHS(Clob& buffer, int NombreDeContraintes, const double* SecondMembre)
 {
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    Flot.appendFormat("RHS\n");
+    buffer.appendFormat("RHS\n");
     for (int Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (SecondMembre[Cnt] != 0.0)
         {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
-            Flot.appendFormat("    RHSVAL    R%07d  %s\n", Cnt, buffer);
+            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
+            buffer.appendFormat("    RHSVAL    R%07d  %s\n", Cnt, printBuffer);
         }
     }
 }
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
-    Clob Flot;
+    Clob buffer;
     int Cnt;
     int Var;
     int il;
@@ -141,8 +194,6 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
     int* Cdeb;
     int* NumeroDeContrainte;
     int* Csui;
-
-
 
     for (ilMax = -1, Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
@@ -203,40 +254,36 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
 
     free(Cder);
 
-    auto study = Data::Study::Current::Get();
-        
-    auto filename = study->createFileIntoOutputWithExtension("problem-fixed-part", "mps", currentOptimNumber, numSpace);
+    printHeader(buffer, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
-
-    Flot.appendFormat("ROWS\n");
-    Flot.appendFormat(" N  OBJECTIF\n");
+    buffer.appendFormat("ROWS\n");
+    buffer.appendFormat(" N  OBJECTIF\n");
 
     for (Cnt = 0; Cnt < Pb->NombreDeContraintes; Cnt++)
     {
         if (Pb->Sens[Cnt] == '=')
         {
-            Flot.appendFormat(" E  R%07d\n", Cnt);
+            buffer.appendFormat(" E  R%07d\n", Cnt);
         }
         else if (Pb->Sens[Cnt] == '<')
         {
-            Flot.appendFormat(" L  R%07d\n", Cnt);
+            buffer.appendFormat(" L  R%07d\n", Cnt);
         }
         else if (Pb->Sens[Cnt] == '>')
         {
-            Flot.appendFormat(" G  R%07d\n", Cnt);
+            buffer.appendFormat(" G  R%07d\n", Cnt);
         }
         else
         {
-            Flot.appendFormat(
-                    "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
-                    "partie des sens reconnus\n",
-                    Pb->Sens[Cnt]);
+            buffer.appendFormat(
+              "Writing fixed part of MPS data : le sens de la contrainte %c ne fait pas "
+              "partie des sens reconnus\n",
+              Pb->Sens[Cnt]);
             AntaresSolverEmergencyShutdown();
         }
     }
 
-    printColumnsObjective(Flot,
+    printColumnsObjective(buffer,
                           Pb->NombreDeVariables,
                           NumeroDeContrainte,
                           Pb->CoefficientsDeLaMatriceDesContraintes,
@@ -244,65 +291,51 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber
                           Csui,
                           nullptr);
 
-    Flot.appendFormat("ENDATA\n");
+    buffer.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    auto filename = getFilenameWithExtension("problem-fixed-part", "mps", optNumber, numSpace);
+    auto writer = study->resultWriter;
+    writer->addJob(filename, buffer);
 
     free(Cdeb);
     free(NumeroDeContrainte);
     free(Csui);
 }
 
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int currentOptimNumber, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
 {
-    Clob Flot;
+    Clob buffer;
     int Var;
-    
+    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
 
-    char buffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    printHeader(buffer, Pb->NombreDeVariables, Pb->NombreDeContraintes);
 
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem-variable-part", "mps", currentOptimNumber, numSpace);
-
-
-    printHeader(Flot, Pb->NombreDeVariables, Pb->NombreDeContraintes);
-
-    Flot.appendFormat("COLUMNS\n");
+    buffer.appendFormat("COLUMNS\n");
     for (Var = 0; Var < Pb->NombreDeVariables; Var++)
     {
         if (Pb->CoutLineaire[Var] != 0.0)
         {
-            SNPRINTF(buffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", Pb->CoutLineaire[Var]);
-            Flot.appendFormat("    C%07d  OBJECTIF  %s\n", Var, buffer);
+            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", Pb->CoutLineaire[Var]);
+            buffer.appendFormat("    C%07d  OBJECTIF  %s\n", Var, printBuffer);
         }
     }
 
-    printRHS(Flot, Pb->NombreDeContraintes, Pb->SecondMembre);
+    printRHS(buffer, Pb->NombreDeContraintes, Pb->SecondMembre);
 
-    printBounds(Flot, Pb->NombreDeVariables, Pb->TypeDeVariable, Pb->Xmin, Pb->Xmax);
+    printBounds(buffer, Pb->NombreDeVariables, Pb->TypeDeVariable, Pb->Xmin, Pb->Xmax);
 
-    Flot.appendFormat("ENDATA\n");
+    buffer.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    auto filename = getFilenameWithExtension("problem-variable-part", "mps", optNumber, numSpace);
+    auto writer = study->resultWriter;
+    writer->addJob(filename, buffer);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumber, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace)
 {
-    Clob Flot;
+    Clob buffer;
     int Cnt;
     int Var;
     int il;
@@ -400,27 +433,23 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
 
     free(Cder);
 
-    auto study = Data::Study::Current::Get();
-    auto filename = study->createFileIntoOutputWithExtension("problem", "mps", currentOptimNumber, numSpace);
-
-    printHeader(Flot, NombreDeVariables, NombreDeContraintes);
-
-    Flot.appendFormat("ROWS\n");
-    Flot.appendFormat(" N  OBJECTIF\n");
+    printHeader(buffer, NombreDeVariables, NombreDeContraintes);
+    buffer.appendFormat("ROWS\n");
+    buffer.appendFormat(" N  OBJECTIF\n");
 
     for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
     {
         if (Sens[Cnt] == '=')
         {
-            Flot.appendFormat(" E  R%07d\n", Cnt);
+            buffer.appendFormat(" E  R%07d\n", Cnt);
         }
         else if (Sens[Cnt] == '<')
         {
-            Flot.appendFormat(" L  R%07d\n", Cnt);
+            buffer.appendFormat(" L  R%07d\n", Cnt);
         }
         else if (Sens[Cnt] == '>')
         {
-            Flot.appendFormat(" G  R%07d\n", Cnt);
+            buffer.appendFormat(" G  R%07d\n", Cnt);
         }
         else
         {
@@ -430,7 +459,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
         }
     }
 
-    printColumnsObjective(Flot,
+    printColumnsObjective(buffer,
                           Probleme->NombreDeVariables,
                           NumeroDeContrainte,
                           Probleme->CoefficientsDeLaMatriceDesContraintes,
@@ -438,21 +467,20 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
                           Csui,
                           Probleme->CoutLineaire);
 
-    printRHS(Flot, Probleme->NombreDeContraintes, Probleme->SecondMembre);
+    printRHS(buffer, Probleme->NombreDeContraintes, Probleme->SecondMembre);
 
-    printBounds(
-      Flot, Probleme->NombreDeVariables, Probleme->TypeDeVariable, Probleme->Xmin, Probleme->Xmax);
+    printBounds(buffer,
+                Probleme->NombreDeVariables,
+                Probleme->TypeDeVariable,
+                Probleme->Xmin,
+                Probleme->Xmax);
 
-    Flot.appendFormat("ENDATA\n");
+    buffer.appendFormat("ENDATA\n");
 
-    // [FO] TODO
-    // auto archive = study->pZipArchive;
-    // archive->addData(filename,
-    //                  Flot.c_str(),
-    //                  Flot.size());
-
-    // archive->close();
-    // archive->open(libzippp::ZipArchive::Write);
+    auto study = Data::Study::Current::Get();
+    auto filename = getFilenameWithExtension("problem", "mps", optNumber, numSpace);
+    auto writer = study->resultWriter;
+    writer->addJob(filename, buffer);
 
     free(Cdeb);
     free(NumeroDeContrainte);
@@ -466,10 +494,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int currentOptimNumbe
 // --------------------
 fullMPSwriter::fullMPSwriter(
         PROBLEME_SIMPLEXE_NOMME* named_splx_problem, 
-        int currentOptimNumber, 
+        int optNumber, 
         uint thread_number) :
     named_splx_problem_(named_splx_problem),
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_number_(thread_number)
 {}
 void fullMPSwriter::runIfNeeded()
@@ -482,10 +510,10 @@ void fullMPSwriter::runIfNeeded()
 // ---------------------------------
 fullOrToolsMPSwriter::fullOrToolsMPSwriter(
         MPSolver* solver, 
-        int currentOptimNumber, 
+        int optNumber, 
         uint thread_number) :
     solver_(solver), 
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_number_(thread_number)
 {}
 void fullOrToolsMPSwriter::runIfNeeded()
@@ -500,11 +528,11 @@ void fullOrToolsMPSwriter::runIfNeeded()
 // ---------------------------------
 splitMPSwriter::splitMPSwriter(
         PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-        int currentOptimNumber,
+        int optNumber,
         uint thread_nb, 
         bool simu_1st_week) :
     named_splx_problem_(named_splx_problem),
-    current_optim_number_(currentOptimNumber),
+    current_optim_number_(optNumber),
     thread_nb_(thread_nb), 
     simu_1st_week_(simu_1st_week)
 {}

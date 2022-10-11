@@ -462,7 +462,6 @@ set(SRC
 	study/estimate.memory-footprint.cpp
 	study/study.cpp
 	study/correlation-updater.hxx
-	study/mps.cpp
 	study/study.importprepro.cpp
 	study/memory-usage.h
 	study/memory-usage.cpp
