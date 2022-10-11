@@ -791,7 +791,11 @@ void Study::saveAboutTheStudy()
       path.clear() << "about-the-study" << SEP << "study.ini";
       Antares::IniFile ini;
       header.CopySettingsToIni(ini, false);
-      resultWriter->addEntry(path.c_str(), ini);
+
+      std::string writeBuffer;
+      ini.saveToString(writeBuffer);
+
+      resultWriter->addEntry(path.c_str(), writeBuffer);
   }
 
   // Write parameters.ini

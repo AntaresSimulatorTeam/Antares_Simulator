@@ -118,13 +118,6 @@ void ZipWriter::addEntry(const std::string& entryPath, std::string& entryContent
     addEntryHelper<std::string>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntry(const std::string& entryPath, Antares::IniFile& entryContent)
-{
-    std::string buffer;
-    entryContent.saveToString(buffer);
-    addEntryHelper<std::string>(entryPath, buffer);
-}
-
 bool ZipWriter::needsTheJobQueue() const
 {
     return true;

@@ -1,3 +1,5 @@
+#include <antares/inifile.h>
+
 #include "file_content.h"
 
 using namespace std;
@@ -30,5 +32,21 @@ void FileContent::addDurationItem(const string& name, unsigned int duration, int
 {
     addItemToSection("durations_ms", name, duration);
     addItemToSection("number_of_calls", name, nbCalls);
+}
+
+// TODO should be const
+std::string FileContent::saveToBufferAsIni()
+{
+    Antares::IniFile ini;
+    for (const auto& [sectionName, content] : *this)
+    {
+        // Loop on properties
+        auto* section = ini.addSection(sectionName);
+        for (const auto& [key, value]  : content)
+            section->add(key, value);
+    }
+    std::string buffer;
+    ini.saveToString(buffer);
+    return buffer;
 }
 } // namespace Benchmarking

@@ -83,15 +83,6 @@ void ImmediateFileResultWriter::addEntry(const std::string& entryPath, std::stri
         IOFileSetContent(output, entryContent);
 }
 
-// Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntry(const std::string& entryPath, Antares::IniFile& entryContent)
-{
-    std::string buffer;
-    entryContent.saveToString(buffer);
-    // Re-use existing method
-    this->addEntry(entryPath, buffer);
-}
-
 bool ImmediateFileResultWriter::needsTheJobQueue() const
 {
     return false;

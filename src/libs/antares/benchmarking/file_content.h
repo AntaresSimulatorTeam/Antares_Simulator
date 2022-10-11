@@ -21,8 +21,7 @@ public:
                           const std::string& value);
     void addDurationItem(const std::string& name, unsigned int duration, int nbCalls);
 
-    template<class DestT>
-    DestT to();
+    std::string saveToBufferAsIni();
 
 private:
     std::mutex pSectionsMutex;
@@ -32,5 +31,3 @@ private:
       sections_;
 };
 } // namespace Benchmarking
-
-#include "file_content.hxx"

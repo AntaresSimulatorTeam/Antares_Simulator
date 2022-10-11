@@ -599,7 +599,7 @@ void Application::writeExectutionInfo()
 
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
-    auto content = file_content.to<Antares::IniFile>();
+    std::string content = file_content.saveToBufferAsIni();
     writer->addEntry(exec_info_path, content);
 }
 

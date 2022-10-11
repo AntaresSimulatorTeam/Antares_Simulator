@@ -56,7 +56,6 @@ public:
     virtual ~ZipWriter();
     void addEntry(const std::string& entryPath, Yuni::Clob& entryContent) override;
     void addEntry(const std::string& entryPath, std::string& entryContent) override;
-    void addEntry(const std::string& entryPath, Antares::IniFile& entryContent) override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
 
