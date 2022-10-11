@@ -61,8 +61,6 @@ public:
 
     void exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer);
 
-    bool createDigestFile();
-
 public:
     //! The current column index
     unsigned int columnIndex;
@@ -111,14 +109,10 @@ public:
 ** \brief Append the data of a matrix (about links variables) to the digest file
 */
 void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     const Yuni::String& originalOutput,
                                      Yuni::String& output,
                                      const char* title,
-                                     Yuni::Clob& pFileBuffer,
+                                     std::string& fileBuffer,
                                      const Matrix<>& matrix);
-
-void ExportGridInfosAreas(const Data::Study& study, const Yuni::String& folder);
-
 } // namespace Private
 } // namespace Variable
 } // namespace Solver

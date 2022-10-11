@@ -233,47 +233,48 @@ public:
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
     }
 
-    static void RunDigest(const ListType& list, SurveyResults& results)
+    static void RunDigest(const ListType& list, SurveyResults& results, IResultWriter::Ptr writer)
     {
         logs.info() << "Exporting digest...";
         logs.debug() << " . Digest, truncating file";
-        if (results.createDigestFile())
+        // Digest: Summary for All years
+        logs.debug() << " . Digest, annual";
+
+        // Digest file : areas part
+        std::string digestBuffer;
+        list.buildDigest(results, Category::digestAllYears, Category::area);
+        results.exportDigestAllYears(digestBuffer);
+
+        // Degest file : districts part
+        list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
+        results.exportDigestAllYears(digestBuffer);
+
+        if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
         {
-            // Digest: Summary for All years
-            logs.debug() << " . Digest, annual";
-
-            // Digest file : areas part
-            list.buildDigest(results, Category::digestAllYears, Category::area);
-            results.exportDigestAllYears();
-
-            // Degest file : districts part
-            list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
-            results.exportDigestAllYears();
-
-            if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
+            // Digest: Flow linear (only if selected by user)
+            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
             {
-                // Digest: Flow linear (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
-                {
-                    logs.debug() << " . Digest, flow linear";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowLinear, Category::area);
-                    results.exportDigestMatrix("Links (FLOW LIN.)");
-                }
+                logs.debug() << " . Digest, flow linear";
+                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+                list.buildDigest(results, Category::digestFlowLinear, Category::area);
+                results.exportDigestMatrix("Links (FLOW LIN.)", digestBuffer);
+            }
 
-                // Digest: Flow Quad (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
-                {
-                    logs.debug() << " . Digest, flow quad";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowQuad, Category::area);
-                    results.exportDigestMatrix("Links (FLOW QUAD.)");
-                }
+            // Digest: Flow Quad (only if selected by user)
+            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
+            {
+                logs.debug() << " . Digest, flow quad";
+                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+                list.buildDigest(results, Category::digestFlowQuad, Category::area);
+                results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
             }
 
             if (Antares::Memory::swapSupport)
                 Antares::memory.flushAll();
         }
+        YString digestFileName;
+        digestFileName << "grid" << SEP << "digest.txt"; // THIS FILE IS DEPRECATED !!!
+        writer->addEntry(digestFileName.c_str(), digestBuffer);
     }
 
 private:
@@ -339,8 +340,7 @@ private:
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id;
                 // Creating the directory
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
                 if (Antares::Memory::swapSupport)
                     Antares::memory.flushAll();
@@ -375,8 +375,7 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id << SEP << "thermal" << SEP << cluster.id();
-                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
                 if (Antares::Memory::swapSupport)
                     Antares::memory.flushAll();
@@ -427,9 +426,9 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                        // Generating the report for each thermal cluster
-                        SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                          list, results, numSpace);
+                    // Generating the report for each thermal cluster
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
+                      list, results, numSpace);
 
                     if (Antares::Memory::swapSupport)
                         Antares::memory.flushAll();
@@ -492,10 +491,8 @@ private:
             // The new output
             results.data.output.clear();
             results.data.output << results.data.originalOutput << SEP << "binding_constraints";
-                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
-
-
     }
 
 }; // class SurveyReportBuilder

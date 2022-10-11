@@ -93,17 +93,15 @@ public:
     */
     void exportGridInfos();
 
-    bool createDigestFile();
-
     // Reset a line of values to zero.
     void resetValuesAtLine(uint);
 
     /*!
     ** \brief Export the digest file
     */
-    void exportDigestAllYears();
+    void exportDigestAllYears(std::string& buffer);
 
-    void exportDigestMatrix(const char* title);
+    void exportDigestMatrix(const char* title, std::string& buffer);
 
 public:
     //! Data (not related to the template parameter)

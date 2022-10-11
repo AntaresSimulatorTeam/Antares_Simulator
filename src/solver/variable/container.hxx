@@ -374,7 +374,7 @@ void List<NextT>::exportSurveyResults(bool global,
         // Exporting the digest
         // The digest must be exported after the real report because some values
         // are computed at this moment.
-        Builder::RunDigest(*this, *survey);
+        Builder::RunDigest(*this, *survey, writer);
     }
     else
     {
