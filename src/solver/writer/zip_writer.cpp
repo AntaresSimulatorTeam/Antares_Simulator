@@ -14,9 +14,7 @@ extern "C"
 
 #include <ctime>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 // Class ZipWriteJob
 template<class ContentT>
@@ -49,9 +47,8 @@ void ZipWriteJob<ContentT>::onExecute()
 {
     // Don't write data if finalize() has been called
     if (pState != ZipState::can_receive_data)
-    {
         return;
-    }
+
     auto file_info = createInfo(pEntryPath);
 
     Benchmarking::Timer timer_wait;
@@ -63,9 +60,7 @@ void ZipWriteJob<ContentT>::onExecute()
     Benchmarking::Timer timer_write;
 
     if (int32_t ret = mz_zip_writer_entry_open(pZipHandle, file_info.get()); ret != MZ_OK)
-    {
         logs.error() << "Error opening entry " << pEntryPath << " (" << ret << ")";
-    }
 
     int32_t bw = mz_zip_writer_entry_write(pZipHandle, pContent.data(), pContent.size());
     if (static_cast<unsigned int>(bw) != pContent.size())
@@ -100,10 +95,15 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 
 ZipWriter::~ZipWriter()
 {
-    this->finalize(false);
-    if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK)
+    try
     {
-        logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
+        this->finalize(false);
+        if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK)
+            logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
+    }
+    catch (...)
+    {
+        // Catch all, do nothing
     }
     mz_zip_writer_delete(&pZipHandle);
 }
@@ -149,6 +149,4 @@ void ZipWriter::finalize(bool verbose)
     if (verbose)
         logs.notice() << "Done";
 }
-
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
