@@ -248,15 +248,7 @@ void SurveyResultsData::initialize(uint maxVariables)
 
 void SurveyResultsData::exportGridInfos(Antares::Solver::IResultWriter::Ptr writer)
 {
-    // Create output/grid
     // TODO
-    output.clear();
-    output << originalOutput << SEP << "grid";
-    IO::Directory::Create(output);
-
-    // Archive
-    output.clear() << SEP << "grid";
-    Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
 
 void SurveyResultsData::exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer)

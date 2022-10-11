@@ -288,11 +288,7 @@ private:
             results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                 << "whole system";
             // Creating the directory
-            if (IO::Directory::Create(results.data.output))
-                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-            else
-                logs.error() << "I/O Error: '" << results.data.output
-                             << "': impossible to create the folder";
+            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
 
@@ -343,12 +339,8 @@ private:
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id;
                 // Creating the directory
-                if (IO::Directory::Create(results.data.output))
                     SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
                       list, results, numSpace);
-                else
-                    logs.error() << "I/O Error: '" << results.data.output
-                                 << "': impossible to create the folder";
 
                 if (Antares::Memory::swapSupport)
                     Antares::memory.flushAll();
@@ -383,16 +375,8 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id << SEP << "thermal" << SEP << cluster.id();
-                // Creating the directory
-                if (Yuni::IO::Directory::Create(results.data.output))
-                {
-                    // Generating the report for each thermal cluster
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
                       list, results, numSpace);
-                }
-                else
-                    logs.error() << "I/O Error: '" << results.data.output
-                                 << "': impossible to create the folder";
 
                 if (Antares::Memory::swapSupport)
                     Antares::memory.flushAll();
@@ -443,16 +427,9 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    // Creating the directory
-                    if (IO::Directory::Create(results.data.output))
-                    {
                         // Generating the report for each thermal cluster
                         SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
                           list, results, numSpace);
-                    }
-                    else
-                        logs.error() << "I/O Error: '" << results.data.output
-                                     << "': impossible to create the folder";
 
                     if (Antares::Memory::swapSupport)
                         Antares::memory.flushAll();
@@ -494,14 +471,6 @@ private:
             results.data.output << results.data.originalOutput << SEP << "areas" << SEP << "@ "
                                 << sets.nameByIndex(i);
 
-            // Creating the directory
-            if (!IO::Directory::Create(results.data.output))
-            {
-                logs.error() << "I/O Error: '" << results.data.output
-                             << "': impossible to create the folder";
-                ++indx;
-                continue;
-            }
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
@@ -523,12 +492,7 @@ private:
             // The new output
             results.data.output.clear();
             results.data.output << results.data.originalOutput << SEP << "binding_constraints";
-            // Creating the directory
-            if (IO::Directory::Create(results.data.output))
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-            else
-                logs.error() << "I/O Error: '" << results.data.output
-                                << "': impossible to create the folder";
         }
 
 
