@@ -95,17 +95,17 @@ ZipWriter::ZipWriter(std::shared_ptr<Yuni::Job::QueueService> qs,
 
 ZipWriter::~ZipWriter()
 {
+    if (!pZipHandle)
+        return;
+
     try
     {
         this->finalize(false);
-        if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK)
-            logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
     }
     catch (...)
     {
         // Catch all, do nothing
     }
-    mz_zip_writer_delete(&pZipHandle);
 }
 
 void ZipWriter::addEntry(const std::string& entryPath, Yuni::Clob& entryContent)
@@ -142,7 +142,9 @@ void ZipWriter::finalize(bool verbose)
         logs.notice() << "Writing results...";
 
     std::lock_guard<std::mutex> guard(pZipMutex);
-    mz_zip_writer_close(pZipHandle);
+    if (int ret = mz_zip_writer_close(pZipHandle); ret != MZ_OK && verbose)
+        logs.warning() << "Error closing the zip file " << pArchivePath << " (" << ret << ")";
+
     mz_zip_writer_delete(&pZipHandle);
     pZipHandle = nullptr;
 
