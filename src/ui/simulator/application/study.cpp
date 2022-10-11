@@ -1209,22 +1209,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             if (preproOnly)
                 cmd << " --generators-only";
 
-            // Temp folder
-            {
-                String cacheFolder = Antares::memory.cacheFolder();
-                if (!cacheFolder.empty())
-                {
-                    if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
-                        cacheFolder.removeLast();
-                    if (!cacheFolder.empty())
-                    {
-                        cmd << ' ';
-                        tmp.clear() << "--swap-folder=" << cacheFolder;
-                        AppendWithQuotes(cmd, tmp);
-                    }
-                }
-            }
-
             cmd << ' ';
             // The input data
             AppendWithQuotes(cmd, study->folder);
