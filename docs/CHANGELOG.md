@@ -1,6 +1,96 @@
 Antares Changelog
 =================
 
+v8.3.2 (09/2022)
+--------------------
+### Output aggregation change
+- Daily, weekly, monthtly & annual values for link variable "MARG. COST" (EUR/MWh) was previously obtained by a sum. It now computed by average (#881).
+
+### New features
+- Add new BC marginal price output variable (#801)
+- Add Antares logo in solver logs (#861)
+- Add XPRESS-compatible assets for Ubuntu. Windows coming soon.
+
+### GUI
+- In the "Links" panel, replace "Flat" view by "By area" view (#755)
+
+### Bug fixes
+- Fix segfault when more than 9 renewable clusters are present in an area (#869)
+- Fix segfault related to the digest occurring when many thermal clusters are present (#852)
+- Statistics: use std::mutex / std::atomic<> to prevent concurrent writes (#838)
+- Allow more than 100 thermal clusters (#886)
+- Fix warning in hydro.ini loading function (#883)
+- MPS for the 1st optimization were erased by the one related to the 2nd optimization. Fixed (#863).
+
+### For developers
+- Simplify day ahead reserve condition (#777)
+- Remove unused "shedding strategy" (#788)
+- Refactor Layers by adding a LayerData class (#866)
+- Output variables: remove useless methods for renewable clusters (#869)
+- Restore notifications from Sonar (#828)
+- Restore tests in the CI (Windows only) (#850)
+- Add OR-Tools+XPRESS to Ubuntu CI and merge files for centos CI (#859)
+- Simplify Parameters::fixRefreshIntervals, clean headers (#832)
+- Simplify tuneSolverSpecificOptions (#829)
+
+### Documentation
+- Input and output format due to addition of BC marginal prices (#836)
+- Fix e-mail address and website (#834)
+
+v8.3.1 (08/2022)
+--------------------
+### New features
+- Add execution-info.ini output file, containing execution durations and study info #740 #803 #816
+- OR-Tools: set solver-specific options for XPRESS #796
+
+### Bug fixes
+- Fix missing renewable columns in districts (sets of areas) #802
+
+### GUI
+- Fix wrong number of cores in the "Run a simulation" window #793
+
+### For developers
+- Bump C++11 to C++17
+
+v8.3.0 (07/2022)
+--------------------
+### New features
+- Adequacy patch - share the unsupplied energy according to the "local matching rule". This feature was contributed by RTE-i with support from RTE, ELIA and APG #657
+- Add output variable "profit by cluster". This variable represents the difference between proportional costs and marginal costs in the area. It provides a partial answer to the question "what is the economic profit associated to a thermal cluster ?", excluding non-proportional (€/h) and startup costs (€/startup). #686
+- Allow +/- infinity in binding constraint RHS, allowing the user to enable BCs only for some timesteps #631(*)
+- Add option to enable the splitting of exported MPS files. This feature is intended to be used by Antares Xpansion.
+- Add --list-solvers command-line argument, to list linear solvers available through OR-Tools
+- Measure the execution duration for every computation step, store the durations in a dedicated file #546
+
+(*) May not work with the Sirius solver. Consider using other solvers through OR-Tools
+
+### Bug fixes
+- Fix segfault occuring when inter/intramodal correlation is enabled and TS width are inconsistent #694
+- Fix logging of performed MC years when running jobs in parallel #680
+- Fix a crash occuring in studies where an area contains 100+ thermal clusters (#753)
+- Load & check prepro data only if needed (#754)
+- Fix possible loss of data if adq-patch is disabled (#738)
+- UI For property update for adq-patch mode, allow batch edit (#747)
+- UI - Fix GUI freeze when using multiple map layers (#721)
+
+### For developers
+- Display the git commit-id in the logs for debugging & diagnosis purposes #698
+- Code cleaning in hydro heuristic #671
+- Use antares-deps 2.0.2, which now excludes OR-Tools #684
+- Fetch OR-Tools directly, allowing more flexibility on the flavor (XPRESS/Sirius/etc.) #684
+- Code cleaning #663 #665 #666 #687 #725 #667 #668 #730
+
+### Misc. improvements
+- Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
+- Upgrade examples 8.1 -> 8.3 (#733)
+
+v8.2.2 (04/2022)
+--------------------
+### Bug fixes
+- Fix solver crash on parsing command-line parameters #624
+### GUI
+- Fix crash occuring when switching to the links panel #658
+
 v8.2.1 (03/2022)
 --------------------
 ### Bug fixes

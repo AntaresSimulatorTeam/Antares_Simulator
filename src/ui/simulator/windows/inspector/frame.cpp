@@ -397,6 +397,11 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
       pPGAreaResort,
       new wxBoolProperty(wxT("other dispatch. power"), wxT("area.other_dispatch_power"), false));
 
+    pPGAreaAdequacyPatchTitle
+      = Category(pg, wxT("Adequacy Patch"), wxT("area.adequacy_patch_title"));
+    pPGAreaAdequacyPatchMode = page->Append(new wxEnumProperty(
+      wxT("adequacy patch mode"), wxT("area.adequacy_patch_mode"), adequacyPatchMode));
+
     pPGAreaLocalization = Category(pg, wxT("Localization"), wxT("area.localization"));
     P_INT("x", "area.x");
     P_INT("y", "area.y");
@@ -530,9 +535,8 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
 
     pPGThClusterReliabilityModel
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
-    pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS.data())
-      pPGThClusterVolatilityForced
-      = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
+    pPGThClusterDoGenerateTS = P_ENUM("Generate timeseries", "cluster.gen-ts", localGenTS);
+    pPGThClusterVolatilityForced = P_FLOAT("Volatility (forced)", "cluster.forcedVolatility");
     pPGThClusterVolatilityPlanned = P_FLOAT("Volatility (planned)", "cluster.plannedVolatility");
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
@@ -710,15 +714,12 @@ void Frame::apply(const InspectorData::Ptr& data)
     }
     else
     {
-        if (&study)
+        // ugly hack : to allow self refresh when several properties
+        // are modified in the same time
+        if (not pAlreadyConnectedToSimulationChangesEvent)
         {
-            // ugly hack : to allow self refresh when several properties
-            // are modified in the same time
-            if (not pAlreadyConnectedToSimulationChangesEvent)
-            {
-                OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
-                pAlreadyConnectedToSimulationChangesEvent = true;
-            }
+            OnStudySimulationSettingsChanged.connect(this, &Frame::delayApply);
+            pAlreadyConnectedToSimulationChangesEvent = true;
         }
     }
 
@@ -776,7 +777,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     // -----
     pPGAreaSeparator->Hide(hide);
     pPGAreaGeneral->Hide(hide);
-    pPGAreaFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
+    pPGAreaFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     if (!hide)
     {
         pPGAreaName->Hide(multiple);
@@ -785,6 +786,8 @@ void Frame::apply(const InspectorData::Ptr& data)
             pPGAreaName->SetValueFromString(wxStringFromUTF8((*(data->areas.begin()))->name));
         // Area color
         Accumulator<PAreaColor>::Apply(pPGAreaColor, data->areas);
+        // Adequacy patch
+        Accumulator<PAdequacyPatchMode>::Apply(pPGAreaAdequacyPatchMode, data->areas);
         // Area position
         if (!multiple)
         {
@@ -835,6 +838,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     }
     pPGAreaOptimization->Hide(hide);
     pPGAreaResort->Hide(hide);
+    pPGAreaAdequacyPatchTitle->Hide(hide);
     pPGAreaLocalization->Hide(hide || multiple);
     pPGAreaDeps->Hide(hide);
 
@@ -844,7 +848,7 @@ void Frame::apply(const InspectorData::Ptr& data)
     hide = !data || data->links.empty();
     multiple = (data and data->links.size() > 1);
     pPGLinkSeparator->Hide(hide);
-    pPGLinkFilteringStatus->Hide(!(!hide and &study and study->parameters.geographicTrimming));
+    pPGLinkFilteringStatus->Hide(!(!hide and study and study->parameters.geographicTrimming));
     p = PROPERTY("link.title");
     p->Hide(hide);
     if (!hide)

@@ -1,19 +1,24 @@
-project(antares)
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      2)
-set(ANTARES_VERSION_REVISION  1)
+set(ANTARES_VERSION_LO	      3)
+set(ANTARES_VERSION_REVISION  2)
 set(ANTARES_VERSION_YEAR      2022)
 
+project(antares
+        VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
+
 set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
+set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
 set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
+
+# OR-Tools tag
+file(READ "../ortools_tag" ORTOOLS_TAG)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -26,6 +31,9 @@ include(CheckIncludeFiles)
 include(CheckIncludeFileCXX)
 include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
+include(FetchContent)
+
+set(CMAKE_CXX_STANDARD 17)
 
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
@@ -176,6 +184,9 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
+option(BUILD_ORTOOLS "Build OR-Tools" OFF)
+message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -241,9 +252,28 @@ endif()
 set(GFLAGS_USE_TARGET_NAMESPACE TRUE) 
 find_package(gflags)
 
-find_package(ortools)
-if(NOT ortools_FOUND)
-	message (FATAL_ERROR "OR-Tools not found. OR-Tools can be compiled with -DBUILD_ortools=ON or you can specify previous dependency install directory with -DCMAKE_PREFIX_PATH or -DDEPS_INSTALL_DIR")
+find_package(ortools QUIET)
+if(NOT ortools_FOUND OR BUILD_ORTOOLS)
+message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
+  FetchContent_Declare(ortools
+    GIT_REPOSITORY "https://github.com/rte-france/or-tools"
+    GIT_TAG ${ORTOOLS_TAG}
+    )
+
+  # Pass options to OR-Tools's CMake
+  set(BUILD_DEPS "ON" CACHE INTERNAL "")
+  set(BUILD_SAMPLES "OFF" CACHE INTERNAL "")
+  set(BUILD_FLATZINC "OFF" CACHE INTERNAL "")
+  set(BUILD_EXAMPLES "OFF" CACHE INTERNAL "")
+  set(USE_SCIP "OFF" CACHE INTERNAL "")
+  # We build OR-Tools as a static lib. Cyclic dependencies are detected
+  # without this flag.
+  set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
+
+  FetchContent_MakeAvailable(ortools)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt
@@ -376,8 +406,8 @@ else()
 	set(CPACK_DEBIAN_PACKAGE_NAME "antares")
 	set(CPACK_PACKAGE_VERSION_MAJOR ${ANTARES_VERSION_HI})
 	set(CPACK_PACKAGE_VERSION_MINOR ${ANTARES_VERSION_LO})
-	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION})
-	
+	set(CPACK_PACKAGE_VERSION_PATCH ${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG})
+
 	set(CPACK_DEBIAN_PACKAGE_DEPENDS "libwxgtk3.0-gtk3-0v5")
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")

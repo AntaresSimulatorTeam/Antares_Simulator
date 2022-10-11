@@ -159,9 +159,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
 
             bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
             bool opt1 = (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
-            bool exp = (ProblemeHebdo->Expansion == OUI_ANTARES);
-            bool opt2 = (ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION);
-            if ((reserveJm1 && opt1) || (reserveJm1 && exp && opt2))
+            if (reserveJm1 && opt1)
             {
                 SecondMembre[Cnt]
                   -= ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
@@ -227,7 +225,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                 {
                     SecondMembre[Cnt] = MatriceDesContraintesCouplantes
                                           ->SecondMembreDeLaContrainteCouplante[PdtHebdo];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales + PdtHebdo;
                 }
             }
         }
@@ -385,7 +383,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                 {
                     SecondMembre[Cnt]
                       = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Jour];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales + Jour;
                 }
             }
         }
@@ -412,7 +410,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                 {
                     SecondMembre[Cnt] = MatriceDesContraintesCouplantes
                                           ->SecondMembreDeLaContrainteCouplante[Semaine];
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales + Semaine;
                 }
             }
         }

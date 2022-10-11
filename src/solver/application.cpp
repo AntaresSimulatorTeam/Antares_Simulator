@@ -8,10 +8,13 @@
 #include "../config.h"
 
 #include "misc/system-memory.h"
+#include "utils/ortools_utils.h"
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
+
+#include <algorithm>
 
 namespace
 {
@@ -40,6 +43,16 @@ void printVersion()
 #else
     std::cout << ANTARES_VERSION_STR << std::endl;
 #endif
+}
+
+void printSolvers()
+{
+    std::cout << "Available solvers :" << std::endl;
+    OrtoolsUtils utils;
+    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    {
+        std::cout << solver << std::endl;
+    }
 }
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et « hydro-pricing
@@ -81,6 +94,30 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
                 throw Error::IncompatibleDailyOptHeuristicForArea(area.name);
             }
         }
+    }
+}
+
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
+                                       const Antares::Data::StudyMode studyMode)
+{
+    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
+    {
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
+void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
+{
+    using namespace Antares::Data;
+    if (adqPatchOn)
+    {
+        const bool containsAdqArea
+          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
+            });
+        if (!containsAdqArea)
+            throw Error::NoAreaInsideAdqPatchMode();
     }
 }
 
@@ -140,6 +177,14 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
 }
 
+void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
+{
+    if (ortoolsUsed && splitExportedMPS)
+    {
+        throw Error::InvalidParametersORTools_SplitMPS();
+    }
+}
+
 } // namespace
 
 namespace Antares
@@ -176,13 +221,18 @@ void Application::prepare(int argc, char* argv[])
     auto parser = CreateParser(pSettings, options);
 
     // Parse the command line arguments
-    if (!parser(argc, argv))
-        throw Error::CommandLineArguments(parser.errors());
+    if (!parser->operator()(argc, argv))
+        throw Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
         printVersion();
-        shouldExecute = false;
+        return;
+    }
+
+    if (options.listSolvers)
+    {
+        printSolvers();
         return;
     }
 
@@ -197,7 +247,12 @@ void Application::prepare(int argc, char* argv[])
     resetLogFilename();
 
     // Starting !
+#ifdef GIT_SHA1_SHORT_STRING
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+                      << GIT_SHA1_SHORT_STRING << ")";
+#else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
+#endif
     WriteHostInfoIntoLogs();
     logs.info();
 
@@ -228,11 +283,15 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    bool tsGenThermal = (0
-                         != (pStudy->parameters.timeSeriesToGenerate
-                             & Antares::Data::TimeSeries::timeSeriesThermal));
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
+
+    bool tsGenThermal
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkSplitMPSWithORTOOLS(pParameters->ortoolsUsed, pParameters->include.splitExportedMPS);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
@@ -289,7 +348,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
-    if (!shouldExecute)
+    if (!pStudy)
         return;
 
     processCaption(Yuni::String() << "antares: running \"" << pStudy->header.caption << "\"");
@@ -375,11 +434,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     options.loadOnlyNeeded = true;
 
     // Load the study from a folder
+    Benchmarking::Timer timer;
+
     if (study.loadFromFolder(pSettings.studyFolder, options) && !study.gotFatalError)
     {
         logs.info() << "The study is loaded.";
         logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     }
+
+    timer.stop();
+    pDurationCollector.addDuration("study_loading", timer.get_duration());
 
     if (study.gotFatalError)
         throw Error::ReadingStudy();
@@ -476,6 +540,32 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     initializeRandomNumberGenerators();
 }
 
+void Application::writeExectutionInfo()
+{
+    if (!pStudy)
+        return;
+
+    // Last missing duration to get : measure of total simulation duration
+    pTotalTimer.stop();
+    pDurationCollector.addDuration("total", pTotalTimer.get_duration());
+
+    // Info collectors : they retrieve data from study and simulation
+    Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
+    Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
+
+    // Fill file content with data retrieved by collectors
+    Benchmarking::FileContent file_content;
+    pDurationCollector.toFileContent(file_content);
+    study_info_collector.toFileContent(file_content);
+    simulation_info_collector.toFileContent(file_content);
+
+    // Flush previous info into a record file
+    Yuni::String filePath;
+    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
+    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
+    ini_file_writer.flush();
+}
+
 Application::~Application()
 {
     // Destroy all remaining bouns (callbacks)
@@ -501,7 +591,6 @@ Application::~Application()
         // Removing all unused spwa files
         Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
-        logs.info() << "Done.";
     }
 }
 } // namespace Solver

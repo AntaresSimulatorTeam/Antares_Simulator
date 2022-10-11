@@ -30,10 +30,9 @@
 #include <yuni/core/string.h>
 
 #include <antares/study.h>
-#include <antares/timeelapsed.h>
+#include <antares/benchmarking.h>
 #include <antares/logs.h>
 #include <antares/emergency.h>
-#include <antares/string-to-double.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
@@ -651,8 +650,8 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
-                               Data::GlobalTSGenerationBehavior globalBehavior,
-                               bool refresh)
+                               bool globalThermalTSgeneration,
+                               bool refreshTSonCurrentYear)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
@@ -675,7 +674,7 @@ bool GenerateThermalTimeSeries(Data::Study& study,
         {
             auto& cluster = *(it->second);
 
-            if (cluster.doWeGenerateTS(globalBehavior, refresh))
+            if (cluster.doWeGenerateTS(globalThermalTSgeneration) && refreshTSonCurrentYear)
             {
                 (*generator)(area, cluster);
             }

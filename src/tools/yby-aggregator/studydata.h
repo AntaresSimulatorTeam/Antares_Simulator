@@ -40,9 +40,9 @@ public:
     //! Vector
     using Vector = std::vector<Ptr>;
     //! Short string
-    typedef Yuni::CString<10, false> ShortString;
+    using ShortString = Yuni::CString<10, false>;
     //! Short string
-    typedef Yuni::CString<512, false> ShortString512;
+    using ShortString512 = Yuni::CString<512, false>;
 
 public:
     template<class StringT>

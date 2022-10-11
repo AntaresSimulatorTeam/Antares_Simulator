@@ -6,12 +6,17 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
-  
+
 jobs:
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
 
   windows:
 
     runs-on: ${{ matrix.os }}
+    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -19,27 +24,26 @@ jobs:
           - os: windows-latest
             triplet: x64-windows
             vcpkgPackages: wxwidgets boost-test
+            test-platform: windows-2022
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
-      
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
+
     steps:
-    - uses: actions/checkout@v2 
-    
+    - uses: actions/checkout@v3
+
     - name: Get release
       id: get_release
       uses: bruceadams/get-release@v1.2.0
-           
-    - name: Set up Python
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
+
 
     - name: Pre-requisites
       shell: cmd
-      run: |          
+      run: |
           choco install wget unzip --no-progress
-          
+
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
       uses: actions/cache@v2
@@ -56,12 +60,13 @@ jobs:
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
-          
-    - name: Install dependencies
-      run: |
-          python -m pip install --upgrade pip
-          pip3 install -r src/tests/examples/requirements.txt
-          
+
+    - name: Setup Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        architecture: 'x64'
+        python-version: '3.10.6'
+
     - name : Install deps with VCPKG
       run: |
           git submodule update --init vcpkg
@@ -70,36 +75,107 @@ jobs:
           vcpkg install ${{matrix.vcpkgPackages}} --triplet ${{matrix.triplet}}
           rm -rf buildtrees packages downloads
       shell: bash
-      
+
+    - name: Download userguide
+      uses: actions/download-artifact@v2
+      with:
+        name: pdf-doc
+        path: docs/ref_guides
+
     - name: Read antares-deps version
       id: antares-deps-version
       uses: notiz-dev/github-action-json-property@release
-      with: 
+      with:
         path: 'antares-deps-version.json'
         prop_path: 'antares_deps_version'
-            
+
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-zip
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
-           
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
+
+    - name: Install pip dependencies if necessary
+      run: pip install -r src/tests/examples/requirements.txt
+
+    # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule
       run: |
            git submodule update --init --recursive src
-      
+
+    - name: Enable git longpaths
+      run:  git config --system core.longpaths true
+
     - name: Configure with VCPKG
+      shell: bash
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DVCPKG_ROOT=${{env.VCPKG_ROOT}} -DVCPKG_TARGET_TRIPLET=${{matrix.triplet}} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
-           
+           cmake -B _build -S src \
+           -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
+           -DCMAKE_PREFIX_PATH="${{env.ORTOOLS_DIR}}/install" \
+           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON  \
+           -DBUILD_not_system=OFF
+
     - name: Build
       run: |
            cmake --build _build --config release -j2
-           
-    - name: Running unit tests
-      run: |
-           cd _build
-           ctest -C release --output-on-failure -L "unit|end-to-end|short|medium" -LE ortools
+
+    - name: Remove OR-Tools install directory to free some disk space
+      shell: bash
+      run: rm -rf ${{env.ORTOOLS_DIR}}
+
+    - name: Remove antares-deps to free some disk space
+      shell: bash
+      run: rm -rf ${{ github.workspace }}/src/antares-deps
+
+    # TODO : don't download submodule Antares_Simulator_Tests
+    - name: Remove Antares_Simulator_Tests to free some disk space
+      shell: bash
+      run: rm -rf ${{ github.workspace }}/src/tests/resources/Antares_Simulator_Tests
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run medium-tests
+      uses: ./.github/workflows/run-tests
+      continue-on-error: true
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      uses: ./.github/workflows/run-tests
+      continue-on-error: true
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      uses: ./.github/workflows/run-tests
+      continue-on-error: true
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      continue-on-error: true
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
 
     - name: .zip creation
       shell: bash
@@ -117,6 +193,10 @@ jobs:
         asset_name: ${{env.ZIP_NAME}}
         asset_content_type: application/octet-stream
 
+    - name: Remove zip to free some disk space
+      shell: bash
+      run: rm _build/${{env.ZIP_NAME}}
+
     - name: NSIS Installer creation
       shell: bash
       run: |
@@ -126,7 +206,14 @@ jobs:
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
-           
+
+    - name: Upload NSIS logs
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: NSISOutput.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: Upload NSIS installer
       uses: actions/upload-release-asset@v1.0.2
       with:
@@ -134,4 +221,3 @@ jobs:
         asset_path: _build/${{env.NSIS_NAME}}
         asset_name: ${{env.NSIS_NAME}}
         asset_content_type: application/octet-stream
-        

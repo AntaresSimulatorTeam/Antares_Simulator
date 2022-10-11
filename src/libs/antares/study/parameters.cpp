@@ -27,14 +27,10 @@
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <algorithm>
-#include <iostream>
+#include <tuple>   // std::tuple
+#include <list>    // std::list
+#include <sstream> // std::stringstream
 
-#include <sstream>
-
-#ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#endif
 #include "../constants.h"
 #include "parameters.h"
 #include "../inifile.h"
@@ -202,6 +198,13 @@ void Parameters::resetSeeds()
         seed[i] = (s += increment);
 }
 
+void Parameters::resetAdqPatchParameters()
+{
+    adqPatch.enabled = false;
+    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+}
+
 void Parameters::reset()
 {
     // Mode
@@ -279,7 +282,6 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristic;
@@ -304,7 +306,8 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
+    include.splitExportedMPS = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -315,6 +318,9 @@ void Parameters::reset()
 
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
+
+    // Adequacy patch
+    resetAdqPatchParameters();
 
     // Initialize all seeds
     resetSeeds();
@@ -550,8 +556,21 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
+        {
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                << ". Reset to no MPS export.";
+            return false;
+        }
+        return true;
+    }
+
+    if (key == "include-split-exported-mps")
+        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -611,6 +630,22 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
     }
     return false;
 }
+static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
+{
+    if (key == "include-adq-patch")
+        return value.to<bool>(d.adqPatch.enabled);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
@@ -698,17 +733,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -960,6 +984,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -982,7 +1010,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     // A temporary buffer, used for the values in lowercase
     String value;
     String sectionName;
-    typedef bool (*Callback)(
+    using Callback = bool (*)(
       Parameters&,   // [out] Parameter object to load the data into
       const String&, // [in] Key, comes left to the '=' sign in the .ini file
       const String&, // [in] Lowercase value, comes right to the '=' sign in the .ini file
@@ -994,6 +1022,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
          {"input", &SGDIntLoadFamily_Input},
          {"output", &SGDIntLoadFamily_Output},
          {"optimization", &SGDIntLoadFamily_Optimization},
+         {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
          {"other preferences", &SGDIntLoadFamily_OtherPreferences},
          {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
          {"playlist", &SGDIntLoadFamily_Playlist},
@@ -1078,7 +1107,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1132,53 +1160,41 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
 void Parameters::fixRefreshIntervals()
 {
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    using T = std::
+      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
+                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
+                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
+                                            {refreshIntervalWind, timeSeriesWind, "wind"},
+                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
+
+    for (const auto& [refreshInterval, ts, label] : timeSeriesToCheck)
     {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
+        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
+        {
+            refreshInterval = 1;
+            logs.error() << "The " << label
+                         << " time-series must be refreshed but the interval is equal to 0. "
+                            "Auto-Reset to a safe value (1).";
+        }
     }
 }
 
 void Parameters::fixGenRefreshForNTC()
 {
-    if (timeSeriesTransmissionCapacities & timeSeriesToGenerate != 0)
+    if ((timeSeriesTransmissionCapacities & timeSeriesToGenerate) != 0)
     {
         timeSeriesToGenerate &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series generation is not available for transmission capacities. It "
                         "will be automatically disabled.";
     }
-    if (timeSeriesTransmissionCapacities & timeSeriesToRefresh != 0)
+    if ((timeSeriesTransmissionCapacities & timeSeriesToRefresh) != 0)
     {
         timeSeriesToRefresh &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Time-series refresh is not available for transmission capacities. It will "
                         "be automatically disabled.";
     }
-    if (timeSeriesTransmissionCapacities & interModal != 0)
+    if ((timeSeriesTransmissionCapacities & interModal) != 0)
     {
         interModal &= ~timeSeriesTransmissionCapacities;
         logs.error() << "Inter-modal correlation is not available for transmission capacities. It "
@@ -1291,7 +1307,7 @@ float Parameters::getYearsWeightSum() const
     return result;
 }
 
-void Parameters::setYearWeight(int year, float weight)
+void Parameters::setYearWeight(uint year, float weight)
 {
     assert(year < yearsWeight.size());
     yearsWeight[year] = weight;
@@ -1417,8 +1433,13 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info()
           << "Aggregate renewables were chosen. Output will be disabled for renewable clusters.";
         break;
+    case rgUnknown:
+        logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    std::vector<std::string> excluded_vars;
+    renewableGeneration.addExcludedVariables(excluded_vars);
+    adqPatch.addExcludedVariables(excluded_vars);
+
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1544,8 +1565,12 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
+    if (!include.splitExportedMPS)
+        logs.info() << "  :: ignoring split exported mps";
+    if (!adqPatch.enabled)
+        logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
@@ -1706,7 +1731,8 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
+        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1714,6 +1740,15 @@ void Parameters::saveToINI(IniFile& ini) const
                      Enum::toString(include.unfeasibleProblemBehavior));
     }
 
+    // Adequacy patch
+    {
+        auto* section = ini.addSection("adequacy patch");
+        section->add("include-adq-patch", adqPatch.enabled);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    }
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1723,7 +1758,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
@@ -1861,33 +1895,39 @@ bool Parameters::saveToFile(const AnyString& filename) const
     return ini.save(filename);
 }
 
-std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
+    const static std::vector<std::string> ren = {"wind offshore",
+                                                 "wind onshore",
+                                                 "solar concrt.",
+                                                 "solar pv",
+                                                 "solar rooft",
+                                                 "renw. 1",
+                                                 "renw. 2",
+                                                 "renw. 3",
+                                                 "renw. 4"};
+
+    const static std::vector<std::string> agg = {"wind", "solar"};
+
     switch (rgModelling)
     {
-    /*
-       Order is important because AllVariablesPrintInfo::setPrintStatus
-       does not reset the search pointer.
-
-       Inverting some variable names below may result in some of them not being
-       taken into account.
-    */
+    // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        return {"wind offshore",
-                "wind onshore",
-                "solar concrt.",
-                "solar pv",
-                "solar rooft",
-                "renw. 1",
-                "renw. 2",
-                "renw. 3",
-                "renw. 4"};
+        out.insert(out.end(), ren.begin(), ren.end());
+        break;
+    // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:
-        return {"wind", "solar"};
-    case rgUnknown:
-        return {};
+        out.insert(out.end(), agg.begin(), agg.end());
+        break;
+    default:
+        break;
     }
-    return {};
+}
+
+void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
+{
+    if (!enabled)
+        out.emplace_back("dens");
 }
 
 bool Parameters::haveToImport(int tsKind) const

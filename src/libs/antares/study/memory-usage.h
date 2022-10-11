@@ -69,6 +69,8 @@ public:
     */
     void overheadDiskSpaceForSingleAreaOrLink();
 
+    void overheadDiskSpaceForSingleBindConstraint();
+
 public:
     //! \name Input data
     //@{

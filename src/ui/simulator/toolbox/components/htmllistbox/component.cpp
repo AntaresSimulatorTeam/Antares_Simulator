@@ -53,8 +53,8 @@ class CustomClientData final : public wxClientData
 {
 public:
     //! List
-    typedef std::list<CustomClientData*> List;
-    typedef std::vector<CustomClientData*> Vector;
+    using List = std::list<CustomClientData*>;
+    using Vector = std::vector<CustomClientData*>;
 
 public:
     CustomClientData(const Item::IItem::Ptr& it) : item(it)
@@ -328,7 +328,7 @@ void Component::internalAddDatasource(Datasource::IDatasource* ds)
 {
     if (ds)
     {
-        typedef Antares::Component::Button ButtonType;
+        using ButtonType = Antares::Component::Button;
         auto* btn
           = new ButtonType(this, wxEmptyString, ds->icon(), this, &Component::onDatasourceClicked);
         pSizerForDatasources->Add(btn, 0, wxALL | wxEXPAND);

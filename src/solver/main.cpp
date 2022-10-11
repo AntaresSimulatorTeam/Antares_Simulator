@@ -60,27 +60,55 @@ using namespace Yuni;
 
 #define SEP Yuni::IO::Separator
 
-#define GPL_ANNOUNCEMENT \
-    "Copyright 2007-2018 RTE  - Authors: The Antares_Simulator Team \n\
-\n\
-Antares_Simulator is free software : you can redistribute it and / or modify\n\
-it under the terms of the GNU General Public License as published by\n\
-the Free Software Foundation, either version 3 of the License, or\n\
-(at your option) any later version.\n\
-\n\
-There are special exceptions to the terms and conditions of the\n\
-license as they are applied to this software.View the full text of\n\
-the exceptions in file COPYING.txt in the directory of a distribution\n\
-of this software in source form.\n\
-\n\
-Antares_Simulator is distributed in the hope that it will be useful, \n\
-but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the\n\
-GNU General Public License for more details.\n\
-\n\
-You should have received a copy of the GNU General Public License\n\
-along with Antares_Simulator.If not, see <http://www.gnu.org/licenses/>.\n\
-\n\n"
+const char* const GPL_ANNOUNCEMENT
+  = "Copyright 2007-2018 RTE  - Authors: The Antares_Simulator Team \n"
+    "\n"
+    "Antares_Simulator is free software : you can redistribute it and / or modify\n"
+    "it under the terms of the GNU General Public License as published by\n"
+    "the Free Software Foundation, either version 3 of the License, or\n"
+    "(at your option) any later version.\n"
+    "\n"
+    "There are special exceptions to the terms and conditions of the\n"
+    "license as they are applied to this software.View the full text of\n"
+    "the exceptions in file COPYING.txt in the directory of a distribution\n"
+    "of this software in source form.\n"
+    "\n"
+    "Antares_Simulator is distributed in the hope that it will be useful, \n"
+    "but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the\n"
+    "GNU General Public License for more details.\n"
+    "\n"
+    "You should have received a copy of the GNU General Public License\n"
+    "along with Antares_Simulator.If not, see <http://www.gnu.org/licenses/>.\n"
+    "\n";
+
+const char* const ANTARES_LOGO = "\n\n"
+                                 "                  . = - .                                   \n"
+                                 "                  - % % :                                   \n"
+                                 "              . . - % # :                   . .             \n"
+                                 "            . - : - + : .         . . . . : + = .           \n"
+                                 "          . = : . = - .     : = - - = = + * % % -           \n"
+                                 "        . = -   . + :   . : * % * = - : : + # * .           \n"
+                                 "        - * .   . + : : = + + * - .   . - + : .             \n"
+                                 "      . * -     - # * + = : . . .     : + :                 \n"
+                                 "      = # :   . # % % = .           . = = .                 \n"
+                                 "    . * * .   : # % % :             - + .                   \n"
+                                 "    : # * . : + = * + .           . = - .                   \n"
+                                 "    : % + . = = . : + :           : + :                     \n"
+                                 "    - % * = = .   . = = .       . - = .                     \n"
+                                 "    - % # + :       : + = .     . = -             . . .     \n"
+                                 "    - % % = .         : + = : . : + :           . - + :     \n"
+                                 "    : % % -             . = + = # % = . . . . . : # @ + .   \n"
+                                 "    . # % + .             . : * % % # = = = = + + * # -     \n"
+                                 "      + % % -                 : # % + - = = - : . . . .     \n"
+                                 "      : # % * .               . = + . . . . .               \n"
+                                 "      . + % % + .             . = + .         . . .         \n"
+                                 "        . * % % + .           . # % :       . . .           \n"
+                                 "          : # % % * - .       . + # :     . : : .           \n"
+                                 "            : * % % % * - : . . : + : . - = - .             \n"
+                                 "              . = # % % % # * * * # # # + : .               \n"
+                                 "                . : = * # % % % % # + - .                   \n"
+                                 "                    . . : : : : : . .                       \n\n";
 
 static void NotEnoughMemory()
 {
@@ -93,6 +121,7 @@ static void NotEnoughMemory()
 */
 int main(int argc, char** argv)
 {
+    logs.info(ANTARES_LOGO);
     logs.info(GPL_ANNOUNCEMENT);
     // Name of the running application for the logger
     logs.applicationName("solver");
@@ -123,6 +152,8 @@ int main(int argc, char** argv)
     }
 
     application.execute();
+
+    application.writeExectutionInfo();
 
     FreeUTF8Arguments(argc, argv);
 

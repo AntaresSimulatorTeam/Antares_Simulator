@@ -3,6 +3,7 @@
 #include "misc/options.h"
 #include <antares/study.h>
 #include <antares/study/load-options.h>
+#include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
 #include <yuni/core/string.h>
@@ -49,6 +50,8 @@ public:
     */
     void resetProcessPriority() const;
 
+    void writeExectutionInfo();
+
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -84,7 +87,10 @@ private:
     int pArgc;
     char** pArgv;
 
-    bool shouldExecute = true;
+    // Benchmarking
+    Benchmarking::Timer pTotalTimer;
+    Benchmarking::DurationCollector pDurationCollector;
+    Benchmarking::OptimizationInfo pOptimizationInfo;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

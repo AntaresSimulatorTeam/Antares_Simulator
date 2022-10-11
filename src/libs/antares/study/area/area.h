@@ -50,15 +50,15 @@ struct CompareAreaName;
 class Area final : private Yuni::NonCopyable<Area>
 {
 public:
-    typedef std::set<AreaName> NameSet;
-    typedef std::set<Area*, CompareAreaName> Set;
-    typedef std::map<Area*, AreaLink::Set, CompareAreaName> LinkMap;
-    typedef std::map<AreaName, Area*> Map;
-    typedef std::vector<Area*> Vector;
-    typedef std::vector<const Area*> VectorConst;
-    typedef std::list<Area*> List;
+    using NameSet = std::set<AreaName>;
+    using Set = std::set<Area*, CompareAreaName>;
+    using LinkMap = std::map<Area*, AreaLink::Set, CompareAreaName>;
+    using Map = std::map<AreaName, Area*>;
+    using Vector = std::vector<Area*>;
+    using VectorConst = std::vector<const Area*>;
+    using List = std::list<Area*>;
     //! Name mapping -> must be replaced by AreaNameMapping
-    typedef std::map<AreaName, AreaName> NameMapping;
+    using NameMapping = std::map<AreaName, AreaName>;
 
 public:
     //! \name Constructor & Destructor
@@ -225,6 +225,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
     //! \name Associate data */
@@ -347,6 +349,8 @@ private:
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
 
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
+
 /*!
 ** \brief A list of areas
 **
@@ -379,13 +383,15 @@ class AreaList final : public Yuni::NonCopyable<AreaList>
 {
 public:
     //! An iterator
-    typedef Area::Map::iterator iterator;
+    using iterator = Area::Map::iterator;
     //! A const iterator
-    typedef Area::Map::const_iterator const_iterator;
+    using const_iterator = Area::Map::const_iterator;
     //! An iterator
-    typedef Area::Map::reverse_iterator reverse_iterator;
+    using reverse_iterator = Area::Map::reverse_iterator;
     //! A const iterator
-    typedef Area::Map::const_reverse_iterator const_reverse_iterator;
+    using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    //! Key-value type
+    using value_type = Area::Map::value_type;
 
 public:
     //! \name Constructor & Destructor

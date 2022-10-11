@@ -32,7 +32,7 @@
 #include <yuni/core/math.h>
 #include <logs.h>
 #include <utility>
-#include "../string-to-double.h"
+#include <cstdlib>
 #include "../io/statistics.h"
 #include "matrix-to-buffer.h"
 
@@ -69,7 +69,7 @@ template<uint ChunkSizeT, bool ExpandableT>
 class MatrixData<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {
 public:
-    typedef Yuni::CString<ChunkSizeT, ExpandableT> StringT;
+    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
 
 public:
     inline static void Init(StringT& data)
@@ -113,7 +113,7 @@ public:
     inline static bool Do(const AnyString& str, double& out)
     {
         char* pend;
-        out = ::mystrtod(str.c_str(), &pend);
+        out = ::strtod(str.c_str(), &pend);
         return (NULL != pend and '\0' == *pend);
     }
 };
@@ -131,7 +131,7 @@ public:
     inline static bool Do(const AnyString& str, float& out)
     {
         char* pend;
-        out = static_cast<float>(::mystrtod(str.c_str(), &pend));
+        out = static_cast<float>(::strtod(str.c_str(), &pend));
         return (NULL != pend and '\0' == *pend);
     }
 };
@@ -144,7 +144,7 @@ public:
     {
         direct = 1,
     };
-    typedef Yuni::CString<ChunkSizeT, ExpandableT> StringT;
+    using StringT = Yuni::CString<ChunkSizeT, ExpandableT>;
 
 public:
     inline static bool Do(const AnyString& str, StringT& out)
@@ -415,7 +415,7 @@ bool Matrix<T, ReadWriteT>::loadFromCSVFile(const AnyString& filename,
 {
     assert(not filename.empty() and "Matrix<>:: loadFromCSVFile: empty filename");
     // As the loading might be expensive, especially when dealing with
-    // numerous matriceis, we may want to delay this loading (a `lazy` mode)
+    // numerous matrices, we may want to delay this loading (a `lazy` mode)
     if (JIT::enabled and not(options & optImmediate))
     {
         return internalLoadJITData(filename, minWidth, maxHeight, options);
@@ -723,7 +723,6 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
 
 #ifndef NDEBUG
     logs.debug() << "  :: loading `" << filename << "'";
-    assert(&data != NULL and "Invalid buffer");
 #endif
 
     // Detecting BOM

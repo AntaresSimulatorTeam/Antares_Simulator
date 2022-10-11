@@ -47,6 +47,7 @@
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
+#include "layerdata.h"
 
 #include <memory>
 
@@ -61,37 +62,38 @@ namespace Data
 /*!
 ** \brief Antares Study
 */
-class Study final : public Yuni::NonCopyable<Study>, public IObject
+
+class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
-    typedef std::set<Ptr> Set;
+    using Set = std::set<Ptr>;
     //! List of studies
-    typedef std::list<Ptr> List;
+    using List = std::list<Ptr>;
 
     //! A single set of areas
     // CompareAreaName : to control the order of areas in a set of areas. This order can have an
     // effect, even if tiny, on the results of aggregations.
-    typedef std::set<Area*, CompareAreaName> SingleSetOfAreas;
+    using SingleSetOfAreas = std::set<Area*, CompareAreaName>;
 
     //! Multiple sets of areas
-    typedef Antares::Data::Sets<SingleSetOfAreas> SetsOfAreas;
+    using SetsOfAreas = Antares::Data::Sets<SingleSetOfAreas>;
 
     //! A single set of links
-    typedef std::set<AreaLink*> SingleSetOfLinks;
+    using SingleSetOfLinks = std::set<AreaLink*>;
     //! Multiple sets of links
-    typedef Antares::Data::Sets<SingleSetOfLinks> SetsOfLinks;
+    using SetsOfLinks = Antares::Data::Sets<SingleSetOfLinks>;
 
     //! List of disabled areas
-    typedef std::set<AreaName> DisabledAreaList;
+    using DisabledAreaList = std::set<AreaName>;
     //! List of disabled links
-    typedef std::set<AreaLinkName> DisabledAreaLinkList;
+    using DisabledAreaLinkList = std::set<AreaLinkName>;
     //! List of disabled thermal clusters
-    typedef std::set<ClusterName> DisabledThermalClusterList;
+    using DisabledThermalClusterList = std::set<ClusterName>;
 
     //! Extension filename
-    typedef Yuni::CString<8, false> FileExtension;
+    using FileExtension = Yuni::CString<8, false>;
 
 public:
     /*!
@@ -502,35 +504,8 @@ public:
     */
     FILE* createFileIntoOutputWithExtension(const YString& prefix,
                                             const YString& extension,
-                                            uint numSpace) const;
-
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createMPSFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("problem", "mps", numSpace);
-    };
-    //@}
-
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    ** This file should receive a linear problem using the MPS file
-    ** format. (see `opt/AppelDuSolveurLineairePasVariable`)
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createCriterionFileIntoOutput(uint numSpace) const
-    {
-        return createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    };
-    //@}
+                                            uint numSpace,
+                                            const int currentOptimNumber = 0) const;
 
     //! \name
     //@{
@@ -775,13 +750,6 @@ public:
     void* cacheTSGenerator[timeSeriesCount];
     //@}
 
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
     /*!
     ** \brief
     */
@@ -816,20 +784,6 @@ protected:
     void inputExtensionCompatibility();
     //! Release all unnecessary buffers
     void reduceMemoryUsage();
-    //@}
-
-private:
-    //! Load all layers
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
-    //! \name Disabled items
-    //@{
-    //! List of all disabled areas
-    // DisabledAreaList         pDisabledAreaList;
-    //! List of all disabled area links
-    // DisabledAreaLinkList     pDisabledAreaLinkList;
-    //! List of all disabled thermal clusters
-    // DisabledThermalClusterList pDisabledThermalClusterList;
     //@}
 
 }; // class Study

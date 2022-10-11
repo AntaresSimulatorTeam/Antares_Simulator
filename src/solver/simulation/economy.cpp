@@ -50,6 +50,59 @@ enum
     nbHoursInAWeek = 168,
 };
 
+// Interface class + factory
+void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
+{
+    pProblemesHebdo = problemesHebdo;
+}
+
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+{
+    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
+    if (adqPatchEnabled)
+        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+    else
+        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+
+    return nullptr;
+}
+
+// Adequacy patch
+AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
+void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+    problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
+
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
+    {
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            memcpy(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+        else
+            memset(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
+                   0,
+                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
+    }
+
+    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
+    // part that we need
+    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+
+// No adequacy patch
+NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -66,6 +119,18 @@ Economy::~Economy()
         }
         delete[] pProblemesHebdo;
     }
+}
+
+Benchmarking::OptimizationInfo Economy::getOptimizationInfo() const
+{
+    const uint numSpace = 0;
+    const auto& Pb = pProblemesHebdo[numSpace]->ProblemeAResoudre;
+    Benchmarking::OptimizationInfo optInfo;
+
+    optInfo.nbVariables = Pb->NombreDeVariables;
+    optInfo.nbConstraints = Pb->NombreDeContraintes;
+    optInfo.nbNonZeroCoeffs = Pb->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    return optInfo;
 }
 
 void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
@@ -98,6 +163,9 @@ bool Economy::simulationBegin()
             }
         }
 
+        weeklyOptProblem
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+
         SIM_InitialisationResultats();
     }
 
@@ -105,6 +173,11 @@ bool Economy::simulationBegin()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
+
+        if (weeklyOptProblem)
+        {
+            weeklyOptProblem->initializeProblemeHebdo(pProblemesHebdo);
+        }
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -146,9 +219,10 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
+            weeklyOptProblem->solve(state, hourInTheYear, numSpace);
+
             DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

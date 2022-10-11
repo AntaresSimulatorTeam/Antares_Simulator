@@ -29,5 +29,4 @@ set_target_properties(tests-ts-numbers PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME ts-numbers COMMAND tests-ts-numbers)
 
-set_property(TEST ts-numbers PROPERTY LABELS TESTLABEL unit)
-
+set_property(TEST ts-numbers PROPERTY LABELS unit)

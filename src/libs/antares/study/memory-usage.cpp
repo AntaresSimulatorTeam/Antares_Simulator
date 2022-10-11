@@ -147,19 +147,29 @@ void StudyMemoryUsage::takeIntoConsiderationANewTimeserieForDiskOutput(bool with
     }
 }
 
+Yuni::uint64 computeOverheadDiskSpaceForAnyDataLevelComponent()
+{
+    // Reminder : a data level can be an area, a link or a binding constraint
+    Yuni::uint64 diskSpace = 0;
+
+    diskSpace += 160 * 1024;    // hourly
+    diskSpace += 6 * 1024;      // daily
+    diskSpace += 6 * 1024;      // weekly
+    diskSpace += 2 * 1024;      // monthly
+    diskSpace += 1024;          // annual
+
+    return diskSpace;
+}
+
 void StudyMemoryUsage::overheadDiskSpaceForSingleAreaOrLink()
 {
     // x2 : values + IDs
-    // hourly
-    requiredDiskSpaceForOutput += 2 * 160 * 1024;
-    // daily
-    requiredDiskSpaceForOutput += 2 * 6 * 1024;
-    // weekly
-    requiredDiskSpaceForOutput += 2 * 6 * 1024;
-    // monthly
-    requiredDiskSpaceForOutput += 2 * 2 * 1024;
-    // annual
-    requiredDiskSpaceForOutput += 2 * 1 * 1024;
+    requiredDiskSpaceForOutput += 2 * computeOverheadDiskSpaceForAnyDataLevelComponent();
+}
+
+void StudyMemoryUsage::overheadDiskSpaceForSingleBindConstraint()
+{
+    requiredDiskSpaceForOutput += computeOverheadDiskSpaceForAnyDataLevelComponent();
 }
 
 } // namespace Data

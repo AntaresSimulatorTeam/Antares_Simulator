@@ -166,5 +166,23 @@ class CommandLineArguments : public LoadingError
 public:
     explicit CommandLineArguments(uint errors);
 };
+
+class IncompatibleStudyModeForAdqPatch : public LoadingError
+{
+public:
+    IncompatibleStudyModeForAdqPatch();
+};
+
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
+class InvalidParametersORTools_SplitMPS : public LoadingError
+{
+public:
+    InvalidParametersORTools_SplitMPS();
+};
 } // namespace Error
 } // namespace Antares

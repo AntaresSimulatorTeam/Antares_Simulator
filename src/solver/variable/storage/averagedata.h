@@ -74,9 +74,8 @@ public:
     double daily[maxDaysInAYear];
     Antares::Memory::Stored<double>::Type hourly;
     double* year;
-    mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     unsigned int nbYearsCapacity;
-
+    mutable double allYears; // FIX MEEE - Remove the mutable as soon as possible
     std::vector<float> yearsWeight;
     float yearsWeightSum;
 

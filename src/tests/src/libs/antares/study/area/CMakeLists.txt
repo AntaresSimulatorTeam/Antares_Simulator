@@ -1,5 +1,4 @@
 # Useful variables definitions
-set(CMAKE_CXX_STANDARD 17)
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 # ================================
@@ -33,7 +32,7 @@ set_target_properties(test-save-link-properties PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME save-link-properties COMMAND test-save-link-properties)
 
-set_property(TEST save-link-properties PROPERTY LABELS TESTLABEL unit)
+set_property(TEST save-link-properties PROPERTY LABELS unit)
 
 # ===================================
 # Tests on area's optimization.ini
@@ -67,5 +66,5 @@ set_target_properties(test-save-area-optimization-ini PROPERTIES FOLDER Unit-tes
 
 add_test(NAME save-area-optimization COMMAND test-save-area-optimization-ini)
 
-set_property(TEST save-area-optimization PROPERTY LABELS TESTLABEL unit)
+set_property(TEST save-area-optimization PROPERTY LABELS unit)
 

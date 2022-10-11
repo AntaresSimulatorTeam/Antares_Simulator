@@ -48,7 +48,7 @@ enum LevelOfDetails
 class IAction;
 
 //! Property map
-typedef std::map<Yuni::String, Yuni::String> PropertyMap;
+using PropertyMap = std::map<Yuni::String, Yuni::String>;
 
 class ActionInformations
 {

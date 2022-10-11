@@ -51,7 +51,7 @@ namespace Filter
 template<class T>
 struct ResultCaption
 {
-    typedef const wxChar* Type;
+    using Type = const wxChar*;
     static const wxChar* Default()
     {
         return wxT("(null)");
@@ -66,7 +66,7 @@ struct ResultCaption
 template<class T>
 struct ResultNewInstance
 {
-    typedef AFilterBase* Type;
+    using Type = AFilterBase*;
     static AFilterBase* Default()
     {
         return NULL;

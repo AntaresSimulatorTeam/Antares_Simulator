@@ -60,7 +60,7 @@ struct VCardAllLinks
     }
 
     //! The expecte results
-    typedef Results<> ResultsType;
+    using ResultsType = Results<>;
 
     enum
     {
@@ -84,14 +84,14 @@ class Links //: public Variable::IVariable<Links<NextT>, NextT, VCardAllLinks>
 {
 public:
     //! Type of the next static variable
-    typedef VariablePerLink NextType;
+    using NextType = VariablePerLink;
     //! VCard
-    typedef VCardAllLinks VCardType;
+    using VCardType = VCardAllLinks;
     //! Ancestor
-    // typedef Variable::IVariable<Links<NextT>, NextT, VCardType> AncestorType;
+    // using AncestorType = Variable::IVariable<Links<NextT>, NextT, VCardType>;
 
     //! List of expected results
-    typedef VCardType::ResultsType ResultsType;
+    using ResultsType = VCardType::ResultsType;
 
     enum
     {
@@ -147,7 +147,6 @@ public:
     void yearBegin(uint year, unsigned int numSpace);
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year, uint numSpace);
-    void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace);
     void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
     void yearEndBuild(State& state, uint year);

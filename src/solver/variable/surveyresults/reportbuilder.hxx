@@ -122,7 +122,7 @@ template<bool GlobalT, class NextT, int CDataLevel, int CFile = 1>
 class SurveyReportBuilderFile
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     enum
     {
         //! A non-zero value to write down the results for the simulation
@@ -139,7 +139,7 @@ public:
             RunAnnual(list, results, numSpace);
 
         // The survey type
-        typedef SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel> SurveyRBFileType;
+        using SurveyRBFileType = SurveyReportBuilderFile<GlobalT, NextT, CDataLevel, nextFileLevel>;
         // Go to the next data level
         SurveyRBFileType::Run(list, results, numSpace);
     }
@@ -192,7 +192,7 @@ template<bool GlobalT, class NextT, int N>
 class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     // dead end
     static inline void Run(const ListType&, SurveyResults&, unsigned int)
     {
@@ -204,7 +204,7 @@ class SurveyReportBuilder
 {
 public:
     //! List
-    typedef NextT ListType;
+    using ListType = NextT;
     enum
     {
         nextDataLevel = CDataLevel * 2,
@@ -215,13 +215,19 @@ public:
         // Standard - Not related to anything
         if (CDataLevel & Category::standard)
             RunStandard(list, results, numSpace);
+
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
             RunForEachArea(list, results, numSpace);
+
         // Set of Areas
         if (CDataLevel & Category::setOfAreas)
             RunForEachSetOfAreas(list, results, numSpace);
+
+        // Binding constraints level
+        if (CDataLevel & Category::bindingConstraint)
+            RunForEachBindingConstraint(list, results, numSpace);
 
         // Go to the next data level
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
@@ -504,13 +510,37 @@ private:
         }
     }
 
+    static void RunForEachBindingConstraint(const ListType& list,
+                                            SurveyResults& results,
+                                            unsigned int numSpace)
+    {
+        using namespace Yuni;
+
+        // Generating the report for each binding constraint
+        if (CDataLevel & Category::bindingConstraint)
+        {
+            logs.info() << "Exporting results : binding constraints";
+            // The new output
+            results.data.output.clear();
+            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
+            // Creating the directory
+            if (IO::Directory::Create(results.data.output))
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+            else
+                logs.error() << "I/O Error: '" << results.data.output
+                                << "': impossible to create the folder";
+        }
+
+
+    }
+
 }; // class SurveyReportBuilder
 
 template<bool GlobalT, class NextT>
 class SurveyReportBuilder<GlobalT, NextT, 2 * Category::maxDataLevel>
 {
 public:
-    typedef NextT ListType;
+    using ListType = NextT;
     // Dead end
     static void Run(const ListType&, SurveyResults&, unsigned int)
     {

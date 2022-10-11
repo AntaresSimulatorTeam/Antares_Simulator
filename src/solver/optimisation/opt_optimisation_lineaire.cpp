@@ -63,7 +63,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = PREMIERE_OPTIMISATION;
+    ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation = PREMIERE_OPTIMISATION;
 
     OPT_NumeroDeJourDuPasDeTemps(ProblemeHebdo);
 
@@ -84,7 +84,7 @@ OptimisationHebdo:
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, NumeroDeLIntervalle);
@@ -97,7 +97,7 @@ OptimisationHebdo:
         if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
             return false;
 
-        if (ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
               (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
 
@@ -105,7 +105,7 @@ OptimisationHebdo:
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;
     }
 
-    if ((ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION)
     {
         if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         {
@@ -119,7 +119,7 @@ OptimisationHebdo:
             printf("BUG: l'indicateur ProblemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
                    "initialise a OUI_ANTARES ou NON_ANTARES\n");
 
-        (ProblemeHebdo->ProblemeAResoudre)->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
+        ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
 
         if (ProblemeHebdo->Expansion == NON_ANTARES)
             goto OptimisationHebdo;

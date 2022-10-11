@@ -56,7 +56,7 @@ static Data::Area* gLastArea = nullptr;
 class SpotlightProviderArea final : public Component::Spotlight::IProvider
 {
 public:
-    typedef Antares::Component::Spotlight Spotlight;
+    using Spotlight = Antares::Component::Spotlight;
 
 public:
     SpotlightProviderArea() : pAutoTriggerSelection(true)
@@ -86,11 +86,6 @@ public:
         auto& study = *Data::Study::Current::Get();
         if (study.areas.empty())
             return;
-
-        uint currentEquipment = 0;
-        auto* mainFrm = Forms::ApplWnd::Instance();
-        if (mainFrm)
-            currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
 
         std::vector<Antares::Data::Area*> layerFilteredItems;
         if (!text.empty())
@@ -140,7 +135,6 @@ public:
         if (mainFrm)
             currentEquipment = mainFrm->mainNotebookCurrentEquipmentPage();
 
-        auto end = study.areas.end();
         if (tokens.empty())
         {
             for (auto i = in.begin(); i != in.end(); ++i)

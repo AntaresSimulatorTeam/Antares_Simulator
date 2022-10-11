@@ -28,6 +28,7 @@
 #include "../application.h"
 #include "../simulation/solver.h"
 #include "../simulation/adequacy-draft.h"
+#include <antares/benchmarking.h>
 #include <antares/logs.h>
 
 namespace Antares
@@ -38,10 +39,16 @@ void Application::runSimulationInAdequacyDraftMode()
 {
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings);
+    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
     simulation.run();
+
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+    {
+        Benchmarking::Timer timer;
         simulation.writeResults(/*synthesis:*/ true);
+        timer.stop();
+        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
+    }
 }
 
 } // namespace Solver

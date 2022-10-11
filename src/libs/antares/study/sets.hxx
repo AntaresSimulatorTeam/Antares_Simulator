@@ -312,7 +312,6 @@ void Sets<T>::rebuildFromRules(const IDType& id, HandlerT& handler)
     // Options
     Options& opts = i->second;
     Type& set = *(pMap[id]);
-    assert(&set != NULL);
 
     // Clear the result first
     handler.clear(set);

@@ -364,7 +364,6 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
-        // parameters.shedding.strategy = Data::shsShareMargins;
         parameters.shedding.policy = Data::shpShavePeaks;
         parameters.reserveManagement.daMode = Data::daGlobal;
         parameters.unitCommitment.ucMode = Data::ucHeuristic;
@@ -627,7 +626,7 @@ void AdvancedParameters::onHydroHeuristicPolicy(Component::Button&, wxMenu& menu
                  this);
 }
 
-void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& evt)
+void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -640,7 +639,7 @@ void AdvancedParameters::onSelectAccomodateRuleCurves(wxCommandEvent& evt)
         refresh();
     }
 }
-void AdvancedParameters::onSelectMaximizeGeneration(wxCommandEvent& evt)
+void AdvancedParameters::onSelectMaximizeGeneration(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -680,7 +679,7 @@ void AdvancedParameters::onHydroPricingMode(Component::Button&, wxMenu& menu, vo
                  this);
 }
 
-void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& evt)
+void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& /* evt */)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
@@ -694,7 +693,7 @@ void AdvancedParameters::onSelectHPHeuristic(wxCommandEvent& evt)
     }
 }
 
-void AdvancedParameters::onSelectHPMixedIntegerLinearProblem(wxCommandEvent& evt)
+void AdvancedParameters::onSelectHPMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -862,7 +861,7 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& evt)
+void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& /* evt */)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
@@ -876,7 +875,7 @@ void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& evt)
     }
 }
 
-void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt)
+void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -899,7 +898,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmin),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMin>),
                  nullptr,
                  this);
 
@@ -908,7 +907,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNClow),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncLow>),
                  nullptr,
                  this);
 
@@ -918,7 +917,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCaverage),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncAvg>),
                  nullptr,
                  this);
 
@@ -927,7 +926,7 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNChigh),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
                  nullptr,
                  this);
 
@@ -936,79 +935,31 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNCmax),
+                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncMax>),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectNCmin(wxCommandEvent& evt)
+void AdvancedParameters::onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMode)
 {
     if (not Data::Study::Current::Valid())
         return;
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
-    if (study.parameters.nbCores.ncMode != Data::ncMin)
+    if (study->parameters.nbCores.ncMode != ncMode)
     {
-        study.parameters.nbCores.ncMode = Data::ncMin;
+        study->parameters.nbCores.ncMode = ncMode;
+        // Force refresh for study->nbYearsParallelRaw
+        study->getNumberOfCores(false, 1 /* ignored */);
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectNClow(wxCommandEvent& evt)
+template<Data::NumberOfCoresMode level>
+void AdvancedParameters::onSelectNumberOfCoresLevel(wxCommandEvent& /* evt */)
 {
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncLow)
-    {
-        study.parameters.nbCores.ncMode = Data::ncLow;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNCaverage(wxCommandEvent& evt)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncAvg)
-    {
-        study.parameters.nbCores.ncMode = Data::ncAvg;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNChigh(wxCommandEvent& evt)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncHigh)
-    {
-        study.parameters.nbCores.ncMode = Data::ncHigh;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectNCmax(wxCommandEvent& evt)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.nbCores.ncMode != Data::ncMax)
-    {
-        study.parameters.nbCores.ncMode = Data::ncMax;
-        MarkTheStudyAsModified();
-        refresh();
-    }
+    onSelectNumberOfCoresLevel(level);
 }
 
 void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMenu& menu, void*)
@@ -1035,7 +986,7 @@ void AdvancedParameters::onRenewableGenerationModelling(Component::Button&, wxMe
                  this);
 }
 
-void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
+void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -1050,7 +1001,7 @@ void AdvancedParameters::onSelectRGMaggregated(wxCommandEvent& evt)
     }
 }
 
-void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& evt)
+void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;
@@ -1089,7 +1040,7 @@ void AdvancedParameters::onDAReserveAllocationMode(Component::Button&, wxMenu& m
                  this);
 }
 
-void AdvancedParameters::onSelectDAGlobal(wxCommandEvent& evt)
+void AdvancedParameters::onSelectDAGlobal(wxCommandEvent& /* evt */)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
@@ -1103,7 +1054,7 @@ void AdvancedParameters::onSelectDAGlobal(wxCommandEvent& evt)
     }
 }
 
-void AdvancedParameters::onSelectDALocal(wxCommandEvent& evt)
+void AdvancedParameters::onSelectDALocal(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;

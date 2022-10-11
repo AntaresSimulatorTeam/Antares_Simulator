@@ -157,8 +157,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
         for (uint hour = 0; hour != 8760; ++hour)
         {
-            auto month = study.calendar.hours[hour].month;
-            auto realmonth = study.calendar.months[month].realmonth;
             auto dayYear = study.calendar.hours[hour].dayYear;
 
             double netdemand = 0;
@@ -190,7 +188,6 @@ void HydroManagement::prepareNetDemand(uint numSpace)
 
             assert(!Math::NaN(netdemand)
                    && "hydro management: NaN detected when calculating the net demande");
-            data.MLN[realmonth] += netdemand;
             data.DLN[dayYear] += netdemand;
         }
     });

@@ -87,11 +87,6 @@ void ApplWnd::evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent&)
     OpenPDF("help/antares-general-reference-guide.pdf");
 }
 
-void ApplWnd::evtOnHelpPDFOptimizationProblemsFormulation(wxCommandEvent&)
-{
-    OpenPDF("help/optimization-problems-formulation.pdf");
-}
-
 void ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent&)
 {
     OpenPDF("help/system-map-editor-reference-guide.pdf");

@@ -43,26 +43,6 @@ using namespace Antares;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
-{
-bool ThermalCluster::doWeGenerateTS(GlobalTSGenerationBehavior global, bool refresh) const
-{
-    switch (tsGenBehavior)
-    {
-    // Generate if global tells us to
-    case LocalTSGenerationBehavior::useGlobalParameter:
-        return (global == GlobalTSGenerationBehavior::generate) && refresh;
-    case LocalTSGenerationBehavior::forceGen:
-        return refresh;
-    default:
-        return false;
-    }
-}
-} // namespace Data
-} // namespace Antares
-
 namespace Yuni
 {
 namespace Extension
@@ -298,7 +278,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     if (not series)
         series = new DataSeriesCommon();
 
@@ -533,7 +513,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal();
+        prepro = new PreproThermal(this->shared_from_this());
     prepro->reset();
 
     // Links
@@ -588,12 +568,6 @@ bool Data::ThermalCluster::integrityCheck()
                      << ": The Nominal capacity must be positive or null";
         nominalCapacity = 0.;
         nominalCapacityWithSpinning = 0.;
-        ret = false;
-    }
-    if (unitCount > 100)
-    {
-        logs.error() << "Thermal cluster " << pID << ": The variable `unitCount` must be < 100";
-        unitCount = 100;
         ret = false;
     }
     if (spinning < 0. or spinning > 100.)
@@ -751,6 +725,19 @@ bool ThermalCluster::checkMinStablePowerWithNewModulation(uint index, double val
     }
 
     return checkMinStablePower();
+}
+
+bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
+{
+    switch (tsGenBehavior)
+    {
+    case LocalTSGenerationBehavior::useGlobalParameter:
+        return globalTSgeneration;
+    case LocalTSGenerationBehavior::forceGen:
+        return true;
+    default:
+        return false;
+    }
 }
 
 unsigned int ThermalCluster::precision() const

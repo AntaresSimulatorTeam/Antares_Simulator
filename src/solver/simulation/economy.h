@@ -28,6 +28,8 @@
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
 #include <yuni/yuni.h>
+#include <memory>
+#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
@@ -41,6 +43,32 @@ namespace Solver
 {
 namespace Simulation
 {
+class EconomyWeeklyOptimization
+{
+public:
+    using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
+    void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
+    static Ptr create(bool adqPatchEnabled);
+
+protected:
+    PROBLEME_HEBDO** pProblemesHebdo;
+};
+
+class AdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    AdequacyPatchOptimization();
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
+};
+
+class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
+{
+public:
+    NoAdequacyPatchOptimization();
+    void solve(Variable::State&, int, uint numSpace) override;
+};
+
 class Economy
 {
 public:
@@ -62,6 +90,8 @@ public:
     //! Destructor
     ~Economy();
     //@}
+
+    Benchmarking::OptimizationInfo getOptimizationInfo() const;
 
 public:
     //! Current study
@@ -100,7 +130,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-
+    EconomyWeeklyOptimization::Ptr weeklyOptProblem;
 }; // class Economy
 
 } // namespace Simulation

@@ -158,7 +158,7 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 {
 	pStudy->parameters.userPlaylist = true;
 
-	for (int i = 0; i < yearsWeight.size(); i++)
+	for (uint i = 0; i < yearsWeight.size(); i++)
 	{
 		pStudy->parameters.setYearWeight(i, yearsWeight[i]);
 	}
@@ -176,7 +176,8 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 	pSettings.noOutput = false;
 
 	//Launch simulation
-	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings);
+	Benchmarking::NullDurationCollector nullDurationCollector;
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings, &nullDurationCollector);
 
 	// Allocate all arrays
 	SIM_AllocationTableaux();

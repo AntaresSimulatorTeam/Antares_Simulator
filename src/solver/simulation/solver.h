@@ -30,6 +30,9 @@
 #include <antares/study/memory-usage.h>
 #include <antares/study.h>
 #include <antares/logs.h>
+#include <antares/study/fwd.h> // PowerFluctuations
+#include <antares/benchmarking.h>
+
 #include <yuni/core/string.h>
 #include "../variable/state.h"
 #include "../misc/options.h"
@@ -37,7 +40,7 @@
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-#include "../../libs/antares/study/fwd.h" // Added for definition of type PowerFluctuations
+
 
 namespace Antares
 {
@@ -63,7 +66,9 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, const ::Settings& settings);
+    ISimulation(Data::Study& study, 
+                const ::Settings& settings,
+                Benchmarking::IDurationCollector* duration_collector);
     //! Destructor
     ~ISimulation();
     //@}
@@ -102,7 +107,6 @@ private:
     /*!
     ** \brief Regenerate time-series if required for a given year
     */
-    template<bool PreproOnly>
     void regenerateTimeSeries(uint year);
 
     /*!
@@ -170,6 +174,10 @@ private:
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualCostsStatistics;
+    
+    // Collecting durations inside the simulation
+    Benchmarking::IDurationCollector* pDurationCollector;
+
 }; // class ISimulation
 
 } // namespace Simulation

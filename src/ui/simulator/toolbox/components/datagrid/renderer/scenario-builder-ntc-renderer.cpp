@@ -45,7 +45,7 @@ wxString ntcScBuilderRenderer::rowCaption(int rowIndx) const
     // Unlikely, but can happen if the study has not yet been loaded into memory
     if (!pListOfLinks)
         return wxEmptyString;
-    if (rowIndx >= pListOfLinks->size())
+    if ((uint)rowIndx >= pListOfLinks->size())
         return wxEmptyString;
     return (*pListOfLinks)[rowIndx]->getName().c_str();
 }

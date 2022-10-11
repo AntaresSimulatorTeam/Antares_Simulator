@@ -30,15 +30,28 @@ theme:
 nav:
   - 'Home': index.md
   - 'Antares ecosystem' : 'https://antares-doc.readthedocs.io'
-  - 'User guide':
-    - 'Reference guide': 'reference-guide/1-reference-guide.md'
-    - 'Optimisation problem' : 'reference-guide/2-modeling.md'
+  - 'Reference guide':
+    - 'Introduction': 'reference-guide/01-introduction.md'
+    - 'Data organization': 'reference-guide/02-data_organization.md'
+    - 'Commands': 'reference-guide/03-commands.md'
+    - 'Active windows': 'reference-guide/04-active_windows.md'
+    - 'Output files': 'reference-guide/05-output_files.md'
+    - 'Time-Series analysis and generation': 'reference-guide/06-time_series_analysis_and_generation.md'
+    - 'Kirchhoff''s constraint generator': 'reference-guide/07-kirchhoffs_constraint_generator.md'
+    - 'Miscellaneous': 'reference-guide/08-miscellaneous.md'
+    - 'System requirements': 'reference-guide/09-system_requirements.md'
+    - 'Command line': 'reference-guide/10-command_line.md'
+    - 'Adequacy patch (v8.3.0+)': 'reference-guide/14-adequacy-patch.md'
+    - 'File format changes': 'reference-guide/13-file-format.md'
+    - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
+  - 'Optimisation problem' : 'reference-guide/11-modeling.md'
   - 'Build':
     - 'Introduction': 'build/0-INSTALL.md'
     - 'Development requirements': 'build/1-Development-requirements.md'
     - 'Dependencies install': 'build/2-Dependencies-install.md'
     - 'Build': 'build/3-Build.md'
-    - 'Tests': 'build/4-Tests.md'
+    - 'Tests (user)': 'build/4-Tests-user.md'
+    - 'Tests (developer)' : 'build/4-Tests-dev.md'
     - 'Installer creation': 'build/5-Installer-creation.md'
     - 'Continuous Integration' : 'build/continuous-integration.md'
     - 'OR-tools integration' : 'build/ortools-integration.md'
@@ -56,6 +69,7 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 markdown_extensions:
+  - footnotes
   - attr_list
   - toc:
       permalink: true

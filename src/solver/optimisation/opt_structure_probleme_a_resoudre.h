@@ -58,10 +58,6 @@
 
 #define VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES OUI_ANTARES
 
-#define SUBSTITUTION_DE_LA_VARIABLE_MPLUS                                          \
-    NON_ANTARES /* Attention, dans le cas de OUI_ANTARES, la partie pour recuperer \
-                   la valeur de MPLUS n'est pas encore codee */
-
 /*--------------------------------------------------------------------------------------*/
 
 /* Les problemes Simplexe */

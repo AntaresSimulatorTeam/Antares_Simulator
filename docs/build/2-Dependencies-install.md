@@ -3,7 +3,7 @@
 *ANTARES* depends on severals mandatory libraries.
 
 - [Sirius Solver](https://github.com/AntaresSimulatorTeam/sirius-solver/tree/Antares_VCPKG) (fork from [RTE](https://github.com/rte-france/sirius-solver/tree/Antares_VCPKG))
-- [OR-Tools](https://github.com/AntaresSimulatorTeam/or-tools/tree/rte_dev_sirius) (fork from [RTE](https://github.com/rte-france/or-tools/tree/rte_dev_sirius) based on official OR-Tools github)
+- [OR-Tools](https://github.com/rte-france.com/or-tools) (fork from [Google](https://github.com/google/or-tools))
 - [wxWidgets](https://github.com/wxWidgets/wxWidgets)
   (Only for the complete Antares Simulator solution with GUI)
 - Boost librairies : test (Only for unit tests)
@@ -63,9 +63,16 @@ The install procedure can be done
 ## Automatic libraries compilation from git
 [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps) is used as a git submodule for automatic libraries compilation from git.
 
-ALL dependency can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
+Apart from OR-Tools, all dependencies can be built at configure time using the option `-DBUILD_ALL=ON` (`OFF` by default). For a list of available option see [Antares dependencies compilation repository](https://github.com/AntaresSimulatorTeam/antares-deps).
 
-Some dependencies can't be installed with a package manager. They can be built at configure step with a cmake option  : `-DBUILD_not_system=ON` (`ON` by default):
+You can set `-DBUILD_ORTOOLS=ON` to download & build OR-Tools. It is also possible to use a precompiled archive, see below.
+
+### Pre-compiled OR-Tools : release+static only
+You can [download](https://github.com/rte-france/or-tools/releases) a precompiled OR-Tools archive that contains headers & static libraries.
+
+Please note that dynamic linking with OR-Tools is only supported in Linux.
+
+Decompress the archive, and provide its path as a `CMAKE_PREFIX_PATH`. If you use XPRESS, you may need also to specify `XPRESS_ROOT`.
 
 ### Defining dependency install directory
 When using multiple directories for antares development with multiple branches it can be useful to have a common dependency install directory.
@@ -81,5 +88,5 @@ You can download pre-compiled antares-deps archive from [Antares dependencies co
 Note:
 > For windows, you must you use a MSVC version compatible with MSVC version used in GitHub Action.
 
-[antares-deps-url]: https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v2.0.0-rc2
+[antares-deps-url]: https://github.com/AntaresSimulatorTeam/antares-deps/releases/tag/v2.0.2
 

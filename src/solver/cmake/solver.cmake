@@ -51,12 +51,17 @@ set(RTESOLVER_OPT
 		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
+		optimisation/adequacy_patch.h
+		optimisation/adequacy_patch.cpp
 
         utils/ortools_utils.h
 		utils/ortools_utils.cpp
         
         utils/named_problem.h
         utils/named_problem.cpp
+
+        utils/mps_utils.h
+        utils/mps_utils.cpp
 	)
 
 

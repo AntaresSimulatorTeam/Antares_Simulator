@@ -33,7 +33,6 @@
 #include "../../../toolbox/create.h"
 #include "../../../toolbox/resources.h"
 #include "../../../application/study.h"
-#include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
@@ -46,6 +45,18 @@ namespace Window
 {
 namespace Options
 {
+static void SubTitle(wxWindow* parent, wxSizer* sizer, const wxChar* text)
+{
+    sizer->AddSpacer(25);
+    sizer->AddSpacer(25);
+
+    auto* label = Component::CreateLabel(parent, text, true);
+
+    sizer->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
+    sizer->AddSpacer(5);
+}
 static void ResetButton(Component::Button* button, bool value)
 {
     assert(button != NULL);
@@ -58,6 +69,21 @@ static void ResetButton(Component::Button* button, bool value)
     {
         button->image("images/16x16/light_orange.png");
         button->caption(wxT("ignore"));
+    }
+}
+
+static void ResetButtonAdequacyPatch(Component::Button* button, bool value)
+{
+    assert(button != NULL);
+    if (value)
+    {
+        button->image("images/16x16/light_orange.png");
+        button->caption(wxT("set to null"));
+    }
+    else
+    {
+        button->image("images/16x16/light_green.png");
+        button->caption(wxT("local values"));
     }
 }
 
@@ -109,6 +135,23 @@ static void ResetButton(Component::Button* button, Data::LinkType value)
         button->image("images/16x16/light_orange.png");
         button->caption(wxT("set to AC"));
         break;
+    }
+}
+
+const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
+{
+    switch (mps_export_status)
+    {
+    case Data::mpsExportStatus::NO_EXPORT:
+        return "images/16x16/light_orange.png";
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return "images/16x16/light_green.png";
+    default:
+        return "images/16x16/light_orange.png";
     }
 }
 
@@ -293,21 +336,38 @@ Optimization::Optimization(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnSpinningReserve = button;
     }
-    // Export mps
+    // Export MPS
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
-        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+
+        const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
+        button = new Component::Button( this, 
+                                        mpsExportStatusToString(defaultValue), 
+                                        mpsExportIcon(defaultValue));
+
         button->SetBackgroundColour(bgColor);
         button->menu(true);
         onPopup.bind(this,
-                     &Optimization::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.include.exportMPS, wxT("true")));
+                     &Optimization::onPopupMenuExportMPSstatus);
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnExportMPS = button;
     }
-
+    // Split exported MPS
+    {
+        label = Component::CreateLabel(this, wxT("Split exported mps"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuSpecify,
+                     PopupInfo(study.parameters.include.splitExportedMPS, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnSplitExportedMPS = button;
+    }
     // Unfeasible problem behavior
     {
         label = Component::CreateLabel(this, wxT("Unfeasible problem behavior"));
@@ -343,6 +403,56 @@ Optimization::Optimization(wxWindow* parent) :
           this, wxT("Weekly binding constraints will be ignored"), false, false, -1);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->AddSpacer(2);
+    }
+    SubTitle(this, s, wxT("Adequacy Patch"));
+    // Adequacy patch
+    {
+        label = Component::CreateLabel(this, wxT("Enable Adequacy patch"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuSpecify,
+                     PopupInfo(study.parameters.adqPatch.enabled, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatch = button;
+    }
+    // Transmission capacities (NTC) from physical areas outside adequacy patch (area type 1) to
+    // physical areas inside adequacy patch (area type 2). Used in the first step of adequacy patch
+    // local matching rule.
+    {
+        label = Component::CreateLabel(
+          this, wxT("NTC from physical areas outside to physical areas inside adequacy patch"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuAdequacyPatch,
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks,
+                               wxT("NTC")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdqPatchOutsideInside = button;
+    }
+    // Transmission capacities (NTC) between physical areas outside adequacy patch (area type 1).
+    // Used in the first step of adequacy patch local matching rule.
+    {
+        label
+          = Component::CreateLabel(this, wxT("NTC between physical areas outside adequacy patch"));
+        button = new Component::Button(this, wxT("Day"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(this,
+                     &Optimization::onPopupMenuAdequacyPatch,
+                     PopupInfo(study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks,
+                               wxT("NTC")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdqPatchOutsideOutside = button;
     }
 
     {
@@ -426,7 +536,11 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.strategic = true;
             study.parameters.include.reserve.primary = true;
             study.parameters.include.reserve.spinning = true;
-            study.parameters.include.exportMPS = false;
+            study.parameters.include.exportMPS = Data::mpsExportStatus::NO_EXPORT;
+            study.parameters.include.splitExportedMPS = false;
+            study.parameters.adqPatch.enabled = false;
+            study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+            study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
             study.parameters.simplexOptimizationRange = Data::sorWeek;
 
             study.parameters.include.unfeasibleProblemBehavior
@@ -473,7 +587,20 @@ void Optimization::refresh()
     // Spinning reserve
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
-    ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
+    pBtnExportMPS->image(mpsExportIcon(study.parameters.include.exportMPS));
+    pBtnExportMPS->caption(Data::mpsExportStatusToString(study.parameters.include.exportMPS));
+    // Split exported MPS
+    ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
+    // Adequacy patch
+    ResetButtonSpecify(pBtnAdequacyPatch, study.parameters.adqPatch.enabled);
+    // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
+    // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideInside,
+                             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks);
+    // NTC between physical areas outside adequacy patch (area type 1). Used in the first step of
+    // adequacy patch local matching rule.
+    ResetButtonAdequacyPatch(pBtnAdqPatchOutsideOutside,
+                             study.parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
 
     // Unfeasible problem behavior
     pBtnUnfeasibleProblemBehavior->image(
@@ -511,6 +638,36 @@ void Optimization::onPopupMenu(Component::Button&, wxMenu& menu, void*, const Po
                  this);
     it = Menu::CreateItem(
       &menu, wxID_ANY, wxT("ignore"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectModeIgnore),
+                 nullptr,
+                 this);
+}
+
+void Optimization::onPopupMenuAdequacyPatch(Component::Button&,
+                                            wxMenu& menu,
+                                            void*,
+                                            const PopupInfo& info)
+{
+    pTargetRef = &info.rval;
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxString() << wxT("set to null"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectModeInclude),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxString() << wxT("local values (") << info.text << wxT(")"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
                  wxCommandEventHandler(Optimization::onSelectModeIgnore),
@@ -591,6 +748,15 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                  wxCommandEventHandler(Optimization::onSelectTransCapInfinite),
                  nullptr,
                  this);
+}
+
+
+void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
+{
+    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::NO_EXPORT>(menu);
+    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_FIRST_OPIM>(menu);
+    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_SECOND_OPIM>(menu);
+    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_BOTH_OPTIMS>(menu);
 }
 
 void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
@@ -787,6 +953,26 @@ void Optimization::onSelectLinkTypeAC(wxCommandEvent&)
     }
 }
 
+// -----------------------------------
+// On select methods for MPS export
+// -----------------------------------
+void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_status)
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        if (study->parameters.include.exportMPS != mps_export_status)
+        {
+            study->parameters.include.exportMPS = mps_export_status;
+            refresh();
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+// ----------------------------------------------------
+// On select methods for unfeasible problem behavior
+// ----------------------------------------------------
 void Optimization::onSelectUnfeasibleBehavior(
   const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {

@@ -1,5 +1,4 @@
 # Useful variables definitions
-set(CMAKE_CXX_STANDARD 17)
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 # ====================================
@@ -33,7 +32,7 @@ set_target_properties(test-sc-builder-file-read-line PROPERTIES FOLDER Unit-test
 
 add_test(NAME sc-builder-file-read-line COMMAND test-sc-builder-file-read-line)
 
-set_property(TEST sc-builder-file-read-line PROPERTY LABELS TESTLABEL unit)
+set_property(TEST sc-builder-file-read-line PROPERTY LABELS unit)
 
 # ====================================
 # Tests on saving scenario-builder
@@ -63,4 +62,4 @@ set_target_properties(test-sc-builder-file-save PROPERTIES FOLDER Unit-tests/sc-
 
 add_test(NAME sc-builder-file-save COMMAND test-sc-builder-file-save)
 
-set_property(TEST sc-builder-file-save PROPERTY LABELS TESTLABEL unit)
+set_property(TEST sc-builder-file-save PROPERTY LABELS unit)

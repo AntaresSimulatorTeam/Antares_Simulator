@@ -332,12 +332,18 @@ set(SRC_XCAST
 	)
 source_group("study\\xcast" FILES ${SRC_XCAST})
 
-set(SRC_TIMEELAPSED
-	timeelapsed.h
-	timeelapsed/timeelapsed.h
-	timeelapsed/timeelapsed.cpp
+set(SRC_BENCHMARKING
+	benchmarking.h
+	benchmarking/timer.h
+	benchmarking/timer.cpp
+    benchmarking/info_collectors.h
+    benchmarking/info_collectors.cpp
+	benchmarking/file_content.h
+    benchmarking/file_content.cpp
+	benchmarking/file_writer.h
+	benchmarking/file_writer.cpp
 	)
-source_group("misc\\timeelapsed" FILES ${SRC_TIMEELAPSED})
+source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
 set(SRC_IO
 	io/statistics.h
@@ -368,14 +374,13 @@ set(SRC_STDCXX
 source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
-	config.h  constants.h
+    config.h
+    constants.h
+    xpansion.h
 	# Misc
 
 	locale.h
 	locale.cpp
-
-	string-to-double.h
-	string-to-double.cpp
 
 	emergency.h emergency.cpp
 
@@ -474,6 +479,8 @@ set(SRC
 	study/output.cpp
 	study/output.h
 	study/output.hxx
+	study/layerdata.cpp
+	study/layerdata.h
 
 	# progression
 	study/progression/progression.h
@@ -532,7 +539,7 @@ add_library(libantares-core
 	${SRC_INI}
 	${SRC_IO}
 	${SRC_MATRIX}
-	${SRC_TIMEELAPSED}
+	${SRC_BENCHMARKING}
 	${SRC_AREAS}
 	${SRC_LINKS}
 	${SRC_XCAST}

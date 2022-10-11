@@ -60,7 +60,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     double* Xmin;
     double* Xmax;
     int t1;
-    char ContrainteDeReserveJMoins1ParZone;
     int NombreDePasDeTempsPourUneOptimisation;
     int t1moins1;
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
@@ -72,7 +71,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     AdresseOuPlacerLaValeurDesVariablesOptimisees
@@ -113,11 +111,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
                 Xmax[Var] = LINFINI_ANTARES;
-
-#if SUBSTITUTION_DE_LA_VARIABLE_MPLUS == OUI_ANTARES
-                Xmax[Var] = 0;
-#endif
-
                 Xmin[Var] = 0;
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
@@ -160,43 +153,4 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
             }
         }
     }
-
-#if GROSSES_VARIABLES == OUI_ANTARES
-    for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
-         PdtHebdo++, PdtJour++)
-    {
-        CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-        {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillancePositive[Pays];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                Xmax[Var] = LINFINI_ANTARES;
-                Xmin[Var] = -LINFINI_ANTARES;
-                ;
-            }
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeGrosseVariableDefaillanceNegative[Pays];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                Xmax[Var] = LINFINI_ANTARES;
-                Xmin[Var] = -LINFINI_ANTARES;
-                ;
-            }
-
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeGrosseVariableDefaillanceEnReserve[Pays];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                {
-                    Xmax[Var] = LINFINI_ANTARES;
-                    Xmin[Var] = -LINFINI_ANTARES;
-                    ;
-                }
-            }
-        }
-    }
-#endif
-
-    return;
 }

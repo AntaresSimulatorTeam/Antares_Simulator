@@ -44,17 +44,17 @@ class IAction : public Yuni::Core::TreeN<IAction>
 {
 public:
     //! The ancestor
-    typedef Yuni::Core::TreeN<IAction> AncestorType;
+    using AncestorType = Yuni::Core::TreeN<IAction>;
     //! The most suitable smart ptr for the class
-    typedef AncestorType::Ptr Ptr;
+    using Ptr = AncestorType::Ptr;
     //! The threading policy
-    typedef AncestorType::ThreadingPolicy ThreadingPolicy;
+    using ThreadingPolicy = AncestorType::ThreadingPolicy;
 
     //! Vector
-    typedef std::vector<Ptr> Vector;
+    using Vector = std::vector<Ptr>;
 
     //! iterator
-    typedef AncestorType::iterator iterator;
+    using iterator = AncestorType::iterator;
 
 public:
     //! \name Constructor & Destructor

@@ -36,6 +36,7 @@
 #include "../parts/thermal/cluster.h"
 #include "../../array/matrix.h"
 #include "../../inifile/inifile.h"
+#include "antares/study/filter.h"
 #include <vector>
 #include <set>
 
@@ -81,37 +82,37 @@ public:
     };
 
     //! Map of weight (for links)
-    typedef std::map<const AreaLink*, double, CompareLinkName> linkWeightMap;
+    using linkWeightMap = std::map<const AreaLink*, double, CompareLinkName>;
     //! Iterator
-    typedef linkWeightMap::iterator iterator;
+    using iterator = linkWeightMap::iterator;
     //! Const iterator
-    typedef linkWeightMap::const_iterator const_iterator;
+    using const_iterator = linkWeightMap::const_iterator;
 
     //! Map of weight (for thermal clusters)
-    typedef std::map<const ThermalCluster*, double, CompareClusterName> clusterWeightMap;
+    using clusterWeightMap = std::map<const ThermalCluster*, double, CompareClusterName>;
     //! Iterator
-    typedef clusterWeightMap::iterator thermalIterator;
+    using thermalIterator = clusterWeightMap::iterator;
     //! Const iterator
-    typedef clusterWeightMap::const_iterator const_thermalIterator;
+    using const_thermalIterator = clusterWeightMap::const_iterator;
 
     //! Map of offset (for links)
-    typedef std::map<const AreaLink*, int> linkOffsetMap;
+    using linkOffsetMap = std::map<const AreaLink*, int>;
     //! Iterator
-    typedef linkOffsetMap::iterator OffsetIterator;
+    using OffsetIterator = linkOffsetMap::iterator;
     //! Const iterator
-    typedef linkOffsetMap::const_iterator OffsetConst_iterator;
+    using OffsetConst_iterator = linkOffsetMap::const_iterator;
 
     //! Map of offset (for links)
-    typedef std::map<const ThermalCluster*, int> clusterOffsetMap;
+    using clusterOffsetMap = std::map<const ThermalCluster*, int>;
     //! Iterator
-    typedef clusterOffsetMap::iterator thermalOffsetIterator;
+    using thermalOffsetIterator = clusterOffsetMap::iterator;
     //! Const iterator
-    typedef clusterOffsetMap::const_iterator thermalOffsetConst_iterator;
+    using thermalOffsetConst_iterator = clusterOffsetMap::const_iterator;
 
     //! Vector of binding constraints
-    typedef std::vector<BindingConstraint*> Vector;
+    using Vector = std::vector<BindingConstraint*>;
     //! Ordered Set of binding constraints
-    typedef std::set<BindingConstraint*, CompareBindingConstraintName> Set;
+    using Set = std::set<BindingConstraint*, CompareBindingConstraintName>;
 
     class EnvForLoading final
     {
@@ -383,6 +384,9 @@ public:
     void operatorType(Operator o);
     //@}
 
+    uint yearByYearFilter() const;
+    uint synthesisFilter() const;
+
     //! \name Enabled / Disabled
     //@{
     //! Get if the binding constraint is enabled
@@ -499,6 +503,10 @@ private:
     Type pType;
     //! Operator
     Operator pOperator;
+    //! Print binding constraint's marginal prices of any year for which time step granularity ?
+    uint pFilterYearByYear = filterAll;
+    //! Print binding constraint's marginal prices synthesis for which time step granularity ?
+    uint pFilterSynthesis = filterAll;
     //! Enabled / Disabled
     bool pEnabled;
     //! Comments
@@ -509,8 +517,8 @@ private:
 class BindConstList final : public Yuni::NonCopyable<BindConstList>
 {
 public:
-    typedef BindingConstraint::Vector::iterator iterator;
-    typedef BindingConstraint::Vector::const_iterator const_iterator;
+    using iterator = BindingConstraint::Vector::iterator;
+    using const_iterator = BindingConstraint::Vector::const_iterator;
 
 public:
     //! \name Constructor && Destructor

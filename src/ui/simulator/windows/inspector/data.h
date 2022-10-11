@@ -46,7 +46,7 @@ class InspectorData final
 {
 public:
     //! The most suitable smart pointer for the class
-    typedef std::shared_ptr<InspectorData> Ptr;
+    using Ptr = std::shared_ptr<InspectorData>;
 
 public:
     //! \name Constructor & Destructor

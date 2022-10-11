@@ -28,7 +28,6 @@
 #include "study.h"
 #include "../files/files.h"
 #include "../logs.h"
-#include <yuni/datetime/timestamp.h>
 
 using namespace Yuni;
 
@@ -40,10 +39,10 @@ namespace Data
 {
 FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
                                                const YString& extension,
-                                               uint numSpace) const
+                                               uint numSpace,
+                                               const int currentOptimNumber) const
 {
-    static int count_problem = 0;
-    static int count_criterion = 0;
+    static std::map<YString, int> count;
 
     // Empty log entry
     logs.info();
@@ -60,37 +59,31 @@ FILE* Study::createFileIntoOutputWithExtension(const YString& prefix,
         return nullptr;
     }
 
-    // Date/time
     String outputFile;
     outputFile << prefix << "-"; // problem ou criterion
     outputFile << (runtime->currentYear[numSpace] + 1) << "-"
-               << (runtime->weekInTheYear[numSpace] + 1) << "-";
-    Yuni::DateTime::TimestampToString(outputFile, "%Y%m%d-%H%M%S", 0, false);
-    String tempOutputFile;
-    tempOutputFile << outputFile << "." << extension;
+               << (runtime->weekInTheYear[numSpace] + 1);
 
-    buffer.clear() << this->folderOutput << SEP << tempOutputFile;
+    if (currentOptimNumber)
+        outputFile << "--optim-nb-" << currentOptimNumber;
 
-    // tester si le fichier existe deja
+    buffer.clear() << this->folderOutput << SEP << outputFile;
+
+    // test if file already exists
     FILE* fd_test = FileOpen(buffer.c_str(), "rb");
-    // logs.debug() << " !fd_test = " << (!fd_test) << " : FOR " << buffer.c_str();
     if (fd_test)
     {
-        if (prefix == "problem")
-            outputFile << "-" << (++count_problem) << "." << extension;
-        else
-            outputFile << "-" << (++count_criterion) << "." << extension;
-
-        buffer.clear() << this->folderOutput << SEP << outputFile;
+        count[prefix]++;
+        outputFile << "-" << count[prefix] << "." << extension;
         fclose(fd_test);
     }
     else
     {
-        count_problem = count_criterion = 0;
-
+        count[prefix] = 0;
         outputFile << "." << extension;
-        buffer.clear() << this->folderOutput << SEP << outputFile;
     }
+
+    buffer.clear() << this->folderOutput << SEP << outputFile;
 
     logs.info() << "Solver output File: `" << buffer << "'";
 
