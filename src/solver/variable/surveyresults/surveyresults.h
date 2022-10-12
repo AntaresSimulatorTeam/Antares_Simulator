@@ -150,11 +150,6 @@ public:
     IResultWriter::Ptr pResultWriter;
 
 private:
-    /*!
-    ** \brief Export informations about each area (and its sub-components - thermal clusters, links)
-    */
-    void exportGridInfosAreas();
-
     template<class StringT, class ConvertT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,

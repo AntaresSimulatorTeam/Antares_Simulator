@@ -222,11 +222,6 @@ void SurveyResultsData::exportGridInfos(IResultWriter::Ptr writer)
     output.clear();
     Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
-
-void SurveyResultsData::exportGridInfosAreas(IResultWriter::Ptr writer)
-{
-    Solver::Variable::Private::ExportGridInfosAreas(study, writer);
-}
 } // namespace Private
 } // namespace Variable
 } // namespace Solver
@@ -850,10 +845,6 @@ void SurveyResults::exportGridInfos()
     data.exportGridInfos(pResultWriter);
 }
 
-void SurveyResults::exportGridInfosAreas()
-{
-    data.exportGridInfosAreas(pResultWriter);
-}
 
 } // namespace Variable
 } // namespace Solver
