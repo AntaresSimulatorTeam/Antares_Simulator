@@ -274,12 +274,7 @@ inline void Matrix<T, ReadWriteT>::zero()
     {
         ++autoflush;
         ColumnType& column = entry[i];
-
-#ifdef ANTARES_SWAP_SUPPORT
-        column.assign(height);
-#else
         (void)::memset((void*)column, 0, sizeof(T) * height);
-#endif
     }
 }
 
@@ -330,12 +325,9 @@ void Matrix<T, ReadWriteT>::fill(const T& v)
     {
         ++autoflush;
         ColumnType& column = entry[i];
-#ifdef ANTARES_SWAP_SUPPORT
-        column.assign(height, v);
-#else
+
         for (uint j = 0; j != height; ++j)
             column[j] = v;
-#endif
     }
 }
 
@@ -348,11 +340,7 @@ inline void Matrix<T, ReadWriteT>::fillUnit()
         ++autoflush;
         ColumnType& column = entry[i];
 
-#ifdef ANTARES_SWAP_SUPPORT
-        column.assign(height);
-#else
         (void)::memset((void*)column, 0, sizeof(T) * height);
-#endif
 
         column[i] = T(1);
     }
@@ -459,11 +447,7 @@ void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const U* data)
     // optimisations
     if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
     {
-#ifdef ANTARES_SWAP_SUPPORT
-        column.copy(height, data);
-#else
         (void)::memcpy(column, data, sizeof(T) * height);
-#endif
     }
     else
     {
@@ -486,11 +470,7 @@ void Matrix<T, ReadWriteT>::pasteToColumn(uint x, const Antares::Memory::Array<U
     // optimisations
     if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
     {
-#ifdef ANTARES_SWAP_SUPPORT
-        column.copy(height, data);
-#else
         (void)::memcpy(column, data, sizeof(T) * height);
-#endif
     }
     else
     {
@@ -507,12 +487,9 @@ void Matrix<T, ReadWriteT>::fillColumn(uint x, const T& value)
 {
     assert(x < width and "Invalid column index (bigger than `this->width`)");
     ColumnType& column = entry[x];
-#ifdef ANTARES_SWAP_SUPPORT
-    column.assign(height, value);
-#else
+
     for (uint y = 0; y != height; ++y)
         column[y] = value;
-#endif
 
     markAsModified();
 }
@@ -522,11 +499,8 @@ inline void Matrix<T, ReadWriteT>::columnToZero(uint x)
 {
     assert(x < width and "Invalid column index (bigger than `this->width`)");
     ColumnType& column = entry[x];
-#ifdef ANTARES_SWAP_SUPPORT
-    column.assign(height);
-#else
+
     (void)::memset((void*)column, 0, sizeof(T) * height);
-#endif
 
     markAsModified();
 }
@@ -547,18 +521,8 @@ inline bool Matrix<T, ReadWriteT>::empty() const
 template<class T, class ReadWriteT>
 inline Yuni::uint64 Matrix<T, ReadWriteT>::memoryUsage() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    Yuni::uint64 r = sizeof(Matrix<T, ReadWriteT>) + ((jit) ? jit->memoryUsage() : 0);
-    if (entry)
-    {
-        for (uint i = 0; i != width; ++i)
-            r += sizeof(ColumnType) + (entry[i].needFlush() ? sizeof(T) * height : 0);
-    }
-    return r;
-#else
     return sizeof(Matrix<T, ReadWriteT>) + (sizeof(T) * (width * height))
            + ((jit) ? jit->memoryUsage() : 0);
-#endif
 }
 
 template<class T, class ReadWriteT>
@@ -591,13 +555,7 @@ void Matrix<T, ReadWriteT>::reset()
 template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::flush() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    if (entry)
-    {
-        for (uint i = 0; i != width; ++i)
-            entry[i].flush();
-    }
-#endif
+    // gp : function flush() to be removed ?
 }
 
 template<class T, class ReadWriteT>
@@ -1014,10 +972,6 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
                 MatrixData<T>::Init(entry[x][y]);
                 ++x;
             }
-#ifdef ANTARES_SWAP_SUPPORT
-            if (width > 100)
-                flush();
-#endif
         }
 
         // Go to the next line
@@ -1341,17 +1295,12 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
                 ++autoflushCopy;
 
                 ColumnType& column = entry[i];
-#ifdef ANTARES_SWAP_SUPPORT
-                column.copy(minH, copy.entry[i]);
-#else
+
                 (void)::memcpy(column, copy.entry[i], sizeof(T) * minH);
-#endif
+
                 for (uint j = minH; j < y; ++j)
                     column[j] = defVal;
 
-#ifdef ANTARES_SWAP_SUPPORT
-                column.flush();
-#endif
             }
 
             if (defVal == T())
@@ -1401,12 +1350,9 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
             {
                 ++autoflush;
                 ColumnType& column = entry[x];
-#ifdef ANTARES_SWAP_SUPPORT
-                column.multiply(height, c);
-#else
+
                 for (uint y = 0; y != height; ++y)
                     column[y] *= (T)c;
-#endif
             }
         }
         else
@@ -1524,11 +1470,8 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
             // optimisations
             if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
             {
-#ifdef ANTARES_SWAP_SUPPORT
-                column.copy(height, src);
-#else
+
                 (void)::memcpy((void*)column, (void*)src, sizeof(T) * height);
-#endif
             }
             else
             {
@@ -1718,9 +1661,6 @@ void Matrix<T, ReadWriteT>::circularShiftRows(uint count)
         for (uint column = 0; column != width; ++column)
         {
             circularShiftRows(column, count);
-#ifdef ANTARES_SWAP_SUPPORT
-            entry[column].flush();
-#endif
         }
         markAsModified();
     }

@@ -1017,9 +1017,4 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,
                nbPays * sizeof(double));
     }
-
-#ifdef ANTARES_SWAP_SUPPORT
-
-    Antares::memory.flushAll();
-#endif
 }

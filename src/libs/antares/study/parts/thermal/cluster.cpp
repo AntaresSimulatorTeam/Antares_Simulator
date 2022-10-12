@@ -194,13 +194,7 @@ Data::ThermalCluster::~ThermalCluster()
 
 void ThermalCluster::flush()
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    modulation.flush();
-    if (prepro)
-        prepro->flush();
-    if (series)
-        series->flush();
-#endif
+    // gp : to be removed
 }
 
 uint ThermalCluster::groupId() const

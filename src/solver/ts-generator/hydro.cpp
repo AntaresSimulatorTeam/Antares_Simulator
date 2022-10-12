@@ -59,8 +59,6 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
         hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
         hydroseries.count = tsCount;
-
-        hydroseries.flush();
     });
 }
 
@@ -79,8 +77,6 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
             hydroseries.ror.averageTimeseries();
             hydroseries.storage.averageTimeseries();
         }
-
-        hydroseries.flush();
     });
 }
 
@@ -314,8 +310,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
 
                     output.clear() << study.buffer << SEP << "storage.txt";
                     area.hydro.series->storage.saveToCSVFile(output);
-
-                    area.hydro.series->flush();
                 }
 
                 ++progression;

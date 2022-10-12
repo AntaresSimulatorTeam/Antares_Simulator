@@ -598,12 +598,7 @@ void* Memory::acquireMapping(Handle handle, volatile void* pointer)
 
 void Memory::flushAll() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    Yuni::MutexLocker locker(gMutex);
-    const MappingMap::iterator end = pMapping.end();
-    for (MappingMap::iterator i = pMapping.begin(); i != end; ++i)
-        FlushMappingWL(*(i->second));
-#endif
+    // gp : to be removed
 }
 
 void Memory::flush(Handle handle)

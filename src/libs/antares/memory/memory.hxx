@@ -27,21 +27,7 @@
 #ifndef __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 #define __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 
-#ifdef ANTARES_SWAP_SUPPORT
-
-#define ANTARES_SWAP_ACQUIRE_PTR                                           \
-    assert(this != NULL);                                                  \
-    if (not pPointer)                                                      \
-    {                                                                      \
-        pPointer = (T*)Antares::memory.acquireMapping(pHandle, &pPointer); \
-        assert(!(!pPointer));                                              \
-    }
-
-#else
-
 #define ANTARES_SWAP_ACQUIRE_PTR
-
-#endif
 
 namespace Antares
 {
@@ -57,53 +43,28 @@ inline Memory::Handle Memory::allocate(size_t count)
 }
 
 template<class T>
-inline Memory::Array<T>::Array() :
- pPointer(nullptr)
-#ifdef ANTARES_SWAP_SUPPORT
- ,
- pHandle(0)
-#endif
+inline Memory::Array<T>::Array() : pPointer(nullptr)
 {
 }
 
 template<class T>
-Memory::Array<T>::Array(const Yuni::NullPtr&) :
- pPointer(nullptr)
-#ifdef ANTARES_SWAP_SUPPORT
- ,
- pHandle(0)
-#endif
+Memory::Array<T>::Array(const Yuni::NullPtr&) : pPointer(nullptr)
 {
 }
 
 template<class T>
-Memory::Array<T>::Array(const Memory::Array<T>&) :
- pPointer(nullptr)
-#ifdef ANTARES_SWAP_SUPPORT
- ,
- pHandle(0)
-#endif
+Memory::Array<T>::Array(const Memory::Array<T>&) : pPointer(nullptr)
 {
 }
 
 template<class T>
 template<class U>
-Memory::Array<T>::Array(const Memory::Array<U>&) :
- pPointer(nullptr)
-#ifdef ANTARES_SWAP_SUPPORT
- ,
- pHandle(0)
-#endif
+Memory::Array<T>::Array(const Memory::Array<U>&) : pPointer(nullptr)
 {
 }
 
 template<class T>
-inline Memory::Array<T>::Array(size_t size) :
- pPointer(nullptr)
-#ifdef ANTARES_SWAP_SUPPORT
- ,
- pHandle(0)
-#endif
+inline Memory::Array<T>::Array(size_t size) : pPointer(nullptr)
 {
     allocate(size);
 }
@@ -117,61 +78,25 @@ inline Memory::Array<T>::~Array()
 template<class T>
 void Memory::Array<T>::allocate(size_t size)
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    if (pHandle)
-        memory.release(pHandle);
-    else
-        delete[] pPointer;
-
-    if (size * sizeof(T) < Memory::minimalAllocationSize)
-    {
-        pPointer = new T[size];
-        pHandle = 0;
-    }
-    else
-    {
-        pHandle = memory.allocate<T>(size);
-        if (pHandle)
-            pPointer = nullptr;
-        else
-            pPointer = new T[size];
-    }
-#else
     delete[] pPointer;
     pPointer = new T[size];
-#endif
 }
 
 template<class T>
 inline bool Memory::Array<T>::needFlush() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    return (pHandle and pPointer);
-#else
     return false;
-#endif
 }
 
 template<class T>
 inline void Memory::Array<T>::flush() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    if (pHandle and pPointer)
-        Antares::memory.flush(pHandle);
-#endif
+    // gp : to be removed
 }
 
 template<class T>
 void Memory::Array<T>::release()
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    if (pHandle)
-    {
-        Antares::memory.release(pHandle);
-        pHandle = 0;
-    }
-#endif
-
     delete[] pPointer;
     pPointer = nullptr;
 }
@@ -208,10 +133,6 @@ template<class T>
 void Memory::Array<T>::copy(uint count, const Memory::Array<T>& value)
 {
     ANTARES_SWAP_ACQUIRE_PTR;
-#ifdef ANTARES_SWAP_SUPPORT
-    if (not value.pPointer)
-        value.pPointer = (T*)Antares::memory.acquireMapping(value.pHandle, &value.pPointer);
-#endif
     (void)memcpy((void*)pPointer, (void*)value.pPointer, sizeof(T) * count);
 }
 
@@ -235,10 +156,6 @@ template<class T>
 void Memory::Array<T>::increment(uint count, const Memory::Array<T>& value)
 {
     ANTARES_SWAP_ACQUIRE_PTR;
-#ifdef ANTARES_SWAP_SUPPORT
-    if (not value.pPointer)
-        value.pPointer = (T*)Antares::memory.acquireMapping(value.pHandle, &value.pPointer);
-#endif
     for (uint i = 0; i != count; ++i)
         ((T*)pPointer)[i] += ((T*)value.pPointer)[i];
 }
@@ -263,10 +180,6 @@ template<class T>
 void Memory::Array<T>::multiply(uint count, const Memory::Array<T>& value)
 {
     ANTARES_SWAP_ACQUIRE_PTR;
-#ifdef ANTARES_SWAP_SUPPORT
-    if (not value.pPointer)
-        value.pPointer = (T*)Antares::memory.acquireMapping(value.pHandle, &value.pPointer);
-#endif
     for (uint i = 0; i != count; ++i)
         ((T*)pPointer)[i] *= ((T*)value.pPointer)[i];
 }
@@ -357,21 +270,13 @@ inline Memory::Array<T>& Memory::Array<T>::operator=(const Yuni::NullPtr&)
 template<class T>
 inline bool Memory::Array<T>::operator!() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    return (not pPointer and not pHandle);
-#else
     return not pPointer;
-#endif
 }
 
 template<class T>
 inline bool Memory::Array<T>::valid() const
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    return (pPointer or pHandle);
-#else
     return pPointer;
-#endif
 }
 
 template<class T>
@@ -393,77 +298,36 @@ inline void Memory::Release(Array<T>& pointer)
     pointer.release();
 }
 
-#ifdef ANTARES_SWAP_SUPPORT
-template<class T>
-inline void Memory::Allocate(Antares::Memory::Array<T>& out, size_t size)
-{
-    assert(size > 0);
-    out.allocate(size);
-}
-#else
 template<class T>
 inline void Memory::Allocate(T*& out, size_t size)
 {
     assert(size > 0);
     out = new T[size];
 }
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-template<class T>
-inline bool Memory::Null(const Antares::Memory::Array<T>& out)
-{
-    return !out;
-}
-#else
 template<class T>
 inline bool Memory::Null(const T* out)
 {
     return !out;
 }
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-template<class T>
-inline bool Memory::StrictNull(const Antares::Memory::Array<T>& out)
-{
-    return out.strictNull();
-}
-#else
 template<class T>
 inline bool Memory::StrictNull(const T*& out)
 {
     return !out;
 }
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-template<class T>
-inline void Memory::Flush(Antares::Memory::Array<T>& out)
-{
-    out.flush();
-}
-#else
 template<class T>
 inline void Memory::Flush(T*&)
 {
     // do nothing
 }
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-template<class T>
-inline void Memory::Acquire(Antares::Memory::Array<T>& out)
-{
-    out.acquire();
-}
-#else
 template<class T>
 inline void Memory::Acquire(T*&)
 {
     // do nothing
 }
-#endif
 
 template<class U>
 inline U* Memory::RawPointer(U* array)

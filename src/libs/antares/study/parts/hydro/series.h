@@ -58,7 +58,7 @@ public:
     /*!
     ** \brief Flush all matrix-related data
     */
-    void flush();
+    void flush(); // gp : to be removed ?
 
     /*!
     ** \brief Load all data not already loaded

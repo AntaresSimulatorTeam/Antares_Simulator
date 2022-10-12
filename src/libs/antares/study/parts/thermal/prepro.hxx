@@ -33,9 +33,7 @@ namespace Data
 {
 inline void PreproThermal::flush()
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    data.flush();
-#endif
+    // gp : to be removed
 }
 
 inline Yuni::uint64 PreproThermal::memoryUsage() const

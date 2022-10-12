@@ -191,27 +191,15 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             {
             case Data::XCast::dtNormal:
             {
-#ifdef ANTARES_SWAP_SUPPORT
-                data.data[gamma][realmonth]
-                  = data.data[alpha][realmonth] - 6.f * data.data[beta][realmonth];
-                data.data[delta][realmonth]
-                  = data.data[alpha][realmonth] + 6.f * data.data[beta][realmonth];
-#else
                 float** v = data.data.entry;
                 v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
                 v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
-#endif
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
-#ifdef ANTARES_SWAP_SUPPORT
-                data.data[delta][realmonth]
-                  = (float)GammaEuler(1. + 1. / data.data[alpha][realmonth]);
-#else
                 float** v = data.data.entry;
                 v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
-#endif
                 break;
             }
             default:
@@ -655,10 +643,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
         }
     }
 
-#ifdef ANTARES_SWAP_SUPPORT
-
-    Antares::memory.flushAll();
-#endif
     return true;
 }
 

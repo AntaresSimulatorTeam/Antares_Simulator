@@ -59,10 +59,7 @@ Data::RenewableCluster::~RenewableCluster()
 
 void RenewableCluster::flush()
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    if (series)
-        series->flush();
-#endif
+    // gp : to be removed
 }
 
 uint RenewableCluster::groupId() const

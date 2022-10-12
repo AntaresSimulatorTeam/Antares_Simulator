@@ -24,14 +24,7 @@ using namespace Antares;
 template<class ClusterT>
 inline void ClusterList<ClusterT>::flush()
 {
-#ifndef ANTARES_SWAP_SUPPORT
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-    {
-        Cluster& it = *(i->second);
-        it.flush();
-    }
-#endif
+    // gp : to be remove
 }
 
 template<class ClusterT>

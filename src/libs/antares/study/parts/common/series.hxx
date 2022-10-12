@@ -33,10 +33,7 @@ namespace Data
 {
 inline void DataSeriesCommon::flush()
 {
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
+    // gp : to be removed
 }
 
 inline Yuni::uint64 DataSeriesMemoryUsage(DataSeriesCommon* t)

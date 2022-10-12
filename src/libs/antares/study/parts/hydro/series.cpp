@@ -319,14 +319,6 @@ void DataSeriesHydro::reset()
     count = 1;
 }
 
-#ifdef ANTARES_SWAP_SUPPORT
-void DataSeriesHydro::flush()
-{
-    ror.flush();
-    storage.flush();
-}
-#endif
-
 uint64 DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();

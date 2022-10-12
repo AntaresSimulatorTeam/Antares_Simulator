@@ -35,12 +35,7 @@ namespace Data
 {
 inline void XCast::flush()
 {
-#ifndef ANTARES_SWAP_SUPPORT
-    data.flush();
-    K.flush();
-    translation.flush();
-    conversion.flush();
-#endif
+    // gp : to be removed
 }
 
 inline Yuni::uint64 XCast::memoryUsage() const

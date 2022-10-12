@@ -241,29 +241,13 @@ public:
         //@}
 
     private:
-#ifdef ANTARES_SWAP_SUPPORT
-        mutable volatile T* pPointer;
-        Memory::Handle pHandle;
-#else
         T* pPointer;
-#endif
 
     }; // class Array
 
     template<class T>
     struct Stored final
     {
-#ifdef ANTARES_SWAP_SUPPORT
-        using Type = Array<T>;
-        using ReturnType = Array<T>&;
-        using ConstReturnType = const Array<T>&;
-
-        static const Type& NullValue()
-        {
-            static const Type value;
-            return value;
-        }
-#else
         using Type = T*;
         using ReturnType = T*;
         using ConstReturnType = const T*;
@@ -272,7 +256,6 @@ public:
         {
             return nullptr;
         }
-#endif
     };
 
     template<class U>
@@ -303,45 +286,21 @@ public:
     static void Assign(uint count, Array<U>& array, const U& value);
 
 public:
-#ifdef ANTARES_SWAP_SUPPORT
-    template<class T>
-    static void Allocate(Antares::Memory::Array<T>& out, size_t size);
-#else
+
     template<class T>
     static void Allocate(T*& out, size_t size);
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-    template<class T>
-    static void Flush(Antares::Memory::Array<T>& out);
-#else
     template<class T>
     static void Flush(T*&);
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-    template<class T>
-    static void Acquire(Antares::Memory::Array<T>& out);
-#else
     template<class T>
     static void Acquire(T*&);
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-    template<class T>
-    static bool Null(const Antares::Memory::Array<T>& out);
-#else
     template<class T>
     static bool Null(const T* out);
-#endif
 
-#ifdef ANTARES_SWAP_SUPPORT
-    template<class T>
-    static bool StrictNull(const Antares::Memory::Array<T>& out);
-#else
     template<class T>
     static bool StrictNull(const T*& out);
-#endif
 
     /*!
     ** \brief Release a raw pointer

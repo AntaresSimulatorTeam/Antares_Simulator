@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h>
 
+// gp : class and file to be removed
 namespace Antares
 {
 template<class MatrixT>
@@ -42,44 +43,14 @@ public:
     };
 
 public:
-#ifdef ANTARES_SWAP_SUPPORT
-    MatrixAutoFlush(const MatrixT& matrix) : pCount(0), pLastFlush(0), pMatrix(matrix)
-    {
-    }
-#else
     MatrixAutoFlush(const MatrixT&)
     {
     }
-#endif
 
     MatrixAutoFlush& operator++()
     {
-#ifdef ANTARES_SWAP_SUPPORT
-        if (++pCount == autoFlushRowCount)
-        {
-            if (pLastFlush != 0)
-            {
-                uint last = pLastFlush + pCount;
-                for (uint i = pLastFlush; i != last; ++i)
-                    pMatrix[i].flush();
-                pLastFlush = last;
-                pCount = 0;
-            }
-            else
-            {
-                pLastFlush = pCount;
-            }
-        }
-#endif
         return *this;
     }
-
-private:
-#ifdef ANTARES_SWAP_SUPPORT
-    uint pCount;
-    uint pLastFlush;
-    const MatrixT& pMatrix;
-#endif
 
 }; // class MatrixAutoFlush
 
