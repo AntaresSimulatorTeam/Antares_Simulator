@@ -222,14 +222,14 @@ void SurveyResultsData::initialize(uint maxVariables)
     }
 }
 
-void SurveyResultsData::exportGridInfos(Antares::Solver::IResultWriter::Ptr writer)
+void SurveyResultsData::exportGridInfos(IResultWriter::Ptr writer)
 {
     output.clear();
 
     Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
 
-void SurveyResultsData::exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer)
+void SurveyResultsData::exportGridInfosAreas(IResultWriter::Ptr writer)
 {
     Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }

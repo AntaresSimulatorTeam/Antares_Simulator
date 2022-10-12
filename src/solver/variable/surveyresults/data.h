@@ -57,9 +57,9 @@ public:
     ** It is composed by several files to completely describe the system
     ** and provide a good support for Excel macros.
     */
-    void exportGridInfos(Antares::Solver::IResultWriter::Ptr writer);
+    void exportGridInfos(IResultWriter::Ptr writer);
 
-    void exportGridInfosAreas(Antares::Solver::IResultWriter::Ptr writer);
+    void exportGridInfosAreas(IResultWriter::Ptr writer);
 
 public:
     //! The current column index

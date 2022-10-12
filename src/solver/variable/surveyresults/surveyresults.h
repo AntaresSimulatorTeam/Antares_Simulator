@@ -147,7 +147,7 @@ public:
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
     // File writer
-    Antares::Solver::IResultWriter::Ptr pResultWriter;
+    IResultWriter::Ptr pResultWriter;
 
 private:
     /*!
