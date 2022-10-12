@@ -112,7 +112,9 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
     }
 }
 
-static void ExportGridInfosAreas(const Data::Study& study, IResultWriter::Ptr writer)
+static void ExportGridInfosAreas(const Data::Study& study,
+                                 const Yuni::String& originalOutput,
+                                 IResultWriter::Ptr writer)
 {
     Clob out;
     Clob outLinks;
@@ -160,10 +162,14 @@ static void ExportGridInfosAreas(const Data::Study& study, IResultWriter::Ptr wr
 
         } // each thermal cluster
     });   // each area
+    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
+                 YString path;
+                 path << originalOutput << SEP << "grid" << SEP << filename;
+                 writer->addEntry(path.c_str(), buffer);};
 
-    writer->addEntry("areas.txt", out);
-    writer->addEntry("links.txt", outLinks);
-    writer->addEntry("thermal.txt", outThermal);
+    add("areas.txt", std::move(out));
+    add("links.txt", std::move(outLinks));
+    add("thermal.txt", std::move(outThermal));
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -220,7 +226,7 @@ void SurveyResultsData::initialize(uint maxVariables)
 void SurveyResultsData::exportGridInfos(IResultWriter::Ptr writer)
 {
     output.clear();
-    Solver::Variable::Private::ExportGridInfosAreas(study, writer);
+    Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
 } // namespace Private
 } // namespace Variable
