@@ -102,11 +102,6 @@ void SetsOfAreas<NextT>::initializeFromStudy(Data::Study& study)
         pOriginalSets.push_back(originalSet);
 
         pNames.push_back(setname);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Memory::swapSupport)
-            memory.flushAll();
     }
 
     // Initializing iterators
@@ -322,11 +317,6 @@ void SetsOfAreas<NextT>::yearEndSpatialAggregates(V& allVars, uint year, uint nu
         assert(setindex < pOriginalSets.size());
         pSetsOfAreas[setindex]->yearEndSpatialAggregates(
           allVars, year, *(pOriginalSets[setindex]), numSpace);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Memory::swapSupport)
-            memory.flushAll();
     }
 }
 
@@ -342,11 +332,6 @@ void SetsOfAreas<NextT>::computeSpatialAggregatesSummary(
         assert(setindex < pOriginalSets.size());
         pSetsOfAreas[setindex]->computeSpatialAggregatesSummary(
           allVars, numSpaceToYear, nbYearsForCurrentSummary);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Memory::swapSupport)
-            memory.flushAll();
     }
 }
 
@@ -357,11 +342,6 @@ void SetsOfAreas<NextT>::simulationEndSpatialAggregates(V& allVars)
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
         pSetsOfAreas[i]->simulationEndSpatialAggregates(allVars, *(pOriginalSets[i]));
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Memory::swapSupport)
-            memory.flushAll();
     }
 }
 
@@ -371,11 +351,6 @@ void SetsOfAreas<NextT>::beforeYearByYearExport(uint year, uint numSpace)
     for (uint i = 0; i != pSetsOfAreas.size(); ++i)
     {
         pSetsOfAreas[i]->beforeYearByYearExport(year, numSpace);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Memory::swapSupport)
-            memory.flushAll();
     }
 }
 

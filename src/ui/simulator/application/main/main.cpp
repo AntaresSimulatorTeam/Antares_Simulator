@@ -310,9 +310,6 @@ ApplWnd::~ApplWnd()
     // Remove the inspector
     Window::Inspector::Destroy();
 
-    if (pFlushMemoryTimer)
-        pFlushMemoryTimer->Stop();
-
     // We are about to leave !
     onApplicationQuit();
 
@@ -354,8 +351,6 @@ ApplWnd::~ApplWnd()
     Data::StudyIconFile.clear();
     Data::StudyIconFile.shrink();
 
-    delete pFlushMemoryTimer;
-    pFlushMemoryTimer = nullptr;
     delete pData;
     pData = nullptr;
 
@@ -1011,31 +1006,12 @@ void ApplWnd::hideAllComponentsRelatedToTheStudy()
 void ApplWnd::backgroundTimerStop()
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
-    if (pFlushMemoryTimer)
-        pFlushMemoryTimer->Stop();
 
     // !! It is extremly important to wait for all jobs to finish
     // In the contrary, it may appen a race condition with another thread
     // and the swap mode. It would be possible to flush all variables
     // while accessing them
     Dispatcher::Wait();
-
-    // Flushing all variables
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
-}
-
-void ApplWnd::backgroundTimerStart()
-{
-    assert(wxIsMainThread() == true and "Must be ran from the main thread");
-    if (pFlushMemoryTimer)
-        pFlushMemoryTimer->Stop();
-
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
-
-    if (pFlushMemoryTimer)
-        pFlushMemoryTimer->Start(12000, wxTIMER_CONTINUOUS);
 }
 
 void ApplWnd::evtOnMenuOpen(wxMenuEvent&)

@@ -90,13 +90,6 @@ public:
 
     enum // anonymous
     {
-//! Flag which indicates if the swap file support is enabled
-#ifdef ANTARES_SWAP_SUPPORT
-        swapSupport = 1,
-#else
-        swapSupport = 0,
-#endif
-
 /*!
 ** \brief Size of a single memory block (must be a power of 2)
 */

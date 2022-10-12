@@ -285,12 +285,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
             assert(not Math::NaN(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
 
-            if (Antares::Memory::swapSupport)
-            {
-                prepro.data.flush();
-                series.flush();
-            }
-
             cumul += daysPerMonth;
         }
 
@@ -330,9 +324,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
     }
 
     delete[] NORM;
-
-    if (Antares::Memory::swapSupport)
-        study.preproHydroCorrelation.annual->flush();
 
     return true;
 }

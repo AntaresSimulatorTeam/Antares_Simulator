@@ -585,10 +585,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     }
 #endif
 
-    // reduce the memory footprint in swap mode
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
-
     if (not gd.geographicTrimming)
         disableAllFilters(study);
 

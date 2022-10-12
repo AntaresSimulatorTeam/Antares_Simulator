@@ -298,7 +298,6 @@ public:
     */
     void backgroundTimerStop();
 
-    void backgroundTimerStart();
     //@}
 
     //! \name Main Notebook
@@ -770,9 +769,6 @@ private:
 
     //! List of logs to flush
     wxTimer* pLogFlusherTimer;
-
-    //! Timer for the periodic refresh of the memory usage
-    wxTimer* pFlushMemoryTimer;
 
     //! Logs
     Window::StudyLogs* pWndLogs;
