@@ -48,15 +48,10 @@ namespace Variable
 namespace Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     String& output,
                                      const char* title,
                                      std::string& buffer,
                                      const Matrix<>& matrix)
 {
-    // THIS FILE IS DEPRECATED !!!
-    output.clear();
-    output << "grid" << SEP << "digest.txt";
-
     // THIS FILE IS DEPRECATED !!!
     buffer.append("\n\n\n\n\t").append(title).append("\n\t\tFrom...\n\t...To");
 
@@ -225,7 +220,6 @@ void SurveyResultsData::initialize(uint maxVariables)
 void SurveyResultsData::exportGridInfos(IResultWriter::Ptr writer)
 {
     output.clear();
-
     Solver::Variable::Private::ExportGridInfosAreas(study, writer);
 }
 
@@ -703,7 +697,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
 
 void SurveyResults::exportDigestMatrix(const char* title, std::string& buffer)
 {
-    Private::InternalExportDigestLinksMatrix(data.study, data.output, title, buffer, data.matrix);
+    Private::InternalExportDigestLinksMatrix(data.study, title, buffer, data.matrix);
 }
 
 void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)

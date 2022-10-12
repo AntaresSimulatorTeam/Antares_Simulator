@@ -272,8 +272,9 @@ public:
             if (Antares::Memory::swapSupport)
                 Antares::memory.flushAll();
         }
+        // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
-        digestFileName << "grid" << SEP << "digest.txt"; // THIS FILE IS DEPRECATED !!!
+        digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
         writer->addEntry(digestFileName.c_str(), digestBuffer);
     }
 

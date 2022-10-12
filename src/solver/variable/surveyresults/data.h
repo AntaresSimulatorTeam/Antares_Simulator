@@ -109,7 +109,6 @@ public:
 ** \brief Append the data of a matrix (about links variables) to the digest file
 */
 void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     Yuni::String& output,
                                      const char* title,
                                      std::string& fileBuffer,
                                      const Matrix<>& matrix);
