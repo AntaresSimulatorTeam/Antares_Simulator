@@ -78,7 +78,6 @@ int main(int argc, char* argv[])
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     const std::string&  studyPath, const std::string&  kirchhoffOptionPath)
 {
-    bool result = true;
     CBuilder constraintBuilder(study);
     logs.info() << "CBuilder created";
 
@@ -96,8 +95,7 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 
     logs.info() << "CBuilder completed study and option file.";
 
-    result = constraintBuilder.runConstraintsBuilder();
-    if (!result)
+    if (!constraintBuilder.runConstraintsBuilder())
     {
         logs.error() << "Run constraints failed.";
         return false;
@@ -105,11 +103,13 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 
     auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
-    result = study->bindingConstraints.saveToFolder(bindingPath);
-    if (!result)
+    if (!study->bindingConstraints.saveToFolder(bindingPath))
+    {
         logs.error() << "Save to folder failed";
+        return false;
+    }
 
-    return result;
+    return true;
 }
 
 static void NotEnoughMemory()
