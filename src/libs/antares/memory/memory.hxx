@@ -27,8 +27,6 @@
 #ifndef __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 #define __ANTARES_LIBS_MEMORY_MEMORY_HXX__
 
-#define ANTARES_SWAP_ACQUIRE_PTR
-
 namespace Antares
 {
 inline Yuni::uint64 Memory::processID() const
@@ -97,6 +95,18 @@ inline bool Memory::Array<T>::strictNull() const
 }
 
 template<class T>
+T& Memory::Array<T>::operator[](uint i)
+{
+    return (T&)pPointer[i];
+}
+
+template<class T>
+const T& Memory::Array<T>::operator[](uint i) const
+{
+    return (const T&)pPointer[i];
+}
+
+template<class T>
 inline void Memory::Release(T*& pointer)
 {
     delete[] pointer;
@@ -122,11 +132,7 @@ inline bool Memory::StrictNull(const T*& out)
     return !out;
 }
 
-template<class T>
-inline void Memory::Acquire(T*&)
-{
-    // do nothing
-}
+
 
 template<class U>
 inline U* Memory::RawPointer(U* array)

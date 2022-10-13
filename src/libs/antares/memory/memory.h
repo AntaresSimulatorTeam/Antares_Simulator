@@ -156,6 +156,9 @@ public:
 
         bool strictNull() const;
 
+        T& operator[](uint i);
+        const T& operator[](uint i) const;
+
     private:
         T* pPointer;
 
@@ -187,9 +190,6 @@ public:
 
     template<class T>
     static void Allocate(T*& out, size_t size);
-
-    template<class T>
-    static void Acquire(T*&);
 
     template<class T>
     static bool Null(const T* out);

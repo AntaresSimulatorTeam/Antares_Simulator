@@ -325,7 +325,6 @@ bool JobFileReader::storeResults()
 
         // Copy
         store.height = pLineCount;
-        Memory::Acquire(store.rows);
         assert(!Memory::StrictNull(store.rows));
         for (uint y = 0; y != pLineCount; ++y)
         {
