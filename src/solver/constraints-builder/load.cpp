@@ -29,7 +29,7 @@
 #include "../../config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
-//#include <wx/wx.h> // bourrin -> à modifier
+//#include <wx/wx.h> // bourrin -> ? modifier
 //#include "../../ui/simulator/application/study.h"
 
 using namespace Yuni;
@@ -51,7 +51,7 @@ bool CBuilder::completeFromStudy()
             // for all links of the study
             // check if it has been enabled in the INI File
             linkInfo* k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
-            if (!k && j->second->isVisibleOnLayer(pStudy->activeLayerID))
+            if (!k)
             {
                 k = new linkInfo();
 

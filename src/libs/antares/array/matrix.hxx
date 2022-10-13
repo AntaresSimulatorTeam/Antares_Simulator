@@ -1172,18 +1172,17 @@ template<class T, class ReadWriteT>
 template<class PredicateT>
 bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
 {
-    if (width and height)
+    if (!width || !height)
+        return true;
+
+    MatrixAutoFlush<MatrixType> autoflush(*this);
+    for (uint x = 0; x != width; ++x)
     {
-        MatrixAutoFlush<MatrixType> autoflush(*this);
-        for (uint x = 0; x != width; ++x)
+        ++autoflush;
+        for (uint y = 0; y != height; ++y)
         {
-            ++autoflush;
-            auto& column = entry[x];
-            for (uint y = 0; y != height; ++y)
-            {
-                if (not Yuni::Math::Zero((T)predicate(column[y])))
-                    return false;
-            }
+            if (!Yuni::Math::Zero((T)predicate((*this)[x][y])))
+                return false;
         }
     }
     return true;
