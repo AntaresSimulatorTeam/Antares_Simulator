@@ -437,9 +437,6 @@ static void ReadCommandLineOptions(int argc, char** argv)
 
 static bool WriteAggregates()
 {
-    // Flush the whole content to disk
-    memory.flushAll();
-
     const Output::Vector::iterator end = AllOutputs.end();
     for (Output::Vector::iterator i = AllOutputs.begin(); i != end; ++i)
     {

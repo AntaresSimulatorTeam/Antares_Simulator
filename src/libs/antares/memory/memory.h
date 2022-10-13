@@ -152,16 +152,6 @@ public:
         */
         void allocate(size_t size);
 
-        /*!
-        ** \brief Try to acquire the inner pointer
-        */
-        void acquire();
-
-        /*!
-        ** \brief Tell if the data need to be flushed
-        */
-        bool needFlush() const;
-
         bool valid() const;
 
         bool strictNull() const;
@@ -170,75 +160,6 @@ public:
         ** \brief Flush the data into the swap file
         */
         void flush() const;
-
-        /*!
-        ** \brief Release the inner data
-        */
-        void release();
-
-        //! \name Common operations on Array
-        //@{
-        /*!
-        ** \brief Reset 'count' elements to zero
-        */
-        void assign(uint count);
-
-        /*!
-        ** \brief Reset 'count' elements to a given value
-        */
-        void assign(uint count, const T& value);
-
-        /*!
-        ** \brief Copy a whole array
-        */
-        void copy(uint count, const T* value);
-        void copy(uint count, const Memory::Array<T>& value);
-
-        /*!
-        ** \brief Increment @count elements with a given value
-        */
-        void increment(uint count, const T& value);
-        /*!
-        ** \brief Increment @count elements with another array of @count elements
-        */
-        void increment(uint count, const T* value);
-        /*!
-        ** \brief Increment @count elements with another array of @count elements
-        */
-        void increment(uint count, const Memory::Array<T>& value);
-
-        /*!
-        ** \brief Multiply @count elements with a given value
-        */
-        void multiply(uint count, const T& value);
-        /*!
-        ** \brief Multiply @count elements with another array of @count elements
-        */
-        void multiply(uint count, const T* value);
-        /*!
-        ** \brief Multiply @count elements with another array of @count elements
-        */
-        void multiply(uint count, const Memory::Array<T>& value);
-        //@}
-
-        T* rawptr();
-        const T* rawptr() const;
-
-        //! \name Operators
-        //@{
-        operator void*();
-        operator const void*() const;
-
-        T* operator->();
-        const T* operator->() const;
-        const T& operator*() const;
-        T& operator*();
-        T& operator[](uint i);
-        const T& operator[](uint i) const;
-        bool operator!() const;
-        Array& operator=(const Array<T>& copy);
-        Array& operator=(const Yuni::NullPtr&);
-        //@}
 
     private:
         T* pPointer;
@@ -262,28 +183,10 @@ public:
     static U* RawPointer(U* array);
 
     template<class U>
-    static U* RawPointer(Array<U>& array);
-
-    template<class U>
-    static const U* RawPointer(const Array<U>& array);
-
-    template<class U>
     static void Zero(uint count, U* array);
 
     template<class U>
-    static void Zero(uint count, Array<U>& array);
-
-    template<class U>
-    static void Assign(uint count, U* array);
-
-    template<class U>
-    static void Assign(uint count, Array<U>& array);
-
-    template<class U>
     static void Assign(uint count, U* array, const U& value);
-
-    template<class U>
-    static void Assign(uint count, Array<U>& array, const U& value);
 
 public:
 
@@ -307,12 +210,6 @@ public:
     */
     template<class T>
     static void Release(T*& pointer);
-
-    /*!
-    ** \brief Release a managed pointer
-    */
-    template<class T>
-    static void Release(Array<T>& pointer);
 
     /*!
     ** \brief Estimate the memory usage if our managed pointers are used
@@ -363,22 +260,10 @@ public:
     void cacheFolder(const AnyString& folder);
     //@}
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Flush all memory into swap files
-    */
-    void flushAll() const;
-
     /*!
     ** \brief Get the amount of memory currently used
     */
     Yuni::uint64 memoryUsage() const;
-
-    /*!
-    ** \brief Get the amount of memory currently used by the swap
-    */
-    Yuni::uint64 memoryUsageInSwap() const;
 
     /*!
     ** \brief Get the current capacity

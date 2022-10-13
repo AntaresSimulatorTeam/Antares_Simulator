@@ -155,11 +155,6 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         }
                     }
 
-                    if (!--flush)
-                    {
-                        flush = 1000;
-                        memory.flushAll();
-                    }
                 }
             }
 

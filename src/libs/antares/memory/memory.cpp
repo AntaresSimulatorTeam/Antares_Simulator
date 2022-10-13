@@ -298,15 +298,6 @@ uint64 Memory::memoryUsage() const
     return result;
 }
 
-uint64 Memory::memoryUsageInSwap() const
-{
-    uint64 result = 0;
-    Yuni::MutexLocker locker(gMutex);
-
-    for (uint i = 0; i != pSwapFile.size(); ++i)
-        result += (blockPerSwap - pSwapFile[i]->nbFreeBlocks) * blockSize;
-    return result;
-}
 
 Memory::Handle Memory::internalAllocate(size_t size)
 {
@@ -594,11 +585,6 @@ void* Memory::acquireMapping(Handle handle, volatile void* pointer)
 #endif
 
     return nullptr;
-}
-
-void Memory::flushAll() const
-{
-    // gp : to be removed
 }
 
 void Memory::flush(Handle handle)

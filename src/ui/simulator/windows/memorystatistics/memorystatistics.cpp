@@ -449,14 +449,6 @@ void MemoryStatistics::refreshInformation()
 
     // Memory cache
     {
-        uint64 memCache = allocator.memoryUsageInSwap() / (1024 * 1024);
-        s.clear();
-        s << memCache << wxT(" Mo");
-        pData->stTxtMemoryCache->SetLabel(s);
-    }
-
-    // Memory cache
-    {
         uint64 memCache = allocator.memoryUsage() / (1024 * 1024);
         s.clear();
         s << NormalizeAmountOfMemory(memCache) << wxT(" Mo");

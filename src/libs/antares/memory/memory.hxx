@@ -72,7 +72,8 @@ inline Memory::Array<T>::Array(size_t size) : pPointer(nullptr)
 template<class T>
 inline Memory::Array<T>::~Array()
 {
-    release();
+    delete[] pPointer;
+    pPointer = nullptr;
 }
 
 template<class T>
@@ -83,194 +84,9 @@ void Memory::Array<T>::allocate(size_t size)
 }
 
 template<class T>
-inline bool Memory::Array<T>::needFlush() const
-{
-    return false;
-}
-
-template<class T>
 inline void Memory::Array<T>::flush() const
 {
     // gp : to be removed
-}
-
-template<class T>
-void Memory::Array<T>::release()
-{
-    delete[] pPointer;
-    pPointer = nullptr;
-}
-
-template<class T>
-void Memory::Array<T>::acquire()
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-}
-
-template<class T>
-void Memory::Array<T>::assign(uint count)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    memset((void*)pPointer, 0, sizeof(T) * count);
-}
-
-template<class T>
-void Memory::Array<T>::assign(uint count, const T& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] = value;
-}
-
-template<class T>
-void Memory::Array<T>::copy(uint count, const T* value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    memcpy((void*)pPointer, value, sizeof(T) * count);
-}
-
-template<class T>
-void Memory::Array<T>::copy(uint count, const Memory::Array<T>& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    (void)memcpy((void*)pPointer, (void*)value.pPointer, sizeof(T) * count);
-}
-
-template<class T>
-void Memory::Array<T>::increment(uint count, const T& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] += value;
-}
-
-template<class T>
-void Memory::Array<T>::increment(uint count, const T* value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] += value[i];
-}
-
-template<class T>
-void Memory::Array<T>::increment(uint count, const Memory::Array<T>& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] += ((T*)value.pPointer)[i];
-}
-
-template<class T>
-void Memory::Array<T>::multiply(uint count, const T& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] *= value;
-}
-
-template<class T>
-void Memory::Array<T>::multiply(uint count, const T* value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] *= value[i];
-}
-
-template<class T>
-void Memory::Array<T>::multiply(uint count, const Memory::Array<T>& value)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    for (uint i = 0; i != count; ++i)
-        ((T*)pPointer)[i] *= ((T*)value.pPointer)[i];
-}
-
-template<class T>
-inline const T* Memory::Array<T>::rawptr() const
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (const T*)pPointer;
-}
-
-template<class T>
-inline T* Memory::Array<T>::rawptr()
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (T*)pPointer;
-}
-
-template<class T>
-inline Memory::Array<T>::operator void*()
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (void*)pPointer;
-}
-
-template<class T>
-inline Memory::Array<T>::operator const void*() const
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (const void*)pPointer;
-}
-
-template<class T>
-inline T* Memory::Array<T>::operator->()
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (T*)pPointer;
-}
-
-template<class T>
-inline const T* Memory::Array<T>::operator->() const
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (const T*)pPointer;
-}
-
-template<class T>
-inline const T& Memory::Array<T>::operator*() const
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (const T&)*pPointer;
-}
-
-template<class T>
-inline T& Memory::Array<T>::operator*()
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (T&)*pPointer;
-}
-
-template<class T>
-T& Memory::Array<T>::operator[](uint i)
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (T&)pPointer[i];
-}
-
-template<class T>
-const T& Memory::Array<T>::operator[](uint i) const
-{
-    ANTARES_SWAP_ACQUIRE_PTR;
-    return (const T&)pPointer[i];
-}
-
-template<class T>
-inline Memory::Array<T>& Memory::Array<T>::operator=(const Memory::Array<T>&)
-{
-    return *this;
-}
-
-template<class T>
-inline Memory::Array<T>& Memory::Array<T>::operator=(const Yuni::NullPtr&)
-{
-    release();
-    return *this;
-}
-
-template<class T>
-inline bool Memory::Array<T>::operator!() const
-{
-    return not pPointer;
 }
 
 template<class T>
@@ -290,12 +106,6 @@ inline void Memory::Release(T*& pointer)
 {
     delete[] pointer;
     pointer = nullptr;
-}
-
-template<class T>
-inline void Memory::Release(Array<T>& pointer)
-{
-    pointer.release();
 }
 
 template<class T>
@@ -336,39 +146,9 @@ inline U* Memory::RawPointer(U* array)
 }
 
 template<class U>
-inline U* Memory::RawPointer(Array<U>& array)
-{
-    return array.rawptr();
-}
-
-template<class U>
-inline const U* Memory::RawPointer(const Array<U>& array)
-{
-    return array.rawptr();
-}
-
-template<class U>
 inline void Memory::Zero(uint count, U* array)
 {
     (void)::memset(array, 0, sizeof(U) * count);
-}
-
-template<class U>
-inline void Memory::Zero(uint count, Array<U>& array)
-{
-    array.assign(count);
-}
-
-template<class U>
-inline void Memory::Assign(uint count, U* array)
-{
-    (void)::memset(array, 0, sizeof(U) * count);
-}
-
-template<class U>
-inline void Memory::Assign(uint count, Array<U>& array)
-{
-    array.assign(count);
 }
 
 template<class U>
@@ -376,12 +156,6 @@ inline void Memory::Assign(uint count, U* array, const U& value)
 {
     for (uint i = 0; i != count; ++i)
         array[i] = value;
-}
-
-template<class U>
-inline void Memory::Assign(uint count, Array<U>& array, const U& value)
-{
-    array.assign(count, value);
 }
 
 } // namespace Antares
