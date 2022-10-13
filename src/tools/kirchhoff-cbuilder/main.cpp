@@ -82,9 +82,6 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     CBuilder constraintBuilder(study);
     logs.info() << "CBuilder created";
 
-    result = constraintBuilder.completeFromStudy() && result;
-    result = constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath) && result;
-
     if (!constraintBuilder.completeFromStudy())
     {
         logs.error() << "CBuilder complete from study went wrong, aborting.";
