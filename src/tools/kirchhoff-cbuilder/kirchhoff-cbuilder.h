@@ -31,7 +31,7 @@
 static void NotEnoughMemory();
 
 bool initResources(int argc, char* argv[]);
-bool initComponents(std::shared_ptr<Data::Study> study, std::string const &studyPath);
-bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study, std::string const &studyPath, std::string const &kirchhoffOptionPath);
+bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath);
+bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study, const std::string& studyPath, const std::string& kirchhoffOptionPath);
 
 #endif // __KIRCHHOFF_CBUILDER_H__

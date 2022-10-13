@@ -52,6 +52,7 @@ public:
     size_t activeLayerID;
     bool showAllLayer;
 
+protected:
     bool saveLayers(const AnyString& filename);
     void loadLayers(const AnyString& filename);
 };

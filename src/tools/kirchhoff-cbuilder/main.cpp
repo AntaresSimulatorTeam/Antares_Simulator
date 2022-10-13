@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
 }
 
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-    std::string const & studyPath, std::string const & kirchhoffOptionPath)
+    const std::string&  studyPath, const std::string&  kirchhoffOptionPath)
 {
     bool result = true;
     CBuilder constraintBuilder(study);
@@ -85,9 +85,15 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     result = constraintBuilder.completeFromStudy() && result;
     result = constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath) && result;
 
-    if (!result)
+    if (!constraintBuilder.completeFromStudy())
     {
-        logs.error() << "CBuilder init went wrong, aborting.";
+        logs.error() << "CBuilder complete from study went wrong, aborting.";
+        return false;
+    }
+
+    if (!constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath))
+    {
+        logs.error() << "CBuilder complete from option file went wrong, aborting.";
         return false;
     }
 
@@ -100,7 +106,9 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
         return false;
     }
 
-    result = study->bindingConstraints.saveToFolder(studyPath + "/input/bindingconstraints");
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
+
+    result = study->bindingConstraints.saveToFolder(bindingPath);
     if (!result)
         logs.error() << "Save to folder failed";
 
@@ -131,11 +139,11 @@ bool initResources(int argc, char* argv[])
     return true;
 }
 
-bool initComponents(std::shared_ptr<Data::Study> study, std::string const &studyPath)
+bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
 {
-    study->header.version = Data::StudyHeader::ReadVersionFromFile(studyPath + "/study.antares");
+    study->header.version = Data::StudyHeader::ReadVersionFromFile(studyPath + Yuni::IO::Separator + "study.antares");
     study->folder = studyPath;
-    study->folderInput = studyPath + "/input";
+    study->folderInput = studyPath + Yuni::IO::Separator + "input";
     study->inputExtension = "txt";
 
     Data::StudyLoadOptions options;
@@ -148,11 +156,9 @@ bool initComponents(std::shared_ptr<Data::Study> study, std::string const &study
     }
     logs.info() << "Areas loaded.";
 
-    study->loadLayers(studyPath + "layers/layers.ini");
-    logs.debug() << "active layer ID: " << study->activeLayerID;
+    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
-    if (!study->bindingConstraints.loadFromFolder(*study,
-        options, studyPath + "/input/bindingconstraints/"))
+    if (!study->bindingConstraints.loadFromFolder(*study, options, bindingPath))
     {
         logs.error() << "Binding constraints loading failed";
         return false;
