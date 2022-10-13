@@ -636,7 +636,7 @@ void SurveyResults::exportDigestAllYears(std::string& buffer)
             assert(i < maxVariables);
             buffer.append("\t").append(captions[rowIndex][i].c_str());
         }
-        buffer.append("\t");
+        buffer.append("\n");
     }
 
     char conversionBuffer[128];
