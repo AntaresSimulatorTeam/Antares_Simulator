@@ -710,8 +710,6 @@ void Study::performTransformationsBeforeLaunchingSimulation()
                 }*/
             }
         }
-        matrix.flush();
-        area.reserves.flush();
     });
 }
 

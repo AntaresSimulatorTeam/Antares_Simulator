@@ -27,7 +27,6 @@ set(SRC_MATRIX
 	array/matrix.h
 	array/matrix.cpp
 	array/matrix.hxx
-	array/autoflush.h
 	array/correlation.h
 	array/correlation.hxx
 	array/correlation.cpp)

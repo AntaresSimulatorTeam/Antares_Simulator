@@ -83,11 +83,6 @@ void Memory::Array<T>::allocate(size_t size)
     pPointer = new T[size];
 }
 
-template<class T>
-inline void Memory::Array<T>::flush() const
-{
-    // gp : to be removed
-}
 
 template<class T>
 inline bool Memory::Array<T>::valid() const
@@ -125,12 +120,6 @@ template<class T>
 inline bool Memory::StrictNull(const T*& out)
 {
     return !out;
-}
-
-template<class T>
-inline void Memory::Flush(T*&)
-{
-    // do nothing
 }
 
 template<class T>

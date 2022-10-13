@@ -38,11 +38,6 @@ inline IntermediateValues::~IntermediateValues()
     Antares::Memory::Release(hour);
 }
 
-inline void IntermediateValues::flush() const
-{
-    Antares::Memory::Flush(hour);
-}
-
 inline void IntermediateValues::reset()
 {
     Antares::Memory::Zero(maxHoursInAYear, hour);

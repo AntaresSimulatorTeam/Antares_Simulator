@@ -367,8 +367,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = NON_ANTARES;
-
-        lnk->flush();
     }
 
     if (studyruntime.bindingConstraintCount)
@@ -421,9 +419,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 logs.error() << "internal error. Please submit a full bug report";
                 break;
             }
-            }
-            bc.bounds.flush();
-        }
+            }        }
     }
 
     int weekDayIndex[8];

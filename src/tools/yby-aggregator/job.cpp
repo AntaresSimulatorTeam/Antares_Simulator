@@ -332,8 +332,6 @@ bool JobFileReader::storeResults()
             assert(!Memory::StrictNull(store.rows));
             memcpy(store.rows[y], ref[y], maxSizePerCell);
         }
-        // Flush
-        Memory::Flush(store.rows);
     }
 
     return true;

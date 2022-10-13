@@ -223,13 +223,8 @@ Matrix<T, ReadWriteT>::Matrix(const Matrix<T, ReadWriteT>& rhs) :
         entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
         entry[width] = nullptr;
 
-        MatrixAutoFlush<MatrixType> autoflush(*this);
-        MatrixAutoFlush<MatrixType> autoflushRhs(rhs);
         for (uint i = 0; i != rhs.width; ++i)
         {
-            ++autoflush;
-            ++autoflushRhs;
-
             Antares::Memory::Allocate<T>(entry[i], height);
             memcpy(entry[i], rhs.entry[i], sizeof(T) * height);
         }
@@ -269,10 +264,8 @@ Matrix<T, ReadWriteT>::~Matrix()
 template<class T, class ReadWriteT>
 inline void Matrix<T, ReadWriteT>::zero()
 {
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint i = 0; i != width; ++i)
     {
-        ++autoflush;
         ColumnType& column = entry[i];
         (void)::memset((void*)column, 0, sizeof(T) * height);
     }
@@ -320,10 +313,8 @@ void Matrix<T, ReadWriteT>::averageTimeseries(bool roundValues)
 template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::fill(const T& v)
 {
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint i = 0; i != width; ++i)
     {
-        ++autoflush;
         ColumnType& column = entry[i];
 
         for (uint j = 0; j != height; ++j)
@@ -334,10 +325,8 @@ void Matrix<T, ReadWriteT>::fill(const T& v)
 template<class T, class ReadWriteT>
 inline void Matrix<T, ReadWriteT>::fillUnit()
 {
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint i = 0; i != width; ++i)
     {
-        ++autoflush;
         ColumnType& column = entry[i];
 
         (void)::memset((void*)column, 0, sizeof(T) * height);
@@ -553,12 +542,6 @@ void Matrix<T, ReadWriteT>::reset()
 }
 
 template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::flush() const
-{
-    // gp : function flush() to be removed ?
-}
-
-template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
 {
     // Asserts
@@ -598,10 +581,8 @@ void Matrix<T, ReadWriteT>::resize(uint w, uint h, bool fixedSize)
                 entry = new typename Antares::Memory::Stored<T>::Type[width + 1];
                 entry[width] = nullptr;
 
-                MatrixAutoFlush<MatrixType> autoflush(*this);
                 for (uint i = 0; i != w; ++i)
                 {
-                    ++autoflush;
                     Antares::Memory::Allocate<T>(entry[i], height);
                 }
             }
@@ -809,15 +790,10 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
         pos = offset;
         uint lineOffset = (uint)offset;
 
-        // autoflush for loading huge matrices
-        MatrixAutoFlush<MatrixType> autoflush(*this);
-
         while ((offset = data.find_first_of(ANTARES_MATRIX_CSV_SEPARATORS, offset))
                != BufferType::npos)
         {
             assert(offset != BufferType::npos);
-
-            ++autoflush;
 
             separator = data[offset];
             // the final zero is mandatory for string-to-double convertions
@@ -1099,9 +1075,6 @@ bool Matrix<T, ReadWriteT>::internalLoadCSVFile(const AnyString& filename,
         }
     }
 
-    // When swap support is enabled, releasing some memory
-    flush();
-
     // We return `true` in any cases to not stop the execution of the solver, since
     // it may not be a fatal error
     return result;
@@ -1112,10 +1085,8 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero() const
 {
     if (width and height)
     {
-        MatrixAutoFlush<MatrixType> autoflush(*this);
         for (uint x = 0; x != width; ++x)
         {
-            ++autoflush;
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
@@ -1133,10 +1104,8 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
 {
     if (width and height)
     {
-        MatrixAutoFlush<MatrixType> autoflush(*this);
         for (uint x = 0; x != width; ++x)
         {
-            ++autoflush;
             auto& column = entry[x];
             for (uint y = 0; y != height; ++y)
             {
@@ -1246,9 +1215,6 @@ bool Matrix<T, ReadWriteT>::internalSaveCSVFile(const AnyString& filename,
         saveBufferToFile(buffer, file);
     }
 
-    // When the swap support is enabled, releasing some memory
-    flush();
-
 #ifndef NDEBUG
     // Attempt to open the file, and to write data
     // We have write access to the file
@@ -1286,14 +1252,8 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
             uint minW = (x < copy.width) ? x : copy.width;
             uint minH = (y < copy.height) ? y : copy.height;
 
-            MatrixAutoFlush<MatrixType> autoflush(*this);
-            MatrixAutoFlush<MatrixType> autoflushCopy(copy);
-
             for (uint i = 0; i < minW; ++i)
             {
-                ++autoflush;
-                ++autoflushCopy;
-
                 ColumnType& column = entry[i];
 
                 (void)::memcpy(column, copy.entry[i], sizeof(T) * minH);
@@ -1307,7 +1267,6 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
             {
                 for (uint i = minW; i < x; ++i)
                 {
-                    ++autoflush;
                     Memory::Zero(y, entry[i]);
                 }
             }
@@ -1315,7 +1274,6 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
             {
                 for (uint i = minW; i < x; ++i)
                 {
-                    ++autoflush;
                     Memory::Assign(y, entry[i], defVal);
                 }
             }
@@ -1345,10 +1303,8 @@ void Matrix<T, ReadWriteT>::multiplyAllEntriesBy(const U& c)
     {
         if (!Yuni::Math::Zero(c))
         {
-            MatrixAutoFlush<MatrixType> autoflush(*this);
             for (uint x = 0; x != width; ++x)
             {
-                ++autoflush;
                 ColumnType& column = entry[x];
 
                 for (uint y = 0; y != height; ++y)
@@ -1384,10 +1340,8 @@ void Matrix<T, ReadWriteT>::divideColumnBy(uint x, const U& c)
 template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::roundAllEntries()
 {
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint x = 0; x != width; ++x)
     {
-        ++autoflush;
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
             col[y] = (T)Yuni::Math::Round(col[y]);
@@ -1397,10 +1351,8 @@ void Matrix<T, ReadWriteT>::roundAllEntries()
 template<class T, class ReadWriteT>
 void Matrix<T, ReadWriteT>::makeAllEntriesAbsolute()
 {
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint x = 0; x != width; ++x)
     {
-        ++autoflush;
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
             col[y] = Yuni::Math::Abs<T>(col[y]);
@@ -1411,10 +1363,8 @@ template<class T, class ReadWriteT>
 T Matrix<T, ReadWriteT>::findLowerBound() const
 {
     double r = +1e30;
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint x = 0; x != width; ++x)
     {
-        ++autoflush;
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
         {
@@ -1429,10 +1379,8 @@ template<class T, class ReadWriteT>
 T Matrix<T, ReadWriteT>::findUpperBound() const
 {
     double r = -1e30;
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint x = 0; x != width; ++x)
     {
-        ++autoflush;
         ColumnType& col = entry[x];
         for (uint y = 0; y != height; ++y)
         {
@@ -1459,10 +1407,8 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
         // resize the matrix
         resize(rhs.width, rhs.height);
         // copy raw values
-        MatrixAutoFlush<MatrixType> autoflush(*this);
         for (uint x = 0; x != rhs.width; ++x)
         {
-            ++autoflush;
             auto& column = entry[x];
             const auto& src = rhs.entry[x];
 
@@ -1480,10 +1426,6 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
                     column[y] = (T)src[y];
             }
         }
-
-        // swap files
-        flush();
-        rhs.flush();
     }
 
     if (rhs.jit)

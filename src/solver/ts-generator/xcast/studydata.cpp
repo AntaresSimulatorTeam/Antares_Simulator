@@ -85,8 +85,6 @@ void StudyData::prepareMatrix(Matrix<float>& m, const Matrix<float>& source) con
             m[y][x] = d;
         }
     }
-    m.flush();
-    source.flush();
 }
 
 void StudyData::reloadDataFromAreaList(const Data::Correlation& originalCorrelation)

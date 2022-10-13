@@ -33,10 +33,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void XCast::flush()
-{
-    // gp : to be removed
-}
 
 inline Yuni::uint64 XCast::memoryUsage() const
 {

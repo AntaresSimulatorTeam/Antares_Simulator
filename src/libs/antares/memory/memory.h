@@ -156,11 +156,6 @@ public:
 
         bool strictNull() const;
 
-        /*!
-        ** \brief Flush the data into the swap file
-        */
-        void flush() const;
-
     private:
         T* pPointer;
 
@@ -192,9 +187,6 @@ public:
 
     template<class T>
     static void Allocate(T*& out, size_t size);
-
-    template<class T>
-    static void Flush(T*&);
 
     template<class T>
     static void Acquire(T*&);
@@ -327,8 +319,6 @@ private:
     void releaseWL(Mapping& mapping);
 
     void* acquireMapping(Handle handle, volatile void* pointer);
-
-    void flush(Handle handle);
 
     void dumpSwapFilesInfosWL() const;
 

@@ -190,7 +190,6 @@ bool RenewableClusterList::loadFromFolder(const AnyString& folder, Area* area)
                     continue;
                 }
 
-                cluster->flush();
             }
         }
 

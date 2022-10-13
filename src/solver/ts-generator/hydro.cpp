@@ -114,8 +114,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
         AntaresSolverEmergencyShutdown();
     }
 
-    CHSKY.flush();
-    B.flush();
     Matrix<double> CORRE;
     CORRE.reset(DIM, DIM);
 

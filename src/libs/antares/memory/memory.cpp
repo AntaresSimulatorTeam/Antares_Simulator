@@ -587,16 +587,6 @@ void* Memory::acquireMapping(Handle handle, volatile void* pointer)
     return nullptr;
 }
 
-void Memory::flush(Handle handle)
-{
-    if (handle)
-    {
-        Yuni::MutexLocker locker(gMutex);
-        MappingMap::iterator i = pMapping.find(handle);
-        if (i != pMapping.end())
-            FlushMappingWL(*(i->second));
-    }
-}
 
 void Memory::EstimateMemoryUsage(size_t bytes,
                                  uint count,

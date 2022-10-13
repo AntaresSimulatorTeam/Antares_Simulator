@@ -172,8 +172,6 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                     }
                 }
             }
-
-            tf.flush();
         }
     }
 }
@@ -206,8 +204,6 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
 
                 break;
             }
-
-            data.data.flush();
         }
     }
 }
@@ -404,7 +400,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             auto& area = *(pData.localareas[s]);
 
             predicate.matrix(area).resize(nbTimeseries, nbHours);
-            predicate.matrix(area).flush();
             auto& xcast = predicate.xcastData(area);
 
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
@@ -488,9 +483,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 }
                 }
                 memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * nbHoursADay);
-
-                xcastdata.data.flush();
-                xcastdata.K.flush();
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -531,8 +523,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
                     }
-
-                    srcData.translation.flush();
                 }
 
                 applyTransferFunction(predicate);
@@ -581,9 +571,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     for (uint h = 0; h != nbHoursADay; ++h)
                         column[hourInTheYear + h] = Math::Round(dailyResults[h]);
 
-                    series.flush();
-                    srcData.translation.flush();
-
                     ++progression;
                 }
 
@@ -606,7 +593,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     {
         study.areas.each([&](Data::Area& area) {
             predicate.matrix(area).averageTimeseries();
-            predicate.matrix(area).flush();
         });
     }
 
@@ -637,9 +623,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     assert(!Math::NaN(perHour[h]));
                 }
             }
-
-            area.reserves.flush();
-            matrix.flush();
         }
     }
 

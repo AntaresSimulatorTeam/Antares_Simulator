@@ -31,10 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void DataSeriesCommon::flush()
-{
-    // gp : to be removed
-}
 
 inline Yuni::uint64 DataSeriesMemoryUsage(DataSeriesCommon* t)
 {

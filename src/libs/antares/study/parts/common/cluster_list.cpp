@@ -22,12 +22,6 @@ namespace Data
 using namespace Antares;
 
 template<class ClusterT>
-inline void ClusterList<ClusterT>::flush()
-{
-    // gp : to be remove
-}
-
-template<class ClusterT>
 inline uint ClusterList<ClusterT>::size() const
 {
     return (uint)cluster.size();

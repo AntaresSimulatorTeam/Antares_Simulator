@@ -31,10 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void PreproThermal::flush()
-{
-    // gp : to be removed
-}
 
 inline Yuni::uint64 PreproThermal::memoryUsage() const
 {

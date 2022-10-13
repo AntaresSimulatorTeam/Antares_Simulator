@@ -276,8 +276,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
     timeseriesNumbers.clear();
 
-    ror.flush();
-    storage.flush();
     return ret;
 }
 

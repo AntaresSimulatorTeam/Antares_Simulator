@@ -56,11 +56,6 @@ public:
     void reset();
 
     /*!
-    ** \brief Flush all matrix-related data
-    */
-    void flush(); // gp : to be removed ?
-
-    /*!
     ** \brief Load all data not already loaded
     **
     ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)

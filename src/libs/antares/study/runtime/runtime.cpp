@@ -94,8 +94,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     s[i] = 0.;
                 }
             }
-            // reduce the memory footprint
-            m.flush();
         }
 
         // Spinning - Economic Only - If no prepro
@@ -110,26 +108,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
             area.scratchpad[numSpace] = new AreaScratchpad(r, area);
-
-        if (mode == Data::stdmAdequacy)
-            area.reserves.flush();
-        // reduce a bit the memory footprint
-        area.miscGen.flush();
-
-        // hydroHasMod
-        if (mode != stdmAdequacyDraft)
-        {
-            if (!area.hydro.prepro) // not in prepro mode
-                area.hydro.series->storage.flush();
-            else
-            {
-                auto& m = area.hydro.prepro->data;
-                // reduce memory footprint
-                m.flush();
-            }
-        }
-
-        area.reserves.flush();
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
@@ -205,9 +183,6 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
                      rti.linkIndex,
                      rti.clusterIndex,
                      rti.clustersAreaIndex);
-
-    // reduce the memory footprint
-    rti.bounds.flush();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -574,9 +549,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
                 tmp *= maxModCost;
                 if (tmp > m)
                     m = tmp;
-
-                // reduce the memory footprint
-                cluster.modulation.flush();
             }
         });
         m *= 1.1;

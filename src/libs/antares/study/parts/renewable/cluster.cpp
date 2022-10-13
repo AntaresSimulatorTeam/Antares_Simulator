@@ -57,11 +57,6 @@ Data::RenewableCluster::~RenewableCluster()
     delete series;
 }
 
-void RenewableCluster::flush()
-{
-    // gp : to be removed
-}
-
 uint RenewableCluster::groupId() const
 {
     return groupID;
