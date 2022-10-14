@@ -313,12 +313,9 @@ void Application::prepare(int argc, char* argv[])
 
     if (pSettings.displayProgression)
     {
-        pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "about-the-study"
-                               << Yuni::IO::Separator << "map";
-        if (!pStudy->progression.saveToFile(pStudy->buffer))
-        {
-            throw Error::WritingProgressFile(pStudy->buffer);
-        }
+        auto& filename = pStudy->buffer;
+        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
+        pStudy->progression.saveToFile(filename, pStudy->resultWriter);
         pStudy->progression.start();
     }
     else
