@@ -240,7 +240,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     std::shared_ptr<DebugData> debugData(nullptr);
 
-    if (study.parameters.hydroDebug)
+    if (study.parameters.hydroDebug && study.resultWriter)
     {
         debugData = std::make_shared<DebugData>(study.resultWriter,
                                                 data,

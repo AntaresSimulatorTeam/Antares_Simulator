@@ -351,6 +351,8 @@ void Parameters::reset()
 
     activeRulesScenario.clear();
 
+    hydroDebug = false;
+
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
 
