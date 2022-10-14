@@ -53,24 +53,7 @@ void Study::importLogsToOutputFolder() const
         logs.closeLogfile();
     }
 
-    Yuni::Clob log_buffer;
-    // Handle errors
-    switch (IO::File::LoadFromFile(log_buffer, from))
-    {
-    case IO::errNone:
-        break;
-    case IO::errNotFound:
-        logs.error() << from << ": file does not exist";
-        break;
-    case IO::errReadFailed:
-        logs.error() << "Read failed '" << from << "'";
-        break;
-    default:
-        logs.error() << "Impossible to read '" << from << "' to '" << logPath << "'";
-        break;
-    }
-
-    resultWriter->addEntryFromBuffer(logPath, log_buffer);
+    resultWriter->addEntryFromFile(logPath, from.c_str());
 
     if (System::windows)
     {

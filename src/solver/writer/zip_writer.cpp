@@ -1,8 +1,8 @@
 #include <memory>
 #include <antares/logs.h>
+#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "zip_writer.h"
-#include "ensure_queue_started.h"
 
 extern "C"
 {
@@ -12,7 +12,7 @@ extern "C"
 #include <mz_zip_rw.h>
 }
 
-#include <ctime>
+#include <ctime> // std::time
 
 namespace Antares::Solver
 {
@@ -70,7 +70,6 @@ void ZipWriteJob<ContentT>::onExecute()
     }
 
     timer_write.stop();
-
     if (pDurationCollector)
         pDurationCollector->addDuration("zip_write", timer_write.get_duration());
 }
@@ -116,6 +115,28 @@ void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& ent
 void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
 {
     addEntryFromBufferHelper<std::string>(entryPath, entryContent);
+}
+
+void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+{
+    // Read file into buffer immediately, write into archive async
+    Yuni::Clob buffer;
+    switch (Yuni::IO::File::LoadFromFile(buffer, filePath.c_str()))
+    {
+      using namespace Yuni::IO;
+    case errNone:
+        addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
+        break;
+    case errNotFound:
+        logs.error() << filePath << ": file does not exist";
+        break;
+    case errReadFailed:
+        logs.error() << "Read failed '" << filePath << "'";
+        break;
+    default:
+        logs.error() << "Unhandled error";
+        break;
+    }
 }
 
 bool ZipWriter::needsTheJobQueue() const

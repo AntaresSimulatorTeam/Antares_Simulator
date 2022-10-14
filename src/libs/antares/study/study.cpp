@@ -803,13 +803,8 @@ void Study::saveAboutTheStudy()
       String dest;
       dest << "about-the-study" << SEP << "parameters.ini";
 
-      Antares::IniFile ini;
-      parameters.saveToINI(ini);
-
-      std::string buffer;
-      ini.saveToString(buffer);
-
-      resultWriter->addEntryFromBuffer(dest.c_str(), buffer);
+      buffer.clear() << folderSettings << SEP << "generaldata.ini";
+      resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
   }
 
   // antares-output.info

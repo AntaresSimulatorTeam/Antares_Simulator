@@ -3,6 +3,7 @@
 
 #include <antares/logs.h>
 #include <antares/io/file.h> // IOFileSetContent
+#include <yuni/io/file.h> // Yuni::IO::File::LoadFromFile
 
 #include "immediate_file_writer.h"
 
@@ -83,6 +84,32 @@ void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
         IOFileSetContent(output, entryContent);
+}
+
+void ImmediateFileResultWriter::addEntryFromFile(const std::string& entryPath, const std::string& filePath)
+{
+    Yuni::String fullPath;
+    if (!prepareDirectoryHierarchy(pOutputFolder, entryPath, fullPath))
+        return;
+
+    switch(Yuni::IO::File::Copy(filePath.c_str(), fullPath))
+    {
+    using namespace Yuni::IO;
+    case errNone:
+      break;
+    case errNotFound:
+      logs.error() << filePath << ": file does not exist";
+    break;
+    case errReadFailed:
+        logs.error() << "Read failed '" << filePath << "'";
+    break;
+    case errWriteFailed:
+        logs.error() << "Write failed '" << fullPath << "'";
+     break;
+    default:
+        logs.error() << "Unhandled error";
+        break;
+    }
 }
 
 bool ImmediateFileResultWriter::needsTheJobQueue() const

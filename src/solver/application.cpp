@@ -538,23 +538,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         // comments
         {
-            study.buffer.clear() << study.folderOutput << Yuni::IO::Separator
-                                 << "simulation-comments.txt";
+            study.buffer.clear() << "simulation-comments.txt";
 
             if (!pSettings.commentFile.empty())
             {
-                Yuni::IO::Directory::Create(study.folderOutput);
-                if (Yuni::IO::errNone
-                    != Yuni::IO::File::Copy(pSettings.commentFile, study.buffer, true))
-                    logs.error() << "impossible to copy `" << pSettings.commentFile << "` to `"
-                                 << study.buffer << '`';
+                auto writer = pStudy->resultWriter;
+                if (writer)
+                    writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+
                 pSettings.commentFile.clear();
                 pSettings.commentFile.shrink();
-            }
-            else
-            {
-                if (!Yuni::IO::File::CreateEmptyFile(study.buffer))
-                    logs.error() << study.buffer << ": impossible to overwrite its content";
             }
         }
     }
