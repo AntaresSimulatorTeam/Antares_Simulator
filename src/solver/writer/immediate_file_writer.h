@@ -15,8 +15,8 @@ public:
     ImmediateFileResultWriter(const char* folderOutput);
     virtual ~ImmediateFileResultWriter();
     // Write to file immediately, creating directories if needed
-    void addEntry(const std::string& entryPath, Yuni::Clob& entryContent) override;
-    void addEntry(const std::string& entryPath, std::string& entryContent) override;
+    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
+    void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
 

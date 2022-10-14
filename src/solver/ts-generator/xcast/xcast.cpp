@@ -97,7 +97,7 @@ void XCast::exportTimeSeriesToTheOutput(Progression::Task& progression, Predicat
             std::string buffer;
             predicate.matrix(area).saveToBuffer(buffer);
 
-            pWriter->addEntry(filename.c_str(), buffer);
+            pWriter->addEntryFromBuffer(filename.c_str(), buffer);
 
             ++progression;
         });

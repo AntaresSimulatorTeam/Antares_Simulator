@@ -275,7 +275,7 @@ public:
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
         digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
-        writer->addEntry(digestFileName.c_str(), digestBuffer);
+        writer->addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
     }
 
 private:

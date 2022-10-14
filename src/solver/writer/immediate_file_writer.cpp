@@ -68,7 +68,8 @@ static bool prepareDirectoryHierarchy(const YString& root,
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntry(const std::string& entryPath, Yuni::Clob& entryContent)
+void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
+                                                   Yuni::Clob& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))
@@ -76,7 +77,8 @@ void ImmediateFileResultWriter::addEntry(const std::string& entryPath, Yuni::Clo
 }
 
 // Write to file immediately, creating directories if needed
-void ImmediateFileResultWriter::addEntry(const std::string& entryPath, std::string& entryContent)
+void ImmediateFileResultWriter::addEntryFromBuffer(const std::string& entryPath,
+                                                   std::string& entryContent)
 {
     Yuni::String output;
     if (prepareDirectoryHierarchy(pOutputFolder, entryPath, output))

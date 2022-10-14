@@ -163,9 +163,10 @@ static void ExportGridInfosAreas(const Data::Study& study,
         } // each thermal cluster
     });   // each area
     auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
-                 YString path;
-                 path << originalOutput << SEP << "grid" << SEP << filename;
-                 writer->addEntry(path.c_str(), buffer);};
+        YString path;
+        path << originalOutput << SEP << "grid" << SEP << filename;
+        writer->addEntryFromBuffer(path.c_str(), buffer);
+    };
 
     add("areas.txt", std::move(out));
     add("links.txt", std::move(outLinks));
@@ -816,7 +817,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     }
 
     // mc-ind & mc-all
-    pResultWriter->addEntry(data.filename.c_str(), data.fileBuffer);
+    pResultWriter->addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)

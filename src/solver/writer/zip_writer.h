@@ -54,8 +54,8 @@ public:
               const char* archivePath,
               Benchmarking::IDurationCollector* duration_collector);
     virtual ~ZipWriter();
-    void addEntry(const std::string& entryPath, Yuni::Clob& entryContent) override;
-    void addEntry(const std::string& entryPath, std::string& entryContent) override;
+    void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) override;
+    void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) override;
     bool needsTheJobQueue() const override;
     void finalize(bool verbose) override;
 
@@ -78,7 +78,7 @@ private:
 
 private:
     template<class ContentType>
-    void addEntryHelper(const std::string& entryPath, ContentType& entryContent);
+    void addEntryFromBufferHelper(const std::string& entryPath, ContentType& entryContent);
 };
 } // namespace Solver
 } // namespace Antares

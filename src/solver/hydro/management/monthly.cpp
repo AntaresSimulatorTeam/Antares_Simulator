@@ -290,7 +290,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 buffer << '\n';
             }
             auto content = buffer.str();
-            writer->addEntry(path.str(), content);
+            writer->addEntryFromBuffer(path.str(), content);
         }
     });
 }

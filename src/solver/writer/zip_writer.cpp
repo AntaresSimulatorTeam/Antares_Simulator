@@ -108,14 +108,14 @@ ZipWriter::~ZipWriter()
     }
 }
 
-void ZipWriter::addEntry(const std::string& entryPath, Yuni::Clob& entryContent)
+void ZipWriter::addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent)
 {
-    addEntryHelper<Yuni::Clob>(entryPath, entryContent);
+    addEntryFromBufferHelper<Yuni::Clob>(entryPath, entryContent);
 }
 
-void ZipWriter::addEntry(const std::string& entryPath, std::string& entryContent)
+void ZipWriter::addEntryFromBuffer(const std::string& entryPath, std::string& entryContent)
 {
-    addEntryHelper<std::string>(entryPath, entryContent);
+    addEntryFromBufferHelper<std::string>(entryPath, entryContent);
 }
 
 bool ZipWriter::needsTheJobQueue() const

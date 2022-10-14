@@ -178,7 +178,7 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         std::string buffer;
         cluster.series->series.saveToBuffer(buffer, precision);
 
-        pWriter->addEntry(pTempFilename.c_str(), buffer);
+        pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
 
     ++pProgression;

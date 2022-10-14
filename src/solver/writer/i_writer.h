@@ -14,8 +14,8 @@ class IResultWriter
 {
 public:
     using Ptr = std::shared_ptr<IResultWriter>;
-    virtual void addEntry(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
-    virtual void addEntry(const std::string& entryPath, std::string& entryContent) = 0;
+    virtual void addEntryFromBuffer(const std::string& entryPath, Yuni::Clob& entryContent) = 0;
+    virtual void addEntryFromBuffer(const std::string& entryPath, std::string& entryContent) = 0;
     virtual bool needsTheJobQueue() const = 0;
     virtual void finalize(bool verbose) = 0;
 };

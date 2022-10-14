@@ -320,13 +320,13 @@ bool GenerateHydroTimeSeries(Data::Study& study,
                 {
                     std::string ror_buffer;
                     output.clear() << study.buffer << SEP << "ror.txt";
-                    writer->addEntry(output.c_str(), ror_buffer);
+                    writer->addEntryFromBuffer(output.c_str(), ror_buffer);
                 }
 
                 {
                     std::string storage_buffer;
                     output.clear() << study.buffer << SEP << "storage.txt";
-                    writer->addEntry(output.c_str(), storage_buffer);
+                    writer->addEntryFromBuffer(output.c_str(), storage_buffer);
                 }
 
                 area.hydro.series->flush();

@@ -600,7 +600,7 @@ void Application::writeExectutionInfo()
     // Flush previous info into a record file
     const std::string exec_info_path = "execution_info.ini";
     std::string content = file_content.saveToBufferAsIni();
-    writer->addEntry(exec_info_path, content);
+    writer->addEntryFromBuffer(exec_info_path, content);
 }
 
 Application::~Application()
