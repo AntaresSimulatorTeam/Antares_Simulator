@@ -1,11 +1,11 @@
 #include "ortools_utils.h"
+#include "filename.h" // getFilenameWithExtension
 
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
-
-#include <yuni/core/system/memory.h>
+#include <filesystem>
 
 using namespace operations_research;
 
@@ -210,29 +210,23 @@ static void change_MPSolver_rhs(const MPSolver* solver,
     }
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n)
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
+                                                   size_t numSpace,
+                                                   int const numOptim)
 {
-    auto& study = *Antares::Data::Study::Current::Get();
+    namespace fs = std::filesystem;
+    // 1. Determine filename
+    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
 
-    int const year = study.runtime->currentYear[numSpace] + 1;
-    int const week = study.runtime->weekInTheYear[numSpace] + 1;
-    std::stringstream buffer;
-    buffer << study.folderOutput << Yuni::IO::Separator << "problem-" << year << "-" << week << "-"
-           << n << ".mps";
-    // TODO use generic writer
-    solver->Write(buffer.str());
-}
+    // 2. Write MPS to temporary file
+    std::ostringstream tmpPath;
+    tmpPath << fs::temp_directory_path() << Yuni::IO::SeparatorAsString << filename;
+    solver->Write(tmpPath.str());
 
-std::string getRunName(std::string const& prefix, size_t numSpace, int numInterval, int numOptim)
-{
-    auto& study = *Antares::Data::Study::Current::Get();
-
-    int const year = study.runtime->currentYear[numSpace] + 1;
-    int const week = study.runtime->weekInTheYear[numSpace] + 1;
-    std::stringstream buffer;
-    buffer << prefix << " for year=" << year << ", week=" << week << ", interval=" << numInterval
-           << ", optimisation=" << numOptim;
-    return buffer.str();
+    // 3. Copy to real output using generic writer
+    auto study = Antares::Data::Study::Current::Get();
+    auto writer = study->resultWriter;
+    writer->addEntryFromFile(filename, tmpPath.str());
 }
 
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameters& params)

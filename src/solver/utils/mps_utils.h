@@ -20,10 +20,6 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
 void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, uint);
 
-std::string getFilenameWithExtension(const YString& prefix,
-                                     const YString& extension,
-                                     uint numSpace,
-                                     int optNumber = 0);
 // ======================
 // MPS files writing
 // ======================

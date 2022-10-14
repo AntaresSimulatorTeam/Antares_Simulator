@@ -45,30 +45,11 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 */
 #include <antares/study.h>
 #include <string>
+#include "filename.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
-
-std::string getFilenameWithExtension(const YString& prefix,
-                                     const YString& extension,
-                                     uint numSpace,
-                                     int optNumber)
-{
-    auto study = Data::Study::Current::Get();
-    std::string outputFile;
-    outputFile.append(prefix.c_str()).append("-") // problem ou criterion
-      .append(std::to_string(study->runtime->currentYear[numSpace] + 1)).append("-")
-      .append(std::to_string(study->runtime->weekInTheYear[numSpace] + 1));
-
-    if (optNumber)
-       outputFile.append("--optim-nb-").append(std::to_string(optNumber));
-
-    outputFile.append(extension.c_str());
-
-    logs.info() << "Solver output File: `" << outputFile << "'";
-    return outputFile;
-}
 
 static void printHeader(Clob& buffer, int NombreDeVariables, int NombreDeContraintes)
 {
@@ -294,7 +275,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint nu
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    auto filename = getFilenameWithExtension("problem-fixed-part", "mps", optNumber, numSpace);
+    auto filename = getFilenameWithExtension("problem-fixed-part", "mps", numSpace, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 
@@ -328,7 +309,7 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    auto filename = getFilenameWithExtension("problem-variable-part", "mps", optNumber, numSpace);
+    auto filename = getFilenameWithExtension("problem-variable-part", "mps", numSpace, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 }
@@ -478,7 +459,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint n
     buffer.appendFormat("ENDATA\n");
 
     auto study = Data::Study::Current::Get();
-    auto filename = getFilenameWithExtension("problem", "mps", optNumber, numSpace);
+    auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 

@@ -57,6 +57,9 @@ set(RTESOLVER_OPT
         utils/ortools_utils.h
 		utils/ortools_utils.cpp
         
+        utils/filename.h
+        utils/filename.cpp
+
         utils/named_problem.h
         utils/named_problem.cpp
 

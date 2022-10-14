@@ -50,8 +50,9 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/mps_utils.h"
-
 #include "../utils/ortools_utils.h"
+#include "../utils/filename.h"
+
 #include "../infeasible-problem-analysis/problem.h"
 #include "../infeasible-problem-analysis/exceptions.h"
 
@@ -377,7 +378,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
     auto study = Data::Study::Current::Get();
-    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle] - 1;
+    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
     auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
