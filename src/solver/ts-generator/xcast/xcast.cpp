@@ -33,7 +33,6 @@
 #include <antares/emergency.h>
 #include <limits>
 #include <yuni/io/directory.h>
-#include <antares/memory/memory.h>
 #include <antares/study/area/constants.h>
 
 using namespace Yuni;

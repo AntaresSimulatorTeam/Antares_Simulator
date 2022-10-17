@@ -27,8 +27,6 @@
 #ifndef __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 #define __SOLVER_VARIABLE_SET_OF_AREAS_HXX__
 
-#include <antares/memory/memory.h>
-
 namespace Antares
 {
 namespace Solver

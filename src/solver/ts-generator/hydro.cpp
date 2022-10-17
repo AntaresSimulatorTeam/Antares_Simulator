@@ -34,7 +34,6 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/study.h>
-#include <antares/memory/memory.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 

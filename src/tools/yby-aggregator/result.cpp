@@ -26,7 +26,6 @@
 */
 
 #include "result.h"
-#include <antares/memory/memory.h>
 #include "progress.h"
 
 using namespace Yuni;

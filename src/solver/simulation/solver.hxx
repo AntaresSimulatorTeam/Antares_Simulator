@@ -38,7 +38,6 @@
 #include "apply-scenario.h"
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
-#include <antares/memory/memory.h>
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 

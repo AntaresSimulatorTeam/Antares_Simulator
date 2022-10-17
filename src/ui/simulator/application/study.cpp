@@ -46,7 +46,6 @@
 #include "menus.h"
 #include <map>
 #include "../windows/inspector/inspector.h"
-#include <antares/memory/memory.h>
 #include <ui/common/lock.h>
 
 #include <wx/wupdlock.h>

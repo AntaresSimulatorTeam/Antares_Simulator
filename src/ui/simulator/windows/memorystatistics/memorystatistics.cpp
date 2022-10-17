@@ -32,7 +32,6 @@
 
 #include <antares/study.h>
 #include <antares/study/memory-usage.h>
-#include <antares/memory/memory.h>
 #include "../../application/study.h"
 #include "../../toolbox/create.h"
 #include "../../toolbox/resources.h"
