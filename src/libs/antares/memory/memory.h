@@ -296,9 +296,6 @@ public:
     //@{
     //! Display infos into the logs
     void displayInfo() const;
-
-    //! Dump to the logs informations about all swap files
-    void dumpSwapFilesInfos() const;
     //@}
 
 private:
@@ -311,8 +308,6 @@ private:
     void releaseWL(Mapping& mapping);
 
     void* acquireMapping(Handle handle, volatile void* pointer);
-
-    void dumpSwapFilesInfosWL() const;
 
     /*!
     ** \brief Create a new swap file

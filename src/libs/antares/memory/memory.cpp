@@ -212,34 +212,6 @@ void Memory::removeAllUnusedSwapFiles()
     }
 }
 
-void Memory::dumpSwapFilesInfos() const
-{
-    Yuni::MutexLocker locker(gMutex);
-    dumpSwapFilesInfosWL();
-}
-
-void Memory::dumpSwapFilesInfosWL() const
-{
-    logs.info() << "[memory][summary] -- begin";
-    // Destroying all segments
-    if (not pSwapFile.empty())
-    {
-        uint index = 0;
-        const SwapFileList::const_iterator end = pSwapFile.end();
-        for (SwapFileList::const_iterator i = pSwapFile.begin(); i != end; ++i)
-        {
-            const SwapFileInfo& s = *(*i);
-            logs.info() << "[memory][summary] -- swap " << index << ": "
-                        << (((blockPerSwap - s.nbFreeBlocks) * blockSize) / 1024 / 1024) << "Mo / "
-                        << (swapSize / 1024 / 1024) << "Mo, " << s.nbFreeBlocks << " free blocks";
-            ++index;
-        }
-    }
-    else
-        logs.info() << "[memory][summary] No swap file available";
-    logs.info() << "[memory][summary] -- end";
-}
-
 bool Memory::createNewSwapFileWL()
 {
     // We have detected there is not enough disk space. It is useless to
