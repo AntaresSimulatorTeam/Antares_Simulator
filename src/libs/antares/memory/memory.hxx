@@ -35,12 +35,6 @@ inline Yuni::uint64 Memory::processID() const
 }
 
 template<class T>
-inline Memory::Handle Memory::allocate(size_t count)
-{
-    return internalAllocate(count * sizeof(T));
-}
-
-template<class T>
 inline Memory::Array<T>::Array() : pPointer(nullptr)
 {
 }

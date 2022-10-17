@@ -302,14 +302,6 @@ public:
     //@}
 
 private:
-    /*!
-    ** \brief Allocate a new memory data block
-    **
-    ** \param count The number of object T to allocate
-    ** \return A internal handle
-    */
-    template<class T>
-    Handle allocate(size_t count);
 
     /*!
     ** \brief Release
@@ -326,13 +318,6 @@ private:
     ** \brief Create a new swap file
     */
     bool createNewSwapFileWL();
-
-    /*!
-    ** \brief Allocate a new region into a swap file
-    **
-    ** \return An internal handle to retrieve a real pointer for R/W access
-    */
-    Handle internalAllocate(size_t size);
 
     /*!
     ** \brief Initialize the prefix to use for swap filename
