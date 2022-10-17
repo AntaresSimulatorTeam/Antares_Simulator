@@ -1,3 +1,4 @@
+#include <sstream>
 #include <antares/study.h>
 #include "filename.h"
 
@@ -7,18 +8,18 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      int optNumber)
 {
     auto study = Data::Study::Current::Get();
-    std::string outputFile;
-    outputFile.append(prefix.c_str())
-      .append("-") // problem ou criterion
-      .append(std::to_string(study->runtime->currentYear[numSpace] + 1))
-      .append("-")
-      .append(std::to_string(study->runtime->weekInTheYear[numSpace] + 1));
+    std::ostringstream outputFile;
+    outputFile << prefix.c_str()
+               << "-" // problem ou criterion
+               << std::to_string(study->runtime->currentYear[numSpace] + 1)
+               << "-"
+               << std::to_string(study->runtime->weekInTheYear[numSpace] + 1);
 
     if (optNumber)
-        outputFile.append("--optim-nb-").append(std::to_string(optNumber));
+        outputFile << "--optim-nb-" << std::to_string(optNumber);
 
-    outputFile.append(".").append(extension.c_str());
+    outputFile << "." << extension.c_str();
 
-    logs.info() << "Solver output File: `" << outputFile << "'";
-    return outputFile;
+    logs.info() << "Solver output File: `" << outputFile.str() << "'";
+    return outputFile.str();
 }
