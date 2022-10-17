@@ -64,8 +64,6 @@ public:
      stTxtDiskFree(nullptr),
      stTxtSimu(nullptr),
      stTxtSimuDisk(nullptr),
-     stTxtSimuSwap(nullptr),
-     stTxtSimuSwapDisk(nullptr),
      stTxtSimuPar(nullptr),
      stTxtSimuParDisk(nullptr),
      stTxtDataDisplay(nullptr),
@@ -81,8 +79,6 @@ public:
     wxStaticText* stTxtDiskFree;
     wxStaticText* stTxtSimu;
     wxStaticText* stTxtSimuDisk;
-    wxStaticText* stTxtSimuSwap;
-    wxStaticText* stTxtSimuSwapDisk;
     wxStaticText* stTxtSimuPar;
     wxStaticText* stTxtSimuParDisk;
     wxStaticText* stTxtDataDisplay;
@@ -271,19 +267,6 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
       this, wxID_ANY, wxT("    Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
     gridSizer->Add(pData->stTxtSimuDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-    // Required for a simulation (with swap support)
-    wxStaticText* stTxtSimuSwapTtl = new wxStaticText(
-      this, wxID_ANY, wxT("Swap : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(stTxtSimuSwapTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuSwap = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuSwap, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuSwapDisk = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuSwapDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
     // Parallel mode
     auto* stTxtSimuParTtl = new wxStaticText(
       this, wxID_ANY, wxT("Parallel : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
@@ -456,30 +439,6 @@ void MemoryStatistics::refreshInformation()
             }
 
             {
-                Data::StudyMemoryUsage m(*study);
-                m.estimate();
-                s.clear();
-
-                if (!pDisplayLogsOnce)
-                {
-                    logs.info() << "Memory usage: estimate: input: "
-                                << (m.requiredMemoryForInput / (1024 * 1024))
-                                << "Mo, output: " << (m.requiredMemoryForOutput / (1024 * 1024))
-                                << "Mo,   disk: " << (m.requiredDiskSpace / (1024 * 1024))
-                                << "Mo";
-                }
-
-                s << wxT("~ ") << NormalizeAmountOfMemory(m.requiredMemory) << wxT(" Mo");
-                pData->stTxtSimuSwap->SetLabel(s);
-                s.clear();
-                if (m.requiredDiskSpace)
-                    s << wxT("~ ") << (m.requiredDiskSpace / (1024 * 1024)) << wxT(" Mo");
-                else
-                    s << wxT("0 Mo");
-                pData->stTxtSimuSwapDisk->SetLabel(s);
-            }
-
-            {
                 // Parallel mode
                 study->maxNbYearsInParallel = study->maxNbYearsInParallel_save;
 
@@ -511,8 +470,6 @@ void MemoryStatistics::refreshInformation()
         {
             pData->stTxtSimu->SetLabel(wxT("updating"));
             pData->stTxtSimuDisk->SetLabel(wxT("updating"));
-            pData->stTxtSimuSwap->SetLabel(wxT("updating"));
-            pData->stTxtSimuSwapDisk->SetLabel(wxT("updating"));
             pData->stTxtSimuPar->SetLabel(wxT("updating"));
             pData->stTxtSimuParDisk->SetLabel(wxT("updating"));
         }
@@ -530,8 +487,6 @@ void MemoryStatistics::refreshInformation()
 
         pData->stTxtSimu->SetLabel(wxT("N/A"));
         pData->stTxtSimuDisk->SetLabel(wxT("N/A"));
-        pData->stTxtSimuSwap->SetLabel(wxT("N/A"));
-        pData->stTxtSimuSwapDisk->SetLabel(wxT("N/A"));
         pData->stTxtSimuPar->SetLabel(wxT("N/A"));
         pData->stTxtSimuParDisk->SetLabel(wxT("N/A"));
     }
