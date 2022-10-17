@@ -264,41 +264,6 @@ bool Memory::createNewSwapFileWL()
     return true;
 }
 
-uint64 Memory::memoryUsage() const
-{
-    uint64 result = sizeof(Memory);
-
-    Yuni::MutexLocker locker(gMutex);
-    result += pCacheFolder.capacity();
-    result += pSwapFilePrefix.capacity();
-    result += pSwapFile.size() * (sizeof(void*) * 2); // overhead std::map - estimation
-
-    for (uint i = 0; i != pSwapFile.size(); ++i)
-    {
-        const SwapFileInfo& swap = *(pSwapFile[i]);
-        result += sizeof(SwapFileInfo) + swap.filename.capacity() + swap.blocks.size();
-    }
-
-    // mapping overhead
-    // (sizeof(A) + sizeof(B) + ELEMENT_OVERHEAD) * N + CONTAINER_OVERHEAD
-    enum
-    {
-        mapOverheadPerElement
-        = (sizeof(Handle) + sizeof(Mapping*) + sizeof(32 /*std::_Rb_tree_node_base*/))
-    };
-    result += pMapping.size() * (sizeof(Mapping) + mapOverheadPerElement);
-
-    const MappingMap::const_iterator end = pMapping.end();
-    for (MappingMap::const_iterator i = pMapping.begin(); i != end; ++i)
-    {
-        const Mapping& mapping = *(i->second);
-        if (mapping.pointer)
-            result += mapping.nbBlocks * blockSize;
-    }
-    return result;
-}
-
-
 Memory::Handle Memory::internalAllocate(size_t size)
 {
     // This allocator does not suit well for small chunks

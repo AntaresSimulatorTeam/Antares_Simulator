@@ -70,8 +70,6 @@ public:
      stTxtSimuParDisk(nullptr),
      stTxtDataDisplay(nullptr),
      stTxtMemoryCache(nullptr),
-     stTxtMemoryCacheUsage(nullptr),
-     stTxtMemoryCacheCapacity(nullptr),
      timer(nullptr)
     {
     }
@@ -89,8 +87,6 @@ public:
     wxStaticText* stTxtSimuParDisk;
     wxStaticText* stTxtDataDisplay;
     wxStaticText* stTxtMemoryCache;
-    wxStaticText* stTxtMemoryCacheUsage;
-    wxStaticText* stTxtMemoryCacheCapacity;
     wxTimer* timer;
     Yuni::Thread::IThread::Ptr thread;
 
@@ -216,25 +212,6 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     pData->stTxtMemoryCache
       = new wxStaticText(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
     gridSizer->Add(pData->stTxtMemoryCache, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    // Memory cache - capacity
-    auto* stTxtMemoryCacheCapaTtl = new wxStaticText(this,
-                                                     wxID_ANY,
-                                                     wxT("Used by swap files : "),
-                                                     wxDefaultPosition,
-                                                     wxDefaultSize,
-                                                     wxALIGN_RIGHT);
-    gridSizer->Add(stTxtMemoryCacheCapaTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtMemoryCacheUsage = new wxStaticText(
-      this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(
-      pData->stTxtMemoryCacheUsage, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtMemoryCacheCapacity
-      = new wxStaticText(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(
-      pData->stTxtMemoryCacheCapacity, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
     // Space
     {
@@ -444,21 +421,6 @@ void MemoryStatistics::refreshInformation()
         pData->stTxtDiskFree->SetLabel(wxT("N/A"));
 #endif
     }
-
-    auto& allocator = Antares::memory;
-
-    // Memory cache
-    {
-        uint64 memCache = allocator.memoryUsage() / (1024 * 1024);
-        s.clear();
-        s << NormalizeAmountOfMemory(memCache) << wxT(" Mo");
-        pData->stTxtMemoryCacheUsage->SetLabel(s);
-    }
-
-    // Memory cache
-    s.clear();
-    s << (allocator.memoryCapacity() / (1024 * 1024)) << wxT(" Mo");
-    pData->stTxtMemoryCacheCapacity->SetLabel(s);
 
     if (!(!study))
     {
