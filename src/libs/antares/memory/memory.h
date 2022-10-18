@@ -307,8 +307,6 @@ private:
 
     void releaseWL(Mapping& mapping);
 
-    void* acquireMapping(Handle handle, volatile void* pointer);
-
     /*!
     ** \brief Create a new swap file
     */
