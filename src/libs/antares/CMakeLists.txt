@@ -5,7 +5,6 @@ set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
 	memory/memory.cpp
-	memory/prefix.cpp
 	memory/swapfile.h
 	memory/swapfile.cpp)
 source_group("memory" FILES ${SRC_MEMORY})

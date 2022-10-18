@@ -587,9 +587,6 @@ Application::~Application()
         pStudy->clear();
         pStudy = nullptr;
 
-        // only used if a study exists
-        // Removing all unused spwa files
-        Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
     }
 }

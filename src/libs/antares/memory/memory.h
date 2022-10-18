@@ -226,24 +226,8 @@ public:
     */
     ~Memory();
     //@}
-
-    //! \name Initialize
-    //@{
-    /*!
-    ** \brief Initialize the underlying engine
-    **
-    ** This method must not be called from the constructor.. There is a circular
-    ** reference issue when initializing global variables.
-    */
-    bool initialize();
-    //@}
-
-    //! \name Cleanup
-    //@{
-    /*!
-    ** \brief Try to remove all no longer needed swap file to recover disk space
-    */
-    void cleanupCacheFolder() const;
+    
+    bool initializeTemporaryFolder();
     //@}
 
     //! \nane Cache Folder
@@ -258,38 +242,12 @@ public:
     Yuni::uint64 memoryUsage() const;
 
     /*!
-    ** \brief Get the current capacity
-    */
-    Yuni::uint64 memoryCapacity() const;
-
-    /*!
-    ** \brief Remove all unused swap files
-    **
-    ** In some cases, one or more swap files may remain to avoid useless
-    ** allocation/deallocation.
-    */
-    void removeAllUnusedSwapFiles();
-
-    /*!
-    ** \brief Release the whole memory used by the memory cache
-    **
-    ** This method will destroyed all swap files. All futur calls to `release()`
-    ** will produce a double free error (except for all newly allocated memory blocks)
-    ** If unsure, This method should not be called.
-    */
-    void releaseAll();
-
-    /*!
     ** \brief Get the process ID of the application
     **
     ** This value is cached and detected at the creation of the instance.
     */
     Yuni::uint64 processID() const;
 
-    /*!
-    ** \brief Ensure that at least one swap file is available
-    */
-    void ensureOneSwapFile();
     //@}
 
     //! \name Informations
@@ -299,19 +257,6 @@ public:
     //@}
 
 private:
-
-    /*!
-    ** \brief Release
-    */
-    void release(Handle handle);
-
-    void releaseWL(Mapping& mapping);
-
-    /*!
-    ** \brief Create a new swap file
-    */
-    bool createNewSwapFileWL();
-
     /*!
     ** \brief Initialize the prefix to use for swap filename
     */
@@ -322,18 +267,6 @@ private:
     Yuni::String pCacheFolder;
     //! Get if the user is allowed to modify this value
     bool pAllowedToChangeCacheFolder;
-    //! Swap file prefix
-    Yuni::String pSwapFilePrefix;
-    Yuni::CString<10, false> pSwapFilePrefixProcessID;
-
-    /*!
-    ** \brief Flag to disable the creation of a new swap file
-    **
-    ** When we have detected that it is impossible to allocate a new
-    ** swap file, it is useless to try each time. We would prefer
-    ** to wait for the next deletion of a swap file.
-    */
-    bool waitForSwapFileDeletion;
 
     //! The process ID used
     Yuni::uint64 pProcessID;

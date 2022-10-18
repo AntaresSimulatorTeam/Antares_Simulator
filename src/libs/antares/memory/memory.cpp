@@ -61,42 +61,8 @@ namespace Antares
 
 namespace // anonymous
 {
-//! Information about a single swap file
-using SwapFileInfo = Antares::Private::Memory::SwapFileInfo;
-//! Informations about a list of swap files
-using SwapFileList = std::vector<SwapFileInfo*>;
-//! handle mapping
-using MappingMap = std::unordered_map<Memory::Handle, Memory::Mapping*>;
-
 // Global mutex for memory handler
 static Yuni::Mutex gMutex;
-
-//! The next handle which should be used
-static Memory::Handle pNextHandle = 0; // It will be incremented by internalAllocate()
-//! Mapping handle
-static MappingMap pMapping;
-//! All swap files
-static SwapFileList pSwapFile;
-
-static inline void FlushMappingWL(Memory::Mapping& mapping)
-{
-    void** p = const_cast<void**>(mapping.pointer);
-    if (p)
-    {
-        if (*p)
-        {
-// Unmapping
-#ifdef YUNI_OS_WINDOWS
-            UnmapViewOfFile(*p);
-#else
-            munmap(*p, (mapping.nbBlocks * Memory::blockSize));
-#endif
-            *p = nullptr;
-        }
-        mapping.pointer = nullptr;
-    }
-}
-
 } // anonymous namespace
 
 Memory::Memory() : pAlreadyInitialized(false)
@@ -107,36 +73,19 @@ Memory::Memory() : pAlreadyInitialized(false)
 
 Memory::~Memory()
 {
-    // Destroying all segments
-    if (not pSwapFile.empty())
-    {
-        // Making sure that all blocks have been unmapped
-        releaseAll();
-        // Destroying all swap files
-        for (uint i = 0; i != pSwapFile.size(); ++i)
-            delete pSwapFile[i];
-    }
 }
 
-bool Memory::initialize()
+bool Memory::initializeTemporaryFolder()
 {
     Yuni::MutexLocker locker(gMutex);
     if (pAlreadyInitialized)
         return true;
 
     pAlreadyInitialized = true;
-    pAllowedToChangeCacheFolder = LocalPolicy::ReadAsBool("allow_custom_swap_folder", true);
-    waitForSwapFileDeletion = false;
-
-    // pMapping.set_empty_key(0);
-    // pMapping.set_deleted_key((uint) -1);
+    pAllowedToChangeCacheFolder = LocalPolicy::ReadAsBool("allow_custom_cache_folder", true);
 
     // Reading information from the local policy
-    LocalPolicy::Read(pCacheFolder, "default_swap_folder");
-
-    // swap file names
-    // see prefix.cpp
-    initializeSwapFilePrefix();
+    LocalPolicy::Read(pCacheFolder, "default_cache_folder");
 
     // Looking for the temporary folder if the cache folder is not set
     if (pCacheFolder.empty())
@@ -174,166 +123,11 @@ bool Memory::initialize()
         and not IO::Directory::Create(pCacheFolder))
     {
         // The swap support is disabled.
-        logs.warning() << "Swap support is disabled. Impossible to create the folder "
+        logs.warning() << "Impossible to create the cache folder "
                        << pCacheFolder;
         pCacheFolder.clear();
     }
     return true;
-}
-
-void Memory::removeAllUnusedSwapFiles()
-{
-    Yuni::MutexLocker locker(gMutex);
-    assert(pAlreadyInitialized and "swap memory not initialized");
-
-    // Destroying all segments
-    if (not pSwapFile.empty())
-    {
-        // Flush all handle first
-        {
-            const MappingMap::iterator end = pMapping.end();
-            for (MappingMap::iterator i = pMapping.begin(); i != end; ++i)
-                FlushMappingWL(*(i->second));
-        }
-
-        bool stop = true;
-        do
-        {
-            stop = true;
-            SwapFileList::iterator end = pSwapFile.end();
-            for (SwapFileList::iterator i = pSwapFile.begin(); i != end; ++i)
-            {
-                delete *i;
-                pSwapFile.erase(i);
-                stop = false;
-                break;
-            }
-        } while (!stop);
-    }
-}
-
-bool Memory::createNewSwapFileWL()
-{
-    // We have detected there is not enough disk space. It is useless to
-    // continue.
-    if (not pCacheFolder or waitForSwapFileDeletion)
-        return false;
-
-    SwapFileInfo* info = new SwapFileInfo();
-
-    // The swap filename
-    info->filename << pCacheFolder << SEP << pSwapFilePrefix << pSwapFilePrefixProcessID
-                   << (int)pSwapFile.size() << ".antares-swap";
-
-    if (!info->openSwapFile((uint)pSwapFile.size(), false))
-    {
-        delete info;
-        waitForSwapFileDeletion = true;
-        return false;
-    }
-    // Adding it into the swap list
-    pSwapFile.push_back(info);
-    return true;
-}
-
-
-void Memory::releaseAll()
-{
-    Yuni::MutexLocker locker(gMutex);
-
-    // higher pointers should be located into the last swap files
-    MappingMap::iterator end = pMapping.end();
-    for (MappingMap::iterator i = pMapping.begin(); i != end; ++i)
-    {
-        Mapping& mapping = *(i->second);
-        releaseWL(mapping);
-        delete i->second;
-    }
-    pMapping.clear();
-
-    // Reset the next handle
-    pNextHandle = 0;
-}
-
-void Memory::releaseWL(Mapping& mapping)
-{
-    // alias to the current swap file
-    SwapFileInfo& currentSwapFile = *mapping.swapFile;
-    // Updating the new amount of free blocks
-    currentSwapFile.nbFreeBlocks += mapping.nbBlocks;
-
-    // unmapping the pointer
-    // On Windows, all pointers must be unmapped before closing the file
-    // descriptor
-    // This is not mandatory on Unixes but it will be better like that.
-    void** p = const_cast<void**>(mapping.pointer);
-    if (p and *p)
-    {
-// Unmapping
-#ifdef YUNI_OS_WINDOWS
-        UnmapViewOfFile(*p);
-#else
-        munmap(*p, mapping.nbBlocks * blockSize);
-#endif
-        *p = nullptr;
-    }
-
-    // Checking if we should merely remove the swap file
-    if (currentSwapFile.nbFreeBlocks == blockPerSwap and pSwapFile.size() != 1)
-    {
-        // Removing it from the list
-        // We suppose that the most recent pointers will be deleted first, which
-        // should be mostly true
-        {
-            const SwapFileInfo* lookup = mapping.swapFile;
-            uint i = (uint)pSwapFile.size();
-            do
-            {
-                if (lookup == pSwapFile[--i])
-                {
-                    pSwapFile.erase(pSwapFile.begin() + i);
-                    break;
-                }
-            } while (i != 0);
-        }
-
-        // logging
-        uint64 newSize = ((uint64)pSwapFile.size() * ::Antares::Memory::swapSize) / (1024 * 1024);
-        logs.info() << "  memory pool: shrinking to " << newSize << "Mo";
-        // Destroying for real the swap file
-        // As the number of free blocks is equal to blockPerSwap, we assume that
-        // all block had been unmapped
-        delete mapping.swapFile;
-        mapping.swapFile = nullptr;
-        // We may have some disk space now
-        waitForSwapFileDeletion = false;
-    }
-    else
-    {
-        // Releasing the memory region
-        Bit::Array& bitmap = currentSwapFile.blocks;
-        for (uint j = 0; j != mapping.nbBlocks; ++j)
-            bitmap.unset(mapping.offset + j);
-    }
-}
-
-void Memory::release(Memory::Handle handle)
-{
-    assert(handle != 0);
-    gMutex.lock();
-
-    MappingMap::iterator i = pMapping.find(handle);
-    if (i != pMapping.end())
-    {
-        Mapping* mapping = i->second;
-        releaseWL(*mapping);
-        pMapping.erase(i);
-        gMutex.unlock();
-
-        delete mapping;
-    }
-    else
-        gMutex.unlock();
 }
 
 void Memory::EstimateMemoryUsage(size_t bytes,
@@ -364,107 +158,6 @@ void Memory::displayInfo() const
 
     Yuni::MutexLocker locker(gMutex);
     logs.info() << "  memory pool: swap folder: " << pCacheFolder;
-}
-
-void Memory::cleanupCacheFolder() const
-{
-    // Copy
-    String folder;
-    String prefix;
-    uint64 ourProcessID;
-    {
-        // Locking
-        Yuni::MutexLocker locker(gMutex);
-        folder = pCacheFolder;
-        prefix = pSwapFilePrefix;
-        ourProcessID = pProcessID;
-    }
-
-    // List of files to delete
-    // We will delay the deletion of the swap files to make sure that
-    // they are released by the system (Windows)
-    using DeleteList = std::vector<String>;
-    DeleteList toDelete;
-
-    {
-        // Note: the variable is already used on Windoes...
-        IO::Directory::Info dirinfo(folder);
-        String s;
-
-        // Building the file list scheduled for deletion
-        const auto end = dirinfo.file_end();
-        for (auto i = dirinfo.file_begin(); i != end; ++i)
-        {
-            const String& name = *i;
-            if (name.startsWith(prefix))
-            {
-                // retrieving the pid from the filename
-                s = name;
-                s.erase(0, prefix.size());
-                uint index = s.find('-');
-                if (index != String::npos)
-                    s.truncate(index);
-                if (!s)
-                    continue;
-
-                uint64 pid;
-                pid = s.to<uint64>();
-                // Checking for an invalid pid or if the pid is ourselves
-                if (pid <= 65535 and pid != ourProcessID)
-                {
-#ifndef YUNI_OS_WINDOWS
-                    // UNIX
-                    // Checking if the process is still alive
-                    if (kill(pid, 0))
-                    {
-                        switch (errno)
-                        {
-                        case EPERM:
-                            logs.error() << "We don't have enough privileges to send a signal";
-                            break;
-                        case ESRCH:
-                            toDelete.push_back(i.filename());
-                            break;
-                        }
-                    }
-#else
-                    toDelete.push_back(i.filename());
-#endif
-                }
-            }
-        }
-    }
-
-    if (not toDelete.empty())
-    {
-        const DeleteList::const_iterator end = toDelete.end();
-        DeleteList::const_iterator i = toDelete.begin();
-        for (; i != end; ++i)
-        {
-            // Try to delete the swap file
-            if (not IO::File::Delete(*i))
-            {
-                // The file may already have been deleted
-                if (IO::Exists(*i))
-                    logs.error() << "  memory pool: impossible to delete " << *i;
-            }
-            else
-                logs.info() << "  memory pool: removing unused swap file " << *i;
-        }
-    }
-}
-
-void Memory::ensureOneSwapFile()
-{
-    MutexLocker locker(gMutex);
-    if (pSwapFile.empty())
-        createNewSwapFileWL();
-}
-
-uint64 Memory::memoryCapacity() const
-{
-    MutexLocker locker(gMutex);
-    return pSwapFile.size() * swapSize;
 }
 
 const String& Memory::cacheFolder() const

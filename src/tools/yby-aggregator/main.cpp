@@ -584,8 +584,7 @@ int main(int argc, char* argv[])
     // logs
     logs.applicationName("yby-aggregator");
 
-    // Swap memory
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     argv = AntaresGetUTF8Arguments(argc, argv);
@@ -631,8 +630,6 @@ int main(int argc, char* argv[])
 
         // early Release !
         AllOutputs.clear();
-        // Removing all unused spwa files
-        Antares::memory.removeAllUnusedSwapFiles();
     }
     else
     {

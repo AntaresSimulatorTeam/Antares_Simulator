@@ -53,9 +53,6 @@ public:
 protected:
     virtual bool onInterval(uint) override
     {
-        logs.info() << "memory pool: looking for orphan swap files...";
-        Antares::memory.cleanupCacheFolder();
-        logs.debug() << "memory pool: cleanup is done";
         return false;
     }
 };
