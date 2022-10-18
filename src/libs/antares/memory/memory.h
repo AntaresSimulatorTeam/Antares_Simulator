@@ -61,33 +61,6 @@ namespace Antares
 class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
 {
 public:
-    //! Threading policy
-    using ThreadingPolicy = Yuni::Policy::ObjectLevelLockable<Memory>;
-    //! Internal handle
-    using Handle = uint;
-
-    //! Information about a single swap file
-    using SwapFileInfo = Antares::Private::Memory::SwapFileInfo;
-
-    enum
-    {
-        reuseMappingBlockCapacity = 10000,
-    };
-
-    struct Mapping
-    {
-    public:
-        //! Reference to the original pointer
-        volatile void** pointer;
-
-        //! Pointer to the swap file info
-        SwapFileInfo* swapFile;
-        //! Offset within the swap file
-        uint offset;
-        //! The number of block used by this data block
-        uint nbBlocks;
-    };
-
     enum // anonymous
     {
 /*!

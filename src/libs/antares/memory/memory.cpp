@@ -47,7 +47,6 @@
 #include <WinIoCtl.h>
 #endif
 #include "../study/memory-usage.h"
-#include "swapfile.h"
 #include "../sys/policy.h"
 #include <unordered_map>
 
