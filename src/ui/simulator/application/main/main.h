@@ -282,17 +282,6 @@ public:
     bool isScenarioBuilderOpened() const;
     //@}
 
-    //! \name Swap files cleaning
-    //@{
-    /*!
-    ** \brief Perform a cleanup operation on orphan swap files
-    **
-    ** This action will be delayed
-    */
-    void timerCleanSwapFiles(uint timeout = 5000);
-
-    void timerCleanSwapFilesDestroy();
-
     /*!
     ** \brief Stop all timers
     */

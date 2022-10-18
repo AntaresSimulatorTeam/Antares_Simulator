@@ -305,8 +305,7 @@ ApplWnd::~ApplWnd()
 
     // Stopping the action service
     Dispatcher::Stop();
-    // Destroy the timer for cleaning swap files
-    timerCleanSwapFilesDestroy();
+
     // Remove the inspector
     Window::Inspector::Destroy();
 

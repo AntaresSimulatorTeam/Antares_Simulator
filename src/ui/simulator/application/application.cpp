@@ -320,8 +320,6 @@ bool Application::OnInit()
 
     // Creating the main frame
     mainFrame = new Forms::ApplWnd();
-    // Checking for orphan swap files
-    mainFrame->timerCleanSwapFiles(700 /*ms*/);
 
     // Show time !
     mainFrame->Show(true);

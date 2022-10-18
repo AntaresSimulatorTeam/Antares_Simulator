@@ -1274,11 +1274,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             OnStudyChanged(*studyptr);
     }
 
-    // Checking for orphan swap files
-    // We may have to clean the cache folder, if the user canceled the simulation
-    // or if the program crashed
-    mainFrm.timerCleanSwapFiles(4000); // ms
-
     if (result)
     {
         // Delaying the dialog to show to the user that the simulation is over
