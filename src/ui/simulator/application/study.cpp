@@ -1113,7 +1113,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         return;
 
     GUILocker locker;
-    // Checking for orphan swap files
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     bool result = false;

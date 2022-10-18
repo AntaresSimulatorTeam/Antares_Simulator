@@ -124,7 +124,6 @@ bool Memory::initializeTemporaryFolder()
     if (not pCacheFolder.empty() and not pAllowedToChangeCacheFolder
         and not IO::Directory::Create(pCacheFolder))
     {
-        // The swap support is disabled.
         logs.warning() << "Impossible to create the cache folder "
                        << pCacheFolder;
         pCacheFolder.clear();
@@ -159,7 +158,7 @@ void Memory::displayInfo() const
 #endif
 
     Yuni::MutexLocker locker(gMutex);
-    logs.info() << "  memory pool: swap folder: " << pCacheFolder;
+    logs.info() << "  memory pool: cache folder: " << pCacheFolder;
 }
 
 const String& Memory::cacheFolder() const

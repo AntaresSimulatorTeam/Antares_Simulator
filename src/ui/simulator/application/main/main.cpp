@@ -1007,9 +1007,8 @@ void ApplWnd::backgroundTimerStop()
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
     // !! It is extremly important to wait for all jobs to finish
-    // In the contrary, it may appen a race condition with another thread
-    // and the swap mode. It would be possible to flush all variables
-    // while accessing them
+    // Otherwise, it may occur a race condition with another thread.
+    // It would make possible to flush all variables while accessing them.
     Dispatcher::Wait();
 }
 
