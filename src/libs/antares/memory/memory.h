@@ -37,8 +37,6 @@ namespace Private
 {
 namespace Memory
 {
-// Forward declaration
-class SwapFileInfo;
 
 } // namespace Memory
 } // namespace Private
@@ -60,33 +58,6 @@ namespace Antares
 */
 class Memory final : public Yuni::Policy::ObjectLevelLockable<Memory>
 {
-public:
-    enum // anonymous
-    {
-/*!
-** \brief Size of a single memory block (must be a power of 2)
-*/
-#ifdef YUNI_OS_WINDOWS
-        blockSize = 64 * 1024, // On windows, the offset must be a multiple of the granularity
-#else
-        blockSize = 32 * 1024, // man getpagesize()
-#endif
-
-        //! Size of a single swap file (must be a power of 2)
-        swapSize = 512 * 1024 * 1024,
-        //! Blocks per swap file
-        blockPerSwap = swapSize / blockSize,
-        /*!
-        ** \brief Minimal allocation size required to be managed by our custom memory cache
-        **
-        ** Below this value, the system allocator will be used
-        */
-        minimalAllocationSize = blockSize - (blockSize / 4),
-
-        //! Invalid handle
-        invalidHandle = 0,
-    };
-
 public:
     template<class T>
     class Array final
@@ -124,10 +95,6 @@ public:
         ** \brief
         */
         void allocate(size_t size);
-
-        bool valid() const;
-
-        bool strictNull() const;
 
         T& operator[](uint i);
         const T& operator[](uint i) const;
@@ -228,12 +195,6 @@ public:
     //! Display infos into the logs
     void displayInfo() const;
     //@}
-
-private:
-    /*!
-    ** \brief Initialize the prefix to use for swap filename
-    */
-    void initializeSwapFilePrefix();
 
 private:
     //! The cache folder

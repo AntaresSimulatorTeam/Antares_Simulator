@@ -75,19 +75,6 @@ void Memory::Array<T>::allocate(size_t size)
     pPointer = new T[size];
 }
 
-
-template<class T>
-inline bool Memory::Array<T>::valid() const
-{
-    return pPointer;
-}
-
-template<class T>
-inline bool Memory::Array<T>::strictNull() const
-{
-    return not pPointer;
-}
-
 template<class T>
 T& Memory::Array<T>::operator[](uint i)
 {
@@ -125,7 +112,6 @@ inline bool Memory::StrictNull(const T*& out)
 {
     return !out;
 }
-
 
 
 template<class U>

@@ -48,7 +48,7 @@
 #endif
 #include "../study/memory-usage.h"
 #include "../sys/policy.h"
-#include <unordered_map>
+#include <yuni/core/system/process.h>
 
 using namespace Yuni;
 
@@ -64,7 +64,8 @@ namespace // anonymous
 static Yuni::Mutex gMutex;
 } // anonymous namespace
 
-Memory::Memory() : pAlreadyInitialized(false)
+Memory::Memory() : 
+    pAlreadyInitialized(false)
 {
     // Nothing must be called here. There is a circular
     // reference issue when initializing global variables.
@@ -85,6 +86,8 @@ bool Memory::initializeTemporaryFolder()
 
     // Reading information from the local policy
     LocalPolicy::Read(pCacheFolder, "default_cache_folder");
+
+    pProcessID = Yuni::ProcessID();
 
     // Looking for the temporary folder if the cache folder is not set
     if (pCacheFolder.empty())
