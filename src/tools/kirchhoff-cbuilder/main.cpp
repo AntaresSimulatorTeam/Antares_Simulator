@@ -45,7 +45,7 @@ using namespace Antares;
 int main(int argc, char* argv[])
 {
     logs.applicationName("k-cbuild");
-    if (argc < 3)
+    if (argc < 2)
     {
         logs.error() << "Not enough arguments, exiting.";
         logs.error() << "args: study_path, option_path";
@@ -53,7 +53,11 @@ int main(int argc, char* argv[])
     }
 
     std::string studyPath(argv[1]);
-    std::string kirchhoffOptionPath(argv[2]);
+    std::string kirchhoffOptionPath;
+    if (argc > 2)
+        kirchhoffOptionPath = argv[2];
+    else
+        kirchhoffOptionPath = studyPath;
 
     if (!initResources(argc, argv))
     {
@@ -142,6 +146,8 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
     study->folder = studyPath;
     study->folderInput = studyPath + Yuni::IO::Separator + "input";
     study->inputExtension = "txt";
+
+    logs.info() << "Study version: " << study->header.version;
 
     Data::StudyLoadOptions options;
     options.loadOnlyNeeded = false;
