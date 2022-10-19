@@ -114,6 +114,12 @@ double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
 double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
 
 /*!
+ * Calculate densNew values for all hours and areas inside adequacy patch and places them into 
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ */
+void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo);
+
+/*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
 ** **
 ** ** \param A A vector

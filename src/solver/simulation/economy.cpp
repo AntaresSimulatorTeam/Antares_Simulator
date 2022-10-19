@@ -232,6 +232,7 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
+    calculateDensNewForAllHours(problemeHebdo);
     const std::set<int> hoursRequiringCurtailmentSharing
       = getHoursRequiringCurtailmentSharing(numSpace);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)

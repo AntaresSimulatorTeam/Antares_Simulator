@@ -72,7 +72,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
-
+            // ovde se stavljaju rezultati u kolonu dens new, ovo treba izbaciti i staviti petlju van CSR da upise u sve redove
             // update DENS values with densNew values
             ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour]
               = hourlyCsrProblem.densNewValues[area];
@@ -110,7 +110,7 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
             ProblemeAResoudre->X[Var]
               = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour];
 
-            AdresseDuResultat = &(
+            AdresseDuResultat = &(// ovde treba da se promeni gde se stavljaju rezultati da budu u spillage after CSR
               ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]

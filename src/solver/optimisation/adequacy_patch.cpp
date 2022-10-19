@@ -173,6 +173,26 @@ double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area)
     }
     return totalLmrViolationArea;
 }
+void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo)
+{
+    double netPositionInit;
+    double densNew;
+    const int numOfHoursInWeek = 168;
+
+    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
+    {
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        {
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                std::tie(netPositionInit, densNew)
+                  = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+            }
+        }
+    }
+    return;
+}
 
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
                                                    int Area,
