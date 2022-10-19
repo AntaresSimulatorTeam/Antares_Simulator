@@ -221,6 +221,22 @@ AdequacyPatchOptions::AdequacyPatchOptions(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnAdequacyPatchIncludeHurdleCostCsr = button;
     }
+    // Select whether the CSR cost function will be compared prior and after CSR optimization and
+    // results provided accordingly
+    {
+        label = Component::CreateLabel(this, wxT("Check CSR cost function value prior and after CSR"));
+        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+        button->SetBackgroundColour(bgColor);
+        button->menu(true);
+        onPopup.bind(
+          this,
+          &AdequacyPatchOptions::onPopupMenuSpecify,
+          PopupInfo(study.parameters.adqPatch.curtailmentSharing.checkCsrCostFunction, wxT("true")));
+        button->onPopupMenu(onPopup);
+        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
+        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
+        pBtnAdequacyPatchCheckCsrCostFunctionValue = button;
+    }
     addLabelAdqPatch(this, s, wxT("Thresholds"));
     // Threshold values
     {
@@ -341,6 +357,10 @@ void AdequacyPatchOptions::refresh()
     // Include hurdle cost for CSR
     updateButton(pBtnAdequacyPatchIncludeHurdleCostCsr,
                  study.parameters.adqPatch.curtailmentSharing.includeHurdleCost,
+                 buttonType);
+    // Check CSR cost function value prior and after CSR optimization
+    updateButton(pBtnAdequacyPatchCheckCsrCostFunctionValue,
+                 study.parameters.adqPatch.curtailmentSharing.checkCsrCostFunction,
                  buttonType);
     // NTC from physical areas outside adequacy patch (area type 1) to physical areas inside
     // adequacy patch (area type 2). Used in the first step of adequacy patch local matching rule.

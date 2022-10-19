@@ -76,6 +76,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = parameters.adqPatch.curtailmentSharing.priceTakingOrder;
         problem.adqPatchParams->IncludeHurdleCostCsr
           = parameters.adqPatch.curtailmentSharing.includeHurdleCost;
+        problem.adqPatchParams->CheckCsrCostFunctionValue
+          = parameters.adqPatch.curtailmentSharing.checkCsrCostFunction;
         problem.adqPatchParams->ThresholdInitiateCurtailmentSharingRule
           = parameters.adqPatch.curtailmentSharing.thresholdInitiate;
         problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations

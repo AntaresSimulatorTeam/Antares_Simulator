@@ -499,6 +499,7 @@ struct AdequacyPatchParameters
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
     bool IncludeHurdleCostCsr;
+    bool CheckCsrCostFunctionValue;
     AdqPatchPTO PriceTakingOrder;
     double ThresholdInitiateCurtailmentSharingRule;
     double ThresholdDisplayLocalMatchingRuleViolations;

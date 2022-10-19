@@ -541,6 +541,8 @@ public:
             int thresholdVarBoundsRelaxation;
             //! Include hurdle cost in CSR cost function
             bool includeHurdleCost;
+            //! Check CSR cost function prior & after CSR optimization
+            bool checkCsrCostFunction;
         };
         CurtailmentSharing curtailmentSharing;
 
