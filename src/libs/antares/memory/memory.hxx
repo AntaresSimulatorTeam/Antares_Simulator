@@ -35,28 +35,20 @@ inline Yuni::uint64 Memory::processID() const
 }
 
 template<class T>
-inline Memory::Array<T>::Array() : pPointer(nullptr)
-{
-}
+Memory::Array<T>::Array(const Yuni::NullPtr&) 
+{}
 
 template<class T>
-Memory::Array<T>::Array(const Yuni::NullPtr&) : pPointer(nullptr)
-{
-}
-
-template<class T>
-Memory::Array<T>::Array(const Memory::Array<T>&) : pPointer(nullptr)
-{
-}
+Memory::Array<T>::Array(const Memory::Array<T>&)
+{}
 
 template<class T>
 template<class U>
-Memory::Array<T>::Array(const Memory::Array<U>&) : pPointer(nullptr)
-{
-}
+Memory::Array<T>::Array(const Memory::Array<U>&)
+{}
 
 template<class T>
-inline Memory::Array<T>::Array(size_t size) : pPointer(nullptr)
+inline Memory::Array<T>::Array(size_t size)
 {
     allocate(size);
 }

@@ -285,7 +285,7 @@ public:
     /*!
     ** \brief Stop all timers
     */
-    void backgroundTimerStop();
+    void backgroundTimerStop() const;
 
     //@}
 

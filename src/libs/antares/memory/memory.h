@@ -31,23 +31,12 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
 
-namespace Antares
-{
-namespace Private
-{
-namespace Memory
-{
-
-} // namespace Memory
-} // namespace Private
-} // namespace Antares
 
 namespace Antares
 {
 namespace Data
 {
-class StudyMemoryUsage;
-
+    class StudyMemoryUsage;
 } // namespace Data
 } // namespace Antares
 
@@ -68,7 +57,7 @@ public:
         /*!
         ** \brief Default constructor
         */
-        Array();
+        Array() = default;
 
         /*!
         ** \brief Constructor from null
@@ -82,6 +71,7 @@ public:
 
         //! Copy constructor (must be empty)
         Array(const Array& copy);
+
         template<class U>
         Array(const Array<U>&);
 
@@ -100,7 +90,7 @@ public:
         const T& operator[](uint i) const;
 
     private:
-        T* pPointer;
+        T* pPointer = nullptr;
 
     }; // class Array
 
@@ -160,11 +150,11 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    Memory();
+    Memory() = default;
     /*!
     ** \brief Destructor
     */
-    ~Memory();
+    ~Memory() = default;
     //@}
     
     bool initializeTemporaryFolder();
@@ -206,7 +196,7 @@ private:
     Yuni::uint64 pProcessID;
 
     //! Avoid multiple initializations
-    bool pAlreadyInitialized;
+    bool pAlreadyInitialized = false;
 
     // Friend
     template<class T>

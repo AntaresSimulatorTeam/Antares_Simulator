@@ -64,17 +64,6 @@ namespace // anonymous
 static Yuni::Mutex gMutex;
 } // anonymous namespace
 
-Memory::Memory() : 
-    pAlreadyInitialized(false)
-{
-    // Nothing must be called here. There is a circular
-    // reference issue when initializing global variables.
-}
-
-Memory::~Memory()
-{
-}
-
 bool Memory::initializeTemporaryFolder()
 {
     Yuni::MutexLocker locker(gMutex);

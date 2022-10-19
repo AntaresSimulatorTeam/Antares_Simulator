@@ -1002,7 +1002,7 @@ void ApplWnd::hideAllComponentsRelatedToTheStudy()
     pAUIManager.Update();
 }
 
-void ApplWnd::backgroundTimerStop()
+void ApplWnd::backgroundTimerStop() const
 {
     assert(wxIsMainThread() == true and "Must be ran from the main thread");
 
