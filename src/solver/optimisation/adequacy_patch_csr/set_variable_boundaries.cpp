@@ -62,7 +62,8 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
 
             ProblemeAResoudre->Xmin[Var] = -csrSolverRelaxation;
             ProblemeAResoudre->Xmax[Var]
-              = hourlyCsrProblem.densNewValues[area] + csrSolverRelaxation;
+              = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour]
+                + csrSolverRelaxation;
 
             ProblemeAResoudre->X[Var]
               = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive[hour];
@@ -72,10 +73,6 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
-            // ovde se stavljaju rezultati u kolonu dens new, ovo treba izbaciti i staviti petlju van CSR da upise u sve redove
-            // update DENS values with densNew values
-            ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour]
-              = hourlyCsrProblem.densNewValues[area];
 
             logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
                          << ProblemeAResoudre->Xmax[Var];
