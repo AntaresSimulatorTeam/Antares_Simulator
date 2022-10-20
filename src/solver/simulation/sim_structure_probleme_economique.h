@@ -717,6 +717,7 @@ public:
     double maxPminThermiqueByDay[366];
 };
 
+namespace Antares::Solver::Variable { class State; } // foward declaration
 // hourly CSR problem structure
 class HOURLY_CSR_PROBLEM
 {
@@ -729,8 +730,9 @@ private:
     void buildProblemConstraintsRHS();
     void setProblemCost();
     void solveProblem(uint week, int year);
+    void adjustMrgPrices(const Antares::Solver::Variable::State& state);
 public:
-    void run(uint week, int year);
+    void run(uint week, const Antares::Solver::Variable::State& state);
     
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;

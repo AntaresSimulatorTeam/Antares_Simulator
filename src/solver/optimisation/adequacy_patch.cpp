@@ -287,6 +287,23 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
     }
     return;
 }
+void HOURLY_CSR_PROBLEM::adjustMrgPrices(const Antares::Solver::Variable::State& state)
+{
+    int hour = hourInWeekTriggeredCsr;
+    for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
+    {
+        if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
+              == physicalAreaInsideAdqPatch
+            && pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+                   ->ValeursHorairesDeDefaillancePositive[hour]
+                 > 0.5)
+        {
+            pWeeklyProblemBelongedTo->ResultatsHoraires[Area]->CoutsMarginauxHoraires[hour]
+              = -state.study.areas[Area]->thermal.unsuppliedEnergyCost;
+        }
+    }
+    return;
+}
 
 void HOURLY_CSR_PROBLEM::resetProblem()
 {
@@ -324,7 +341,7 @@ void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
     ADQ_PATCH_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, int year)
+void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& state)
 {
     resetProblem();
     calculateCsrParameters();
@@ -333,5 +350,6 @@ void HOURLY_CSR_PROBLEM::run(uint week, int year)
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, year);
+    solveProblem(week, state.year);
+    adjustMrgPrices(state);
 }

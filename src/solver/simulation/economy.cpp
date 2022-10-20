@@ -240,7 +240,7 @@ void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numS
         logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
                     << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
-        hourlyCsrProblem.run(w, state.year);
+        hourlyCsrProblem.run(w, state);
     }
     double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo);
     logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
