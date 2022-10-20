@@ -279,6 +279,8 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
                              ->ValeursHorairesDeDefaillanceNegative[hour];
 
+            // TODO: figure out why this map when removed crashes one csr hour in test example. 
+            // even if it not used ay all, if value is set to 10.0 it will still work and provide same results.. 
             densNewValues[Area] = densNew;
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
