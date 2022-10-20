@@ -173,7 +173,7 @@ if (CODE_COVERAGE)
 	set(BUILD_TESTING ON)
 
 	include("cmake/CodeCoverage.cmake")
-	code_coverage(NAME code-coverage
+	code_coverage(NAME code-coverage-target
 			OUTPUT_DIR coverage
 			EXCLUDE_DIRS tests)
 endif ()

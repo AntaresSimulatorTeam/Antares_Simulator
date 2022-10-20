@@ -9,11 +9,10 @@ include(CMakeParseArguments)
 
 # Compilation flags
 set(COVERAGE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_CXX_FLAGS}")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_CXX_FLAGS}")
 
 # Linker flags
-set(COVERAGE_LINKER_FLAGS "--coverage")
+set(COVERAGE_LINKER_FLAGS "--coverage -lgcov")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
 
@@ -60,9 +59,15 @@ function(code_coverage)
         list(APPEND GCOVR_OPTIONS "--exclude-directories" "${exclude}")
     endforeach ()
 
-    add_custom_target(${Coverage_NAME}
+    add_custom_target(${Coverage_NAME} ALL
+        DEPENDS tests-simple-study
+
         # Cleaning previous results
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${Coverage_OUTPUT_DIR}
+
+        # Running unit tests for coverage files generation (gcda)...
+        COMMENT "Running unit tests and generating coverage report, please wait..."
+        COMMAND ctest --rerun-failed
 
         # Generating report
         COMMAND ${CMAKE_COMMAND} -E make_directory ${Coverage_OUTPUT_DIR}/reports
