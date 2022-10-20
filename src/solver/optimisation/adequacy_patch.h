@@ -97,11 +97,21 @@ void setNTCbounds(double& Xmax,
                   PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
- * Calculates curtailment sharing rule parameters netPositionInit and densNew per given area and hour.
+ * Calculates curtailment sharing rule parameters netPositionInit and densNew per given area and
+ * hour.
  */
 std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
                                                    int Area,
                                                    int hour);
+
+/*!
+ * Calculates dens new parameter depending on the values and ratio of ensInit and
+ * totalNetPositionInit
+ ** ** \param ensInit initial value of ENS (before CSR optimization) of the area
+ ** ** \param totalNetPositionInit total initial import/export of the area
+ ** ** \return double densNew value
+ */
+double calculateDensNew(double ensInit, double totalNetPositionInit);
 
 /*!
  * Check local matching rule violation for each area inside adequacy patch.

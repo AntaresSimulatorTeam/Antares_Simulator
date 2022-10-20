@@ -241,11 +241,19 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 
     ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
-        densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+        densNew = calculateDensNew(ensInit, netPositionInit + flowsNode1toNodeA);
     else
-        densNew = Math::Max(0.0, ensInit + netPositionInit);
+        densNew = calculateDensNew(ensInit, netPositionInit);
 
     return std::make_pair(netPositionInit, densNew);
+}
+
+double calculateDensNew(double ensInit, double totalNetPositionInit)
+{
+    if ((totalNetPositionInit >= 0) || (ensInit > Math::Abs(totalNetPositionInit)))
+        return Math::Max(0.0, ensInit + totalNetPositionInit);
+    else
+        return 0.0;
 }
 
 void addArray(std::vector<double>& A, const double* B)
