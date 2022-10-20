@@ -2021,6 +2021,7 @@ void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& o
     {
         out.emplace_back("DENS");
         out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
     }
 }
 

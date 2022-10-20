@@ -107,8 +107,8 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
             ProblemeAResoudre->X[Var]
               = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour];
 
-            AdresseDuResultat = &(// ovde treba da se promeni gde se stavljaju rezultati da budu u spillage after CSR
-              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour]);
+            AdresseDuResultat = &(
+              ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesSpilledEnergyAfterCSR[hour]);
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
