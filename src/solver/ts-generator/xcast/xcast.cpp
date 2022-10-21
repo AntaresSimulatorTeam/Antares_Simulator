@@ -33,7 +33,6 @@
 #include <antares/emergency.h>
 #include <limits>
 #include <yuni/io/directory.h>
-#include <antares/memory/memory.h>
 #include <antares/study/area/constants.h>
 
 using namespace Yuni;
@@ -172,8 +171,6 @@ void XCast::applyTransferFunction(PredicateT& predicate)
                     }
                 }
             }
-
-            tf.flush();
         }
     }
 }
@@ -191,35 +188,21 @@ void XCast::updateMissingCoefficients(PredicateT& predicate)
             {
             case Data::XCast::dtNormal:
             {
-#ifdef ANTARES_SWAP_SUPPORT
-                data.data[gamma][realmonth]
-                  = data.data[alpha][realmonth] - 6.f * data.data[beta][realmonth];
-                data.data[delta][realmonth]
-                  = data.data[alpha][realmonth] + 6.f * data.data[beta][realmonth];
-#else
                 float** v = data.data.entry;
                 v[gamma][realmonth] = v[alpha][realmonth] - 6.f * v[beta][realmonth];
                 v[delta][realmonth] = v[alpha][realmonth] + 6.f * v[beta][realmonth];
-#endif
                 break;
             }
             case Data::XCast::dtWeibullShapeA:
             {
-#ifdef ANTARES_SWAP_SUPPORT
-                data.data[delta][realmonth]
-                  = (float)GammaEuler(1. + 1. / data.data[alpha][realmonth]);
-#else
                 float** v = data.data.entry;
                 v[delta][realmonth] = (float)GammaEuler(1. + 1. / v[alpha][realmonth]);
-#endif
                 break;
             }
             default:
 
                 break;
             }
-
-            data.data.flush();
         }
     }
 }
@@ -416,7 +399,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             auto& area = *(pData.localareas[s]);
 
             predicate.matrix(area).resize(nbTimeseries, nbHours);
-            predicate.matrix(area).flush();
             auto& xcast = predicate.xcastData(area);
 
             pUseConversion[s] = (xcast.useConversion && xcast.conversion.width >= 3);
@@ -500,9 +482,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                 }
                 }
                 memcpy(FO[s], xcastdata.K[realmonth], sizeof(float) * nbHoursADay);
-
-                xcastdata.data.flush();
-                xcastdata.K.flush();
             }
 
             uint nbDaysPerMonth = study.calendar.months[month].days;
@@ -543,8 +522,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                         assert(0 == Math::Infinite(dailyResults[h]) && "Infinite value");
                         dailyResults[h] += (float)column[hourInTheYear + h];
                     }
-
-                    srcData.translation.flush();
                 }
 
                 applyTransferFunction(predicate);
@@ -593,9 +570,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     for (uint h = 0; h != nbHoursADay; ++h)
                         column[hourInTheYear + h] = Math::Round(dailyResults[h]);
 
-                    series.flush();
-                    srcData.translation.flush();
-
                     ++progression;
                 }
 
@@ -618,7 +592,6 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
     {
         study.areas.each([&](Data::Area& area) {
             predicate.matrix(area).averageTimeseries();
-            predicate.matrix(area).flush();
         });
     }
 
@@ -649,16 +622,9 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
                     assert(!Math::NaN(perHour[h]));
                 }
             }
-
-            area.reserves.flush();
-            matrix.flush();
         }
     }
 
-#ifdef ANTARES_SWAP_SUPPORT
-
-    Antares::memory.flushAll();
-#endif
     return true;
 }
 

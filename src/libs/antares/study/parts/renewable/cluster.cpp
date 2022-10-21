@@ -57,14 +57,6 @@ Data::RenewableCluster::~RenewableCluster()
     delete series;
 }
 
-void RenewableCluster::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    if (series)
-        series->flush();
-#endif
-}
-
 uint RenewableCluster::groupId() const
 {
     return groupID;

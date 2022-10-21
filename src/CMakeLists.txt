@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  1)
+set(ANTARES_VERSION_REVISION  2)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
@@ -184,9 +184,6 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
-message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
-
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
@@ -272,6 +269,9 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
 endif()

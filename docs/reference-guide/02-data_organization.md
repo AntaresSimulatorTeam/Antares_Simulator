@@ -60,14 +60,7 @@ in the course of the analysis and deleted in the end, unless the user wishes to 
 Its location is user-defined and should usually be the "user" subfolder if files are to be kept, otherwise any
 proper temporary space such as `C..../Temp`.
 
-5. If the interconnected system to study is large and/or if the computer is low on RAM, it is possible to run
-the Monte-Carlo adequacy simulator as well as the Monte-Carlo economic simulator in "Swap" mode.
-Swap is not handled by the computer's OS but by an Antares specific swap manager, whose operation requires
-the definition of a space where the software can store temporary files. This location is user-defined but
-should never be chosen within the study folder. `C/.../Temp` may typically be used but an external drive may
-be preferred if the computer is low on HDD.
-
-6. The outputs of the Antares Kirchhoff's constraints generator are not printed in the general output files
+5. The outputs of the Antares Kirchhoff's constraints generator are not printed in the general output files
 but kept within the input files structure, the reason being that they are input data for the proper Antares simulation.
 The associated data (so-called binding constraints bearing in their name the prefix "@UTO-") may nonetheless
 be accessed to be reviewed, updated and deleted at any time through the GUI.

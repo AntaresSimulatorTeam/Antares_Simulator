@@ -26,7 +26,6 @@
 */
 
 #include <yuni/yuni.h>
-#include "../memory/memory.h"
 #include "study.h"
 #include "memory-usage.h"
 #include "runtime.h"

@@ -270,9 +270,6 @@ public:
                     results.exportDigestMatrix("Links (FLOW QUAD.)");
                 }
             }
-
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
         }
     }
 
@@ -349,9 +346,6 @@ private:
                 else
                     logs.error() << "I/O Error: '" << results.data.output
                                  << "': impossible to create the folder";
-
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
             }
 
             // Thermal clusters for the current area
@@ -393,9 +387,6 @@ private:
                 else
                     logs.error() << "I/O Error: '" << results.data.output
                                  << "': impossible to create the folder";
-
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
             }
         }
     }
@@ -453,9 +444,6 @@ private:
                     else
                         logs.error() << "I/O Error: '" << results.data.output
                                      << "': impossible to create the folder";
-
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
                 }
             }
         }
@@ -504,9 +492,6 @@ private:
             }
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
         }
     }
 

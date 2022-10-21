@@ -222,7 +222,7 @@ bool Economy::year(Progression::Task& progression,
             weeklyOptProblem->solve(state, hourInTheYear, numSpace);
 
             DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

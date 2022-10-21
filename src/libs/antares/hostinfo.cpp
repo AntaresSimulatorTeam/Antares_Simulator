@@ -32,10 +32,6 @@
 #include <stdio.h>
 #include "logs.h"
 
-#ifdef ANTARES_SWAP_SUPPORT
-#include "memory/memory.h"
-#endif
-
 #include "sys/hostname.hxx"
 
 using namespace Yuni;
@@ -51,11 +47,6 @@ void WriteHostInfoIntoLogs()
                 << "  :: built for 64-bit architectures, "
 #endif
                 << YUNI_OS_NAME << ", " << System::CPU::Count() << " cpu(s)";
-
-#ifdef ANTARES_SWAP_SUPPORT
-    logs.info() << "  :: memory swapping support (swap file: " << (Memory::swapSize / 1024 / 1024)
-                << "Mo, block: " << (Memory::blockSize / 1024) << "Ko)";
-#endif
 
     ShortString256 buffer;
     InternalAppendHostname(buffer);

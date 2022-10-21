@@ -133,5 +133,10 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 {
 }
 
+InvalidParametersORTools_SplitMPS::InvalidParametersORTools_SplitMPS() :
+ LoadingError("MPS files cannot be split when using OR-Tools")
+{
+}
+
 } // namespace Error
 } // namespace Antares

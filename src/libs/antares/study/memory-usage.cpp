@@ -38,13 +38,11 @@ namespace Data
 // gp : voir l'impact de la selection des variables ici
 StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
  mode(s.parameters.mode),
- swappingSupport(false),
  gatheringInformationsForInput(false),
  requiredMemory(),
  requiredMemoryForInput(),
  requiredMemoryForOutput(),
  requiredDiskSpace(),
- requiredDiskSpaceForSwap(),
  requiredDiskSpaceForOutput(),
  study(s),
  years(s.parameters.nbYears),
@@ -101,7 +99,6 @@ StudyMemoryUsage& StudyMemoryUsage::operator+=(const StudyMemoryUsage& rhs)
     requiredMemoryForInput += rhs.requiredMemoryForInput;
     requiredMemoryForOutput += rhs.requiredMemoryForOutput;
     requiredDiskSpace += rhs.requiredDiskSpace;
-    requiredDiskSpaceForSwap += rhs.requiredDiskSpaceForSwap;
     requiredDiskSpaceForOutput += rhs.requiredDiskSpaceForOutput;
     return *this;
 }
@@ -111,20 +108,9 @@ void StudyMemoryUsage::estimate()
     study.estimateMemoryUsageForInput(*this);
     study.estimateMemoryUsageForOutput(*this);
 
-    if (requiredDiskSpaceForSwap != 0)
-    {
-        Yuni::uint64 swap = 0;
-        do
-        {
-            swap += Antares::Memory::swapSize;
-        } while (swap < requiredDiskSpaceForSwap);
-
-        requiredDiskSpaceForSwap = swap + Antares::Memory::swapSize;
-    }
-
     // Post-operations
     requiredMemory = requiredMemoryForInput + requiredMemoryForOutput;
-    requiredDiskSpace = requiredDiskSpaceForSwap + requiredDiskSpaceForOutput;
+    requiredDiskSpace = requiredDiskSpaceForOutput;
 }
 
 void StudyMemoryUsage::takeIntoConsiderationANewTimeserieForDiskOutput(bool withIDs)

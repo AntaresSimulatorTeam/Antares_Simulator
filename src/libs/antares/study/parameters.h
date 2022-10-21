@@ -417,8 +417,8 @@ public:
             bool minUPTime;
         } thermal;
 
-        //! a flag to export all mps files
-        bool exportMPS;
+        //! Flag to export mps files
+        mpsExportStatus exportMPS;
 
         //! if MPS files are exported, a flag to split them
         bool splitExportedMPS;
@@ -434,8 +434,6 @@ public:
     // Shedding
     struct
     {
-        //! Shedding strategy
-        SheddingStrategy strategy;
         //! Shedding policy
         SheddingPolicy policy;
     } shedding;

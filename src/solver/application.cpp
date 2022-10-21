@@ -177,6 +177,14 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
     }
 }
 
+void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
+{
+    if (ortoolsUsed && splitExportedMPS)
+    {
+        throw Error::InvalidParametersORTools_SplitMPS();
+    }
+}
+
 } // namespace
 
 namespace Antares
@@ -248,17 +256,6 @@ void Application::prepare(int argc, char* argv[])
     WriteHostInfoIntoLogs();
     logs.info();
 
-#ifdef ANTARES_SWAP_SUPPORT
-    // Changing the swap folder
-    if (!pSettings.swap.empty())
-    {
-        logs.info() << "  memory pool: scratch folder:" << pSettings.swap;
-        Antares::memory.cacheFolder(pSettings.swap);
-    }
-    else
-        logs.info() << "  memory pool: scratch folder:" << Antares::memory.cacheFolder();
-#endif
-
     // Initialize the main structures for the simulation
     // Logs
     Resources::WriteRootFolderToLogs();
@@ -289,11 +286,12 @@ void Application::prepare(int argc, char* argv[])
     checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
     checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
 
-    bool tsGenThermal = (0
-                         != (pStudy->parameters.timeSeriesToGenerate
-                             & Antares::Data::TimeSeries::timeSeriesThermal));
+    bool tsGenThermal
+      = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkSplitMPSWithORTOOLS(pParameters->ortoolsUsed, pParameters->include.splitExportedMPS);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
@@ -589,9 +587,6 @@ Application::~Application()
         pStudy->clear();
         pStudy = nullptr;
 
-        // only used if a study exists
-        // Removing all unused spwa files
-        Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
     }
 }

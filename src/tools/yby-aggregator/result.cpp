@@ -26,7 +26,6 @@
 */
 
 #include "result.h"
-#include <antares/memory/memory.h>
 #include "progress.h"
 
 using namespace Yuni;
@@ -127,7 +126,6 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         for (uint d = 0; d != dataBufferHeight; ++d)
             dataBuffer[d] = new CellData[width];
 
-        uint flush = 1000;
         uint dataBufferOffset = 0;
         for (uint y = 0; y != heightAfterAggregation; ++y)
         {
@@ -155,11 +153,6 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                         }
                     }
 
-                    if (!--flush)
-                    {
-                        flush = 1000;
-                        memory.flushAll();
-                    }
                 }
             }
 
@@ -190,12 +183,12 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
         for (uint y = 0; y != heightAfterAggregation; ++y)
         {
             buffer << '\t' << (1 + y) << '\t';
-            if (columns[0].rows.valid())
+            if (columns[0].rows)
                 AppendToBuffer(buffer, columns[0].rows[y]);
             for (uint x = 1; x < width; ++x)
             {
                 buffer << '\t';
-                if (columns[x].rows.valid())
+                if (columns[x].rows)
                     AppendToBuffer(buffer, columns[x].rows[y]);
 
                 if (buffer.size() > 1024 * 1024 * 8)

@@ -224,36 +224,6 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations)
     return "";
 }
 
-SheddingStrategy StringToSheddingStrategy(const AnyString& text)
-{
-    if (!text)
-        return shsUnknown;
-
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
-    if (s == "share margins")
-        return shsShareMargins;
-    if (s == "share sheddings")
-        return shsShareSheddings;
-
-    return shsUnknown;
-}
-
-const char* SheddingStrategyToCString(SheddingStrategy strategy)
-{
-    switch (strategy)
-    {
-    case shsShareMargins:
-        return "share margins";
-    case shsShareSheddings:
-        return "share sheddings";
-    case shsUnknown:
-        return "";
-    }
-    return "";
-}
-
 SheddingPolicy StringToSheddingPolicy(const AnyString& text)
 {
     if (!text)
@@ -398,6 +368,46 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
         return "";
     }
     return "";
+}
+
+
+std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
+{
+    switch (mps_export_status)
+    {
+    case mpsExportStatus::NO_EXPORT:
+        return "none";
+    case mpsExportStatus::EXPORT_FIRST_OPIM:
+        return "optim-1";
+    case mpsExportStatus::EXPORT_SECOND_OPIM:
+        return "optim-2";
+    case mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return "both-optims";
+    default:
+        return "unknown status";
+    }
+}
+
+mpsExportStatus stringToMPSexportStatus(const AnyString& value)
+{
+    if (!value)
+    {
+        return mpsExportStatus::UNKNOWN_EXPORT;
+    }
+
+    CString<24, false> v = value;
+    v.trim();
+    v.toLower();
+    if (v == "both-optims" || v == "true")   // Case "true" : for compatibily with older study versions
+        return mpsExportStatus::EXPORT_BOTH_OPTIMS;
+    if (v == "none" || v == "false")   // Case "false" : for compatibily with older study versions
+        return mpsExportStatus::NO_EXPORT;
+    if (v == "optim-1")
+        return mpsExportStatus::EXPORT_FIRST_OPIM;
+    if (v == "optim-2")
+        return mpsExportStatus::EXPORT_SECOND_OPIM;
+
+    return mpsExportStatus::UNKNOWN_EXPORT;
 }
 
 } // namespace Data

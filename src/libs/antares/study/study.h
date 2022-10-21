@@ -504,7 +504,8 @@ public:
     */
     FILE* createFileIntoOutputWithExtension(const YString& prefix,
                                             const YString& extension,
-                                            uint numSpace) const;
+                                            uint numSpace,
+                                            const int currentOptimNumber = 0) const;
 
     //! \name
     //@{

@@ -22,19 +22,6 @@ namespace Data
 using namespace Antares;
 
 template<class ClusterT>
-inline void ClusterList<ClusterT>::flush()
-{
-#ifndef ANTARES_SWAP_SUPPORT
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-    {
-        Cluster& it = *(i->second);
-        it.flush();
-    }
-#endif
-}
-
-template<class ClusterT>
 inline uint ClusterList<ClusterT>::size() const
 {
     return (uint)cluster.size();

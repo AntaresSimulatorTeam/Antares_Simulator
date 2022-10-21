@@ -32,7 +32,6 @@
 #include <yuni/core/system/cpu.h>
 #include "action.h"
 #include <antares/logs.h>
-#include <antares/memory/memory.h>
 #include "settings.h"
 #include <wx/frame.h>
 
@@ -113,28 +112,6 @@ void Post(const Yuni::Job::IJob::Ptr& job)
     gDispatcher += job;
 }
 
-namespace // anonymous
-{
-class JobPreAllocate final : public Yuni::Job::IJob
-{
-public:
-    JobPreAllocate()
-    {
-    }
-    virtual ~JobPreAllocate()
-    {
-    }
-
-protected:
-    virtual void onExecute() override
-    {
-        ::Antares::memory.ensureOneSwapFile();
-    }
-
-}; // class JobPreAllocate
-
-} // anonymous namespace
-
 bool Start()
 {
     // Looking for the maximum number of threads
@@ -150,12 +127,8 @@ bool Start()
     }
 
     logs.info() << "starting worker pool (" << gDispatcher.maximumThreadCount() << " threads)";
-    if (gDispatcher.start())
-    {
-        gDispatcher += new JobPreAllocate();
-        return true;
-    }
-    return false;
+
+    return gDispatcher.start();
 }
 
 void Stop(uint timeout)
