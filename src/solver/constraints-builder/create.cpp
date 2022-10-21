@@ -80,8 +80,6 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
-                    logs.notice() << "paramenters impedance: " <<(*line)->ptr->parameters[columnImpedance][hour];
-                    logs.notice() << "paramenters impedance: " <<(*line)->ptr->parameters[columnLoopFlow][hour];
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
                                 * (*line)->ptr->parameters[columnLoopFlow][hour]
                                 * includeLoopFlow)

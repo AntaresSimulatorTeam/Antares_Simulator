@@ -325,10 +325,10 @@ bool JobFileReader::storeResults()
 
         // Copy
         store.height = pLineCount;
-        assert(!Memory::StrictNull(store.rows));
+        assert(!Memory::Null(store.rows));
         for (uint y = 0; y != pLineCount; ++y)
         {
-            assert(!Memory::StrictNull(store.rows));
+            assert(!Memory::Null(store.rows));
             memcpy(store.rows[y], ref[y], maxSizePerCell);
         }
     }

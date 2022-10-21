@@ -1105,10 +1105,8 @@ bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
     if (!width || !height)
         return true;
 
-    MatrixAutoFlush<MatrixType> autoflush(*this);
     for (uint x = 0; x != width; ++x)
     {
-        ++autoflush;
         for (uint y = 0; y != height; ++y)
         {
             if (!Yuni::Math::Zero((T)predicate((*this)[x][y])))
