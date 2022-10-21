@@ -119,6 +119,7 @@ bool CBuilder::update(bool applyCheckBox)
 
         uint columnImpedance = (uint)Data::fhlImpedances;
 
+        link->invalidate(true);
         // load the impedance
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
