@@ -188,6 +188,10 @@ void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo)
                 std::tie(netPositionInit, densNew)
                   = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+                // copy spilled Energy values into spilled Energy values after CSR
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
+                  = ProblemeHebdo->ResultatsHoraires[Area]
+                      ->ValeursHorairesDeDefaillanceNegative[hour];
             }
         }
     }
