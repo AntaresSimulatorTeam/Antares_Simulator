@@ -448,6 +448,8 @@ typedef struct
     double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
     int* ValeursHorairesLmrViolations; // adq patch lmr violations
     double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    double* ValeursHorairesDtgMrgInit; // adq patch initial DTG MRG
+    double* ValeursHorairesDtgMrgFinal; // adq patch final DTG MRG
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
