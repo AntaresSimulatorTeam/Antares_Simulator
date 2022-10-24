@@ -214,8 +214,11 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 
     auto& inflowsmatrix = area.hydro.series->storage;
+    auto& mingenmatrix = area.hydro.series->mingen;
+
     auto tsIndex = (uint)ptchro.Hydraulique;
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
     auto& data = pAreas[numSpace][z];
 
