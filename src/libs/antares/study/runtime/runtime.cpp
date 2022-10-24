@@ -121,7 +121,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         if (mode != stdmAdequacyDraft)
         {
             if (!area.hydro.prepro) // not in prepro mode
-                area.hydro.series->storage.flush();
+                area.hydro.series->storage.flush(); //CR22
             else
             {
                 auto& m = area.hydro.prepro->data;

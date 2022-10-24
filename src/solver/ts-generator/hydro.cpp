@@ -198,7 +198,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
             auto& area = *(study.areas.byIndex[i / 12]);
             auto& prepro = *area.hydro.prepro;
             auto& series = *area.hydro.series;
-            auto& ror = series.ror[l];
+            auto& ror = series.ror[l]; //CR22
 
             auto& colExpectation = prepro.data[Data::PreproHydro::expectation];
             auto& colStdDeviation = prepro.data[Data::PreproHydro::stdDeviation];
@@ -279,7 +279,7 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
                 dailyInflowPattern = area.hydro.inflowPattern[0][d];
                 dailyStorage = round(monthlyStorage * dailyInflowPattern / sumInflowPatterns);
 
-                series.storage[l][d] = dailyStorage;
+                series.storage[l][d] = dailyStorage; //CR22
 
                 monthlyStorage -= dailyStorage;
                 sumInflowPatterns -= dailyInflowPattern;

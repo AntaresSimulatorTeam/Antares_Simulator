@@ -115,7 +115,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
         if (!area.hydro.prepro) // not in prepro mode
         {
             assert(area.hydro.series);
-            hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage);
+            hydroHasInflows = MatrixTestForAtLeastOnePositiveValue(area.hydro.series->storage); //CR22
         }
         else
         {

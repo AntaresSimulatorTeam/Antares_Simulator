@@ -604,7 +604,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
             auto& scratchpad = *(area.scratchpad[numSpace]);
-            auto& ror = area.hydro.series->ror;
+            auto& ror = area.hydro.series->ror; //CR22
 
             assert(&scratchpad);
             assert((uint)indx < scratchpad.ts.load.height);
@@ -729,7 +729,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             {
                 auto& area = *study.areas.byIndex[k];
                 uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
-                auto& inflowsmatrix = area.hydro.series->storage;
+                auto& inflowsmatrix = area.hydro.series->storage; //CR22
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
                 if (area.hydro.reservoirManagement)

@@ -235,7 +235,7 @@ void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, 
         auto& scratchpad = *(area.scratchpad[numSpace]);
         auto& primaryReserve = area.reserves[fhrPrimaryReserve];
         auto& strategicReserve = area.reserves[fhrStrategicReserve];
-        auto& ror = area.hydro.series->ror;
+        auto& ror = area.hydro.series->ror; //CR22
         auto& calendar = study.calendar;
 
         memset(Pt.Consommation, 0, study.runtime->nbHoursPerYear * sizeof(double));
