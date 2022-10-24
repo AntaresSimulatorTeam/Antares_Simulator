@@ -125,7 +125,7 @@ public:
     static bool Null(const T* out);
 
     template<class T>
-    static bool StrictNull(const T*& out);
+    static bool StrictNull(const T* out);
 
     /*!
     ** \brief Release a raw pointer

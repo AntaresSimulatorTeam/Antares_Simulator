@@ -100,7 +100,7 @@ inline bool Memory::Null(const T* out)
 }
 
 template<class T>
-inline bool Memory::StrictNull(const T*& out)
+inline bool Memory::StrictNull(const T* out)
 {
     return !out;
 }
