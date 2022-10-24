@@ -34,10 +34,12 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
     int NbPdt;
     int Var;
     double* Xmax;
+    double* Xmin;
 
     int* NumeroVar_Turbine;
 
     double* TurbineMax = DonneesMensuelles->TurbineMax;
+    double* TurbineMin = DonneesMensuelles->TurbineMin; //CR22
 
     PROBLEME_HYDRAULIQUE_ETENDU* ProblemeHydrauliqueEtendu;
     CORRESPONDANCE_DES_VARIABLES_PB_ETENDU* CorrespondanceDesVariables;
@@ -55,10 +57,12 @@ void H2O2_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES_ETENDUES* Donnee
     NumeroVar_Turbine = CorrespondanceDesVariables->NumeroVar_Turbine;
 
     Xmax = ProblemeLineaireEtenduPartieVariable->Xmax;
+    Xmin = ProblemeLineaireEtenduPartieVariable->Xmin;
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = NumeroVar_Turbine[Pdt];
-        Xmax[Var] = TurbineMax[Pdt];
+        Xmax[Var] = TurbineMax[Pdt]; //Gt<Gt_max
+        Xmin[Var] = TurbineMin[Pdt]; //CR22: mingen Gt > mingen
     }
 
     return;

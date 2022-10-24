@@ -59,13 +59,13 @@ void H2O2_j_ConstruireLesVariables(
         Xmax[Var] = 0.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-          = &(DonneesMensuellesEtendues->Turbine[Pdt]);
+          = &(DonneesMensuellesEtendues->Turbine[Pdt]); //Gt
         Var++;
     }
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt] = Var;
+        CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt] = Var; //St
         Xmin[Var] = 0.0;
         Xmax[Var] = 1.0;
         TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -74,7 +74,7 @@ void H2O2_j_ConstruireLesVariables(
         Var++;
     }
 
-    CorrespondanceDesVariables->NumeroVar_waste = Var;
+    CorrespondanceDesVariables->NumeroVar_waste = Var; //Y
     Xmin[Var] = 0.0;
     Xmax[Var] = LINFINI;
     TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -83,7 +83,7 @@ void H2O2_j_ConstruireLesVariables(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        CorrespondanceDesVariables->NumeroVar_overflow[Pdt] = Var;
+        CorrespondanceDesVariables->NumeroVar_overflow[Pdt] = Var; //Ot
         Xmin[Var] = 0.0;
         Xmax[Var] = LINFINI;
         TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;

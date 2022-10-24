@@ -63,22 +63,22 @@ void H2O2_J_ConstruireLesContraintes(
 
     for (Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        IndicesDebutDeLigne[NombreDeContraintes] = il;
+        IndicesDebutDeLigne[NombreDeContraintes] = il; //St+Gt+Ot−St−1=It
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt]; //Gt
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt]; //St
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt - 1];
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_niveauxFinJours[Pdt - 1]; //S(t-1)
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[Pdt];
+        IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_overflow[Pdt]; //Ot
         il++;
 
         Sens[NombreDeContraintes] = '=';
@@ -86,7 +86,7 @@ void H2O2_J_ConstruireLesContraintes(
         NombreDeContraintes++;
     }
 
-    IndicesDebutDeLigne[NombreDeContraintes] = il;
+    IndicesDebutDeLigne[NombreDeContraintes] = il; //sumGt+Y=sumTt+Y(m−1)
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
@@ -96,7 +96,7 @@ void H2O2_J_ConstruireLesContraintes(
     }
 
     CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_waste;
+    IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_waste; //Y
     il++;
 
     Sens[NombreDeContraintes] = '=';
@@ -105,7 +105,7 @@ void H2O2_J_ConstruireLesContraintes(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        IndicesDebutDeLigne[NombreDeContraintes] = il;
+        IndicesDebutDeLigne[NombreDeContraintes] = il; //Gt−Dt≤Tt
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];
@@ -122,7 +122,7 @@ void H2O2_J_ConstruireLesContraintes(
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        IndicesDebutDeLigne[NombreDeContraintes] = il;
+        IndicesDebutDeLigne[NombreDeContraintes] = il; //Gt+Dt≥Tt
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
         IndicesColonnes[il] = CorrespondanceDesVariables->NumeroVar_Turbine[Pdt];

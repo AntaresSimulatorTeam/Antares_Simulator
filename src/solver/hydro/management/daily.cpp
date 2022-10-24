@@ -228,7 +228,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto tsIndex = (uint)ptchro.Hydraulique;
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0]; //CR22
+    auto const& srcmingen = mingenmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
     auto& data = pAreas[numSpace][z];
 
@@ -459,7 +459,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
-
+                problem.TurbineMin[dayMonth] = srcmingen[day] / reservoirCapacity;
                 problem.TurbineCible[dayMonth]
                   = (dtg[day] + wasteFromPreviousMonth / daysPerMonth) / reservoirCapacity;
 

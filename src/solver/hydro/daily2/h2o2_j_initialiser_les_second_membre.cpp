@@ -50,22 +50,22 @@ void H2O2_J_InitialiserLeSecondMembre(DONNEES_MENSUELLES_ETENDUES* DonneesMensue
 
     for (Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->apports[Pdt]; //contraint: St+Gt+Ot−S(t−1)=It, here is "It"
         Cnt++;
     }
 
-    SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois;
+    SecondMembre[Cnt] = DonneesMensuelles->TurbineDuMois; //sumGt+Y=sumTt+Y(m−1)  
     Cnt++;
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt]; //Gt−Dt≤Tt
         Cnt++;
     }
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt];
+        SecondMembre[Cnt] = DonneesMensuelles->TurbineCible[Pdt]; //Gt+Dt≥Tt
         Cnt++;
     }
 
