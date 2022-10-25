@@ -506,7 +506,7 @@ void Matrix<T, ReadWriteT>::fillColumn(uint x, const T& value)
     column.assign(height, value);
 #else
     for (uint y = 0; y != height; ++y)
-        (*this)[x][y] = value;
+        column[y] = value;
 #endif
 
     markAsModified();

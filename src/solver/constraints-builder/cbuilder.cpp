@@ -461,8 +461,6 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
             logs.error() << "no link found.";
             return false;
         }
-
-        NLinks = (uint)pLink.size();
     }
     return true;
 }

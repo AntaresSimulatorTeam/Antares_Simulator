@@ -48,6 +48,12 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     std::vector<Cycle> cycleBase;
     int count = 1;
     auto i = mesh.begin();
+    logs.notice() << "calendarstart: " << calendarStart;
+    logs.notice() << "calendarEnd: " << calendarEnd;
+    logs.notice() << "infinite_value: " << infiniteSecondMember;
+    logs.notice() << "nodal_loopflow_check: " << checkNodalLoopFlow;
+    logs.notice() << "delete: " << pDelete;
+
     for (; i != mesh.end(); i++, count++)
     {
         logs.info() << "Writing constraints (" << count << "/" << mesh.size() << ")";
@@ -80,8 +86,6 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
-                    logs.notice() << "paramenters impedance: " <<(*line)->ptr->parameters[columnImpedance][hour];
-                    logs.notice() << "paramenters impedance: " <<(*line)->ptr->parameters[columnLoopFlow][hour];
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
                                 * (*line)->ptr->parameters[columnLoopFlow][hour]
                                 * includeLoopFlow)

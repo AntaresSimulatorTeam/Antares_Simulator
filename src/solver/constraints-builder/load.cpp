@@ -55,7 +55,7 @@ bool CBuilder::completeFromStudy()
             {
                 k = new linkInfo();
 
-                logs.info() << "Read data (link " << nCount << "/" << NLinks << ")";
+                logs.info() << "Read data (link " << nCount++ << ")";
                 // if Yes, complete the linkInfo
                 // load the pointer
                 k->ptr = j->second;
