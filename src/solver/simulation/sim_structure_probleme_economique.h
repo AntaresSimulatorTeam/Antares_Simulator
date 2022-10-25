@@ -756,6 +756,8 @@ public:
     std::map<int, double> rhsAreaBalanceValues;
     
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
+    std::set<int> ensSet; // place inside only ENS inside adq-patch
+    std::set<int> linkSet; // place inside only links between to zones inside adq-patch
 };
 
 #endif

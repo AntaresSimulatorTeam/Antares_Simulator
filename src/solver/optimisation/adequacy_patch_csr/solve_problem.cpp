@@ -130,6 +130,50 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
     }
 }
 
+void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                          HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                                          uint weekNb,
+                                          int yearNb,
+                                          double deltaCost)
+{
+    const int hoursInWeek = 168;
+    if (deltaCost <= 0.0)
+        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
+    else
+        logs.warning() << "CSR optimization is providing solution with greater costs, optimum "
+                          "solution is set as LMR . year: "
+                       << yearNb + 1 << ". hour: "
+                       << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+}
+
+double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                     const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    double cost = 0.0;
+    if (!hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->CheckCsrCostFunctionValue)
+        return cost;
+
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
+        if (inEnsSet)
+        {
+            cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
+                    * ProblemeAResoudre->CoutQuadratique[Var];
+        }
+        bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
+        if (inLinkSet
+            && hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->IncludeHurdleCostCsr)
+        {
+            if (ProblemeAResoudre->X[Var] >= 0)
+                cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 1];
+            else
+                cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 2];
+        }
+    }
+    return cost;
+}
+
 void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     int Var;
@@ -188,12 +232,14 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme
-      = buildInteriorPointProblem(ProblemeAResoudre);
+    double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
+    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
-        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
+        double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
+        storeOrDisregardInteriorPointResults(
+          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
         return true;
     }
     else
