@@ -59,15 +59,10 @@ function(code_coverage)
         list(APPEND GCOVR_OPTIONS "--exclude-directories" "${exclude}")
     endforeach ()
 
-    add_custom_target(${Coverage_NAME} ALL
-        DEPENDS tests-simple-study
+    add_custom_target(${Coverage_NAME}
 
         # Cleaning previous results
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${Coverage_OUTPUT_DIR}
-
-        # Running unit tests for coverage files generation (gcda)...
-        COMMENT "Running unit tests and generating coverage report, please wait..."
-        COMMAND ctest --rerun-failed
 
         # Generating report
         COMMAND ${CMAKE_COMMAND} -E make_directory ${Coverage_OUTPUT_DIR}/reports
