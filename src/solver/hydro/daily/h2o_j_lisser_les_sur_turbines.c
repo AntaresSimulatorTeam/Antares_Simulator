@@ -38,6 +38,7 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
     double* TurbineCible;
     double* Turbine;
     double* TurbineMax;
+    double* TurbineMin;
     double X;
     int Np;
     char* Flag;
@@ -55,6 +56,7 @@ void H2O_J_LisserLesSurTurbines(DONNEES_MENSUELLES* DonneesMensuelles, int Numer
       = ProblemeHydraulique->ProblemeLineairePartieVariable[NumeroDeProbleme];
 
     TurbineMax = DonneesMensuelles->TurbineMax;
+    TurbineMin = DonneesMensuelles->TurbineMin;
     Turbine = DonneesMensuelles->Turbine;
     TurbineCible = DonneesMensuelles->TurbineCible;
 

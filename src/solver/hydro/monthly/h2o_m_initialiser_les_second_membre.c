@@ -53,7 +53,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     Cnt = 0;
 
-    for (Pdt = 1; Pdt < NbPdt; Pdt++)
+    for (Pdt = 1; Pdt < NbPdt; Pdt++) //St+Gt−S(t−1)=It 
     {
         SecondMembre[Cnt] = DonneesAnnuelles->Apport[Pdt - 1];
         Cnt++;
@@ -79,7 +79,7 @@ void H2O_M_InitialiserLeSecondMembre(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     for (Pdt = 0; Pdt < NbPdt; Pdt++)
     {
-        SecondMembre[Cnt] = TurbineCible[Pdt];
+        SecondMembre[Cnt] = TurbineCible[Pdt]; //sumGt=sumTt
         Cnt++;
 
         SecondMembre[Cnt] = 0.0 * ChgmtSens;

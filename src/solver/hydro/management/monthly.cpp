@@ -86,6 +86,63 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
+
+
+double HydroManagement::prepareMonthlyMingens(Data::Area& area, PerArea& data)
+{
+    double total = 0;
+
+    for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        total += data.inflows[realmonth];
+
+    if (not area.hydro.followLoadModulations)
+    {
+        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+            data.MTG[realmonth] = data.inflows[realmonth];
+
+        return total;
+    }
+
+    double monthlyMaxDemand = -std::numeric_limits<double>::infinity();
+
+    for (uint realmonth = 0; realmonth != 12; ++realmonth)
+    {
+        if (data.MLE[realmonth] > monthlyMaxDemand)
+            monthlyMaxDemand = data.MLE[realmonth];
+    }
+
+    if (not Math::Zero(monthlyMaxDemand))
+    {
+        double coeff = 0.;
+        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        {
+            assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
+            coeff += Math::Power(data.MLE[realmonth] / monthlyMaxDemand,
+                                 area.hydro.intermonthlyBreakdown);
+        }
+
+        if (!Math::Zero(coeff))
+            coeff = total / coeff;
+
+        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+        {
+            assert(data.MLE[realmonth] / monthlyMaxDemand >= 0.);
+            data.MTG[realmonth] = coeff
+                                  * Math::Power(data.MLE[realmonth] / monthlyMaxDemand,
+                                                area.hydro.intermonthlyBreakdown);
+        }
+    }
+    else
+    {
+        double coeff = total / 12.;
+
+        for (uint realmonth = 0; realmonth != 12; ++realmonth)
+            data.MTG[realmonth] = coeff;
+    }
+
+    return total;
+}
+
 double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data)
 {
     double total = 0;
@@ -171,6 +228,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
 
             double totalInflowsYear = prepareMonthlyTargetGenerations(area, data);
             assert(totalInflowsYear >= 0.);
+            double totalMingenYear = prepareMonthlyMingens(area, data);
 
             problem.CoutDepassementVolume = 1e2;
             problem.CoutViolMaxDuVolumeMin = 1e5;
@@ -184,6 +242,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
 
                 problem.TurbineMax[month] = totalInflowsYear;
+                problem.TurbineMin[month] = totalMingenYear; //data.mingen[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
                 problem.VolumeMin[month] = minLvl[firstDay];

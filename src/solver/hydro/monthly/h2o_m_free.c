@@ -95,6 +95,7 @@ void H2O_M_Free(DONNEES_ANNUELLES* DonneesAnnuelles)
     free(ProblemeHydraulique);
 
     free(DonneesAnnuelles->TurbineMax);
+    free(DonneesAnnuelles->TurbineMin);
     free(DonneesAnnuelles->TurbineCible);
     free(DonneesAnnuelles->Apport);
     free(DonneesAnnuelles->VolumeMin);

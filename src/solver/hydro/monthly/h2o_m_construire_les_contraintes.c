@@ -84,18 +84,18 @@ void H2O_M_ConstruireLesContraintes(DONNEES_ANNUELLES* DonneesAnnuelles)
 
     for (Pdt = 1; Pdt < NbPdt; Pdt++)
     {
-        IndicesDebutDeLigne[NombreDeContraintes] = il;
+        IndicesDebutDeLigne[NombreDeContraintes] = il; //St+Gt−S(t−1)=It
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt];
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt]; //St
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = -1.0;
-        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt - 1];
+        IndicesColonnes[il] = NumeroDeVariableVolume[Pdt - 1]; //S(t-1)
         il++;
 
         CoefficientsDeLaMatriceDesContraintes[il] = 1.0;
-        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt - 1];
+        IndicesColonnes[il] = NumeroDeVariableTurbine[Pdt - 1]; //Gt
         il++;
 
         Sens[NombreDeContraintes] = '=';
