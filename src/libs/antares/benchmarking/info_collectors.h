@@ -8,10 +8,8 @@
 #include <antares/study.h>
 #include "file_content.h"
 
-
 namespace Benchmarking
 {
-
 struct OptimizationInfo
 {
     unsigned int nbVariables = 0;
@@ -26,10 +24,11 @@ struct OptimizationInfo
 class StudyInfoCollector
 {
 public:
-    StudyInfoCollector(const Antares::Data::Study& study)
-        : study_(study)
-    {}
+    StudyInfoCollector(const Antares::Data::Study& study) : study_(study)
+    {
+    }
     void toFileContent(FileContent& file_content);
+
 private:
     // Methods
     void areasCountToFileContent(FileContent& file_content);
@@ -51,17 +50,13 @@ private:
 class SimulationInfoCollector
 {
 public:
-    SimulationInfoCollector(const OptimizationInfo& optInfo)
-        : opt_info_(optInfo)
-    {};
+    SimulationInfoCollector(const OptimizationInfo& optInfo) : opt_info_(optInfo){};
 
     void toFileContent(FileContent& file_content);
 
 private:
     const OptimizationInfo& opt_info_;
 };
-
-
 
 class IDurationCollector
 {
@@ -73,7 +68,9 @@ class NullDurationCollector : public IDurationCollector
 {
 public:
     NullDurationCollector() = default;
-    void addDuration(const std::string& /* name */, int64_t /* duration */) override { /* Do nothing */ }
+    void addDuration(const std::string& /* name */, int64_t /* duration */) override
+    { /* Do nothing */
+    }
 };
 
 class DurationCollector : public IDurationCollector
@@ -91,6 +88,5 @@ private:
     // these additions from thread concurrency
     std::mutex mutex_;
 };
-
 
 } // namespace Benchmarking

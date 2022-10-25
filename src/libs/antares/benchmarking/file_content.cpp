@@ -42,7 +42,7 @@ std::string FileContent::saveToBufferAsIni()
     {
         // Loop on properties
         auto* section = ini.addSection(sectionName);
-        for (const auto& [key, value]  : content)
+        for (const auto& [key, value] : content)
             section->add(key, value);
     }
     std::string buffer;

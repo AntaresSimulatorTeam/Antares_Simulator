@@ -68,7 +68,8 @@ bool SimulationComments::saveToFolder(const AnyString& folder) const
     return false;
 }
 
-void SimulationComments::saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const
+void SimulationComments::saveUsingWriter(Solver::IResultWriter::Ptr writer,
+                                         const AnyString& folder) const
 {
     String b = folder;
     b << SEP << "comments.txt";

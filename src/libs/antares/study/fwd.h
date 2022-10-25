@@ -550,8 +550,6 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 } // namespace Data
 } // namespace Antares
 
-
-
 namespace Antares
 {
 namespace Data

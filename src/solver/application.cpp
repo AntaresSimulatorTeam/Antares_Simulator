@@ -368,29 +368,33 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-    try {
-    // Run the simulation
-    switch (pStudy->runtime->mode)
+    try
     {
-    case Data::stdmEconomy:
-        runSimulationInEconomicMode();
-        break;
-    case Data::stdmAdequacy:
-        runSimulationInAdequacyMode();
-        break;
-    case Data::stdmAdequacyDraft:
-        runSimulationInAdequacyDraftMode();
-        break;
-    default:
-        break;
+        // Run the simulation
+        switch (pStudy->runtime->mode)
+        {
+        case Data::stdmEconomy:
+            runSimulationInEconomicMode();
+            break;
+        case Data::stdmAdequacy:
+            runSimulationInAdequacyMode();
+            break;
+        case Data::stdmAdequacyDraft:
+            runSimulationInAdequacyDraftMode();
+            break;
+        default:
+            break;
+        }
     }
-    }
-    // TODO : make an interface class for ISimulation, check writer & queue before runSimulationIn<XXX>Mode()
-    catch (Solver::Initialization::Error::NoResultWriter e) {
+    // TODO : make an interface class for ISimulation, check writer & queue before
+    // runSimulationIn<XXX>Mode()
+    catch (Solver::Initialization::Error::NoResultWriter e)
+    {
         logs.error() << "No result writer";
         AntaresSolverEmergencyShutdown(); // no return
     }
-    catch (Solver::Initialization::Error::NoQueueService e) {
+    catch (Solver::Initialization::Error::NoQueueService e)
+    {
         logs.error() << "No queue service";
         AntaresSolverEmergencyShutdown(); // no return
     }

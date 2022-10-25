@@ -852,7 +852,6 @@ void SurveyResults::exportGridInfos()
     data.exportGridInfos(pResultWriter);
 }
 
-
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares

@@ -1,5 +1,6 @@
 #pragma once
 
-namespace Antares::Solver {
-    void initializeSignalHandlers();
+namespace Antares::Solver
+{
+void initializeSignalHandlers();
 }

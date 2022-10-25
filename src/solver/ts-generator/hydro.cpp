@@ -85,9 +85,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study,
-                             uint currentYear,
-                             IResultWriter::Ptr writer)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter::Ptr writer)
 {
     logs.info() << "Generating the hydro time-series";
 

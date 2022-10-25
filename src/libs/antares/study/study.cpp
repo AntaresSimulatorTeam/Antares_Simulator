@@ -616,7 +616,8 @@ bool Study::checkHydroHotStart()
     if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
     {
         logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
-        logs.error() << "Please update relevant simulation parameters or use Cold Start option.    ";
+        logs.error()
+          << "Please update relevant simulation parameters or use Cold Start option.    ";
         return false;
     }
 
@@ -625,7 +626,8 @@ bool Study::checkHydroHotStart()
     uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
     if (nbDaysInSimulation < 364)
     {
-        logs.error() << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
+        logs.error()
+          << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
         logs.error() << "Please update data or use Cold Start option.";
         return false;
     }
@@ -639,7 +641,7 @@ bool Study::checkHydroHotStart()
         // Reference to the area
         Area* area = i->second;
 
-        // No need to make a check on level initialization when reservoir management 
+        // No need to make a check on level initialization when reservoir management
         // is not activated for the current area
         if (!area->hydro.reservoirManagement)
             continue;
@@ -658,8 +660,9 @@ bool Study::checkHydroHotStart()
         // Check the day of level initialization is the first day of simulation
         if (initLevelOnSimDay != parameters.simulationDays.first)
         {
-            logs.error() << "Hot Start Hydro option : area '" << area->name 
-                         << "' - hydro level must be initialized on the first simulation month.    ";
+            logs.error()
+              << "Hot Start Hydro option : area '" << area->name
+              << "' - hydro level must be initialized on the first simulation month.    ";
             logs.error() << "Please update data or use Cold Start option.";
             return false;
         }
@@ -780,72 +783,72 @@ bool Study::prepareOutput()
 
 void Study::saveAboutTheStudy()
 {
-  String path;
-  path.reserve(1024);
+    String path;
+    path.reserve(1024);
 
-  path.clear() << "about-the-study";
-  simulationComments.saveUsingWriter(resultWriter, path);
+    path.clear() << "about-the-study";
+    simulationComments.saveUsingWriter(resultWriter, path);
 
-  // Write the header as a reminder
-  {
-      path.clear() << "about-the-study" << SEP << "study.ini";
-      Antares::IniFile ini;
-      header.CopySettingsToIni(ini, false);
+    // Write the header as a reminder
+    {
+        path.clear() << "about-the-study" << SEP << "study.ini";
+        Antares::IniFile ini;
+        header.CopySettingsToIni(ini, false);
 
-      std::string writeBuffer;
-      ini.saveToString(writeBuffer);
+        std::string writeBuffer;
+        ini.saveToString(writeBuffer);
 
-      resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
-  }
+        resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
+    }
 
-  // Write parameters.ini
-  {
-      String dest;
-      dest << "about-the-study" << SEP << "parameters.ini";
+    // Write parameters.ini
+    {
+        String dest;
+        dest << "about-the-study" << SEP << "parameters.ini";
 
-      buffer.clear() << folderSettings << SEP << "generaldata.ini";
-      resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
-  }
+        buffer.clear() << folderSettings << SEP << "generaldata.ini";
+        resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
+    }
 
-  // antares-output.info
-  path.clear() << "info.antares-output";
-  std::ostringstream f;
-  String startTimeStr;
-  DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
-  f << "[general]";
-  f << "\nversion = " << (uint)Data::versionLatest;
-  f << "\nname = " << simulationComments.name;
-  f << "\nmode = " << StudyModeToCString(parameters.mode);
-  f << "\ndate = " << startTimeStr;
-  f << "\ntitle = " << startTimeStr;
-  f << "\ntimestamp = " << pStartTime;
-  f << "\n\n";
-  auto output = f.str();
-  resultWriter->addEntryFromBuffer(path.c_str(), output);
+    // antares-output.info
+    path.clear() << "info.antares-output";
+    std::ostringstream f;
+    String startTimeStr;
+    DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
+    f << "[general]";
+    f << "\nversion = " << (uint)Data::versionLatest;
+    f << "\nname = " << simulationComments.name;
+    f << "\nmode = " << StudyModeToCString(parameters.mode);
+    f << "\ndate = " << startTimeStr;
+    f << "\ntitle = " << startTimeStr;
+    f << "\ntimestamp = " << pStartTime;
+    f << "\n\n";
+    auto output = f.str();
+    resultWriter->addEntryFromBuffer(path.c_str(), output);
 
-  if (usedByTheSolver and !parameters.noOutput)
-  {
-      // Write all available areas as a reminder
-      {
-        Yuni::Clob buffer;
-        path.clear() << "about-the-study" << SEP << "areas.txt";
-        for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
-          {
-            if (setsOfAreas.hasOutput(i->first))
-              buffer << "@ " << i->first << "\r\n";
-          }
-        areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
-        resultWriter->addEntryFromBuffer(path.c_str(), buffer);
-      }
+    if (usedByTheSolver and !parameters.noOutput)
+    {
+        // Write all available areas as a reminder
+        {
+            Yuni::Clob buffer;
+            path.clear() << "about-the-study" << SEP << "areas.txt";
+            for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
+            {
+                if (setsOfAreas.hasOutput(i->first))
+                    buffer << "@ " << i->first << "\r\n";
+            }
+            areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+        }
 
-      // Write all available links as a reminder
-      {
-        path.clear() << "about-the-study" << SEP << "links.txt";
-        Yuni::Clob buffer;
-        areas.saveLinkListToBuffer(buffer);
-        resultWriter->addEntryFromBuffer(path.c_str(), buffer);
-      }
-  }
+        // Write all available links as a reminder
+        {
+            path.clear() << "about-the-study" << SEP << "links.txt";
+            Yuni::Clob buffer;
+            areas.saveLinkListToBuffer(buffer);
+            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+        }
+    }
 }
 
 Area* Study::areaAdd(const AreaName& name)
@@ -1113,7 +1116,8 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
         kThermal,
         kRenewable,
         kUnknown
-    } type = kUnknown;
+    } type
+      = kUnknown;
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {

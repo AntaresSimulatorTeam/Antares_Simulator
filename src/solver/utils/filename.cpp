@@ -9,10 +9,8 @@ std::string getFilenameWithExtension(const YString& prefix,
 {
     auto study = Data::Study::Current::Get();
     std::ostringstream outputFile;
-    outputFile << prefix.c_str()
-               << "-" // problem ou criterion
-               << std::to_string(study->runtime->currentYear[numSpace] + 1)
-               << "-"
+    outputFile << prefix.c_str() << "-" // problem ou criterion
+               << std::to_string(study->runtime->currentYear[numSpace] + 1) << "-"
                << std::to_string(study->runtime->weekInTheYear[numSpace] + 1);
 
     if (optNumber)

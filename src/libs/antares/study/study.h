@@ -597,7 +597,7 @@ public:
     //@{
     //! The current Simulation
     SimulationComments simulationComments;
-  
+
     Yuni::sint64 pStartTime;
     // Used in GUI and solver
     // ----------------------

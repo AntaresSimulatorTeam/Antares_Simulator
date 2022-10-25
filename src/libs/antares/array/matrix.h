@@ -502,8 +502,7 @@ public:
         }
     };
 
-    void saveToBuffer(std::string& data,
-                      uint precision = 6) const;
+    void saveToBuffer(std::string& data, uint precision = 6) const;
 
 private:
     /*!

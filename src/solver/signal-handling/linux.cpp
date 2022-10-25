@@ -10,6 +10,6 @@ void initializeSignalHandlers()
     std::signal(SIGTERM, signalCtrl_term);
     std::signal(SIGINT, signalCtrl_int);
 }
-}// namespace Antares::Solver
+} // namespace Antares::Solver
 
 #endif

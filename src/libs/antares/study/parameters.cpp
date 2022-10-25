@@ -603,7 +603,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
             logs.warning() << "Reading parameters : invalid MPS export status : " << value
-                << ". Reset to no MPS export.";
+                           << ". Reset to no MPS export.";
             return false;
         }
         return true;

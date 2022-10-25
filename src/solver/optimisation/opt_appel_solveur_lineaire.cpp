@@ -232,7 +232,8 @@ RESOLUTION:
 
     // We create the MPS writer here (and not at the beginning of the current function) because
     // MPS writer uses the solver that can be updated earlier in the function.
-    mpsWriterFactory mps_writer_factory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    mpsWriterFactory mps_writer_factory(
+      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded();
 

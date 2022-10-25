@@ -46,8 +46,6 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 
-
-
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
 
@@ -474,7 +472,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace, pResultWriter);
+        ImplementationType::variables.exportSurveyResults(
+          synthesis, newPath, numSpace, pResultWriter);
     }
 }
 
@@ -1512,13 +1511,14 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
 
 static void logPerformedYearsInAset(setOfParallelYears& set)
 {
-    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears << " perfomed)";
-    
+    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears
+                << " perfomed)";
+
     std::string performedYearsToLog = "";
     std::for_each(std::begin(set.yearsIndices), std::end(set.yearsIndices), [&](uint const& y) {
         if (set.isYearPerformed[y])
             performedYearsToLog += std::to_string(y + 1) + " ";
-        });
+    });
 
     logs.info() << "Year(s) " << performedYearsToLog;
 }

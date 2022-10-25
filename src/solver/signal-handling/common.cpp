@@ -23,7 +23,7 @@ static void finalizeWrite()
         logs.warning() << "Could not finalize write: invalid study";
         exit(EXIT_FAILURE);
     }
-     
+
     exit(EXIT_SUCCESS);
 }
 

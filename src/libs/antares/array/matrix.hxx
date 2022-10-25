@@ -1226,8 +1226,7 @@ void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
 }
 
 template<class T, class ReadWriteT>
-void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data,
-                                         uint precision) const
+void Matrix<T, ReadWriteT>::saveToBuffer(std::string& data, uint precision) const
 {
     PredicateIdentity identity;
     this->saveToBuffer(data, precision, false, identity, true);

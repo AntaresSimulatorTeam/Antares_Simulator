@@ -123,7 +123,7 @@ void ZipWriter::addEntryFromFile(const std::string& entryPath, const std::string
     Yuni::Clob buffer;
     switch (Yuni::IO::File::LoadFromFile(buffer, filePath.c_str()))
     {
-      using namespace Yuni::IO;
+        using namespace Yuni::IO;
     case errNone:
         addEntryFromBufferHelper<Yuni::Clob>(entryPath, buffer);
         break;

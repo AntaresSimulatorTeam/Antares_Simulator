@@ -163,8 +163,7 @@ bool Economy::simulationBegin()
             }
         }
 
-        weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+        weeklyOptProblem = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
 
         SIM_InitialisationResultats();
     }

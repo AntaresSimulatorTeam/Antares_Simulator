@@ -58,6 +58,7 @@ public:
     ** and provide a good support for Excel macros.
     */
     void exportGridInfos(IResultWriter::Ptr writer);
+
 public:
     //! The current column index
     unsigned int columnIndex;
