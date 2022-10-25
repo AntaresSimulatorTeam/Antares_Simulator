@@ -146,7 +146,7 @@ jobs:
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
-           ctest -C ${{ matrix.buildtype }} --rerun-failed --verbose --output-on-failure -L "unit|end-to-end"
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
     # simtest
     - name: Read simtest version

@@ -61,20 +61,8 @@ struct Fixture
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)
 
-BOOST_AUTO_TEST_CASE(nb_parallel_years_with_avrg_mode)
-{
-	BOOST_TEST_MESSAGE("nb_parallel_years_with_avrg_mode");
-	uint expectedNbParallelYears;
-	pStudy->parameters.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncMax;
-	pStudy->computeRawNbParallelYear();	
-	expectedNbParallelYears = 15;
-	BOOST_CHECK_EQUAL(pStudy->getNbYearsParallelRaw(), expectedNbParallelYears);
-
-}
-
 BOOST_AUTO_TEST_CASE(test_init_internal_data_not_latest_version)
 {
-	BOOST_TEST_MESSAGE("test_init_internal_data_not_latest_version");
 	pStudy->header.version = version820;
 	pStudy->parameters.timeSeriesToImport = true;
 	BOOST_CHECK(!pStudyWrapper->initializeInternalData(options));
@@ -82,7 +70,6 @@ BOOST_AUTO_TEST_CASE(test_init_internal_data_not_latest_version)
 
 BOOST_AUTO_TEST_CASE(test_init_internal_data_latest_version)
 {
-	BOOST_TEST_MESSAGE("test_init_internal_data_latest_version");
 	pStudy->header.version = versionLatest;
 	pStudy->parameters.timeSeriesToImport = true;
 	BOOST_CHECK(pStudyWrapper->initializeInternalData(options));
@@ -90,7 +77,6 @@ BOOST_AUTO_TEST_CASE(test_init_internal_data_latest_version)
 
 BOOST_AUTO_TEST_CASE(test_init_internal_data_hot_start_bad_nb_parallel_years)
 {
-	BOOST_TEST_MESSAGE("test_init_internal_data_hot_start_bad_nb_parallel_years");
 	pStudy->parameters.initialReservoirLevels.iniLevels = irlHotStart;
 	pStudy->maxNbYearsInParallel = 2;
 	pStudy->parameters.allSetsHaveSameSize = false;
@@ -99,7 +85,6 @@ BOOST_AUTO_TEST_CASE(test_init_internal_data_hot_start_bad_nb_parallel_years)
 
 BOOST_AUTO_TEST_CASE(test_init_internal_data_hot_start_not_whole_year)
 {
-	BOOST_TEST_MESSAGE("test_init_internal_data_hot_start_not_whole_year");
 	pStudy->parameters.initialReservoirLevels.iniLevels = irlHotStart;
 	pStudy->parameters.simulationDays.end = 300;
 	BOOST_CHECK(!pStudyWrapper->initializeInternalData(options));
@@ -107,7 +92,6 @@ BOOST_AUTO_TEST_CASE(test_init_internal_data_hot_start_not_whole_year)
 
 BOOST_AUTO_TEST_CASE(test_init_internal_data_hot_start_bad_first_day)
 {
-	BOOST_TEST_MESSAGE("test_init_internal_data_hot_start_bad_first_day");
 	int nbTS = 2;
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 	pStudy->parameters.initialReservoirLevels.iniLevels = irlHotStart;
