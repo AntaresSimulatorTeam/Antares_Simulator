@@ -49,6 +49,7 @@ extern "C"
         int NombreDeJoursDuMois; /* A renseigner par l'appelant */
         double TurbineDuMois;    /* A renseigner par l'appelant (c'est le turbine opt du mois) */
         double* TurbineMax;      /* A renseigner par l'appelant : 1 valeur par jour */
+        double* TurbineMin;
         double* TurbineCible;    /* A renseigner par l'appelant : 1 valeur par jour */
         /* Les resultats */
         char
