@@ -11,7 +11,7 @@
 #include <fwd.h>
 #include <study.h>
 #include <area/constants.h>
-#include <wrappers/study-wrapper.h>
+#include "../wrappers/study-wrapper.h"
 // #include "files-generator.h"
 
 #include <yuni/io/file.h>
