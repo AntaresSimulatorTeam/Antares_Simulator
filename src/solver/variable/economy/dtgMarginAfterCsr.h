@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_DtgMarginFinal_H__
-#define __SOLVER_VARIABLE_ECONOMY_DtgMarginFinal_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__
+#define __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__
 
 #include "../variable.h"
 
@@ -37,12 +37,12 @@ namespace Variable
 {
 namespace Economy
 {
-struct VCardDtgMarginFinal
+struct VCardDtgMarginCsr
 {
     //! Caption
     static const char* Caption()
     {
-        return "DTG. MRG. FIN";
+        return "DTG MRG CSR";
     }
     //! Unit
     static const char* Unit()
@@ -65,7 +65,7 @@ struct VCardDtgMarginFinal
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardDtgMarginFinal VCardForSpatialAggregate;
+    typedef VCardDtgMarginCsr VCardForSpatialAggregate;
 
     enum
     {
@@ -99,20 +99,20 @@ struct VCardDtgMarginFinal
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall DtgMarginFinal emissions expected from all
+** \brief C02 Average value of the overrall DtgMarginCsr emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class DtgMarginFinal
- : public Variable::IVariable<DtgMarginFinal<NextT>, NextT, VCardDtgMarginFinal>
+class DtgMarginCsr
+ : public Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardDtgMarginCsr>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardDtgMarginFinal VCardType;
+    typedef VCardDtgMarginCsr VCardType;
     //! Ancestor
-    typedef Variable::IVariable<DtgMarginFinal<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -139,7 +139,7 @@ public:
     };
 
 public:
-    ~DtgMarginFinal()
+    ~DtgMarginCsr()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -236,9 +236,9 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total DtgMarginFinal 
+        // Total DtgMarginCsr 
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesDtgMrgFinal[state.hourInTheWeek];
+          = state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -279,11 +279,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class DtgMarginFinal
+}; // class DtgMarginCsr
 
 } // namespace Economy
 } // namespace Variable
 } // namespace Solver
 } // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_DtgMarginFinal_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__

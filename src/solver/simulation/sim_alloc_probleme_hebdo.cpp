@@ -457,9 +457,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgInit
-          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgFinal
+        problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
@@ -841,8 +839,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgInit);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgFinal);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny);

@@ -132,8 +132,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/domesticUnsuppliedEnergy.h
 		variable/economy/localMatchingRuleViolations.h
 		variable/economy/spilledEnergyAfterCSR.h
-		variable/economy/dtgMarginInit.h
-		variable/economy/dtgMarginFinal.h
+		variable/economy/dtgMarginAfterCsr.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
 		variable/economy/productionByDispatchablePlant.h
