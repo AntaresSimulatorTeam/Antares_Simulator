@@ -140,10 +140,10 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
     if (deltaCost <= 0.0)
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
     else
-        logs.warning() << "CSR optimization is providing solution with greater costs, optimum "
-                          "solution is set as LMR . year: "
-                       << yearNb + 1 << ". hour: "
-                       << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+        logs.info() << "CSR optimization is providing solution with greater costs, optimum "
+                       "solution is set as LMR . year: "
+                    << yearNb + 1 << ". hour: "
+                    << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
