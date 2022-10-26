@@ -464,7 +464,7 @@ public:
     *"max").
     **
     */
-    void computeRawNbParallelYear();
+    void computeRawNbParallelYear(const bool forceParallel, const uint nbYearsParallelForced);
 
     /*!
     ** \brief Gets the raw number of parallel years
@@ -489,7 +489,7 @@ public:
     /*!
     ** \brief True if all sets have the same size.
     */
-    bool allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>> setsOfParallelYears);
+    bool allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>>& setsOfParallelYears);
 
     /*!
     ** \brief Computes number of cores
@@ -497,7 +497,7 @@ public:
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
-    void computeNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
+    void computeNumberOfCores(const StudyLoadOptions& options);
 
     /*!
     ** \brief In case hydro hot start is enabled, checking all conditions are met.

@@ -98,7 +98,7 @@ public:
         set.clear();
     }
 
-    uint size(Study::SingleSetOfAreas& set)
+    uint size(Study::SingleSetOfAreas& set) const
     {
         return (uint)set.size();
     }

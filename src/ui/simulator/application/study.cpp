@@ -316,12 +316,14 @@ protected:
         logs.notice() << "Saving the study...";
         logs.info() << "  Destination: " << pFolder;
 
+        Data::StudyLoadOptions options;
+
         // making sure that all internal data are allocated
         study->ensureDataAreAllInitialized();
 
         // Updating the number of logical cores to use when saving the study
         // so that the run window is up to date.
-        study->computeNumberOfCores(false, 0);
+        study->computeNumberOfCores(options);
 
         if (pSaveAs || pShouldInvalidateStudy)
         {

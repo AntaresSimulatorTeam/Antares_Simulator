@@ -323,105 +323,100 @@ void Study::ensureDataAreAllInitialized()
 }
 
 
-void Study::computeRawNbParallelYear()
+void Study::computeRawNbParallelYear(const bool forceParallel, const uint nbYearsParallelForced)
 {
-    std::map<std::string, uint> table;
+    if (forceParallel)
+    {
+        nbYearsParallelRaw = nbYearsParallelForced;
+        return;
+    }
+
+    std::map<NumberOfCoresMode, uint> table;
     uint nbLogicalCores = Yuni::System::CPU::Count();
-    if (!nbLogicalCores)
-        logs.fatal() << "Number of logical cores available is 0.";
+
+    table[ncMin] = 1;
 
     switch (nbLogicalCores)
     {
+    case 0:
+        logs.fatal() << "Number of logical cores available is 0.";
     case 1:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 1;
-        table["max"] = 1;
+        table[ncLow] = 1;
+        table[ncAvg] = 1;
+        table[ncHigh] = 1;
+        table[ncMax] = 1;
         break;
     case 2:
-        table["min"] = 1;
-        table["low"] = 1;
-        table["med"] = 1;
-        table["high"] = 2;
-        table["max"] = 2;
+        table[ncLow] = 1;
+        table[ncAvg] = 1;
+        table[ncHigh] = 2;
+        table[ncMax] = 2;
         break;
     case 3:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 2;
-        table["max"] = 3;
+        table[ncLow] = 2;
+        table[ncAvg] = 2;
+        table[ncHigh] = 2;
+        table[ncMax] = 3;
         break;
     case 4:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 2;
-        table["high"] = 3;
-        table["max"] = 4;
+        table[ncLow] = 2;
+        table[ncAvg] = 2;
+        table[ncHigh] = 3;
+        table[ncMax] = 4;
         break;
     case 5:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 5;
+        table[ncLow] = 2;
+        table[ncAvg] = 3;
+        table[ncHigh] = 4;
+        table[ncMax] = 5;
         break;
     case 6:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 4;
-        table["max"] = 6;
+        table[ncLow] = 2;
+        table[ncAvg] = 3;
+        table[ncHigh] = 4;
+        table[ncMax] = 6;
         break;
     case 7:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 3;
-        table["high"] = 5;
-        table["max"] = 7;
+        table[ncLow] = 2;
+        table[ncAvg] = 3;
+        table[ncHigh] = 5;
+        table[ncMax] = 7;
         break;
     case 8:
-        table["min"] = 1;
-        table["low"] = 2;
-        table["med"] = 4;
-        table["high"] = 6;
-        table["max"] = 8;
+        table[ncLow] = 2;
+        table[ncAvg] = 4;
+        table[ncHigh] = 6;
+        table[ncMax] = 8;
         break;
     case 9:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 7;
-        table["max"] = 8;
+        table[ncLow] = 3;
+        table[ncAvg] = 5;
+        table[ncHigh] = 7;
+        table[ncMax] = 8;
         break;
     case 10:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 5;
-        table["high"] = 8;
-        table["max"] = 9;
+        table[ncLow] = 3;
+        table[ncAvg] = 5;
+        table[ncHigh] = 8;
+        table[ncMax] = 9;
         break;
     case 11:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 8;
-        table["max"] = 10;
+        table[ncLow] = 3;
+        table[ncAvg] = 6;
+        table[ncHigh] = 8;
+        table[ncMax] = 10;
         break;
     case 12:
-        table["min"] = 1;
-        table["low"] = 3;
-        table["med"] = 6;
-        table["high"] = 9;
-        table["max"] = 11;
+        table[ncLow] = 3;
+        table[ncAvg] = 6;
+        table[ncHigh] = 9;
+        table[ncMax] = 11;
         break;
     default:
-        table["min"] = 1;
-        table["low"] = (uint)std::ceil(nbLogicalCores / 4.);
-        table["med"] = (uint)std::ceil(nbLogicalCores / 2.);
-        table["high"] = (uint)std::ceil(3 * nbLogicalCores / 4.);
-        table["max"] = nbLogicalCores - 1;
+        table[ncLow] = (uint)std::ceil(nbLogicalCores / 4.);
+        table[ncAvg] = (uint)std::ceil(nbLogicalCores / 2.);
+        table[ncHigh] = (uint)std::ceil(3 * nbLogicalCores / 4.);
+        table[ncMax] = nbLogicalCores - 1;
         break;
     }
 
@@ -432,30 +427,14 @@ void Study::computeRawNbParallelYear()
             one type of time series is generated)
     */
 
-    // Getting the number of parallel years based on the number of cores level.
-
-    switch (parameters.nbCores.ncMode)
+    try
     {
-    case ncMin:
-        nbYearsParallelRaw = table["min"];
-        break;
-    case ncLow:
-        nbYearsParallelRaw = table["low"];
-        break;
-    case ncAvg:
-        nbYearsParallelRaw = table["med"];
-        break;
-    case ncHigh:
-        nbYearsParallelRaw = table["high"];
-        break;
-    case ncMax:
-        nbYearsParallelRaw = table["max"];
-        break;
-    default:
-        logs.fatal() << "Simulation cores level not correct : " << (int)parameters.nbCores.ncMode;
-        break;
+        nbYearsParallelRaw = table.at(parameters.nbCores.ncMode);
     }
-
+    catch(const std::out_of_range& e)
+    {
+        logs.fatal() << "Simulation cores level not correct : " << (int)parameters.nbCores.ncMode;
+    }
 }
 
 uint Study::getNbYearsParallelRaw() const {
@@ -483,7 +462,7 @@ uint Study::computeTimeSeriesParallelYearsLimit(){
 
 std::vector<std::vector<uint>> Study::computeMinNbYearsInParallelYearSet(){
 
-    auto& p = parameters;
+    const auto& p = parameters;
 
     // Getting the minimum number of years in a set of parallel years.
     // To get this number, we have to divide all years into sets of parallel
@@ -555,27 +534,24 @@ void Study::setGUIMinMaxNbYearsInParallel(const uint min, const uint max){
     maxNbYearsInParallel_save = max;
 }
 
-bool Study::allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>> setsOfParallelYears){
+bool Study::allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>>& setsOfParallelYears){
 
     if (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && setsOfParallelYears.size() && maxNbYearsInParallel > 1)
+        && !setsOfParallelYears.empty() && maxNbYearsInParallel > 1)
     {
         uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        if (setsOfParallelYears.size() > 1)
+        for (uint s = 1; s < setsOfParallelYears.size(); s++)
         {
-            for (uint s = 1; s < setsOfParallelYears.size(); s++)
+            if (setsOfParallelYears[s].size() != currentSetSize)
             {
-                if (setsOfParallelYears[s].size() != currentSetSize)
-                {
-                    return false;
-                }
+                return false;
             }
         }
     } // End if hot start
     return true;
 }
 
-void Study::computeNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced)
+void Study::computeNumberOfCores(const StudyLoadOptions& options)
 {
     /*
             Getting the number of parallel years based on the number
@@ -583,13 +559,8 @@ void Study::computeNumberOfCores(const bool forceParallel, const uint nbYearsPar
             This number is limited by the smallest refresh span (if at least
             one type of time series is generated)
     */
-    computeRawNbParallelYear();
-
+    computeRawNbParallelYear(options.forceParallel, options.maxNbYearsInParallel);
     maxNbYearsInParallel = getNbYearsParallelRaw();
-
-    // In case solver option '--force-parallel n' is used, previous computation is overridden.
-    if (forceParallel)
-        maxNbYearsInParallel = nbYearsParallelForced;
 
     uint TSlimit = computeTimeSeriesParallelYearsLimit();
     if (TSlimit < maxNbYearsInParallel)
@@ -617,7 +588,6 @@ void Study::computeNumberOfCores(const bool forceParallel, const uint nbYearsPar
     // GUI : storing minimum number of parallel years (in a set of parallel years).
     //		 Useful in the run window's simulation cores field in case parallel mode is enabled
     // by user.
-    // minNbYearsInParallel_save = minNbYearsInParallel;
 
     // The max number of years to run in parallel is limited by the max number years in a set of
     // parallel years. This latter number can be limited by the smallest interval between 2 refresh

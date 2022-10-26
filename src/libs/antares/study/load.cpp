@@ -129,7 +129,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // -------------------------
     // Getting the number of logical cores to use before loading and creating the areas :
     // Areas need this number to be up-to-date at construction.
-    computeNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+    computeNumberOfCores(options);
 
 #ifdef ANTARES_SWAP_SUPPORT
     // In case of swap support, MC years parallel computing is forbidden.
