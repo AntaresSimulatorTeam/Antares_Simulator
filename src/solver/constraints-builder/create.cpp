@@ -48,11 +48,11 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     std::vector<Cycle> cycleBase;
     int count = 1;
     auto i = mesh.begin();
-    logs.notice() << "calendarstart: " << calendarStart;
-    logs.notice() << "calendarEnd: " << calendarEnd;
-    logs.notice() << "infinite_value: " << infiniteSecondMember;
-    logs.notice() << "nodal_loopflow_check: " << checkNodalLoopFlow;
-    logs.notice() << "delete: " << pDelete;
+    logs.debug() << "calendarstart: " << calendarStart;
+    logs.debug() << "calendarEnd: " << calendarEnd;
+    logs.debug() << "infinite_value: " << infiniteSecondMember;
+    logs.debug() << "nodal_loopflow_check: " << checkNodalLoopFlow;
+    logs.debug() << "delete: " << pDelete;
 
     for (; i != mesh.end(); i++, count++)
     {
@@ -63,6 +63,10 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
         if (calendarEnd != 8760 || calendarStart != 1)
         {
             currentCycle.opType = Data::BindingConstraint::opBoth;
+
+            logs.error() << "Calendar start and end needs to be default values: 1 and 8760";
+            logs.error() << "Actual values: start " << calendarStart << " end " << calendarEnd;
+            return false;
         }
 
         for (uint hour = 0; hour < currentCycle.time; ++hour)
