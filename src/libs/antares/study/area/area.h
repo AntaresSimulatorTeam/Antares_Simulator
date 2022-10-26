@@ -430,6 +430,17 @@ public:
 
     reverse_iterator rend();
     const_reverse_iterator rend() const;
+
+    //! \name Internal Data TS-Generators / Series
+    //@{
+    /*!
+    ** \brief Ensure data for time series/prepro are initalized if they should be
+    **
+    ** It initializes data for each area so it would be better to call this
+    ** routine when areas are already loaded.
+    */
+
+    void ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded);
     //@}
 
     //! \name Import / Export

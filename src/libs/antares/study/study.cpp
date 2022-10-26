@@ -201,61 +201,6 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-void StudyEnsureDataLoadPrepro(Study* s)
-{
-    AreaListEnsureDataLoadPrepro(&s->areas);
-}
-
-void StudyEnsureDataLoadTimeSeries(Study* s)
-{
-    AreaListEnsureDataLoadTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataSolarPrepro(Study* s)
-{
-    AreaListEnsureDataSolarPrepro(&s->areas);
-}
-
-void StudyEnsureDataSolarTimeSeries(Study* s)
-{
-    AreaListEnsureDataSolarTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataWindTimeSeries(Study* s)
-{
-    AreaListEnsureDataWindTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataWindPrepro(Study* s)
-{
-    AreaListEnsureDataWindPrepro(&s->areas);
-}
-
-void StudyEnsureDataHydroTimeSeries(Study* s)
-{
-    AreaListEnsureDataHydroTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataHydroPrepro(Study* s)
-{
-    AreaListEnsureDataHydroPrepro(&s->areas);
-}
-
-void StudyEnsureDataThermalTimeSeries(Study* s)
-{
-    AreaListEnsureDataThermalTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataRenewableTimeSeries(Study* s)
-{
-    AreaListEnsureDataRenewableTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataThermalPrepro(Study* s)
-{
-    AreaListEnsureDataThermalPrepro(&s->areas);
-}
-
 uint64 Study::memoryUsage() const
 {
     return folder.capacity()
@@ -277,48 +222,6 @@ uint64 Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-void Study::ensureDataAreInitializedAccordingParameters()
-{
-    StudyEnsureDataLoadTimeSeries(this);
-    StudyEnsureDataSolarTimeSeries(this);
-    StudyEnsureDataWindTimeSeries(this);
-    StudyEnsureDataHydroTimeSeries(this);
-    StudyEnsureDataThermalTimeSeries(this);
-    StudyEnsureDataRenewableTimeSeries(this);
-
-    // Load
-    if (parameters.isTSGeneratedByPrepro(timeSeriesLoad))
-        StudyEnsureDataLoadPrepro(this);
-    // Solar
-    if (parameters.isTSGeneratedByPrepro(timeSeriesSolar))
-        StudyEnsureDataSolarPrepro(this);
-    // Hydro
-    if (parameters.isTSGeneratedByPrepro(timeSeriesHydro))
-        StudyEnsureDataHydroPrepro(this);
-    // Wind
-    if (parameters.isTSGeneratedByPrepro(timeSeriesWind))
-        StudyEnsureDataWindPrepro(this);
-    // Thermal
-    StudyEnsureDataThermalPrepro(this);
-}
-
-void Study::ensureDataAreAllInitialized()
-{
-    // Timeseries
-    StudyEnsureDataLoadTimeSeries(this);
-    StudyEnsureDataSolarTimeSeries(this);
-    StudyEnsureDataWindTimeSeries(this);
-    StudyEnsureDataHydroTimeSeries(this);
-    StudyEnsureDataThermalTimeSeries(this);
-    StudyEnsureDataRenewableTimeSeries(this);
-
-    // TS-Generators
-    StudyEnsureDataLoadPrepro(this);
-    StudyEnsureDataSolarPrepro(this);
-    StudyEnsureDataHydroPrepro(this);
-    StudyEnsureDataWindPrepro(this);
-    StudyEnsureDataThermalPrepro(this);
-}
 
 std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
 {

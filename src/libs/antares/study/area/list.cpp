@@ -1212,6 +1212,42 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     return ret;
 }
 
+void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded) //allocation
+{
+    AreaListEnsureDataLoadTimeSeries(this);
+    AreaListEnsureDataSolarTimeSeries(this);
+    AreaListEnsureDataWindTimeSeries(this);
+    AreaListEnsureDataHydroTimeSeries(this);
+    AreaListEnsureDataThermalTimeSeries(this);
+    AreaListEnsureDataRenewableTimeSeries(this);
+
+    if(loadOnlyNeeded)
+    {
+        // Load
+        if (params.isTSGeneratedByPrepro(timeSeriesLoad))
+            AreaListEnsureDataLoadPrepro(this);
+        // Solar
+        if (params.isTSGeneratedByPrepro(timeSeriesSolar))
+            AreaListEnsureDataSolarPrepro(this);
+        // Hydro
+        if (params.isTSGeneratedByPrepro(timeSeriesHydro))
+            AreaListEnsureDataHydroPrepro(this);
+        // Wind
+        if (params.isTSGeneratedByPrepro(timeSeriesWind))
+            AreaListEnsureDataWindPrepro(this);
+    }
+    else
+    {
+        AreaListEnsureDataLoadPrepro(this);
+        AreaListEnsureDataSolarPrepro(this);
+        AreaListEnsureDataHydroPrepro(this);
+        AreaListEnsureDataWindPrepro(this);
+    }
+
+    // Thermal
+    AreaListEnsureDataThermalPrepro(this);
+}
+
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
@@ -1239,7 +1275,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         ret = AreaListLoadThermalDataFromFile(*this, buffer) and ret;
 
         // The cluster list must be loaded before the method
-        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // ensureDataIsInitialized is called
         // in order to allocate data with all thermal clusters.
         CString<30, false> thermalPlant;
         if (pStudy.header.version < 350)
@@ -1261,7 +1297,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (pStudy.header.version >= 810)
     {
         // The cluster list must be loaded before the method
-        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // ensureDataIsInitialized is called
         // in order to allocate data with all renewable clusters.
         CString<30, false> renewablePlant;
         renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
@@ -1277,12 +1313,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Prepare
-    if (options.loadOnlyNeeded)
-        // Only data we need
-        pStudy.ensureDataAreInitializedAccordingParameters();
-    else
-        // We want all data, without exception
-        pStudy.ensureDataAreAllInitialized();
+    ensureDataIsInitialized(pStudy.parameters, options.loadOnlyNeeded);
 
     // Load all nodes
     uint indx = 0;
@@ -1384,6 +1415,7 @@ void AreaListEnsureDataLoadTimeSeries(AreaList* l)
         if (!area.load.series)
             area.load.series = new DataSeriesLoad();
     });
+    logs.info() << "AreaListEnsureDataLoadTimeSeries done";
 }
 
 void AreaListEnsureDataLoadPrepro(AreaList* l)
@@ -1479,6 +1511,7 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+    logs.info() << "AreaListEnsureDataThermalPrepro done";
 }
 
 uint64 AreaList::memoryUsage() const
