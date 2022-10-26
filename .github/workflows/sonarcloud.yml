@@ -94,7 +94,7 @@ jobs:
           python-version: 3.8
 
       - name: Install gcovr
-        run: sudo pip install gcovr
+        run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing
 
       - name: Install dependencies
         run: |
