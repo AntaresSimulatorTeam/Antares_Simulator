@@ -229,12 +229,6 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    // We create the MPS writer here (and not at the beginning of the current function) because
-    // MPS writer uses the solver that can be updated earlier in the function.
-    mpsWriterFactory mps_writer_factory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
-    auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded();
-
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
@@ -255,8 +249,14 @@ RESOLUTION:
     measure.tick();
     ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
 
-    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
+    // We create the MPS writer here (and not at the beginning of the current function) because
+    // MPS writer uses the solver that can be updated earlier in the function.
+    // This is the case if OR-Tools is used.
+    mpsWriterFactory mps_writer_factory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    auto mps_writer = mps_writer_factory.create();
+    mps_writer->runIfNeeded();
 
+    ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
