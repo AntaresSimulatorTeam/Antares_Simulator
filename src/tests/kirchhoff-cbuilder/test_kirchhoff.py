@@ -4,11 +4,11 @@ import sys
 nb_test = 3
 
 files = [[0 for x in range(2)] for y in range(nb_test)]
-files[0][0] = "/home/payetvin/Projects/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff"
+files[0][0] = "../resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff"
 files[0][1] = "reference/39"
-files[1][0] = "/home/payetvin/Projects/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"
+files[1][0] = "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"
 files[1][1] = "reference/43"
-files[2][0] = "/home/payetvin/Projects/Antares_Simulator/src/tests/resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"
+files[2][0] = "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"
 files[2][1] = "reference/79"
 
 
