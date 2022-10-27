@@ -27,6 +27,7 @@ runs:
     run: |
            cd _build
            ctest -C Release --output-on-failure -R json
+           ctest -C Release --output-on-failure -R kirchhoff
 
   - name: Clean batches
     shell: bash
