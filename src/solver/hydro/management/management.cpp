@@ -138,17 +138,34 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
                 data.inflows[realmonth] = totalMonthInflows;
             }
 
+            //CR22: Monthly minimum generation <= Monthly inflows for each month
+            double totalMonthMingen = 0.0;
+            for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
+            {
+                for (uint h = 0; h < 24; ++h)
+                {
+                    totalMonthMingen += srcmingen[d*24 + h];
+                }          
+            }
+
+            //CR22: set montly mingen, used later for h2o_m
+            if (not(area.hydro.reservoirCapacity < 1e-4))
+            {
+                if (area.hydro.reservoirManagement)
+                {
+                    data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
+                    assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
+                }
+                else
+                    data.mingens[realmonth] = totalMonthMingen;
+            }
+            else
+            {
+                data.mingens[realmonth] = totalMonthMingen;
+            }                  
+
             if (area.hydro.followLoadModulations and not area.hydro.reservoirManagement)
             {
-                //CR22: Monthly minimum generation <= Monthly inflows for each month
-                double totalMonthMingen = 0.0;
-                for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
-                {
-                    for (uint h = 0; h < 24; ++h)
-                    {
-                        totalMonthMingen += srcmingen[d*24 + h];
-                    }
-                }
                 if(totalMonthMingen > totalMonthInflows)
                 {
                     logs.error() << "In Area "<< area.name << " the minimum generation of "

@@ -87,7 +87,6 @@ private:
     // note: inflows may have two different types, if in swap mode or not
     // \return The total inflow for the whole year
     double prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data);
-    double prepareMonthlyMingens(Data::Area& area, PerArea& data);
 
     void prepareDailyOptimalGenerations(Solver::Variable::State& state, uint y, uint numSpace);
     void prepareDailyOptimalGenerations(Solver::Variable::State& state,
@@ -130,6 +129,7 @@ public:
         double MTG[12];
         //! inflows
         double inflows[12];
+        double mingens[12]; //CR22 mingen
 
         //! Net demand, for each day of the year, for each area
         double DLN[dayYearCount];
