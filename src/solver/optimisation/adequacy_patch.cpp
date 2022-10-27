@@ -134,49 +134,32 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
+double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+                            double totalNodeBalance,
+                            int Area,
+                            int hour)
 {
-    double totalLmrViolation = 0;
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
-        {
-            totalLmrViolation += LmrViolationArea(ProblemeHebdo,Area);
-        }
-    }
-    return totalLmrViolation;
-}
-
-double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area)
-{
-    const int numOfHoursInWeek = 168;
-    double totalLmrViolationArea = 0;
-    double netPositionInit;
-    double densNew;
-    double ensInit;
+    double ensInit
+      = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
 
-    for (int hour = 0; hour < numOfHoursInWeek; hour++)
+    ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
+    // check LMR violations
+    if ((ensInit > 0.0) && (totalNodeBalance < 0.0)
+        && (Math::Abs(totalNodeBalance) > ensInit + Math::Abs(threshold)))
     {
-        std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-
-        ensInit
-          = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-
-        // check LMR violations
-        ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-        if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
-        {
-            ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
-            totalLmrViolationArea += (ensInit - densNew);
-        }
+        ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
+        return Math::Abs(totalNodeBalance);
     }
-    return totalLmrViolationArea;
+    return 0.0;
 }
-void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo)
+
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo)
 {
     double netPositionInit;
     double densNew;
+    double totalNodeBalance;
+    double totalLmrViolation = 0.0;
     const int numOfHoursInWeek = 168;
 
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
@@ -185,22 +168,25 @@ void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo)
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
-                std::tie(netPositionInit, densNew)
+                std::tie(netPositionInit, densNew, totalNodeBalance)
                   = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
                 // copy spilled Energy values into spilled Energy values after CSR
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
                   = ProblemeHebdo->ResultatsHoraires[Area]
                       ->ValeursHorairesDeDefaillanceNegative[hour];
+                // check LMR violations
+                totalLmrViolation += LmrViolationAreaHour(
+                  ProblemeHebdo, totalNodeBalance, Area, hour);
             }
         }
     }
-    return;
+    return totalLmrViolation;
 }
 
-std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
-                                                   int Area,
-                                                   int hour)
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                            int Area,
+                                                            int hour)
 {
     int Interco;
     double netPositionInit = 0;
@@ -245,19 +231,15 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 
     ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
-        densNew = calculateDensNew(ensInit, netPositionInit + flowsNode1toNodeA);
+    {
+        densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+        return std::make_tuple(netPositionInit, densNew, netPositionInit + flowsNode1toNodeA);
+    }
     else
-        densNew = calculateDensNew(ensInit, netPositionInit);
-
-    return std::make_pair(netPositionInit, densNew);
-}
-
-double calculateDensNew(double ensInit, double totalNetPositionInit)
-{
-    if ((totalNetPositionInit >= 0) || (ensInit > Math::Abs(totalNetPositionInit)))
-        return Math::Max(0.0, ensInit + totalNetPositionInit);
-    else
-        return 0.0;
+    {
+        densNew = Math::Max(0.0, ensInit + netPositionInit);
+        return std::make_tuple(netPositionInit, densNew, netPositionInit);
+    }
 }
 
 void addArray(std::vector<double>& A, const double* B)
@@ -273,7 +255,6 @@ void addArray(std::vector<double>& A, const double* B)
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
     double netPositionInit;
-    double densNew;
     double ensInit;
     double spillageInit;
     int hour = hourInWeekTriggeredCsr;
@@ -283,7 +264,7 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
         if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
             == physicalAreaInsideAdqPatch)
         {
-            std::tie(netPositionInit, densNew)
+            std::tie(netPositionInit, ignore, ignore)
               = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
 
             ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
@@ -291,9 +272,6 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
                              ->ValeursHorairesDeDefaillanceNegative[hour];
 
-            // TODO: figure out why this map when removed crashes one csr hour in test example. 
-            // even if it not used ay all, if value is set to 10.0 it will still work and provide same results.. 
-            densNewValues[Area] = densNew;
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
     }

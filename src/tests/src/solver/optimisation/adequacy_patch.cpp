@@ -105,7 +105,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     // get results
     double netPositionInit;
     double densNew;
-    std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(&problem, Area, hour);
+    std::tie(netPositionInit, densNew, ignore) = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
     free(problem.IndexDebutIntercoExtremite);

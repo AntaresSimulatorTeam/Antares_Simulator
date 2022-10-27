@@ -97,37 +97,29 @@ void setNTCbounds(double& Xmax,
                   PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
- * Calculates curtailment sharing rule parameters netPositionInit and densNew per given area and
- * hour.
+ * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
+ * given area and hour.
  */
-std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
-                                                   int Area,
-                                                   int hour);
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                            int Area,
+                                                            int hour);
 
 /*!
- * Calculates dens new parameter depending on the values and ratio of ensInit and
- * totalNetPositionInit
- ** ** \param ensInit initial value of ENS (before CSR optimization) of the area
- ** ** \param totalNetPositionInit total initial import/export of the area
- ** ** \return double densNew value
+ * Calculate total local matching rule violation per one area, per one hour.
  */
-double calculateDensNew(double ensInit, double totalNetPositionInit);
+double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+                            double totalNodeBalance,
+                            int Area,
+                            int hour);
 
 /*!
- * Check local matching rule violation for each area inside adequacy patch.
- */
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
-
-/*!
- * Calculate total local matching rule violation per one area.
- */
-double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
-
-/*!
- * Calculate densNew values for all hours and areas inside adequacy patch and places them into 
+ * Calculate densNew values for all hours and areas inside adequacy patch and places them into
  * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * copy-pastes spilled Energy values into spilled Energy values after CSR
+ * calculates total LMR violations and LMR violations per area per hour inside
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
-void calculateDensNewForAllHours(PROBLEME_HEBDO* ProblemeHebdo);
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
