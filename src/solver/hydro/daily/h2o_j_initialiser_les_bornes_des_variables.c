@@ -75,17 +75,15 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
         if (TurbineMax[Pdt] > TurbineCible[Pdt])
         {
           if (TurbineCible[Pdt] > TurbineMin[Pdt])
-            Xmin[Var] = TurbineMin[Pdt];
-          else
             Xmin[Var] = TurbineCible[Pdt];
+          else
+            Xmin[Var] = TurbineMin[Pdt]; //CR22
         }
         else
         {
-          if (TurbineMax[Pdt] > TurbineMin[Pdt])
-            Xmin[Var] = TurbineMin[Pdt];
-          else
             Xmin[Var] = TurbineMax[Pdt];
-        }
+        }        
+
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
     }
 
