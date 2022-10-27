@@ -130,6 +130,12 @@ jobs:
       - name: Compile coverage reports
         run: |
           cmake --build $GITHUB_WORKSPACE/_build --target code-coverage
+      
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: $GITHUB_WORKSPACE/_build/coverage/index.html
 
       - name: Run sonar-scanner
         env:
