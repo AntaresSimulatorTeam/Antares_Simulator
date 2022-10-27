@@ -112,7 +112,7 @@ jobs:
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
              -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
              -DCODE_COVERAGE=ON \
-             -DCMAKE_BUILD_TYPE=release \
+             -DCMAKE_BUILD_TYPE=debug \
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_TESTING=ON \
              -DBUILD_not_system=OFF
@@ -135,7 +135,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: $GITHUB_WORKSPACE/_build/libs/antares/CMakeFiles/*
+          path: $GITHUB_WORKSPACE/_build/coverage/index.html
 
       - name: Run sonar-scanner
         env:
