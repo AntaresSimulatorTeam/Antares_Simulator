@@ -89,7 +89,7 @@ bool Study::initializeInternalData(const StudyLoadOptions& options)
 class SetHandlerAreas
 {
 public:
-    SetHandlerAreas(Study& study) : pStudy(study)
+    SetHandlerAreas(AreaList& _areas) : areas(_areas)
     {
     }
 
@@ -105,7 +105,7 @@ public:
 
     bool add(Study::SingleSetOfAreas& set, const String& value)
     {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
+        Area* area = AreaListLFind(&areas, value.c_str());
         if (area)
         {
             set.insert(area);
@@ -127,7 +127,7 @@ public:
 
     bool remove(Study::SingleSetOfAreas& set, const String& value)
     {
-        Area* area = AreaListLFind(&pStudy.areas, value.c_str());
+        Area* area = AreaListLFind(&areas, value.c_str());
         if (area)
         {
             set.erase(area);
@@ -153,8 +153,8 @@ public:
     {
         if (value == "add-all")
         {
-            auto end = pStudy.areas.end();
-            for (auto i = pStudy.areas.begin(); i != end; ++i)
+            auto end = areas.end();
+            for (auto i = areas.begin(); i != end; ++i)
                 set.insert(i->second);
             return true;
         }
@@ -168,14 +168,14 @@ public:
     }
 
 private:
-    Study& pStudy;
+    AreaList& areas;
 
 }; // class SetHandlerAreas 
 
 void Study::initializeSetsData()
 {
     // Apply the rules
-    SetHandlerAreas handler(*this);
+    SetHandlerAreas handler(this->areas);
     setsOfAreas.rebuildAllFromRules(handler);
     // Write the results into the logs
     setsOfAreas.dumpToLogs(logs);

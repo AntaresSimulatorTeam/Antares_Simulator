@@ -340,6 +340,7 @@ void Study::computeRawNbParallelYear(const bool forceParallel, const uint nbYear
     {
     case 0:
         logs.fatal() << "Number of logical cores available is 0.";
+        break;
     case 1:
         table[ncLow] = 1;
         table[ncAvg] = 1;
@@ -540,13 +541,8 @@ bool Study::allSetsParallelYearsHaveSameSize(const std::vector<std::vector<uint>
         && !setsOfParallelYears.empty() && maxNbYearsInParallel > 1)
     {
         uint currentSetSize = (uint)setsOfParallelYears[0].size();
-        for (uint s = 1; s < setsOfParallelYears.size(); s++)
-        {
-            if (setsOfParallelYears[s].size() != currentSetSize)
-            {
-                return false;
-            }
-        }
+        return all_of(setsOfParallelYears.begin(), setsOfParallelYears.end(),
+                    [currentSetSize](const std::vector<uint>& v){ return v.size() == currentSetSize; } );
     } // End if hot start
     return true;
 }
