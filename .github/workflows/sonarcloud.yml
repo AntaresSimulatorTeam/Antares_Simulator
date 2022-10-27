@@ -114,6 +114,7 @@ jobs:
              -DCODE_COVERAGE=ON \
              -DCMAKE_BUILD_TYPE=debug \
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
+             -DBUILD_sirius=ON \
              -DBUILD_TESTING=ON \
              -DBUILD_not_system=OFF
 
