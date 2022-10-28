@@ -136,7 +136,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: $GITHUB_WORKSPACE/_build/
+          path: _build/coverage/
 
       - name: Run sonar-scanner
         env:
