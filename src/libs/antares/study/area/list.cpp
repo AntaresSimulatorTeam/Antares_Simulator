@@ -1212,7 +1212,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     return ret;
 }
 
-void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded) //allocation
+void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
 {
     AreaListEnsureDataLoadTimeSeries(this);
     AreaListEnsureDataSolarTimeSeries(this);
@@ -1415,7 +1415,6 @@ void AreaListEnsureDataLoadTimeSeries(AreaList* l)
         if (!area.load.series)
             area.load.series = new DataSeriesLoad();
     });
-    logs.info() << "AreaListEnsureDataLoadTimeSeries done";
 }
 
 void AreaListEnsureDataLoadPrepro(AreaList* l)
@@ -1511,7 +1510,6 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
-    logs.info() << "AreaListEnsureDataThermalPrepro done";
 }
 
 uint64 AreaList::memoryUsage() const

@@ -316,7 +316,6 @@ protected:
         logs.info() << "  Destination: " << pFolder;
 
         // making sure that all internal data are allocated
-        // study->ensureDataAreAllInitialized();
         study->areas.ensureDataIsInitialized(study->parameters, false);
 
         // Updating the number of logical cores to use when saving the study
