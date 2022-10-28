@@ -252,7 +252,13 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             ProblemeHebdo->ResultatsHoraires[Pays]->TurbinageHoraire[PdtHebdo] = 0.0;
             if (Var >= 0)
             {
-                Xmin[Var] = 0.0;
+                Xmin[Var] = 0.0; 
+                char presenceHydro = 
+                    ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
+                if( presenceHydro == OUI_ANTARES )
+                {
+                    Xmin[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->MingenHoraire[PdtHebdo]; //CR 22 Xmin by mingen
+                }
                 Xmax[Var] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
                               ->ContrainteDePmaxHydrauliqueHoraire[PdtHebdo];
                 AdresseDuResultat

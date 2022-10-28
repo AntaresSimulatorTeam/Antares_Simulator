@@ -434,6 +434,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double));
         problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double));
+        problem.CaracteristiquesHydrauliques[k]->MingenHoraire
+          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double));
 
         problem.CaracteristiquesHydrauliques[k]->WaterLayerValues
           = (double*)MemAllocMemset(100 * sizeof(double));
@@ -780,6 +782,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CaracteristiquesHydrauliques[k]->NiveauHoraireSup);
         MemFree(problem.CaracteristiquesHydrauliques[k]->NiveauHoraireInf);
         MemFree(problem.CaracteristiquesHydrauliques[k]->ApportNaturelHoraire);
+        MemFree(problem.CaracteristiquesHydrauliques[k]->MingenHoraire);
 
         MemFree(problem.CaracteristiquesHydrauliques[k]->WaterLayerValues);
         MemFree(problem.CaracteristiquesHydrauliques[k]->InflowForTimeInterval);
