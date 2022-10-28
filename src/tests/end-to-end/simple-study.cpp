@@ -61,7 +61,7 @@ void prepareStudy(Study::Ptr pStudy, int nbYears)
 	// -------------------------
 	// Getting the number of logical cores to use before loading and creating the areas :
 	// Areas need this number to be up-to-date at construction.
-	pStudy->getNumberOfCores(false, 0);
+	pStudy->computeNumberOfCores(options);
 
 	// Define as current study
 	Data::Study::Current::Set(pStudy);
