@@ -27,17 +27,13 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
+#include <i_writer.h>
 #include "../study.h"
 #include "../../logs.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
-namespace
-{
-const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
-}
-
 namespace Antares
 {
 namespace Data
@@ -53,130 +49,73 @@ struct TSNumbersPredicate
 };
 } // anonymous namespace
 
-bool Area::storeTimeseriesNumbersForLoad(Study& study)
+static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
+                                          const Matrix<Yuni::uint32>& timeseriesNumbers,
+                                          const String& id,
+                                          const String& directory)
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "load";
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
     TSNumbersPredicate predicate;
-    study.buffer << SEP << this->id << ".txt";
-    return load.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+    Clob path;
+    path << "ts-numbers" << SEP << directory << SEP << id << ".txt";
+
+    std::string buffer;
+    timeseriesNumbers.saveToBuffer(buffer,
+                                   0,         // precision
+                                   false,     // print_dimensions
+                                   predicate, // predicate
+                                   true);     // save even if all coeffs are zero
+
+    writer->addEntryFromBuffer(path.c_str(), buffer);
 }
 
-bool Area::storeTimeseriesNumbersForSolar(Study& study)
+void Area::storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const
 {
-    if (study.header.version >= 330)
-    {
-        // Before 330, the folder for the solar time-series does not exist
-        study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "solar";
-
-        if (!IO::Directory::Create(study.buffer))
-        {
-            logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-            return false;
-        }
-        study.buffer << SEP << this->id << ".txt";
-
-        TSNumbersPredicate predicate;
-        return solar.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
-    }
-    return true;
+    genericStoreTimeseriesNumbers(writer, load.series->timeseriesNumbers, id, "load");
 }
 
-bool Area::storeTimeseriesNumbersForHydro(Study& study)
+void Area::storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "hydro";
-
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
-
-    TSNumbersPredicate predicate;
-    study.buffer << SEP << this->id << ".txt";
-    return hydro.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+    genericStoreTimeseriesNumbers(writer, solar.series->timeseriesNumbers, id, "solar");
 }
 
-bool Area::storeTimeseriesNumbersForWind(Study& study)
+void Area::storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP << "wind";
-
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
-
-    TSNumbersPredicate predicate;
-    study.buffer << SEP << this->id << ".txt";
-    return wind.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate);
+    genericStoreTimeseriesNumbers(writer, hydro.series->timeseriesNumbers, id, "hydro");
 }
 
-bool Area::storeTimeseriesNumbersForThermal(Study& study)
+void Area::storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
-                         << thermal.list.typeID() << SEP << id;
-
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
-
-    bool ret = thermal.list.storeTimeseriesNumbers(study);
-    ret = thermal.mustrunList.storeTimeseriesNumbers(study) && ret;
-    return ret;
+    genericStoreTimeseriesNumbers(writer, wind.series->timeseriesNumbers, id, "wind");
 }
 
-bool Area::storeTimeseriesNumbersForRenewable(Study& study)
+void Area::storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const
 {
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
-                         << renewable.list.typeID() << SEP << id;
-
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
-
-    bool ret = renewable.list.storeTimeseriesNumbers(study);
-    return ret;
+    thermal.list.storeTimeseriesNumbers(writer);
+    thermal.mustrunList.storeTimeseriesNumbers(writer);
 }
 
-bool Area::storeTimeseriesNumbersForTransmissionCapacities(Study& study) const
+void Area::storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const
+{
+    renewable.list.storeTimeseriesNumbers(writer);
+}
+
+void Area::storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const
 {
     // No links originating from this area
     // do not create an empty directory
     if (links.empty())
-        return true;
+        return;
 
-    study.buffer.clear() << study.folderOutput << SEP << "ts-numbers" << SEP
-                         << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << id;
-
-    if (!IO::Directory::Create(study.buffer))
-    {
-        logs.error() << "I/O Error: impossible to create the folder " << study.buffer;
-        return false;
-    }
-
-    bool ret = true;
     for (const auto& link : links)
     {
         if (link.second == nullptr)
         {
             logs.error() << "Unexpected nullptr encountered for area " << id;
-            return false;
+            return;
         }
         else
-        {
-            ret = link.second->storeTimeseriesNumbers(study.buffer) && ret;
-        }
+            link.second->storeTimeseriesNumbers(writer);
     }
-    return ret;
 }
 } // namespace Data
 } // namespace Antares

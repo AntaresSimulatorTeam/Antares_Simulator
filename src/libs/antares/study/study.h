@@ -354,7 +354,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<int TimeSeriesT>
-    bool storeTimeSeriesNumbers();
+    void storeTimeSeriesNumbers() const;
     //@}
 
     //! \name Simulation
