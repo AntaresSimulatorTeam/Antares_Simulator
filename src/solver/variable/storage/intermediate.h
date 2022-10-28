@@ -79,11 +79,6 @@ public:
     void reset();
 
     /*!
-    ** \brief Flush the memory
-    */
-    void flush() const;
-
-    /*!
     ** \brief Compute statistics for the current year
     */
     void computeStatisticsForTheCurrentYear();

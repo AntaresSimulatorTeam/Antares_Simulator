@@ -664,10 +664,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
     if (generator->archive)
         generator->prepareOutputFoldersForAllAreas(year);
 
-#ifdef ANTARES_SWAP_SUPPORT
-    auto& swap = Antares::memory;
-#endif
-
     study.areas.each([&](Data::Area& area) {
         auto end = area.thermal.list.mapping.end();
         for (auto it = area.thermal.list.mapping.begin(); it != end; ++it)
@@ -680,10 +676,6 @@ bool GenerateThermalTimeSeries(Data::Study& study,
             }
 
             ++progression;
-#ifdef ANTARES_SWAP_SUPPORT
-
-            swap.flushAll();
-#endif
         }
     });
 

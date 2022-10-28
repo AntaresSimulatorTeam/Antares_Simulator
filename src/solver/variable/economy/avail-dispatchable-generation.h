@@ -208,7 +208,6 @@ public:
 
             for (unsigned int y = 0; y != matrix.height; ++y)
                 pValuesForTheCurrentYear[numSpace].hour[y] += column[y];
-            matrix.flush();
         }
     }
 

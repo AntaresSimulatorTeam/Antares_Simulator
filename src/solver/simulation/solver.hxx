@@ -38,7 +38,6 @@
 #include "apply-scenario.h"
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
-#include <antares/memory/memory.h>
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
@@ -159,7 +158,7 @@ private:
                     randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
             }
 
-            // 3 - Preparing the Time-series numbers
+            // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
             ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
 
@@ -181,10 +180,6 @@ private:
             // 5 - Resetting all variables for the output
             simulationObj->variables.yearBegin(y, numSpace);
 
-            // Flush all memory into the swap files
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
-
             // 6 - The Solver itself
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
@@ -200,21 +195,11 @@ private:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            // 6.5 - Flush all memory into the swap files
-            // This is mandatory for big studies, with numerous areas and thermal clusters
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
-
             simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
             simulationObj->variables.yearEnd(y, numSpace);
-
-            // 7.5 - Flush all memory into the swap files
-            // This is mandatory for big studies, with numerous areas and thermal clusters
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
@@ -244,10 +229,6 @@ private:
             yearFailed[y] = false;
 
         } // End if(performCalculations)
-
-        // 10 - Flush all memory into the swap files
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
 
     } // End of onExecute() method
 };
@@ -295,13 +276,6 @@ void ISimulation<Impl>::run()
     ImplementationType::variables.initializeFromStudy(study);
 
     logs.info() << "Allocating resources...";
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-    {
-        Antares::memory.flushAll();
-        Antares::memory.dumpSwapFilesInfos();
-    }
 
     // Memory usage
     {
@@ -422,11 +396,6 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     }
     else
     {
-        // Flush all memory into the swap files
-        // The check is required to avoid to create an instance of `Antares::Memory`
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-
         if (synthesis)
         {
             auto& parameters = *(study.runtime->parameters);
@@ -1509,11 +1478,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                          uint endYear,
                                          std::vector<Variable::State>& state)
 {
-    // (only if the support is available)
-    // The check is required to avoid to create an instance of `Antares::Memory`
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
-
     assert(endYear <= study.parameters.nbYears);
 
     // List of parallel years sets

@@ -46,7 +46,6 @@
 #include "menus.h"
 #include <map>
 #include "../windows/inspector/inspector.h"
-#include <antares/memory/memory.h>
 #include <ui/common/lock.h>
 
 #include <wx/wupdlock.h>
@@ -1114,7 +1113,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         return;
 
     GUILocker locker;
-    // Checking for orphan swap files
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     bool result = false;
@@ -1274,11 +1272,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         if (!(!studyptr)) // should never be null
             OnStudyChanged(*studyptr);
     }
-
-    // Checking for orphan swap files
-    // We may have to clean the cache folder, if the user canceled the simulation
-    // or if the program crashed
-    mainFrm.timerCleanSwapFiles(4000); // ms
 
     if (result)
     {

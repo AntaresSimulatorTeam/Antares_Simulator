@@ -23,7 +23,6 @@ SET(SRC_APPLICATION
 		application/main/menu.cpp
 		application/main/refresh.cpp
 		application/main/notes.cpp
-		application/main/clean-swap-files.cpp
 		application/main/options.cpp
 		application/main/analyzer.cpp
 		application/main/constraintsbuilder.cpp

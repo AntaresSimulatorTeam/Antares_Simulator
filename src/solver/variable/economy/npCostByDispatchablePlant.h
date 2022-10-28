@@ -202,19 +202,10 @@ public:
                 for (unsigned int i = 0; i != pSize; ++i)
                     pValuesForTheCurrentYear[numSpace][i].initializeFromStudy(*study);
 
-            // to automatically flush the memory from times to times
-            unsigned int autoflush = 5;
             for (unsigned int i = 0; i != pSize; ++i)
             {
                 AncestorType::pResults[i].initializeFromStudy(*study);
                 AncestorType::pResults[i].reset();
-
-                if (!--autoflush)
-                {
-                    autoflush = 5;
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
-                }
             }
         }
         else
@@ -281,20 +272,10 @@ public:
     {
         // Merge all results for all thermal clusters
         {
-            // to automatically flush the memory from times to times
-            unsigned int autoflush = 5;
-
             for (unsigned int i = 0; i < pSize; ++i)
             {
                 // Compute all statistics for the current year (daily,weekly,monthly)
                 pValuesForTheCurrentYear[numSpace][i].computeStatisticsForTheCurrentYear();
-
-                if (!--autoflush)
-                {
-                    autoflush = 5;
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
-                }
             }
         }
         // Next variable

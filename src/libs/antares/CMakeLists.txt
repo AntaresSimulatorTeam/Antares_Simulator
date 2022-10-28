@@ -4,10 +4,7 @@ OMESSAGE("Antares Core library")
 set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
-	memory/memory.cpp
-	memory/prefix.cpp
-	memory/swapfile.h
-	memory/swapfile.cpp)
+	memory/memory.cpp)
 source_group("memory" FILES ${SRC_MEMORY})
 
 set(SRC_OBJECT
@@ -27,7 +24,6 @@ set(SRC_MATRIX
 	array/matrix.h
 	array/matrix.cpp
 	array/matrix.hxx
-	array/autoflush.h
 	array/correlation.h
 	array/correlation.hxx
 	array/correlation.cpp)

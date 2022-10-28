@@ -155,12 +155,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Areas need this number to be up-to-date at construction.
     getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-#ifdef ANTARES_SWAP_SUPPORT
-    // In case of swap support, MC years parallel computing is forbidden.
-    // Numbers of parallel years is set to 1.
-    maxNbYearsInParallel = 1;
-#endif
-
     // In case the study is run in the draft mode, only 1 core is allowed
     if (parameters.mode == Data::stdmAdequacyDraft)
         maxNbYearsInParallel = 1;

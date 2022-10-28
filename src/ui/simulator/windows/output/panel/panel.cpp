@@ -391,11 +391,6 @@ void Panel::runMerge()
     Yuni::Bind<void()> callback;
     callback.bind(this, &Panel::forceRefresh);
     Antares::Dispatcher::GUI::Post(callback, 10 /**/);
-
-    // Checking for orphan swap files
-    Forms::ApplWnd* mainFrm = Forms::ApplWnd::Instance();
-    if (mainFrm)
-        mainFrm->timerCleanSwapFiles(100 /*ms*/);
 }
 
 void Panel::executeAggregator()

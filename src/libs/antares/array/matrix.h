@@ -35,7 +35,6 @@
 #include <set>
 #include "../memory/memory.h"
 #include "../study/fwd.h"
-#include "autoflush.h"
 
 namespace Antares
 {
@@ -279,13 +278,6 @@ public:
     ** \see zero()
     */
     void reset(uint w, uint h, bool fixedSize = false);
-
-    /*!
-    ** \brief Flush the content of the whole matrix into the swap files
-    **
-    ** This will reduce the memory usage
-    */
-    void flush() const;
 
     //! Get the Nth column
     ColumnType& column(uint n);

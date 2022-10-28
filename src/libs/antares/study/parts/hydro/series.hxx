@@ -31,12 +31,8 @@ namespace Antares
 {
 namespace Data
 {
-#ifndef ANTARES_SWAP_SUPPORT
-inline void DataSeriesHydro::flush()
-{
-    // do nothing
-}
-#endif
+
+	// gp : whole file to be removed
 
 } // namespace Data
 } // namespace Antares

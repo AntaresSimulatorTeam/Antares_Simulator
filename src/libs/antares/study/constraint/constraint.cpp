@@ -270,7 +270,6 @@ void BindingConstraint::resetToDefaultValues()
     pComments.clear();
     pValues.zero();
     pValues.markAsModified();
-    pValues.flush();
 }
 
 void BindingConstraint::copyWeights(const Study& study,
@@ -810,7 +809,6 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
             (void)memcpy(pValues.entry[columnInferior], m.entry[0], sizeof(double) * h);
             logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
                         << OperatorToShortCString(pOperator) << ')';
-            pValues.flush();
             return true;
         }
     }
@@ -1515,7 +1513,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     }
     }
     pValues.markAsModified();
-    pValues.flush();
 }
 
 bool BindConstList::saveToFolder(const AnyString& folder) const
