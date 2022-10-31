@@ -78,7 +78,8 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                 }
                 matrix.flush();
             }
-            Data::AdequacyPatch::postProcess(dtgmrg, hourlyResults);
+            if (study.parameters.adqPatch.enabled)
+                Data::AdequacyPatch::postProcess(dtgmrg, hourlyResults);
         }
     });
 }

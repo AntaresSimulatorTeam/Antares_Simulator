@@ -236,7 +236,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         // Total DtgMarginCsr
-        // if area is inside adq-patch but has no thermal clusters, value of -1.0 is left over,
+        // if area is inside adq-patch but has no thermal clusters, value of -1.0 can be left over,
         //  and needs to be set to zero here
         if (state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek] < 0.0)
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.0;

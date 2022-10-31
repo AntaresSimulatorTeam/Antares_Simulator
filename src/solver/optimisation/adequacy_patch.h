@@ -131,10 +131,11 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo);
 void addArray(std::vector<double>& A, const double* B);
 
 /*!
-** ** \brief calculate dtgMrgCsr and adjust ENS values if neccessary
+** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
+** ** values if neccessary
 ** **
-** ** \param dtgmrg pointer to array of DTG MRG 
-** ** \param hourlyResults hourly results
+** ** \param dtgmrg pointer to the array of DTG MRG (Dispatchable margin - already calculated)
+** ** \param hourlyResults hourly results structure
 ** ** \return
 ** */
 void postProcess(const double* dtgmrg, RESULTATS_HORAIRES& hourlyResults);
