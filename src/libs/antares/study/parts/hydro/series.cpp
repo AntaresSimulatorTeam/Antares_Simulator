@@ -276,8 +276,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
     timeseriesNumbers.clear();
 
-    ror.flush();
-    storage.flush();
     return ret;
 }
 
@@ -318,14 +316,6 @@ void DataSeriesHydro::reset()
     storage.reset(1, DAYS_PER_YEAR);
     count = 1;
 }
-
-#ifdef ANTARES_SWAP_SUPPORT
-void DataSeriesHydro::flush()
-{
-    ror.flush();
-    storage.flush();
-}
-#endif
 
 uint64 DataSeriesHydro::memoryUsage() const
 {

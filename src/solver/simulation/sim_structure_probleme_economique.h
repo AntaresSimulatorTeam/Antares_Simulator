@@ -560,7 +560,7 @@ struct PROBLEME_HEBDO
     /* Implementation details : I/O, error management, etc. */
     char ReinitOptimisation;
 
-    char ExportMPS;
+    Data::mpsExportStatus ExportMPS;
     bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;

@@ -31,13 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void DataSeriesCommon::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    series.flush();
-    timeseriesNumbers.flush();
-#endif
-}
 
 inline Yuni::uint64 DataSeriesMemoryUsage(DataSeriesCommon* t)
 {

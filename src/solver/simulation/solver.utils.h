@@ -35,6 +35,8 @@
 // #include <stdio.h>
 #include <yuni/yuni.h>
 
+#include <i_writer.h>
+
 #define SEP Yuni::IO::Separator
 
 namespace Antares
@@ -89,13 +91,15 @@ public:
      costStdDeviation(0.),
      costMin(std::numeric_limits<double>::max()),
      costMax(0.),
-     nbPerformedYears(0){};
+     nbPerformedYears(0)
+    {
+    }
 
     void setNbPerformedYears(uint n)
     {
         assert(n);
         nbPerformedYears = n;
-    };
+    }
 
     void addCost(const double cost)
     {
@@ -110,12 +114,12 @@ public:
             costMin = cost;
         if (cost > costMax)
             costMax = cost;
-    };
+    }
 
     void endStandardDeviation()
     {
         costStdDeviation = Yuni::Math::SquareRoot(costStdDeviation - costAverage * costAverage);
-    };
+    }
 
 public:
     // System costs statistics
@@ -132,12 +136,12 @@ private:
 class annualCostsStatistics
 {
 public:
-    annualCostsStatistics(Data::Study& s)
+    annualCostsStatistics() :
+     systemCostFilename("annualSystemCost.txt"),
+     criterionsCostsFilename("checkIntegrity.txt"),
+     optimizationTimeFilename("timeStatistics.txt")
     {
-        systemCostFilename << s.folderOutput << SEP << "annualSystemCost.txt";
-        criterionsCostsFilename << s.folderOutput << SEP << "checkIntegrity.txt";
-        optimizationTimeFilename << s.folderOutput << SEP << "timeStatistics.txt";
-    };
+    }
 
     void setNbPerformedYears(uint n)
     {
@@ -145,7 +149,7 @@ public:
         criterionCost1.setNbPerformedYears(n);
         criterionCost2.setNbPerformedYears(n);
         optimizationTime.setNbPerformedYears(n);
-    };
+    }
 
     void endStandardDeviations()
     {
@@ -153,14 +157,17 @@ public:
         criterionCost1.endStandardDeviation();
         criterionCost2.endStandardDeviation();
         optimizationTime.endStandardDeviation();
-    };
+    }
 
-    void writeToOutput()
+    void writeToOutput(IResultWriter::Ptr writer)
     {
-        writeSystemCostToOutput();
-        writeCriterionCostsToOutput();
-        writeOptimizationTimeToOutput();
-    };
+        if (!writer)
+            return;
+
+        writeSystemCostToOutput(writer);
+        writeCriterionCostsToOutput(writer);
+        writeOptimizationTimeToOutput(writer);
+    }
 
     std::string to_scientific(const double d)
     {
@@ -184,45 +191,42 @@ public:
     }
 
 private:
-    void writeSystemCostToOutput()
+    void writeSystemCostToOutput(IResultWriter::Ptr writer)
     {
-        Yuni::IO::File::Stream file;
-        if (file.open(systemCostFilename, Yuni::IO::OpenMode::append))
-        {
-            file << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
-            file << "STD : " << round_to_closer_int(systemCost.costStdDeviation) << "\n";
-            file << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
-            file << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
-        }
-    };
+        Yuni::Clob buffer;
+        buffer << "EXP : " << round_to_closer_int(systemCost.costAverage) << "\n";
+        buffer << "STD : " << round_to_closer_int(systemCost.costStdDeviation) << "\n";
+        buffer << "MIN : " << round_to_closer_int(systemCost.costMin) << "\n";
+        buffer << "MAX : " << round_to_closer_int(systemCost.costMax) << "\n";
 
-    void writeCriterionCostsToOutput()
+        writer->addEntryFromBuffer(systemCostFilename, buffer);
+    }
+
+    void writeCriterionCostsToOutput(IResultWriter::Ptr writer)
     {
-        Yuni::IO::File::Stream file;
-        if (file.open(criterionsCostsFilename, Yuni::IO::OpenMode::append))
-        {
-            file << to_scientific(criterionCost1.costAverage) << "\n";
-            file << to_scientific(criterionCost1.costStdDeviation) << "\n";
-            file << to_scientific(criterionCost1.costMin) << "\n";
-            file << to_scientific(criterionCost1.costMax) << "\n";
+        Yuni::Clob buffer;
+        buffer << to_scientific(criterionCost1.costAverage) << "\n";
+        buffer << to_scientific(criterionCost1.costStdDeviation) << "\n";
+        buffer << to_scientific(criterionCost1.costMin) << "\n";
+        buffer << to_scientific(criterionCost1.costMax) << "\n";
 
-            file << to_scientific(criterionCost2.costAverage) << "\n";
-            file << to_scientific(criterionCost2.costStdDeviation) << "\n";
-            file << to_scientific(criterionCost2.costMin) << "\n";
-            file << to_scientific(criterionCost2.costMax) << "\n";
-        }
-    };
+        buffer << to_scientific(criterionCost2.costAverage) << "\n";
+        buffer << to_scientific(criterionCost2.costStdDeviation) << "\n";
+        buffer << to_scientific(criterionCost2.costMin) << "\n";
+        buffer << to_scientific(criterionCost2.costMax) << "\n";
 
-    void writeOptimizationTimeToOutput()
+        writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
+    }
+
+    void writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
     {
-        Yuni::IO::File::Stream file;
-        if (file.open(optimizationTimeFilename, Yuni::IO::OpenMode::append))
-        {
-            file << "EXP (ms) : " << optimizationTime.costAverage << "\n";
-            file << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
-            file << "MIN (ms) : " << optimizationTime.costMin << "\n";
-            file << "MAX (ms) : " << optimizationTime.costMax << "\n";
-        }
+        Yuni::Clob buffer;
+        buffer << "EXP (ms) : " << optimizationTime.costAverage << "\n";
+        buffer << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
+        buffer << "MIN (ms) : " << optimizationTime.costMin << "\n";
+        buffer << "MAX (ms) : " << optimizationTime.costMax << "\n";
+
+        writer->addEntryFromBuffer(optimizationTimeFilename, buffer);
     }
 
 public:
@@ -233,9 +237,9 @@ public:
     costStatistics optimizationTime;
 
 private:
-    Yuni::String systemCostFilename;
-    Yuni::String criterionsCostsFilename;
-    Yuni::String optimizationTimeFilename;
+    const std::string systemCostFilename;
+    const std::string criterionsCostsFilename;
+    const std::string optimizationTimeFilename;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 
@@ -399,7 +403,9 @@ public:
 class hydroCostNoise
 {
 public:
-    hydroCostNoise(double v, uint i) : value(v), index(i){};
+    hydroCostNoise(double v, uint i) : value(v), index(i)
+    {
+    }
     inline double getValue() const
     {
         return value;

@@ -28,6 +28,7 @@
 #include "inifile.h"
 #include "../io/statistics.h"
 #include "../logs.h"
+#include <sstream>
 
 using namespace Yuni;
 
@@ -274,6 +275,20 @@ bool IniFile::open(const AnyString& filename, bool warnings)
         logs.error() << "I/O error: " << filename << ": Impossible to read the file";
     pFilename.clear();
     return false;
+}
+
+void IniFile::saveToString(std::string& str) const
+{
+    uint64 written = 0;
+    std::ostringstream ostream;
+    // save all sections
+    for (auto* section = firstSection; section; section = section->next)
+        section->saveToStream(ostream, written);
+
+    if (written != 0)
+        Statistics::HasWrittenToDisk(written);
+
+    str = ostream.str();
 }
 
 bool IniFile::save(const AnyString& filename) const

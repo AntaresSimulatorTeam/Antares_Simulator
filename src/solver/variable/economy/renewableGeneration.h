@@ -287,20 +287,6 @@ public:
         return pValuesForTheCurrentYear[numSpace][column].hour;
     }
 
-    void yearEndBuildPrepareDataForEachRenewableCluster(State& state,
-                                                        uint year,
-                                                        unsigned int numSpace)
-    {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
-        {
-            state.renewableClusterProductionForYear[i]
-              += pValuesForTheCurrentYear[numSpace][state.renewableCluster->areaWideIndex].hour[i];
-        }
-
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults& results,
                                       int fileLevel,
                                       int precision,
