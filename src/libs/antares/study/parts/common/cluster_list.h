@@ -5,6 +5,8 @@
 #include "../../../logs.h"
 #include "../../fwd.h"
 
+#include <i_writer.h>
+
 #include <vector>
 #include <memory>
 
@@ -185,7 +187,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    bool storeTimeseriesNumbers(Study& study);
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     //@}
 

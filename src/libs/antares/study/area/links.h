@@ -32,6 +32,7 @@
 #include <yuni/core/string.h>
 #include "../fwd.h"
 #include "../../array/matrix.h"
+#include <i_writer.h>
 #include <set>
 
 //! The minimal allowed value for hurdle costs when not null
@@ -73,7 +74,7 @@ public:
 
     bool loadTimeSeries(Study& study, const AnyString& folder);
 
-    bool storeTimeseriesNumbers(const AnyString& folder) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     //! \name Area
     //@{

@@ -27,6 +27,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-c, --comment-file=VALUE | Specify the file to copy as comments of the simulation |
 |-f, --force | Ignore all warnings at loading |
 |--no-output | Do not write the results in the output folder |
+|-z, --zip-output | Force the write of results into a single zip archive |
 |-y, --year=VALUE | Override the number of MC years |
 |--year-by-year | Force the writing the result output for each year <br/> (economy only) |
 |--derated | Force the derated mode |

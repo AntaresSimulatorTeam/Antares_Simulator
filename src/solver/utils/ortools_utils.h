@@ -10,8 +10,6 @@
 
 using namespace operations_research;
 
-std::string getRunName(std::string const& prefix, size_t numSpace, int numInterval, int numOptim);
-
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n);
 
 using namespace Antares::Data;

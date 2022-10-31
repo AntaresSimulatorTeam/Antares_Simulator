@@ -50,8 +50,9 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/mps_utils.h"
-
 #include "../utils/ortools_utils.h"
+#include "../utils/filename.h"
+
 #include "../infeasible-problem-analysis/problem.h"
 #include "../infeasible-problem-analysis/exceptions.h"
 
@@ -231,7 +232,8 @@ RESOLUTION:
 
     // We create the MPS writer here (and not at the beginning of the current function) because
     // MPS writer uses the solver that can be updated earlier in the function.
-    mpsWriterFactory mps_writer_factory(ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    mpsWriterFactory mps_writer_factory(
+      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded();
 
@@ -362,25 +364,23 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
-    FILE* Flot;
-    const PROBLEME_HEBDO* Probleme = (PROBLEME_HEBDO*)Prob;
-    
-    double CoutOptimalDeLaSolution = 0.;
-    int numeroOptimisation = Probleme->numeroOptimisation[NumeroDeLIntervalle];
+    Yuni::Clob buffer;
+    double CoutOptimalDeLaSolution;
+    PROBLEME_HEBDO* Probleme;
 
-    if (numeroOptimisation == PREMIERE_OPTIMISATION)
+    Probleme = (PROBLEME_HEBDO*)Prob;
+
+    CoutOptimalDeLaSolution = 0.;
+    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
+
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace, numeroOptimisation);
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
-
-    fprintf(Flot, "* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
-
-    fclose(Flot);
-
-    return;
+    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
+    auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
+    auto writer = study->resultWriter;
+    writer->addEntryFromBuffer(filename, buffer);
 }

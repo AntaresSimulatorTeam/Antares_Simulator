@@ -32,6 +32,7 @@
 #include <yuni/io/file.h>
 #include <yuni/datetime/timestamp.h>
 
+#include <sstream> // std::ostringstream
 #include <cassert>
 #include <climits>
 
@@ -47,6 +48,7 @@
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
+#include <writer_factory.h>
 
 using namespace Yuni;
 
@@ -71,7 +73,7 @@ static inline void FreeAndNil(T*& pointer)
 
 Study::Study(bool forTheSolver) :
  LayerData(0, true),
- simulation(*this),
+ simulationComments(*this),
  maxNbYearsInParallel(0),
  maxNbYearsInParallel_save(0),
  nbYearsParallelRaw(0),
@@ -82,6 +84,7 @@ Study::Study(bool forTheSolver) :
  runtime(nullptr),
  // state(nullptr),
  uiinfo(nullptr),
+ pQueueService(std::make_shared<Yuni::Job::QueueService>()),
  gotFatalError(false),
  usedByTheSolver(forTheSolver)
 {
@@ -264,7 +267,7 @@ uint64 Study::memoryUsage() const
            + buffer.capacity() + dataBuffer.capacity()
            + bufferLoadingTS.capacity()
            // Simulation
-           + simulation.memoryUsage()
+           + simulationComments.memoryUsage()
            // parameters
            + parameters.memoryUsage()
            // Areas
@@ -613,7 +616,8 @@ bool Study::checkHydroHotStart()
     if (maxNbYearsInParallel != 1 && !parameters.allSetsHaveSameSize)
     {
         logs.error() << "Hot Start Hydro option : conflict with parallelization parameters.";
-        logs.error() << "Please update relevant simulation parameters or use Cold Start option.    ";
+        logs.error()
+          << "Please update relevant simulation parameters or use Cold Start option.    ";
         return false;
     }
 
@@ -622,7 +626,8 @@ bool Study::checkHydroHotStart()
     uint nbDaysInSimulation = parameters.simulationDays.end - parameters.simulationDays.first + 1;
     if (nbDaysInSimulation < 364)
     {
-        logs.error() << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
+        logs.error()
+          << "Hot Start Hydro option : simulation calendar must cover one complete year.    ";
         logs.error() << "Please update data or use Cold Start option.";
         return false;
     }
@@ -636,7 +641,7 @@ bool Study::checkHydroHotStart()
         // Reference to the area
         Area* area = i->second;
 
-        // No need to make a check on level initialization when reservoir management 
+        // No need to make a check on level initialization when reservoir management
         // is not activated for the current area
         if (!area->hydro.reservoirManagement)
             continue;
@@ -655,8 +660,9 @@ bool Study::checkHydroHotStart()
         // Check the day of level initialization is the first day of simulation
         if (initLevelOnSimDay != parameters.simulationDays.first)
         {
-            logs.error() << "Hot Start Hydro option : area '" << area->name 
-                         << "' - hydro level must be initialized on the first simulation month.    ";
+            logs.error()
+              << "Hot Start Hydro option : area '" << area->name
+              << "' - hydro level must be initialized on the first simulation month.    ";
             logs.error() << "Please update data or use Cold Start option.";
             return false;
         }
@@ -715,12 +721,12 @@ void Study::performTransformationsBeforeLaunchingSimulation()
 
 bool Study::prepareOutput()
 {
-    sint64 now = DateTime::Now();
+    pStartTime = DateTime::Now();
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
     folderOutput.clear() << folder << SEP << "output" << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", now, false);
+    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", pStartTime, false);
 
     switch (parameters.mode)
     {
@@ -744,16 +750,17 @@ bool Study::prepareOutput()
     buffer.reserve(1024);
 
     // Folder output
-    if (not simulation.name.empty())
+    if (not simulationComments.name.empty())
     {
         buffer.clear();
-        TransformNameIntoID(simulation.name, buffer);
+        TransformNameIntoID(simulationComments.name, buffer);
         folderOutput << '-' << buffer;
     }
 
     if (parameters.noOutput or not usedByTheSolver)
         return true;
 
+    // TODO : use writer
     // avoid creating the same output twice
     if (IO::Exists(folderOutput))
     {
@@ -769,48 +776,77 @@ bool Study::prepareOutput()
     }
 
     logs.info() << "  Output folder : " << folderOutput;
+    return true;
+}
 
-    // Settings
-    buffer.clear() << folderOutput << SEP << "about-the-study";
-    if (not IO::Directory::Create(buffer))
+void Study::saveAboutTheStudy()
+{
+    String path;
+    path.reserve(1024);
+
+    path.clear() << "about-the-study";
+    simulationComments.saveUsingWriter(resultWriter, path);
+
+    // Write the header as a reminder
     {
-        logs.error() << "I/O: impossible to create the directory " << buffer;
-        return false;
+        path.clear() << "about-the-study" << SEP << "study.ini";
+        Antares::IniFile ini;
+        header.CopySettingsToIni(ini, false);
+
+        std::string writeBuffer;
+        ini.saveToString(writeBuffer);
+
+        resultWriter->addEntryFromBuffer(path.c_str(), writeBuffer);
     }
-    if (not simulation.saveToFolder(buffer))
-        return false;
 
-    // Write the header as a reminder too
-    buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "study.ini";
-    header.saveToFile(buffer, false);
+    // Write parameters.ini
+    {
+        String dest;
+        dest << "about-the-study" << SEP << "parameters.ini";
 
-    // copying the generaldata.ini
-    buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
-    String dest;
-    dest << folderOutput << SEP << "about-the-study" << SEP << "parameters.ini";
-    if (IO::errNone != IO::File::Copy(buffer, dest))
-        logs.error() << "impossible to copy " << dest;
+        buffer.clear() << folderSettings << SEP << "generaldata.ini";
+        resultWriter->addEntryFromFile(dest.c_str(), buffer.c_str());
+    }
 
     // antares-output.info
-    buffer.clear() << folderOutput << SEP << "info.antares-output";
-    IO::File::Stream f(buffer, IO::OpenMode::write | IO::OpenMode::truncate);
-    if (f.opened())
-    {
-        String nowstr;
-        DateTime::TimestampToString(nowstr, "%Y.%m.%d - %H:%M", now);
-        f << "[general]";
-        f << "\nversion = " << (uint)Data::versionLatest;
-        f << "\nname = " << simulation.name;
-        f << "\nmode = " << StudyModeToCString(parameters.mode);
-        f << "\ndate = " << nowstr;
-        f << "\ntitle = " << nowstr;
-        f << "\ntimestamp = " << now;
-        f << "\n\n";
-    }
-    else
-        logs.error() << "I/O: impossible to write " << buffer;
+    path.clear() << "info.antares-output";
+    std::ostringstream f;
+    String startTimeStr;
+    DateTime::TimestampToString(startTimeStr, "%Y.%m.%d - %H:%M", pStartTime);
+    f << "[general]";
+    f << "\nversion = " << (uint)Data::versionLatest;
+    f << "\nname = " << simulationComments.name;
+    f << "\nmode = " << StudyModeToCString(parameters.mode);
+    f << "\ndate = " << startTimeStr;
+    f << "\ntitle = " << startTimeStr;
+    f << "\ntimestamp = " << pStartTime;
+    f << "\n\n";
+    auto output = f.str();
+    resultWriter->addEntryFromBuffer(path.c_str(), output);
 
-    return true;
+    if (usedByTheSolver and !parameters.noOutput)
+    {
+        // Write all available areas as a reminder
+        {
+            Yuni::Clob buffer;
+            path.clear() << "about-the-study" << SEP << "areas.txt";
+            for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
+            {
+                if (setsOfAreas.hasOutput(i->first))
+                    buffer << "@ " << i->first << "\r\n";
+            }
+            areas.each([&](const Data::Area& area) { buffer << area.name << "\r\n"; });
+            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+        }
+
+        // Write all available links as a reminder
+        {
+            path.clear() << "about-the-study" << SEP << "links.txt";
+            Yuni::Clob buffer;
+            areas.saveLinkListToBuffer(buffer);
+            resultWriter->addEntryFromBuffer(path.c_str(), buffer);
+        }
+    }
 }
 
 Area* Study::areaAdd(const AreaName& name)
@@ -1078,7 +1114,8 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
         kThermal,
         kRenewable,
         kUnknown
-    } type = kUnknown;
+    } type
+      = kUnknown;
 
     if (dynamic_cast<ThermalCluster*>(cluster))
     {
@@ -1588,6 +1625,12 @@ void Study::computePThetaInfForThermalClusters() const
                                         * cluster->unitCount * cluster->nominalCapacity;
         }
     }
+}
+
+void Study::prepareWriter(Benchmarking::IDurationCollector* duration_collector)
+{
+    resultWriter = Solver::resultWriterFactory(
+      parameters.resultFormat, folderOutput, pQueueService, duration_collector);
 }
 
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,

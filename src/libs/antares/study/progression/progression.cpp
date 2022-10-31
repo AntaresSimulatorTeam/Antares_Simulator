@@ -153,14 +153,11 @@ Progression::~Progression()
     pProgressMeter.stop();
 }
 
-bool Progression::saveToFile(const Yuni::String& filename)
+bool Progression::saveToFile(const Yuni::String& filename, IResultWriter::Ptr writer)
 {
+    Yuni::Clob buffer;
     MutexLocker locker(pProgressMeter.mutex);
     {
-        IO::File::Stream file;
-        if (not file.openRW(filename))
-            return false;
-
         uint year;
         const Part::Map::const_iterator end = pProgressMeter.parts.end();
         for (Part::Map::const_iterator i = pProgressMeter.parts.begin(); i != end; ++i)
@@ -170,16 +167,14 @@ bool Progression::saveToFile(const Yuni::String& filename)
             for (Part::MapPerSection::const_iterator j = i->second.begin(); j != jend; ++j)
             {
                 if (year != (uint)-1)
-                    file << year;
+                    buffer << year;
                 else
-                    file << "post";
-                file << ' ' << SectionToCStr(j->first) << '\n';
+                    buffer << "post";
+                buffer << ' ' << SectionToCStr(j->first) << '\n';
             }
         }
-        // The file will be closed here
-        // It is important that the file is closed before emitting the log entry
-        // (There is an exclusive lock by default on Windows)
     }
+    writer->addEntryFromBuffer(filename.c_str(), buffer);
     logs.info() << LOG_UI_PROGRESSION_MAP << filename;
     return true;
 }

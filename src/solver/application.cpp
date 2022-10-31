@@ -10,6 +10,8 @@
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 
+#include <antares/exception/InitializationError.hpp>
+
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/core/process/rename.h>
@@ -222,7 +224,7 @@ void Application::prepare(int argc, char* argv[])
 
     // Parse the command line arguments
     if (!parser->operator()(argc, argv))
-        throw Error::CommandLineArguments(parser->errors());
+        throw Antares::Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
@@ -300,12 +302,9 @@ void Application::prepare(int argc, char* argv[])
 
     if (pSettings.displayProgression)
     {
-        pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "about-the-study"
-                               << Yuni::IO::Separator << "map";
-        if (!pStudy->progression.saveToFile(pStudy->buffer))
-        {
-            throw Error::WritingProgressFile(pStudy->buffer);
-        }
+        auto& filename = pStudy->buffer;
+        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
+        pStudy->progression.saveToFile(filename, pStudy->resultWriter);
         pStudy->progression.start();
     }
     else
@@ -358,21 +357,35 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-
-    // Run the simulation
-    switch (pStudy->runtime->mode)
+    try
     {
-    case Data::stdmEconomy:
-        runSimulationInEconomicMode();
-        break;
-    case Data::stdmAdequacy:
-        runSimulationInAdequacyMode();
-        break;
-    case Data::stdmAdequacyDraft:
-        runSimulationInAdequacyDraftMode();
-        break;
-    default:
-        break;
+        // Run the simulation
+        switch (pStudy->runtime->mode)
+        {
+        case Data::stdmEconomy:
+            runSimulationInEconomicMode();
+            break;
+        case Data::stdmAdequacy:
+            runSimulationInAdequacyMode();
+            break;
+        case Data::stdmAdequacyDraft:
+            runSimulationInAdequacyDraftMode();
+            break;
+        default:
+            break;
+        }
+    }
+    // TODO : make an interface class for ISimulation, check writer & queue before
+    // runSimulationIn<XXX>Mode()
+    catch (Solver::Initialization::Error::NoResultWriter e)
+    {
+        logs.error() << "No result writer";
+        AntaresSolverEmergencyShutdown(); // no return
+    }
+    catch (Solver::Initialization::Error::NoQueueService e)
+    {
+        logs.error() << "No queue service";
+        AntaresSolverEmergencyShutdown(); // no return
     }
 
     // Importing Time-Series if asked
@@ -426,7 +439,7 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -456,9 +469,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // no output ?
     study.parameters.noOutput = pSettings.noOutput;
 
+    if (pSettings.forceZipOutput)
+    {
+        pParameters->resultFormat = Antares::Data::zipArchive;
+    }
+    // Initialize the result writer
+    study.prepareWriter(&pDurationCollector);
+
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveAboutTheStudy();
+
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();
@@ -505,23 +528,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         // comments
         {
-            study.buffer.clear() << study.folderOutput << Yuni::IO::Separator
-                                 << "simulation-comments.txt";
+            study.buffer.clear() << "simulation-comments.txt";
 
             if (!pSettings.commentFile.empty())
             {
-                Yuni::IO::Directory::Create(study.folderOutput);
-                if (Yuni::IO::errNone
-                    != Yuni::IO::File::Copy(pSettings.commentFile, study.buffer, true))
-                    logs.error() << "impossible to copy `" << pSettings.commentFile << "` to `"
-                                 << study.buffer << '`';
+                auto writer = pStudy->resultWriter;
+                if (writer)
+                    writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+
                 pSettings.commentFile.clear();
                 pSettings.commentFile.shrink();
-            }
-            else
-            {
-                if (!Yuni::IO::File::CreateEmptyFile(study.buffer))
-                    logs.error() << study.buffer << ": impossible to overwrite its content";
             }
         }
     }
@@ -549,6 +565,11 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
+    auto writer = pStudy->resultWriter;
+    // If no writer is available, we can't write
+    if (!writer)
+        return;
+
     // Info collectors : they retrieve data from study and simulation
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
     Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
@@ -560,10 +581,9 @@ void Application::writeExectutionInfo()
     simulation_info_collector.toFileContent(file_content);
 
     // Flush previous info into a record file
-    Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
-    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
-    ini_file_writer.flush();
+    const std::string exec_info_path = "execution_info.ini";
+    std::string content = file_content.saveToBufferAsIni();
+    writer->addEntryFromBuffer(exec_info_path, content);
 }
 
 Application::~Application()

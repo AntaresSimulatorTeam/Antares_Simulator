@@ -523,6 +523,14 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
 */
 DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
 
+// Format of results
+enum ResultFormat
+{
+    // Store outputs as files inside directories
+    legacyFilesDirectories = 0,
+    // Store outputs inside a single zip archive
+    zipArchive
+};
 
 // ------------------------
 // MPS export status
@@ -541,8 +549,6 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 
 } // namespace Data
 } // namespace Antares
-
-
 
 namespace Antares
 {
@@ -592,9 +598,13 @@ enum LinkCapacityForAdequacyPatchFirstStep
     setExtremityOrigineToZero
 
 }; // enum NTC
-
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
+
+namespace Benchmarking
+{
+class IDurationCollector;
+}
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

@@ -127,14 +127,12 @@ jobs:
            cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
-      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
     - name: Run adq-patch related test
-      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
 
       run: |
@@ -142,7 +140,6 @@ jobs:
            ctest -C Release --output-on-failure -R test-adq-patch
 
     - name: Run unit and end-to-end tests
-      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build

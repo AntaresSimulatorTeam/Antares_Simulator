@@ -34,6 +34,7 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/study.h>
+#include <i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 
@@ -79,7 +80,7 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter::Ptr writer)
 {
     logs.info() << "Generating the hydro time-series";
 
@@ -298,17 +299,20 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
             logs.info() << "Archiving the hydro time-series";
             String output;
             study.areas.each([&](const Data::Area& area) {
-                study.buffer.clear() << study.folderOutput << SEP << "ts-generator" << SEP
-                                     << "hydro" << SEP << "mc-" << currentYear << SEP << area.id;
-                if (IO::Directory::Create(study.buffer))
-                {
-                    output.clear() << study.buffer << SEP << "ror.txt";
-                    area.hydro.series->ror.saveToCSVFile(output);
+                study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
+                                     << currentYear << SEP << area.id;
 
-                    output.clear() << study.buffer << SEP << "storage.txt";
-                    area.hydro.series->storage.saveToCSVFile(output);
+                {
+                    std::string ror_buffer;
+                    output.clear() << study.buffer << SEP << "ror.txt";
+                    writer->addEntryFromBuffer(output.c_str(), ror_buffer);
                 }
 
+                {
+                    std::string storage_buffer;
+                    output.clear() << study.buffer << SEP << "storage.txt";
+                    writer->addEntryFromBuffer(output.c_str(), storage_buffer);
+                }
                 ++progression;
             });
         }

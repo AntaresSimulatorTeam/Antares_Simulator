@@ -25,14 +25,16 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <string>
+
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <yuni/core/string.h>
 
 #include <antares/study.h>
-#include <antares/benchmarking.h>
 #include <antares/logs.h>
 #include <antares/emergency.h>
+#include <i_writer.h>
 
 #include "../simulation/simulation.h"
 #include "../simulation/sim_structure_donnees.h"
@@ -58,7 +60,9 @@ namespace
 class GeneratorTempData final
 {
 public:
-    GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr);
+    GeneratorTempData(Data::Study& study,
+                      Solver::Progression::Task& progr,
+                      IResultWriter::Ptr writer);
 
     void prepareOutputFoldersForAllAreas(uint year);
 
@@ -130,14 +134,19 @@ private:
     String pTempFilename;
 
     Solver::Progression::Task& pProgression;
+
+    IResultWriter::Ptr pWriter;
 };
 
-GeneratorTempData::GeneratorTempData(Data::Study& study, Solver::Progression::Task& progr) :
+GeneratorTempData::GeneratorTempData(Data::Study& study,
+                                     Solver::Progression::Task& progr,
+                                     IResultWriter::Ptr writer) :
  study(study),
  nbHoursPerYear(study.runtime->nbHoursPerYear),
  daysPerYear(study.runtime->nbDaysPerYear),
  rndgenerator(study.runtime->random[Data::seedTsGenThermal]),
- pProgression(progr)
+ pProgression(progr),
+ pWriter(writer)
 {
     auto& parameters = study.parameters;
 
@@ -157,42 +166,22 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
     {
         pTempFilename.reserve(study.folderOutput.size() + 256);
 
-        pTempFilename.clear() << study.folderOutput << SEP << "ts-generator" << SEP << "thermal"
-                              << SEP << "mc-" << currentYear << SEP << area.id << SEP
-                              << cluster.id() << ".txt";
+        pTempFilename.clear() << "ts-generator" << SEP << "thermal" << SEP << "mc-" << currentYear
+                              << SEP << area.id << SEP << cluster.id() << ".txt";
 
         assert(cluster.series);
         enum
         {
             precision = 0
         };
-        cluster.series->series.saveToCSVFile(pTempFilename, precision);
+
+        std::string buffer;
+        cluster.series->series.saveToBuffer(buffer, precision);
+
+        pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
 
     ++pProgression;
-}
-
-void GeneratorTempData::prepareOutputFoldersForAllAreas(uint year)
-{
-    String folder;
-    folder.reserve(study.folderOutput.size() + 256);
-
-    study.areas.each([&](Data::Area& area) {
-        if (archive)
-        {
-            folder.clear();
-            folder << study.folderOutput << SEP << "ts-generator" << SEP << "thermal" << SEP
-                   << "mc-" << year << SEP << area.id;
-
-            if (not IO::Directory::Create(folder))
-            {
-                archive = false;
-                logs.warning()
-                  << "Archives for TS-generator thermal have been disabled, impossible to create : "
-                  << folder;
-            }
-        }
-    });
 }
 
 template<class T>
@@ -651,18 +640,16 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
-                               bool refreshTSonCurrentYear)
+                               bool refreshTSonCurrentYear,
+                               Antares::Solver::IResultWriter::Ptr writer)
 {
     logs.info();
     logs.info() << "Generating the thermal time-series";
     Solver::Progression::Task progression(study, year, Solver::Progression::sectTSGThermal);
 
-    auto* generator = new GeneratorTempData(study, progression);
+    auto* generator = new GeneratorTempData(study, progression, writer);
 
     generator->currentYear = year;
-
-    if (generator->archive)
-        generator->prepareOutputFoldersForAllAreas(year);
 
     study.areas.each([&](Data::Area& area) {
         auto end = area.thermal.list.mapping.end();

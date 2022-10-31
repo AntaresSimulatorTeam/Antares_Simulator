@@ -336,8 +336,6 @@ set(SRC_BENCHMARKING
     benchmarking/info_collectors.cpp
 	benchmarking/file_content.h
     benchmarking/file_content.cpp
-	benchmarking/file_writer.h
-	benchmarking/file_writer.cpp
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
@@ -459,7 +457,6 @@ set(SRC
 	study/estimate.memory-footprint.cpp
 	study/study.cpp
 	study/correlation-updater.hxx
-	study/mps.cpp
 	study/study.importprepro.cpp
 	study/memory-usage.h
 	study/memory-usage.cpp
@@ -567,6 +564,7 @@ target_include_directories(libantares-core
 			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
+            ${CMAKE_SOURCE_DIR}/solver/writer
 		)
 
 target_link_libraries(libantares-core
@@ -575,6 +573,7 @@ target_link_libraries(libantares-core
 		yuni-static-uuid
 		libantares-core-calendar
 		libantares-solver-variable-info
+        result_writer
 	)
 
 

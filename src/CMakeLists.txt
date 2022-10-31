@@ -187,6 +187,9 @@ message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
+option(BUILD_MINIZIP "Build minizip" OFF)
+message(STATUS "Build minizip ${BUILD_MINIZIP}")
+
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
     SET(DEPS_INSTALL_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../rte-antares-deps-${CMAKE_BUILD_TYPE})
@@ -275,6 +278,28 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   set(USE_SIRIUS "ON" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
+endif()
+
+find_package(minizip)
+
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    # Repository + tag
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "3.0.7")
+    # CMake flags
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+
+    FetchContent_Declare(minizip
+    GIT_REPOSITORY ${MZ_REPOSITORY}
+    GIT_TAG ${MZ_TAG})
+
+    FetchContent_MakeAvailable(minizip)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt

@@ -31,6 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/noncopyable.h>
+#include <yuni/job/queue/service.h>
+
+#include <i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"
@@ -166,7 +169,7 @@ public:
     ** \param forTheSolver True to indicate that the study will be used for a simulation
     **   Consequently some preparations / shortcuts should be done
     */
-    explicit Study(bool forTheSolver = false);
+    Study(bool forTheSolver = false);
     //! Destructor
     virtual ~Study();
     //@}
@@ -351,7 +354,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<int TimeSeriesT>
-    bool storeTimeSeriesNumbers();
+    void storeTimeSeriesNumbers() const;
     //@}
 
     //! \name Simulation
@@ -373,6 +376,8 @@ public:
     ** \brief Prepare the output where the results of the simulation will be written
     */
     bool prepareOutput();
+
+    void saveAboutTheStudy();
 
     /*!
     ** \brief Initialize the progress meter
@@ -494,19 +499,6 @@ public:
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
 
-    //! \name Simulation output Files creation
-    //@{
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createFileIntoOutputWithExtension(const YString& prefix,
-                                            const YString& extension,
-                                            uint numSpace,
-                                            const int currentOptimNumber = 0) const;
-
     //! \name
     //@{
     /*!
@@ -584,6 +576,8 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
+    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
+
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -602,8 +596,9 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
-    Simulation simulation;
+    SimulationComments simulationComments;
 
+    Yuni::sint64 pStartTime;
     // Used in GUI and solver
     // ----------------------
     // Maximum number of years in a set of parallel years.
@@ -739,6 +734,12 @@ public:
     //! A buffer used when loading time-series for dealing with filenames (prepro/series only)
     mutable YString bufferLoadingTS;
     //@}
+
+    //! The queue service that runs every set of parallel years
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+
+    //! Result writer, required to write residual files (comments, about-the-study, etc.)
+    Solver::IResultWriter::Ptr resultWriter = nullptr;
 
 public:
     //! \name TS Generators

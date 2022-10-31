@@ -580,19 +580,14 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     return true;
 }
 
-bool AreaList::saveLinkListToFile(const AnyString& filename) const
+void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
-    IO::File::Stream file;
-    if (not file.openRW(filename))
-        return false;
-
     each([&](const Data::Area& area) {
-        file << area.id << '\n';
+        buffer << area.id << '\n';
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
-            file << '\t' << (i->second)->with->id << '\n';
+            buffer << '\t' << (i->second)->with->id << '\n';
     });
-    return true;
 }
 
 bool AreaList::saveListToFile(const AnyString& filename) const

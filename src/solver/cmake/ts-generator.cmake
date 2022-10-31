@@ -41,4 +41,4 @@ add_library(libantares-solver-ts-generator
 				${SRC_GENERATORS}
 				${SRC_XCAST})
 
-target_link_libraries(libantares-solver-ts-generator PRIVATE libantares-core)
+target_link_libraries(libantares-solver-ts-generator PRIVATE libantares-core result_writer)
