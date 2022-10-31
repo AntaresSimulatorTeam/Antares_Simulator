@@ -34,7 +34,6 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/study.h>
-#include <antares/memory/memory.h>
 #include <i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
@@ -60,8 +59,6 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
         hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
         hydroseries.count = tsCount;
-
-        hydroseries.flush();
     });
 }
 
@@ -80,8 +77,6 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
             hydroseries.ror.averageTimeseries();
             hydroseries.storage.averageTimeseries();
         }
-
-        hydroseries.flush();
     });
 }
 
@@ -119,8 +114,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         AntaresSolverEmergencyShutdown();
     }
 
-    CHSKY.flush();
-    B.flush();
     Matrix<double> CORRE;
     CORRE.reset(DIM, DIM);
 
@@ -286,12 +279,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
             assert(not Math::NaN(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
 
-            if (Antares::Memory::swapSupport)
-            {
-                prepro.data.flush();
-                series.flush();
-            }
-
             cumul += daysPerMonth;
         }
 
@@ -335,9 +322,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     }
 
     delete[] NORM;
-
-    if (Antares::Memory::swapSupport)
-        study.preproHydroCorrelation.annual->flush();
 
     return true;
 }

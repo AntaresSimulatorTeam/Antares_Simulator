@@ -54,16 +54,4 @@ source_group("simulation" FILES ${SRC_SIMULATION})
 add_library(libantares-solver-simulation
 		${SRC_SIMULATION}  )
 
-target_link_libraries(libantares-solver-simulation PRIVATE libantares-core result_writer)
-
-if(BUILD_SWAP)
-
-    add_library(libantares-solver-simulation-swap
-            ${SRC_SIMULATION}  )
-
-    target_link_libraries(libantares-solver-simulation-swap PRIVATE libantares-core-swap)
-
-    set_target_properties(libantares-solver-simulation-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-
-endif()
-
+target_link_libraries(libantares-solver-simulation PRIVATE libantares-core)

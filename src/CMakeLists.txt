@@ -184,9 +184,6 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
-message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
-
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 
@@ -264,6 +261,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
     GIT_REPOSITORY "https://github.com/rte-france/or-tools"
     GIT_TAG ${ORTOOLS_TAG}
+    GIT_SHALLOW TRUE
     )
 
   # Pass options to OR-Tools's CMake

@@ -204,11 +204,6 @@ public:
     void markAsModified() const;
 
     /*!
-    ** \brief Flush memory to swap files
-    */
-    void flush();
-
-    /*!
     ** \brief Rebuild the index of clusters
     **
     ** As a list of clusters is a hash table, it is not

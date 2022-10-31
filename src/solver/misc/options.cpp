@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/memory/memory.h>
 #include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
@@ -178,19 +177,6 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --progress
     parser->addFlag(
       settings.displayProgression, ' ', "progress", "Display the progress of each task");
-    // --swap
-    parser->add(settings.swap,
-                ' ',
-                "swap-folder",
-#ifdef ANTARES_SWAP_SUPPORT
-                String("Folder where the swap files will be written. (default: '")
-                  << Antares::memory.cacheFolder() << "')"
-#else
-                "Folder where the swap files will be written. This option has no effect (swap "
-                "files "
-                "are only available for 'antares-solver-swap')"
-#endif
-    );
 
     // --pid
     parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");

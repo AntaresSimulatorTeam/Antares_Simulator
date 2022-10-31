@@ -520,11 +520,12 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
       - NP Costs
       - Net profit
     */
-    const uint nbVariablesPerDetailRenewableCluster = 1;
-    // Production
+    const uint nbVariablesPerDetailRenewableCluster = 1; // Production
 
-    const uint nbVariablesPerInequalityBindingConstraint = 1;
-    // Marginal price
+    // Max number of columns taken by an inequality binding constraint in a report 
+    // (= output file). Here, this max is 4, and occurs in binding 
+    // constraint synythesis reports.
+    const uint maxNbVariablesPerInequalityBindingConstraint = 4;
 
     const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
 
@@ -533,7 +534,7 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
                                  * runtime->maxThermalClustersForSingleArea),
                static_cast<uint>(nbVariablesPerDetailRenewableCluster
                                  * runtime->maxRenewableClustersForSingleArea),
-               nbVariablesPerInequalityBindingConstraint
+               maxNbVariablesPerInequalityBindingConstraint
                  * runtime->getNumberOfInequalityBindingConstraints());
 }
 

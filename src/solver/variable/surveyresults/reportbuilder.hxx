@@ -268,9 +268,6 @@ public:
                 list.buildDigest(results, Category::digestFlowQuad, Category::area);
                 results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
             }
-
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
         }
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
@@ -340,11 +337,7 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id;
-                // Creating the directory
                 SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
             }
 
             // Thermal clusters for the current area
@@ -376,10 +369,8 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id << SEP << "thermal" << SEP << cluster.id();
-                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
         }
     }
@@ -427,12 +418,8 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    // Generating the report for each thermal cluster
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
                 }
             }
         }
@@ -473,9 +460,6 @@ private:
 
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
         }
     }
 

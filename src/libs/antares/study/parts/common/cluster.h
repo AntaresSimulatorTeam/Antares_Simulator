@@ -50,13 +50,6 @@ public:
     //! Get the full cluster name
     Yuni::String getFullName() const;
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Flush the memory to swap files (if swap support enabled)
-    */
-    virtual void flush() = 0;
-
     virtual uint groupId() const = 0;
 
     //! Set the group

@@ -367,8 +367,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = NON_ANTARES;
-
-        lnk->flush();
     }
 
     if (studyruntime.bindingConstraintCount)
@@ -421,9 +419,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 logs.error() << "internal error. Please submit a full bug report";
                 break;
             }
-            }
-            bc.bounds.flush();
-        }
+            }        }
     }
 
     int weekDayIndex[8];
@@ -1017,9 +1013,4 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,
                nbPays * sizeof(double));
     }
-
-#ifdef ANTARES_SWAP_SUPPORT
-
-    Antares::memory.flushAll();
-#endif
 }

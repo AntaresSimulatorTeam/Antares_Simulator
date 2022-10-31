@@ -40,94 +40,69 @@ if(WIN32)
 endif()
 
 
-macro(solver_app name swap)
-	if(${swap})
-		OMESSAGE("  :: application ${name} (with swap support)")
-	else()
-		OMESSAGE("  :: application ${name}")
-	endif()
 
-	set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
-	if(${swap})
-		set(exec_name "${exec_name}-swap")
-	endif()
+OMESSAGE("  :: application solver")
 
-	add_executable(${exec_name}
-		memory/mem.h
+set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
-		misc/options.h
-		misc/options.cpp
-		misc/process-priority.cpp
-		misc/cholesky.h
-		misc/cholesky.hxx
-		misc/matrix-dp-make.h
-		misc/matrix-dp-make.hxx
+add_executable(${exec_name}
+	memory/mem.h
 
-		misc/system-memory.h
-		misc/system-memory.cpp
+	misc/options.h
+	misc/options.cpp
+	misc/process-priority.cpp
+	misc/cholesky.h
+	misc/cholesky.hxx
+	misc/matrix-dp-make.h
+	misc/matrix-dp-make.hxx
 
-		mps/mps_define.h
-		mps/mps_extern_global.h
-		mps/mps_global.c
-		${SRCS}
-		main.cpp
-        application.h
-        application.cpp
+	misc/system-memory.h
+	misc/system-memory.cpp
 
-        signal-handling/common.h
-        signal-handling/public.h
-        signal-handling/common.cpp
-        signal-handling/linux.cpp
-        signal-handling/windows.cpp
-	)
-	
-	set(ANTARES_SOLVER_LIBS		
-		libantares-core-calendar
-		yuni-static-uuid
-		yuni-static-core		
-		${CMAKE_THREADS_LIBS_INIT}
-	)
+	mps/mps_define.h
+	mps/mps_extern_global.h
+	mps/mps_global.c
+	${SRCS}
+	main.cpp
+	application.h application.cpp
 
-	if(${swap})
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
-			libantares-solver-main-economy-swap
-			libantares-solver-main-adequacy-draft-swap
-			libantares-solver-main-adequacy-swap
-			libantares-solver-hydro-swap
-			libantares-solver-aleatoire-swap
-			libantares-solver-variable-swap
-			libantares-solver-simulation-swap
-			libantares-solver-ts-generator-swap
-			libmodel_antares-swap
-			libantares-core-swap)
-		set_target_properties(${exec_name} PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-	else()
-		set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
-			libantares-solver-main-economy
-			libantares-solver-main-adequacy-draft
-			libantares-solver-main-adequacy
-			libantares-solver-hydro
-			libantares-solver-aleatoire
-			libantares-solver-variable
-			libantares-solver-simulation
-			libantares-solver-ts-generator
-			libmodel_antares
-			libantares-core)
-	endif()
+    signal-handling/common.h
+    signal-handling/public.h
+    signal-handling/common.cpp
+    signal-handling/linux.cpp
+    signal-handling/windows.cpp
+)
 
-	target_link_libraries(${exec_name}
-			PRIVATE
+set(ANTARES_SOLVER_LIBS		
+	libantares-core-calendar
+	yuni-static-uuid
+	yuni-static-core		
+	${CMAKE_THREADS_LIBS_INIT}
+)
+
+set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
+	libantares-solver-main-economy
+	libantares-solver-main-adequacy-draft
+	libantares-solver-main-adequacy
+	libantares-solver-hydro
+	libantares-solver-aleatoire
+	libantares-solver-variable
+	libantares-solver-simulation
+	libantares-solver-ts-generator
+	libmodel_antares
+	libantares-core)
+
+target_link_libraries(${exec_name}
+		PRIVATE
 			${ANTARES_SOLVER_LIBS}
-			)
+		)
 
-	import_std_libs(${exec_name})
-	executable_strip(${exec_name})	
-	
-	copy_dependency(sirius_solver ${exec_name})	
+import_std_libs(${exec_name})
+executable_strip(${exec_name})
 
-endmacro()
+copy_dependency(sirius_solver ${exec_name})
 
-solver_app("solver"      false)
+
 
 #TODO : not working inside macro
 install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" EXPORT antares-solver DESTINATION bin)
@@ -136,19 +111,4 @@ INSTALL(EXPORT antares-solver
 	FILE antares-solverConfig.cmake
 	DESTINATION cmake
 )
-
-
-if(BUILD_SWAP)
-
-    solver_app("solver-swap" true)
-
-    #TODO : not working inside macro
-    install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver-swap" EXPORT antares-solver-swap DESTINATION bin)
-    
-    INSTALL(EXPORT antares-solver-swap
-	FILE antares-solver-swapConfig.cmake
-	DESTINATION cmake
-)
-
-endif()
 

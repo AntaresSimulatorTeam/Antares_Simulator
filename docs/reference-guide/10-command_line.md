@@ -4,8 +4,7 @@ Several executable parts of Antares\_Simulator can be run in command line from a
 
 _In all cases, arguments " –h" or "–help" can be used to get help_
 
-**antares-8.3-solver** <br/>
-**antares-8.3-solver-swap** (simulation in low-RAM swap mode)
+**The solver executable : antares-8.3-solver**
 
 - Simulation
 
@@ -47,7 +46,6 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |command|meaning|
 |:---|:---|
 |--progress | Display the progress of each task |
-|--swap-folder=VALUE | Folder where the swap files will be written. This <br/> option has effect only in swap mode (swap files are only <br/> available for 'antares-solver-swap') |
 |-p, --pid=VALUE | Specify the file where to write the process ID |
 |-v, --version | Print the version of the solver and exit |
 |-h, --help | Display this help and exit |
@@ -132,7 +130,6 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |command|meaning|
 |:---|:---|
 |--solver=VALUE | Specify the antares-solver location |
-|-s, --swap | Swap mode |
 |--parallel | Enable the parallel computation of MC years |
 |--force-parallel=VALUE | Override the max number of years computed simultaneously |
 |--verbose |Display detailed logs for each simulation to run |
