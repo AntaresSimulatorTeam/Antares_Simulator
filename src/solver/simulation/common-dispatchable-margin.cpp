@@ -32,6 +32,7 @@
 #include "common-eco-adq.h"
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
+#include "../optimisation/adequacy_patch.h"
 
 namespace Antares
 {
@@ -77,6 +78,7 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                 }
                 matrix.flush();
             }
+            Data::AdequacyPatch::postProcess(dtgmrg, hourlyResults);
         }
     });
 }

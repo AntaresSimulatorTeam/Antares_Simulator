@@ -130,6 +130,15 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo);
 ** */
 void addArray(std::vector<double>& A, const double* B);
 
+/*!
+** ** \brief calculate dtgMrgCsr and adjust ENS values if neccessary
+** **
+** ** \param dtgmrg pointer to array of DTG MRG 
+** ** \param hourlyResults hourly results
+** ** \return
+** */
+void postProcess(const double* dtgmrg, RESULTATS_HORAIRES& hourlyResults);
+
 } // end namespace Antares
 } // end namespace Data
 } // end namespace AdequacyPatch

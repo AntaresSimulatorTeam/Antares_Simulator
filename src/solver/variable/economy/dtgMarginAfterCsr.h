@@ -52,8 +52,7 @@ struct VCardDtgMarginCsr
     //! The short description of the variable
     static const char* Description()
     {
-        return "Spilled Energy After CSR Optimization (generation that cannot be satisfied) "
-               "after CSR optimization";
+        return "Dispatchable Generation Margin (after CSR optimization)";
     }
 
     //! The expecte results
@@ -236,9 +235,14 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total DtgMarginCsr 
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek];
+        // Total DtgMarginCsr
+        // if area is inside adq-patch but has no thermal clusters, value of -1.0 is left over,
+        //  and needs to be set to zero here
+        if (state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek] < 0.0)
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear] = 0.0;
+        else
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+              = state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);

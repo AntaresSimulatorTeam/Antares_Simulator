@@ -248,6 +248,22 @@ void addArray(std::vector<double>& A, const double* B)
         A[i] += B[i];
 }
 
+void postProcess(const double* dtgmrg, RESULTATS_HORAIRES& hourlyResults)
+{
+    for (uint y = 0; y != 168; ++y)
+    {
+        double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[y];
+        double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[y];
+        if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+        {
+            dtgMrgCsr = Math::Max(0.0, dtgmrg[y] - ens);
+            ens = Math::Max(0.0, ens - dtgmrg[y]);
+        }
+        else
+            dtgMrgCsr = dtgmrg[y];
+    }
+}
+
 } // end namespace Antares
 } // end namespace Data
 } // end namespace AdequacyPatch
@@ -264,6 +280,10 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
         if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
             == physicalAreaInsideAdqPatch)
         {
+            // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
+            pWeeklyProblemBelongedTo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour]
+              = -1.0;
+            // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, ignore, ignore)
               = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
 
@@ -282,6 +302,7 @@ void HOURLY_CSR_PROBLEM::adjustMrgPrices(const Antares::Solver::Variable::State&
     int hour = hourInWeekTriggeredCsr;
     for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
     {
+        // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5) 
         if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
               == physicalAreaInsideAdqPatch
             && pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
