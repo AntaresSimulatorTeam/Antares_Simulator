@@ -218,24 +218,9 @@ static std::string generateTempPath(const std::string& filename)
     return tmpPath.str();
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   size_t numSpace,
-                                                   int const numOptim)
+static void removeTemporaryFile(const std::string& tmpPath)
 {
     namespace fs = std::filesystem;
-    // 1. Determine filename
-    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
-    const auto tmpPath = generateTempPath(filename);
-
-    // 2. Write MPS to temporary file
-    solver->Write(tmpPath);
-
-    // 3. Copy to real output using generic writer
-    auto study = Antares::Data::Study::Current::Get();
-    auto writer = study->resultWriter;
-    writer->addEntryFromFile(filename, tmpPath);
-
-    // 4. Remove tmp file
     bool ret = false;
     try
     {
@@ -249,6 +234,26 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     {
         Antares::logs.warning() << "Could not remove temporary file " << tmpPath;
     }
+}
+
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
+                                                   size_t numSpace,
+                                                   int const numOptim)
+{
+    // 1. Determine filename
+    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
+    const auto tmpPath = generateTempPath(filename);
+
+    // 2. Write MPS to temporary file
+    solver->Write(tmpPath);
+
+    // 3. Copy to real output using generic writer
+    auto study = Antares::Data::Study::Current::Get();
+    auto writer = study->resultWriter;
+    writer->addEntryFromFile(filename, tmpPath);
+
+    // 4. Remove tmp file
+    removeTemporaryFile(tmpPath);
 }
 
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameters& params)
