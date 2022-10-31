@@ -261,7 +261,7 @@ void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
     path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
          << SEP << with->id << ".txt";
 
-    timeseriesNumbers.saveToBuffer(buffer, 0, false, predicate, true);
+    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
     writer->addEntryFromBuffer(path.c_str(), buffer);
 }
 

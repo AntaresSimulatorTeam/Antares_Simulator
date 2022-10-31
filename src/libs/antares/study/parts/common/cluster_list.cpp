@@ -177,7 +177,7 @@ void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr wr
     each([&](const Cluster& cluster) {
         path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
                      << cluster.id() << ".txt";
-        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, false, predicate, true);
+        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
         writer->addEntryFromBuffer(path.c_str(), ts_content);
     });
 }

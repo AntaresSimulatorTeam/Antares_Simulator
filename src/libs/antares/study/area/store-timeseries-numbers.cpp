@@ -61,7 +61,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer,
                                    0,         // precision
-                                   false,     // print_dimensions
+                                   true,     // print_dimensions
                                    predicate, // predicate
                                    true);     // save even if all coeffs are zero
 
