@@ -564,6 +564,7 @@ target_include_directories(libantares-core
 			${CMAKE_SOURCE_DIR}/ext/yuni/src
 			${CMAKE_SOURCE_DIR}/libs
 			${CMAKE_SOURCE_DIR}/libs/antares/logs
+            ${CMAKE_SOURCE_DIR}/solver/writer
 		)
 
 target_link_libraries(libantares-core
@@ -572,6 +573,7 @@ target_link_libraries(libantares-core
 		yuni-static-uuid
 		libantares-core-calendar
 		libantares-solver-variable-info
+        result_writer
 	)
 
 

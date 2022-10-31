@@ -313,9 +313,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                     output.clear() << study.buffer << SEP << "storage.txt";
                     writer->addEntryFromBuffer(output.c_str(), storage_buffer);
                 }
-
-                area.hydro.series->flush();
-
                 ++progression;
             });
         }
