@@ -184,9 +184,6 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
-message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
-
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
 

@@ -175,13 +175,6 @@ public:
     */
     void copyFrom(const ThermalCluster& cluster);
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Flush the memory to swap files (if swap support enabled)
-    */
-    void flush() override;
-
     /*!
     ** \brief Group ID as an uint
     */

@@ -222,8 +222,6 @@ bool Adequacy::year(Progression::Task& progression,
                             state.resSpilled[ar][hw] = 0.;
                     }
                 }
-
-                area.reserves.flush();
             }
 
             try

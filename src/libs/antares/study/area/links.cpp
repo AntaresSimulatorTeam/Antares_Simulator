@@ -325,9 +325,6 @@ void AreaLink::reverse()
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
-
-    directCapacities.flush();
-    indirectCapacities.flush();
 }
 
 bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
@@ -711,9 +708,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             }
             }
         }
-
-        // memory swap
-        link.flush();
     }
 
     return ret;
@@ -872,14 +866,6 @@ String AreaLink::getName() const
 AreaLink::NamePair AreaLink::getNamePair() const
 {
     return NamePair(from->name, with->name);
-}
-
-void AreaLink::flush()
-{
-    parameters.flush();
-    directCapacities.flush();
-    indirectCapacities.flush();
-    timeseriesNumbers.flush();
 }
 
 } // namespace Data

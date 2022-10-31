@@ -80,18 +80,8 @@ bool FindLocation(String& location, Data::Version /*version*/, Solver::Feature f
         searchpaths.directories.push_back(s.clear() << "/usr/bin/");
     }
 
-    bool success = false;
     s.clear();
-    switch (features)
-    {
-    case Solver::parallel:
-    case Solver::standard:
-        success = searchpaths.find(s, "solver");
-        break;
-    case Solver::withSwapFiles:
-        success = searchpaths.find(s, "solver-swap");
-        break;
-    }
+    bool success = searchpaths.find(s, "solver");
 
     if (success)
     {

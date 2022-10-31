@@ -111,8 +111,7 @@ int main(int argc, char* argv[])
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
 
-    // Swap memory
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     // locale
