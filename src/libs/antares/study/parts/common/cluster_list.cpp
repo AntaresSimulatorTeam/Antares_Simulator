@@ -178,22 +178,21 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 #define SEP IO::Separator
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::storeTimeseriesNumbers(Study& study)
+void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
 {
     if (cluster.empty())
-        return true;
+        return;
 
-    bool ret = true;
     TSNumbersPredicate predicate;
+    Clob path;
+    std::string ts_content;
 
     each([&](const Cluster& cluster) {
-        study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id
-                     << SEP << cluster.id() << ".txt";
-        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
-              and ret;
+        path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
+                     << cluster.id() << ".txt";
+        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, false, predicate, true);
+        writer->addEntryFromBuffer(path.c_str(), ts_content);
     });
-    return ret;
 }
 
 template<class ClusterT>

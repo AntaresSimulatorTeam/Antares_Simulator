@@ -504,6 +504,13 @@ public:
 
     void saveToBuffer(std::string& data, uint precision = 6) const;
 
+    template<class PredicateT>
+    void saveToBuffer(std::string& data,
+                      uint precision,
+                      bool print_dimensions,
+                      PredicateT& predicate,
+                      bool saveEvenIfAllZero) const;
+
 private:
     /*!
     ** \brief Load data from a CSV file
@@ -529,13 +536,6 @@ private:
                              bool print_dimensions,
                              PredicateT& predicate,
                              bool saveEvenIfAllZero) const;
-
-    template<class PredicateT>
-    void saveToBuffer(std::string& data,
-                      uint precision,
-                      bool print_dimensions,
-                      PredicateT& predicate,
-                      bool saveEvenIfAllZero) const;
 
     bool loadFromBuffer(const AnyString& filename,
                         BufferType& data,
