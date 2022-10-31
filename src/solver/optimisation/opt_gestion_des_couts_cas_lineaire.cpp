@@ -213,26 +213,93 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[Pays];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[Var]
-                  = ProblemeHebdo
-                      ->BruitSurCoutHydraulique[Pays][ProblemeHebdo->HeureDansLAnnee + PdtHebdo];
+                /* Sets the cost of the pumping variable when such a variable is actually defined
+                (i.e. Var>=0)
+
+
+                1-   When the "AccurateWaterValue" optimization mode is not used, the pumping
+                variable must be given an explicit meaningful value, because no reservoir level
+                variables are defined in this case. The pumping cost is based on the water value
+                found for the initial reservoir level (with a sign change and weighted by the
+                pumping ratio) In the eventuality of a zero-value water configuration, the pumping
+                cost is then uplifted by an "espilon" component whose definition is given in the
+                next section.
+
+                2-   When the "AccurateWaterValue" optimization mode is used, the economic
+                    contribution of pumping is mainly described through the cost set for the
+                reservoir level variable ; as a consequence, the pumping variable is given only a
+                residual "epsilon" cost based on the hydro generating "economic noise" The residual
+                pumping cost is set to 2*fabs(generating noise), so as to make sure that, if the
+                pumping ratio is equal to 1.0, no meaningless situations involving pumping and
+                generating equal power amounts in the same location shall ever occur.
+
+                */
 
                 if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue
                     == NON_ANTARES)
+                {
                     ProblemeAResoudre->CoutLineaire[Var]
-                      += ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
-                           ->WeeklyWaterValueStateRegular;
+                      = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                          ->WeeklyWaterValueStateRegular;
 
-                ProblemeAResoudre->CoutLineaire[Var]
-                  *= ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PumpingRatio;
-                ProblemeAResoudre->CoutLineaire[Var] *= -1.;
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      *= ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PumpingRatio;
+                    ProblemeAResoudre->CoutLineaire[Var] *= -1.;
+
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      += 2.
+                         * fabs(ProblemeHebdo
+                                  ->BruitSurCoutHydraulique[Pays][ProblemeHebdo->HeureDansLAnnee
+                                                                  + PdtHebdo]);
+                }
+                else
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = 2.
+                        * fabs(ProblemeHebdo
+                                 ->BruitSurCoutHydraulique[Pays][ProblemeHebdo->HeureDansLAnnee
+                                                                 + PdtHebdo]);
+                }
             }
+
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-                ProblemeAResoudre->CoutLineaire[Var]
-                  = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
+                /* Sets the cost of the overflow variable when such a variable is actually defined
+               (i.e. Var>=0)
+
+
+               1-   When the "AccurateWaterValue" optimization mode is not used, the overflow
+               variable must be given a cost translating the fact that overflowing is at the same
+               time:
+                - A loss of a storage oppportunity, whose value is in this case the water value
+               found for the initial level.
+                - A spillage of power, whose value is the reference spillage cost.
+
+               2-   When the "AccurateWaterValue" optimization mode is used, the economic loss of
+               storage oppportunity incurred when overflowing is modelled through the costs of the
+               reservoir level variables. The cost of the overflow variable involves therefore only
+               a spillage component.
+
+              */
+
+                if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue
+                    == NON_ANTARES)
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
+
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      += ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                           ->WeeklyWaterValueStateRegular;
+                }
+                else
+                {
+                    ProblemeAResoudre->CoutLineaire[Var]
+                      = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
+                }
             }
+
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
