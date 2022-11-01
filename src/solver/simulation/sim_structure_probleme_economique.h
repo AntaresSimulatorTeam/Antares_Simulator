@@ -731,7 +731,6 @@ private:
     void buildProblemConstraintsRHS();
     void setProblemCost();
     void solveProblem(uint week, int year);
-    void adjustMrgPrices(const Antares::Solver::Variable::State& state);
 public:
     void run(uint week, const Antares::Solver::Variable::State& state);
     
