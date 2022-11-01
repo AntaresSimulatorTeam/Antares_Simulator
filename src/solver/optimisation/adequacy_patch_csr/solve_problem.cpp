@@ -251,14 +251,14 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    int yearNb)
 {
     double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-    logs.debug() << "costPriorToCsr: " << costPriorToCsr;
+    logs.info() << "costPriorToCsr: " << costPriorToCsr;
     auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-        logs.debug() << "costAfterCsr: " << costAfterCsr;
-        logs.debug() << "deltaCost: " << costAfterCsr - costPriorToCsr;
+        logs.info() << "costAfterCsr: " << costAfterCsr;
+        logs.info() << "deltaCost: " << costAfterCsr - costPriorToCsr;
         storeOrDisregardInteriorPointResults(
           ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
         return true;
