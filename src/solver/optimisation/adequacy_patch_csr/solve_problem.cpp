@@ -143,10 +143,10 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
     if (deltaCost <= 0.0)
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
     else
-        logs.info() << "CSR optimization is providing solution with greater costs, optimum "
-                       "solution is set as LMR . year: "
-                    << yearNb + 1 << ". hour: "
-                    << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+        logs.warning() << "CSR optimization is providing solution with greater costs, optimum "
+                          "solution is set as LMR . year: "
+                       << yearNb + 1 << ". hour: "
+                       << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
@@ -168,9 +168,9 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
         {
             cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
                     * ProblemeAResoudre->CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var];
-            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var];
-            logs.debug() << "TotalCost: " << cost;
+            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var]*1000000;
+            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var]*1000000;
+            logs.debug() << "TotalCost: " << cost*1000000;
         }
         bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
         if (inLinkSet
@@ -179,16 +179,16 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
             if (ProblemeAResoudre->X[Var] >= 0)
             {
                 cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 1];
-                logs.debug() << "X+: " << ProblemeAResoudre->X[Var];
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 1];
-                logs.debug() << "TotalCost: " << cost;
+                logs.debug() << "X+: " << ProblemeAResoudre->X[Var]*1000000;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 1]*1000000;
+                logs.debug() << "TotalCost: " << cost*1000000;
             }
             else
             {
                 cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 2];
-                logs.debug() << "X-: " << ProblemeAResoudre->X[Var];
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 2];
-                logs.debug() << "TotalCost: " << cost;
+                logs.debug() << "X-: " << ProblemeAResoudre->X[Var]*1000000;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 2]*1000000;
+                logs.debug() << "TotalCost: " << cost*1000000;
             }
         }
     }
@@ -254,15 +254,15 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    int yearNb)
 {
     double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-    logs.info() << "costPriorToCsr: " << costPriorToCsr;
+    logs.info() << "costPriorToCsr[*10^6]: " << costPriorToCsr*1e6;
     auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-        logs.info() << "costAfterCsr: " << costAfterCsr;
-        logs.info() << "deltaCost: " << costAfterCsr - costPriorToCsr;
+        logs.info() << "costAfterCsr[*10^6]: " << costAfterCsr*1e6;
+        logs.info() << "deltaCost[*10^6]: " << (costAfterCsr - costPriorToCsr)*1e6;
         storeOrDisregardInteriorPointResults(
           ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
         return true;
