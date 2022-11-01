@@ -105,13 +105,17 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     return Probleme;
 }
 
-void setToZeroIfBelowThreshold(double* pt, int Var, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                               HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
-                  != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
-    bool belowLimit = *pt < hourlyCsrProblem.belowThisThresholdSetToZero;
-    if (inSet && belowLimit)
-        *pt = 0.0;
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
+                     != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
+        bool belowLimit = ProblemeAResoudre->X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
+        if (inSet && belowLimit)
+            ProblemeAResoudre->X[Var] = 0.0;
+    }
 }
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
@@ -124,7 +128,6 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
         if (pt)
         {
             *pt = ProblemeAResoudre->X[Var];
-            setToZeroIfBelowThreshold(pt, Var, hourlyCsrProblem);
         }
         logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
     }
@@ -256,6 +259,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
+        setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
         logs.info() << "costAfterCsr: " << costAfterCsr;
         logs.info() << "deltaCost: " << costAfterCsr - costPriorToCsr;
