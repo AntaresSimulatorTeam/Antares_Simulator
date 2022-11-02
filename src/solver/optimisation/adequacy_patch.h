@@ -132,7 +132,7 @@ void addArray(std::vector<double>& A, const double* B);
 
 /*!
 ** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
-** ** values if neccessary. If LOLD=1, Sets MRG COST for to the max value (unsupplied energy cost)
+** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** **
 ** ** \param study The Antares study
 ** ** \param problem The weekly problem, from the solver
