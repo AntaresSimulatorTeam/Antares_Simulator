@@ -53,6 +53,11 @@ struct TSNumbersPredicate
 
 #define SEP (IO::Separator)
 
+namespace
+{
+const YString DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES = "ntc";
+}
+
 namespace Antares
 {
 namespace Data
@@ -247,12 +252,17 @@ bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
     }
 }
 
-bool AreaLink::storeTimeseriesNumbers(const AnyString& folder) const
+void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
 {
+    Clob path;
     TSNumbersPredicate predicate;
-    YString filename;
-    filename << folder << SEP << with->id << ".txt";
-    return timeseriesNumbers.saveToCSVFile(filename, 0, true, predicate);
+    std::string buffer;
+
+    path << "ts-numbers" << SEP << DIRECTORY_NAME_FOR_TRANSMISSION_CAPACITIES << SEP << from->id
+         << SEP << with->id << ".txt";
+
+    timeseriesNumbers.saveToBuffer(buffer, 0, true, predicate, true);
+    writer->addEntryFromBuffer(path.c_str(), buffer);
 }
 
 void AreaLink::detach()
@@ -325,9 +335,6 @@ void AreaLink::reverse()
 
     directCapacities.markAsModified();
     indirectCapacities.markAsModified();
-
-    directCapacities.flush();
-    indirectCapacities.flush();
 }
 
 bool AreaLink::isVisibleOnLayer(const size_t& layerID) const
@@ -711,9 +718,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             }
             }
         }
-
-        // memory swap
-        link.flush();
     }
 
     return ret;
@@ -872,14 +876,6 @@ String AreaLink::getName() const
 AreaLink::NamePair AreaLink::getNamePair() const
 {
     return NamePair(from->name, with->name);
-}
-
-void AreaLink::flush()
-{
-    parameters.flush();
-    directCapacities.flush();
-    indirectCapacities.flush();
-    timeseriesNumbers.flush();
 }
 
 } // namespace Data

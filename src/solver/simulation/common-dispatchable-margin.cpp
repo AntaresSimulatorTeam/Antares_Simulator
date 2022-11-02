@@ -73,7 +73,6 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                                           ->ProductionThermiqueDuPalier[cluster.index];
                     dtgmrg[y] += column[y + hourInYear] - production;
                 }
-                matrix.flush();
             }
         }
     });

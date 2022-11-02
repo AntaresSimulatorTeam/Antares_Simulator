@@ -228,11 +228,8 @@ struct VariableAccessor
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
+
             assert(src != NULL);
-#endif
             for (uint h = 0; h != maxHoursInAYear; ++h)
                 out[i].hour[h] += src[h];
         }
@@ -245,12 +242,8 @@ struct VariableAccessor
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
             {
                 if (out[i].hour[h] < src[h])
@@ -456,12 +449,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
                 out[i].hour[h] += src[h];
         }
@@ -474,12 +463,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
             {
                 if (out[i].hour[h] < src[h])
@@ -612,12 +597,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         Antares::Memory::Stored<double>::ConstReturnType src
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-        assert(src.valid());
-#else
-        assert(src != NULL);
-#endif
 
+        assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
             out.hour[h] += src[h];
     }
@@ -627,12 +608,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         Antares::Memory::Stored<double>::ConstReturnType src
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-        assert(src.valid());
-#else
-        assert(src != NULL);
-#endif
 
+        assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
         {
             if (out.hour[h] < src[h])

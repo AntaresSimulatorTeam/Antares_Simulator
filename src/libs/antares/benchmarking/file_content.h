@@ -21,6 +21,8 @@ public:
                           const std::string& value);
     void addDurationItem(const std::string& name, unsigned int duration, int nbCalls);
 
+    std::string saveToBufferAsIni();
+
 private:
     std::mutex pSectionsMutex;
     // Data of the file content
@@ -28,5 +30,4 @@ private:
              std::map<std::string, std::string>> // Section parameters as name / value
       sections_;
 };
-
 } // namespace Benchmarking

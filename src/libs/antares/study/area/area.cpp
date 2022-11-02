@@ -420,12 +420,6 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
         for (auto i = links.begin(); i != end; ++i)
             (i->second)->estimateMemoryUsage(u);
     }
-
-    if (u.swappingSupport)
-    {
-        // + something
-        u.requiredMemoryForInput += ((/*1.5*/ 15 * 1024 * 1024) / 10);
-    }
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const

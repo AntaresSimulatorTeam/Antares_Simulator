@@ -580,19 +580,14 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     return true;
 }
 
-bool AreaList::saveLinkListToFile(const AnyString& filename) const
+void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
-    IO::File::Stream file;
-    if (not file.openRW(filename))
-        return false;
-
     each([&](const Data::Area& area) {
-        file << area.id << '\n';
+        buffer << area.id << '\n';
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
-            file << '\t' << (i->second)->with->id << '\n';
+            buffer << '\t' << (i->second)->with->id << '\n';
     });
-    return true;
 }
 
 bool AreaList::saveListToFile(const AnyString& filename) const
@@ -838,8 +833,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         // Release
         delete[] tmp;
-        // flush
-        area.reserves.flush();
     }
     else
     {
@@ -857,7 +850,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.reserves.columnToZero(fhrStrategicReserve);
         if (not study.parameters.include.reserve.primary)
             area.reserves.columnToZero(fhrPrimaryReserve);
-        area.reserves.flush();
     }
 
     // Fatal hors hydro - Misc Gen.
@@ -940,7 +932,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << "Misc Gen: `" << area.id << '`';
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
     }
-    area.miscGen.flush();
 
     ++options.progressTicks;
     options.pushProgressLogs();
@@ -1086,9 +1077,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
-
-        // flush
-        area.thermal.list.flush();
     }
 
     // Renewable cluster list
@@ -1096,8 +1084,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
-        // flush
-        area.renewable.list.flush();
     }
 
     // Adequacy patch

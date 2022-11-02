@@ -72,11 +72,6 @@ void Links::initializeFromArea(Data::Study* study, Data::Area* area)
             n.initializeFromArea(study, area);
             // From the link
             n.initializeFromAreaLink(study, i->second);
-
-            // Flush all memory into the swap files
-            // (only if the support is available)
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
         }
     }
     else
@@ -88,8 +83,6 @@ void Links::simulationBegin()
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].simulationBegin();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -98,8 +91,6 @@ void Links::simulationEnd()
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].simulationEnd();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -127,9 +118,6 @@ void Links::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].beforeYearByYearExport(year, numSpace);
-
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 }
 
 } // namespace LINK_NAMESPACE

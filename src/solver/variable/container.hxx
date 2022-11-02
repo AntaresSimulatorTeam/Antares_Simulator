@@ -32,6 +32,8 @@
 
 #include <memory>
 
+#define SEP Yuni::IO::Separator
+
 namespace Antares
 {
 namespace Solver
@@ -265,7 +267,7 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << '/';
+    results.data.filename << results.data.output << SEP;
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);
@@ -296,7 +298,7 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 
     // The new filename
     results.data.filename.clear();
-    results.data.filename << results.data.output << '/';
+    results.data.filename << results.data.output << SEP;
     Category::FileLevelToStream(results.data.filename, fileLevel);
     results.data.filename << '-';
     Category::PrecisionLevelToStream(results.data.filename, precision);
@@ -336,7 +338,8 @@ inline void List<NextT>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 template<class NextT>
 void List<NextT>::exportSurveyResults(bool global,
                                       const Yuni::String& output,
-                                      unsigned int numSpace)
+                                      unsigned int numSpace,
+                                      IResultWriter::Ptr writer)
 {
     using namespace Antares;
 
@@ -354,7 +357,8 @@ void List<NextT>::exportSurveyResults(bool global,
     uint nbColumnsNeededForExportation = pStudy->parameters.variablesPrintInfo.getMaxColumnsCount();
     logs.debug() << "  (for " << nbColumnsNeededForExportation << " columns)";
 
-    auto survey = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output);
+    auto survey
+      = std::make_shared<SurveyResults>(nbColumnsNeededForExportation, *pStudy, output, writer);
 
     // Year by year ?
     survey->yearByYearResults = !global;
@@ -372,7 +376,7 @@ void List<NextT>::exportSurveyResults(bool global,
         // Exporting the digest
         // The digest must be exported after the real report because some values
         // are computed at this moment.
-        Builder::RunDigest(*this, *survey);
+        Builder::RunDigest(*this, *survey, writer);
     }
     else
     {

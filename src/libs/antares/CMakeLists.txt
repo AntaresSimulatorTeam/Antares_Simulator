@@ -4,10 +4,7 @@ OMESSAGE("Antares Core library")
 set(SRC_MEMORY
 	memory/memory.h
 	memory/memory.hxx
-	memory/memory.cpp
-	memory/prefix.cpp
-	memory/swapfile.h
-	memory/swapfile.cpp)
+	memory/memory.cpp)
 source_group("memory" FILES ${SRC_MEMORY})
 
 set(SRC_OBJECT
@@ -27,7 +24,6 @@ set(SRC_MATRIX
 	array/matrix.h
 	array/matrix.cpp
 	array/matrix.hxx
-	array/autoflush.h
 	array/correlation.h
 	array/correlation.hxx
 	array/correlation.cpp)
@@ -340,8 +336,6 @@ set(SRC_BENCHMARKING
     benchmarking/info_collectors.cpp
 	benchmarking/file_content.h
     benchmarking/file_content.cpp
-	benchmarking/file_writer.h
-	benchmarking/file_writer.cpp
 	)
 source_group("misc\\benchmarking" FILES ${SRC_BENCHMARKING})
 
@@ -463,7 +457,6 @@ set(SRC
 	study/estimate.memory-footprint.cpp
 	study/study.cpp
 	study/correlation-updater.hxx
-	study/mps.cpp
 	study/study.importprepro.cpp
 	study/memory-usage.h
 	study/memory-usage.cpp
@@ -530,67 +523,58 @@ target_include_directories(libantares-core-calendar
 			${CMAKE_SOURCE_DIR}/libs
 		)
 
-macro(ADD_ANTARES_CORE name)
-	add_library(libantares-core${name}
-		antares.h
-		${SRC}
-		${SRC_LOGS}
-		${SRC_MEMORY}
-		${SRC_OBJECT}
-		${SRC_JIT}
-		${SRC_INI}
-		${SRC_IO}
-		${SRC_MATRIX}
-		${SRC_BENCHMARKING}
-		${SRC_AREAS}
-		${SRC_LINKS}
-		${SRC_XCAST}
-		${SRC_STUDY_AREA_UI}
-		${SRC_STUDY_ACTIONS}
-		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_THERMAL}
-		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_AREA}
-		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK}
-		${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT}
-		${SRC_STUDY_UI}
-		${SRC_STUDY_PARAMETERS}
-		${SRC_STUDY_FINDER}
-		${SRC_STUDY_BINDING_CONSTRAINT}
-		${SRC_STUDY_PART_WIND}
-		${SRC_STUDY_PART_HYDRO}
-		${SRC_STUDY_PART_COMMON}
-		${SRC_STUDY_PART_THERMAL}
-        ${SRC_STUDY_PART_RENEWABLE}
-		${SRC_STUDY_SCENARIO_BUILDER}
-        ${SRC_EXCEPTION}
-        ${SRC_STDCXX}
+add_library(libantares-core
+	antares.h
+	${SRC}
+	${SRC_LOGS}
+	${SRC_MEMORY}
+	${SRC_OBJECT}
+	${SRC_JIT}
+	${SRC_INI}
+	${SRC_IO}
+	${SRC_MATRIX}
+	${SRC_BENCHMARKING}
+	${SRC_AREAS}
+	${SRC_LINKS}
+	${SRC_XCAST}
+	${SRC_STUDY_AREA_UI}
+	${SRC_STUDY_ACTIONS}
+	${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_THERMAL}
+	${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_AREA}
+	${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_LINK}
+	${SRC_STUDY_ACTIONS_HANDLER_ANTARES_STUDY_CONSTRAINT}
+	${SRC_STUDY_UI}
+	${SRC_STUDY_PARAMETERS}
+	${SRC_STUDY_FINDER}
+	${SRC_STUDY_BINDING_CONSTRAINT}
+	${SRC_STUDY_PART_WIND}
+	${SRC_STUDY_PART_HYDRO}
+	${SRC_STUDY_PART_COMMON}
+	${SRC_STUDY_PART_THERMAL}
+	${SRC_STUDY_PART_RENEWABLE}
+	${SRC_STUDY_SCENARIO_BUILDER}
+	${SRC_EXCEPTION}
+	${SRC_STDCXX}
+)
+
+
+#TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
+#TODO : needed for include
+target_include_directories(libantares-core
+		PUBLIC
+			${CMAKE_SOURCE_DIR}/ext/yuni/src
+			${CMAKE_SOURCE_DIR}/libs
+			${CMAKE_SOURCE_DIR}/libs/antares/logs
+            ${CMAKE_SOURCE_DIR}/solver/writer
+		)
+
+target_link_libraries(libantares-core
+	PUBLIC
+		yuni-static-core
+		yuni-static-uuid
+		libantares-core-calendar
+		libantares-solver-variable-info
+        result_writer
 	)
 
 
-	#TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
-	#TODO : needed for include
-	target_include_directories(libantares-core${name}
-			PUBLIC
-				${CMAKE_SOURCE_DIR}/ext/yuni/src
-				${CMAKE_SOURCE_DIR}/libs
-				${CMAKE_SOURCE_DIR}/libs/antares/logs
-			)
-
-	target_link_libraries(libantares-core${name}
-		PUBLIC
-			yuni-static-core
-			yuni-static-uuid
-			libantares-core-calendar
-			libantares-solver-variable-info${name}
-		)
-endmacro()
-
-ADD_ANTARES_CORE("")
-
-if(BUILD_SWAP)
-
-    ADD_ANTARES_CORE("-swap")
-
-    #Add specific swap support for libantares-core-swap
-    set_target_properties(libantares-core-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-
-endif()

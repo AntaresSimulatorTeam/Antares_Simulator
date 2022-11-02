@@ -116,6 +116,7 @@ jobs:
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_sirius=ON \
              -DBUILD_TESTING=ON \
+             -DMZ_CODE_COVERAGE=ON \
              -DBUILD_not_system=OFF
 
       - name: Build

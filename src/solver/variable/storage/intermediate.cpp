@@ -43,7 +43,6 @@ IntermediateValues::IntermediateValues() : pRange(nullptr), calendar(nullptr), y
 {
     Antares::Memory::Allocate<Type>(hour, maxHoursInAYear);
     Antares::Memory::Zero(maxHoursInAYear, hour);
-    Antares::Memory::Flush(hour);
     (void)::memset(month, 0, sizeof(Type) * maxMonths);
     (void)::memset(week, 0, sizeof(Type) * maxWeeksInAYear);
     (void)::memset(day, 0, sizeof(Type) * maxDaysInAYear);

@@ -192,17 +192,6 @@ Data::ThermalCluster::~ThermalCluster()
         delete[] pminOfAGroup;
 }
 
-void ThermalCluster::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    modulation.flush();
-    if (prepro)
-        prepro->flush();
-    if (series)
-        series->flush();
-#endif
-}
-
 uint ThermalCluster::groupId() const
 {
     return groupID;
@@ -430,7 +419,6 @@ void Data::ThermalCluster::calculationOfSpinning()
         // already does this test.
         nominalCapacityWithSpinning *= 1 - (spinning / 100.);
         ts.multiplyAllEntriesBy(1. - (spinning / 100.));
-        ts.flush();
     }
 }
 
@@ -455,7 +443,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         // already does this test.
         ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
         ts.roundAllEntries();
-        ts.flush();
     }
 }
 
@@ -506,7 +493,6 @@ void Data::ThermalCluster::reset()
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
     modulation.fill(1.);
     modulation.fillColumn(thermalMinGenModulation, 0.);
-    modulation.flush();
 
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed

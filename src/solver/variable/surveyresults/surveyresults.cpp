@@ -48,67 +48,46 @@ namespace Variable
 namespace Private
 {
 void InternalExportDigestLinksMatrix(const Data::Study& study,
-                                     const String& originalOutput,
-                                     String& output,
                                      const char* title,
-                                     Clob& pFileBuffer,
+                                     std::string& buffer,
                                      const Matrix<>& matrix)
 {
     // THIS FILE IS DEPRECATED !!!
-    output.clear();
-    output << originalOutput << SEP << "grid" << SEP << "digest.txt";
+    buffer.append("\n\n\n\n\t").append(title).append("\n\t\tFrom...\n\t...To");
 
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(output, IO::OpenMode::append);
-    if (not out.opened())
-    {
-        logs.error() << "Digest: " << title << ": Impossible to open the file '" << output
-                     << "' for appending data";
-        return;
-    }
-
-    pFileBuffer = "\n\n\n\n\t";
-    pFileBuffer << title << "\n\t\tFrom...\n\t...To";
     for (uint y = 0; y != study.areas.size(); ++y)
     {
-        pFileBuffer << '\t' << study.areas.byIndex[y]->id;
+        buffer.append("\t").append(study.areas.byIndex[y]->id.c_str());
     }
-    pFileBuffer += '\n';
-    if (pFileBuffer.size() != out.write(pFileBuffer))
-    {
-        logs.error() << "Digest: " << title << ": Impossible to append data to the file '" << output
-                     << "'.";
-        return;
-    }
+    buffer.append("\n");
 
     char conversionBuffer[256];
     conversionBuffer[0] = '\t';
     int sizePrintf;
 
     uint count = study.areas.size();
-    pFileBuffer.reserve(10 + count * (1 /*tab*/ + 7));
+    buffer.reserve(10 + count * (1 /*tab*/ + 7));
 
     double v;
     for (uint y = 0; y != count; ++y)
     {
-        pFileBuffer = '\t';
-        pFileBuffer += study.areas.byIndex[y]->id;
+        buffer.append("\t").append(study.areas.byIndex[y]->id.c_str());
         for (uint x = 0; x < count; ++x)
         {
             if (x == y)
             {
-                pFileBuffer += "\tX";
+                buffer.append("\tX");
             }
             else
             {
                 v = matrix[x][y];
                 if (Math::NaN(v))
-                    pFileBuffer += "\t--";
+                    buffer.append("\t--");
                 else
                 {
                     if (Math::Zero(v))
                     {
-                        pFileBuffer.append("\t0", 2);
+                        buffer.append("\t0");
                     }
                     else
                     {
@@ -122,25 +101,20 @@ void InternalExportDigestLinksMatrix(const Data::Study& study,
                           conversionBuffer + 1, sizeof(conversionBuffer) - 2, "%.0f", v);
 #endif
                         if (sizePrintf >= 0)
-                            pFileBuffer.append((const char*)conversionBuffer, 1 + sizePrintf);
+                            buffer.append((const char*)conversionBuffer);
                         else
-                            pFileBuffer += "\tERR";
+                            buffer.append("\tERR");
                     }
                 }
             }
         }
-        pFileBuffer += '\n';
-
-        // Write
-        if (pFileBuffer.size() != out.write(pFileBuffer))
-        {
-            logs.error() << "Digest: " << title << ": Impossible to append data to the file '"
-                         << output << "'.";
-        }
+        buffer.append("\n");
     }
 }
 
-void ExportGridInfosAreas(const Data::Study& study, const String& folder)
+static void ExportGridInfosAreas(const Data::Study& study,
+                                 const Yuni::String& originalOutput,
+                                 IResultWriter::Ptr writer)
 {
     Clob out;
     Clob outLinks;
@@ -188,18 +162,15 @@ void ExportGridInfosAreas(const Data::Study& study, const String& folder)
 
         } // each thermal cluster
     });   // each area
+    auto add = [&writer, &originalOutput](const YString& filename, Clob&& buffer) {
+        YString path;
+        path << originalOutput << SEP << "grid" << SEP << filename;
+        writer->addEntryFromBuffer(path.c_str(), buffer);
+    };
 
-    String filename;
-    filename.reserve(folder.size() + 15);
-
-    filename.clear() << folder << SEP << "areas.txt";
-    IOFileSetContent(filename, out);
-
-    filename.clear() << folder << SEP << "links.txt";
-    IOFileSetContent(filename, outLinks);
-
-    filename.clear() << folder << SEP << "thermal.txt";
-    IOFileSetContent(filename, outThermal);
+    add("areas.txt", std::move(out));
+    add("links.txt", std::move(outLinks));
+    add("thermal.txt", std::move(outThermal));
 }
 
 SurveyResultsData::SurveyResultsData(const Data::Study& s, const String& o) :
@@ -224,7 +195,6 @@ void SurveyResultsData::initialize(uint maxVariables)
     rowIndex = (uint)-1; // invalid index
 
     logs.debug() << "  :: initializing survey results (max: " << maxVariables << " variables)";
-    logs.debug() << "  :: results: output : `" << originalOutput << "`";
 
     switch (study.parameters.mode)
     {
@@ -254,40 +224,11 @@ void SurveyResultsData::initialize(uint maxVariables)
     }
 }
 
-void SurveyResultsData::exportGridInfos()
+void SurveyResultsData::exportGridInfos(IResultWriter::Ptr writer)
 {
     output.clear();
-    output << originalOutput << SEP << "grid";
-    if (IO::Directory::Create(output))
-    {
-        output << SEP;
-        // exportGridInfosAreas(output);
-        Solver::Variable::Private::ExportGridInfosAreas(study, output);
-    }
-    else
-        logs.error() << "I/O Error: '" << output << "': impossible to create the folder";
+    Solver::Variable::Private::ExportGridInfosAreas(study, originalOutput, writer);
 }
-
-void SurveyResultsData::exportGridInfosAreas(const String& folder)
-{
-    Solver::Variable::Private::ExportGridInfosAreas(study, folder);
-}
-
-bool SurveyResultsData::createDigestFile()
-{
-    output.clear();
-    output << originalOutput << SEP << "grid" << SEP << "digest.txt";
-
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(output, IO::OpenMode::write);
-    if (!out)
-    {
-        logs.error() << "Impossible to open the file '" << output << "' for writing";
-        return false;
-    }
-    return true;
-}
-
 } // namespace Private
 } // namespace Variable
 } // namespace Solver
@@ -598,12 +539,16 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
-SurveyResults::SurveyResults(uint maxVars, const Data::Study& s, const String& o) :
+SurveyResults::SurveyResults(uint maxVars,
+                             const Data::Study& s,
+                             const String& o,
+                             IResultWriter::Ptr writer) :
  data(s, o),
  maxVariables(initializeMaxVariables(maxVars, s.runtime)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
- isPrinted(nullptr)
+ isPrinted(nullptr),
+ pResultWriter(writer)
 {
     variableCaption.reserve(10);
 
@@ -673,44 +618,27 @@ void SurveyResults::resetValuesAtLine(uint j)
         values[i][j] = 0.;
 }
 
-bool SurveyResults::createDigestFile()
+void SurveyResults::exportDigestAllYears(std::string& buffer)
 {
-    return data.createDigestFile();
-}
-
-void SurveyResults::exportDigestAllYears()
-{
-    data.output.clear();
-    data.output << data.originalOutput << SEP << "grid" << SEP << "digest.txt";
-
-    // THIS FILE IS DEPRECATED !!!
-    IO::File::Stream out(data.output, IO::OpenMode::append);
-    if (not out.opened())
-    {
-        logs.error() << "impossible to open the file '" << data.output << "' for appending data";
-        return;
-    }
-
-    // Clearing the buffer
-    data.fileBuffer.clear();
-
     // Main Header
     {
-        data.fileBuffer << "\tdigest\n\tVARIABLES\tAREAS\tLINKS\n";
-        data.fileBuffer << '\t' << data.columnIndex << '\t' << (uint)data.rowCaptions.size();
-        data.fileBuffer.append("\t0\n\n", 4);
+        buffer.append("\tdigest\n\tVARIABLES\tAREAS\tLINKS\n")
+          .append("\t")
+          .append(std::to_string(data.columnIndex))
+          .append("\t")
+          .append(std::to_string(data.rowCaptions.size()))
+          .append("\t0\n\n");
     }
     // Header - All columns
     for (uint rowIndex = 0; rowIndex != captionCount; ++rowIndex)
     {
-        data.fileBuffer += '\t';
+        buffer.append("\t");
         for (uint i = 0; i != data.columnIndex; ++i)
         {
             assert(i < maxVariables);
-            data.fileBuffer += '\t';
-            data.fileBuffer += captions[rowIndex][i];
+            buffer.append("\t").append(captions[rowIndex][i].c_str());
         }
-        data.fileBuffer += '\n';
+        buffer.append("\n");
     }
 
     char conversionBuffer[128];
@@ -724,7 +652,7 @@ void SurveyResults::exportDigestAllYears()
         // asserts
         assert(y < maxHoursInAYear);
 
-        data.fileBuffer << '\t' << *j;
+        buffer.append("\t").append(j->c_str());
 
         // Loop over results matrix columns
         for (uint i = 0; i != data.columnIndex; ++i)
@@ -734,13 +662,13 @@ void SurveyResults::exportDigestAllYears()
 
             if (digestNonApplicableStatus[y][i])
             {
-                data.fileBuffer.append("\tN/A", 4);
+                buffer.append("\tN/A");
                 continue;
             }
 
             if (Math::Zero(values[i][y]))
             {
-                data.fileBuffer.append("\t0", 2);
+                buffer.append("\t0");
             }
             else
             {
@@ -758,24 +686,21 @@ void SurveyResults::exportDigestAllYears()
                                         values[i][y]);
 #endif
                 if (sizePrintf >= 0)
-                    data.fileBuffer.append((const char*)conversionBuffer, 1 + sizePrintf);
+                    buffer.append((const char*)conversionBuffer);
                 else
-                    data.fileBuffer += "\tERR";
+                    buffer.append("\tERR");
             }
         }
 
         // End of line
-        data.fileBuffer += '\n';
+        buffer.append("\n");
     }
-    data.fileBuffer.append("\n\n", 2);
-
-    out << data.fileBuffer;
+    buffer.append("\n\n");
 }
 
-void SurveyResults::exportDigestMatrix(const char* title)
+void SurveyResults::exportDigestMatrix(const char* title, std::string& buffer)
 {
-    Private::InternalExportDigestLinksMatrix(
-      data.study, data.originalOutput, data.output, title, data.fileBuffer, data.matrix);
+    Private::InternalExportDigestLinksMatrix(data.study, title, buffer, data.matrix);
 }
 
 void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
@@ -892,7 +817,8 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         }
     }
 
-    IOFileSetContent(data.filename, data.fileBuffer);
+    // mc-ind & mc-all
+    pResultWriter->addEntryFromBuffer(data.filename.c_str(), data.fileBuffer);
 }
 
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
@@ -924,12 +850,7 @@ void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
 
 void SurveyResults::exportGridInfos()
 {
-    data.exportGridInfos();
-}
-
-void SurveyResults::exportGridInfosAreas(const String& folder)
-{
-    data.exportGridInfosAreas(folder);
+    data.exportGridInfos(pResultWriter);
 }
 
 } // namespace Variable
