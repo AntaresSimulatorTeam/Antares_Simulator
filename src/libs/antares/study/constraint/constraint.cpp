@@ -1009,6 +1009,8 @@ bool BindConstList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) c
     else
         logs.info() << "Exporting " << pList.size() << " binding constraints...";
 
+    logs.error() << env.folder;
+
     if (not IO::Directory::Create(env.folder))
         return false;
 

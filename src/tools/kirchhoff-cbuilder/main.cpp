@@ -109,6 +109,7 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 
     auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
+    logs.error() << "binding path in main: " << bindingPath;
     if (!study->bindingConstraints.saveToFolder(bindingPath))
     {
         logs.error() << "Save to folder failed";
