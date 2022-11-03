@@ -143,10 +143,11 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
     if (deltaCost <= 0.0)
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
     else
-        logs.warning() << "CSR optimization is providing solution with greater costs, optimum "
-                          "solution is set as LMR . year: "
-                       << yearNb + 1 << ". hour: "
-                       << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+        logs.warning()
+          << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
+             "solution is set as LMR . year: "
+          << yearNb + 1
+          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
@@ -254,15 +255,15 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    int yearNb)
 {
     double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-    logs.info() << "costPriorToCsr: " << costPriorToCsr;
+    logs.info() << "[adq-patch] costPriorToCsr: " << costPriorToCsr;
     auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-        logs.info() << "costAfterCsr: " << costAfterCsr;
-        logs.info() << "deltaCost: " << costAfterCsr - costPriorToCsr;
+        logs.info() << "[adq-patch] costAfterCsr: " << costAfterCsr;
+        logs.info() << "[adq-patch] deltaCost: " << costAfterCsr - costPriorToCsr;
         storeOrDisregardInteriorPointResults(
           ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
         return true;
