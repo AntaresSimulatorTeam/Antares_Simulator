@@ -56,8 +56,6 @@ int main(int argc, char* argv[])
     std::string kirchhoffOptionPath;
     if (argc > 2)
         kirchhoffOptionPath = argv[2];
-    else
-        kirchhoffOptionPath = studyPath;
 
     if (!initResources(argc, argv))
     {
@@ -80,7 +78,7 @@ int main(int argc, char* argv[])
 }
 
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-    const std::string&  studyPath, const std::string&  kirchhoffOptionPath)
+    const std::string& studyPath, const std::string& kirchhoffOptionPath)
 {
     study->ensureDataAreAllInitialized();
 
@@ -93,10 +91,13 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
         return false;
     }
 
-    if (!constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath))
+    if (kirchhoffOptionPath != "")
     {
-        logs.error() << "CBuilder complete from option file went wrong, aborting.";
-        return false;
+        if (!constraintBuilder.completeCBuilderFromFile(kirchhoffOptionPath))
+        {
+            logs.error() << "CBuilder complete from option file went wrong, aborting.";
+            return false;
+        }
     }
 
     logs.info() << "CBuilder completed study and option file.";
@@ -109,7 +110,6 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
 
     auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
-    logs.error() << "binding path in main: " << bindingPath;
     if (!study->bindingConstraints.saveToFolder(bindingPath))
     {
         logs.error() << "Save to folder failed";

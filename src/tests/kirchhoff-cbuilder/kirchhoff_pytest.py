@@ -7,12 +7,12 @@ from pathlib import Path
 nb_test = 3
 
 files = [[0 for x in range(2)] for y in range(nb_test)]
-files[0][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff")
-files[0][1] = Path("reference/39")
-files[1][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff")
-files[1][1] = Path("reference/43")
-files[2][0] = Path("../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1")
-files[2][1] = Path("reference/79")
+files[0][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff").resolve()
+files[0][1] = Path("reference/39").resolve()
+files[1][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff").resolve()
+files[1][1] = Path("reference/43").resolve()
+files[2][0] = Path("../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1").resolve()
+files[2][1] = Path("reference/79").resolve()
 
 
 def run_and_compare(path, ref_path, exe):
