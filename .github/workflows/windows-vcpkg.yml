@@ -150,6 +150,12 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
+    - name: Run kirchhoff-constraint-tests
+      shell: bash
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
+
     - name: NSIS Installer creation
       shell: bash
       run: |

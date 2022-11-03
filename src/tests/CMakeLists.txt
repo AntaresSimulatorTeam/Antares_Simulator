@@ -61,7 +61,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME kirchhoff
-        COMMAND Python3::Interpreter -m pytest -n 3 -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder> kirchhoff_pytest.py
+        COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
         )
 
