@@ -1012,7 +1012,10 @@ bool BindConstList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) c
     logs.error() << env.folder;
 
     if (not IO::Directory::Create(env.folder))
+    {
+        logs.error() << "io dir create failed";
         return false;
+    }
 
     IniFile ini;
     bool ret = true;
