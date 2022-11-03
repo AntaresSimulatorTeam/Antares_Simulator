@@ -964,14 +964,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
-        char presenceHydro
+        const char presenceHydro
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes
+        const char presencePompage
+          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable;
+        const char TurbEntreBornes
           = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
         if (presenceHydro == OUI_ANTARES
-            && (TurbEntreBornes == OUI_ANTARES
-                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
-                     == OUI_ANTARES))
+            && (TurbEntreBornes == OUI_ANTARES || presencePompage == OUI_ANTARES))
         {
             NombreDeTermes = 0;
             for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
