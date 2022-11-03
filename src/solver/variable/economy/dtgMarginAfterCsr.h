@@ -24,39 +24,47 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__
-#define __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__
+#ifndef __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__
+#define __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__
 
 #include "../variable.h"
 
-namespace Antares::Solver::Variable::Economy
+namespace Antares
 {
-struct VCardLMRViolations
+namespace Solver
+{
+namespace Variable
+{
+namespace Economy
+{
+struct VCardDtgMarginCsr
 {
     //! Caption
     static const char* Caption()
     {
-        return "LMR VIOL.";
+        return "DTG MRG CSR";
     }
     //! Unit
     static const char* Unit()
     {
-        return " ";
+        return "MWh";
     }
-
     //! The short description of the variable
     static const char* Description()
     {
-        return "Local Matching Rule is violated more than the provided threshold";
+        return "Dispatchable Generation Margin (after CSR optimization)";
     }
 
     //! The expecte results
     typedef Results<R::AllYears::Average< // The average values throughout all years
-      >>
+      R::AllYears::StdDeviation<          // The standard deviation values throughout all years
+        R::AllYears::Min<                 // The minimum values throughout all years
+          R::AllYears::Max<               // The maximum values throughout all years
+            >>>>>
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardLMRViolations VCardForSpatialAggregate;
+    typedef VCardDtgMarginCsr VCardForSpatialAggregate;
 
     enum
     {
@@ -90,19 +98,20 @@ struct VCardLMRViolations
 }; // class VCard
 
 /*!
-** \brief C02 Average value of the overrall CO2 emissions expected from all
+** \brief C02 Average value of the overrall DtgMarginCsr emissions expected from all
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class LMRViolations : public Variable::IVariable<LMRViolations<NextT>, NextT, VCardLMRViolations>
+class DtgMarginCsr
+ : public Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardDtgMarginCsr>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardLMRViolations VCardType;
+    typedef VCardDtgMarginCsr VCardType;
     //! Ancestor
-    typedef Variable::IVariable<LMRViolations<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -128,8 +137,8 @@ public:
         };
     };
 
-
-    ~LMRViolations()
+public:
+    ~DtgMarginCsr()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -184,6 +193,7 @@ public:
     {
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -225,9 +235,9 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Total LocalMatchingRule Violations
+        // Total DtgMarginCsr
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          = state.hourlyResults->ValeursHorairesLmrViolations[state.hourInTheWeek];
+          = state.hourlyResults->ValeursHorairesDtgMrgCsr[state.hourInTheWeek];
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
@@ -235,6 +245,7 @@ public:
 
     void hourEnd(State& state, unsigned int hourInTheYear)
     {
+        // Next variable
         NextType::hourEnd(state, hourInTheYear);
     }
 
@@ -267,8 +278,11 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class LMRViolations
+}; // class DtgMarginCsr
 
-}
+} // namespace Economy
+} // namespace Variable
+} // namespace Solver
+} // namespace Antares
 
-#endif // __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__
+#endif // __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__

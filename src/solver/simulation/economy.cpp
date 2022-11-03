@@ -232,6 +232,9 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
+    double totalLmrViolation = calculateDensNewAndTotalLmrViolation(problemeHebdo);
+    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
+                << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
       = getHoursRequiringCurtailmentSharing(numSpace);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
@@ -239,11 +242,8 @@ void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numS
         logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
                     << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
-        hourlyCsrProblem.run(w, state.year);
+        hourlyCsrProblem.run(w, state);
     }
-    double totalLmrViolation = checkLocalMatchingRuleViolations(problemeHebdo);
-    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
-                << ".Total LMR violation:" << totalLmrViolation;
 }
 
 bool Economy::year(Progression::Task& progression,
@@ -284,6 +284,8 @@ bool Economy::year(Progression::Task& progression,
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+            adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

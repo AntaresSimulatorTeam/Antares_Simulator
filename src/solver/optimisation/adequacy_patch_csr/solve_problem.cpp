@@ -105,13 +105,17 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     return Probleme;
 }
 
-void setToZeroIfBelowThreshold(double* pt, int Var, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                               HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
-    bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
-                  != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
-    bool belowLimit = *pt < hourlyCsrProblem.belowThisThresholdSetToZero;
-    if (inSet && belowLimit)
-        *pt = 0.0;
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
+                     != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
+        bool belowLimit = ProblemeAResoudre->X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
+        if (inSet && belowLimit)
+            ProblemeAResoudre->X[Var] = 0.0;
+    }
 }
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
@@ -124,10 +128,71 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
         if (pt)
         {
             *pt = ProblemeAResoudre->X[Var];
-            setToZeroIfBelowThreshold(pt, Var, hourlyCsrProblem);
         }
         logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
     }
+}
+
+void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                          HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                                          uint weekNb,
+                                          int yearNb,
+                                          double deltaCost)
+{
+    const int hoursInWeek = 168;
+    if (deltaCost <= 0.0)
+        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
+    else
+        logs.warning() << "CSR optimization is providing solution with greater costs, optimum "
+                          "solution is set as LMR . year: "
+                       << yearNb + 1 << ". hour: "
+                       << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+}
+
+double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                     const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+{
+    logs.debug() << "calculateCsrCostFunctionValue! ";
+    double cost = 0.0;
+    if (!hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->CheckCsrCostFunctionValue)
+    {
+        logs.debug() << "CheckCsrCostFunctionValue = FALSE";
+        return cost;
+    }
+
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    {
+        logs.debug() << "Var: " << Var;
+        bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
+        if (inEnsSet)
+        {
+            cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
+                    * ProblemeAResoudre->CoutQuadratique[Var];
+            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var]*1e3;
+            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var]*1e3;
+            logs.debug() << "TotalCost: " << cost*1e3;
+        }
+        bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
+        if (inLinkSet
+            && hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->IncludeHurdleCostCsr)
+        {
+            if (ProblemeAResoudre->X[Var] >= 0)
+            {
+                cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 1];
+                logs.debug() << "X+: " << ProblemeAResoudre->X[Var]*1e3;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 1]*1e3;
+                logs.debug() << "TotalCost: " << cost*1e3;
+            }
+            else
+            {
+                cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 2];
+                logs.debug() << "X-: " << ProblemeAResoudre->X[Var]*1e3;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 2]*1e3;
+                logs.debug() << "TotalCost: " << cost*1e3;
+            }
+        }
+    }
+    return cost;
 }
 
 void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
@@ -188,12 +253,18 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme
-      = buildInteriorPointProblem(ProblemeAResoudre);
+    double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
+    logs.info() << "costPriorToCsr: " << costPriorToCsr;
+    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
-        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
+        setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
+        double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
+        logs.info() << "costAfterCsr: " << costAfterCsr;
+        logs.info() << "deltaCost: " << costAfterCsr - costPriorToCsr;
+        storeOrDisregardInteriorPointResults(
+          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
         return true;
     }
     else

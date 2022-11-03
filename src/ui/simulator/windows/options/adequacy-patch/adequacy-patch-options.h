@@ -90,6 +90,7 @@ private:
     Component::Button* pBtnNTCfromOutToOutAdqPatch;
     Component::Button* pBtnAdequacyPatchPTO;
     Component::Button* pBtnAdequacyPatchIncludeHurdleCostCsr;
+    Component::Button* pBtnAdequacyPatchCheckCsrCostFunctionValue;
     wxTextCtrl* pThresholdCSRStart;
     wxTextCtrl* pThresholdLMRviolations;
     wxTextCtrl* pThresholdCSRVarBoundsRelaxation;

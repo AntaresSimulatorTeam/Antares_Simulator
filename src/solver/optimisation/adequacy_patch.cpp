@@ -30,6 +30,7 @@
 #include "adequacy_patch.h"
 #include <math.h>
 #include "../simulation/sim_structure_probleme_economique.h"
+#include "../study/area/scratchpad.h"
 
 using namespace Yuni;
 
@@ -134,49 +135,59 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo)
+double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+                            double totalNodeBalance,
+                            int Area,
+                            int hour)
 {
-    double totalLmrViolation = 0;
+    double ensInit
+      = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+
+    ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
+    // check LMR violations
+    if ((ensInit > 0.0) && (totalNodeBalance < 0.0)
+        && (Math::Abs(totalNodeBalance) > ensInit + Math::Abs(threshold)))
+    {
+        ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
+        return Math::Abs(totalNodeBalance);
+    }
+    return 0.0;
+}
+
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo)
+{
+    double netPositionInit;
+    double densNew;
+    double totalNodeBalance;
+    double totalLmrViolation = 0.0;
+    const int numOfHoursInWeek = 168;
+
     for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
-            totalLmrViolation += LmrViolationArea(ProblemeHebdo,Area);
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                std::tie(netPositionInit, densNew, totalNodeBalance)
+                  = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+                // copy spilled Energy values into spilled Energy values after CSR
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
+                  = ProblemeHebdo->ResultatsHoraires[Area]
+                      ->ValeursHorairesDeDefaillanceNegative[hour];
+                // check LMR violations
+                totalLmrViolation += LmrViolationAreaHour(
+                  ProblemeHebdo, totalNodeBalance, Area, hour);
+            }
         }
     }
     return totalLmrViolation;
 }
 
-double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area)
-{
-    const int numOfHoursInWeek = 168;
-    double totalLmrViolationArea = 0;
-    double netPositionInit;
-    double densNew;
-    double ensInit;
-    double threshold = ProblemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
-
-    for (int hour = 0; hour < numOfHoursInWeek; hour++)
-    {
-        std::tie(netPositionInit, densNew) = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-
-        ensInit
-          = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-
-        // check LMR violations
-        ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
-        if ((densNew < ensInit) && (ensInit - densNew > Math::Abs(threshold)))
-        {
-            ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
-            totalLmrViolationArea += (ensInit - densNew);
-        }
-    }
-    return totalLmrViolationArea;
-}
-
-std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
-                                                   int Area,
-                                                   int hour)
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                            int Area,
+                                                            int hour)
 {
     int Interco;
     double netPositionInit = 0;
@@ -221,17 +232,57 @@ std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo
 
     ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
+    {
         densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+        return std::make_tuple(netPositionInit, densNew, netPositionInit + flowsNode1toNodeA);
+    }
     else
+    {
         densNew = Math::Max(0.0, ensInit + netPositionInit);
-
-    return std::make_pair(netPositionInit, densNew);
+        return std::make_tuple(netPositionInit, densNew, netPositionInit);
+    }
 }
 
 void addArray(std::vector<double>& A, const double* B)
 {
     for (uint i = 0; i < A.size(); ++i)
         A[i] += B[i];
+}
+
+void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
+{
+    if (!study.parameters.adqPatch.enabled)
+        return;
+
+    const int numOfHoursInWeek = 168;
+    for (int Area = 0; Area < problem.NombreDePays; Area++)
+    {
+        if (problem.adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        {
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                // define access to the required variables
+                auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+
+                auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
+                double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
+                double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+                double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+                // calculate DTG MRG CSR and adjust ENS if neccessary
+                if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+                {
+                    dtgMrgCsr = Math::Max(0.0, dtgMrg - ens);
+                    ens = Math::Max(0.0, ens - dtgMrg);
+                    // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
+                    if (ens > 0.5)
+                        mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
+                }
+                else
+                    dtgMrgCsr = dtgMrg;
+            }
+        }
+    }
 }
 
 } // end namespace Antares
@@ -241,7 +292,6 @@ void addArray(std::vector<double>& A, const double* B)
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
     double netPositionInit;
-    double densNew;
     double ensInit;
     double spillageInit;
     int hour = hourInWeekTriggeredCsr;
@@ -251,7 +301,11 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
         if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
             == physicalAreaInsideAdqPatch)
         {
-            std::tie(netPositionInit, densNew)
+            // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
+            pWeeklyProblemBelongedTo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour]
+              = -1.0;
+            // calculate netPositionInit and the RHS of the AreaBalance constraints
+            std::tie(netPositionInit, ignore, ignore)
               = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
 
             ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
@@ -259,7 +313,6 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
                              ->ValeursHorairesDeDefaillanceNegative[hour];
 
-            densNewValues[Area] = densNew;
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
@@ -302,7 +355,7 @@ void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
     ADQ_PATCH_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, int year)
+void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& state)
 {
     resetProblem();
     calculateCsrParameters();
@@ -311,5 +364,5 @@ void HOURLY_CSR_PROBLEM::run(uint week, int year)
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, year);
+    solveProblem(week, state.year);
 }

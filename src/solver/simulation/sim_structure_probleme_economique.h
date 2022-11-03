@@ -447,6 +447,8 @@ typedef struct
     double* ValeursHorairesDeDefaillancePositive;
     double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
     int* ValeursHorairesLmrViolations; // adq patch lmr violations
+    double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    double* ValeursHorairesDtgMrgCsr; // adq patch DTG MRG after CSR
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -499,6 +501,7 @@ struct AdequacyPatchParameters
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
     bool IncludeHurdleCostCsr;
+    bool CheckCsrCostFunctionValue;
     AdqPatchPTO PriceTakingOrder;
     double ThresholdInitiateCurtailmentSharingRule;
     double ThresholdDisplayLocalMatchingRuleViolations;
@@ -715,6 +718,7 @@ public:
     double maxPminThermiqueByDay[366];
 };
 
+namespace Antares::Solver::Variable { class State; } // foward declaration
 // hourly CSR problem structure
 class HOURLY_CSR_PROBLEM
 {
@@ -728,7 +732,7 @@ private:
     void setProblemCost();
     void solveProblem(uint week, int year);
 public:
-    void run(uint week, int year);
+    void run(uint week, const Antares::Solver::Variable::State& state);
     
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
@@ -746,10 +750,10 @@ public:
     std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
                                                            // contains interco 2-2
 
-    std::map<int, double> densNewValues;
     std::map<int, double> rhsAreaBalanceValues;
-    
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
+    std::set<int> ensSet; // place inside only ENS inside adq-patch
+    std::set<int> linkSet; // place inside only links between to zones inside adq-patch
 };
 
 #endif

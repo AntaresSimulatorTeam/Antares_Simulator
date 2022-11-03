@@ -57,6 +57,7 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
+            hourlyCsrProblem.ensSet.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
                          << ProblemeHebdo->NomsDesPays[area] << "].";
 
@@ -95,7 +96,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -119,6 +120,7 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROB
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+            hourlyCsrProblem.linkSet.insert(NumberOfVariables);
             logs.debug()
               << NumberOfVariables << " flow[" << Interco << "]. ["
               << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]

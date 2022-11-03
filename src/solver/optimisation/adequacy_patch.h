@@ -97,21 +97,29 @@ void setNTCbounds(double& Xmax,
                   PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
- * Calculates curtailment sharing rule parameters netPositionInit and densNew per given area and hour.
+ * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
+ * given area and hour.
  */
-std::pair<double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
-                                                   int Area,
-                                                   int hour);
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                            int Area,
+                                                            int hour);
 
 /*!
- * Check local matching rule violation for each area inside adequacy patch.
+ * Calculate total local matching rule violation per one area, per one hour.
  */
-double checkLocalMatchingRuleViolations(PROBLEME_HEBDO* ProblemeHebdo);
+double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+                            double totalNodeBalance,
+                            int Area,
+                            int hour);
 
 /*!
- * Calculate total local matching rule violation per one area.
+ * Calculate densNew values for all hours and areas inside adequacy patch and places them into
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * copy-pastes spilled Energy values into spilled Energy values after CSR
+ * calculates total LMR violations and LMR violations per area per hour inside
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
-double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
@@ -121,6 +129,16 @@ double LmrViolationArea(PROBLEME_HEBDO* ProblemeHebdo, int Area);
 ** ** \return
 ** */
 void addArray(std::vector<double>& A, const double* B);
+
+/*!
+** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
+** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
+** **
+** ** \param study The Antares study
+** ** \param problem The weekly problem, from the solver
+** ** \return
+** */
+void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
 
 } // end namespace Antares
 } // end namespace Data

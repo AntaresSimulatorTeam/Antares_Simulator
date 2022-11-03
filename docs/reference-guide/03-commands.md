@@ -221,9 +221,11 @@ Auxiliary window [Areas] Opens a window in which a choice can be made regarding 
 - _NTC between physical areas outside adequacy patch (set to null / local values)_
 - _Price taking order (DENS / Load)_
 - _Include hurdle cost in CSR optimization (false / true)_
+- _Check SCR cost function value prior and after CSR (false / true)_
 - _Thresholds:_
 - _Initiate curtailment sharing rule_
 - _Display local maching rule violations_
+- _Relax CSR variable boundaries_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
 that are more numerical than physical. The set of parameters is study-specific and can be updated at any time.
