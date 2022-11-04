@@ -127,11 +127,6 @@ static void NotEnoughMemory()
 bool initResources(int argc, char* argv[])
 {
     std::set_new_handler(&NotEnoughMemory);
-    if (!memory.initialize())
-    {
-        logs.error() << "Failed to initialize memory.";
-        return false;
-    }
 
     InitializeDefaultLocale();
     if (!LocalPolicy::Open())
