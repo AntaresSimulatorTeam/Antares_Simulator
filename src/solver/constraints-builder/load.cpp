@@ -29,7 +29,7 @@
 #include "../../config.h"
 #include "../../libs/antares/study/area/constants.h"
 #include <yuni/io/file.h>
-//#include <wx/wx.h> // bourrin -> ? modifier
+//#include <wx/wx.h> // bourrin -> à modifier
 //#include "../../ui/simulator/application/study.h"
 
 using namespace Yuni;
