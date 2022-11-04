@@ -1102,11 +1102,7 @@ template<class T, class ReadWriteT>
 template<class PredicateT>
 bool Matrix<T, ReadWriteT>::containsOnlyZero(PredicateT& predicate) const
 {
-    if (!width || !height)
-        return true;
-
-    MatrixAutoFlush<MatrixType> autoflush(*this);
-    for (uint x = 0; x != width; ++x)
+    if (width and height)
     {
         for (uint x = 0; x != width; ++x)
         {

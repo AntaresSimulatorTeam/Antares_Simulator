@@ -131,18 +131,19 @@ int MatrixTestForPositiveValues(const char* msg, const Matrix<>* m)
     uint x = 0;
     uint y;
 
-    if (!m->width || !m->height)
-        return 1;
-
-    for (; x < m->width; ++x)
+    if (m->width and m->height)
     {
-        for (y = 0; y < m->height; ++y)
+        for (; x < m->width; ++x)
         {
-            if ((*m)[x][y] < 0.)
+            const Matrix<>::ColumnType& col = m->entry[x];
+            for (y = 0; y < m->height; ++y)
             {
-                logs.error() << msg << ": Negative value detected (at the position " << x << ','
-                    << y << ')';
-                return 0;
+                if (col[y] < 0.)
+                {
+                    logs.error() << msg << ": Negative value detected (at the position " << x << ','
+                                 << y << ')';
+                    return 0;
+                }
             }
         }
     }
@@ -155,20 +156,19 @@ int MatrixTestIfValuesAreHigherThan(const char* msg, const Matrix<>* m, const do
     uint y;
 
     logs.debug() << "Checking : " << msg;
-
-    if (!m->width || !m->height)
-        return 1;
-
-    for (; x < m->width; ++x)
+    if (m->width and m->height)
     {
-        const Matrix<>::ColumnType& col = m->entry[x];
-        for (y = 0; y < m->height; ++y)
+        for (; x < m->width; ++x)
         {
-            if (col[y] < value)
+            const Matrix<>::ColumnType& col = m->entry[x];
+            for (y = 0; y < m->height; ++y)
             {
-                logs.error() << msg << ": invalid value detected (at column " << x
-                    << ", row: " << y << ')';
-                return 0;
+                if (col[y] < value)
+                {
+                    logs.error() << msg << ": invalid value detected (at column " << x
+                                 << ", row: " << y << ')';
+                    return 0;
+                }
             }
         }
     }
@@ -181,20 +181,19 @@ int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const dou
     uint y;
 
     logs.debug() << "Checking : " << msg;
-
-    if (!m->width || !m->height)
-        return 1;
-
-    for (; x < m->width; ++x)
+    if (m->width and m->height)
     {
-        const Matrix<>::ColumnType& col = m->entry[x];
-        for (y = 0; y < m->height; ++y)
+        for (; x < m->width; ++x)
         {
-            if (col[y] > value)
+            const Matrix<>::ColumnType& col = m->entry[x];
+            for (y = 0; y < m->height; ++y)
             {
-                logs.error() << msg << ": invalid value detected (at column " << x
-                    << ", row: " << y << ')';
-                return 0;
+                if (col[y] > value)
+                {
+                    logs.error() << msg << ": invalid value detected (at column " << x
+                                 << ", row: " << y << ')';
+                    return 0;
+                }
             }
         }
     }
@@ -204,19 +203,19 @@ int MatrixTestIfValuesAreLowerThan(const char* msg, const Matrix<>* m, const dou
 int MatrixTestForNegativeValues(const char* msg, const Matrix<>* m)
 {
     logs.debug() << "Checking : " << msg;
-
-    if (!m->width || !m->height)
-        return 1;
-
-    for (uint x = 0; x < m->width; ++x)
+    if (m->width and m->height)
     {
-        for (uint y = 0; y < m->height; ++y)
+        for (uint x = 0; x < m->width; ++x)
         {
-            if ((*m)[x][y] > 0.)
+            auto& column = m->entry[x];
+            for (uint y = 0; y < m->height; ++y)
             {
-                logs.error() << msg << ": positive value detected (at column " << x
-                             << ", row: " << y << ')';
-                return 0;
+                if (column[y] > 0.)
+                {
+                    logs.error() << msg << ": positive value detected (at column " << x
+                                 << ", row: " << y << ')';
+                    return 0;
+                }
             }
         }
     }
@@ -226,19 +225,19 @@ int MatrixTestForNegativeValues(const char* msg, const Matrix<>* m)
 int MatrixTestForPositiveValues_LimitWidth(const char* msg, const Matrix<>* m, uint maxWidth)
 {
     logs.debug() << "Checking : " << msg;
-
-    if (!m->width || !m->height || !maxWidth)
-        return 1;
-
-    for (uint x = 0; x < maxWidth; ++x)
+    if (m->width and m->height and maxWidth)
     {
-        for (uint y = 0; y < m->height; ++y)
+        for (uint x = 0; x < maxWidth; ++x)
         {
-            if ((*m)[x][y] < 0.)
+            auto& column = m->entry[x];
+            for (uint y = 0; y < m->height; ++y)
             {
-                logs.error() << msg << ": negative value detected (at column " << x
-                    << ", row: " << y << ')';
-                return 0;
+                if (column[y] < 0.)
+                {
+                    logs.error() << msg << ": negative value detected (at column " << x
+                                 << ", row: " << y << ')';
+                    return 0;
+                }
             }
         }
     }
