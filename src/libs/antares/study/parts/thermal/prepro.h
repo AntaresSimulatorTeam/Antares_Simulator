@@ -101,11 +101,6 @@ public:
     bool saveToFolder(const AnyString& folder);
 
     /*!
-    ** \brief Flush memory to swap file
-    */
-    void flush();
-
-    /*!
     ** \brief Get the amount of memory used by the class
     */
     Yuni::uint64 memoryUsage() const;

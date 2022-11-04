@@ -115,7 +115,6 @@ void Cluster::reset()
         series = new DataSeriesCommon();
 
     series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();
 }
 
 bool CompareClusterName::operator()(const Cluster* s1, const Cluster* s2) const

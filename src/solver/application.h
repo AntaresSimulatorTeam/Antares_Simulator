@@ -6,6 +6,8 @@
 #include <antares/benchmarking.h>
 #include "simulation/simulation.h"
 
+#include <i_writer.h>
+
 #include <yuni/core/string.h>
 
 namespace Antares
@@ -51,6 +53,8 @@ public:
     void resetProcessPriority() const;
 
     void writeExectutionInfo();
+
+    void installSignalHandlers() const;
 
 private:
     /*!

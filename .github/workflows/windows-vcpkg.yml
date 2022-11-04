@@ -8,6 +8,7 @@ on:
       - features/*
       - fix/*
       - release/*
+
 jobs:
   doc_generation:
     uses: ./.github/workflows/build-userguide.yml
@@ -30,6 +31,8 @@ jobs:
     env:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -86,6 +89,8 @@ jobs:
       with:
         antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
         os: ${{matrix.os}}
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Setup Python 3.10
       uses: actions/setup-python@v4
@@ -106,7 +111,14 @@ jobs:
     - name: Configure
       shell: bash
       run: |
-           cmake -B _build -S src -DDEPS_INSTALL_DIR=rte-antares-deps-Release -DCMAKE_PREFIX_PATH="../install" -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DCMAKE_BUILD_TYPE=release -DBUILD_TESTING=ON -DBUILD_not_system=OFF
+           cmake -B _build -S src \
+           -DDEPS_INSTALL_DIR=rte-antares-deps-Release \
+           -DCMAKE_PREFIX_PATH="${{ env.ORTOOLS_DIR }}/install" \
+           -DVCPKG_ROOT="${{env.VCPKG_ROOT}}" \
+           -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON  \
+           -DBUILD_not_system=OFF
 
     - name: Build
       shell: bash

@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_SIMULATION_H__
 
 #include <yuni/yuni.h>
+#include <i_writer.h>
 #include "fwd.h"
 
 namespace Antares
@@ -37,7 +38,7 @@ namespace Data
 /*!
 ** \brief Set of settings for a simulation
 */
-class Simulation final
+class SimulationComments final
 {
 public:
     //! \name Constructor & Destructor
@@ -45,9 +46,9 @@ public:
     /*!
     ** \brief Default constructor
     */
-    Simulation(Study& study);
+    SimulationComments(Study& study);
     //! Destructor
-    ~Simulation()
+    ~SimulationComments()
     {
     }
     //@}
@@ -64,6 +65,8 @@ public:
     */
     bool saveToFolder(const AnyString& folder) const;
 
+    void saveUsingWriter(Solver::IResultWriter::Ptr writer, const AnyString& folder) const;
+
     //! Get (in bytes) the amount of memory used by the class
     Yuni::uint64 memoryUsage() const;
 
@@ -76,7 +79,7 @@ public:
 private:
     Study& pStudy;
 
-}; // class Simulation
+}; // class SimulationComments
 
 } // namespace Data
 } // namespace Antares
