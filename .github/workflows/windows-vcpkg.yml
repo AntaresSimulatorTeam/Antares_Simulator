@@ -140,6 +140,13 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
+    - name: Run kirchhoff-constraint-tests
+      shell: bash
+      run: |
+           tar xvf src/tests/kirchhoff-cbuilder/kirchhoff-cbuilder.tgz
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
+
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -162,11 +169,7 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-    - name: Run kirchhoff-constraint-tests
-      shell: bash
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R kirchhoff
+
 
     - name: NSIS Installer creation
       shell: bash

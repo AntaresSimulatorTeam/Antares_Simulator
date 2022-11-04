@@ -145,6 +145,13 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
 
+    - name: Run kirchhoff constraints tests
+      shell: bash
+      run: |
+           tar xvf src/tests/kirchhoff-cbuilder/kirchhoff-cbuilder.tgz
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
+
     # simtest
     - name: Read simtest version
       id: simtest-version
