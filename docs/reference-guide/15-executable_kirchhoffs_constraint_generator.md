@@ -16,7 +16,9 @@ The binary is located in Antares_Simulator/bin/
 
 **study_path**: the path of the study, mandatory
 
-**option_file_path**: the path of the **constraintbuilder.ini** file. It's normally located in *study_path/settings/*. If not provided the constraint builder will take the default values.
+**option_file_path**: Optional. The path of the **constraintbuilder.ini** file. It's normally located in *study_path/settings/*. If not provided the constraint builder will take the default values, which are defined at the end of cbuilder.h. 
+
+Those values were used to fill the GUI default values, and then the GUI created the file. That's why it's optional since only the default values are guaranteed to work.
 
 ## Results
 
