@@ -66,7 +66,7 @@ AreaLink::AreaLink() :
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
- transmissionCapacities(Data::LocalTransmissionCapacities::enabled),
+ transmissionCapacities(LocalTransmissionCapacities::enabled),
  assetType(Data::atAC),
  index(0),
  indexForArea(0),
@@ -241,8 +241,8 @@ static LocalTransmissionCapacities overrideTransmissionCapacities(
 {
     switch (tncGlobal)
     {
-    case GlobalTransmissionCapacities::enabled: // Use the local property for all links, including
-                                                // physical links
+    case GlobalTransmissionCapacities::enabledForAllLinks: // Use the local property for all links,
+                                                           // including physical links
         return LocalTransmissionCapacities::enabled;
     case GlobalTransmissionCapacities::nullForAllLinks:
         return LocalTransmissionCapacities::null;
@@ -328,7 +328,7 @@ void AreaLink::resetToDefaultValues()
     useLoopFlow = false;
     usePST = false;
     useHurdlesCost = false;
-    transmissionCapacities = Data::LocalTransmissionCapacities::enabled;
+    transmissionCapacities = LocalTransmissionCapacities::enabled;
     assetType = Data::atAC;
     color[0] = 112;
     color[1] = 112;

@@ -133,7 +133,7 @@ enum SimplexOptimization
 enum class GlobalTransmissionCapacities
 {
     //! Transmission capacities are enabled
-    enabled = 0,
+    enabledForAllLinks = 0,
     //! Transmission capacities are ignored (set to null)
     nullForAllLinks,
     //! Transmission capacities are infinite (aka Copper Plate)

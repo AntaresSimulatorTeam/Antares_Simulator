@@ -301,7 +301,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = GlobalTransmissionCapacities::enabled;
+    transmissionCapacities = GlobalTransmissionCapacities::enabledForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -618,7 +618,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         v.trim();
         v.toLower();
         if (v == "enabled")
-            d.transmissionCapacities = GT::enabled;
+            d.transmissionCapacities = GT::enabledForAllLinks;
         else if (v == "null")
             d.transmissionCapacities = GT::nullForAllLinks;
         else if (v == "infinite")
@@ -628,7 +628,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         else if (v == "null-for-physical-links")
             d.transmissionCapacities = GT::nullForPhysicalLinks;
         else
-            d.transmissionCapacities = v.to<bool>() ? GT::enabled : GT::nullForAllLinks;
+            d.transmissionCapacities = v.to<bool>() ? GT::enabledForAllLinks : GT::nullForAllLinks;
         return true;
     }
     return false;
@@ -1726,7 +1726,7 @@ void Parameters::saveToINI(IniFile& ini) const
         switch (transmissionCapacities)
         {
             using GT = GlobalTransmissionCapacities;
-        case GT::enabled:
+        case GT::enabledForAllLinks:
             section->add("transmission-capacities", "enabled");
             break;
         case GT::nullForAllLinks:

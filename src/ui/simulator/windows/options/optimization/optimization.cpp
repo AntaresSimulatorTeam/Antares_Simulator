@@ -108,7 +108,7 @@ static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapac
     assert(button != NULL);
     switch (value)
     {
-    case Data::GlobalTransmissionCapacities::enabled:
+    case Data::GlobalTransmissionCapacities::enabledForAllLinks:
         button->image("images/16x16/light_green.png");
         button->caption(wxT("local values"));
         break;
@@ -516,7 +516,8 @@ void Optimization::onResetToDefault(void*)
             auto& study = *studyptr;
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
-            study.parameters.transmissionCapacities = Data::GlobalTransmissionCapacities::enabled;
+            study.parameters.transmissionCapacities
+              = Data::GlobalTransmissionCapacities::enabledForAllLinks;
             study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
@@ -717,41 +718,59 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                           wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::enabled>),
+                 wxCommandEventHandler(
+                   Optimization::onSelectTransmissionCapacity<GTransmission::enabledForAllLinks>),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to null (all links)"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("set to null (all links)"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::nullForAllLinks>),
+                 wxCommandEventHandler(
+                   Optimization::onSelectTransmissionCapacity<GTransmission::nullForAllLinks>),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite (all links)"), "images/16x16/infinity.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("set to infinite (all links)"),
+                          "images/16x16/infinity.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForAllLinks>),
+                 wxCommandEventHandler(
+                   Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForAllLinks>),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to null (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("set to null (physical links)"),
+                          "images/16x16/light_orange.png",
+                          wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::nullForPhysicalLinks>),
+                 wxCommandEventHandler(
+                   Optimization::onSelectTransmissionCapacity<GTransmission::nullForPhysicalLinks>),
                  nullptr,
                  this);
 
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite (physical links)"), "images/16x16/infinity.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForPhysicalLinks>),
-                 nullptr,
-                 this);
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("set to infinite (physical links)"),
+                          "images/16x16/infinity.png",
+                          wxEmptyString);
+    menu.Connect(
+      it->GetId(),
+      wxEVT_COMMAND_MENU_SELECTED,
+      wxCommandEventHandler(
+        Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForPhysicalLinks>),
+      nullptr,
+      this);
 }
 
 void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
