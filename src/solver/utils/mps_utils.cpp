@@ -493,7 +493,7 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
     (void)writer; //FIXME demander florian erreur namespace
     // Make or-tools print the MPS files leads to a crash !
-    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_);
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_, writer);
 }
 
 // ---------------------------------
