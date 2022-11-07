@@ -163,7 +163,8 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
     }
 }
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace
+    , Solver::IResultWriter::Ptr writer)
 {
     Clob buffer;
     int Cnt;
@@ -274,9 +275,7 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint nu
 
     buffer.appendFormat("ENDATA\n");
 
-    auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem-fixed-part", "mps", numSpace, optNumber);
-    auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 
     free(Cdeb);
@@ -284,7 +283,8 @@ void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint nu
     free(Csui);
 }
 
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace)
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint numSpace
+    , Solver::IResultWriter::Ptr writer)
 {
     Clob buffer;
     int Var;
@@ -308,13 +308,12 @@ void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, int optNumber, uint
 
     buffer.appendFormat("ENDATA\n");
 
-    auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem-variable-part", "mps", numSpace, optNumber);
-    auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 }
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace
+    , Solver::IResultWriter::Ptr writer)
 {
     Clob buffer;
     int Cnt;
@@ -458,9 +457,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint n
 
     buffer.appendFormat("ENDATA\n");
 
-    auto study = Data::Study::Current::Get();
     auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
-    auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 
     free(Cdeb);
@@ -479,10 +476,10 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
  thread_number_(thread_number)
 {
 }
-void fullMPSwriter::runIfNeeded()
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-      (void*)named_splx_problem_, current_optim_number_, thread_number_);
+      (void*)named_splx_problem_, current_optim_number_, thread_number_, writer);
 }
 
 // ---------------------------------
@@ -492,8 +489,9 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, int optNumber, uint
  solver_(solver), current_optim_number_(optNumber), thread_number_(thread_number)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded()
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
+    (void)writer; //FIXME demander florian erreur namespace
     // Make or-tools print the MPS files leads to a crash !
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_);
 }
@@ -512,12 +510,12 @@ splitMPSwriter::splitMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
 {
 }
 
-void splitMPSwriter::runIfNeeded()
+void splitMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
     if (simu_1st_week_)
-        OPT_dump_spx_fixed_part(named_splx_problem_, current_optim_number_, thread_nb_);
+        OPT_dump_spx_fixed_part(named_splx_problem_, current_optim_number_, thread_nb_, writer);
 
-    OPT_dump_spx_variable_part(named_splx_problem_, current_optim_number_, thread_nb_);
+    OPT_dump_spx_variable_part(named_splx_problem_, current_optim_number_, thread_nb_, writer);
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
