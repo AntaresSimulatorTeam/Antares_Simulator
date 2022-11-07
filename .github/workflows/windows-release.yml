@@ -137,6 +137,10 @@ jobs:
       shell: bash
       run: rm -rf ${{ github.workspace }}/src/tests/resources/Antares_Simulator_Tests
 
+    - name: Remove _deps to free some disk space
+      shell: bash
+      run: rm -rf ${{ github.workspace }}/src/_build/_deps
+
     # simtest
     - name: Read simtest version
       id: simtest-version
