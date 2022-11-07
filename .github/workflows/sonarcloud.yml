@@ -136,4 +136,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
+        run: |
+          export SONAR_USER_HOME=/home/runner/work/Antares_Simulator/Antares_Simulator
+          sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
