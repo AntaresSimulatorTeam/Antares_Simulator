@@ -4,33 +4,34 @@ import sys
 
 from pathlib import Path
 
-nb_test = 3
+class StudyReference(object):
 
-files = [[0 for x in range(2)] for y in range(nb_test)]
-files[0][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff").resolve()
-files[0][1] = Path("reference/39").resolve()
-files[1][0] = Path("../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff").resolve()
-files[1][1] = Path("reference/43").resolve()
-files[2][0] = Path("../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1").resolve()
-files[2][1] = Path("reference/79").resolve()
+    def __init__(self, path, ref_path):
+        self.path = Path(path).resolve()
+        self.ref_path = Path(ref_path).resolve()
 
+    def run_and_compare(self, exe):
+        res = subprocess.run([exe, self.path])
+        assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
 
-def run_and_compare(path, ref_path, exe):
-    res = subprocess.run([exe, path])
-    assert (res.returncode == 0), "The exec failed for study: " + str(path)
+        out_path = self.path / "input/bindingconstraints/"
+        res = subprocess.run(["diff", "-bur", out_path, self.ref_path])
+        assert (res.returncode == 0), "Wrong results for study: " + str(self.path)
 
-    out_path = path / "input/bindingconstraints/"
-    res = subprocess.run(["diff", "-bur", out_path, ref_path])
-    assert (res.returncode == 0), "Wrong results for study: " + str(path)
+study_list = []
+study_list.append(StudyReference("../resources/Antares_Simulator_Tests/medium-tests/039 Multistage study-4-Kirchhoff", "reference/39"))
+study_list.append(StudyReference("../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff", "reference/43"))
+study_list.append(StudyReference("../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1", "reference/79"))
+
 
 @pytest.mark.kirchhoff
 def test_kirchhoff_0(exe_kirchhoff_path):
-    run_and_compare(files[0][0], files[0][1], exe_kirchhoff_path)
+    study_list[0].run_and_compare(exe_kirchhoff_path)
 
 @pytest.mark.kirchhoff
 def test_kirchhoff_1(exe_kirchhoff_path):
-    run_and_compare(files[1][0], files[1][1], exe_kirchhoff_path)
+    study_list[1].run_and_compare(exe_kirchhoff_path)
 
 @pytest.mark.kirchhoff
 def test_kirchhoff_2(exe_kirchhoff_path):
-    run_and_compare(files[2][0], files[2][1], exe_kirchhoff_path)
+    study_list[2].run_and_compare(exe_kirchhoff_path)
