@@ -282,23 +282,11 @@ public:
     bool isScenarioBuilderOpened() const;
     //@}
 
-    //! \name Swap files cleaning
-    //@{
-    /*!
-    ** \brief Perform a cleanup operation on orphan swap files
-    **
-    ** This action will be delayed
-    */
-    void timerCleanSwapFiles(uint timeout = 5000);
-
-    void timerCleanSwapFilesDestroy();
-
     /*!
     ** \brief Stop all timers
     */
-    void backgroundTimerStop();
+    void backgroundTimerStop() const;
 
-    void backgroundTimerStart();
     //@}
 
     //! \name Main Notebook
@@ -770,9 +758,6 @@ private:
 
     //! List of logs to flush
     wxTimer* pLogFlusherTimer;
-
-    //! Timer for the periodic refresh of the memory usage
-    wxTimer* pFlushMemoryTimer;
 
     //! Logs
     Window::StudyLogs* pWndLogs;

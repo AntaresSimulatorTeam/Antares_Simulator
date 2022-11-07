@@ -94,8 +94,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     s[i] = 0.;
                 }
             }
-            // reduce the memory footprint
-            m.flush();
         }
 
         // Spinning - Economic Only - If no prepro
@@ -110,26 +108,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
             area.scratchpad[numSpace] = new AreaScratchpad(r, area);
-
-        if (mode == Data::stdmAdequacy)
-            area.reserves.flush();
-        // reduce a bit the memory footprint
-        area.miscGen.flush();
-
-        // hydroHasMod
-        if (mode != stdmAdequacyDraft)
-        {
-            if (!area.hydro.prepro) // not in prepro mode
-                area.hydro.series->storage.flush();
-            else
-            {
-                auto& m = area.hydro.prepro->data;
-                // reduce memory footprint
-                m.flush();
-            }
-        }
-
-        area.reserves.flush();
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
@@ -205,9 +183,6 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
                      rti.linkIndex,
                      rti.clusterIndex,
                      rti.clustersAreaIndex);
-
-    // reduce the memory footprint
-    rti.bounds.flush();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -574,9 +549,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
                 tmp *= maxModCost;
                 if (tmp > m)
                     m = tmp;
-
-                // reduce the memory footprint
-                cluster.modulation.flush();
             }
         });
         m *= 1.1;
@@ -584,10 +556,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
         logs.info() << "  Global Maximum cost: " << m;
     }
 #endif
-
-    // reduce the memory footprint in swap mode
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 
     if (not gd.geographicTrimming)
         disableAllFilters(study);
@@ -659,6 +627,35 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
     this->maxRenewableClustersForSingleArea
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
+}
+
+static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
+{
+    return bc.operatorType == '<' || bc.operatorType == '>';
+}
+
+uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
+}
+
+std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
+{
+    const auto* firstBC = this->bindingConstraint;
+    const auto* lastBC = firstBC + this->bindingConstraintCount;
+
+    std::vector<uint> indices;
+    for (auto bc = firstBC; bc < lastBC; bc++)
+    {
+        if (isBindingConstraintTypeInequality(*bc))
+        {
+            auto index = static_cast<uint>(std::distance(firstBC, bc));
+            indices.push_back(index);
+        }
+    }
+    return indices;
 }
 
 void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) const

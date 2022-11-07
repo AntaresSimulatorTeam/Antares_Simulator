@@ -42,35 +42,41 @@ struct CompareAreaName final
 };
 
 template<int TimeSeriesT>
-inline bool Area::storeTimeseriesNumbers(Study& study)
+inline void Area::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
 {
     switch (TimeSeriesT)
     {
     // Load
     case timeSeriesLoad:
-        return storeTimeseriesNumbersForLoad(study);
+        storeTimeseriesNumbersForLoad(writer);
+        break;
         // Solar
     case timeSeriesSolar:
-        return storeTimeseriesNumbersForSolar(study);
+        storeTimeseriesNumbersForSolar(writer);
+        break;
         // Hydro
     case timeSeriesHydro:
-        return storeTimeseriesNumbersForHydro(study);
+        storeTimeseriesNumbersForHydro(writer);
+        break;
         // Wind
     case timeSeriesWind:
-        return storeTimeseriesNumbersForWind(study);
+        storeTimeseriesNumbersForWind(writer);
+        break;
         // Thermal
     case timeSeriesThermal:
-        return storeTimeseriesNumbersForThermal(study);
+        storeTimeseriesNumbersForThermal(writer);
+        break;
         // Renewable
     case timeSeriesRenewable:
-        return storeTimeseriesNumbersForRenewable(study);
+        storeTimeseriesNumbersForRenewable(writer);
+        break;
         // Transmission capacities (NTC)
     case timeSeriesTransmissionCapacities:
-        return storeTimeseriesNumbersForTransmissionCapacities(study);
+        storeTimeseriesNumbersForTransmissionCapacities(writer);
+        break;
     case timeSeriesCount:
         break;
     }
-    return false;
 }
 
 inline Area* AreaList::operator[](uint i)

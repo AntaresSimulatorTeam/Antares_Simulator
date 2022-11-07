@@ -42,9 +42,6 @@ void AntaresSolverEmergencyShutdown(int code)
         if (!(!currentStudy))
             currentStudy->releaseAllLocks();
 
-        // Releasing all swap files held by the program
-        Antares::memory.releaseAll();
-
         // Importing logs
         if (!logs.logfile())
         {

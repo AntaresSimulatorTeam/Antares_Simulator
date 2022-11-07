@@ -353,9 +353,6 @@ bool XCast::loadFromFolder(Study& study, const AnyString& folder)
         }
     }
 
-    // Flush memory to swap files (if support enabled)
-    flush();
-
     return ret;
 }
 

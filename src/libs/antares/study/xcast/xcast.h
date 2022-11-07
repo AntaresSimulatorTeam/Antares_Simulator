@@ -166,11 +166,6 @@ public:
     void markAsModified() const;
 
     /*!
-    ** \brief Flush memory to swap files
-    */
-    void flush();
-
-    /*!
     ** \brief Get the amount of memory currently used by the XCast data
     */
     Yuni::uint64 memoryUsage() const;
