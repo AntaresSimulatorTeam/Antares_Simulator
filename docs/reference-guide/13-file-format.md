@@ -14,8 +14,6 @@ In file **settings/generaldata.ini**, in section `optimization`, change admissib
 
 Previous values (`true`, `false` and `infinite`) are still admissible for compatibility.
 
-## v8.3.2
-#### Marginal price for inequality binding constraints
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 
@@ -23,7 +21,7 @@ In file **settings/generaldata.ini**, in existing section `output`, add property
 #### Result format
 If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
 
-
+## v8.3.2
 ### Writing MPS files
 MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
 Now user can choose to print :
@@ -48,8 +46,8 @@ They constrol which marginal price time granularity is printed, either regarding
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
-* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const**
-* **output/yyyymmdd-hhmmeco/economy/mc-all/bind_const**
+* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/binding_constraints**
+* **output/yyyymmdd-hhmmeco/economy/mc-all/binding_constraints**
 
 These folders are meant to contain results of any kind regarding binding constraints marginal price (year by year or synthesis).
 
