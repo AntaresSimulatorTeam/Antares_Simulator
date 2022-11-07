@@ -238,7 +238,8 @@ static void removeTemporaryFile(const std::string& tmpPath)
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    size_t numSpace,
-                                                   int const numOptim)
+                                                   int const numOptim,
+                                                   Antares::Solver::IResultWriter::Ptr writer)
 {
     // 1. Determine filename
     const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
@@ -248,8 +249,6 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     solver->Write(tmpPath);
 
     // 3. Copy to real output using generic writer
-    auto study = Antares::Data::Study::Current::Get();
-    auto writer = study->resultWriter;
     writer->addEntryFromFile(filename, tmpPath);
 
     // 4. Remove tmp file
