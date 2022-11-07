@@ -46,16 +46,14 @@ include("cmake/utils.cmake")
 #CMake Macro to display message
 include("cmake/messages.cmake")
 
+set(ANTARES_VERSION_TAG "")
+
 if(${ANTARES_BETA})
 	set(ANTARES_VERSION_TAG "-beta${ANTARES_BETA}")
-else()
-	set(ANTARES_VERSION_TAG "")
 endif()
 
 if(${ANTARES_RC})
-	set (ANTARES_VERSION_TAG "${ANTARES_VERSION_TAG}-rc${ANTARES_RC}")
-else()
-	set (ANTARES_RC 0)
+	set (ANTARES_VERSION_TAG "-rc${ANTARES_RC}")
 endif()
 
 # git SHA-1
