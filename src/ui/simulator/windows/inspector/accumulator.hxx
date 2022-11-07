@@ -433,7 +433,6 @@ struct PLinkCopperPlate
         default:
             return wxT("set to zero");
         }
-        return wxT("set to zero");
     }
 };
 
