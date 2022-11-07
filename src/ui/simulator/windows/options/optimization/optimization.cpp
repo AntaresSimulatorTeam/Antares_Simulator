@@ -103,30 +103,30 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-static void ResetButton(Component::Button* button, Data::TransmissionCapacities value)
+static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
     assert(button != NULL);
     switch (value)
     {
-    case Data::tncEnabled:
+    case Data::GlobalTransmissionCapacities::enabled:
         button->image("images/16x16/light_green.png");
         button->caption(wxT("local values"));
         break;
-    case Data::tncIgnore:
+    case Data::GlobalTransmissionCapacities::nullForAllLinks:
         button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
+        button->caption(wxT("set to null (all links)"));
         break;
-    case Data::tncInfinite:
+    case Data::GlobalTransmissionCapacities::infiniteForAllLinks:
         button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite"));
+        button->caption(wxT("set to infinite (all links)"));
         break;
-    case Data::tncInfinitePhysical:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite (physical links)"));
-        break;
-    case Data::tncIgnorePhysical:
+    case Data::GlobalTransmissionCapacities::nullForPhysicalLinks:
         button->image("images/16x16/light_orange.png");
         button->caption(wxT("set to null (physical links)"));
+        break;
+    case Data::GlobalTransmissionCapacities::infiniteForPhysicalLinks:
+        button->image("images/16x16/infinity.png");
+        button->caption(wxT("set to infinite (physical links)"));
         break;
     }
 }
@@ -516,7 +516,7 @@ void Optimization::onResetToDefault(void*)
             auto& study = *studyptr;
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
-            study.parameters.transmissionCapacities = Data::tncEnabled;
+            study.parameters.transmissionCapacities = Data::GlobalTransmissionCapacities::enabled;
             study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
@@ -707,6 +707,7 @@ void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 
 void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
+    using GTransmission = Data::GlobalTransmissionCapacities;
     wxMenuItem* it;
 
     it = Menu::CreateItem(&menu,
@@ -716,31 +717,23 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
                           wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncEnabled>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::enabled>),
                  nullptr,
                  this);
 
     it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to null"), "images/16x16/light_orange.png", wxEmptyString);
+      &menu, wxID_ANY, wxT("set to null (all links)"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncIgnore>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::nullForAllLinks>),
                  nullptr,
                  this);
 
     it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite"), "images/16x16/infinity.png", wxEmptyString);
+      &menu, wxID_ANY, wxT("set to infinite (all links)"), "images/16x16/infinity.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncInfinite>),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite (physical links)"), "images/16x16/infinity.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncInfinitePhysical>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForAllLinks>),
                  nullptr,
                  this);
 
@@ -748,7 +741,15 @@ void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu&
       &menu, wxID_ANY, wxT("set to null (physical links)"), "images/16x16/light_orange.png", wxEmptyString);
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<Data::tncIgnorePhysical>),
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::nullForPhysicalLinks>),
+                 nullptr,
+                 this);
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("set to infinite (physical links)"), "images/16x16/infinity.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<GTransmission::infiniteForPhysicalLinks>),
                  nullptr,
                  this);
 }
@@ -853,7 +854,7 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     }
 }
 
-void Optimization::setTransmissionCapacity(Data::TransmissionCapacities newCapacity)
+void Optimization::setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity)
 {
     auto study = Data::Study::Current::Get();
     if (study && study->parameters.transmissionCapacities != newCapacity)
@@ -864,10 +865,10 @@ void Optimization::setTransmissionCapacity(Data::TransmissionCapacities newCapac
     }
 }
 
-template<int newCapacity>
+template<Data::GlobalTransmissionCapacities capacity>
 void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
 {
-    setTransmissionCapacity(static_cast<Data::TransmissionCapacities>(newCapacity));
+    setTransmissionCapacity(capacity);
 }
 
 void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)

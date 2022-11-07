@@ -126,7 +126,7 @@ public:
 
     void flush();
 
-    void overrideTransmissionCapacityAccordingToGlobalParameter(TransmissionCapacities tc);
+    void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
     bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
@@ -168,7 +168,7 @@ public:
 
     //! Flag for the transmission capacities (NTC +infinite)
     // previously called copper plate
-    TransmissionCapacities transmissionCapacities;
+    LocalTransmissionCapacities transmissionCapacities;
     //@}
 
     //! Flag for the asset type (AC/DC/Other)

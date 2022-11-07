@@ -7,13 +7,13 @@ namespace Antares
 {
 namespace Data
 {
-std::string transmissionCapacitiesToString(const TransmissionCapacities& tc)
+std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc)
 {
     switch (tc)
     {
-    case Data::tncEnabled:
+    case Data::LocalTransmissionCapacities::enabled:
         return "enabled";
-    case Data::tncInfinite:
+    case Data::LocalTransmissionCapacities::infinite:
         return "infinite";
     default:
         return "ignore";

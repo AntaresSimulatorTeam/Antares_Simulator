@@ -78,8 +78,8 @@ private:
     void onSelectSimplexDay(wxCommandEvent& evt);
     void onSelectSimplexWeek(wxCommandEvent& evt);
 
-    void setTransmissionCapacity(Data::TransmissionCapacities newCapacity);
-    template<int>
+    void setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity);
+    template<Data::GlobalTransmissionCapacities>
     void onSelectTransmissionCapacity(wxCommandEvent&);
 
     void onSelectLinkTypeLocal(wxCommandEvent& evt);

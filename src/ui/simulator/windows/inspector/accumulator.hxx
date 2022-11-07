@@ -415,7 +415,7 @@ struct PLinkArea
 
 struct PLinkCopperPlate
 {
-    using Type = Data::TransmissionCapacities;
+    using Type = Data::LocalTransmissionCapacities;
     static Type Value(const Data::AreaLink* link)
     {
         return link->transmissionCapacities;
@@ -424,11 +424,11 @@ struct PLinkCopperPlate
     {
         switch (v)
         {
-        case Data::tncEnabled:
+        case Type::enabled:
             return wxT("enabled");
-        case Data::tncIgnore:
+        case Type::null:
             return wxT("set to zero");
-        case Data::tncInfinite:
+        case Type::infinite:
             return wxT("set to infinite");
         default:
             return wxT("set to zero");

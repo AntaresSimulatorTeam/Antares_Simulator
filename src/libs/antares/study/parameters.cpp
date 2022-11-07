@@ -301,7 +301,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = tncEnabled;
+    transmissionCapacities = GlobalTransmissionCapacities::enabled;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -613,17 +613,22 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "transmission-capacities")
     {
+        using GT = GlobalTransmissionCapacities;
         CString<64, false> v = value;
         v.trim();
         v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
-        else if (v == "infinite-physical")
-            d.transmissionCapacities = tncInfinitePhysical;
-        else if (v == "false-physical")
-            d.transmissionCapacities = tncIgnorePhysical;
+        if (v == "enabled")
+            d.transmissionCapacities = GT::enabled;
+        else if (v == "null")
+            d.transmissionCapacities = GT::nullForAllLinks;
+        else if (v == "infinite")
+            d.transmissionCapacities = GT::infiniteForAllLinks;
+        else if (v == "infinite-for-physical-links")
+            d.transmissionCapacities = GT::infiniteForPhysicalLinks;
+        else if (v == "null-for-physical-links")
+            d.transmissionCapacities = GT::nullForPhysicalLinks;
         else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
+            d.transmissionCapacities = v.to<bool>() ? GT::enabled : GT::nullForAllLinks;
         return true;
     }
     return false;
@@ -1720,20 +1725,21 @@ void Parameters::saveToINI(IniFile& ini) const
         // Optimization preferences
         switch (transmissionCapacities)
         {
-        case tncEnabled:
-            section->add("transmission-capacities", "true");
+            using GT = GlobalTransmissionCapacities;
+        case GT::enabled:
+            section->add("transmission-capacities", "enabled");
             break;
-        case tncIgnore:
-            section->add("transmission-capacities", "false");
+        case GT::nullForAllLinks:
+            section->add("transmission-capacities", "null");
             break;
-        case tncInfinite:
+        case GT::infiniteForAllLinks:
             section->add("transmission-capacities", "infinite");
             break;
-        case tncInfinitePhysical:
-            section->add("transmission-capacities", "infinite-physical");
+        case GT::infiniteForPhysicalLinks:
+            section->add("transmission-capacities", "infinite-for-physical-links");
             break;
-        case tncIgnorePhysical:
-            section->add("transmission-capacities", "false-physical");
+        case GT::nullForPhysicalLinks:
+            section->add("transmission-capacities", "null-for-physical-links");
             break;
         }
 

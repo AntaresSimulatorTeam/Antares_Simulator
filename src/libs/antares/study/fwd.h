@@ -128,23 +128,33 @@ enum SimplexOptimization
 }; // enum SimplexOptimization
 
 /*!
-** \brief Transmission capacities mode
+** \brief Transmission capacities mode (applies to all links)
 */
-enum TransmissionCapacities
+enum class GlobalTransmissionCapacities
 {
     //! Transmission capacities are enabled
-    tncEnabled = 0,
+    enabled = 0,
     //! Transmission capacities are ignored (set to null)
-    tncIgnore,
+    nullForAllLinks,
     //! Transmission capacities are infinite (aka Copper Plate)
-    tncInfinite,
+    infiniteForAllLinks,
     //! Transmission capacities are ignored only for physical links
     //! Global property only, cannot be used for individual links
-    tncIgnorePhysical,
+    nullForPhysicalLinks,
     //! Transmission capacities are infinite only for physical links (not virtual)
     //! Global property only, cannot be used for individual links
-    tncInfinitePhysical
+    infiniteForPhysicalLinks
 }; // enum TransmissionCapacities
+
+/*!
+** \brief Transmission capacities mode (applies to individual links)
+*/
+enum class LocalTransmissionCapacities
+{
+    enabled,
+    null,
+    infinite
+};
 
 /*!
 ** \brief Asset Type mode
