@@ -148,7 +148,7 @@ jobs:
     - name: Run kirchhoff constraints tests
       shell: bash
       run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz
+           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
