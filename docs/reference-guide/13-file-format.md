@@ -4,12 +4,16 @@ This is a list of all recent changes that came with new Antares Simulator featur
 ## v8.4.0
 ### Input
 #### Zero/infinite capacity for physical links only
-In file **settings/generaldata.ini**, in section `optimization`, add 2 values for existing property `transmission-capacities` [str]:
+In file **settings/generaldata.ini**, in section `optimization`, change admissible values for key `transmission-capacities` [str]:
 
-* `false-physical` sets the capacity of physical links to 0
-* `infinite-physical` sets the capacity of physical links to infinity
+* `enabled` (formerly `true`, default) uses the local capacity of all links
+* `null` (formerly `false`) sets the capacity of all links to 0
+* `infinite` (no change) sets the capacity of all links to +infinity
+* `null-for-physical-links` sets the capacity of physical links to 0, uses the local capacity for virtual links
+* `infinite-for-physical-links` sets the capacity of physical links to +infinity, uses the local capacity for virtual links
 
-The default value, `true`, remains unchanged.
+Previous values (`true`, `false` and `infinite`) are still admissible for compatibility.
+
 #### Marginal price for inequality binding constraints
 In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
 They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
