@@ -166,7 +166,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      continue-on-error: false
+      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:

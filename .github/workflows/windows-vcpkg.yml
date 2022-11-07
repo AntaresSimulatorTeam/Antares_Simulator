@@ -156,6 +156,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
+      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
