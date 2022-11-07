@@ -160,15 +160,6 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
-    ** \brief Check if some general data seem valid
-    **
-    ** \return The error if any (stErrNone otherwise)
-    */
-    StudyError checkIntegrity() const;
-
-    void removeExtraSettings();
-
-    /*!
     ** \brief Get the amount of memory used by the general data
     */
     Yuni::uint64 memoryUsage() const;
