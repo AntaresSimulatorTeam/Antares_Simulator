@@ -331,7 +331,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = GlobalTransmissionCapacities::enabledForAllLinks;
+    transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -1734,7 +1734,8 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         }
         // Optimization preferences
-        section->add("transmission-capacities", GlobalTransmissionCapacitiesToString(transmissionCapacities));
+        section->add("transmission-capacities",
+                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
         switch (linkType)
         {
         case ltLocal:

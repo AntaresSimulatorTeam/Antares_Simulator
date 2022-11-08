@@ -416,7 +416,7 @@ std::string GlobalTransmissionCapacitiesToString(
     switch (transmissionCapacities)
     {
         using GT = GlobalTransmissionCapacities;
-    case GT::enabledForAllLinks:
+    case GT::localValuesForAllLinks:
         return "local-values";
     case GT::nullForAllLinks:
         return "null-for-all-links";
@@ -447,7 +447,7 @@ bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmis
     v.toLower();
     if (v == "local-values" || v == "true" || v == "enabled")
     {
-        out = GT::enabledForAllLinks;
+        out = GT::localValuesForAllLinks;
         return true;
     }
     else if (v == "null-for-all-links" || v == "false" || v == "disabled")

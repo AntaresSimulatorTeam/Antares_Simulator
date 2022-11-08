@@ -133,7 +133,7 @@ enum SimplexOptimization
 enum class GlobalTransmissionCapacities
 {
     //! Transmission capacities are enabled
-    enabledForAllLinks = 0,
+    localValuesForAllLinks = 0,
     //! Transmission capacities are ignored (set to null)
     nullForAllLinks,
     //! Transmission capacities are infinite (aka Copper Plate)
@@ -146,12 +146,12 @@ enum class GlobalTransmissionCapacities
     infiniteForPhysicalLinks
 }; // enum TransmissionCapacities
 
-std::string GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities transmissionCapacities);
-std::string GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities);
+std::string GlobalTransmissionCapacitiesToString(
+  GlobalTransmissionCapacities transmissionCapacities);
+std::string GlobalTransmissionCapacitiesToString_Display(
+  GlobalTransmissionCapacities transmissionCapacities);
 bool stringToGlobalTransmissionCapacities(const AnyString& value,
                                           GlobalTransmissionCapacities& out);
-
-
 
 /*!
 ** \brief Transmission capacities mode (applies to individual links)

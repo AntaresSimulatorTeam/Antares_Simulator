@@ -143,16 +143,16 @@ const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
 }
 const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity)
 {
-  using GTransmission = Data::GlobalTransmissionCapacities;
-  switch(capacity)
+    using GTransmission = Data::GlobalTransmissionCapacities;
+    switch (capacity)
     {
-    case GTransmission::enabledForAllLinks:
-      return "images/16x16/light_green.png";
+    case GTransmission::localValuesForAllLinks:
+        return "images/16x16/light_green.png";
     case GTransmission::infiniteForAllLinks:
     case GTransmission::infiniteForPhysicalLinks:
-      return "images/16x16/infinity.png";
+        return "images/16x16/infinity.png";
     default:
-      return "images/16x16/light_orange.png";
+        return "images/16x16/light_orange.png";
     }
 }
 
@@ -530,7 +530,7 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
             study.parameters.transmissionCapacities
-              = Data::GlobalTransmissionCapacities::enabledForAllLinks;
+              = Data::GlobalTransmissionCapacities::localValuesForAllLinks;
             study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
@@ -723,13 +723,14 @@ void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
     using GTransmission = Data::GlobalTransmissionCapacities;
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::enabledForAllLinks>(menu);
+    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::localValuesForAllLinks>(
+      menu);
     this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::nullForAllLinks>(menu);
     this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::infiniteForAllLinks>(menu);
     this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::nullForPhysicalLinks>(menu);
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::infiniteForPhysicalLinks>(menu);
+    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::infiniteForPhysicalLinks>(
+      menu);
 }
-
 
 void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
 {
