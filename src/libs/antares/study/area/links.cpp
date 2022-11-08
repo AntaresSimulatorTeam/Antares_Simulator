@@ -248,7 +248,7 @@ static LocalTransmissionCapacities overrideTransmissionCapacities(
     {
     case GlobalTransmissionCapacities::enabledForAllLinks: // Use the local property for all links,
                                                            // including physical links
-        return LocalTransmissionCapacities::enabled;
+        return tncLocal;
     case GlobalTransmissionCapacities::nullForAllLinks:
         return LocalTransmissionCapacities::null;
     case GlobalTransmissionCapacities::infiniteForAllLinks:
