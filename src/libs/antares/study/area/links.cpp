@@ -238,37 +238,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
-// Handle all trivial cases here
-static LocalTransmissionCapacities overrideTransmissionCapacities(
-  GlobalTransmissionCapacities tncGlobal,
-  LocalTransmissionCapacities tncLocal,
-  bool virtualLink)
+bool AreaLink::isLinkPhysical() const
 {
-    switch (tncGlobal)
-    {
-    case GlobalTransmissionCapacities::localValuesForAllLinks: // Use the local property for all
-                                                               // links, including physical links
-        return tncLocal;
-    case GlobalTransmissionCapacities::nullForAllLinks:
-        return LocalTransmissionCapacities::null;
-    case GlobalTransmissionCapacities::infiniteForAllLinks:
-        return LocalTransmissionCapacities::infinite;
-    case GlobalTransmissionCapacities::nullForPhysicalLinks: // Use '0' only for physical links
-        return virtualLink ? tncLocal : LocalTransmissionCapacities::null;
-    case GlobalTransmissionCapacities::infiniteForPhysicalLinks: // Use 'infinity' only for physical
-                                                                 // links
-        return virtualLink ? tncLocal : LocalTransmissionCapacities::infinite;
-    default:
-        logs.error() << "Wrong global transmission capacity given to function" << __FUNCTION__;
-        return LocalTransmissionCapacities::enabled;
-    }
-}
-
-// Global Optimization override
-void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
-  GlobalTransmissionCapacities tncGlobal)
-{
-    bool isLinkVirtual;
     switch (assetType)
     {
     // Physical
@@ -276,15 +247,39 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     case atDC:
     case atGas:
     case atOther:
-        isLinkVirtual = false;
-        break;
-    // Virtual
+        return true;
     default:
-        isLinkVirtual = true;
-        break;
+        return false;
     }
-    transmissionCapacities
-      = overrideTransmissionCapacities(tncGlobal, transmissionCapacities, isLinkVirtual);
+}
+
+// Handle all trivial cases here
+void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
+  GlobalTransmissionCapacities tncGlobal)
+{
+    switch (tncGlobal)
+    {
+    case GlobalTransmissionCapacities::localValuesForAllLinks: // Use the local property for all
+                                                               // links, including physical links
+        break;
+    case GlobalTransmissionCapacities::nullForAllLinks:
+        transmissionCapacities = LocalTransmissionCapacities::null;
+        break;
+    case GlobalTransmissionCapacities::infiniteForAllLinks:
+        transmissionCapacities = LocalTransmissionCapacities::infinite;
+        break;
+    case GlobalTransmissionCapacities::nullForPhysicalLinks: // Use '0' only for physical links
+        if (isLinkPhysical())
+            transmissionCapacities = LocalTransmissionCapacities::null;
+        break;
+    case GlobalTransmissionCapacities::infiniteForPhysicalLinks: // Use 'infinity' only for physical
+                                                                 // links
+        if (isLinkPhysical())
+            transmissionCapacities = LocalTransmissionCapacities::infinite;
+        break;
+    default:
+        logs.error() << "Wrong global transmission capacity given to function" << __FUNCTION__;
+    }
 }
 
 bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)

@@ -125,6 +125,7 @@ public:
 
     Yuni::String getName() const;
 
+    bool isLinkPhysical() const;
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
