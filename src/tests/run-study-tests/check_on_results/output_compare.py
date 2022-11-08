@@ -64,12 +64,19 @@ def skip_folder(folder):
     return basename(folder) in ['grid']
 
 def skip_file(file):
-    ignored_files = ['id-hourly.txt',
-                     'id-daily.txt',
-                     'id-weekly.txt',
-                     'id-monthly.txt',
-                     'id-annual.txt']
-    return file in ignored_files
+    id_files = ['id-hourly.txt',
+                'id-daily.txt',
+                'id-weekly.txt',
+                'id-monthly.txt',
+                'id-annual.txt']
+
+    bc_files = ['binding-constraints-hourly.txt',
+                'binding-constraints-daily.txt',
+                'binding-constraints-weekly.txt',
+                'binding-constraints-monthly.txt',
+                'binding-constraints-annual.txt']
+
+    return (file in id_files) or (file in bc_files)
 
 def compare_simulation_files(simulation_files, tol):
     REF_INDEX = 0
