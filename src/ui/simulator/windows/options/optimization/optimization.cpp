@@ -169,6 +169,9 @@ const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity
     {
     case GTransmission::enabledForAllLinks:
       return "images/16x16/light_green.png";
+    case GTransmission::infiniteForAllLinks:
+    case GTransmission::infiniteForPhysicalLinks:
+      return "images/16x16/infinity.png";
     default:
       return "images/16x16/light_orange.png";
     }
