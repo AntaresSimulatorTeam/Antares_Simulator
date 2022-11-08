@@ -105,29 +105,8 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
 static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
     assert(button != NULL);
-    switch (value)
-    {
-    case Data::GlobalTransmissionCapacities::enabledForAllLinks:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::GlobalTransmissionCapacities::nullForAllLinks:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null (all links)"));
-        break;
-    case Data::GlobalTransmissionCapacities::infiniteForAllLinks:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite (all links)"));
-        break;
-    case Data::GlobalTransmissionCapacities::nullForPhysicalLinks:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null (physical links)"));
-        break;
-    case Data::GlobalTransmissionCapacities::infiniteForPhysicalLinks:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite (physical links)"));
-        break;
-    }
+    button->image(transmissionCapacityIcon(value));
+    button->caption(GlobalTransmissionCapacitiesToString_Display(value));
 }
 
 static void ResetButton(Component::Button* button, Data::LinkType value)

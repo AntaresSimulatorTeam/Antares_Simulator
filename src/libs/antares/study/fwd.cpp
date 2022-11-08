@@ -420,8 +420,15 @@ std::string GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities tr
         case GT::infiniteForAllLinks: return "infinite-for-all-links";
         case GT::infiniteForPhysicalLinks: return "infinite-for-physical-links";
         case GT::nullForPhysicalLinks: return "null-for-physical-links";
+        default: return "";
         }
-        return "";
+}
+
+std::string GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities)
+{
+    auto result = GlobalTransmissionCapacitiesToString(transmissionCapacities);
+    std::replace(result.begin(), result.end(), '-', ' ');
+    return result;
 }
 
 bool stringToGlobalTransmissionCapacities(const AnyString& value,

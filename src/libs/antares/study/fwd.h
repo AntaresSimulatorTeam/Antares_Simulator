@@ -147,6 +147,7 @@ enum class GlobalTransmissionCapacities
 }; // enum TransmissionCapacities
 
 std::string GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities transmissionCapacities);
+std::string GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities);
 bool stringToGlobalTransmissionCapacities(const AnyString& value,
                                           GlobalTransmissionCapacities& out);
 

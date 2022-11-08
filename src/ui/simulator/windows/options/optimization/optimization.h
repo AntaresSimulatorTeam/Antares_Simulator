@@ -173,7 +173,7 @@ void Optimization::createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu)
     const wxMenuItem* it = Menu::CreateItem(
         &menu,
         wxID_ANY,
-        GlobalTransmissionCapacitiesToString(CAPACITY),
+        GlobalTransmissionCapacitiesToString_Display(CAPACITY),
         transmissionCapacityIcon(CAPACITY),
         wxEmptyString);
 
