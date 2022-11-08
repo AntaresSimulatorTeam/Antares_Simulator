@@ -26,6 +26,7 @@
 */
 
 #include "fwd.h"
+#include <algorithm>
 
 using namespace Yuni;
 
@@ -370,7 +371,6 @@ const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daR
     return "";
 }
 
-
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
 {
     switch (mps_export_status)
@@ -410,47 +410,67 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
 
-std::string GlobalTransmissionCapacitiesToString(GlobalTransmissionCapacities transmissionCapacities)
+std::string GlobalTransmissionCapacitiesToString(
+  GlobalTransmissionCapacities transmissionCapacities)
 {
-        switch (transmissionCapacities)
-        {
+    switch (transmissionCapacities)
+    {
         using GT = GlobalTransmissionCapacities;
-        case GT::enabledForAllLinks: return "local-values";
-        case GT::nullForAllLinks: return "null-for-all-links";
-        case GT::infiniteForAllLinks: return "infinite-for-all-links";
-        case GT::infiniteForPhysicalLinks: return "infinite-for-physical-links";
-        case GT::nullForPhysicalLinks: return "null-for-physical-links";
-        default: return "";
-        }
+    case GT::enabledForAllLinks:
+        return "local-values";
+    case GT::nullForAllLinks:
+        return "null-for-all-links";
+    case GT::infiniteForAllLinks:
+        return "infinite-for-all-links";
+    case GT::infiniteForPhysicalLinks:
+        return "infinite-for-physical-links";
+    case GT::nullForPhysicalLinks:
+        return "null-for-physical-links";
+    default:
+        return "";
+    }
 }
 
-std::string GlobalTransmissionCapacitiesToString_Display(GlobalTransmissionCapacities transmissionCapacities)
+std::string GlobalTransmissionCapacitiesToString_Display(
+  GlobalTransmissionCapacities transmissionCapacities)
 {
     auto result = GlobalTransmissionCapacitiesToString(transmissionCapacities);
     std::replace(result.begin(), result.end(), '-', ' ');
     return result;
 }
 
-bool stringToGlobalTransmissionCapacities(const AnyString& value,
-                                          GlobalTransmissionCapacities& out)
+bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
 {
-        using GT = GlobalTransmissionCapacities;
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "local-values")
-            out = GT::enabledForAllLinks;
-        else if (v == "null-for-all-links")
-            out = GT::nullForAllLinks;
-        else if (v == "infinite-for-all-links")
-            out = GT::infiniteForAllLinks;
-        else if (v == "infinite-for-physical-links")
-            out = GT::infiniteForPhysicalLinks;
-        else if (v == "null-for-physical-links")
-            out = GT::nullForPhysicalLinks;
-        else
-            out = v.to<bool>() ? GT::enabledForAllLinks : GT::nullForAllLinks;
+    using GT = GlobalTransmissionCapacities;
+    CString<64, false> v = value;
+    v.trim();
+    v.toLower();
+    if (v == "local-values" || v == "true")
+    {
+        out = GT::enabledForAllLinks;
         return true;
+    }
+    else if (v == "null-for-all-links" || v == "false")
+    {
+        out = GT::nullForAllLinks;
+        return true;
+    }
+    else if (v == "infinite-for-all-links")
+    {
+        out = GT::infiniteForAllLinks;
+        return true;
+    }
+    else if (v == "infinite-for-physical-links")
+    {
+        out = GT::infiniteForPhysicalLinks;
+        return true;
+    }
+    else if (v == "null-for-physical-links")
+    {
+        out = GT::nullForPhysicalLinks;
+        return true;
+    }
+    return false;
 }
 
 } // namespace Data
