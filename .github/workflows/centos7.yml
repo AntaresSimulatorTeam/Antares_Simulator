@@ -128,7 +128,7 @@ jobs:
             rm ortools.zip
 
     - name: Download userguide
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: pdf-doc
         path: docs/ref_guides
@@ -178,12 +178,12 @@ jobs:
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.rpm
 

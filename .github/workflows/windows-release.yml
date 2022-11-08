@@ -77,7 +77,7 @@ jobs:
       shell: bash
 
     - name: Download userguide
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: pdf-doc
         path: docs/ref_guides
@@ -209,7 +209,7 @@ jobs:
 
     - name: Upload NSIS logs
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: NSISOutput.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log

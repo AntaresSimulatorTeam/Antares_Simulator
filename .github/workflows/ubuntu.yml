@@ -45,7 +45,7 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Export release flag
       id: release_flag
@@ -90,7 +90,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: 3.x
 
@@ -232,12 +232,12 @@ jobs:
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer archive upload push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
 
