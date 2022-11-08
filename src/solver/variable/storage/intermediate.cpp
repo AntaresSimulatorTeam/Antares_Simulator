@@ -246,7 +246,9 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
     uint i, j;
     double d;
     
-    // months
+    // months : we need daily values in order to compute monthly averages. Indeed,
+    // weekly values would be suitable for this : there are not necessarily an integer number
+    // of weeks in a month.
     uint indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
     for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
     {
@@ -263,11 +265,12 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
 
     // Year
     year = 0.;
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
     {
-        year += day[i];
+        year += week[i];
     }
-    year /= pRange->hour[Data::rangeCount];
+    year /= pRange->week[Data::rangeCount];
+
 }
 
 
