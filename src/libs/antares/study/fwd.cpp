@@ -455,7 +455,7 @@ bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmis
         out = GT::nullForAllLinks;
         return true;
     }
-    else if (v == "infinite-for-all-links")
+    else if (v == "infinite-for-all-links" || v == "infinite")
     {
         out = GT::infiniteForAllLinks;
         return true;
