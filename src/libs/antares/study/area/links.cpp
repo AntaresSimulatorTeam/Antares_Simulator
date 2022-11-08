@@ -268,6 +268,7 @@ static LocalTransmissionCapacities overrideTransmissionCapacities(
 void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
   GlobalTransmissionCapacities tncGlobal)
 {
+    bool isLinkVirtual;
     switch (assetType)
     {
     // Physical
@@ -275,15 +276,15 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     case atDC:
     case atGas:
     case atOther:
-        transmissionCapacities
-          = overrideTransmissionCapacities(tncGlobal, transmissionCapacities, false);
+        isLinkVirtual = false;
         break;
     // Virtual
     default:
-        transmissionCapacities
-          = overrideTransmissionCapacities(tncGlobal, transmissionCapacities, true);
+        isLinkVirtual = true;
         break;
     }
+    transmissionCapacities
+      = overrideTransmissionCapacities(tncGlobal, transmissionCapacities, isLinkVirtual);
 }
 
 bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
