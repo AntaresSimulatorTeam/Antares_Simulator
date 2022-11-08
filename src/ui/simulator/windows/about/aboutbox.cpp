@@ -923,12 +923,9 @@ AboutBox::AboutBox(wxWindow* parent) :
 
     // version
     wxString vstr;
-    vstr << wxT("Version ") << wxT(ANTARES_VERSION_STR);
-#if ANTARES_RC != 0
-    vstr << wxT("rc") << int(ANTARES_RC);
-#endif
-    vstr << wxT("  ") << (is64Bits ? wxT("[64bits] ") : wxT("[32bits] "));
-    vstr << wxT("compiled on " __DATE__ " with ");
+    vstr << wxT("Version ") << wxT(ANTARES_VERSION_STR) << wxT("  ")
+         << (is64Bits ? wxT("[64bits] ") : wxT("[32bits] "))
+         << wxT("compiled on " __DATE__ " with ");
 #define STRING2(x) #x
 #define STRING(x) STRING2(x)
 

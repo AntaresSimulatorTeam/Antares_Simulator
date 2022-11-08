@@ -16,9 +16,9 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, uint);
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, uint, Solver::IResultWriter::Ptr writer);
 
 // ======================
 // MPS files writing
@@ -28,7 +28,7 @@ class I_MPS_writer
 {
 public:
     I_MPS_writer() = default;
-    virtual void runIfNeeded() = 0;
+    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
 };
 
 class fullMPSwriter final : public I_MPS_writer
@@ -37,7 +37,7 @@ public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                   int currentOptimNumber,
                   uint thread_number);
-    void runIfNeeded();
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -49,7 +49,7 @@ class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
     fullOrToolsMPSwriter(MPSolver* solver, int currentOptimNumber, uint thread_number);
-    void runIfNeeded();
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
 
 private:
     MPSolver* solver_ = nullptr;
@@ -65,7 +65,7 @@ public:
                    uint thread_nb,
                    bool simu_1st_week);
 
-    void runIfNeeded();
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
@@ -77,7 +77,7 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
-    void runIfNeeded()
+    void runIfNeeded(Solver::IResultWriter::Ptr writer)
     {
         // Does nothing
     }
