@@ -94,6 +94,11 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
 
+    - name: ccache
+      uses: ./ccache-action
+      with:
+          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
+
     - name: Export release flag
       id: release_flag
       run: |

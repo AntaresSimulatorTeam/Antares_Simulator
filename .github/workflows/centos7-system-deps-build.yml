@@ -27,6 +27,7 @@ jobs:
            yum install -y cmake3 devtoolset-9
            yum install -y rh-git227-git
            yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
+           yum install -y ccache
                       
     
     - uses: nelonoel/branch-name@v1.0.1
