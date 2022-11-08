@@ -137,7 +137,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: _build/coverage/index.html
+          path: _build/coverage/
 
       - name: Run sonar-scanner
         env:
