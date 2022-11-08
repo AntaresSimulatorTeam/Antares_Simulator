@@ -51,6 +51,7 @@ src/ext/yuni/src/compiler-flags-*
 
 src/ext/v8
 
+src/tests/resources/batches/
 
 src/ui/simulator/resources/win32/manifest.antares-win32.manifest
 src/ui/simulator/ProxyConnexionParameters.txt
