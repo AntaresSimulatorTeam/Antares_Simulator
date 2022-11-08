@@ -432,7 +432,7 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
         if (value.to<bool>(copperPlate))
         {
             using LT = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities = (copperPlate) ? LT::infinite : LT::enabled;
+            link.transmissionCapacities = copperPlate ? LT::infinite : LT::enabled;
             return true;
         }
         return false;
