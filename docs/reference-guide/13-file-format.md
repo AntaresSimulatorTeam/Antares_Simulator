@@ -8,7 +8,7 @@ In file **settings/generaldata.ini**, in section `optimization`, change admissib
 
 * `local-values` (formerly `true`, default) uses the local capacity of all links
 * `null-for-all-links` (formerly `false`) sets the capacity of all links to 0
-* `infinite-for-all-links` (no change) sets the capacity of all links to +infinity
+* `infinite-for-all-links` (formerly `infinite`) sets the capacity of all links to +infinity
 * `null-for-physical-links` sets the capacity of physical links to 0, uses the local capacity for virtual links
 * `infinite-for-physical-links` sets the capacity of physical links to +infinity, uses the local capacity for virtual links
 
