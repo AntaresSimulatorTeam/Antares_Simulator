@@ -48,7 +48,6 @@ jobs:
           SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
         if: steps.sonarcloud-cache.outputs.cache-hit != 'true'
         run: |
-          ls -la /home/runner/work/Antares_Simulator/Antares_Simulator
           mkdir -p $HOME/.sonar
           curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
@@ -64,6 +63,7 @@ jobs:
 
       - name: Set build-wrapper and sonar-scanner paths
         run: |
+          ls -la /home/runner/work/Antares_Simulator/Antares_Simulator
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
           echo "$HOME/.sonar/sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-linux/bin" >> $GITHUB_PATH
 
