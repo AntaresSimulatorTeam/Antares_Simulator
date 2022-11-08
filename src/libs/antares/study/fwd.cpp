@@ -445,12 +445,12 @@ bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmis
     CString<64, false> v = value;
     v.trim();
     v.toLower();
-    if (v == "local-values" || v == "true")
+    if (v == "local-values" || v == "true" || v == "enabled")
     {
         out = GT::enabledForAllLinks;
         return true;
     }
-    else if (v == "null-for-all-links" || v == "false")
+    else if (v == "null-for-all-links" || v == "false" || v == "disabled")
     {
         out = GT::nullForAllLinks;
         return true;
