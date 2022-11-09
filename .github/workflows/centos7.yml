@@ -91,7 +91,8 @@ jobs:
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${GITHUB_REF_NAME}
+          echo $GITHUB_REF_NAME
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME
 
     - name: Export release flag
       id: release_flag
