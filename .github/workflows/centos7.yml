@@ -100,6 +100,8 @@ jobs:
 
     - name: Init submodule
       run: |
+          ls -la src/tests/resources/
+          ls -la src/
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
