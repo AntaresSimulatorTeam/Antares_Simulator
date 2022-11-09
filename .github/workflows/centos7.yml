@@ -34,7 +34,7 @@ jobs:
 
     - name: Get changed files
       id: changed-files
-      uses: tj-actions/changed-files@v1.1.2
+      uses: tj-actions/changed-files@v34
       with:
         files: |
           docker/centos7-basic-requirements
@@ -43,7 +43,7 @@ jobs:
     - name: Get branch name
       id: branch_name
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: tj-actions/branch-names@v5
+      uses: tj-actions/branch-names@v6
 
     - name: Read antares-deps version
       id: antares-deps-version
