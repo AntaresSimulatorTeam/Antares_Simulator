@@ -29,11 +29,9 @@ jobs:
            yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
 
 
-    - uses: nelonoel/branch-name@v1.0.1
-
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
     - name: Init submodule
       run: |
