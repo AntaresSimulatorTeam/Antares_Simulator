@@ -97,7 +97,7 @@ jobs:
     - name: Export release flag
       id: release_flag
       run: |
-        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
+        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
     - name: Init submodule
       run: |
