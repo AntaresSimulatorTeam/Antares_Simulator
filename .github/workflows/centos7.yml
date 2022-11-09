@@ -93,6 +93,8 @@ jobs:
       run: |
           echo $GITHUB_REF_NAME
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME
+          ls -la $GITHUB_REPOSITORY
+          sleep 10
 
     - name: Export release flag
       id: release_flag
