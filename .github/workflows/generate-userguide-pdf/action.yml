@@ -18,5 +18,5 @@ runs:
         bash create_pdf_doc.sh $PDF_NAME
         mv antaressimulatoruserguide.pdf $PDF_NAME
         PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME
-        echo "{pdf-path}={$PDF_PATH}" >> $GITHUB_OUTPUT
-        echo "{pdf-name}={$PDF_NAME}" >> $GITHUB_OUTPUT
+        echo "pdf-path=$PDF_PATH" >> $GITHUB_OUTPUT
+        echo "pdf-name=$PDF_NAME" >> $GITHUB_OUTPUT
