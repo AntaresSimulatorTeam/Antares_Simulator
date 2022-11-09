@@ -91,11 +91,7 @@ jobs:
 
     - name: Checkout
       run: |
-          echo $GITHUB_REF_NAME
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME
-          ls -la Antares_Simulator
-          ls -la Antares_Simulator/src
-          ls -la Antares_Simulator/src/tests
 
     - name: Export release flag
       id: release_flag
@@ -104,8 +100,7 @@ jobs:
 
     - name: Init submodule
       run: |
-          ls -la src/tests/resources/
-          ls -la src/
+          ls -la Antares_Simulator/src/tests/resources/
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
