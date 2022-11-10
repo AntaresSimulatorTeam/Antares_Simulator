@@ -422,8 +422,8 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
         bool copperPlate;
         if (value.to<bool>(copperPlate))
         {
-            using LT = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities = copperPlate ? LT::infinite : LT::enabled;
+            using LocalNTCtype = Data::LocalTransmissionCapacities;
+            link.transmissionCapacities = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
             return true;
         }
         return false;
@@ -486,16 +486,16 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
     }
     if (key == "transmission-capacities")
     {
-        using LT = Data::LocalTransmissionCapacities;
+        using LocalNTCtype = Data::LocalTransmissionCapacities;
         if (value == "enabled")
-            link.transmissionCapacities = LT::enabled;
+            link.transmissionCapacities = LocalNTCtype::enabled;
         else if (value == "infinite")
-            link.transmissionCapacities = LT::infinite;
+            link.transmissionCapacities = LocalNTCtype::infinite;
         else if (value == "ignore")
-            link.transmissionCapacities = LT::null;
+            link.transmissionCapacities = LocalNTCtype::null;
         else
         {
-            link.transmissionCapacities = LT::null;
+            link.transmissionCapacities = LocalNTCtype::null;
             return false;
         }
         return true;

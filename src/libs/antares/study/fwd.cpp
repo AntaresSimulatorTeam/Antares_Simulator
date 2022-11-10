@@ -415,16 +415,16 @@ std::string GlobalTransmissionCapacitiesToString(
 {
     switch (transmissionCapacities)
     {
-        using GT = GlobalTransmissionCapacities;
-    case GT::localValuesForAllLinks:
+        using GlobalNTCtype = GlobalTransmissionCapacities;
+    case GlobalNTCtype::localValuesForAllLinks:
         return "local-values";
-    case GT::nullForAllLinks:
+    case GlobalNTCtype::nullForAllLinks:
         return "null-for-all-links";
-    case GT::infiniteForAllLinks:
+    case GlobalNTCtype::infiniteForAllLinks:
         return "infinite-for-all-links";
-    case GT::infiniteForPhysicalLinks:
+    case GlobalNTCtype::infiniteForPhysicalLinks:
         return "infinite-for-physical-links";
-    case GT::nullForPhysicalLinks:
+    case GlobalNTCtype::nullForPhysicalLinks:
         return "null-for-physical-links";
     default:
         return "";
@@ -441,33 +441,33 @@ std::string GlobalTransmissionCapacitiesToString_Display(
 
 bool stringToGlobalTransmissionCapacities(const AnyString& value, GlobalTransmissionCapacities& out)
 {
-    using GT = GlobalTransmissionCapacities;
+    using GlobalNTCtype = GlobalTransmissionCapacities;
     CString<64, false> v = value;
     v.trim();
     v.toLower();
     if (v == "local-values" || v == "true" || v == "enabled")
     {
-        out = GT::localValuesForAllLinks;
+        out = GlobalNTCtype::localValuesForAllLinks;
         return true;
     }
     else if (v == "null-for-all-links" || v == "false" || v == "disabled")
     {
-        out = GT::nullForAllLinks;
+        out = GlobalNTCtype::nullForAllLinks;
         return true;
     }
     else if (v == "infinite-for-all-links" || v == "infinite")
     {
-        out = GT::infiniteForAllLinks;
+        out = GlobalNTCtype::infiniteForAllLinks;
         return true;
     }
     else if (v == "infinite-for-physical-links")
     {
-        out = GT::infiniteForPhysicalLinks;
+        out = GlobalNTCtype::infiniteForPhysicalLinks;
         return true;
     }
     else if (v == "null-for-physical-links")
     {
-        out = GT::nullForPhysicalLinks;
+        out = GlobalNTCtype::nullForPhysicalLinks;
         return true;
     }
     return false;
