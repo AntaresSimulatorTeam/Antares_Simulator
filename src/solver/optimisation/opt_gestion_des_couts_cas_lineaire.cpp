@@ -157,10 +157,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
 
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-                if (study.runtime->hydroCostByAreaShouldBeInfinite[Pays])
-                    ProblemeAResoudre->CoutLineaire[Var] = study.runtime->globalMaximumCost;
-#endif
 
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo
