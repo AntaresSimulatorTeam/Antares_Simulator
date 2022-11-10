@@ -342,14 +342,12 @@ Optimization::Optimization(wxWindow* parent) :
         label = Component::CreateLabel(this, wxT("Export mps"));
 
         const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
-        button = new Component::Button( this, 
-                                        mpsExportStatusToString(defaultValue), 
-                                        mpsExportIcon(defaultValue));
+        button = new Component::Button(
+          this, mpsExportStatusToString(defaultValue), mpsExportIcon(defaultValue));
 
         button->SetBackgroundColour(bgColor);
         button->menu(true);
-        onPopup.bind(this,
-                     &Optimization::onPopupMenuExportMPSstatus);
+        onPopup.bind(this, &Optimization::onPopupMenuExportMPSstatus);
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -722,22 +720,21 @@ void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 
 void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
-    using GTransmission = Data::GlobalTransmissionCapacities;
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::localValuesForAllLinks>(
-      menu);
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::nullForAllLinks>(menu);
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::infiniteForAllLinks>(menu);
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::nullForPhysicalLinks>(menu);
-    this->createGlobalTransmissionCapacitiesItemIntoMenu<GTransmission::infiniteForPhysicalLinks>(
-      menu);
+    using GT = Data::GlobalTransmissionCapacities;
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::localValuesForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForPhysicalLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForPhysicalLinks>(menu);
 }
 
 void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
 {
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::NO_EXPORT>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_FIRST_OPIM>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_SECOND_OPIM>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_BOTH_OPTIMS>(menu);
+    using MPS = Data::mpsExportStatus;
+    createMPSexportItemIntoMenu<MPS::NO_EXPORT>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_FIRST_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_SECOND_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_BOTH_OPTIMS>(menu);
 }
 
 void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
