@@ -148,29 +148,11 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
         std::vector<std::vector<double>> temp(countInt, std::vector<double>(DAYS_PER_YEAR));
 
-        uint daysPerMonthDecals[12];
-        for (int oldMonth = 0; oldMonth < 12; oldMonth++)
-        {
-            int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-            daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
-            if (study.parameters.leapYear)
-            {
-                if (realMonth == 1) // February
-                {
-                    daysPerMonthDecals[oldMonth]++;
-                }
-                if (oldMonth == 11) // Last month of the year
-                {
-                    daysPerMonthDecals[oldMonth]--;
-                }
-            }
-        }
         uint firstDayMonth[13];
-        firstDayMonth[0] = 0;
-        for (int i = 1; i < 13; i++)
-        {
-            firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
-        }
+        uint daysPerMonthDecals[12];
+
+        AdjustMonth(study, firstDayMonth, daysPerMonthDecals);
+
         for (int x = 0; x < countInt; x++)
         {
             auto& col = storage[x];
@@ -319,6 +301,32 @@ void DataSeriesHydro::reset()
 uint64 DataSeriesHydro::memoryUsage() const
 {
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
+}
+
+void DataSeriesHydro::AdjustMonth(Study& study, uint(& firstDayMonth)[13], uint(& daysPerMonthDecals)[12])
+{
+    for (int oldMonth = 0; oldMonth < 12; oldMonth++)
+    {
+        int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
+        daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
+        if (study.parameters.leapYear)
+        {
+            if (realMonth == 1) // February
+            {
+                daysPerMonthDecals[oldMonth]++;
+            }
+            if (oldMonth == 11) // Last month of the year
+            {
+                daysPerMonthDecals[oldMonth]--;
+            }
+        }
+    }
+
+    firstDayMonth[0] = 0;
+    for (int i = 1; i < 13; i++)
+    {
+        firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
+    }
 }
 
 } // namespace Data

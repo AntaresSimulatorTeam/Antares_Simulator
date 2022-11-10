@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_CONSTANTS_H__
 
 #include "xpansion.h"
+#include <array>
 
 /*! Name of the app to use into logs */
 #define LOG_APPLICATION_NAME "antares"
@@ -40,7 +41,7 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+static const std::array<uint, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 /*! Max number of MC years */
 constexpr uint MAX_NB_MC_YEARS = 50000;

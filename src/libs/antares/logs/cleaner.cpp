@@ -35,8 +35,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-// days per month, immutable values for version prior to 3.9 for sure
-// these values are not related in any cases to an Antares study
 
 static inline bool IsLeapYear(uint year)
 {

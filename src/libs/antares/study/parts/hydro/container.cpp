@@ -146,9 +146,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                                       Matrix<>::optFixedSize | Matrix<>::optImmediate,
                                       &study.dataBuffer))
             {
-                // days per month, immutable values for version prior to 3.9 for sure
-                // these values was hard-coded before 3.9
-
                 uint dayYear = 0;
                 for (uint m = 0; m != 12; ++m)
                 {
@@ -285,29 +282,11 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   && ret;
 
             double temp[3][DAYS_PER_YEAR];
-            uint daysPerMonthDecals[12];
-            for (int oldMonth = 0; oldMonth < 12; oldMonth++)
-            {
-                int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-                daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
-                if (study.parameters.leapYear)
-                {
-                    if (realMonth == 1) // February
-                    {
-                        daysPerMonthDecals[oldMonth]++;
-                    }
-                    if (oldMonth == 11) // Last month of the year
-                    {
-                        daysPerMonthDecals[oldMonth]--;
-                    }
-                }
-            }
             uint firstDayMonth[13];
-            firstDayMonth[0] = 0;
-            for (int i = 1; i < 13; i++)
-            {
-                firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
-            }
+            uint daysPerMonthDecals[12];
+
+            DataSeriesHydro::AdjustMonth(study, firstDayMonth, daysPerMonthDecals);
+
             for (int x = area.hydro.minimum; x <= area.hydro.maximum; x++)
             {
                 auto& col = area.hydro.reservoirLevel[x];
