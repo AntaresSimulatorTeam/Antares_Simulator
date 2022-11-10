@@ -35,7 +35,6 @@
 #include "../filter.h"
 #include "constants.h"
 #include "../fwd.h"
-#include <antares/study/links/property-links-helper.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -423,7 +422,8 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
         if (value.to<bool>(copperPlate))
         {
             using LocalNTCtype = Data::LocalTransmissionCapacities;
-            link.transmissionCapacities = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
+            link.transmissionCapacities
+              = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
             return true;
         }
         return false;

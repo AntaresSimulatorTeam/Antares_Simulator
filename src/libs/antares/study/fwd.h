@@ -163,6 +163,8 @@ enum class LocalTransmissionCapacities
     infinite
 };
 
+std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc);
+
 /*!
 ** \brief Asset Type mode
 */
@@ -181,6 +183,8 @@ enum AssetType
 
 }; // enum AssetType
 
+std::string assetTypeToString(const AssetType& assetType);
+
 /*!
 ** \brief Style Type mode
 */
@@ -196,6 +200,8 @@ enum StyleType
     stDotDash,
 
 }; // enum StyleType
+
+std::string styleToString(const StyleType& style);
 
 /*!
 ** \brief Link Type mode

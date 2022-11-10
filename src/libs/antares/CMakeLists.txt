@@ -183,11 +183,6 @@ set(SRC_AREAS
 	)
 source_group("study\\area" FILES ${SRC_AREAS})
 
-set(SRC_LINKS
-	study/links/property-links-helper.h
-)
-source_group("study\\links" FILES ${SRC_LINKS})
-
 
 set(SRC_STUDY_AREA_UI
 	study/area/ui.h
@@ -534,7 +529,6 @@ add_library(libantares-core
 	${SRC_MATRIX}
 	${SRC_BENCHMARKING}
 	${SRC_AREAS}
-	${SRC_LINKS}
 	${SRC_XCAST}
 	${SRC_STUDY_AREA_UI}
 	${SRC_STUDY_ACTIONS}
