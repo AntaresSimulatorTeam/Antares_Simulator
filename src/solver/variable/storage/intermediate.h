@@ -93,16 +93,12 @@ public:
     */
     void computeStatisticsAdequacyForTheCurrentYear();
 
-    /*!
-    ** \brief Compute daily, weekly, monthly and yearly averages for the current year
-    */
-    void computeAVGstatisticsForCurrentYear();
-
-    // From daily, compute weekly, monthly and yearly averages for the current year
-    void computeAnnualAveragesFromDailyValues();
-
-    // From weekly, compute monthly and yearly averages for the current year
-    void computeAnnualAveragesFromWeeklyValues();
+    // Compute averages for the current year : daily, weekly, monthly and yearly averages
+    void computeAveragesForCurrentYear();
+    void computeDailyAveragesForCurrentYear();
+    void computeWeeklyAveragesForCurrentYear();
+    void computeMonthlyAveragesForCurrentYear();
+    void computeYearlyAveragesForCurrentYear();
 
     /*!
     ** \brief Compute probabilities for the current year

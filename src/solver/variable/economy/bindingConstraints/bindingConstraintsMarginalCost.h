@@ -193,13 +193,16 @@ public:
         switch (associatedBC_->type)
         {
         case BindingConstraint::typeHourly:
-            pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYear();
             break;
         case BindingConstraint::typeDaily:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromDailyValues();
+            pValuesForTheCurrentYear[numSpace].computeWeeklyAveragesForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeMonthlyAveragesForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeYearlyAveragesForCurrentYear();
             break;
         case BindingConstraint::typeWeekly:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromWeeklyValues();
+            pValuesForTheCurrentYear[numSpace].computeMonthlyAveragesForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeYearlyAveragesForCurrentYear();
             break;
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:

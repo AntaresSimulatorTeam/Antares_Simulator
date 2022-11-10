@@ -136,7 +136,7 @@ struct VariableAccessor
             {
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
-                    intermediateValues[i].computeAVGstatisticsForCurrentYear();
+                    intermediateValues[i].computeAveragesForCurrentYear();
                 else
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
             }
@@ -333,7 +333,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
                     // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-                    intermediateValues[i].computeAVGstatisticsForCurrentYear();
+                    intermediateValues[i].computeAveragesForCurrentYear();
                 else
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
             }
@@ -529,7 +529,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
             if (VCardT::spatialAggregatePostProcessing
                 == (int)Category::spatialAggregatePostProcessingPrice)
                 // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-                intermediateValues.computeAVGstatisticsForCurrentYear();
+                intermediateValues.computeAveragesForCurrentYear();
             else
                 intermediateValues.computeStatisticsForTheCurrentYear();
         }
