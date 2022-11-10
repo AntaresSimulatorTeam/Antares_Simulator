@@ -182,8 +182,6 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
 
 void IntermediateValues::computeAVGstatisticsForCurrentYear()
 {
-    uint i;
-    uint j;
     double d;
 
     year = 0.;
@@ -199,11 +197,11 @@ void IntermediateValues::computeAVGstatisticsForCurrentYear()
     // Ratio
     double ratioDay = 1. / maxHoursInADay;
 
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    for (uint i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
     {
         d = 0.;
         // One day
-        for (j = 0; j != maxHoursInADay; ++j)
+        for (uint j = 0; j != maxHoursInADay; ++j)
         {
             d += hour[indx];
             ++indx;
@@ -213,21 +211,19 @@ void IntermediateValues::computeAVGstatisticsForCurrentYear()
     }
 
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
-        week[i] = 0.;
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    for (uint i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
         week[calendar->days[i].week] += day[i];
-    for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
+    for (uint i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
         week[i] /= pRuntimeInfo->simulationDaysPerWeek[i];
 
     // x(m)
     // indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
     indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
-    for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
+    for (uint i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
     {
         d = 0.;
         uint daysInMonth = calendar->months[i].days;
-        for (j = 0; j != daysInMonth; ++j)
+        for (uint j = 0; j != daysInMonth; ++j)
         {
             assert(indx < 7 * 53 + 1);
             d += day[indx];
@@ -276,14 +272,10 @@ void IntermediateValues::computeAnnualAveragesFromWeeklyValues()
 
 void IntermediateValues::computeAnnualAveragesFromDailyValues()
 {
-    uint i;
-
     // weeks
-    for (i = 0; i != maxWeeksInAYear; ++i)
-        week[i] = 0.;
-    for (i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
+    for (uint i = pRange->day[Data::rangeBegin]; i <= pRange->day[Data::rangeEnd]; ++i)
         week[calendar->days[i].week] += day[i];
-    for (i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
+    for (uint i = pRange->week[Data::rangeBegin]; i <= pRange->week[Data::rangeEnd]; ++i)
         week[i] /= pRuntimeInfo->simulationDaysPerWeek[i];
 
     computeAnnualAveragesFromWeeklyValues();
