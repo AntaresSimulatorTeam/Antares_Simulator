@@ -148,7 +148,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
             {
                 // days per month, immutable values for version prior to 3.9 for sure
                 // these values was hard-coded before 3.9
-                static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
                 uint dayYear = 0;
                 for (uint m = 0; m != 12; ++m)
@@ -286,7 +285,6 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   && ret;
 
             double temp[3][DAYS_PER_YEAR];
-            static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
             uint daysPerMonthDecals[12];
             for (int oldMonth = 0; oldMonth < 12; oldMonth++)
             {

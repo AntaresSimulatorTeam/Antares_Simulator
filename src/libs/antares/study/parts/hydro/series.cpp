@@ -148,7 +148,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
 
         std::vector<std::vector<double>> temp(countInt, std::vector<double>(DAYS_PER_YEAR));
 
-        static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        /* static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}; */
         uint daysPerMonthDecals[12];
         for (int oldMonth = 0; oldMonth < 12; oldMonth++)
         {

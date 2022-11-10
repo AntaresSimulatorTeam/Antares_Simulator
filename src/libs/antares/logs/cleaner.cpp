@@ -26,6 +26,7 @@
 */
 
 #include "cleaner.h"
+#include "../constants.h"
 #include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
@@ -36,7 +37,6 @@ namespace Antares
 {
 // days per month, immutable values for version prior to 3.9 for sure
 // these values are not related in any cases to an Antares study
-static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 static inline bool IsLeapYear(uint year)
 {
