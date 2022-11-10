@@ -240,17 +240,8 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
 
 bool AreaLink::isLinkPhysical() const
 {
-    switch (assetType)
-    {
-    // Physical
-    case atAC:
-    case atDC:
-    case atGas:
-    case atOther:
-        return true;
-    default:
-        return false;
-    }
+    // All link types are physical, except arVirt
+    return assetType != atVirt;
 }
 
 // Handle all trivial cases here
