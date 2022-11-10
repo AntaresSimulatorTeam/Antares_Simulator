@@ -185,7 +185,7 @@ bool Summary::cellValue(int x, int y, const String& value)
         if (pTmp == "enabled" || pTmp == "e")
             link->transmissionCapacities = LocalTransmissionCapacities::enabled;
         else if (pTmp == "infinite" || pTmp == "set to infinite" || pTmp == "inf" || pTmp == "i")
-            link->transmissionCapacities = LocalTransmissionCapacities::enabled;
+            link->transmissionCapacities = LocalTransmissionCapacities::infinite;
         else if (pTmp == "0" || pTmp == "zero" || pTmp == "null" || pTmp == "set to null"
                  || pTmp == "n")
             link->transmissionCapacities = LocalTransmissionCapacities::null;
