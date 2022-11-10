@@ -276,11 +276,7 @@ StartupWizard::StartupWizard(wxFrame* parent) :
         hz2->Add(welcome, 0, wxALIGN_CENTER_VERTICAL | wxALL | wxALIGN_CENTER_HORIZONTAL);
 
         wxString versSTR;
-        versSTR << wxT(ANTARES_VERSION_STR)
-#if ANTARES_RC != 0
-                << wxT("rc") << int(ANTARES_RC)
-#endif
-          ;
+        versSTR << wxT(ANTARES_VERSION_STR);
         auto* version = Component::CreateLabel(this, versSTR, false, false, -1);
         version->SetForegroundColour(wxColour(161, 166, 180));
         hz2->Add(version, 0, wxALIGN_CENTER_VERTICAL | wxALL | wxALIGN_CENTER_HORIZONTAL);

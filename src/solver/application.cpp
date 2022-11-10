@@ -5,10 +5,14 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/version.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
+
+#include <antares/exception/InitializationError.hpp>
 
 #include <yuni/io/io.h>
 #include <yuni/datetime/timestamp.h>
@@ -34,15 +38,6 @@ void checkStudyVersion(const AnyString& optStudyFolder)
                                         VersionToCStr((Version)versionLatest));
         }
     }
-}
-
-void printVersion()
-{
-#ifdef GIT_SHA1_SHORT_STRING
-    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
-#else
-    std::cout << ANTARES_VERSION_STR << std::endl;
-#endif
 }
 
 void printSolvers()
@@ -222,11 +217,11 @@ void Application::prepare(int argc, char* argv[])
 
     // Parse the command line arguments
     if (!parser->operator()(argc, argv))
-        throw Error::CommandLineArguments(parser->errors());
+        throw Antares::Error::CommandLineArguments(parser->errors());
 
     if (options.displayVersion)
     {
-        printVersion();
+        PrintVersionToStdCout();
         return;
     }
 
@@ -248,24 +243,13 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " ("
                       << GIT_SHA1_SHORT_STRING << ")";
 #else
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
     logs.info();
-
-#ifdef ANTARES_SWAP_SUPPORT
-    // Changing the swap folder
-    if (!pSettings.swap.empty())
-    {
-        logs.info() << "  memory pool: scratch folder:" << pSettings.swap;
-        Antares::memory.cacheFolder(pSettings.swap);
-    }
-    else
-        logs.info() << "  memory pool: scratch folder:" << Antares::memory.cacheFolder();
-#endif
 
     // Initialize the main structures for the simulation
     // Logs
@@ -311,12 +295,9 @@ void Application::prepare(int argc, char* argv[])
 
     if (pSettings.displayProgression)
     {
-        pStudy->buffer.clear() << pStudy->folderOutput << Yuni::IO::Separator << "about-the-study"
-                               << Yuni::IO::Separator << "map";
-        if (!pStudy->progression.saveToFile(pStudy->buffer))
-        {
-            throw Error::WritingProgressFile(pStudy->buffer);
-        }
+        auto& filename = pStudy->buffer;
+        filename.clear() << "about-the-study" << Yuni::IO::Separator << "map";
+        pStudy->progression.saveToFile(filename, pStudy->resultWriter);
         pStudy->progression.start();
     }
     else
@@ -369,21 +350,35 @@ void Application::execute()
     memoryReport.start();
 
     pStudy->computePThetaInfForThermalClusters();
-
-    // Run the simulation
-    switch (pStudy->runtime->mode)
+    try
     {
-    case Data::stdmEconomy:
-        runSimulationInEconomicMode();
-        break;
-    case Data::stdmAdequacy:
-        runSimulationInAdequacyMode();
-        break;
-    case Data::stdmAdequacyDraft:
-        runSimulationInAdequacyDraftMode();
-        break;
-    default:
-        break;
+        // Run the simulation
+        switch (pStudy->runtime->mode)
+        {
+        case Data::stdmEconomy:
+            runSimulationInEconomicMode();
+            break;
+        case Data::stdmAdequacy:
+            runSimulationInAdequacyMode();
+            break;
+        case Data::stdmAdequacyDraft:
+            runSimulationInAdequacyDraftMode();
+            break;
+        default:
+            break;
+        }
+    }
+    // TODO : make an interface class for ISimulation, check writer & queue before
+    // runSimulationIn<XXX>Mode()
+    catch (Solver::Initialization::Error::NoResultWriter e)
+    {
+        logs.error() << "No result writer";
+        AntaresSolverEmergencyShutdown(); // no return
+    }
+    catch (Solver::Initialization::Error::NoQueueService e)
+    {
+        logs.error() << "No queue service";
+        AntaresSolverEmergencyShutdown(); // no return
     }
 
     // Importing Time-Series if asked
@@ -432,12 +427,9 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
 
-    // Init the global variable for backward compatibility
-    AppelEnModeSimulateur = OUI_ANTARES;
-
     // Name of the simulation
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Force some options
     options.prepareOutput = !pSettings.noOutput;
@@ -467,9 +459,19 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     // no output ?
     study.parameters.noOutput = pSettings.noOutput;
 
+    if (pSettings.forceZipOutput)
+    {
+        pParameters->resultFormat = Antares::Data::zipArchive;
+    }
+    // Initialize the result writer
+    study.prepareWriter(&pDurationCollector);
+
+    // Save about-the-study files (comments, notes, etc.)
+    pStudy->saveAboutTheStudy();
+
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
-        study.simulation.name = pSettings.simulationName;
+        study.simulationComments.name = pSettings.simulationName;
 
     // Removing all callbacks, which are no longer needed
     logs.callback.clear();
@@ -516,23 +518,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 
         // comments
         {
-            study.buffer.clear() << study.folderOutput << Yuni::IO::Separator
-                                 << "simulation-comments.txt";
+            study.buffer.clear() << "simulation-comments.txt";
 
             if (!pSettings.commentFile.empty())
             {
-                Yuni::IO::Directory::Create(study.folderOutput);
-                if (Yuni::IO::errNone
-                    != Yuni::IO::File::Copy(pSettings.commentFile, study.buffer, true))
-                    logs.error() << "impossible to copy `" << pSettings.commentFile << "` to `"
-                                 << study.buffer << '`';
+                auto writer = pStudy->resultWriter;
+                if (writer)
+                    writer->addEntryFromFile(study.buffer.c_str(), pSettings.commentFile.c_str());
+
                 pSettings.commentFile.clear();
                 pSettings.commentFile.shrink();
-            }
-            else
-            {
-                if (!Yuni::IO::File::CreateEmptyFile(study.buffer))
-                    logs.error() << study.buffer << ": impossible to overwrite its content";
             }
         }
     }
@@ -560,6 +555,11 @@ void Application::writeExectutionInfo()
     pTotalTimer.stop();
     pDurationCollector.addDuration("total", pTotalTimer.get_duration());
 
+    auto writer = pStudy->resultWriter;
+    // If no writer is available, we can't write
+    if (!writer)
+        return;
+
     // Info collectors : they retrieve data from study and simulation
     Benchmarking::StudyInfoCollector study_info_collector(*pStudy);
     Benchmarking::SimulationInfoCollector simulation_info_collector(pOptimizationInfo);
@@ -571,10 +571,9 @@ void Application::writeExectutionInfo()
     simulation_info_collector.toFileContent(file_content);
 
     // Flush previous info into a record file
-    Yuni::String filePath;
-    filePath.clear() << pStudy->folderOutput << Yuni::IO::Separator << "execution_info.ini";
-    Benchmarking::iniFilewriter ini_file_writer(filePath, file_content);
-    ini_file_writer.flush();
+    const std::string exec_info_path = "execution_info.ini";
+    std::string content = file_content.saveToBufferAsIni();
+    writer->addEntryFromBuffer(exec_info_path, content);
 }
 
 Application::~Application()
@@ -598,9 +597,6 @@ Application::~Application()
         pStudy->clear();
         pStudy = nullptr;
 
-        // only used if a study exists
-        // Removing all unused spwa files
-        Antares::memory.removeAllUnusedSwapFiles();
         LocalPolicy::Close();
     }
 }

@@ -58,31 +58,15 @@ set(SRC_MANAGEMENT
 
 
 
+add_library(libantares-solver-hydro
+	${SRC_EXT_SOLVER_H2O_DAILY}
+	${SRC_EXT_SOLVER_H2O_MONTHLY}
+	${SRC_EXT_SOLVER_H2O2_DAILY}
+	${SRC_MANAGEMENT} )
+
+target_link_libraries(libantares-solver-hydro
+	PRIVATE
+	libmodel_antares
+	libantares-solver-variable PUBLIC sirius_solver)
 
 
-
-macro(add_solver_hydro  suffix)
-
-	add_library(libantares-solver-hydro${suffix}
-		${SRC_EXT_SOLVER_H2O_DAILY}
-		${SRC_EXT_SOLVER_H2O_MONTHLY}
-		${SRC_EXT_SOLVER_H2O2_DAILY}
-		${SRC_MANAGEMENT} )
-
-	target_link_libraries(libantares-solver-hydro${suffix}
-		PRIVATE
-		libmodel_antares${suffix} 
-		libantares-solver-variable${suffix} PUBLIC sirius_solver)
-
-
-endmacro()
-
-
-add_solver_hydro("")
-
-if(BUILD_SWAP)
-    
-    add_solver_hydro("-swap")
-    set_target_properties(libantares-solver-hydro-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-
-endif()

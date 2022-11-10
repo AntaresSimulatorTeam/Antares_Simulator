@@ -42,11 +42,6 @@ class DataSeriesCommon
 public:
     void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
-    /*!
-    ** \brief Flush memory to swap file
-    */
-    void flush();
-
     bool invalidate(bool reload = false) const;
 
     void markAsModified() const;

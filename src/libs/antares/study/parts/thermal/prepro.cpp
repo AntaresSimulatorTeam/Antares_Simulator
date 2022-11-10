@@ -106,7 +106,6 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     if (study.header.version < 350)
     {
         ret = LoadPreproThermal350(study, data, folder) and ret;
-        data.flush();
     }
     else
     {
@@ -139,7 +138,6 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                 ret = false;
             // the structure must be marked as modified
             data.markAsModified();
-            data.flush();
         }
         else
         {
@@ -240,9 +238,6 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                 break;
             }
         }
-
-        // memory swapping
-        data.flush();
     }
 
     return ret;
@@ -325,9 +320,7 @@ bool PreproThermal::normalizeAndCheckNPO()
         logs.info() << "  NPO max for the thermal cluster '" << parentArea->id
                     << "' has been normalized";
 
-    // modified and flushed
     data.markAsModified();
-    data.flush();
     return (0 == errors);
 }
 

@@ -311,11 +311,6 @@ void SIM_InitialisationResultats()
             interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
         }
     }
-
-    for (uint i = 0; i < study.runtime->bindingConstraintCount; i++)
-    {
-        memset(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-    }
 }
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
@@ -367,8 +362,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = NON_ANTARES;
-
-        lnk->flush();
     }
 
     if (studyruntime.bindingConstraintCount)
@@ -421,9 +414,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 logs.error() << "internal error. Please submit a full bug report";
                 break;
             }
-            }
-            bc.bounds.flush();
-        }
+            }        }
     }
 
     int weekDayIndex[8];
@@ -1017,9 +1008,4 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,
                nbPays * sizeof(double));
     }
-
-#ifdef ANTARES_SWAP_SUPPORT
-
-    Antares::memory.flushAll();
-#endif
 }

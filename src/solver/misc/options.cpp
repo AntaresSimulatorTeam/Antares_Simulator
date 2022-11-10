@@ -42,7 +42,6 @@
 
 #include "../../config.h"
 
-#include <antares/memory/memory.h>
 #include <antares/emergency.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/exception/LoadingError.hpp>
@@ -89,7 +88,8 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --economy
     parser->addFlag(options.forceEconomy, ' ', "economy", "Force the simulation in economy mode");
     // --adequacy
-    parser->addFlag(options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
+    parser->addFlag(
+      options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
     // --draft
     parser->addFlag(
       options.forceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
@@ -98,34 +98,36 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
       options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
     // --force-parallel
     parser->add(options.maxNbYearsInParallel,
-               ' ',
-               "force-parallel",
-               "Override the max number of years computed simultaneously");
+                ' ',
+                "force-parallel",
+                "Override the max number of years computed simultaneously");
 
     // add option for ortools use
     // --use-ortools
-    parser->addFlag(options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
+    parser->addFlag(
+      options.ortoolsUsed, ' ', "use-ortools", "Use ortools library to launch solver");
 
     //--ortools-solver
     parser->add(options.ortoolsSolver,
-               ' ',
-               "ortools-solver",
-               "Ortools solver used for simulation (only available with use-ortools "
-               "option)\nAvailable solver list : "
-                 + availableOrToolsSolversString());
+                ' ',
+                "ortools-solver",
+                "Ortools solver used for simulation (only available with use-ortools "
+                "option)\nAvailable solver list : "
+                  + availableOrToolsSolversString());
 
     parser->addParagraph("\nParameters");
     // --name
-    parser->add(settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
+    parser->add(
+      settings.simulationName, 'n', "name", "Set the name of the new simulation to VALUE");
     // --generators-only
     parser->addFlag(
       settings.tsGeneratorsOnly, 'g', "generators-only", "Run the time-series generators only");
 
     // --comment-file
     parser->add(settings.commentFile,
-               'c',
-               "comment-file",
-               "Specify the file to copy as comments of the simulation");
+                'c',
+                "comment-file",
+                "Specify the file to copy as comments of the simulation");
     // --force
     parser->addFlag(settings.ignoreWarningsErrors, 'f', "force", "Ignore all warnings at loading");
     // --no-output
@@ -135,52 +137,46 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     parser->add(options.nbYears, 'y', "year", "Override the number of MC years");
     // --year-by-year
     parser->addFlag(options.forceYearByYear,
-                   ' ',
-                   "year-by-year",
-                   "Force the writing the result output for each year (economy only)");
+                    ' ',
+                    "year-by-year",
+                    "Force the writing the result output for each year (economy only)");
     // --derated
     parser->addFlag(options.forceDerated, ' ', "derated", "Force the derated mode");
+
+    // --output-force-zip
+    parser->addFlag(settings.forceZipOutput,
+                    'z',
+                    "zip-output",
+                    "Force the write output into a single zip archive");
 
     parser->addParagraph("\nOptimization");
 
     // --optimization-range
     parser->addFlag(settings.simplexOptimRange,
-                   ' ',
-                   "optimization-range",
-                   "Force the simplex optimization range ('day' or 'week')");
+                    ' ',
+                    "optimization-range",
+                    "Force the simplex optimization range ('day' or 'week')");
 
     // --no-constraints
     parser->addFlag(settings.ignoreConstraints, ' ', "no-constraints", "Ignore all constraints");
 
     // --no-ts-import
     parser->addFlag(options.noTimeseriesImportIntoInput,
-                   ' ',
-                   "no-ts-import",
-                   "Do not import timeseries into the input folder. This option might be useful "
-                   "for running old studies without upgrading them");
+                    ' ',
+                    "no-ts-import",
+                    "Do not import timeseries into the input folder. This option might be useful "
+                    "for running old studies without upgrading them");
 
     // --mps-export
     parser->addFlag(options.mpsToExport,
-                   ' ',
-                   "mps-export",
-                   "Export in the mps format the optimization problems.");
+                    ' ',
+                    "mps-export",
+                    "Export in the mps format the optimization problems.");
 
     parser->addParagraph("\nMisc.");
     // --progress
     parser->addFlag(
       settings.displayProgression, ' ', "progress", "Display the progress of each task");
-    // --swap
-    parser->add(settings.swap,
-               ' ',
-               "swap-folder",
-#ifdef ANTARES_SWAP_SUPPORT
-               String("Folder where the swap files will be written. (default: '")
-                 << Antares::memory.cacheFolder() << "')"
-#else
-               "Folder where the swap files will be written. This option has no effect (swap files "
-               "are only available for 'antares-solver-swap')"
-#endif
-    );
 
     // --pid
     parser->add(settings.PID, 'p', "pid", "Specify the file where to write the process ID");
@@ -258,6 +254,12 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
         else
             throw Error::WritingPID(optPID);
     }
+
+    // no-output and force-zip-output
+    if (settings.noOutput && settings.forceZipOutput)
+    {
+        throw Error::IncompatibleOutputOptions("no-output and zip-output options are incompatible");
+    }
 }
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
@@ -326,4 +328,5 @@ void Settings::reset()
     noOutput = false;
     displayProgression = false;
     ignoreConstraints = false;
+    forceZipOutput = false;
 }
