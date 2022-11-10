@@ -43,9 +43,6 @@
 /*! Max number of MC years */
 constexpr uint MAX_NB_MC_YEARS = 50000;
 
-/*! */
-/* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */
-
 enum AntaresConstants
 {
     ant_k_area_name_max_length = 128,
