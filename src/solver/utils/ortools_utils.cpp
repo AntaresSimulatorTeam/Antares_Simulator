@@ -271,15 +271,22 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme, MPSolver* ProbSpx)
+MPSolver* ORTOOLS_ConvertIfNeeded(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                                  MPSolver* solver)
 {
-    MPSolver* solver = ProbSpx;
-
-    if (solver == NULL)
+    if (solver == nullptr)
     {
-        solver = Antares::Optimization::convert_to_MPSolver(Probleme);
+        return Antares::Optimization::convert_to_MPSolver(Probleme);
     }
+    else
+    {
+        return solver;
+    }
+}
 
+MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                           MPSolver* solver)
+{
     MPSolverParameters params;
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
@@ -288,12 +295,6 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     }
 
     return solver;
-}
-
-MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* ProbSpx)
-{
-    return solveProblem(Probleme, ProbSpx);
 }
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)

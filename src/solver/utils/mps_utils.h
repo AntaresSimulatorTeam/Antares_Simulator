@@ -16,9 +16,16 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, uint, Solver::IResultWriter::Ptr writer);
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb,
+                             uint numSpace,
+                             Solver::IResultWriter::Ptr writer);
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb,
+                                uint numSpace,
+                                Solver::IResultWriter::Ptr writer);
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
+                                               uint,
+                                               uint,
+                                               Solver::IResultWriter::Ptr writer);
 
 // ======================
 // MPS files writing
@@ -77,7 +84,7 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
-    void runIfNeeded(Solver::IResultWriter::Ptr writer)
+    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/)
     {
         // Does nothing
     }
