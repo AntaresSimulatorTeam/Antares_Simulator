@@ -46,7 +46,7 @@ jobs:
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
         # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
@@ -77,7 +77,7 @@ jobs:
       shell: bash
 
     - name: Download userguide
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: pdf-doc
         path: docs/ref_guides
@@ -213,7 +213,7 @@ jobs:
 
     - name: Upload NSIS logs
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: NSISOutput.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
