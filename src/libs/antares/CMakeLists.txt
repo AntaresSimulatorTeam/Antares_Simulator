@@ -405,7 +405,6 @@ set(SRC
 	hostinfo.h hostinfo.cpp
 
 	# files & paths
-	files/files.h files/files.cpp
 	paths/list.h   paths/list.cpp
 
 	# Utils
