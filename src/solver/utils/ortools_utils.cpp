@@ -271,7 +271,7 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* ORTOOLS_ConvertIfNeeded(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver)
 {
     if (solver == nullptr)

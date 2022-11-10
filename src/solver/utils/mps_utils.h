@@ -84,7 +84,7 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
-    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/)
+    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/) override
     {
         // Does nothing
     }
