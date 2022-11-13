@@ -740,13 +740,9 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         {
         case 0:
             costgeneration = Data::setManually;
-            EnableProperty(pFrame.pPGThClusterMarginalCost);
-            EnableProperty(pFrame.pPGThClusterOperatingCost);
             break;
         case 1:
             costgeneration = Data::useCostTimeseries;
-            DisableProperty(pFrame.pPGThClusterMarginalCost); //disable onPropertyChanging
-            DisableProperty(pFrame.pPGThClusterOperatingCost);
             break;
         default:
             return false;
