@@ -460,6 +460,7 @@ void ClusterList<ClusterT>::retrieveTotalCapacityAndUnitCount(double& total, uin
 // Force template instantiation
 template class ClusterList<ThermalCluster>;
 template class ClusterList<RenewableCluster>;
+template class ClusterList<HydroclusterCluster>;
 
 } // namespace Data
 } // namespace Antares
