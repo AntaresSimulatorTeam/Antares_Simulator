@@ -108,9 +108,9 @@ static bool SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
                     for (uint i = 0; i != m - 1; ++i)
                     {
                         if (i == 1 and IsLeapYear(y))
-                            timestamp += 24 * 3600 * (daysPerMonth[i] + 1);
+                            timestamp += 24 * 3600 * (Constants::daysPerMonth[i] + 1);
                         else
-                            timestamp += 24 * 3600 * daysPerMonth[i];
+                            timestamp += 24 * 3600 * Constants::daysPerMonth[i];
                     }
                 }
 

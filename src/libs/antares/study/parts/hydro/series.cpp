@@ -303,12 +303,12 @@ uint64 DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
 }
 
-void DataSeriesHydro::AdjustMonth(Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12])
+void DataSeriesHydro::AdjustMonth(const Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12])
 {
     for (int oldMonth = 0; oldMonth < 12; oldMonth++)
     {
         int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-        daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
+        daysPerMonthDecals[oldMonth] = Constants::daysPerMonth[realMonth];
         if (study.parameters.leapYear)
         {
             if (realMonth == 1) // February

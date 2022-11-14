@@ -149,7 +149,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 uint dayYear = 0;
                 for (uint m = 0; m != 12; ++m)
                 {
-                    uint nbDays = daysPerMonth[m];
+                    uint nbDays = Constants::daysPerMonth[m];
                     uint power = array.entry[0][m];
 
                     for (uint d = 0; d != nbDays; ++d, ++dayYear)

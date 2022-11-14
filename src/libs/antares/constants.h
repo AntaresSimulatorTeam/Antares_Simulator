@@ -1,3 +1,4 @@
+
 /*
 ** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team
@@ -41,7 +42,11 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
+namespace Antares::Constants {
+
 extern const std::array<unsigned int, 12> daysPerMonth;
+
+} // namespace constants
 
 /*! Max number of MC years */
 constexpr uint MAX_NB_MC_YEARS = 50000;

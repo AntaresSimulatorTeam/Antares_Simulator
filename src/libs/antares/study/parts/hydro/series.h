@@ -127,7 +127,7 @@ public:
     */
     uint count;
 
-    static void AdjustMonth(Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12]);
+    static void AdjustMonth(const Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12]);
 
     /*!
     ** \brief Monte-Carlo
