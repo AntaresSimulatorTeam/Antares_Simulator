@@ -416,6 +416,32 @@ void TimeSeriesRenewableCluster::onStudyClosed()
     AncestorType::onStudyClosed();
 }
 
+
+// ----------------------
+//   HYDROCLUSTER CLUSTERS
+// ----------------------
+
+TimeSeriesHydroclusterCluster::TimeSeriesHydroclusterCluster(
+  wxWindow* control,
+  Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onClusterChanged.connect(
+          this, &TimeSeriesHydroclusterCluster::internalHydroclusterClusterChanged);
+}
+
+TimeSeriesHydroclusterCluster::~TimeSeriesHydroclusterCluster()
+{
+}
+
+void TimeSeriesHydroclusterCluster::onStudyClosed()
+{
+    internalHydroclusterClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
