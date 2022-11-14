@@ -80,7 +80,7 @@ void CommonProperties::onClusterChanged(Data::HydroclusterCluster* cluster)
     if (cluster)
     {
         auto data = std::make_shared<Window::Inspector::InspectorData>(Data::Study::Current::Get());
-        data->RnClusters.insert(cluster);
+        data->HydroclusterClusters.insert(cluster);
         pUpdateInfoAboutPlant(data);
     }
     else

@@ -81,6 +81,8 @@ public:
     Data::ThermalCluster::Set ThClusters;
     //! All selected renewable clusters
     Data::RenewableCluster::Set RnClusters;
+    Data::HydroclusterCluster::Set HydroclusterClusters;
+
     //! All selected binding constraints
     Data::BindingConstraint::Set constraints;
     //! All studies

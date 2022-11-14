@@ -128,6 +128,7 @@ void Frame::onSelectAllLinks(wxCommandEvent&)
         data->areas.clear();
         data->ThClusters.clear();
         data->RnClusters.clear();
+        data->HydroclusterClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -143,6 +144,7 @@ void Frame::onSelectLink(wxCommandEvent& evt)
         data->areas.clear();
         data->ThClusters.clear();
         data->RnClusters.clear();
+        data->HydroclusterClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -163,6 +165,7 @@ void Frame::onSelectAllLinksFromArea(wxCommandEvent& evt)
         data->areas.clear();
         data->ThClusters.clear();
         data->RnClusters.clear();
+        data->HydroclusterClusters.clear();
         data->empty = data->links.empty();
         gInspector->delayApplyGlobalSelection();
     }
@@ -550,7 +553,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     Group(pg, wxT("RENEWABLE CLUSTERS"), wxT("rn-cluster.title"));
     pPGRnClusterGeneral = Category(pg, wxT("General"), wxT("rn-cluster.general"));
     pPGRnClusterName = P_STRING("Name", "rn-cluster.name");
-
+    //cr13 todo add hydrocluster
     wxPGChoices RnGroupChoices;
     for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
         RnGroupChoices.Add(arrayRnClusterGroup[i], i);
@@ -1027,6 +1030,9 @@ void Frame::apply(const InspectorData::Ptr& data)
     pPGRnClusterParams->Hide(hide);
     pPGRnClusterGeneral->Hide(hide);
 
+    //cr13 todo add hydrocluster
+
+    
     // -----------
     // CONSTRAINTS
     // -----------

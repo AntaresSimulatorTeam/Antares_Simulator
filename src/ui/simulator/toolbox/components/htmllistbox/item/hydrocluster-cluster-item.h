@@ -65,7 +65,7 @@ public:
     //@}
 
     //! Get the attached cluster
-    Antares::Data::HydroclusterCluster* renewableAggregate() const;
+    Antares::Data::HydroclusterCluster* hydroclusterAggregate() const;
 
     void addAdditionalIcons(wxString& out) const override;
 

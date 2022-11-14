@@ -221,7 +221,7 @@ ClusterUpdaterHydrocluster::ClusterUpdaterHydrocluster(InspectorData::Ptr data, 
     // installedCapacity = frame.pPGRnClusterInstalled;
     // nominalCapacity = frame.pPGRnClusterNominalCapacity;
 
-    // clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
+    // clusters = Data::Cluster::Set(data->HydroclusterClusters.begin(), data->HydroclusterClusters.end());
     // groups = std::vector<const wxChar*>(arrayRnClusterGroup,
     //                                     arrayRnClusterGroup + arrayRnClusterGroupCount);
 }

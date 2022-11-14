@@ -246,6 +246,8 @@ private:
     wxPGProperty* pPGRnClusterArea;
     wxPGProperty* pPGRnClusterParams;
 
+    //cr13 todo add hydrocluster
+
 public:
     wxPGProperty* pPGRnClusterUnitCount;
     wxPGProperty* pPGRnClusterInstalled;

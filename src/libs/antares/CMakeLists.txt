@@ -263,6 +263,7 @@ set(SRC_STUDY_PART_HYDRO
 	study/parts/hydro/allocation.cpp
 	study/parts/hydro/container.hxx
 	study/parts/hydro/cluster.h
+	study/parts/hydro/cluster.hxx
 	study/parts/hydro/cluster.cpp
     study/parts/hydro/cluster_list.h
     study/parts/hydro/cluster_list.cpp	
