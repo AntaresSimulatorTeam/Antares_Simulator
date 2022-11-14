@@ -303,7 +303,7 @@ uint64 DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
 }
 
-void DataSeriesHydro::AdjustMonth(Study& study, uint(& firstDayMonth)[13], uint(& daysPerMonthDecals)[12])
+void DataSeriesHydro::AdjustMonth(Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12])
 {
     for (int oldMonth = 0; oldMonth < 12; oldMonth++)
     {
