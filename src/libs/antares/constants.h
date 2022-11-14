@@ -49,7 +49,7 @@ extern const std::array<unsigned int, 12> daysPerMonth;
 } // namespace constants
 
 /*! Max number of MC years */
-constexpr uint MAX_NB_MC_YEARS = 50000;
+constexpr unsigned int MAX_NB_MC_YEARS = 50000;
 
 /*! */
 /* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */
