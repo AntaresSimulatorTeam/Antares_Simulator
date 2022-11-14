@@ -51,11 +51,11 @@ bool CBuilder::completeFromStudy()
             // for all links of the study
             // check if it has been enabled in the INI File
             linkInfo* k = findLinkInfoFromNodeNames(j->second->from->id, j->second->with->id);
-            if (!k && j->second->isVisibleOnLayer(pStudy->activeLayerID))
+            if (!k)
             {
                 k = new linkInfo();
 
-                logs.info() << "Read data (link " << nCount << "/" << NLinks << ")";
+                logs.info() << "Read data (link " << nCount++ << ")";
                 // if Yes, complete the linkInfo
                 // load the pointer
                 k->ptr = j->second;
