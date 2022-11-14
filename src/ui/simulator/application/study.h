@@ -301,6 +301,11 @@ extern Yuni::Event<void()> OnStudyRenewableClusterCommonSettingsChanged;
 extern Yuni::Event<void(Data::RenewableCluster*)> OnStudyRenewableClusterRenamed;
 extern Yuni::Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
 
+
+extern Yuni::Event<void()> OnStudyHydroclusterClusterCommonSettingsChanged;
+extern Yuni::Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterRenamed;
+extern Yuni::Event<void(Data::Area*)> OnStudyHydroclusterClusterGroupChanged;
+
 /*!
 ** \brief Event triggered when the data related to the Scenario Builder are loaded
 **

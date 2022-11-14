@@ -60,14 +60,14 @@ wxString HydroclusterClusterItem::htmlContentTail()
     return wxString();
 }
 
-Antares::Data::HydroclusterCluster* HydroclusterClusterItem::renewableAggregate() const
+Antares::Data::HydroclusterCluster* HydroclusterClusterItem::hydroclusterAggregate() const
 {
     return pHydroclusterCluster;
 }
 
 void HydroclusterClusterItem::addAdditionalIcons(wxString& /* out */) const
 {
-    // No additional icons should be added for renewable clusters
+    // No additional icons should be added for hydrocluster clusters
 }
 
 } // namespace Item

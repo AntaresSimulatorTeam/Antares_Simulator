@@ -197,6 +197,9 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster);
 */
 void RemoveRenewableCluster(const Data::RenewableCluster* cluster);
 
+void SelectHydroclusterCluster(const Data::HydroclusterCluster* cluster);
+void RemoveHydroclusterCluster(const Data::HydroclusterCluster* cluster);
+
 //! \name Data::Binding constraints
 //@{
 /*!

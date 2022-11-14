@@ -469,6 +469,16 @@ void RemoveRenewableCluster(const Data::RenewableCluster* cluster)
     }
 }
 
+void RemoveHydroclusterCluster(const Data::HydroclusterCluster* cluster)
+{
+    // if (!(!gData) && gData->RnClusters.erase(const_cast<Data::HydroclusterCluster*>(cluster))) //cr13
+    // {
+    //     gData->determineEmpty();
+    //     if (gInspector)
+    //         gInspector->apply(gData);
+    // }
+}
+
 void SelectAreas(const Data::Area::Vector& areas)
 {
     if (!gData)
@@ -621,6 +631,23 @@ void SelectRenewableCluster(const Data::RenewableCluster* cluster)
     if (gInspector)
         gInspector->apply(gData);
 }
+
+
+void SelectHydroclusterCluster(const Data::HydroclusterCluster* cluster)
+{
+    // if (!gData)
+    //     gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
+
+    // gData->clear();
+    // if (cluster)
+    // {
+    //     if (gData->RnClusters.insert(const_cast<Data::HydroclusterCluster*>(cluster)).second) //cr13
+    //         gData->empty = false;
+    // }
+    // if (gInspector)
+    //     gInspector->apply(gData);
+}
+
 
 uint CopyToClipboard()
 {

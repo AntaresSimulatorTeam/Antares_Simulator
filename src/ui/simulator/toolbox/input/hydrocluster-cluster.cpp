@@ -96,10 +96,10 @@ void HydroclusterCluster::internalBuildSubControls()
     wxBoxSizer* toolSZ = new wxBoxSizer(wxHORIZONTAL);
     toolSZ->AddSpacer(10);
 
-    // Create a new renewable cluster
+    // Create a new hydrocluster cluster
     btn = new Antares::Component::Button(this,
                                          wxT("Create a cluster"),
-                                         "images/16x16/renewable_add.png",
+                                         "images/16x16/hydrocluster_add.png",
                                          this,
                                          &HydroclusterCluster::internalAddPlant);
 
@@ -108,7 +108,7 @@ void HydroclusterCluster::internalBuildSubControls()
     // Delete
     btn = new Antares::Component::Button(this,
                                          wxT("Delete"),
-                                         "images/16x16/renewable_remove.png",
+                                         "images/16x16/hydrocluster_remove.png",
                                          this,
                                          &HydroclusterCluster::internalDeletePlant);
     btn->dropDown(true);
@@ -184,7 +184,7 @@ void HydroclusterCluster::updateInnerValues()
     {
         double total = 0.;
         uint unitCount = 0;
-        pArea->renewable.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
+        pArea->hydrocluster.list.retrieveTotalCapacityAndUnitCount(total, unitCount);
 
         // The total - installed capacity
         pTotalMW->SetLabel(wxString() << unitCount << wxT(" units, ") << total << wxT(" MW"));
@@ -242,8 +242,8 @@ void HydroclusterCluster::internalDeletePlant(void*)
     if (!pArea || !pLastSelectedHydroclusterCluster || not Data::Study::Current::Valid())
         return;
 
-    // The renewable cluster to delete
-    auto* toDelete = pLastSelectedHydroclusterCluster->renewableAggregate();
+    // The hydrocluster cluster to delete
+    auto* toDelete = pLastSelectedHydroclusterCluster->hydroclusterAggregate();
     if (not toDelete)
         return;
 
@@ -254,9 +254,9 @@ void HydroclusterCluster::internalDeletePlant(void*)
     // If the pointer has been, it is guaranteed to be valid
     Window::Message message(&mainFrm,
                             wxT("Hydrocluster cluster"),
-                            wxT("Delete a renewable cluster"),
+                            wxT("Delete a hydrocluster cluster"),
                             wxString()
-                              << wxT("Do you really want to delete the renewable cluster '")
+                              << wxT("Do you really want to delete the hydrocluster cluster '")
                               << wxStringFromUTF8(toDelete->name()) << wxT("' ?") << messageText);
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
@@ -279,7 +279,7 @@ void HydroclusterCluster::internalDeletePlant(void*)
         ScenarioBuilderUpdater updaterSB(
           *study); // this will create a temp file, and save it during destructor call
 
-        if (pArea->renewable.list.remove(toDelete->id()))
+        if (pArea->hydrocluster.list.remove(toDelete->id()))
         {
             // We __must__ update the scenario builder data
             // We may delete an area and re-create a new one with the same
@@ -290,8 +290,8 @@ void HydroclusterCluster::internalDeletePlant(void*)
             Refresh();
             MarkTheStudyAsModified();
             updateInnerValues();
-            pArea->renewable.list.rebuildIndex();
-            pArea->renewable.prepareAreaWideIndexes();
+            pArea->hydrocluster.list.rebuildIndex();
+            pArea->hydrocluster.prepareAreaWideIndexes();
             study->uiinfo->reload();
         }
         else
@@ -308,7 +308,7 @@ void HydroclusterCluster::internalDeleteAll(void*)
     if (!pArea)
         return;
 
-    if (pArea->renewable.list.empty())
+    if (pArea->hydrocluster.list.empty())
     {
         // The selected has been obviously invalidated
         pLastSelectedHydroclusterCluster = nullptr;
@@ -323,8 +323,8 @@ void HydroclusterCluster::internalDeleteAll(void*)
     Window::Message message(
       &mainFrm,
       wxT("Hydrocluster cluster"),
-      wxT("Delete all renewable clusters"),
-      wxString() << wxT("Do you really want to delete all renewable clusters from the area '")
+      wxT("Delete all hydrocluster clusters"),
+      wxString() << wxT("Do you really want to delete all hydrocluster clusters from the area '")
                  << wxStringFromUTF8(pArea->name) << wxT("' ?"));
     message.add(Window::Message::btnYes);
     message.add(Window::Message::btnCancel, true);
@@ -345,7 +345,7 @@ void HydroclusterCluster::internalDeleteAll(void*)
         pLastSelectedHydroclusterCluster = nullptr;
         onClusterChanged(nullptr);
 
-        pArea->renewable.reset();
+        pArea->hydrocluster.reset();
 
         update();
         Refresh();
@@ -373,7 +373,7 @@ void HydroclusterCluster::internalAddPlant(void*)
         // Trying to find an uniq name
         Antares::Data::ClusterName sFl;
         sFl.clear() << "new cluster";
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->hydrocluster.list.find(sFl))
         {
             ++indx;
             sFl.clear() << "new cluster " << indx;
@@ -384,12 +384,12 @@ void HydroclusterCluster::internalAddPlant(void*)
 
         // Creating a new cluster
         auto cluster = std::make_shared<Antares::Data::HydroclusterCluster>(pArea);
-        logs.info() << "adding new renewable cluster " << pArea->id << '.' << sFl;
+        logs.info() << "adding new hydrocluster cluster " << pArea->id << '.' << sFl;
         cluster->setName(sFl);
         cluster->reset();
-        pArea->renewable.list.add(cluster);
-        pArea->renewable.list.rebuildIndex();
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->hydrocluster.list.add(cluster);
+        pArea->hydrocluster.list.rebuildIndex();
+        pArea->hydrocluster.prepareAreaWideIndexes();
 
         // Update the list
         update();
@@ -410,18 +410,18 @@ void HydroclusterCluster::internalClonePlant(void*)
     if (!pArea || !pLastSelectedHydroclusterCluster)
         return;
 
-    if (!pArea->renewable.list.find(pLastSelectedHydroclusterCluster->renewableAggregate()->id()))
+    if (!pArea->hydrocluster.list.find(pLastSelectedHydroclusterCluster->hydroclusterAggregate()->id()))
     {
         // The selected has been obviously invalidated
         pLastSelectedHydroclusterCluster = nullptr;
         // Inform the user
-        logs.error() << "Please select a renewable cluster.";
+        logs.error() << "Please select a hydrocluster cluster.";
         return;
     }
 
     WIP::Locker wip;
     const Antares::Data::HydroclusterCluster& selectedPlant
-      = *pLastSelectedHydroclusterCluster->renewableAggregate();
+      = *pLastSelectedHydroclusterCluster->hydroclusterAggregate();
 
     auto study = Data::Study::Current::Get();
     if (!(!study) && pArea)
@@ -449,7 +449,7 @@ void HydroclusterCluster::internalClonePlant(void*)
 
         Antares::Data::ClusterName sFl;
         sFl << copy << indx; // lowercase
-        while (pArea->renewable.list.find(sFl))
+        while (pArea->hydrocluster.list.find(sFl))
         {
             ++indx;
             sFl.clear() << copy << indx;
@@ -465,9 +465,9 @@ void HydroclusterCluster::internalClonePlant(void*)
         // Reset to default values
         cluster->copyFrom(selectedPlant);
 
-        pArea->renewable.list.add(cluster);
-        pArea->renewable.list.rebuildIndex();
-        pArea->renewable.prepareAreaWideIndexes();
+        pArea->hydrocluster.list.add(cluster);
+        pArea->hydrocluster.list.rebuildIndex();
+        pArea->hydrocluster.prepareAreaWideIndexes();
 
         // Update the list
         update();
@@ -515,7 +515,7 @@ void HydroclusterCluster::delayedSelection(Component::HTMLListbox::Item::IItem::
         Forms::ApplWnd& mainFrm = *Forms::ApplWnd::Instance();
 
         pLastSelectedHydroclusterCluster = a;
-        auto* cluster = a->renewableAggregate();
+        auto* cluster = a->hydroclusterAggregate();
 
         WIP::Locker wip;
         wxWindowUpdateLocker updater(&mainFrm);

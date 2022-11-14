@@ -211,6 +211,37 @@ void ClusterUpdaterRenewable::OnStudyClusterRenamed(Data::Cluster* cluster)
 {
     OnStudyRenewableClusterRenamed(dynamic_cast<Data::RenewableCluster*>(cluster));
 }
+
+// ClusterUpdaterHydrocluster
+ClusterUpdaterHydrocluster::ClusterUpdaterHydrocluster(InspectorData::Ptr data, Frame& frame) :
+ ClusterUpdater(frame)
+{
+    // // wxProperties
+    // unitCount = frame.pPGRnClusterUnitCount; //cr13
+    // installedCapacity = frame.pPGRnClusterInstalled;
+    // nominalCapacity = frame.pPGRnClusterNominalCapacity;
+
+    // clusters = Data::Cluster::Set(data->RnClusters.begin(), data->RnClusters.end());
+    // groups = std::vector<const wxChar*>(arrayRnClusterGroup,
+    //                                     arrayRnClusterGroup + arrayRnClusterGroupCount);
+}
+
+void ClusterUpdaterHydrocluster::OnCommonSettingsChanged()
+{
+    OnStudyHydroclusterClusterCommonSettingsChanged();
+}
+void ClusterUpdaterHydrocluster::OnStudyClusterGroupChanged(Data::Area* area)
+{
+    OnStudyHydroclusterClusterGroupChanged(area);
+}
+void ClusterUpdaterHydrocluster::OnStudyClusterRenamed(Data::Cluster* cluster)
+{
+    OnStudyHydroclusterClusterRenamed(dynamic_cast<Data::HydroclusterCluster*>(cluster));
+}
+
+
+
+
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares

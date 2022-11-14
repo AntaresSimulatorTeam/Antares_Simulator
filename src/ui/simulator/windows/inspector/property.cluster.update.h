@@ -55,6 +55,17 @@ private:
     virtual void OnStudyClusterRenamed(Data::Cluster* cluster);
 };
 
+class ClusterUpdaterHydrocluster : public ClusterUpdater
+{
+public:
+    ClusterUpdaterHydrocluster(InspectorData::Ptr data, Frame& frame);
+
+private:
+    virtual void OnCommonSettingsChanged() override;
+    virtual void OnStudyClusterGroupChanged(Data::Area* area);
+    virtual void OnStudyClusterRenamed(Data::Cluster* cluster);
+};
+
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares

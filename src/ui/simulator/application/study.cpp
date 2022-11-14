@@ -99,6 +99,10 @@ Event<void()> OnStudyRenewableClusterCommonSettingsChanged;
 Event<void(Data::RenewableCluster*)> OnStudyRenewableClusterRenamed;
 Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
 
+Event<void()> OnStudyHydroclusterClusterCommonSettingsChanged;
+Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterRenamed;
+Event<void(Data::Area*)> OnStudyHydroclusterClusterGroupChanged;
+
 Event<void()> OnStudyUpdatePlaylist;
 Event<void(const void*)> OnInspectorRefresh;
 Event<void()> OnStudyScenarioBuilderDataAreLoaded;

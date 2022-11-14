@@ -53,8 +53,8 @@ void GetHydroclusterClusterMap(Data::Area* area, HydroclusterClusterMap& l, cons
 {
     wxString grp;
 
-    const Data::HydroclusterClusterList::iterator end = area->renewable.list.end();
-    for (Data::HydroclusterClusterList::iterator i = area->renewable.list.begin(); i != end; ++i)
+    const Data::HydroclusterClusterList::iterator end = area->hydrocluster.list.end();
+    for (Data::HydroclusterClusterList::iterator i = area->hydrocluster.list.begin(); i != end; ++i)
     {
         Data::HydroclusterCluster* cluster = i->second.get();
 
