@@ -30,7 +30,8 @@ void HydroclusterClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
         u.requiredMemoryForInput += sizeof(HydroclusterCluster);
         u.requiredMemoryForInput += sizeof(void*);
         if (cluster.series)
-            cluster.series->estimateMemoryUsage(u, timeSeriesHydrocluster /* FIXME */);
+            cluster.series->estimateMemoryUsage(u, timeSeriesHydro /* FIXME */); //cr13
+            // cluster.series->estimateMemoryUsage(u, timeSeriesHydrocluster /* FIXME */); //cr13
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;

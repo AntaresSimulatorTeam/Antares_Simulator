@@ -32,6 +32,12 @@
 #include "../../fwd.h"
 #include "allocation.h"
 
+#include <yuni/yuni.h>
+#include "../../fwd.h"
+#include "cluster.h"
+#include "cluster_list.h"
+
+
 namespace Antares
 {
 namespace Data
@@ -200,8 +206,91 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            Matrix<double, double>& creditMod,
                            int modType);
 
+
+
+class PartHydrocluster
+{
+public:
+    //! \name Constructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    PartHydrocluster();
+    //! Destructor
+    ~PartHydrocluster();
+    //@}
+
+    /*!
+    ** \brief Reset internal data
+    */
+    void reset();
+
+    /*!
+    ** \brief Resize all matrices dedicated to the sampled timeseries numbers
+    **
+    ** \param n A number of years
+    */
+    void resizeAllTimeseriesNumbers(uint n);
+
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
+
+    /*!
+    ** \brief Create and initialize the list of all clusters (with the mustrun flag or not)
+    **
+    ** This method must be called before prepareClustersInMustRunMode()
+    ** to ensure the same order whatever the value of the 'mustrun' flag is.
+    */
+    void prepareAreaWideIndexes();
+
+    /*!
+    ** \brief Removes disabled hydrocluster clusters
+    **
+    ** All clusters with the flag 'enabled' turned to false will be removed from 'list'.
+    ** As a consequence, they will no longer be seen as hydrocluster clusters
+    ** from the solver's point of view.
+    ** \warning This method should only be used from the solver
+    **
+    ** \return The number of disabled clusters found
+    */
+    uint removeDisabledClusters();
+
+    /*!
+    ** \brief Invalidate all JIT data
+    */
+    bool invalidate(bool reload) const;
+
+    /*!
+    ** \brief Mark the hydrocluster cluster as modified
+    */
+    void markAsModified() const;
+
+public:
+    //! List of all hydrocluster clusters (enabled and disabled)
+    HydroclusterClusterList list;
+
+    /*!
+    ** \brief All clusters for the area
+    **
+    ** This variable is only available at runtime from the solver.
+    ** It is initialized in the same time that the runtime data.
+    **
+    ** This list is mainly used to ensure the same order of the
+    ** hydrocluster clusters in the outputs.
+    */
+    std::vector<HydroclusterCluster*> clusters;
+    //! How many clusters have we got ?
+    // Only available from the solver
+    inline size_t clusterCount() const
+    {
+        return clusters.size();
+    }
+}; // class PartHydrocluster
+
 } // namespace Data
 } // namespace Antares
+
+#include "container.hxx"
 
 #include "../../area.h"
 

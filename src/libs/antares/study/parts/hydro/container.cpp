@@ -1042,5 +1042,86 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
     return valueToReturn;
 }
 
+
+PartHydrocluster::PartHydrocluster()
+{
+}
+
+bool PartHydrocluster::invalidate(bool reload) const
+{
+    bool ret = true;
+    ret = list.invalidate(reload) && ret;
+    return ret;
+}
+
+void PartHydrocluster::markAsModified() const
+{
+    list.markAsModified();
+}
+
+void PartHydrocluster::estimateMemoryUsage(StudyMemoryUsage& u) const
+{
+    u.requiredMemoryForInput += sizeof(PartHydrocluster);
+    list.estimateMemoryUsage(u);
+}
+
+PartHydrocluster::~PartHydrocluster()
+{
+}
+
+void PartHydrocluster::prepareAreaWideIndexes()
+{
+    // Copy the list with all Hydrocluster clusters
+    // And init the areaWideIndex (unique index for a given area)
+    if (list.empty())
+    {
+        clusters.clear();
+        return;
+    }
+
+    clusters = std::vector<HydroclusterCluster*>(list.size());
+
+    auto end = list.end();
+    uint idx = 0;
+    for (auto i = list.begin(); i != end; ++i)
+    {
+        HydroclusterCluster* t = i->second.get();
+        t->areaWideIndex = idx;
+        clusters[idx] = t;
+        ++idx;
+    }
+}
+
+uint PartHydrocluster::removeDisabledClusters()
+{
+    // nothing to do if there is no cluster available
+    if (list.empty())
+        return 0;
+
+    std::vector<ClusterName> disabledClusters;
+
+    for (auto& it : list)
+    {
+        if (!it.second->enabled)
+            disabledClusters.push_back(it.first);
+    }
+
+    for (auto& cluster : disabledClusters)
+        list.remove(cluster);
+
+    const auto count = disabledClusters.size();
+    if (count)
+        list.rebuildIndex();
+
+    return count;
+}
+
+void PartHydrocluster::reset()
+{
+    list.clear();
+    clusters.clear();
+}
+
+
 } // namespace Data
 } // namespace Antares

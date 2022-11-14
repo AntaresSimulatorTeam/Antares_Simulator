@@ -51,7 +51,7 @@ HydroclusterClusterSummarySingleArea::~HydroclusterClusterSummarySingleArea()
 wxString HydroclusterClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
     if (pArea)
-        return wxStringFromUTF8(pArea->renewable.list.byIndex[rowIndx]->name());
+        return wxStringFromUTF8(pArea->hydrocluster.list.byIndex[rowIndx]->name());
     return wxEmptyString;
 }
 
@@ -70,8 +70,8 @@ wxString HydroclusterClusterSummarySingleArea::columnCaption(int colIndx) const
 
 wxString HydroclusterClusterSummarySingleArea::cellValue(int x, int y) const
 {
-    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                        ? pArea->renewable.list.byIndex[y]
+    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+                                        ? pArea->hydrocluster.list.byIndex[y]
                                         : nullptr;
     switch (x)
     {
@@ -89,8 +89,8 @@ wxString HydroclusterClusterSummarySingleArea::cellValue(int x, int y) const
 
 double HydroclusterClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
-    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                                        ? pArea->renewable.list.byIndex[y]
+    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+                                        ? pArea->hydrocluster.list.byIndex[y]
                                         : nullptr;
     // gp : do we wish to have the line empty if cluster disabled
     // if (!cluster->enabled)
@@ -111,8 +111,8 @@ double HydroclusterClusterSummarySingleArea::cellNumericValue(int x, int y) cons
 
 bool HydroclusterClusterSummarySingleArea::cellValue(int x, int y, const String& v)
 {
-    auto* cluster = (pArea and (uint) y < pArea->renewable.list.size())
-                      ? pArea->renewable.list.byIndex[y]
+    auto* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+                      ? pArea->hydrocluster.list.byIndex[y]
                       : nullptr;
 
     if (cluster)

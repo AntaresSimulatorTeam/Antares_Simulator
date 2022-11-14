@@ -261,6 +261,7 @@ public:
     //@{
     PartHydro hydro;
     //@}
+    PartHydrocluster hydrocluster;
 
     //! \name Wind
     //@{
