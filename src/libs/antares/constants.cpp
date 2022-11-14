@@ -27,4 +27,4 @@
 
 #include "constants.h"
 
-const std::array<uint, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+const std::array<unsigned int, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};

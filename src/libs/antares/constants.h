@@ -41,7 +41,7 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-extern const std::array<uint, 12> daysPerMonth;
+extern const std::array<unsigned int, 12> daysPerMonth;
 
 /*! Max number of MC years */
 constexpr uint MAX_NB_MC_YEARS = 50000;
