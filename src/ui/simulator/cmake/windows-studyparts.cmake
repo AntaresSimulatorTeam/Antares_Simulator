@@ -20,6 +20,10 @@ set(SRC_UI_WINDOWS_STUDYPARTS
 		windows/hydro/management.cpp
 		windows/hydro/levelsandvalues.h
 		windows/hydro/levelsandvalues.cpp
+		windows/hydro/cluster.h
+		windows/hydro/cluster.cpp	
+		windows/hydro/panel.h
+		windows/hydro/panel.cpp			
 		windows/thermal/cluster.h
 		windows/thermal/cluster.cpp
 		windows/renewables/cluster.h

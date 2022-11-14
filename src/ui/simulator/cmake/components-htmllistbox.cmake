@@ -16,6 +16,8 @@ add_library(libantares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/item/error.h
 		toolbox/components/htmllistbox/item/error.cpp
 
+		toolbox/components/htmllistbox/item/hydrocluster-cluster-item.h
+		toolbox/components/htmllistbox/item/hydrocluster-cluster-item.cpp		
 		toolbox/components/htmllistbox/item/thermal-cluster-item.h
 		toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
 		toolbox/components/htmllistbox/item/renewable-cluster-item.h
@@ -32,13 +34,11 @@ add_library(libantares-ui-component-htmllistbox
 		toolbox/components/htmllistbox/datasource/thermal-cluster-order.cpp
 		toolbox/components/htmllistbox/datasource/renewable-cluster-order.h
 		toolbox/components/htmllistbox/datasource/renewable-cluster-order.cpp
+		toolbox/components/htmllistbox/datasource/hydrocluster-cluster-order.h
+		toolbox/components/htmllistbox/datasource/hydrocluster-cluster-order.cpp
 
         toolbox/components/htmllistbox/item/cluster-item.h
         toolbox/components/htmllistbox/item/cluster-item.cpp        
-        toolbox/components/htmllistbox/item/renewable-cluster-item.h
-        toolbox/components/htmllistbox/item/renewable-cluster-item.cpp
-        toolbox/components/htmllistbox/item/thermal-cluster-item.h
-        toolbox/components/htmllistbox/item/thermal-cluster-item.cpp
 	)
 
 

@@ -30,6 +30,7 @@
 #include <antares/wx-wrapper.h>
 #include "../area.h"
 #include "../matrix.h"
+#include "../../../../input/hydrocluster-cluster.h"
 #include "../../../../input/thermal-cluster.h"
 #include "../../../../input/renewable-cluster.h"
 #include <antares/date.h>

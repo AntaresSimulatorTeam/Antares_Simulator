@@ -78,6 +78,7 @@
 #include "windows/simulation/panel.h"
 #include "windows/thermal/panel.h"
 #include "windows/renewables/panel.h"
+#include "windows/hydro/panel.h"
 #include "windows/correlation/correlation.h"
 #include "windows/bindingconstraint/bindingconstraint.h"
 #include "windows/analyzer/analyzer.h"
@@ -564,6 +565,7 @@ void ApplWnd::createAllComponentsNeededByTheMainNotebook()
     createNBThermal();
     // Hydro
     createNBHydro();
+    createNBHydrocluster();
 
     // yield !
     wxTheApp->Yield();
@@ -661,6 +663,16 @@ void ApplWnd::createNBRenewable()
     // pageThermalPrepro = panel->pageThermalPrepro;
     pageRenewableCommon = panel->pageRenewableCommon;
     pageRenewableClusterList = panel->pageRenewableClusterList;
+}
+
+void ApplWnd::createNBHydrocluster()
+{
+    assert(pNotebook);
+
+    auto* panel = new Window::Hydro::Panel(pNotebook);
+    pNotebook->add(panel, wxT("hydroCluster"), wxT("Hydrocluster"));
+    pageHydroclusterCommon = panel->pageHydroclusterCommon ;
+    pageHydroclusterClusterList = panel->pageHydroclusterClusterList;
 }
 
 void ApplWnd::createNBBindingConstraints()

@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
-#define __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
+#ifndef __ANTARES_TOOLBOX_INPUT_HYDROCLUSTER_CLUSTER_H__
+#define __ANTARES_TOOLBOX_INPUT_HYDROCLUSTER_CLUSTER_H__
 
 // gp : remove useless header includes
 // #include <antares/wx-wrapper.h>
@@ -39,8 +39,8 @@
 #include <wx/imaglist.h>
 // #include "../components/htmllistbox/component.h"
 // #include "../components/htmllistbox/item/thermal-cluster.h"
-#include "../components/htmllistbox/item/renewable-cluster-item.h"
-#include "../components/htmllistbox/datasource/renewable-cluster-order.h"
+#include "../components/htmllistbox/datasource/hydrocluster-cluster-order.h"
+#include "../components/htmllistbox/item/hydrocluster-cluster-item.h"
 
 namespace Antares
 {
@@ -53,7 +53,7 @@ using namespace Component::HTMLListbox::Datasource;
 /*!
 ** \brief Visual Component for displaying renewable clusters of an arbitrary area
 */
-class RenewableCluster final : public AInput, public Yuni::IEventObserver<RenewableCluster>
+class HydroclusterCluster final : public AInput, public Yuni::IEventObserver<HydroclusterCluster>
 {
 public:
     //! \name Constructor & Destructor
@@ -61,9 +61,9 @@ public:
     /*!
     ** \brief Default Constructor
     */
-    RenewableCluster(wxWindow* parent, InputSelector::Area* area);
+    HydroclusterCluster(wxWindow* parent, InputSelector::Area* area);
     //! Destructor
-    virtual ~RenewableCluster();
+    virtual ~HydroclusterCluster();
     //@}
 
     virtual void update();
@@ -91,7 +91,7 @@ public:
     //                      const bool broadcast = true);
 
 public:
-    Yuni::Event<void(Antares::Data::RenewableCluster*)> onClusterChanged;
+    Yuni::Event<void(Antares::Data::HydroclusterCluster*)> onClusterChanged;
 
 protected:
     /*!
@@ -138,11 +138,11 @@ private:
     */
     void onRnSelected(Component::HTMLListbox::Item::IItem::Ptr item);
 
-    void onStudyRenewableClusterCommonSettingsChanged();
+    void onStudyHydroclusterClusterCommonSettingsChanged();
 
-    void onStudyRenewableClusterRenamed(Antares::Data::RenewableCluster* cluster);
+    void onStudyHydroclusterClusterRenamed(Antares::Data::HydroclusterCluster* cluster);
 
-    void onStudyRenewableClusterGroupChanged(Antares::Data::Area* area);
+    void onStudyHydroclusterClusterGroupChanged(Antares::Data::Area* area);
 
     void onDeleteDropdown(Antares::Component::Button&, wxMenu& menu, void*);
 
@@ -166,10 +166,10 @@ private:
     //! The area notifier
     InputSelector::Area* pAreaNotifier;
     //! The last selected thermal cluster
-    Component::HTMLListbox::Item::RenewableClusterItem::Ptr pLastSelectedRenewableCluster;
+    Component::HTMLListbox::Item::HydroclusterClusterItem::Ptr pLastSelectedHydroclusterCluster;
 
-    RenewableClustersByAlphaOrder* pDataSourceAZ;
-    RenewableClustersByAlphaReverseOrder* pDataSourceZA;
+    HydroclusterClustersByAlphaOrder* pDataSourceAZ;
+    HydroclusterClustersByAlphaReverseOrder* pDataSourceZA;
 
 }; // class Area
 
@@ -177,4 +177,4 @@ private:
 } // namespace Toolbox
 } // namespace Antares
 
-#endif // __ANTARES_TOOLBOX_INPUT_RENEWABLE_CLUSTER_H__
+#endif // __ANTARES_TOOLBOX_INPUT_HYDROCLUSTER_CLUSTER_H__

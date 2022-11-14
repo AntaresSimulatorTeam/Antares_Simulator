@@ -418,6 +418,7 @@ private:
     void createNBSolar();
     //! Create the page about the hydro (time-series, prepro, correlation...)
     void createNBHydro();
+    void createNBHydrocluster();
     //! Create the page about the wind (time-series, prepro, correlation...)
     void createNBWind();
     //! Create the page about the thermal clusters
@@ -725,6 +726,10 @@ private:
     Component::Notebook::Page* pageHydroPrepro;
     Component::Notebook::Page* pageHydroCorrelation;
     Component::Notebook::Page* pageHydroAllocation;
+    
+    Component::Notebook::Page* pageHydroclusterClusterList;
+    Component::Notebook::Page* pageHydroclusterCommon;
+
 
     Component::Notebook::Page* pageWindTimeSeries;
     Component::Notebook::Page* pageWindPrepro;

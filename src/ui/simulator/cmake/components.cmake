@@ -142,6 +142,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/thermal.areasummary.h
 		toolbox/components/datagrid/renderer/area/renewable.areasummary.cpp
 		toolbox/components/datagrid/renderer/area/renewable.areasummary.h
+		toolbox/components/datagrid/renderer/area/hydrocluster.areasummary.cpp
+		toolbox/components/datagrid/renderer/area/hydrocluster.areasummary.h		
 		toolbox/components/datagrid/renderer/area/xcast-k.h
 		toolbox/components/datagrid/renderer/area/xcast-k.hxx
 		toolbox/components/datagrid/renderer/area/xcast-coefficients.h

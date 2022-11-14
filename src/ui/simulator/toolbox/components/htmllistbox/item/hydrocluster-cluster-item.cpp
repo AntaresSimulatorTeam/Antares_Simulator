@@ -24,37 +24,53 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-#define __ANTARES_LIBS_STUDY_PARTS_H__
 
-// Load
-#include "load/series.h"
-#include "load/container.h"
+#include "hydrocluster-cluster-item.h"
 
-// Solar
-#include "solar/series.h"
-#include "solar/container.h"
+using namespace Yuni;
 
-// Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
-#include "hydro/container.h"
-#include "hydro/cluster.h"
+namespace Antares
+{
+namespace Component
+{
+namespace HTMLListbox
+{
+namespace Item
+{
+HydroclusterClusterItem::HydroclusterClusterItem(Antares::Data::HydroclusterCluster* a) :
+ ClusterItem(a), pHydroclusterCluster(a)
+{
+    preloadImages();
+}
 
-// Wind
-#include "wind/prepro.h"
-#include "wind/series.h"
-#include "wind/container.h"
+HydroclusterClusterItem::HydroclusterClusterItem(Antares::Data::HydroclusterCluster* a,
+                                           const wxString& additional) :
+ ClusterItem(a, additional), pHydroclusterCluster(a)
+{
+    preloadImages();
+}
 
-// Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
-#include "thermal/cluster.h"
-#include "thermal/container.h"
+HydroclusterClusterItem::~HydroclusterClusterItem()
+{
+}
 
-// Renewable
-#include "renewable/defines.h"
-#include "renewable/cluster.h"
-#include "renewable/container.h"
+wxString HydroclusterClusterItem::htmlContentTail()
+{
+    // Return nothing
+    return wxString();
+}
 
-#endif // __ANTARES_LIBS_STUDY_PARTS_H__
+Antares::Data::HydroclusterCluster* HydroclusterClusterItem::renewableAggregate() const
+{
+    return pHydroclusterCluster;
+}
+
+void HydroclusterClusterItem::addAdditionalIcons(wxString& /* out */) const
+{
+    // No additional icons should be added for renewable clusters
+}
+
+} // namespace Item
+} // namespace HTMLListbox
+} // namespace Component
+} // namespace Antares
