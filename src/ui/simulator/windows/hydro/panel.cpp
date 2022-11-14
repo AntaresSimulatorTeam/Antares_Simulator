@@ -106,7 +106,7 @@ Panel::Panel(Component::Notebook* parent) :
 
         // Common properties of the current thermal cluster
         pageHydroclusterCommon
-          = subbook->add(new Window::Hydrocluster::CommonProperties(subbook, tag), wxT("Common"));
+          = subbook->add(new Window::Hydro::CommonProperties(subbook, tag), wxT("Common"));
 
         // Time Series
         pageHydroclusterTimeSeries = subbook->add(
