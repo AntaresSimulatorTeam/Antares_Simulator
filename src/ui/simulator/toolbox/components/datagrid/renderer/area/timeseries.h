@@ -477,6 +477,28 @@ private:
     void onStudyClosed() override;
 };
 
+
+// ----------------------
+//   HYDROCLUSTER CLUSTERS
+// ----------------------
+
+class TimeSeriesHydroclusterCluster final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesHydroclusterCluster(wxWindow* control,
+                               Toolbox::InputSelector::HydroclusterCluster* notifier);
+
+    virtual ~TimeSeriesHydroclusterCluster();
+
+private:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+    {
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+    }
+
+    void onStudyClosed() override;
+};
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component
