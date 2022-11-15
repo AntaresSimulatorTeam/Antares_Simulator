@@ -331,7 +331,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = tncEnabled;
+    transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -659,14 +659,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "transmission-capacities")
     {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
-        else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
-        return true;
+        return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
     return false;
 }
@@ -1736,19 +1729,8 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         }
         // Optimization preferences
-        switch (transmissionCapacities)
-        {
-        case tncEnabled:
-            section->add("transmission-capacities", "true");
-            break;
-        case tncIgnore:
-            section->add("transmission-capacities", "false");
-            break;
-        case tncInfinite:
-            section->add("transmission-capacities", "infinite");
-            break;
-        }
-
+        section->add("transmission-capacities",
+                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
         switch (linkType)
         {
         case ltLocal:

@@ -413,54 +413,6 @@ struct PLinkArea
     }
 };
 
-struct PLinkCopperPlate
-{
-    using Type = Data::TransmissionCapacities;
-    static Type Value(const Data::AreaLink* link)
-    {
-        return link->transmissionCapacities;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        switch (v)
-        {
-        case Data::tncEnabled:
-            return wxT("enabled");
-        case Data::tncIgnore:
-            return wxT("set to zero");
-        case Data::tncInfinite:
-            return wxT("set to infinite");
-        }
-        return wxT("set to zero");
-    }
-};
-
-struct PLinkAssetType
-{
-    using Type = Data::AssetType;
-    static Type Value(const Data::AreaLink* link)
-    {
-        return link->assetType;
-    }
-    static wxString ConvertToString(const Type v)
-    {
-        switch (v)
-        {
-        case Data::atAC:
-            return wxT("ac");
-        case Data::atDC:
-            return wxT("dc");
-        case Data::atGas:
-            return wxT("gas");
-        case Data::atVirt:
-            return wxT("virt");
-        case Data::atOther:
-            return wxT("other");
-        }
-        return wxT("ac");
-    }
-};
-
 struct PLinkHurdlesCost
 {
     using Type = bool;
@@ -526,18 +478,6 @@ struct PLinkComments
     }
 };
 
-/*struct PLinkStyle
-{
-        using Type = wxString;
-        static Type Value(const Data::AreaLink* link)
-        {
-                return wxStringFromUTF8(link->style);
-        }
-        static wxString ConvertToString(const Type v)
-        {
-                return v;
-        }
-};*/
 struct PLinkStyle
 {
     using Type = int;
@@ -569,6 +509,7 @@ struct PLinkStyle
         return ret;
     }
 };
+
 struct PLinkWidth
 {
     using Type = int;

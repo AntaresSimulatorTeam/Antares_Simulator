@@ -79,9 +79,12 @@ private:
     void onSelectSimplexDay(wxCommandEvent& evt);
     void onSelectSimplexWeek(wxCommandEvent& evt);
 
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
+    void setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity);
+    template<Data::GlobalTransmissionCapacities>
+    void onSelectTransmissionCapacity(wxCommandEvent&);
+
+    template<Data::GlobalTransmissionCapacities>
+    void createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu);
 
     void onSelectLinkTypeLocal(wxCommandEvent& evt);
     void onSelectLinkTypeAC(wxCommandEvent& evt);
@@ -89,10 +92,10 @@ private:
     // Export MPS functions
     void onSelectExportMPS(const Data::mpsExportStatus& mps_export_status);
 
-    template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+    template<Data::mpsExportStatus>
     void onSelectExportMPS(wxCommandEvent&);
 
-    template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+    template<Data::mpsExportStatus>
     void createMPSexportItemIntoMenu(wxMenu& menu);
 
     // Unfeasible behavior problem functions
@@ -158,6 +161,25 @@ void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
     menu.Connect(it->GetId(),
         wxEVT_COMMAND_MENU_SELECTED,
         wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
+        nullptr,
+        this);
+}
+
+const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity);
+
+template<Data::GlobalTransmissionCapacities CAPACITY>
+void Optimization::createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu)
+{
+    const wxMenuItem* it = Menu::CreateItem(
+        &menu,
+        wxID_ANY,
+        GlobalTransmissionCapacitiesToString_Display(CAPACITY),
+        transmissionCapacityIcon(CAPACITY),
+        wxEmptyString);
+
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
         nullptr,
         this);
 }

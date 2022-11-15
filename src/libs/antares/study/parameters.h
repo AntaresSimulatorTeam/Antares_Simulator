@@ -494,7 +494,7 @@ public:
     } reserveManagement;
 
     //! Transmission capacities
-    TransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
     LinkType linkType;
     //! Simplex optimization range (day/week)

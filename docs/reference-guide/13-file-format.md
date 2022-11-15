@@ -3,6 +3,17 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.4.0
 ### Input
+#### Zero/infinite capacity for physical links only
+In file **settings/generaldata.ini**, in section `optimization`, change admissible values for key `transmission-capacities` [str]:
+
+* `local-values` (formerly `true`, default) uses the local capacity of all links
+* `null-for-all-links` (formerly `false`) sets the capacity of all links to 0
+* `infinite-for-all-links` (formerly `infinite`) sets the capacity of all links to +infinity
+* `null-for-physical-links` sets the capacity of physical links to 0, uses the local capacity for virtual links
+* `infinite-for-physical-links` sets the capacity of physical links to +infinity, uses the local capacity for virtual links
+
+Previous values (`true`, `false` and `infinite`) are still admissible for compatibility.
+
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 
@@ -35,8 +46,8 @@ They constrol which marginal price time granularity is printed, either regarding
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
-* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const**
-* **output/yyyymmdd-hhmmeco/economy/mc-all/bind_const**
+* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/binding_constraints**
+* **output/yyyymmdd-hhmmeco/economy/mc-all/binding_constraints**
 
 These folders are meant to contain results of any kind regarding binding constraints marginal price (year by year or synthesis).
 
@@ -118,7 +129,7 @@ adequacy-patch-mode = outside
 * If `include-split-exported-mps` is set to `true`, create splitted MPS files in the output folder
 * Add file **time_measurement.txt**, containing performance data
 
-NOTE : **period** can be any of the following
+NOTE: **period** can be any of the following
 
 * `hourly`
 * `daily`
