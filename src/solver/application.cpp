@@ -219,10 +219,10 @@ void Application::prepare(int argc, char* argv[])
     switch (auto ret = parser->operator()(argc, argv); ret)
     {
         using namespace Yuni::GetOpt;
-    case ReturnCode::ERROR:
+    case ReturnCode::_ERROR:
         throw Error::CommandLineArguments(parser->errors());
         break;
-    case ReturnCode::HELP:
+    case ReturnCode::_HELP:
         return;
     }
 

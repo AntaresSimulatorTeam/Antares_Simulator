@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
     bool optVersion = false;
     options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-    if (options(argc, argv) == GetOpt::ReturnCode::ERROR)
+    if (options(argc, argv) == GetOpt::ReturnCode::_ERROR)
         return options.errors() ? EXIT_FAILURE : 0;
 
     if (optVersion)
