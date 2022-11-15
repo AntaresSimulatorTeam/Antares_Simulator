@@ -138,8 +138,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ls -la /home/runner/work/Antares_Simulator/Antares_Simulator
-          #export SONAR_USER_HOME=/home/runner/work/Antares_Simulator/Antares_Simulator
+          export SONAR_USER_HOME=/home/runner/
           sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
-          ls -la /home/runner/work/Antares_Simulator/Antares_Simulator
-          ls -la /home/runner/work/Antares_Simulator/Antares_Simulator/cache
