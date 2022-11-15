@@ -214,6 +214,10 @@ void IntermediateValues::computeDailyAveragesForCurrentYear()
 
 void IntermediateValues::computeWeeklyAveragesForCurrentYear()
 {
+    // Re-initialization (a previous MC year could have left non-nil values)
+    for (int w = 0; w != maxWeeksInAYear; ++w)
+        week[w] = 0.;
+
     // Compute weekly averages for each week in the year
     for (uint d = pRange->day[Data::rangeBegin]; d <= pRange->day[Data::rangeEnd]; ++d)
         week[calendar->days[d].week] += day[d];
@@ -245,6 +249,8 @@ void IntermediateValues::computeMonthlyAveragesForCurrentYear()
 
 void IntermediateValues::computeYearlyAveragesForCurrentYear()
 {
+    year = 0.; // Re-initialization (a previous MC year could have left a non-nil value)
+
     // Compute current year average
     for (uint w = pRange->week[Data::rangeBegin]; w <= pRange->week[Data::rangeEnd]; ++w)
     {
