@@ -45,12 +45,12 @@ jobs:
 
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Export release flag
       id: release_flag
       run: |
-        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
+        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -90,7 +90,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Set up Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: 3.x
 
@@ -144,6 +144,13 @@ jobs:
       run: |
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+
+    - name: Run kirchhoff constraints tests
+      shell: bash
+      run: |
+           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
 
     # simtest
     - name: Read simtest version
@@ -232,12 +239,12 @@ jobs:
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer archive upload push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
 

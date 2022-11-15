@@ -3,18 +3,9 @@ antares-[0-9].[0-9]-*
 
 .*.sw[a-z]
 *~
-CMakeCache.txt
 Makefile
-CMakeFiles
-cmake_install.cmake
-*.sln
 *.rc
 *.cbp
-src/ipch
-src/x64
-src/win32
-Debug
-Release
 
 # Visual Studio
 *.vcxproj
@@ -30,11 +21,6 @@ Release
 *.layout
 src/.vs
 
-resources/antares-open*
-bin/debug
-bin/release
-
-src/DartConfiguration.tcl
 src/config.h
 
 # Yuni
@@ -49,12 +35,8 @@ src/ext/yuni/docs/*
 src/ext/yuni/nany/*
 src/ext/yuni/src/compiler-flags-*
 
-src/ext/v8
 
-src/tests/resources/batches/
-
-src/ui/simulator/resources/win32/manifest.antares-win32.manifest
-src/ui/simulator/ProxyConnexionParameters.txt
+src/tests/resources/batches/*
 
 src/distrib/win32/version.nsh
 src/distrib/win32/build.nsh

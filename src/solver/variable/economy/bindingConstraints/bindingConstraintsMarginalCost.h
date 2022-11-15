@@ -263,13 +263,10 @@ public:
 
             pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
 
-            // Even if not printed for weekly BC, we need daily values as : (weekly values) / 7
-            double dailyValue = weeklyValue / 7;
-
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = dailyValue;
+                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = weeklyValue;
                 dayInTheYear++;
             }
             break;

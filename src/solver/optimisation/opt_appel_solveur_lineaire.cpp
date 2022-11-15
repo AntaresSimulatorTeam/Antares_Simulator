@@ -235,7 +235,7 @@ RESOLUTION:
     mpsWriterFactory mps_writer_factory(
       ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded();
+    mps_writer->runIfNeeded(study->resultWriter);
 
     TimeMeasurement measure;
     if (ortoolsUsed)
@@ -352,7 +352,7 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded();
+        mps_writer_on_error->runIfNeeded(study->resultWriter);
 
         return false;
     }

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2022 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,40 +25,13 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include "files.h"
+#ifndef __KIRCHHOFF_CBUILDER_H__
+#define __KIRCHHOFF_CBUILDER_H__
 
-#include <yuni/core/system/windows.hdr.h>
-#ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#endif
-#include <sys/types.h>
-#include <sys/stat.h>
+static void NotEnoughMemory();
 
-using namespace Yuni;
+bool initResources(int argc, char* argv[]);
+bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath);
+bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study, const std::string& studyPath, const std::string& kirchhoffOptionPath);
 
-FILE* FileOpen(const char* filename, const char* mode)
-{
-#ifdef YUNI_OS_WINDOWS
-    wchar_t m[4];
-
-    wchar_t wb[FILENAME_MAX];
-    wb[0] = L'\\';
-    wb[1] = L'\\';
-    wb[2] = L'?';
-    wb[3] = L'\\';
-    int n = MultiByteToWideChar(CP_UTF8, 0, filename, -1, wb + 4, sizeof(wb) - 10);
-    if (n <= 0)
-        return NULL;
-    wb[n + 4] = L'\0';
-    MultiByteToWideChar(CP_UTF8, 0, mode, -1, m, sizeof(m));
-    FILE* fd;
-    return !_wfopen_s(&fd, wb, m) ? fd : NULL;
-#else
-    return fopen(filename, mode);
-#endif
-}
+#endif // __KIRCHHOFF_CBUILDER_H__

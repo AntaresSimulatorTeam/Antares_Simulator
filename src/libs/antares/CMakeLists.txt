@@ -369,7 +369,7 @@ source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
     config.h
-    constants.h
+    constants.h constants.cpp
     xpansion.h
 	# Misc
 
@@ -405,7 +405,6 @@ set(SRC
 	hostinfo.h hostinfo.cpp
 
 	# files & paths
-	files/files.h files/files.cpp
 	paths/list.h   paths/list.cpp
 
 	# Utils
