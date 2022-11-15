@@ -205,15 +205,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueUp
-          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueDown
-          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydDown
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage
           = (int*)MemAlloc(nbPays * sizeof(int));
@@ -223,19 +215,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
           = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveAny
-          = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve
@@ -243,16 +223,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
           = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseDown
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]
@@ -656,39 +628,17 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueUp);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydUp);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveDown);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveAny);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeDown);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
         MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseDown);
-        MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
