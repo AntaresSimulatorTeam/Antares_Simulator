@@ -16,11 +16,9 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace);
-
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint);
-
+void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
+void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb, uint numSpace, Solver::IResultWriter::Ptr writer);
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint, uint, Solver::IResultWriter::Ptr writer);
 
 // ======================
 // MPS files writing
@@ -29,86 +27,90 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*, uint);
 class I_MPS_writer
 {
 public:
-	I_MPS_writer() = default;
-	virtual void runIfNeeded() = 0;
+    I_MPS_writer() = default;
+    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
 };
 
 class fullMPSwriter final : public I_MPS_writer
 {
 public:
-	fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, int currentOptimNumber, uint thread_number);
-	void runIfNeeded();
+    fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+                  int currentOptimNumber,
+                  uint thread_number);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+
 private:
-	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
-	int current_optim_number_;
-	uint thread_number_;
+    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
+    int current_optim_number_;
+    uint thread_number_;
 };
 
 class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
-	fullOrToolsMPSwriter(MPSolver* solver, int currentOptimNumber, uint thread_number);
-	void runIfNeeded();
+    fullOrToolsMPSwriter(MPSolver* solver, int currentOptimNumber, uint thread_number);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+
 private:
-	MPSolver* solver_ = nullptr;
-	int current_optim_number_;
-	uint thread_number_;
+    MPSolver* solver_ = nullptr;
+    int current_optim_number_;
+    uint thread_number_;
 };
 
 class splitMPSwriter : public I_MPS_writer
 {
 public:
-	splitMPSwriter(	PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-					int currentOptimNumber,
-					uint thread_nb,
-					bool simu_1st_week);
+    splitMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+                   int currentOptimNumber,
+                   uint thread_nb,
+                   bool simu_1st_week);
 
-	void runIfNeeded();
+    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+
 private:
-	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
-	int current_optim_number_;
-	uint thread_nb_;
-	bool simu_1st_week_;
+    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
+    int current_optim_number_;
+    uint thread_nb_;
+    bool simu_1st_week_;
 };
 
 class nullMPSwriter : public I_MPS_writer
 {
 public:
-	void runIfNeeded() 
-	{ 
-		// Does nothing
-	}
+    void runIfNeeded(Solver::IResultWriter::Ptr writer)
+    {
+        // Does nothing
+    }
 };
 
 class mpsWriterFactory
 {
 public:
-	mpsWriterFactory(
-		PROBLEME_HEBDO* ProblemeHebdo,
-		int NumIntervalle,
-		PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-		bool ortoolsUsed,
-		MPSolver* solver,
-		uint thread_number);
+    mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
+                     int NumIntervalle,
+                     PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
+                     bool ortoolsUsed,
+                     MPSolver* solver,
+                     uint thread_number);
 
-	std::unique_ptr<I_MPS_writer> create();
-	std::unique_ptr<I_MPS_writer> createOnOptimizationError();
+    std::unique_ptr<I_MPS_writer> create();
+    std::unique_ptr<I_MPS_writer> createOnOptimizationError();
 
 private:
-	// Member functions...
-	std::unique_ptr<I_MPS_writer> createFullmpsWriter();
-	bool doWeExportMPS();
+    // Member functions...
+    std::unique_ptr<I_MPS_writer> createFullmpsWriter();
+    bool doWeExportMPS();
 
-	// Member data...
-	PROBLEME_HEBDO* pb_hebdo_ = nullptr;
-	int num_intervalle_;
-	PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
-	bool ortools_used_;
-	MPSolver* solver_ = nullptr;
-	uint thread_number_;
-	int current_optim_number_;
-	Data::mpsExportStatus export_mps_;
-	bool export_mps_on_error_;
-	bool split_mps_;
-	bool is_first_week_of_year_;
+    // Member data...
+    PROBLEME_HEBDO* pb_hebdo_ = nullptr;
+    int num_intervalle_;
+    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
+    bool ortools_used_;
+    MPSolver* solver_ = nullptr;
+    uint thread_number_;
+    int current_optim_number_;
+    Data::mpsExportStatus export_mps_;
+    bool export_mps_on_error_;
+    bool split_mps_;
+    bool is_first_week_of_year_;
 };

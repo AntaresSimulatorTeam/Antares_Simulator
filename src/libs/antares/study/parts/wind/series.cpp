@@ -56,7 +56,6 @@ int DataSeriesWindLoadFromFolder(Study& s,
         d->series.averageTimeseries();
 
     d->timeseriesNumbers.clear();
-    d->series.flush();
 
     return ret;
 }

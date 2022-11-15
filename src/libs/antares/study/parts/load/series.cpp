@@ -61,7 +61,6 @@ int DataSeriesLoadLoadFromFolder(Study& study,
         s->series.averageTimeseries();
 
     s->timeseriesNumbers.clear();
-    s->series.flush();
 
     return ret;
 }

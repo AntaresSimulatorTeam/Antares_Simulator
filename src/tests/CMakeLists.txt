@@ -6,7 +6,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 # Make found targets globally available.
 if (Boost_FOUND)
-	set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
+    set_target_properties(Boost::unit_test_framework PROPERTIES IMPORTED_GLOBAL TRUE)
 endif()
 
 
@@ -33,6 +33,7 @@ endif()
 if (${RECENT_BOOST})
     add_subdirectory(end-to-end)
     add_subdirectory(src)
+    add_subdirectory(kirchhoff-cbuilder)
 else()
     message(STATUS "Boost >= 1.60.0 is required for end-to-end tests, found ${Boost_VERSION}. Skipping")
 endif()
@@ -58,9 +59,15 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
+      add_test(
+        NAME kirchhoff
+        COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder> kirchhoff_pytest.py
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
+        )
+
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
-  else()   
+  else()
       message(FATAL_ERROR "Module pytest or numpy not installed : can't run python scripts for end to end tests")
   endif()
-  
+
 endif()

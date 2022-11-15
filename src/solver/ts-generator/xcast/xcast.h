@@ -30,6 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 #include <antares/mersenne-twister/mersenne-twister.h>
+#include <i_writer.h>
 #include "studydata.h"
 #include <yuni/core/noncopyable.h>
 
@@ -73,7 +74,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    XCast(Data::Study& study, Data::TimeSeries ts);
+    XCast(Data::Study& study, Data::TimeSeries ts, IResultWriter::Ptr writer);
     /*!
     ** \brief Destructor
     */
@@ -249,6 +250,7 @@ private:
     //! Name of the current timeseries
     Yuni::CString<32, false> pTSName;
 
+    IResultWriter::Ptr pWriter;
 }; // class XCast
 
 } // namespace XCast

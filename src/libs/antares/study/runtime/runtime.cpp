@@ -94,8 +94,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
                     s[i] = 0.;
                 }
             }
-            // reduce the memory footprint
-            m.flush();
         }
 
         // Spinning - Economic Only - If no prepro
@@ -110,26 +108,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
             area.scratchpad[numSpace] = new AreaScratchpad(r, area);
-
-        if (mode == Data::stdmAdequacy)
-            area.reserves.flush();
-        // reduce a bit the memory footprint
-        area.miscGen.flush();
-
-        // hydroHasMod
-        if (mode != stdmAdequacyDraft)
-        {
-            if (!area.hydro.prepro) // not in prepro mode
-                area.hydro.series->storage.flush();
-            else
-            {
-                auto& m = area.hydro.prepro->data;
-                // reduce memory footprint
-                m.flush();
-            }
-        }
-
-        area.reserves.flush();
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
@@ -205,9 +183,6 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
                      rti.linkIndex,
                      rti.clusterIndex,
                      rti.clustersAreaIndex);
-
-    // reduce the memory footprint
-    rti.bounds.flush();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
@@ -446,10 +421,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
- hydroCostByAreaShouldBeInfinite(nullptr),
- globalMaximumCost(0.),
-#endif
  quadraticOptimizationHasFailed(false),
  weekInTheYear(nullptr),
  currentYear(nullptr)
@@ -542,52 +513,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
 
     // Check if some clusters request TS generation
     checkThermalTSGeneration(study);
-
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-    // Hydro cost - Infinite
-    hydroCostByAreaShouldBeInfinite = new bool[study.areas.size()];
-
-    // Looking for the maximum global cost
-    {
-        double m = 0.;
-        double tmp;
-        double maxModCost;
-        // each area...
-        study.areas.each([&](Data::Area& area) {
-            if (area.thermal.unsuppliedEnergyCost > m)
-                m = area.thermal.unsuppliedEnergyCost;
-
-            // each thermal cluster...
-            auto end = area.thermal.list.end();
-            for (auto i = area.thermal.list.begin(); i != end; ++i)
-            {
-                auto& cluster = *(i->second);
-
-                tmp = cluster.marketBidCost + (cluster.spreadCost * 2.);
-                // Looking for the max. value of the modulation cost
-                maxModCost = 0.;
-                for (uint j = 0; j < cluster.modulation.height; ++j)
-                {
-                    if (cluster.modulation[0][j] < maxModCost)
-                        maxModCost = cluster.modulation[0][j];
-                }
-                tmp *= maxModCost;
-                if (tmp > m)
-                    m = tmp;
-
-                // reduce the memory footprint
-                cluster.modulation.flush();
-            }
-        });
-        m *= 1.1;
-        globalMaximumCost = m;
-        logs.info() << "  Global Maximum cost: " << m;
-    }
-#endif
-
-    // reduce the memory footprint in swap mode
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 
     if (not gd.geographicTrimming)
         disableAllFilters(study);
@@ -791,9 +716,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     delete[] timeseriesNumberYear;
     delete[] areaLink;
     delete[] bindingConstraint;
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-    delete[] hydroCostByAreaShouldBeInfinite;
-#endif
 }
 
 Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
@@ -809,10 +731,6 @@ Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
 {
     u.requiredMemoryForInput += sizeof(StudyRuntimeInfos);
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-    u.requiredMemoryForInput += sizeof(bool) * u.study.areas.size();
-#endif
-
     u.study.areas.each([&](const Data::Area& area) {
         u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
     });

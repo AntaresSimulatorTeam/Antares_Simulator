@@ -66,7 +66,6 @@ int DataSeriesSolarLoadFromFolder(Study& study,
         s->series.reset(1, HOURS_PER_YEAR);
 
     s->timeseriesNumbers.clear();
-    s->series.flush();
 
     return ret;
 }

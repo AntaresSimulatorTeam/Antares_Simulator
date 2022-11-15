@@ -163,8 +163,7 @@ bool Economy::simulationBegin()
             }
         }
 
-        weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+        weeklyOptProblem = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
 
         SIM_InitialisationResultats();
     }
@@ -222,7 +221,7 @@ bool Economy::year(Progression::Task& progression,
             weeklyOptProblem->solve(state, hourInTheYear, numSpace);
 
             DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

@@ -52,8 +52,7 @@ using namespace Antares;
 
 int main(int argc, char* argv[])
 {
-    // Antares SWAP
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     // We have one or several arguments

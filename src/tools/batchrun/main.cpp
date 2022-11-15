@@ -85,7 +85,6 @@ int main(int argc, char* argv[])
 
     // options
     String optInput;
-    bool optSwap = false;
     bool optNoTSImport = false;
     bool optIgnoreAllConstraints = false;
     bool optForceExpansion = false;
@@ -144,7 +143,6 @@ int main(int argc, char* argv[])
                     ' ',
                     "force-parallel",
                     "Override the max number of years computed simultaneously");
-        options.addFlag(optSwap, 's', "swap", "Swap mode");
         options.remainingArguments(optInput);
         // Version
         options.addParagraph("\nMisc.");
@@ -186,7 +184,7 @@ int main(int argc, char* argv[])
     String solver;
     if (optSolver.empty())
     {
-        Solver::Feature feature = (not optSwap) ? Solver::standard : Solver::withSwapFiles;
+        Solver::Feature feature = Solver::standard;
         Solver::FindLocation(solver, (Data::Version)Data::versionLatest, feature);
         if (solver.empty())
         {

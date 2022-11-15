@@ -70,55 +70,16 @@ typedef struct
 
 typedef struct
 {
-    double* DefaillancePositive;                /* horaire */
-    double* DefaillanceNegative;                /* horaire */
-    double* DefaillanceEnReserve;               /* horaire */
-    double* Turbinage;                          /* horaire */
-    double* Solde;                              /* horaire */
-    double* CoutMarginal;                       /* horaire */
-    PRODUCTION_THERMIQUE** ProductionThermique; /* indice par paliers */
-} PAYS_PAR_ANNEE_SIMULEE;
-
-typedef struct
-{
-    double* ParPalier; /* indice par palier */
-    double* Minimum;
-    int* MinimumNo;
-    double* Maximum;
-    int* MaximumNo;
-    double* StdDev;
-    double* Annuel; /*Productions annuelles*/
-} PRODUCTION_THERMIQUE_MOYENNE;
-
-typedef struct
-{
-    double* VariableDuale;
-} CONTCOUPL_PAR_ANNEE_SIMULEE;
-
-typedef struct
-{
-    double* VariablesDualesMoyennes;
-    CONTCOUPL_PAR_ANNEE_SIMULEE** ParSituation;
-} RESULTATS_PAR_CONTRAINTE_COUPLANTE;
-
-typedef struct
-{
-    double* VariableDuale;
-} INTERCO_PAR_ANNEE_SIMULEE;
-
-typedef struct
-{
-    double* TransitMoyen;
-    double* TransitMinimum;
-    int* TransitMinimumNo;
-    double* TransitMaximum;
-    int* TransitMaximumNo;
-    double* TransitStdDev;
+    double* TransitMoyen;   // UNUSED
+    double* TransitMinimum; // UNUSED
+    int* TransitMinimumNo;  // UNUSED
+    double* TransitMaximum; // UNUSED
+    int* TransitMaximumNo;  // UNUSED
+    double* TransitStdDev;  // UNUSED
     double* TransitMoyenRecalculQuadratique;
-    double* VariablesDualesMoyennes;
-    double* TransitAnnuel;
-    INTERCO_PAR_ANNEE_SIMULEE** ParSituation;
-    double* RenteHoraire;
+    double* VariablesDualesMoyennes; // UNUSED
+    double* TransitAnnuel;           // UNUSED
+    double* RenteHoraire;            // UNUSED
 } RESULTATS_PAR_INTERCONNEXION;
 
 typedef struct
