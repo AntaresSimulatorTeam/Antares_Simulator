@@ -369,7 +369,7 @@ source_group("stdcxx" FILES ${SRC_STDCXX})
 
 set(SRC
     config.h
-    constants.h
+    constants.h constants.cpp
     xpansion.h
 	# Misc
 
