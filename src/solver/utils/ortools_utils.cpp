@@ -345,9 +345,9 @@ OrtoolsUtils::OrtoolsUtils()
     // linear_solver/linear_solver.cc file
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::sirius]
-      = "sirius_lp"; // TODO JMK : not defined in current ortools RTE branch.
+      = "sirius_lp";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::sirius]
-      = "sirius_mip"; // TODO JMK : not defined in current ortools RTE branch.
+      = "sirius_mip";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::coin] = "clp";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::coin] = "cbc";
@@ -355,13 +355,13 @@ OrtoolsUtils::OrtoolsUtils()
     _solverLinearProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_lp";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_mip";
 
-    _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_scip] = "glop";
-    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_scip] = "scip";
+    _solverLinearProblemOptimStringMap[OrtoolsSolver::scip] = "scip";
+    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::scip] = "scip";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::cplex]
-      = "cplex_lp"; // TODO JMK : not defined in current ortools RTE branch.
+      = "cplex_lp";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::cplex]
-      = "cplex_mip"; // TODO JMK : not defined in current ortools RTE branch.
+      = "cplex_mip";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::gurobi] = "gurobi_lp";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::gurobi] = "gurobi_mip";
@@ -371,51 +371,6 @@ OrtoolsUtils::OrtoolsUtils()
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_cbc] = "glop";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_cbc] = "cbc";
-
-    /* TODO JMK : see how we can get optimization problem type with current ortools RTE branch
-    (can't use enum because of compile switch)
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::sirius]       =
-    MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::sirius] =
-    MPSolver::OptimizationProblemType::SIRIUS_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::coin]       =
-    MPSolver::OptimizationProblemType::CLP_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::coin] =
-    MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::xpress]       =
-    MPSolver::OptimizationProblemType::XPRESS_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::xpress] =
-    MPSolver::OptimizationProblemType::XPRESS_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::glop_scip]       =
-    MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_scip] =
-    MPSolver::OptimizationProblemType::SCIP_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::cplex]       =
-    MPSolver::OptimizationProblemType::CPLEX_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::cplex] =
-    MPSolver::OptimizationProblemType::CPLEX_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::gurobi]       =
-    MPSolver::OptimizationProblemType::GUROBI_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::gurobi] =
-    MPSolver::OptimizationProblemType::GUROBI_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::glpk]       =
-    MPSolver::OptimizationProblemType::GLPK_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glpk] =
-    MPSolver::OptimizationProblemType::GLPK_MIXED_INTEGER_PROGRAMMING;
-
-    _solverLinearProblemOptimMap[OrtoolsSolver::glop_cbc]       =
-    MPSolver::OptimizationProblemType::GLOP_LINEAR_PROGRAMMING;
-    _solverMixedIntegerProblemOptimMap[OrtoolsSolver::glop_cbc] =
-    MPSolver::OptimizationProblemType::CBC_MIXED_INTEGER_PROGRAMMING;
-
-            */
 }
 
 bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver)
@@ -423,7 +378,7 @@ bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver)
     bool result = false;
 
     // GLOP solver fail for too many examples. For now support is disabled
-    if (ortoolsSolver == OrtoolsSolver::glop_scip || ortoolsSolver == OrtoolsSolver::glop_cbc)
+    if (ortoolsSolver == OrtoolsSolver::glop_cbc)
     {
         return false;
     }

@@ -36,9 +36,9 @@ namespace Data
 enum class OrtoolsSolver : unsigned char
 {
     sirius,    /*! Sirius solver  */
-    coin,      /*! Cpl and Cbc coin solver */
+    coin,      /*! Clp and Cbc coin solver */
     xpress,    /*! Xpress solver : licence needed, depends on ortools link */
-    glop_scip, /*! Glop and SCIP solver */
+    scip,      /*! SCIP solver */
     cplex,     /*! CPlex solver  : licence needed, depends on ortools link*/
     gurobi,    /*! Gurobi solver : licence needed, depends on ortools link*/
     glpk,      /*! GLPK solver */

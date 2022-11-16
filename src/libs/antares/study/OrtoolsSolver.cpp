@@ -45,7 +45,7 @@ const std::initializer_list<std::string>& getNames<OrtoolsSolver>()
     // Enum must be stored in lower case and without spaces because values  are trimmed and lowered
     // in ini load
     static std::initializer_list<std::string> s_ortoolsSolverNames{
-      "sirius", "coin", "xpress", "glop-scip", "cplex", "gurobi", "glpk", "glop-cbc"};
+      "sirius", "coin", "xpress", "scip", "cplex", "gurobi", "glpk", "glop-cbc"};
 
     return s_ortoolsSolverNames;
 }
