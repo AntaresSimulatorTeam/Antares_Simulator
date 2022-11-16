@@ -137,12 +137,24 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
                                           HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                                           uint weekNb,
                                           int yearNb,
-                                          double deltaCost)
+                                          double costPriorToCsr,
+                                          double costAfterCsr)
 {
     const int hoursInWeek = 168;
-    if (deltaCost <= 0.0)
+    const bool checkCost
+      = hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->CheckCsrCostFunctionValue;
+    double deltaCost = costAfterCsr - costPriorToCsr;
+
+    if (checkCost)
+    {
+        logs.info() << "[adq-patch] costPriorToCsr: " << costPriorToCsr
+                    << ", costAfterCsr: " << costAfterCsr
+                    << ", deltaCost: " << costAfterCsr - costPriorToCsr;
+    }
+
+    if (!checkCost || (checkCost && deltaCost < 0.0))
         storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
-    else
+    else if (checkCost && deltaCost >= 0.0)
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
              "solution is set as LMR . year: "
@@ -255,17 +267,14 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    int yearNb)
 {
     double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-    logs.info() << "[adq-patch] costPriorToCsr: " << costPriorToCsr;
     auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
-        logs.info() << "[adq-patch] costAfterCsr: " << costAfterCsr;
-        logs.info() << "[adq-patch] deltaCost: " << costAfterCsr - costPriorToCsr;
         storeOrDisregardInteriorPointResults(
-          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costAfterCsr - costPriorToCsr);
+          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
         return true;
     }
     else
