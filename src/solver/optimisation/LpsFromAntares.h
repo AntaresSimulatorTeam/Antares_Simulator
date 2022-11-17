@@ -4,6 +4,12 @@
 #include <array>
 #include <vector>
 
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/serialization/vector.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/array.hpp>
 
 using YearWeekNum = std::array<int, 3>;
 class LpFromAntares;
@@ -17,6 +23,18 @@ using WeekConstantDataFromAntares = std::map<int, ConstantDataFromAntaresPtr>;
 using YearWeekNumHebdoDataFromAntares = std::map<YearWeekNum, HebdoDataFromAntaresPtr>;
 
 class ConstantDataFromAntares {
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, const unsigned int version) {
+        ar & NombreDeVariables;
+        ar & NombreDeContraintes;
+        ar & NombreDeCoefficients;
+        ar & TypeDeVariable;
+        ar & Mdeb;
+        ar & Nbterm;
+        ar & IndicesColonnes;
+        ar & CoefficientsDeLaMatriceDesContraintes;
+    }
 public:
     int     NombreDeVariables;
     int     NombreDeContraintes;
@@ -30,6 +48,15 @@ public:
 };
 
 class HebdoDataFromAntares {
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & Sens;
+        ar & Xmax;
+        ar & Xmin;
+        ar & CoutLineaire;
+        ar & SecondMembre;
+    }
 public:
     std::vector<char>   Sens;
     std::vector<double> Xmax;
@@ -39,6 +66,13 @@ public:
 };
 
 class LpsFromAntares {
+    friend class boost::serialization::access;
+    template<class Archive>
+    void serialize(Archive & ar, [[maybe_unused]] const unsigned int version) {
+        ar & _constant;
+        ar & _hedbo;
+    }
+
 public:
     WeekConstantDataFromAntares _constant;
     YearWeekNumHebdoDataFromAntares _hedbo;
