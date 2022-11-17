@@ -58,7 +58,6 @@ EconomyWeeklyOptimization::EconomyWeeklyOptimization(PROBLEME_HEBDO** problemesH
 EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled,
                                                                  PROBLEME_HEBDO** problemesHebdo)
 {
-    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
     if (adqPatchEnabled)
         return std::make_unique<AdequacyPatchOptimization>(problemesHebdo);
     else
