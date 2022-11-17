@@ -97,8 +97,6 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     // part that we need
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-
-    solveCSR(state, numSpace, w);
 }
 
 // No adequacy patch
@@ -107,6 +105,10 @@ void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, ui
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+void NoAdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
+{
+    return;
 }
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
@@ -284,6 +286,8 @@ bool Economy::year(Progression::Task& progression,
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+            weeklyOptProblem->solveCSR(state, numSpace, w);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 
