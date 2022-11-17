@@ -482,7 +482,7 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
     {
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            marketBidCostPerHour[hour] = prepro->fuelcost[0][hour] * 3600 / efficiency + co2 * prepro->co2cost[0][hour] + variableomcost;
+            marketBidCostPerHour[hour] = prepro->fuelcost[0][hour] * 360.0 / efficiency + co2 * prepro->co2cost[0][hour] + variableomcost;
             marginalCostPerHour[hour] = marketBidCostPerHour[hour];           
         }
         return;
