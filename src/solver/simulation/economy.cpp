@@ -234,7 +234,8 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
-    double totalLmrViolation = calculateDensNewAndTotalLmrViolation(problemeHebdo);
+    double totalLmrViolation
+      = calculateDensNewAndTotalLmrViolation(problemeHebdo, state.study, numSpace);
     logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
