@@ -55,6 +55,8 @@ public:
 
     void installSignalHandlers() const;
 
+//! The current Antares study
+Antares::Data::Study::Ptr pStudy = nullptr;
 private:
     /*!
     ** \brief Reset the log filename and open it
@@ -77,8 +79,6 @@ private:
 
     //! The settings given from the command line
     Settings pSettings;
-    //! The current Antares study
-    Antares::Data::Study::Ptr pStudy = nullptr;
     //! General data related to the current study
     Antares::Data::Parameters* pParameters = nullptr;
     //! The total number of errors which have been generated

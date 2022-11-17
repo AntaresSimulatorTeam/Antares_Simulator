@@ -27,6 +27,7 @@
 
 #include "sim_structure_probleme_economique.h"
 #include "opt_fonctions.h"
+#include "LpsFromAntares.h"
 
 #include <antares/logs/logs.h>
 #include "../utils/filename.h"
@@ -37,6 +38,13 @@ using Antares::Solver::Optimization::OptimizationOptions;
 
 namespace
 {
+
+template<class T, class U>
+void copy(int n, T * in, U & out) {
+    out.resize(n);
+    std::copy(in, in + n, out.begin());
+}
+
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
                                    const int optimizationNumber)
@@ -102,6 +110,47 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                                     problemeHebdo->weekInTheYear,
                                     problemeHebdo->year);
 
+        /* rend accessible les problems à haut niveau */
+        auto& study = *Antares::Data::Study::Current::Get();
+        if (study._lps != NULL) {
+            LpsFromAntares * lps = (LpsFromAntares*)study._lps;
+            int const year = study.runtime->currentYear[numSpace] + 1;
+            int const week = study.runtime->weekInTheYear[numSpace] + 1;
+            int const n = ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle];
+            int nvars = ProblemeHebdo->ProblemeAResoudre->NombreDeVariables;
+            int ncons = ProblemeHebdo->ProblemeAResoudre->NombreDeContraintes;
+            int neles = ProblemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne[ncons - 1] + ProblemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes[ncons - 1];
+
+            //LpFromAntaresPtr lp(new LpFromAntares);
+            if (week == 1 && n == 1) {
+                ConstantDataFromAntaresPtr year_ptr(new ConstantDataFromAntares);
+                year_ptr->NombreDeVariables = nvars;
+                year_ptr->NombreDeCoefficients = neles;
+                year_ptr->NombreDeContraintes = ncons;
+
+                copy(nvars, ProblemeHebdo->ProblemeAResoudre->TypeDeVariable, year_ptr->TypeDeVariable);
+
+                copy(neles, ProblemeHebdo->ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, year_ptr->CoefficientsDeLaMatriceDesContraintes);
+                copy(neles, ProblemeHebdo->ProblemeAResoudre->IndicesColonnes, year_ptr->IndicesColonnes);
+
+                copy(ncons, ProblemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
+                copy(ncons, ProblemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes, year_ptr->Nbterm);
+                lps->_constant[year] = year_ptr;
+            }
+            {
+                HebdoDataFromAntaresPtr week_ptr(new HebdoDataFromAntares);
+
+                copy(nvars, ProblemeHebdo->ProblemeAResoudre->CoutLineaire, week_ptr->CoutLineaire);
+                copy(nvars, ProblemeHebdo->ProblemeAResoudre->Xmax, week_ptr->Xmax);
+                copy(nvars, ProblemeHebdo->ProblemeAResoudre->Xmin, week_ptr->Xmin);
+
+                copy(ncons, ProblemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
+                copy(ncons, ProblemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
+
+                lps->_hedbo[{year, week, n}] = week_ptr;
+            }
+        }
+        /* Fin */
         if (!OPT_AppelDuSimplexe(options,
                                  problemeHebdo,
                                  numeroDeLIntervalle,
