@@ -53,6 +53,8 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.cpp
 		optimisation/adequacy_patch.h
 		optimisation/adequacy_patch.cpp
+		optimisation/LpsFromAntares.cpp
+		optimisation/LpsFromAntares.h
 
         utils/ortools_utils.h
 		utils/ortools_utils.cpp
@@ -73,5 +75,5 @@ set(SRC_MODEL
 	${RTESOLVER_OPT}
 )
 
-add_library(libmodel_antares ${SRC_MODEL})
+add_library(libmodel_antares ${SRC_MODEL}  )
 target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver infeasible_problem_analysis)
