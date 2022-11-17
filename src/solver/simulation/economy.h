@@ -51,21 +51,21 @@ public:
     static Ptr create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
-    EconomyWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
+    explicit EconomyWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
     PROBLEME_HEBDO** pProblemesHebdo;
 };
 
 class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
-    AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
+    explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
 };
 
 class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
-    NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
+    explicit NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(Variable::State&, int, uint numSpace) override;
 };
 
