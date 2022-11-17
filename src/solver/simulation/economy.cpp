@@ -97,8 +97,6 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
     // part that we need
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-
-    solveCSR(state, numSpace, w);
 }
 
 // No adequacy patch
@@ -107,6 +105,10 @@ void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, ui
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+void NoAdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
+{
+    return;
 }
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
@@ -232,7 +234,8 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
-    double totalLmrViolation = calculateDensNewAndTotalLmrViolation(problemeHebdo);
+    double totalLmrViolation
+      = calculateDensNewAndTotalLmrViolation(problemeHebdo, state.study, numSpace);
     logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
@@ -284,6 +287,8 @@ bool Economy::year(Progression::Task& progression,
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+            weeklyOptProblem->solveCSR(state, numSpace, w);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 

@@ -119,7 +119,9 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
  * calculates total LMR violations and LMR violations per area per hour inside
  * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo);
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+                                            const Study& study,
+                                            uint numSpace);
 
 /*!
 ** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]

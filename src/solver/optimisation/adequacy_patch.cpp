@@ -155,7 +155,9 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
     return 0.0;
 }
 
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo)
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+                                            const Study& study,
+                                            uint numSpace)
 {
     double netPositionInit;
     double densNew;
@@ -171,14 +173,21 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo)
             {
                 std::tie(netPositionInit, densNew, totalNodeBalance)
                   = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+                // adjust densNew according to the new specification/request by ELIA
+                /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
+                                        + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
+                auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+                densNew = Math::Max(0.0, densNew - dtgMrg);
+                // write down densNew values for all the hours
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
                 // copy spilled Energy values into spilled Energy values after CSR
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
                   = ProblemeHebdo->ResultatsHoraires[Area]
                       ->ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
-                totalLmrViolation += LmrViolationAreaHour(
-                  ProblemeHebdo, totalNodeBalance, Area, hour);
+                totalLmrViolation
+                  += LmrViolationAreaHour(ProblemeHebdo, totalNodeBalance, Area, hour);
             }
         }
     }
