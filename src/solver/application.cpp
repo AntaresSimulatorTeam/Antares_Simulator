@@ -223,18 +223,24 @@ void Application::prepare(int argc, char* argv[])
         throw Error::CommandLineArguments(parser->errors());
         break;
     case ReturnCode::help:
+        // End the program
+        pStudy = nullptr;
         return;
+    default:
+        break;
     }
 
     if (options.displayVersion)
     {
         PrintVersionToStdCout();
+        pStudy = nullptr;
         return;
     }
 
     if (options.listSolvers)
     {
         printSolvers();
+        pStudy = nullptr;
         return;
     }
 
@@ -250,8 +256,8 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " ("
-                      << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
+                      << ")";
 #else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
@@ -347,6 +353,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
+    // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
         return;
 
