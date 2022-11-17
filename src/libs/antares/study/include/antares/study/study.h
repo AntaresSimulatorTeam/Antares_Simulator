@@ -67,6 +67,9 @@ class UIRuntimeInfo;
 class Study: public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
+    void * _lps;
+
+public:
     using Ptr = std::shared_ptr<Study>;
     //! Set of studies
     using Set = std::set<Ptr>;
