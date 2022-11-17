@@ -5,16 +5,16 @@
 #include <vector>
 
 
-typedef std::array<int, 3> YearWeekNum;
+using YearWeekNum = std::array<int, 3>;
 class LpFromAntares;
 class ConstantDataFromAntares;
 class HebdoDataFromAntares;
 
-typedef std::shared_ptr<ConstantDataFromAntares> ConstantDataFromAntaresPtr;
-typedef std::shared_ptr<HebdoDataFromAntares> HebdoDataFromAntaresPtr;
+using ConstantDataFromAntaresPtr = std::shared_ptr<ConstantDataFromAntares>;
+using HebdoDataFromAntaresPtr = std::shared_ptr<HebdoDataFromAntares>;
 
-typedef std::map<int, ConstantDataFromAntaresPtr> WeekConstantDataFromAntares;
-typedef std::map<YearWeekNum, HebdoDataFromAntaresPtr> YearWeekNumHebdoDataFromAntares;
+using WeekConstantDataFromAntares = std::map<int, ConstantDataFromAntaresPtr>;
+using YearWeekNumHebdoDataFromAntares = std::map<YearWeekNum, HebdoDataFromAntaresPtr>;
 
 class ConstantDataFromAntares {
 public:
