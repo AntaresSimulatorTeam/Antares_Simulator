@@ -34,6 +34,9 @@
 #include <antares/memory/memory.h>
 #include <antares/locale.h>
 
+#include "optimisation/LpsFromAntares.h"
+#include <fstream>
+
 using namespace Antares;
 using namespace Yuni;
 
@@ -132,6 +135,11 @@ int main(int argc, char** argv)
         Antares::Solver::Application application;
         application.prepare(argc, argv);
         application.execute();
+
+        std::ofstream ofs("fichierDeSerialisation");
+        boost::archive::text_oarchive oa(ofs);
+        oa << application.pStudy->_lps;
+
         application.writeExectutionInfo();
 
         // to avoid a bug from wxExecute, we should wait a little before returning
