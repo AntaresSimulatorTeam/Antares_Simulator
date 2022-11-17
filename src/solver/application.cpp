@@ -214,20 +214,33 @@ void Application::prepare(int argc, char* argv[])
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
     auto parser = CreateParser(pSettings, options);
-
     // Parse the command line arguments
-    if (!parser->operator()(argc, argv))
-        throw Antares::Error::CommandLineArguments(parser->errors());
+
+    switch (auto ret = parser->operator()(argc, argv); ret)
+    {
+        using namespace Yuni::GetOpt;
+    case ReturnCode::error:
+        throw Error::CommandLineArguments(parser->errors());
+        break;
+    case ReturnCode::help:
+        // End the program
+        pStudy = nullptr;
+        return;
+    default:
+        break;
+    }
 
     if (options.displayVersion)
     {
         PrintVersionToStdCout();
+        pStudy = nullptr;
         return;
     }
 
     if (options.listSolvers)
     {
         printSolvers();
+        pStudy = nullptr;
         return;
     }
 
@@ -243,8 +256,8 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " ("
-                      << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
+                      << ")";
 #else
     logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
@@ -340,6 +353,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
+    // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
         return;
 
