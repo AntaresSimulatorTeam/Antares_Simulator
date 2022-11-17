@@ -55,6 +55,9 @@
 #include <conio.h>
 #else
 #include <unistd.h>
+#include "optimisation/LpsFromAntares.h"
+#include <fstream>
+
 #endif
 
 using namespace Antares;
@@ -156,6 +159,10 @@ int main(int argc, char** argv)
     }
 
     application.execute();
+
+    std::ofstream ofs("fichierDeSerialisation");
+    boost::archive::text_oarchive oa(ofs);
+    oa << application.pStudy->_lps;
 
     application.writeExectutionInfo();
 
