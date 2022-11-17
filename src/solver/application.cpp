@@ -215,14 +215,14 @@ void Application::prepare(int argc, char* argv[])
     // don't de-allocate these.
     auto parser = CreateParser(pSettings, options);
     // Parse the command line arguments
-    
+
     switch (auto ret = parser->operator()(argc, argv); ret)
     {
         using namespace Yuni::GetOpt;
-    case ReturnCode::_ERROR:
+    case ReturnCode::error:
         throw Error::CommandLineArguments(parser->errors());
         break;
-    case ReturnCode::_HELP:
+    case ReturnCode::help:
         return;
     }
 

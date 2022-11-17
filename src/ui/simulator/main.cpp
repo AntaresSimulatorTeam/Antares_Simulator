@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         // An error has occured
-        if (options(argc, argv) == GetOpt::ReturnCode::_ERROR)
+        if (options(argc, argv) == GetOpt::ReturnCode::error)
         {
             FreeUTF8Arguments(argc, argv);
             return options.errors() ? 1 : 0;

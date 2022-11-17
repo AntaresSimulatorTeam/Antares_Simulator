@@ -26,9 +26,9 @@ namespace GetOpt
 // Return codes
 enum class ReturnCode
 {
-    _OK,
-    _ERROR,
-    _HELP
+    ok,
+    error,
+    help
 };
 
 class YUNI_DECL Parser final

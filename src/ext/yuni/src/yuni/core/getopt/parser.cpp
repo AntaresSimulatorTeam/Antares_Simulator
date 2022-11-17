@@ -186,7 +186,7 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
                     if (*arg == 'h' or *arg == '?')
                     {
                         pParser.helpUsage(argv[0]);
-                        return ReturnCode::_HELP;
+                        return ReturnCode::help;
                     }
                     optionIsUnknown(arg);
                 }
@@ -200,7 +200,7 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
             ++arg;
             ++arg;
             if ('\0' == *arg) // End of options
-                return (0 == pParser.pErrors) ? ReturnCode::_OK : ReturnCode::_ERROR;
+                return (0 == pParser.pErrors) ? ReturnCode::ok : ReturnCode::error;
 
             if ((sub = strchr(arg, '=')))
             {
@@ -222,7 +222,7 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
                         if (0 == ::strcmp(buffer.c_str(), "help"))
                         {
                             pParser.helpUsage(argv[0]);
-                            return ReturnCode::_HELP;
+                            return ReturnCode::help;
                         }
                         optionIsUnknown(buffer.c_str());
                     }
@@ -246,7 +246,7 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
                     if (0 == ::strcmp(arg, "help"))
                     {
                         pParser.helpUsage(argv[0]);
-                        return ReturnCode::_HELP;
+                        return ReturnCode::help;
                     }
                     optionIsUnknown(arg);
                 }
@@ -269,7 +269,7 @@ GetOpt::ReturnCode Context::operator()(int argc, char* argv[])
         ++pTokenIndex;
     }
 
-    return (0 == pParser.pErrors) ? ReturnCode::_OK : ReturnCode::_ERROR;
+    return (0 == pParser.pErrors) ? ReturnCode::ok : ReturnCode::error;
 }
 
 } // namespace GetOptImpl
