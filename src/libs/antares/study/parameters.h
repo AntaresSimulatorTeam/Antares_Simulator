@@ -414,9 +414,6 @@ public:
         //! Flag to export mps files
         mpsExportStatus exportMPS;
 
-        //! if MPS files are exported, a flag to split them
-        bool splitExportedMPS;
-
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
