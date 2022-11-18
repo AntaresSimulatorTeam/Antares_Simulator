@@ -567,6 +567,7 @@ target_link_libraries(libantares-core
 		libantares-core-calendar
 		libantares-solver-variable-info
         result_writer
+        ortools::ortools
 	)
 
 

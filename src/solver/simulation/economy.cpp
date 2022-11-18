@@ -310,8 +310,8 @@ bool Economy::year(Progression::Task& progression,
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
     String filename;
-    filename << "debug" << SEP << "solver" << SEP << state.year + 1 << SEP << "weeksSolveTimes_"
-             << state.year << ".txt";
+    filename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_"
+             << state.year + 1 << ".txt";
     study.resultWriter->addEntryFromBuffer(filename.c_str(), weekResolutionBuffer);
 
     auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim;

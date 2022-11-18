@@ -19,13 +19,15 @@ private:
 public:
     PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
-                            const std::vector<bool>& VariablesEntieres);
+                            const std::vector<bool>& VariablesEntieres,
+                            std::vector<BasisStatus>& StatutDesVariables,
+                            std::vector<BasisStatus>& StatutDesContraintes);
 
     const std::vector<std::string>& NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     const std::vector<bool>& VariablesEntieres;
-    std::vector<BasisStatus> StatutDesVariables;
-    std::vector<BasisStatus> StatutDesContraintes;
+    std::vector<BasisStatus>& StatutDesVariables;
+    std::vector<BasisStatus>& StatutDesContraintes;
 
     bool isMIP() const;
     bool basisExists() const;
