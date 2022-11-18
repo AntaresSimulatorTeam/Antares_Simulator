@@ -173,8 +173,6 @@ MPSolver* convert_to_MPSolver(
         solver->EnableOutput();
 
     return solver;
-
-
 }
 } // namespace Optimization
 } // namespace Antares
@@ -319,11 +317,12 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* solver)
+                           MPSolver* solver,
+                           bool keepBasis)
 {
     MPSolverParameters params;
-
-    if (!Probleme->StatutDesVariables.empty() && !Probleme->StatutDesContraintes.empty())
+    // Provide an initial simplex basis, if any
+    if (Probleme->basisExists() && !Probleme->isMIP())
     {
         solver->SetStartingLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
@@ -331,7 +330,11 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
-        solver->GetFinalLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        // Save the final simplex basis for next resolutions
+        if (keepBasis)
+        {
+            solver->GetFinalLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        }
     }
 
     return solver;

@@ -16,7 +16,13 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
 
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
 {
-    return std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
+    return std::any_of(
+      VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
+}
+
+bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
+{
+    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }
 
 } // namespace Optimization

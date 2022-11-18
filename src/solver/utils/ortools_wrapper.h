@@ -6,7 +6,8 @@
 using namespace operations_research;
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* ProbSpx);
+                           MPSolver* ProbSpx,
+                           bool keepBasis);
 
 MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
                                   MPSolver* solver);

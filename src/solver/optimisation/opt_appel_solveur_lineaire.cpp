@@ -150,8 +150,6 @@ RESOLUTION:
             solver = nullptr;
             Probleme.Contexte = SIMPLEXE_SEUL;
             Probleme.BaseDeDepartFournie = NON_SPX;
-            ProblemeHebdo->StatutContraintes.clear();
-            ProblemeHebdo->StatutVariables.clear();
         }
         else
         {
@@ -210,10 +208,6 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    // Sauvegarde d'une base initiale pour la resolution
-    Probleme.StatutDesVariables = ProblemeHebdo->StatutVariables;
-    Probleme.StatutDesContraintes = ProblemeHebdo->StatutContraintes;
-
     if (PremierPassage == NON_ANTARES)
         Probleme.FaireDuScaling = NON_SPX;
     if (PremierPassage == OUI_ANTARES)
@@ -257,7 +251,9 @@ RESOLUTION:
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme, solver);
+        const bool keepBasis
+          = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
+        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
@@ -332,13 +328,9 @@ RESOLUTION:
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
-        
+
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
         {
-            // On ne sauvegarde la base qu'apres la premiere optim 
-            ProblemeHebdo->StatutVariables.swap(Probleme.StatutDesVariables);
-            ProblemeHebdo->StatutContraintes.swap(Probleme.StatutDesContraintes);
-            
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }
