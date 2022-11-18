@@ -323,7 +323,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
 {
     MPSolverParameters params;
 
-    if (!(Probleme->StatutDesVariables.empty() || Probleme->StatutDesContraintes.empty()))
+    if (!Probleme->StatutDesVariables.empty() && !Probleme->StatutDesContraintes.empty())
     {
         solver->SetStartingLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
