@@ -48,24 +48,24 @@ class EconomyWeeklyOptimization
 public:
     using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
     virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
-    void initializeProblemeHebdo(PROBLEME_HEBDO** pProblemesHebdo);
-    static Ptr create(bool adqPatchEnabled);
+    static Ptr create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
+    explicit EconomyWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
     PROBLEME_HEBDO** pProblemesHebdo;
 };
 
 class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
-    AdequacyPatchOptimization();
+    explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
 };
 
 class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
-    NoAdequacyPatchOptimization();
+    explicit NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(Variable::State&, int, uint numSpace) override;
 };
 
