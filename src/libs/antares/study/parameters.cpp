@@ -342,7 +342,6 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
-    include.splitExportedMPS = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -611,8 +610,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return true;
     }
 
-    if (key == "include-split-exported-mps")
-        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -1028,7 +1025,8 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true; // value.to<int>(d.thresholdMinimum);
     if (key == "thresholdmax")
         return true; // value.to<int>(d.thresholdMaximum);
-
+    if (key == "include-split-exported-mps")
+        return true;
     return false;
 }
 
@@ -1604,8 +1602,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
-    if (!include.splitExportedMPS)
-        logs.info() << "  :: ignoring split exported mps";
     if (!adqPatch.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
@@ -1754,7 +1750,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
-        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
