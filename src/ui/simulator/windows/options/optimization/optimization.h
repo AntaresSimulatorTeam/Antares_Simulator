@@ -28,10 +28,11 @@
 #define __ANTARES_APPLICATION_WINDOWS_OPTIONS_OPTIMIZATION_PREFS_H__
 
 #include <antares/wx-wrapper.h>
-#include "../../../toolbox/components/button.h"
+#include "toolbox/components/button.h"
 #include <wx/dialog.h>
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
+#include "application/menus.h"
 
 namespace Antares
 {
@@ -78,13 +79,26 @@ private:
     void onSelectSimplexDay(wxCommandEvent& evt);
     void onSelectSimplexWeek(wxCommandEvent& evt);
 
-    void onSelectTransCapInclude(wxCommandEvent&);
-    void onSelectTransCapIgnore(wxCommandEvent&);
-    void onSelectTransCapInfinite(wxCommandEvent&);
+    void setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity);
+    template<Data::GlobalTransmissionCapacities>
+    void onSelectTransmissionCapacity(wxCommandEvent&);
+
+    template<Data::GlobalTransmissionCapacities>
+    void createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu);
 
     void onSelectLinkTypeLocal(wxCommandEvent& evt);
     void onSelectLinkTypeAC(wxCommandEvent& evt);
 
+    // Export MPS functions
+    void onSelectExportMPS(const Data::mpsExportStatus& mps_export_status);
+
+    template<Data::mpsExportStatus>
+    void onSelectExportMPS(wxCommandEvent&);
+
+    template<Data::mpsExportStatus>
+    void createMPSexportItemIntoMenu(wxMenu& menu);
+
+    // Unfeasible behavior problem functions
     void onSelectUnfeasibleBehaviorWarningDry(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorWarningMps(wxCommandEvent& evt);
     void onSelectUnfeasibleBehaviorErrorDry(wxCommandEvent& evt);
@@ -97,6 +111,7 @@ private:
     void onPopupMenuSpecify(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
     void onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
+    void onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuAdequacyPatch(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
 
@@ -124,6 +139,50 @@ private:
     bool* pTargetRef;
 
 }; // class Optimization
+
+const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status);
+
+template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+void Optimization::onSelectExportMPS(wxCommandEvent&)
+{
+    Optimization::onSelectExportMPS(MPS_EXPORT_STATUS);
+}
+
+template<Data::mpsExportStatus MPS_EXPORT_STATUS>
+void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
+{
+    const wxMenuItem* it = Menu::CreateItem(
+        &menu,
+        wxID_ANY,
+        mpsExportStatusToString(MPS_EXPORT_STATUS),
+        mpsExportIcon(MPS_EXPORT_STATUS),
+        wxEmptyString);
+
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
+        nullptr,
+        this);
+}
+
+const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity);
+
+template<Data::GlobalTransmissionCapacities CAPACITY>
+void Optimization::createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu)
+{
+    const wxMenuItem* it = Menu::CreateItem(
+        &menu,
+        wxID_ANY,
+        GlobalTransmissionCapacitiesToString_Display(CAPACITY),
+        transmissionCapacityIcon(CAPACITY),
+        wxEmptyString);
+
+    menu.Connect(it->GetId(),
+        wxEVT_COMMAND_MENU_SELECTED,
+        wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
+        nullptr,
+        this);
+}
 
 } // namespace Options
 } // namespace Window

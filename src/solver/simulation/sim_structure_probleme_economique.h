@@ -44,36 +44,22 @@ typedef struct
     int* NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
     int* NumeroDeVariableDuPalierThermique;
-    int* NumeroDeVariableDuPalierThermiqueUp;
-    int* NumeroDeVariableDuPalierThermiqueDown;
 
     int* NumeroDeVariablesDeLaProdHyd;
-    int* NumeroDeVariablesDeLaProdHydUp;
-    int* NumeroDeVariablesDeLaProdHydDown;
 
     int* NumeroDeVariablesDePompage;
     int* NumeroDeVariablesDeNiveau;
     int* NumeroDeVariablesDeDebordement;
 
     int* NumeroDeVariableDefaillancePositive;
-    int* NumeroDeVariableDefaillancePositiveUp;
-    int* NumeroDeVariableDefaillancePositiveDown;
-    int* NumeroDeVariableDefaillancePositiveAny;
 
     int* NumeroDeVariableDefaillanceNegative;
-    int* NumeroDeVariableDefaillanceNegativeUp;
-    int* NumeroDeVariableDefaillanceNegativeDown;
-    int* NumeroDeVariableDefaillanceNegativeAny;
 
     int* NumeroDeVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
-    int* NumeroDeVariablesVariationHydALaBaisseUp;
-    int* NumeroDeVariablesVariationHydALaBaisseDown;
 
     int* NumeroDeVariablesVariationHydALaHausse;
-    int* NumeroDeVariablesVariationHydALaHausseUp;
-    int* NumeroDeVariablesVariationHydALaHausseDown;
 
     int* NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
@@ -562,7 +548,7 @@ struct PROBLEME_HEBDO
     /* Implementation details : I/O, error management, etc. */
     char ReinitOptimisation;
 
-    char ExportMPS;
+    Data::mpsExportStatus ExportMPS;
     bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;

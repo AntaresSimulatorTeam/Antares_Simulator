@@ -85,7 +85,8 @@ double Summary::cellNumericValue(int x, int y) const
     case 0:
         return (link->useHurdlesCost) ? 1. : 0.;
     case 1:
-        return (link->transmissionCapacities == Data::tncEnabled) ? 1. : 0.;
+        return (link->transmissionCapacities == Data::LocalTransmissionCapacities::enabled) ? 1.
+                                                                                            : 0.;
     }
     return 0.;
 }
@@ -106,12 +107,14 @@ wxString Summary::cellValue(int x, int y) const
     case 1:
         switch (link->transmissionCapacities)
         {
-        case Data::tncEnabled:
+        case Data::LocalTransmissionCapacities::enabled:
             return wxT("enabled");
-        case Data::tncIgnore:
+        case Data::LocalTransmissionCapacities::null:
             return wxT("set to null");
-        case Data::tncInfinite:
+        case Data::LocalTransmissionCapacities::infinite:
             return wxT("set to infinite");
+        default:
+            return wxEmptyString;
         }
     }
     return wxEmptyString;
@@ -133,10 +136,11 @@ wxString Summary::columnCaption(int x) const
 
 IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 {
-    if (not Data::Study::Current::Valid())
+    using namespace Data;
+    if (!Study::Current::Valid())
         return IRenderer::cellStyleDefault;
-    assert(Data::Study::Current::Get()->uiinfo);
-    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    assert(Study::Current::Get()->uiinfo);
+    auto& uiinfo = *(Study::Current::Get()->uiinfo);
     Data::AreaLink* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (!link)
         return IRenderer::cellStyleDefault;
@@ -147,7 +151,7 @@ IRenderer::CellStyle Summary::cellStyle(int x, int y) const
         return (not link->useHurdlesCost) ? IRenderer::cellStyleConstraintWeight
                                           : IRenderer::cellStyleDefault;
     case 1:
-        return (link->transmissionCapacities != Data::tncEnabled)
+        return (link->transmissionCapacities != LocalTransmissionCapacities::enabled)
                  ? IRenderer::cellStyleConstraintWeight
                  : IRenderer::cellStyleDefault;
     }
@@ -156,10 +160,11 @@ IRenderer::CellStyle Summary::cellStyle(int x, int y) const
 
 bool Summary::cellValue(int x, int y, const String& value)
 {
-    if (not Data::Study::Current::Valid())
+    using namespace Data;
+    if (!Study::Current::Valid())
         return false;
-    assert(Data::Study::Current::Get()->uiinfo);
-    auto& uiinfo = *(Data::Study::Current::Get()->uiinfo);
+    assert(Study::Current::Get()->uiinfo);
+    auto& uiinfo = *(Study::Current::Get()->uiinfo);
     auto* link = (uint)y < uiinfo.linkCount() ? uiinfo.link((uint)y) : nullptr;
     if (not link)
         return false;
@@ -178,12 +183,12 @@ bool Summary::cellValue(int x, int y, const String& value)
         return true;
     case 1:
         if (pTmp == "enabled" || pTmp == "e")
-            link->transmissionCapacities = Data::tncEnabled;
+            link->transmissionCapacities = LocalTransmissionCapacities::enabled;
         else if (pTmp == "infinite" || pTmp == "set to infinite" || pTmp == "inf" || pTmp == "i")
-            link->transmissionCapacities = Data::tncInfinite;
+            link->transmissionCapacities = LocalTransmissionCapacities::infinite;
         else if (pTmp == "0" || pTmp == "zero" || pTmp == "null" || pTmp == "set to null"
                  || pTmp == "n")
-            link->transmissionCapacities = Data::tncIgnore;
+            link->transmissionCapacities = LocalTransmissionCapacities::null;
 
         OnInspectorRefresh(nullptr);
         MarkTheStudyAsModified();

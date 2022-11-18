@@ -27,14 +27,10 @@
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <algorithm>
-#include <iostream>
+#include <tuple>   // std::tuple
+#include <list>    // std::list
+#include <sstream> // std::stringstream
 
-#include <sstream>
-
-#ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#endif
 #include "../constants.h"
 #include "parameters.h"
 #include "../inifile.h"
@@ -108,6 +104,41 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     out = rgUnknown;
 
     return false;
+}
+
+static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "txt-files")
+    {
+        out = legacyFilesDirectories;
+        return true;
+    }
+    if (s == "zip") // Using renewable clusters
+    {
+        out = zipArchive;
+        return true;
+    }
+
+    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    out = legacyFilesDirectories;
+
+    return false;
+}
+
+static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
+{
+    const String name = "result-format";
+    switch (fmt)
+    {
+    case zipArchive:
+        section->add(name, "zip");
+        break;
+    default:
+        section->add(name, "txt-files");
+    }
 }
 
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
@@ -286,7 +317,6 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristicFast;
@@ -301,7 +331,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = tncEnabled;
+    transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -311,7 +341,7 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.splitExportedMPS = false;
     include.exportStructure = false;
 
@@ -321,10 +351,14 @@ void Parameters::reset()
 
     activeRulesScenario.clear();
 
+    hydroDebug = false;
+
     ortoolsUsed = false;
     ortoolsEnumUsed = OrtoolsSolver::sirius;
     ortoolsParamsString = "";
     ortoolsVerbosityOn = false;
+
+    resultFormat = legacyFilesDirectories;
 
     // Adequacy patch
     resetAdqPatchParameters();
@@ -536,7 +570,8 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.synthesis);
     if (key == "hydro-debug")
         return value.to<bool>(d.hydroDebug);
-
+    if (key == "result-format")
+        return ConvertCStrToResultFormat(value, d.resultFormat);
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -563,8 +598,19 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
+        {
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                           << ". Reset to no MPS export.";
+            return false;
+        }
+        return true;
+    }
+
     if (key == "include-split-exported-mps")
         return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
@@ -615,14 +661,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "transmission-capacities")
     {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
-        else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
-        return true;
+        return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
     return false;
 }
@@ -729,17 +768,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -991,6 +1019,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1110,7 +1142,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1166,35 +1197,23 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
 void Parameters::fixRefreshIntervals()
 {
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    using T = std::
+      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
+                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
+                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
+                                            {refreshIntervalWind, timeSeriesWind, "wind"},
+                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
+
+    for (const auto& [refreshInterval, ts, label] : timeSeriesToCheck)
     {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
+        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
+        {
+            refreshInterval = 1;
+            logs.error() << "The " << label
+                         << " time-series must be refreshed but the interval is equal to 0. "
+                            "Auto-Reset to a safe value (1).";
+        }
     }
 }
 
@@ -1583,7 +1602,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
     if (!include.splitExportedMPS)
         logs.info() << "  :: ignoring split exported mps";
@@ -1623,11 +1642,6 @@ void Parameters::years(uint y)
     }
 
     resetYearsWeigth();
-}
-
-StudyError Parameters::checkIntegrity() const
-{
-    return stErrNone;
 }
 
 void Parameters::saveToINI(IniFile& ini) const
@@ -1701,6 +1715,7 @@ void Parameters::saveToINI(IniFile& ini) const
         if (hydroDebug)
             section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
+        ParametersSaveResultFormat(section, resultFormat);
     }
 
     // Optimization
@@ -1718,19 +1733,8 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         }
         // Optimization preferences
-        switch (transmissionCapacities)
-        {
-        case tncEnabled:
-            section->add("transmission-capacities", "true");
-            break;
-        case tncIgnore:
-            section->add("transmission-capacities", "false");
-            break;
-        case tncInfinite:
-            section->add("transmission-capacities", "infinite");
-            break;
-        }
-
+        section->add("transmission-capacities",
+                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
         switch (linkType)
         {
         case ltLocal:
@@ -1749,7 +1753,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
         section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
@@ -1776,7 +1780,6 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));

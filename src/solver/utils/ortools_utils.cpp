@@ -1,11 +1,11 @@
 #include "ortools_utils.h"
+#include "filename.h" // getFilenameWithExtension
 
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
-
-#include <yuni/core/system/memory.h>
+#include <filesystem>
 
 using namespace operations_research;
 
@@ -244,28 +244,49 @@ static void change_MPSolver_rhs(const MPSolver* solver,
     }
 }
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n)
+static std::string generateTempPath(const std::string& filename)
 {
-    auto& study = *Antares::Data::Study::Current::Get();
-
-    int const year = study.runtime->currentYear[numSpace] + 1;
-    int const week = study.runtime->weekInTheYear[numSpace] + 1;
-    std::stringstream buffer;
-    buffer << study.folderOutput << Yuni::IO::Separator << "problem-" << year << "-" << week << "-"
-           << n << ".mps";
-    solver->Write(buffer.str());
+    namespace fs = std::filesystem;
+    std::ostringstream tmpPath;
+    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
+    return tmpPath.str();
 }
 
-std::string getRunName(std::string const& prefix, size_t numSpace, int numInterval, int numOptim)
+static void removeTemporaryFile(const std::string& tmpPath)
 {
-    auto& study = *Antares::Data::Study::Current::Get();
+    namespace fs = std::filesystem;
+    bool ret = false;
+    try
+    {
+        ret = fs::remove(tmpPath);
+    }
+    catch (fs::filesystem_error& e)
+    {
+        Antares::logs.error() << e.what();
+    }
+    if (!ret)
+    {
+        Antares::logs.warning() << "Could not remove temporary file " << tmpPath;
+    }
+}
 
-    int const year = study.runtime->currentYear[numSpace] + 1;
-    int const week = study.runtime->weekInTheYear[numSpace] + 1;
-    std::stringstream buffer;
-    buffer << prefix << " for year=" << year << ", week=" << week << ", interval=" << numInterval
-           << ", optimisation=" << numOptim;
-    return buffer.str();
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
+                                                   size_t numSpace,
+                                                   int const numOptim,
+                                                   Antares::Solver::IResultWriter::Ptr writer)
+{
+    // 1. Determine filename
+    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
+    const auto tmpPath = generateTempPath(filename);
+
+    // 2. Write MPS to temporary file
+    solver->Write(tmpPath);
+
+    // 3. Copy to real output using generic writer
+    writer->addEntryFromFile(filename, tmpPath);
+
+    // 4. Remove tmp file
+    removeTemporaryFile(tmpPath);
 }
 
 bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameters& params)
@@ -284,16 +305,22 @@ bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameter
     return resultStatus == OUI_SPX;
 }
 
-MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                       MPSolver* ProbSpx)
+MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                                  MPSolver* solver)
 {
-    MPSolver* solver = ProbSpx;
-
-    if (solver == NULL)
+    if (solver == nullptr)
     {
-        solver = Antares::Optimization::convert_to_MPSolver(Probleme);
+        return Antares::Optimization::convert_to_MPSolver(Probleme);
     }
+    else
+    {
+        return solver;
+    }
+}
 
+MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
+                           MPSolver* solver)
+{
     MPSolverParameters params;
 
     if (!(Probleme->StatutDesVariables.empty() || Probleme->StatutDesContraintes.empty()))
@@ -308,12 +335,6 @@ MPSolver* solveProblem(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
     }
 
     return solver;
-}
-
-MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* ProbSpx)
-{
-    return solveProblem(Probleme, ProbSpx);
 }
 
 void ORTOOLS_ModifierLeVecteurCouts(MPSolver* solver, const double* costs, int nbVar)

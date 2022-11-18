@@ -21,12 +21,18 @@ jobs:
       SONAR_SCANNER_VERSION: 4.7.0.2747 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
     steps:
-    
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: ccache
+        uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          key: sonarcloud-${{ env.SONAR_SCANNER_VERSION }}
 
       - name: Cache SonarCloud packages and analysis
         uses: actions/cache@v3
@@ -45,7 +51,7 @@ jobs:
           mkdir -p $HOME/.sonar
           curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
-          
+
       - name: Download and setup build-wrapper
         shell: bash
         env:
@@ -54,7 +60,7 @@ jobs:
         run: |
           curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
           unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
-          
+
       - name: Set build-wrapper and sonar-scanner paths
         run: |
           echo "$HOME/.sonar/build-wrapper-linux-x86" >> $GITHUB_PATH
@@ -70,22 +76,23 @@ jobs:
       - name: Read antares-deps version
         id: antares-deps-version
         uses: notiz-dev/github-action-json-property@release
-        with: 
+        with:
           path: 'antares-deps-version.json'
           prop_path: 'antares_deps_version'
-        
+
       - name: Download pre-compiled librairies
         uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
-          os-full-name: Ubuntu-20.04
+          ortools-url: ${{env.ORTOOLS_URL}}
+          ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
-          
+
       - name: Install gcovr
         run: sudo pip install gcovr
 
@@ -100,10 +107,20 @@ jobs:
 
       - name: Configure
         run: |
-             cmake -B _build -S src -DDEPS_INSTALL_DIR=./rte-antares-deps-Release -DCODE_COVERAGE=ON -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=../install -DBUILD_TESTING=ON -DBUILD_OUTPUT_TEST=ON -DBUILD_not_system=OFF
+             cmake -B _build -S src \
+             -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+             -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
+             -DCODE_COVERAGE=ON \
+             -DCMAKE_BUILD_TYPE=release \
+             -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
+             -DBUILD_TESTING=ON \
+             -DMZ_CODE_COVERAGE=ON \
+             -DBUILD_not_system=OFF
 
       - name: Build
-        run: build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
+        run: |
+             build-wrapper-linux-x86-64 --out-dir $GITHUB_WORKSPACE/_build/output cmake --build _build --config release -j2
 
       - name: Test and generate coverage
         continue-on-error: true

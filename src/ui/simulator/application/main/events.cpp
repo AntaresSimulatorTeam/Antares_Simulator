@@ -181,9 +181,8 @@ void ApplWnd::evtOnFrameClose(wxCloseEvent& evt)
         Component::Spotlight::FrameClose();
 
         // !! It is extremly important to wait for all jobs to finish
-        // In the contrary, it may appen a race condition with another thread
-        // and the swap mode. It would be possible to flush all variables
-        // while accessing them
+        // Otherwise, it may occur a race condition with another thread.
+        // It would make possible to flush all variables while accessing them.
         Dispatcher::Wait();
 
         // Closing the study if any then quitting the application

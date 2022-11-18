@@ -94,6 +94,9 @@ public:
     */
     bool saveToFile(const AnyString& filename, bool upgradeVersion = true);
 
+    //! Copy the internal settings into an INI structure
+    void CopySettingsToIni(IniFile& ini, bool upgradeVersion);
+
 public:
     //! Caption of the study
     Yuni::String caption;
@@ -115,9 +118,6 @@ private:
 
     //! Get the version written in an header file
     static uint internalFindVersionFromFile(const IniFile& ini);
-
-    //! Copy the internal settings into an INI structure
-    void internalCopySettingsToIni(IniFile& ini, bool upgradeVersion);
 
 }; // class StudyHeader;
 

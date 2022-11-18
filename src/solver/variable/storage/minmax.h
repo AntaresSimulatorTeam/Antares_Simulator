@@ -145,13 +145,7 @@ protected:
 
     Yuni::uint64 memoryUsage() const
     {
-        return
-#ifdef ANTARES_SWAP_SUPPORT
-          0
-#else
-          sizeof(double) * maxHoursInAYear
-#endif
-          + NextType::memoryUsage();
+        return sizeof(double) * maxHoursInAYear + NextType::memoryUsage();
     }
 
     static void EstimateMemoryUsage(Data::StudyMemoryUsage& u)

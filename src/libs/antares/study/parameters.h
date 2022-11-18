@@ -160,15 +160,6 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
-    ** \brief Check if some general data seem valid
-    **
-    ** \return The error if any (stErrNone otherwise)
-    */
-    StudyError checkIntegrity() const;
-
-    void removeExtraSettings();
-
-    /*!
     ** \brief Get the amount of memory used by the general data
     */
     Yuni::uint64 memoryUsage() const;
@@ -203,6 +194,9 @@ public:
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
+
+    //! Save the internal settings into an INI file
+    void saveToINI(IniFile& ini) const;
 
 public:
     //! \name Mode
@@ -417,8 +411,8 @@ public:
             bool minUPTime;
         } thermal;
 
-        //! a flag to export all mps files
-        bool exportMPS;
+        //! Flag to export mps files
+        mpsExportStatus exportMPS;
 
         //! if MPS files are exported, a flag to split them
         bool splitExportedMPS;
@@ -434,8 +428,6 @@ public:
     // Shedding
     struct
     {
-        //! Shedding strategy
-        SheddingStrategy strategy;
         //! Shedding policy
         SheddingPolicy policy;
     } shedding;
@@ -502,7 +494,7 @@ public:
     } reserveManagement;
 
     //! Transmission capacities
-    TransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
     LinkType linkType;
     //! Simplex optimization range (day/week)
@@ -561,12 +553,12 @@ public:
     //! Define if Ortools verbosity should be activated
     bool ortoolsVerbosityOn;
     //@}
+    // Format of results. Currently, only single files or zip archive are supported
+    ResultFormat resultFormat = legacyFilesDirectories;
 
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
-    //! Save the internal settings into an INI file
-    void saveToINI(IniFile& ini) const;
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;

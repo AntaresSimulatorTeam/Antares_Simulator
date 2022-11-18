@@ -3,6 +3,7 @@
 #include <map>
 
 #include <antares/study/OrtoolsSolver.hpp>
+#include <i_writer.h>
 
 #include "ortools/linear_solver/linear_solver.h"
 
@@ -10,9 +11,7 @@
 
 using namespace operations_research;
 
-std::string getRunName(std::string const& prefix, size_t numSpace, int numInterval, int numOptim);
-
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n);
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n, Antares::Solver::IResultWriter::Ptr writer);
 
 using namespace Antares::Data;
 

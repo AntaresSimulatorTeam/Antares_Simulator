@@ -33,7 +33,6 @@
 #include "../../../toolbox/create.h"
 #include "../../../toolbox/resources.h"
 #include "../../../application/study.h"
-#include "../../../application/menus.h"
 #include "../../../windows/message.h"
 #include <ui/common/component/panel.h>
 #include <antares/logs.h>
@@ -103,24 +102,11 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-static void ResetButton(Component::Button* button, Data::TransmissionCapacities value)
+static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
     assert(button != NULL);
-    switch (value)
-    {
-    case Data::tncEnabled:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::tncIgnore:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
-        break;
-    case Data::tncInfinite:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite"));
-        break;
-    }
+    button->image(transmissionCapacityIcon(value));
+    button->caption(GlobalTransmissionCapacitiesToString_Display(value));
 }
 
 static void ResetButton(Component::Button* button, Data::LinkType value)
@@ -136,6 +122,37 @@ static void ResetButton(Component::Button* button, Data::LinkType value)
         button->image("images/16x16/light_orange.png");
         button->caption(wxT("set to AC"));
         break;
+    }
+}
+
+const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
+{
+    switch (mps_export_status)
+    {
+    case Data::mpsExportStatus::NO_EXPORT:
+        return "images/16x16/light_orange.png";
+    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+        return "images/16x16/light_green.png";
+    case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
+        return "images/16x16/light_green.png";
+    default:
+        return "images/16x16/light_orange.png";
+    }
+}
+const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity)
+{
+    using GTransmission = Data::GlobalTransmissionCapacities;
+    switch (capacity)
+    {
+    case GTransmission::localValuesForAllLinks:
+        return "images/16x16/light_green.png";
+    case GTransmission::infiniteForAllLinks:
+    case GTransmission::infiniteForPhysicalLinks:
+        return "images/16x16/infinity.png";
+    default:
+        return "images/16x16/light_orange.png";
     }
 }
 
@@ -323,12 +340,14 @@ Optimization::Optimization(wxWindow* parent) :
     // Export MPS
     {
         label = Component::CreateLabel(this, wxT("Export mps"));
-        button = new Component::Button(this, wxT("true"), "images/16x16/light_green.png");
+
+        const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
+        button = new Component::Button(
+          this, mpsExportStatusToString(defaultValue), mpsExportIcon(defaultValue));
+
         button->SetBackgroundColour(bgColor);
         button->menu(true);
-        onPopup.bind(this,
-                     &Optimization::onPopupMenuSpecify,
-                     PopupInfo(study.parameters.include.exportMPS, wxT("true")));
+        onPopup.bind(this, &Optimization::onPopupMenuExportMPSstatus);
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -508,7 +527,8 @@ void Optimization::onResetToDefault(void*)
             auto& study = *studyptr;
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
-            study.parameters.transmissionCapacities = Data::tncEnabled;
+            study.parameters.transmissionCapacities
+              = Data::GlobalTransmissionCapacities::localValuesForAllLinks;
             study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
@@ -516,7 +536,7 @@ void Optimization::onResetToDefault(void*)
             study.parameters.include.reserve.strategic = true;
             study.parameters.include.reserve.primary = true;
             study.parameters.include.reserve.spinning = true;
-            study.parameters.include.exportMPS = false;
+            study.parameters.include.exportMPS = Data::mpsExportStatus::NO_EXPORT;
             study.parameters.include.splitExportedMPS = false;
             study.parameters.adqPatch.enabled = false;
             study.parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
@@ -567,7 +587,8 @@ void Optimization::refresh()
     // Spinning reserve
     ResetButton(pBtnSpinningReserve, study.parameters.include.reserve.spinning);
     // Export mps
-    ResetButtonSpecify(pBtnExportMPS, study.parameters.include.exportMPS);
+    pBtnExportMPS->image(mpsExportIcon(study.parameters.include.exportMPS));
+    pBtnExportMPS->caption(Data::mpsExportStatusToString(study.parameters.include.exportMPS));
     // Split exported MPS
     ResetButtonSpecify(pBtnSplitExportedMPS, study.parameters.include.splitExportedMPS);
     // Adequacy patch
@@ -699,34 +720,21 @@ void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 
 void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
-    wxMenuItem* it;
+    using GT = Data::GlobalTransmissionCapacities;
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::localValuesForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForPhysicalLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForPhysicalLinks>(menu);
+}
 
-    it = Menu::CreateItem(&menu,
-                          wxID_ANY,
-                          wxString() << wxT("local values"),
-                          "images/16x16/light_green.png",
-                          wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInclude),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to null"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapIgnore),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite"), "images/16x16/infinity.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInfinite),
-                 nullptr,
-                 this);
+void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
+{
+    using MPS = Data::mpsExportStatus;
+    createMPSexportItemIntoMenu<MPS::NO_EXPORT>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_FIRST_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_SECOND_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_BOTH_OPTIMS>(menu);
 }
 
 void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
@@ -829,46 +837,21 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     }
 }
 
-void Optimization::onSelectTransCapInclude(wxCommandEvent&)
+void Optimization::setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity)
 {
     auto study = Data::Study::Current::Get();
-    if (!(!study))
+    if (study && study->parameters.transmissionCapacities != newCapacity)
     {
-        if (study->parameters.transmissionCapacities != Data::tncEnabled)
-        {
-            study->parameters.transmissionCapacities = Data::tncEnabled;
-            refresh();
-            MarkTheStudyAsModified();
-        }
+        study->parameters.transmissionCapacities = newCapacity;
+        refresh();
+        MarkTheStudyAsModified();
     }
 }
 
-void Optimization::onSelectTransCapIgnore(wxCommandEvent&)
+template<Data::GlobalTransmissionCapacities capacity>
+void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncIgnore)
-        {
-            study->parameters.transmissionCapacities = Data::tncIgnore;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
-void Optimization::onSelectTransCapInfinite(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncInfinite)
-        {
-            study->parameters.transmissionCapacities = Data::tncInfinite;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
+    setTransmissionCapacity(capacity);
 }
 
 void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)
@@ -923,6 +906,26 @@ void Optimization::onSelectLinkTypeAC(wxCommandEvent&)
     }
 }
 
+// -----------------------------------
+// On select methods for MPS export
+// -----------------------------------
+void Optimization::onSelectExportMPS(const Data::mpsExportStatus& mps_export_status)
+{
+    auto study = Data::Study::Current::Get();
+    if (!(!study))
+    {
+        if (study->parameters.include.exportMPS != mps_export_status)
+        {
+            study->parameters.include.exportMPS = mps_export_status;
+            refresh();
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+// ----------------------------------------------------
+// On select methods for unfeasible problem behavior
+// ----------------------------------------------------
 void Optimization::onSelectUnfeasibleBehavior(
   const Data::UnfeasibleProblemBehavior& unfeasibleProblemBehavior)
 {

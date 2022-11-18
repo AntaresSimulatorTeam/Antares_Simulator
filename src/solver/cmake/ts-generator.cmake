@@ -34,23 +34,11 @@ source_group("ts-generator\\XCast" FILES ${SRC_XCAST})
 
 
 
-
 #
 # --- Library VARIABLES ---
 #
 add_library(libantares-solver-ts-generator
-		${SRC_GENERATORS}
-		${SRC_XCAST} )
+				${SRC_GENERATORS}
+				${SRC_XCAST})
 
-target_link_libraries(libantares-solver-ts-generator PRIVATE libantares-core)
-
-if(BUILD_SWAP)
-    add_library(libantares-solver-ts-generator-swap
-            ${SRC_GENERATORS}
-            ${SRC_XCAST} )
-    target_link_libraries(libantares-solver-ts-generator-swap PRIVATE libantares-core-swap)
-
-    set_target_properties(libantares-solver-ts-generator-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-
-endif()
-
+target_link_libraries(libantares-solver-ts-generator PRIVATE libantares-core result_writer)

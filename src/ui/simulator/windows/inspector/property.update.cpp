@@ -351,15 +351,15 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
         s.toLower();
         s.trim();
 
-        Data::TransmissionCapacities tc;
+        Data::LocalTransmissionCapacities tc;
         if (s == "enabled")
-            tc = Data::tncEnabled;
+            tc = Data::LocalTransmissionCapacities::enabled;
         else if (s == "set to null")
-            tc = Data::tncIgnore;
+            tc = Data::LocalTransmissionCapacities::null;
         else if (s == "set to infinite")
-            tc = Data::tncInfinite;
+            tc = Data::LocalTransmissionCapacities::infinite;
         else
-            tc = Data::tncIgnore;
+            tc = Data::LocalTransmissionCapacities::null;
 
         for (; i != end; ++i)
         {

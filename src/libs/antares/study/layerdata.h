@@ -24,17 +24,39 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_FILES_FILES_H__
-#define __ANTARES_LIBS_FILES_FILES_H__
+#ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
+#define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
-#include <yuni/yuni.h>
-#include <stdio.h>
+#include <string>
+#include <map>
 
+namespace Antares::Data
+{
 /*!
-** ** \brief Opens a file
-** **
-** ** \see man 3 fopen
-** */
-FILE* FileOpen(const char* filename, const char* mode);
+** \brief Antares Study
+*/
 
-#endif /* __ANTARES_LIBS_FILES_FILES_H__ */
+class LayerData
+{
+public:
+    LayerData(size_t activeLayer, bool showLayer) :
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
+        {}
+
+    //! \name Layers
+    //@{
+    //! All available layers
+    std::map<size_t, std::string> layers;
+    //@}
+    size_t activeLayerID;
+    bool showAllLayer;
+
+protected:
+    bool saveLayers(const AnyString& filename);
+    void loadLayers(const AnyString& filename);
+};
+
+} // namespace Antares::Data
+
+#endif /* __ANTARES_LIBS_STUDY_LAYERDATA_H__ */

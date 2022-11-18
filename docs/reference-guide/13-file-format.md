@@ -3,25 +3,57 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.4.0
 ### Input
+#### Zero/infinite capacity for physical links only
+In file **settings/generaldata.ini**, in section `optimization`, change admissible values for key `transmission-capacities` [str]:
+
+* `local-values` (formerly `true`, default) uses the local capacity of all links
+* `null-for-all-links` (formerly `false`) sets the capacity of all links to 0
+* `infinite-for-all-links` (formerly `infinite`) sets the capacity of all links to +infinity
+* `null-for-physical-links` sets the capacity of physical links to 0, uses the local capacity for virtual links
+* `infinite-for-physical-links` sets the capacity of physical links to +infinity, uses the local capacity for virtual links
+
+Previous values (`true`, `false` and `infinite`) are still admissible for compatibility.
+
+#### Result format
+In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
+
+### Output
+#### Result format
+If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
+
+## v8.3.2
+### Writing MPS files
+MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
+Now user can choose to print :
+* no MPS file,
+* MPS files related to the first opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
+* MPS files related to the second opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
+* MPS files related to the both opimizations.
+
+In the **generaldata.ini** input file, corresponding values for **include-exportmps** are : **none**, **optim-1**, **optim-2**, **both-optims**.
+
+Compatibility with existing values is maintained (**true** = **both-optims**, **false**=**none**).
+
+### Marginal price of a binding constraint
+#### Input
 In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
 They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 * `filter-year-by-year`. Default value = hourly, daily, weekly, monthly, annual
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
 
-### Output
+#### Marginal cost for binding constraints
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
 Examples : 
-* `output/yyyymmdd-hhmmeco/economy/mc-ind/00001/bind_const`
-* `output/yyyymmdd-hhmmeco/economy/mc-all/bind_const`
+* **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/binding_constraints**
+* **output/yyyymmdd-hhmmeco/economy/mc-all/binding_constraints**
 
 These folders are meant to contain results of any kind regarding binding constraints marginal price (year by year or synthesis).
 
 Examples of output files inside these folders :
-* `binding-constraints-hourly.txt`
-* `binding-constraints-weekly.txt`
-
+* **binding-constraints-hourly.txt**
+* **binding-constraints-weekly.txt**
 
 ## v8.3.1
 ### Output
@@ -97,7 +129,7 @@ adequacy-patch-mode = outside
 * If `include-split-exported-mps` is set to `true`, create splitted MPS files in the output folder
 * Add file **time_measurement.txt**, containing performance data
 
-NOTE : **period** can be any of the following
+NOTE: **period** can be any of the following
 
 * `hourly`
 * `daily`

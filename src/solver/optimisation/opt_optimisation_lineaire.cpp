@@ -97,7 +97,7 @@ OptimisationHebdo:
         if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
             return false;
 
-        if (ProblemeHebdo->ExportMPS == OUI_ANTARES || ProblemeHebdo->Expansion == OUI_ANTARES)
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
               (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
 

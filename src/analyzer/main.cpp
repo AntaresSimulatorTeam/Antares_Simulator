@@ -111,8 +111,7 @@ int main(int argc, char* argv[])
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
 
-    // Swap memory
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     // locale
@@ -139,7 +138,7 @@ int main(int argc, char* argv[])
         bool optVersion = false;
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-        if (!options(argc, argv))
+        if (options(argc, argv) == GetOpt::ReturnCode::error)
             return options.errors() ? 1 : 0;
 
         if (optVersion)

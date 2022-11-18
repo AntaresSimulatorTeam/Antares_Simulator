@@ -94,10 +94,13 @@ bool CBuilder::update(bool applyCheckBox)
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        // Try to open link data files
-        YString dataFilename = link->parameters.jit->sourceFilename;
-        if (!link->loadTimeSeries(*pStudy, dataFilename))
-            return false;
+       // Try to open link data files (GUI only)
+        if (link->parameters.jit)
+        {
+            YString dataFilename = link->parameters.jit->sourceFilename;
+            if (!link->loadTimeSeries(*pStudy, dataFilename))
+                return false;
+        }
     }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
@@ -116,6 +119,7 @@ bool CBuilder::update(bool applyCheckBox)
 
         uint columnImpedance = (uint)Data::fhlImpedances;
 
+        link->invalidate(true);
         // load the impedance
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
@@ -304,10 +308,12 @@ bool CBuilder::deletePreviousConstraints()
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        // Try to open link data files
-        YString dataFilename = link->parameters.jit->sourceFilename;
-        if (!link->loadTimeSeries(*pStudy, dataFilename))
-            return false;
+        if (link->parameters.jit)
+        {
+            YString dataFilename = link->parameters.jit->sourceFilename;
+            if (!link->loadTimeSeries(*pStudy, dataFilename))
+                return false;
+        }
 
         link->useLoopFlow = false;
         link->usePST = false;
@@ -455,8 +461,6 @@ bool CBuilder::completeCBuilderFromFile(const String& filename)
             logs.error() << "no link found.";
             return false;
         }
-
-        NLinks = (uint)pLink.size();
     }
     return true;
 }

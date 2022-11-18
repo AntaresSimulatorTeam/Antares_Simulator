@@ -33,15 +33,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void XCast::flush()
-{
-#ifndef ANTARES_SWAP_SUPPORT
-    data.flush();
-    K.flush();
-    translation.flush();
-    conversion.flush();
-#endif
-}
 
 inline Yuni::uint64 XCast::memoryUsage() const
 {
