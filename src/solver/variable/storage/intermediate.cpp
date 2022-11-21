@@ -180,18 +180,31 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 }
 
-void IntermediateValues::computeAveragesForCurrentYear()
+void IntermediateValues::computeAveragesForCurrentYearFromHourlyResults()
 {
     // Detecting large buffer overflow
     assert(pRange);
     pRange->checkIntegrity();
 
-    // Form hourly results of current year, compute average results 
+    // Form hourly results of current year, compute average results
     // for other time divisions of the current year : days of the year, weeks of the year, ...
-    this->computeDailyAveragesForCurrentYear();
-    this->computeWeeklyAveragesForCurrentYear();
-    this->computeMonthlyAveragesForCurrentYear();
-    this->computeYearlyAveragesForCurrentYear();
+    computeDailyAveragesForCurrentYear();
+    computeWeeklyAveragesForCurrentYear();
+    computeMonthlyAveragesForCurrentYear();
+    computeYearlyAveragesForCurrentYear();
+}
+
+void IntermediateValues::computeAveragesForCurrentYearFromDailyResults()
+{
+    computeWeeklyAveragesForCurrentYear();
+    computeMonthlyAveragesForCurrentYear();
+    computeYearlyAveragesForCurrentYear();
+}
+
+void IntermediateValues::computeAveragesForCurrentYearFromWeeklyResults()
+{
+    computeMonthlyAveragesForCurrentYear();
+    computeYearlyAveragesForCurrentYear();
 }
 
 void IntermediateValues::computeDailyAveragesForCurrentYear()
