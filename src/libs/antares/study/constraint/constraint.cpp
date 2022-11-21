@@ -270,7 +270,6 @@ void BindingConstraint::resetToDefaultValues()
     pComments.clear();
     pValues.zero();
     pValues.markAsModified();
-    pValues.flush();
 }
 
 void BindingConstraint::copyWeights(const Study& study,
@@ -560,6 +559,16 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
                 pOperator = BindingConstraint::StringToOperator(p->value);
                 continue;
             }
+            if (p->key == "filter-year-by-year")
+            {
+                pFilterYearByYear = stringIntoDatePrecision(p->value);
+                continue;
+            }
+            if (p->key == "filter-synthesis")
+            {
+                pFilterSynthesis = stringIntoDatePrecision(p->value);
+                continue;
+            }
             if (p->key == "comments")
             {
                 pComments = p->value;
@@ -800,7 +809,6 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
             (void)memcpy(pValues.entry[columnInferior], m.entry[0], sizeof(double) * h);
             logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
                         << OperatorToShortCString(pOperator) << ')';
-            pValues.flush();
             return true;
         }
     }
@@ -814,6 +822,8 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
     env.section->add("enabled", pEnabled);
     env.section->add("type", TypeToCString(pType));
     env.section->add("operator", OperatorToCString(pOperator));
+    env.section->add("filter-year-by-year", datePrecisionIntoString(pFilterYearByYear));
+    env.section->add("filter-synthesis", datePrecisionIntoString(pFilterSynthesis));
 
     if (not pComments.empty())
         env.section->add("comments", pComments);
@@ -1298,6 +1308,16 @@ void BindingConstraint::operatorType(BindingConstraint::Operator o)
     pOperator = o;
 }
 
+uint BindingConstraint::yearByYearFilter() const
+{
+    return pFilterYearByYear;
+}
+
+uint BindingConstraint::synthesisFilter() const
+{
+    return pFilterSynthesis;
+}
+
 bool BindingConstraint::hasAllWeightedLinksOnLayer(size_t layerID)
 {
     if (layerID == 0 || (linkCount() == 0 && clusterCount() == 0))
@@ -1409,18 +1429,18 @@ void BindingConstraint::initLinkArrays(double* w,
     }
 }
 
-bool BindingConstraint::invalidate(bool reload) const
+bool BindingConstraint::forceReload(bool reload) const
 {
-    return pValues.invalidate(reload);
+    return pValues.forceReload(reload);
 }
 
-bool BindConstList::invalidate(bool reload) const
+bool BindConstList::forceReload(bool reload) const
 {
     if (not pList.empty())
     {
         bool ret = true;
         for (uint i = 0; i != pList.size(); ++i)
-            ret = pList[i]->invalidate(reload) and ret;
+            ret = pList[i]->forceReload(reload) and ret;
         return ret;
     }
     return true;
@@ -1493,7 +1513,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     }
     }
     pValues.markAsModified();
-    pValues.flush();
 }
 
 bool BindConstList::saveToFolder(const AnyString& folder) const

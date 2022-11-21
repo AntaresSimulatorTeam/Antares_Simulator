@@ -98,7 +98,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
-    if (not simulation.loadFromFolder(options))
+    if (not simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;
@@ -155,12 +155,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Areas need this number to be up-to-date at construction.
     getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-#ifdef ANTARES_SWAP_SUPPORT
-    // In case of swap support, MC years parallel computing is forbidden.
-    // Numbers of parallel years is set to 1.
-    maxNbYearsInParallel = 1;
-#endif
-
     // In case the study is run in the draft mode, only 1 core is allowed
     if (parameters.mode == Data::stdmAdequacyDraft)
         maxNbYearsInParallel = 1;
@@ -192,34 +186,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         // Post-processing when loaded from the User-Interface
         uiinfo->reload();
         uiinfo->reloadBindingConstraints();
-    }
-
-    if (usedByTheSolver and options.prepareOutput)
-    {
-        // Write all available areas as a reminder
-        {
-            buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "areas.txt";
-            IO::File::Stream file;
-            if (file.openRW(buffer))
-            {
-                for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
-                {
-                    if (setsOfAreas.hasOutput(i->first))
-                        file << "@ " << i->first << "\r\n";
-                }
-                areas.each([&](const Data::Area& area) { file << area.name << "\r\n"; });
-            }
-            else
-                logs.error() << "impossible to write " << buffer;
-        }
-
-        // Write all available links as a reminder
-        buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "links.txt";
-        if (not areas.saveLinkListToFile(buffer))
-        {
-            logs.error() << "impossible to write " << buffer;
-            return false;
-        }
     }
 
     // calendar update
@@ -454,48 +420,6 @@ bool Study::reloadXCastData()
         ret = area.wind.prepro->loadFromFolder(*this, buffer) and ret;
     });
     return ret;
-}
-
-void Study::loadLayers(const AnyString& filename)
-{
-    IniFile ini;
-    if (std::ifstream(filename.c_str()).good()) // check if file exists
-        if (ini.open(filename))
-        {
-            // The section
-            auto* section = ini.find("layers");
-            if (section)
-            {
-                size_t key;
-                CString<50, false> value;
-
-                for (auto* p = section->firstProperty; p; p = p->next)
-                {
-                    // We convert the key and the value into the lower case format,
-                    // since several tests will be done with these string */
-                    key = p->key.to<size_t>();
-                    value = p->value;
-
-                    layers[key] = value.to<std::string>();
-                }
-
-                section = ini.find("activeLayer");
-                if (section)
-                {
-                    auto* p = section->firstProperty;
-                    activeLayerID = p->value.to<size_t>();
-
-                    p = p->next;
-
-                    if (p)
-                        showAllLayer = p->value.to<bool>();
-                }
-                return;
-            }
-
-            logs.warning() << ": The section `layers` can not be found";
-            return;
-        }
 }
 
 } // namespace Data

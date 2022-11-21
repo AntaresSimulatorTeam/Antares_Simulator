@@ -42,10 +42,10 @@ PartRenewable::PartRenewable()
 {
 }
 
-bool PartRenewable::invalidate(bool reload) const
+bool PartRenewable::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = list.invalidate(reload) && ret;
+    ret = list.forceReload(reload) && ret;
     return ret;
 }
 

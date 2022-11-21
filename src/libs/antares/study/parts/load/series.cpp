@@ -61,7 +61,6 @@ int DataSeriesLoadLoadFromFolder(Study& study,
         s->series.averageTimeseries();
 
     s->timeseriesNumbers.clear();
-    s->series.flush();
 
     return ret;
 }
@@ -88,9 +87,9 @@ int DataSeriesLoadSaveToFolder(DataSeriesLoad* s, const AreaName& areaID, const 
     return 0;
 }
 
-bool DataSeriesLoad::invalidate(bool reload) const
+bool DataSeriesLoad::forceReload(bool reload) const
 {
-    return series.invalidate(reload);
+    return series.forceReload(reload);
 }
 
 void DataSeriesLoad::markAsModified() const

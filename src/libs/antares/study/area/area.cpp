@@ -420,12 +420,6 @@ void Area::estimateMemoryUsage(StudyMemoryUsage& u) const
         for (auto i = links.begin(); i != end; ++i)
             (i->second)->estimateMemoryUsage(u);
     }
-
-    if (u.swappingSupport)
-    {
-        // + something
-        u.requiredMemoryForInput += ((/*1.5*/ 15 * 1024 * 1024) / 10);
-    }
 }
 
 bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) const
@@ -446,7 +440,7 @@ bool Area::thermalClustersMinStablePowerValidity(std::vector<YString>& output) c
     return noErrorMinStabPow;
 }
 
-bool Area::invalidate(bool reload) const
+bool Area::forceReload(bool reload) const
 {
     // To not break the entire constness design of the library
     // this method should remain const event if the operations
@@ -457,27 +451,27 @@ bool Area::invalidate(bool reload) const
     invalidateJIT = false;
 
     // Misc Gen
-    ret = self.miscGen.invalidate(reload) and ret;
+    ret = self.miscGen.forceReload(reload) and ret;
     // Reserves
-    ret = self.reserves.invalidate(reload) and ret;
+    ret = self.reserves.forceReload(reload) and ret;
 
     // Load
-    ret = self.load.invalidate(reload) and ret;
+    ret = self.load.forceReload(reload) and ret;
     // Solar
-    ret = self.solar.invalidate(reload) and ret;
+    ret = self.solar.forceReload(reload) and ret;
     // Hydro
-    ret = self.hydro.invalidate(reload) and ret;
+    ret = self.hydro.forceReload(reload) and ret;
     // Wind
-    ret = self.wind.invalidate(reload) and ret;
+    ret = self.wind.forceReload(reload) and ret;
     // Thermal
-    ret = self.thermal.invalidate(reload) and ret;
+    ret = self.thermal.forceReload(reload) and ret;
     // Renewable
-    ret = self.renewable.invalidate(reload) and ret;
+    ret = self.renewable.forceReload(reload) and ret;
     if (not links.empty())
     {
         auto end = self.links.end();
         for (auto i = self.links.begin(); i != end; ++i)
-            ret = (i->second)->invalidate(reload) and ret;
+            ret = (i->second)->forceReload(reload) and ret;
     }
 
     if (ui)

@@ -133,5 +133,9 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 {
 }
 
+IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
+{
+}
+
 } // namespace Error
 } // namespace Antares

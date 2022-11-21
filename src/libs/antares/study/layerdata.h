@@ -24,59 +24,39 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_MEMORY_SWAPFILE_H__
-#define __ANTARES_LIBS_MEMORY_SWAPFILE_H__
+#ifndef __ANTARES_LIBS_STUDY_LAYERDATA_H__
+#define __ANTARES_LIBS_STUDY_LAYERDATA_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/system/windows.hdr.h>
-#include <yuni/core/bit/array.h>
+#include <string>
+#include <map>
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Private
-{
-namespace Memory
-{
-class SwapFileInfo final
+/*!
+** \brief Antares Study
+*/
+
+class LayerData
 {
 public:
-    //! \name Constructor & Destructor
+    LayerData(size_t activeLayer, bool showLayer) :
+        activeLayerID(activeLayer),
+        showAllLayer(showLayer)
+        {}
+
+    //! \name Layers
     //@{
-    /*!
-    ** \brief Default constructor
-    */
-    SwapFileInfo();
-    //! Destructor
-    ~SwapFileInfo();
+    //! All available layers
+    std::map<size_t, std::string> layers;
     //@}
+    size_t activeLayerID;
+    bool showAllLayer;
 
-    /*!
-    ** \brief Open a new swap file
-    */
-    bool openSwapFile(uint count, bool displayDiskLogs);
+protected:
+    bool saveLayers(const AnyString& filename);
+    void loadLayers(const AnyString& filename);
+};
 
-public:
-#ifdef YUNI_OS_WINDOWS
-    HANDLE handle;
-    HANDLE mappingHandle;
-#else
-    int handle;
-#endif
+} // namespace Antares::Data
 
-    //! Reminder for the last cursor offset
-    // This offset is used for optimizing the allocation of a new block
-    uint lastOffset;
-    //! Number of blocks currently used
-    uint nbFreeBlocks;
-    //! Bitmap index for Free blocks
-    Yuni::Bit::Array blocks;
-    //! Swap filename
-    Yuni::String filename;
-
-}; // class SwapFileInfo
-
-} // namespace Memory
-} // namespace Private
-} // namespace Antares
-
-#endif // __ANTARES_LIBS_MEMORY_SWAPFILE_H__
+#endif /* __ANTARES_LIBS_STUDY_LAYERDATA_H__ */

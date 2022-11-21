@@ -109,7 +109,7 @@ typedef struct
     int NumeroVar_waste;            // Waste
     int* NumeroVar_overflow;   // Deversements (ecarts journaliers entre niveaux et les 100 % du
                                // reservoir)
-    int* NumeroVar_deviations; // Deviations (ecarts journaliers entre turbinés et crédits cibles
+    int* NumeroVar_deviations; // Deviations (ecarts journaliers entre turbin?s et cr?dits cibles
                                // brutes)
     int* NumeroVar_violations; // Violations (ecarts journaliers entre niveaux et courbes guides sup
                                // et inf)
@@ -135,7 +135,7 @@ typedef struct
 
 } PROBLEME_HYDRAULIQUE_ETENDU;
 
-namespace Constants
+namespace Antares::Constants
 {
 constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa

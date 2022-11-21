@@ -92,7 +92,7 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
     s->SetFlexibleDirection(wxHORIZONTAL);
     s->AddGrowableCol(0, 1);
 
-    bool readonly = (!LocalPolicy::ReadAsBool("allow_custom_swap_folder", true));
+    bool readonly = (!LocalPolicy::ReadAsBool("allow_custom_cache_folder", true));
 
     if (readonly)
     {
@@ -140,22 +140,8 @@ ConfigureTempFolder::ConfigureTempFolder(wxWindow* parent) :
     }
 
     sizer->Add(s, 0, wxALL | wxEXPAND, 20);
-    sizer->AddSpacer(60);
+    sizer->AddSpacer(30);
 
-    if (not readonly)
-    {
-        const size_t diskSpaceUsed = Antares::memory.memoryCapacity() / 1024 / 1024;
-        wxSizer* hs = new wxBoxSizer(wxHORIZONTAL);
-        hs->Add(20, 5);
-        wxStaticText* info = Component::CreateLabel(
-          this,
-          wxString(wxT("Disk space currently used by swap files : ")) << diskSpaceUsed << wxT("Mo"),
-          false,
-          true);
-        hs->Add(info, 1, wxALL | wxEXPAND);
-        hs->Add(20, 5);
-        sizer->Add(hs, 0, wxALL | wxEXPAND);
-    }
     if (not readonly)
     {
         wxSizer* hs = new wxBoxSizer(wxHORIZONTAL);

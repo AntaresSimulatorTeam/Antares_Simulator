@@ -136,7 +136,7 @@ struct VariableAccessor
             {
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
-                    intermediateValues[i].computeAVGstatisticsForCurrentYear();
+                    intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
                 else
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
             }
@@ -228,11 +228,8 @@ struct VariableAccessor
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
+
             assert(src != NULL);
-#endif
             for (uint h = 0; h != maxHoursInAYear; ++h)
                 out[i].hour[h] += src[h];
         }
@@ -245,12 +242,8 @@ struct VariableAccessor
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
             {
                 if (out[i].hour[h] < src[h])
@@ -340,7 +333,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
                 if (VCardT::spatialAggregatePostProcessing
                     == (int)Category::spatialAggregatePostProcessingPrice)
                     // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-                    intermediateValues[i].computeAVGstatisticsForCurrentYear();
+                    intermediateValues[i].computeAveragesForCurrentYearFromHourlyResults();
                 else
                     intermediateValues[i].computeStatisticsForTheCurrentYear();
             }
@@ -456,12 +449,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
                 out[i].hour[h] += src[h];
         }
@@ -474,12 +463,8 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             Antares::Memory::Stored<double>::ConstReturnType src
               = var.retrieveRawHourlyValuesForCurrentYear(i, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-            assert(src.valid());
-#else
-            assert(src != NULL);
-#endif
 
+            assert(src != NULL);
             for (uint h = 0; h != maxHoursInAYear; ++h)
             {
                 if (out[i].hour[h] < src[h])
@@ -544,7 +529,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
             if (VCardT::spatialAggregatePostProcessing
                 == (int)Category::spatialAggregatePostProcessingPrice)
                 // intermediateValues[i].adjustValuesWhenRelatedToAPrice();
-                intermediateValues.computeAVGstatisticsForCurrentYear();
+                intermediateValues.computeAveragesForCurrentYearFromHourlyResults();
             else
                 intermediateValues.computeStatisticsForTheCurrentYear();
         }
@@ -580,11 +565,15 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
                                   const Type& container,
                                   int dataLevel,
                                   int fileLevel,
-                                  int precision)
+                                  int precision,
+                                  bool updateCaption = true)
     {
         if (*results.isPrinted)
         {
-            results.variableCaption = VCardType::Caption();
+            if (updateCaption)
+            {
+                results.variableCaption = VCardType::Caption();
+            }
             container.template buildSurveyReport<ResultsT, VCardType>(
               results, container, dataLevel, fileLevel, precision);
         }
@@ -608,12 +597,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         Antares::Memory::Stored<double>::ConstReturnType src
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-        assert(src.valid());
-#else
-        assert(src != NULL);
-#endif
 
+        assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
             out.hour[h] += src[h];
     }
@@ -623,12 +608,8 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
     {
         Antares::Memory::Stored<double>::ConstReturnType src
           = var.retrieveRawHourlyValuesForCurrentYear(-1, numSpace);
-#ifdef ANTARES_SWAP_SUPPORT
-        assert(src.valid());
-#else
-        assert(src != NULL);
-#endif
 
+        assert(src != NULL);
         for (uint h = 0; h != maxHoursInAYear; ++h)
         {
             if (out.hour[h] < src[h])

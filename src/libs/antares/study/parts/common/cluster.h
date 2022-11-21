@@ -50,13 +50,6 @@ public:
     //! Get the full cluster name
     Yuni::String getFullName() const;
 
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Flush the memory to swap files (if swap support enabled)
-    */
-    virtual void flush() = 0;
-
     virtual uint groupId() const = 0;
 
     //! Set the group
@@ -79,7 +72,7 @@ public:
     /*!
     ** \brief Invalidate all data associated to the renewable cluster
     */
-    virtual bool invalidate(bool reload) const = 0;
+    virtual bool forceReload(bool reload) const = 0;
 
     /*!
     ** \brief Invalidate the whole attached area

@@ -180,14 +180,14 @@ void Connection::arrowDirection(const Connection::Direction& d)
 {
     pArrowDirection = d;
     MarkTheStudyAsModified();
-    invalidate();
+    forceReload();
 }
 
 void Connection::direction(const Connection::Direction& d)
 {
     pDirection = d;
     MarkTheStudyAsModified();
-    invalidate();
+    forceReload();
     GUIFlagInvalidateAreas = true;
 }
 
@@ -497,7 +497,7 @@ void Connection::selected(bool v)
             if (i != pManager.pSelectedItems.end())
                 pManager.pSelectedItems.erase(i);
         }
-        invalidate();
+        forceReload();
     }
 }
 

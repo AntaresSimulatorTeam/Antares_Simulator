@@ -269,9 +269,9 @@ Note that the "disk requirement" amount does not include the footprint of the sp
 to be written aside from the regular output (see previous § "optimization preferences").
 Besides, the resources monitor shows the number of CPU cores available on the machine Antares is running on.
 
-- **Configure the swap folder** Defines the location that will be used by Antares to store the temporary files of
-the MC simulators when the swap mode is activated (this location may also be used by Antares
-GUI when handling large studies). The default setting is the system temporary folder
+- **Configure the temporary folder** Defines the location that will be used by Antares to store the temporary files of
+the MC simulators. This location is used behind the scene by some Antares Simulator components (for instance scenario
+builder or time-series analyzer). The default setting is the system temporary folder.
 
 ## Window
 

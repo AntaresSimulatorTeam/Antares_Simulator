@@ -101,12 +101,6 @@ void Areas<NEXTTYPE>::initializeFromStudy(Data::Study& study)
         // For each current area's variable, getting the print status, that is :
         // is variable's column(s) printed in output (areas) reports ?
         n.getPrintStatusFromStudy(study);
-
-        // It is needed that the whole memory is flushed to swap
-        // Some intermediate are not flush and it may lead
-        // to an excessive unused amount of memory
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -116,8 +110,6 @@ void Areas<NEXTTYPE>::simulationBegin()
     for (uint i = 0; i != pAreaCount; ++i)
     {
         pAreas[i].simulationBegin();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -127,8 +119,6 @@ void Areas<NEXTTYPE>::simulationEnd()
     for (uint i = 0; i != pAreaCount; ++i)
     {
         pAreas[i].simulationEnd();
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -236,16 +226,6 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
             // Variables
             variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
         } // for each thermal cluster
-
-        // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
-        {
-            state.renewableCluster = area.renewable.clusters[j];
-            state.yearEndResetRenewable();
-
-            // Variables
-            variablesForArea.yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
-        } // for each renewable cluster
     });   // for each area
 }
 
@@ -256,11 +236,6 @@ void Areas<NEXTTYPE>::yearEnd(uint year, uint numSpace)
     {
         // Broadcast to all areas
         pAreas[i].yearEnd(year, numSpace);
-
-        // Flush all memory into the swap files
-        // This is mandatory for big studies with numerous areas
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -322,11 +297,6 @@ void Areas<NEXTTYPE>::beforeYearByYearExport(uint year, uint numSpace)
 {
     for (uint i = 0; i != pAreaCount; ++i)
         pAreas[i].beforeYearByYearExport(year, numSpace);
-
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Memory::swapSupport)
-        memory.flushAll();
 }
 
 } // namespace Variable

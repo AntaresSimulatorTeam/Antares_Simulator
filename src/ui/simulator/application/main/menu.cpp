@@ -508,12 +508,12 @@ wxMenu* ApplWnd::createMenuTools()
 
     pMenuTools->AppendSeparator();
 
-    // SWAP Folder
+    // Temporary Folder
     Menu::CreateItem(pMenuTools,
                      mnIDOptionTempFolder,
-                     wxT("Configure the swap folder"),
+                     wxT("Configure the temporary folder"),
                      nullptr,
-                     wxT("Configure the swap folder"));
+                     wxT("Configure the temporary folder"));
 
     return pMenuTools;
 }

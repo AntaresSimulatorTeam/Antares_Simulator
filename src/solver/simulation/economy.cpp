@@ -51,25 +51,27 @@ enum
     nbHoursInAWeek = 168,
 };
 
-// Interface class + factory
-void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
+EconomyWeeklyOptimization::EconomyWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ pProblemesHebdo(problemesHebdo)
 {
-    pProblemesHebdo = problemesHebdo;
 }
 
-EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled,
+                                                                 PROBLEME_HEBDO** problemesHebdo)
 {
-    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
     if (adqPatchEnabled)
-        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+        return std::make_unique<AdequacyPatchOptimization>(problemesHebdo);
     else
-        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+        return std::make_unique<NoAdequacyPatchOptimization>(problemesHebdo);
 
     return nullptr;
 }
 
-// Adequacy patch
-AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
+/ Adequacy patch
+AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ EconomyWeeklyOptimization(problemesHebdo)
+{
+}
 void AdequacyPatchOptimization::solve(Variable::State& state,
                                       int hourInTheYear,
                                       uint numSpace,
@@ -100,7 +102,10 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
 }
 
 // No adequacy patch
-NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
+NoAdequacyPatchOptimization::NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ EconomyWeeklyOptimization(problemesHebdo)
+{
+}
 void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
@@ -162,8 +167,6 @@ bool Economy::simulationBegin()
             memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
-            assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
-                   && "inconsistency");
             if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
             {
                 logs.fatal() << "internal error";
@@ -172,7 +175,7 @@ bool Economy::simulationBegin()
         }
 
         weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled, pProblemesHebdo);
 
         SIM_InitialisationResultats();
     }
@@ -181,11 +184,6 @@ bool Economy::simulationBegin()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
-
-        if (weeklyOptProblem)
-        {
-            weeklyOptProblem->initializeProblemeHebdo(pProblemesHebdo);
-        }
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -286,7 +284,7 @@ bool Economy::year(Progression::Task& progression,
             weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
 
             DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             weeklyOptProblem->solveCSR(state, numSpace, w);
 

@@ -22,19 +22,6 @@ namespace Data
 using namespace Antares;
 
 template<class ClusterT>
-inline void ClusterList<ClusterT>::flush()
-{
-#ifndef ANTARES_SWAP_SUPPORT
-    auto end = cluster.end();
-    for (auto i = cluster.begin(); i != end; ++i)
-    {
-        Cluster& it = *(i->second);
-        it.flush();
-    }
-#endif
-}
-
-template<class ClusterT>
 inline uint ClusterList<ClusterT>::size() const
 {
     return (uint)cluster.size();
@@ -178,22 +165,21 @@ void ClusterList<ClusterT>::resizeAllTimeseriesNumbers(uint n)
 #define SEP IO::Separator
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::storeTimeseriesNumbers(Study& study)
+void ClusterList<ClusterT>::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
 {
     if (cluster.empty())
-        return true;
+        return;
 
-    bool ret = true;
     TSNumbersPredicate predicate;
+    Clob path;
+    std::string ts_content;
 
     each([&](const Cluster& cluster) {
-        study.buffer = study.folderOutput;
-        study.buffer << SEP << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id
-                     << SEP << cluster.id() << ".txt";
-        ret = cluster.series->timeseriesNumbers.saveToCSVFile(study.buffer, 0, true, predicate)
-              and ret;
+        path.clear() << "ts-numbers" << SEP << typeID() << SEP << cluster.parentArea->id << SEP
+                     << cluster.id() << ".txt";
+        cluster.series->timeseriesNumbers.saveToBuffer(ts_content, 0, true, predicate, true);
+        writer->addEntryFromBuffer(path.c_str(), ts_content);
     });
-    return ret;
 }
 
 template<class ClusterT>
@@ -304,12 +290,12 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::invalidate(bool reload) const
+bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
     bool ret = true;
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
-        ret = (i->second)->invalidate(reload) and ret;
+        ret = (i->second)->forceReload(reload) and ret;
     return ret;
 }
 
@@ -334,7 +320,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
     // Removing it from the list
     cluster.erase(i);
     // Invalidating the parent area
-    c->parentArea->invalidate();
+    c->parentArea->forceReload();
 
     // Rebuilding the index
     rebuildIndex();

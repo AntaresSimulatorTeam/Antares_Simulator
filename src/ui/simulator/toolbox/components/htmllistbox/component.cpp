@@ -144,7 +144,7 @@ void Component::add(Item::IItem::Ptr it)
 {
     // Pushing back the item into the list
     pItems.push_back(it);
-    invalidate();
+    forceReload();
 }
 
 void Component::setElement(Item::IItem::Ptr it, int index_item)
@@ -167,7 +167,7 @@ void Component::forceRedraw()
     pInvalidated = true;
 }
 
-void Component::invalidate()
+void Component::forceReload()
 {
     if (!pInvalidated)
     {
@@ -350,7 +350,7 @@ void Component::onDatasourceClicked(void* ds)
     // getting the new current datasource
     pCurrentDatasource = reinterpret_cast<Datasource::IDatasource*>(ds);
     // The control must be invalidated to force the update
-    invalidate();
+    forceReload();
     Refresh();
 }
 

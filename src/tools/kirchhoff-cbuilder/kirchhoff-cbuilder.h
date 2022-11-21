@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2022 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,17 +24,14 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_FILES_FILES_H__
-#define __ANTARES_LIBS_FILES_FILES_H__
 
-#include <yuni/yuni.h>
-#include <stdio.h>
+#ifndef __KIRCHHOFF_CBUILDER_H__
+#define __KIRCHHOFF_CBUILDER_H__
 
-/*!
-** ** \brief Opens a file
-** **
-** ** \see man 3 fopen
-** */
-FILE* FileOpen(const char* filename, const char* mode);
+static void NotEnoughMemory();
 
-#endif /* __ANTARES_LIBS_FILES_FILES_H__ */
+bool initResources(int argc, char* argv[]);
+bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath);
+bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study, const std::string& studyPath, const std::string& kirchhoffOptionPath);
+
+#endif // __KIRCHHOFF_CBUILDER_H__

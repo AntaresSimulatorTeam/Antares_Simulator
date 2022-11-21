@@ -38,8 +38,6 @@ enum Feature
 {
     //! The standard solver
     standard = 0,
-    //! With swap files
-    withSwapFiles,
     //! The solver with years computed in parallel
     parallel,
 };

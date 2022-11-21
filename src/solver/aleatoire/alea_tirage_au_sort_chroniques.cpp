@@ -199,8 +199,4 @@ void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
     // Initialize in the same time the production costs of all thermal clusters.
     InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
       thermalNoisesByArea, numSpace, ecoMode);
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 }

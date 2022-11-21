@@ -45,9 +45,9 @@ inline Yuni::uint64 Prepro::memoryUsage() const
     return xcast.memoryUsage();
 }
 
-inline bool Prepro::invalidate(bool reload) const
+inline bool Prepro::forceReload(bool reload) const
 {
-    return xcast.invalidate(reload);
+    return xcast.forceReload(reload);
 }
 
 inline void Prepro::markAsModified() const

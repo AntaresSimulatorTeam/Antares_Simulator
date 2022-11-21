@@ -60,7 +60,6 @@ public:
     //   of this class
     static Yuni::uint64 MemoryUsage();
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -79,11 +78,6 @@ public:
     void reset();
 
     /*!
-    ** \brief Flush the memory
-    */
-    void flush() const;
-
-    /*!
     ** \brief Compute statistics for the current year
     */
     void computeStatisticsForTheCurrentYear();
@@ -98,10 +92,13 @@ public:
     */
     void computeStatisticsAdequacyForTheCurrentYear();
 
-    /*!
-    ** \brief Compute daily, weekly, monthly and yearly averages for the current year
-    */
-    void computeAVGstatisticsForCurrentYear();
+    // Compute averages for the current year from a particular time division results :
+    // For instances : 
+    // - compute averages daily to yearly, from hourly results
+    // - compute averages monthly to yearly, from weekly results 
+    void computeAveragesForCurrentYearFromHourlyResults();
+    void computeAveragesForCurrentYearFromDailyResults();
+    void computeAveragesForCurrentYearFromWeeklyResults();
 
     /*!
     ** \brief Compute probabilities for the current year
@@ -133,10 +130,6 @@ public:
     const Type& operator[](const uint index) const;
     //@}
 
-private:
-    template<uint Size, class VCardT, class A>
-    void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;
-
 public:
     //! Range
     Antares::Data::StudyRangeLimits* pRange;
@@ -158,13 +151,16 @@ public:
 
 private:
     // non copyable
-    IntermediateValues(const IntermediateValues&)
-    {
-    }
-    IntermediateValues& operator=(const IntermediateValues&)
-    {
-        return *this;
-    }
+    IntermediateValues(const IntermediateValues&) {}
+    IntermediateValues& operator=(const IntermediateValues&) { return *this; }
+
+    template<uint Size, class VCardT, class A>
+    void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;
+
+    void computeDailyAveragesForCurrentYear();
+    void computeWeeklyAveragesForCurrentYear();
+    void computeMonthlyAveragesForCurrentYear();
+    void computeYearlyAveragesForCurrentYear();
 
 }; // class IntermediateValues
 

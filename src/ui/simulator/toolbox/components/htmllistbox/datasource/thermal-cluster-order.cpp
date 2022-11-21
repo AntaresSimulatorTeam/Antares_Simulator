@@ -160,7 +160,7 @@ void ThermalClustersByOrder::rebuildItemsList(const wxString& search)
             }
         }
     }
-    pParent.invalidate();
+    pParent.forceReload();
 }
 
 // -------------------

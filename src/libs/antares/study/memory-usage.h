@@ -69,13 +69,13 @@ public:
     */
     void overheadDiskSpaceForSingleAreaOrLink();
 
+    void overheadDiskSpaceForSingleBindConstraint();
+
 public:
     //! \name Input data
     //@{
     //! Study mode (economy / adequacy / other)
     StudyMode mode;
-    //! Swapping support
-    bool swappingSupport;
     //! For matrices
     bool gatheringInformationsForInput;
     //@}
@@ -91,8 +91,6 @@ public:
 
     //! Total Amount of disk space required for a simulation
     Yuni::uint64 requiredDiskSpace;
-    //! Amount of disk space required by the swap files for a simulation
-    Yuni::uint64 requiredDiskSpaceForSwap;
     //! Amount of disk space required by the output for a simulation
     Yuni::uint64 requiredDiskSpaceForOutput;
     //@}

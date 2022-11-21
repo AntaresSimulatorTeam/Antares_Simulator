@@ -5,6 +5,8 @@
 #include "../../../logs.h"
 #include "../../fwd.h"
 
+#include <i_writer.h>
+
 #include <vector>
 #include <memory>
 
@@ -185,7 +187,7 @@ public:
     */
     void resizeAllTimeseriesNumbers(uint n);
 
-    bool storeTimeseriesNumbers(Study& study);
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     //@}
 
@@ -194,17 +196,12 @@ public:
     /*!
     ** \brief Invalidate all clusters
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the cluster as modified
     */
     void markAsModified() const;
-
-    /*!
-    ** \brief Flush memory to swap files
-    */
-    void flush();
 
     /*!
     ** \brief Rebuild the index of clusters

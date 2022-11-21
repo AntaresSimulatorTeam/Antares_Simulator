@@ -155,7 +155,7 @@ void ThermalCluster::internalBuildSubControls()
 
 void ThermalCluster::update()
 {
-    pThListbox->invalidate();
+    pThListbox->forceReload();
     onThermalClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -385,7 +385,7 @@ void ThermalCluster::internalDeleteAll(void*)
         ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
 
         // invalidating the parent area
-        pArea->invalidate();
+        pArea->forceReload();
 
         // Update the list
         Window::Inspector::SelectArea(pArea);
@@ -458,7 +458,7 @@ void ThermalCluster::internalAddPlant(void*)
         MarkTheStudyAsModified();
         updateInnerValues();
 
-        pArea->invalidate();
+        pArea->forceReload();
 
         study->uiinfo->reload();
     }
@@ -537,7 +537,7 @@ void ThermalCluster::internalClonePlant(void*)
         MarkTheStudyAsModified();
         updateInnerValues();
 
-        pArea->invalidate();
+        pArea->forceReload();
 
         study->uiinfo->reload();
     }

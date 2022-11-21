@@ -171,7 +171,7 @@ void BindingConstraint::selected(bool v)
                 pManager.pSelectedItems.erase(i);
         }
         pSelected = v;
-        invalidate();
+        forceReload();
     }
 }
 

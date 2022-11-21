@@ -196,7 +196,6 @@ static inline void ExportCorrelationCoefficients(Study& study,
     }
 
     file << '\n';
-    m.flush();
 }
 
 int InterAreaCorrelationLoadFromIniFile(Matrix<>* m, AreaList* l, IniFile* ini, int warnings)
@@ -418,8 +417,6 @@ bool Correlation::internalLoadFromINIPost32(Study& study, const IniFile& ini, bo
         auto* section = ini.find("annual");
         if (section) // the section might be missing
             ReadCorrelationCoefficients(*this, study, *annual, ini, *section, warnings);
-
-        annual->flush();
     }
 
     if (JIT::usedFromGUI or pMode == modeMonthly)
@@ -429,7 +426,6 @@ bool Correlation::internalLoadFromINIPost32(Study& study, const IniFile& ini, bo
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
             monthly[i].fillUnit();
-            monthly[i].flush();
         }
 
         int index;
@@ -441,7 +437,6 @@ bool Correlation::internalLoadFromINIPost32(Study& study, const IniFile& ini, bo
                 {
                     ReadCorrelationCoefficients(
                       *this, study, monthly[index], ini, *section, warnings);
-                    monthly[index].flush();
                 }
                 else
                     logs.error() << "Invalid month index: " << index;
@@ -473,7 +468,6 @@ void Correlation::reset(Study& study)
         annual = new Matrix<>();
         annual->resize(study.areas.size(), study.areas.size());
         annual->fillUnit();
-        annual->flush();
 
         // Preparing the monthly correlation matrices
         monthly = new Matrix<>[12];
@@ -481,7 +475,6 @@ void Correlation::reset(Study& study)
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
             monthly[i].fillUnit();
-            monthly[i].flush();
         }
     }
     else
@@ -489,7 +482,6 @@ void Correlation::reset(Study& study)
         annual = new Matrix<>();
         annual->resize(study.areas.size(), study.areas.size());
         annual->fillUnit();
-        annual->flush();
     }
 }
 
@@ -539,7 +531,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
             annual = new Matrix<>();
             annual->resize(study.areas.size(), study.areas.size());
             annual->fillUnit();
-            annual->flush();
 
             // Preparing the monthly correlation matrices
             monthly = new Matrix<>[12];
@@ -547,7 +538,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
             {
                 monthly[i].resize(study.areas.size(), study.areas.size());
                 monthly[i].fillUnit();
-                monthly[i].flush();
             }
         }
         else
@@ -555,7 +545,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
             annual = new Matrix<>();
             annual->resize(study.areas.size(), study.areas.size());
             annual->fillUnit();
-            annual->flush();
         }
 
         return false;
@@ -580,7 +569,6 @@ bool Correlation::internalLoadFromINIv32(Study& study, const IniFile& ini, bool 
         {
             monthly[i].resize(study.areas.size(), study.areas.size());
             monthly[i].fillUnit();
-            monthly[i].flush();
         }
     }
 
@@ -616,7 +604,6 @@ bool Correlation::internalLoadFromINIv32(Study& study, const IniFile& ini, bool 
             }
         }
     }
-    annual->flush();
     return true;
 }
 
@@ -696,13 +683,13 @@ void Correlation::estimateMemoryUsage(StudyMemoryUsage& u) const
     }
 }
 
-bool Correlation::invalidate(bool reload) const
+bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;
     if (annual)
-        ret = annual->invalidate(reload) and ret;
+        ret = annual->forceReload(reload) and ret;
     for (uint i = 0; i != 12; ++i)
-        ret = monthly[i].invalidate(reload) and ret;
+        ret = monthly[i].forceReload(reload) and ret;
 
     return ret;
 }

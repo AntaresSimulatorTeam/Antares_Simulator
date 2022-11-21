@@ -112,7 +112,7 @@ public:
     */
     bool saveToFolder(const AreaName& areaID, const char* folder);
 
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
 
