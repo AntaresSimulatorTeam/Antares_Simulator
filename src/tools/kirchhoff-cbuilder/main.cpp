@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
     const std::string& studyPath, const std::string& kirchhoffOptionPath)
 {
-    study->ensureDataAreAllInitialized();
+    study->areas.ensureDataIsInitialized(study->parameters, false);
 
     CBuilder constraintBuilder(study);
     logs.info() << "CBuilder created";
