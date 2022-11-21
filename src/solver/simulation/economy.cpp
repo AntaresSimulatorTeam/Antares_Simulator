@@ -67,7 +67,7 @@ EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEn
     return nullptr;
 }
 
-/ Adequacy patch
+// Adequacy patch
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
  EconomyWeeklyOptimization(problemesHebdo)
 {
