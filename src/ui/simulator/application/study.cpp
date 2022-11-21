@@ -329,9 +329,9 @@ protected:
             // all data (and load all missing files)
             study->areas.each([&](Data::Area& area) {
                 logs.info() << "Preparing the area " << area.name;
-                area.invalidate(true);
+                area.forceReload(true);
             });
-            study->invalidate(true);
+            study->forceReload(true);
             // We have to mark the whole study as modified
             study->markAsModified();
 

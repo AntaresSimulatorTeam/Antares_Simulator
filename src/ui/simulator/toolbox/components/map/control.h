@@ -101,7 +101,7 @@ public:
     void zoom(const double v);
     //@}
 
-    void invalidate()
+    void forceReload()
     {
         pInvalidated = true;
     }

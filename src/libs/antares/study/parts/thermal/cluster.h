@@ -122,7 +122,7 @@ public:
     /*!
     ** \brief Invalidate all data associated to the thermal cluster
     */
-    bool invalidate(bool reload) const override;
+    bool forceReload(bool reload) const override;
 
     /*!
     ** \brief Mark the thermal cluster as modified

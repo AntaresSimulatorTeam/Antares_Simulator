@@ -127,7 +127,7 @@ double Data::cellNumericValue(int x, int y) const
         if (bindingconstraint)
         {
             auto& matrix = bindingconstraint->matrix();
-            matrix.invalidate(true);
+            matrix.forceReload(true);
             assert((uint)pColumn < matrix.width);
             assert((uint)y < matrix.height);
             return matrix.entry[pColumn][y];

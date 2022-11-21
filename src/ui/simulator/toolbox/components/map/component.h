@@ -153,7 +153,7 @@ public:
 
     void showLayerAll();
 
-    void invalidate();
+    void forceReload();
     void refresh();
 
     /*!

@@ -181,7 +181,7 @@ public:
         return data;
     }
 
-    bool invalidate(bool /*reload*/) const
+    bool forceReload(bool /*reload*/) const
     {
         pModified = true;
         return true;

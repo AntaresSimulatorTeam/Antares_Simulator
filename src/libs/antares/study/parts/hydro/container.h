@@ -106,7 +106,7 @@ public:
 
     void copyFrom(const PartHydro& rhs);
 
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified

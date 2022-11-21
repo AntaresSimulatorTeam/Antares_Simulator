@@ -63,7 +63,7 @@ void Connection::onConnectionChanged(Data::AreaLink* link)
 {
     if (link)
     {
-        link->invalidate(true); // Force the reload of parameters & capacities to avoid a crash.
+        link->forceReload(true); // Force the reload of parameters & capacities to avoid a crash.
         setMatrix(link);
         mUseLoopFlow = link->useLoopFlow;
     }

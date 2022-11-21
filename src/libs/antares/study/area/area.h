@@ -179,7 +179,7 @@ public:
     ** \param reload True to force the reload of data
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all areas as modified
@@ -549,7 +549,7 @@ public:
     ** \param reload True to reload data in the same time
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified

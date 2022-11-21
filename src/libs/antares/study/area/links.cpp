@@ -361,8 +361,8 @@ void AreaLink::reverse()
     with->buildLinksIndexes();
 
     // Making sure that we have the data
-    directCapacities.invalidate(true);
-    indirectCapacities.invalidate(true);
+    directCapacities.forceReload(true);
+    indirectCapacities.forceReload(true);
 
     // invert NTC values
     directCapacities.swap(indirectCapacities);
@@ -676,7 +676,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             // Starting from 3.9, the UI does not longer allow values below
             // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL but we have to normalize the hurdle costs for
             // older studies. We can not directly use 0 it will bring too much damage to the results
-            link.parameters.invalidate(true);
+            link.parameters.forceReload(true);
             auto& hurdleCostsD = link.parameters[Data::fhlHurdlesCostDirect];
             auto& hurdleCostsI = link.parameters[Data::fhlHurdlesCostIndirect];
             bool rounding = false;
@@ -892,10 +892,10 @@ Yuni::uint64 AreaLink::memoryUsage() const
     return to_return;
 }
 
-bool AreaLink::invalidate(bool reload) const
+bool AreaLink::forceReload(bool reload) const
 {
-    return parameters.invalidate(reload) && directCapacities.invalidate(reload)
-           && indirectCapacities.invalidate(reload);
+    return parameters.forceReload(reload) && directCapacities.forceReload(reload)
+           && indirectCapacities.forceReload(reload);
 }
 
 void AreaLink::markAsModified() const

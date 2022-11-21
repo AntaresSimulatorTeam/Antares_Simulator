@@ -49,13 +49,13 @@ Container::~Container()
     series = nullptr;
 }
 
-bool Container::invalidate(bool reload) const
+bool Container::forceReload(bool reload) const
 {
     bool ret = true;
     if (series)
-        ret = series->invalidate(reload) && ret;
+        ret = series->forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->invalidate(reload) && ret;
+        ret = prepro->forceReload(reload) && ret;
     return ret;
 }
 

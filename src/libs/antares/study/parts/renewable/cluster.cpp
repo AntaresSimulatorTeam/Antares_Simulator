@@ -93,7 +93,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
@@ -156,11 +156,11 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     groupID = renewableOther1;
 }
 
-bool Data::RenewableCluster::invalidate(bool reload) const
+bool Data::RenewableCluster::forceReload(bool reload) const
 {
     bool ret = true;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     return ret;
 }
 
