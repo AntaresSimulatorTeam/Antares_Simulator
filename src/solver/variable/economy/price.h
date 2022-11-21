@@ -204,7 +204,7 @@ public:
     void yearEnd(uint year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
+        pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
