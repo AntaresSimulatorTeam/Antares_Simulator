@@ -1213,7 +1213,7 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
     foreach (auto* constraint, bindingConstraints)
     {
         if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().invalidate(true);
+            constraint->matrix().forceReload(true);
     }
 }
 
@@ -1348,24 +1348,24 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
-bool Study::invalidate(bool reload) const
+bool Study::forceReload(bool reload) const
 {
     bool ret = true;
 
     // Invalidate all areas
-    ret = areas.invalidate(reload) and ret;
+    ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.invalidate(reload) and ret;
+    ret = bindingConstraints.forceReload(reload) and ret;
 
-    ret = preproLoadCorrelation.invalidate(reload) and ret;
-    ret = preproSolarCorrelation.invalidate(reload) and ret;
-    ret = preproWindCorrelation.invalidate(reload) and ret;
-    ret = preproHydroCorrelation.invalidate(reload) and ret;
+    ret = preproLoadCorrelation.forceReload(reload) and ret;
+    ret = preproSolarCorrelation.forceReload(reload) and ret;
+    ret = preproWindCorrelation.forceReload(reload) and ret;
+    ret = preproHydroCorrelation.forceReload(reload) and ret;
 
-    ret = bindingConstraints.invalidate(reload) and ret;
+    ret = bindingConstraints.forceReload(reload) and ret;
 
-    ret = setsOfAreas.invalidate(reload) and ret;
-    ret = setsOfLinks.invalidate(reload) and ret;
+    ret = setsOfAreas.forceReload(reload) and ret;
+    ret = setsOfLinks.forceReload(reload) and ret;
     return ret;
 }
 

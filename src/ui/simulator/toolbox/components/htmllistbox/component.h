@@ -99,7 +99,7 @@ public:
     /*!
     ** \brief Force a visual refresh of the component
     */
-    void invalidate();
+    void forceReload();
 
     void forceRedraw();
 

@@ -59,14 +59,14 @@ Item::~Item()
 void Item::color(const wxColour& c)
 {
     pColor = c;
-    this->invalidate();
+    this->forceReload();
     colorHasChanged();
 }
 
 void Item::color(const wxString& s)
 {
     pColor.Set(s);
-    this->invalidate();
+    this->forceReload();
     colorHasChanged();
 }
 
@@ -76,7 +76,7 @@ void Item::color(const int r, const int g, const int b)
                (unsigned char)Yuni::Math::MinMax<int>(g, 0, 255),
                (unsigned char)Yuni::Math::MinMax<int>(b, 0, 255),
                wxALPHA_OPAQUE);
-    this->invalidate();
+    this->forceReload();
     colorHasChanged();
 }
 
@@ -86,7 +86,7 @@ void Item::color(const int r, const int g, const int b, const int alpha)
                (unsigned char)Yuni::Math::MinMax<int>(g, 0, 255),
                (unsigned char)Yuni::Math::MinMax<int>(b, 0, 255),
                (unsigned char)Yuni::Math::MinMax<int>(alpha, 0, 255));
-    this->invalidate();
+    this->forceReload();
     colorHasChanged();
 }
 
@@ -103,7 +103,7 @@ void Item::selected(bool v)
             if (i != pManager.pSelectedItems.end())
                 pManager.pSelectedItems.erase(i);
         }
-        invalidate();
+        forceReload();
     }
 }
 
@@ -139,14 +139,14 @@ void Item::internalClearAllLinks()
     }
 }
 
-void Item::invalidate()
+void Item::forceReload()
 {
     pInvalidated = true;
     if (!pLinks->empty())
     {
         Links::iterator end = pLinks->end();
         for (Links::iterator i = pLinks->begin(); i != end; ++i)
-            i->first->invalidate();
+            i->first->forceReload();
     }
 }
 

@@ -42,7 +42,7 @@ class DataSeriesCommon
 public:
     void estimateMemoryUsage(StudyMemoryUsage&, enum TimeSeries) const;
 
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
 

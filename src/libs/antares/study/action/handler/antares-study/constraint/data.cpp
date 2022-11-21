@@ -63,7 +63,7 @@ bool Data::performWL(Context& ctx)
 
         if (source && source != ctx.constraint)
         {
-            source->matrix().invalidate(true);
+            source->matrix().forceReload(true);
             assert(source->matrix().width > 0);
             assert(source->matrix().height > 0);
             ctx.constraint->matrix() = source->matrix();

@@ -290,12 +290,12 @@ bool ClusterList<ClusterT>::rename(Data::ClusterName idToFind, Data::ClusterName
 }
 
 template<class ClusterT>
-bool ClusterList<ClusterT>::invalidate(bool reload) const
+bool ClusterList<ClusterT>::forceReload(bool reload) const
 {
     bool ret = true;
     auto end = cluster.end();
     for (auto i = cluster.begin(); i != end; ++i)
-        ret = (i->second)->invalidate(reload) and ret;
+        ret = (i->second)->forceReload(reload) and ret;
     return ret;
 }
 
@@ -320,7 +320,7 @@ bool ClusterList<ClusterT>::remove(const Data::ClusterName& id)
     // Removing it from the list
     cluster.erase(i);
     // Invalidating the parent area
-    c->parentArea->invalidate();
+    c->parentArea->forceReload();
 
     // Rebuilding the index
     rebuildIndex();

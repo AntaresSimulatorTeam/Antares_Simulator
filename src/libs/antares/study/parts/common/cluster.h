@@ -72,7 +72,7 @@ public:
     /*!
     ** \brief Invalidate all data associated to the renewable cluster
     */
-    virtual bool invalidate(bool reload) const = 0;
+    virtual bool forceReload(bool reload) const = 0;
 
     /*!
     ** \brief Invalidate the whole attached area

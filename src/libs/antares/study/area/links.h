@@ -101,7 +101,7 @@ public:
     **
     ** \param reload True to load all missing data
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the data associated to the link as modified

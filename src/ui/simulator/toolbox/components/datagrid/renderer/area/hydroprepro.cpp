@@ -151,7 +151,7 @@ void HydroPrepro::internalAreaChanged(Antares::Data::Area* area)
     Renderer::ARendererArea::internalAreaChanged(area);
     if (pPreproHydro)
     {
-        // area->hydro.reservoirLevel.invalidate(true);
+        // area->hydro.reservoirLevel.forceReload(true);
         MatrixAncestorType::matrix(&pPreproHydro->data);
     }
     else

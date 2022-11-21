@@ -236,7 +236,7 @@ public:
     ** Mark all JIT structures as invalidated. This will force the loading of missing
     ** data in memory and it will force the rewritten of any matrix.
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the whole study as modified

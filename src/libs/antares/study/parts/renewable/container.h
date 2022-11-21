@@ -86,7 +86,7 @@ public:
     /*!
     ** \brief Invalidate all JIT data
     */
-    bool invalidate(bool reload) const;
+    bool forceReload(bool reload) const;
 
     /*!
     ** \brief Mark the renewable cluster as modified

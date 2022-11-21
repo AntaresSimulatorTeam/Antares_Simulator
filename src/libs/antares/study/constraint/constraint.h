@@ -409,7 +409,7 @@ public:
     /*!
     ** \brief Invalidate all matrices
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified
@@ -661,7 +661,7 @@ public:
     /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified

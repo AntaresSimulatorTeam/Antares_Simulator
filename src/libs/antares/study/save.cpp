@@ -96,7 +96,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
         {
             // if at least one area has been invalidated, all constraints
             // must be invalidated as well
-            bindingConstraints.invalidate(true);
+            bindingConstraints.forceReload(true);
             bindingConstraints.markAsModified();
         }
     }
@@ -140,7 +140,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     {
         logs.info() << "  performing a format upgrade";
         // Invalidate all matrices
-        invalidate(true);
+        forceReload(true);
         markAsModified();
         // Invalidate the scenario builder data
         if (not scenarioRules)

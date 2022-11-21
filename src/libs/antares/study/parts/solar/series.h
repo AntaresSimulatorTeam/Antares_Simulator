@@ -42,7 +42,7 @@ class DataSeriesSolar
 public:
     void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
 

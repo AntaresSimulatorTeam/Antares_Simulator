@@ -683,13 +683,13 @@ void Correlation::estimateMemoryUsage(StudyMemoryUsage& u) const
     }
 }
 
-bool Correlation::invalidate(bool reload) const
+bool Correlation::forceReload(bool reload) const
 {
     bool ret = true;
     if (annual)
-        ret = annual->invalidate(reload) and ret;
+        ret = annual->forceReload(reload) and ret;
     for (uint i = 0; i != 12; ++i)
-        ret = monthly[i].invalidate(reload) and ret;
+        ret = monthly[i].forceReload(reload) and ret;
 
     return ret;
 }

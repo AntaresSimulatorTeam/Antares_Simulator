@@ -57,7 +57,7 @@ public:
     /*!
     ** \brief Make sure that all data are loaded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified
