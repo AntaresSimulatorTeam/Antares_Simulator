@@ -562,6 +562,10 @@ private:
     void evtOnOptionsOptimizationPrefs(wxCommandEvent& evt);
     //! Advanced parameters
     void evtOnOptionsAdvanced(wxCommandEvent& evt);
+    //! Adequacy Patch Configure
+    void evtOnOptionsAdequacyPatchOptions(wxCommandEvent& evt);
+    //! Adequacy Patch Areas
+    void evtOnOptionsAdequacyPatchAreas(wxCommandEvent& evt);
     //@}
 
     //! \name Event: Menu: Window
@@ -675,6 +679,8 @@ private:
     wxMenu* pMenuOptions;
     //! SubMenu: Options > Geographic trimming
     wxMenuItem* pMenuGeographicTrimming;
+    //! SubMenu: Options > Adequacy Patch
+    wxMenuItem* pMenuAdequacyPatch;
     //! Menu: Window
     wxMenu* pMenuWindow;
     //! Menu: Tools

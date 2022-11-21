@@ -159,6 +159,8 @@ EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
 EVT_MENU(mnIDOptionOptimizationPrefs, ApplWnd::evtOnOptionsOptimizationPrefs)
 EVT_MENU(mnIDOptionAdvanced, ApplWnd::evtOnOptionsAdvanced)
+EVT_MENU(mnIDOptionAdequacyPatchOptions, ApplWnd::evtOnOptionsAdequacyPatchOptions)
+EVT_MENU(mnIDOptionAdequacyPatchAreas, ApplWnd::evtOnOptionsAdequacyPatchAreas)
 
 // Window
 EVT_MENU(mnIDFullscreen, ApplWnd::evtOnFullscreen)
@@ -227,6 +229,7 @@ ApplWnd::ApplWnd() :
  pMenuSimulation(nullptr),
  pMenuOptions(nullptr),
  pMenuGeographicTrimming(nullptr),
+ pMenuAdequacyPatch(nullptr),
  pMenuWindow(nullptr),
  pMenuTools(nullptr),
  pMenuHelp(nullptr),
@@ -508,6 +511,8 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDOptionConfigureMCScenarioPlaylist, opened);
         EnableItem(menu, mnIDOptionOptimizationPrefs, opened);
         EnableItem(menu, mnIDOptionAdvanced, opened);
+        EnableItem(menu, mnIDOptionAdequacyPatchOptions, opened);
+        EnableItem(menu, mnIDOptionAdequacyPatchAreas, opened);
 
         EnableItem(menu, mnIDInspector, opened);
 

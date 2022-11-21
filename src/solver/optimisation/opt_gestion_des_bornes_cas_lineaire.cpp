@@ -119,7 +119,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
     double* Xmin;
     double* Xmax;
     int* TypeDeVariable;
-
+    
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
@@ -156,11 +156,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
-                AdequacyPatch::setBoundsAdqPatch(
-                  Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
-            else
-                AdequacyPatch::setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
+            AdequacyPatch::setNTCbounds(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -381,14 +377,14 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     Xmax[Var] = 0.;
 
                 // adq patch: update ENS <= DENS in 2nd run
-                if (ProblemeHebdo->adqPatchParams
-                    && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
+                if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
                     && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
-                         == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                         == AdequacyPatch::physicalAreaInsideAdqPatch)
+                {
                     Xmax[Var]
                       = min(Xmax[Var],
                             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
-
+                }
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;

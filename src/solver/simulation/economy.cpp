@@ -35,6 +35,8 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include <set>
+#include "../optimisation/adequacy_patch.h"
 
 using namespace Yuni;
 
@@ -46,7 +48,6 @@ namespace Simulation
 {
 enum
 {
-
     nbHoursInAWeek = 168,
 };
 
@@ -66,12 +67,15 @@ EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEn
     return nullptr;
 }
 
-// Adequacy patch
+/ Adequacy patch
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
  EconomyWeeklyOptimization(problemesHebdo)
 {
 }
-void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
+void AdequacyPatchOptimization::solve(Variable::State& state,
+                                      int hourInTheYear,
+                                      uint numSpace,
+                                      uint w)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
@@ -102,10 +106,14 @@ NoAdequacyPatchOptimization::NoAdequacyPatchOptimization(PROBLEME_HEBDO** proble
  EconomyWeeklyOptimization(problemesHebdo)
 {
 }
-void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
+void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
+}
+void NoAdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
+{
+    return;
 }
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
@@ -183,6 +191,62 @@ bool Economy::simulationBegin()
     return true;
 }
 
+vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
+{
+    std::vector<double> sumENS(nbHoursInAWeek, 0.0);
+    for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
+    {
+        if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
+            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            addArray(sumENS,
+                     pProblemesHebdo[numSpace]
+                       ->ResultatsHoraires[area]
+                       ->ValeursHorairesDeDefaillancePositive);
+    }
+    return sumENS;
+}
+
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
+                                                                            uint numSpace) const
+{
+    double threshold
+      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
+    std::set<int> triggerCsrSet;
+    for (int i = 0; i < nbHoursInAWeek; ++i)
+    {
+        if (sumENS[i] > threshold)
+        {
+            triggerCsrSet.insert(i);
+        }
+    }
+    logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
+    return triggerCsrSet;
+}
+
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
+{
+    vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
+    return identifyHoursForCurtailmentSharing(sumENS, numSpace);
+}
+
+void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
+{
+    auto problemeHebdo = pProblemesHebdo[numSpace];
+    double totalLmrViolation
+      = calculateDensNewAndTotalLmrViolation(problemeHebdo, state.study, numSpace);
+    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
+                << ".Total LMR violation:" << totalLmrViolation;
+    const std::set<int> hoursRequiringCurtailmentSharing
+      = getHoursRequiringCurtailmentSharing(numSpace);
+    for (int hourInWeek : hoursRequiringCurtailmentSharing)
+    {
+        logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
+                    << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
+        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
+        hourlyCsrProblem.run(w, state);
+    }
+}
+
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -217,15 +281,19 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblem->solve(state, hourInTheYear, numSpace);
+            weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+
+            weeklyOptProblem->solveCSR(state, numSpace, w);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 
             RemixHydroForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+            
+            adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
 

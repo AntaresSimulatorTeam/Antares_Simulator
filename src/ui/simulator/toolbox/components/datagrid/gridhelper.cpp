@@ -199,6 +199,20 @@ public:
             pStyles[CellStyle::cellStyleFilterUndefined]->SetAlignment(wxALIGN_CENTRE,
                                                                        wxALIGN_CENTRE);
         }
+        // Adequacy patch areas
+        {
+            pStyles[CellStyle::cellStyleAdqPatchVirtual]->SetAlignment(wxALIGN_CENTRE,
+                                                                       wxALIGN_CENTRE);
+            pStyles[CellStyle::cellStyleAdqPatchVirtual]->SetTextColour(wxColour(0, 0, 0));
+
+            pStyles[CellStyle::cellStyleAdqPatchOutside]->SetAlignment(wxALIGN_CENTRE,
+                                                                       wxALIGN_CENTRE);
+            pStyles[CellStyle::cellStyleAdqPatchOutside]->SetTextColour(wxColour(204, 51, 0));
+
+            pStyles[CellStyle::cellStyleAdqPatchInside]->SetAlignment(wxALIGN_CENTRE,
+                                                                      wxALIGN_CENTRE);
+            pStyles[CellStyle::cellStyleAdqPatchInside]->SetTextColour(wxColour(0, 128, 0));
+        }
     }
 
     virtual ~GridCellAttrProvider()
@@ -302,6 +316,9 @@ public:
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchOutside);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchInside);
     }
 
     void appendCSSForAllCellStyles2(Yuni::String& s)
@@ -338,6 +355,9 @@ public:
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOn);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterSynthesisOff);
         internalAppendCSSCode(s, CellStyle::cellStyleFilterUndefined);
+         internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchVirtual);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchOutside);
+        internalAppendCSSCode(s, CellStyle::cellStyleAdqPatchInside);
     }
 
 private:
