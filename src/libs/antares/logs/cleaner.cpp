@@ -26,6 +26,7 @@
 */
 
 #include "cleaner.h"
+#include "../constants.h"
 #include <yuni/io/directory/info.h>
 #include <yuni/datetime/timestamp.h>
 #include <yuni/io/file.h>
@@ -34,9 +35,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-// days per month, immutable values for version prior to 3.9 for sure
-// these values are not related in any cases to an Antares study
-static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
 static inline bool IsLeapYear(uint year)
 {
@@ -110,9 +108,9 @@ static bool SuitableForDeletion(const AnyString& name, DateTime::Timestamp now)
                     for (uint i = 0; i != m - 1; ++i)
                     {
                         if (i == 1 and IsLeapYear(y))
-                            timestamp += 24 * 3600 * (daysPerMonth[i] + 1);
+                            timestamp += 24 * 3600 * (Constants::daysPerMonth[i] + 1);
                         else
-                            timestamp += 24 * 3600 * daysPerMonth[i];
+                            timestamp += 24 * 3600 * Constants::daysPerMonth[i];
                     }
                 }
 

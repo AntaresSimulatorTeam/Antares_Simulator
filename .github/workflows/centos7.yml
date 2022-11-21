@@ -28,13 +28,13 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 2
 
     - name: Get changed files
       id: changed-files
-      uses: tj-actions/changed-files@v1.1.2
+      uses: tj-actions/changed-files@v34
       with:
         files: |
           docker/centos7-basic-requirements
@@ -43,7 +43,7 @@ jobs:
     - name: Get branch name
       id: branch_name
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: tj-actions/branch-names@v5
+      uses: tj-actions/branch-names@v6
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -88,16 +88,15 @@ jobs:
         ortools-xpress: [ON, OFF]
 
     steps:
-    - uses: nelonoel/branch-name@v1.0.1
 
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
     - name: Export release flag
       id: release_flag
       run: |
-        echo "::set-output name=is_release::${{env.IS_RELEASE}}"
+        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
     - name: Init submodule
       run: |
@@ -128,7 +127,7 @@ jobs:
             rm ortools.zip
 
     - name: Download userguide
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: pdf-doc
         path: docs/ref_guides
@@ -178,12 +177,12 @@ jobs:
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer TGZ push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.tar.gz
 
     - name: Installer RPM push
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: _build/*.rpm
 

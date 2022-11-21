@@ -1,3 +1,4 @@
+
 /*
 ** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team
@@ -28,6 +29,7 @@
 #define __ANTARES_LIBS_CONSTANTS_H__
 
 #include "xpansion.h"
+#include <array>
 
 /*! Name of the app to use into logs */
 #define LOG_APPLICATION_NAME "antares"
@@ -40,11 +42,14 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-/*! Max number of MC years */
-constexpr uint MAX_NB_MC_YEARS = 50000;
+namespace Antares::Constants {
 
-/*! */
-/* # define ANTARES_USE_GLOBAL_MAXIMUM_COST 0 */
+extern const std::array<unsigned int, 12> daysPerMonth;
+
+} // namespace constants
+
+/*! Max number of MC years */
+constexpr unsigned int MAX_NB_MC_YEARS = 50000;
 
 enum AntaresConstants
 {

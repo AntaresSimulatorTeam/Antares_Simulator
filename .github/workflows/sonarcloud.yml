@@ -25,7 +25,7 @@ jobs:
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -88,7 +88,7 @@ jobs:
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.8
 

@@ -125,6 +125,9 @@ public:
 
     Yuni::String getName() const;
 
+    bool isLinkPhysical() const;
+    void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
+
 private:
     bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
     bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
@@ -165,7 +168,7 @@ public:
 
     //! Flag for the transmission capacities (NTC +infinite)
     // previously called copper plate
-    TransmissionCapacities transmissionCapacities;
+    LocalTransmissionCapacities transmissionCapacities;
     //@}
 
     //! Flag for the asset type (AC/DC/Other)

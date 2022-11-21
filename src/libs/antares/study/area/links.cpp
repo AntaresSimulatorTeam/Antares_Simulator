@@ -35,7 +35,6 @@
 #include "../filter.h"
 #include "constants.h"
 #include "../fwd.h"
-#include <antares/study/links/property-links-helper.h>
 
 using namespace Yuni;
 using namespace Antares;
@@ -71,7 +70,7 @@ AreaLink::AreaLink() :
  useLoopFlow(false),
  usePST(false),
  useHurdlesCost(false),
- transmissionCapacities(Data::tncEnabled),
+ transmissionCapacities(LocalTransmissionCapacities::enabled),
  assetType(Data::atAC),
  index(0),
  indexForArea(0),
@@ -238,6 +237,41 @@ bool AreaLink::linkLoadTimeSeries_for_version_820_and_later(const AnyString& fol
     return success;
 }
 
+bool AreaLink::isLinkPhysical() const
+{
+    // All link types are physical, except arVirt
+    return assetType != atVirt;
+}
+
+// Handle all trivial cases here
+void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
+  GlobalTransmissionCapacities tncGlobal)
+{
+    switch (tncGlobal)
+    {
+    case GlobalTransmissionCapacities::localValuesForAllLinks: // Use the local property for all
+                                                               // links, including physical links
+        break;
+    case GlobalTransmissionCapacities::nullForAllLinks:
+        transmissionCapacities = LocalTransmissionCapacities::null;
+        break;
+    case GlobalTransmissionCapacities::infiniteForAllLinks:
+        transmissionCapacities = LocalTransmissionCapacities::infinite;
+        break;
+    case GlobalTransmissionCapacities::nullForPhysicalLinks: // Use '0' only for physical links
+        if (isLinkPhysical())
+            transmissionCapacities = LocalTransmissionCapacities::null;
+        break;
+    case GlobalTransmissionCapacities::infiniteForPhysicalLinks: // Use 'infinity' only for physical
+                                                                 // links
+        if (isLinkPhysical())
+            transmissionCapacities = LocalTransmissionCapacities::infinite;
+        break;
+    default:
+        logs.error() << "Wrong global transmission capacity given to function" << __FUNCTION__;
+    }
+}
+
 bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
 {
     if (study.header.version < 320)
@@ -290,7 +324,7 @@ void AreaLink::resetToDefaultValues()
     useLoopFlow = false;
     usePST = false;
     useHurdlesCost = false;
-    transmissionCapacities = Data::tncEnabled;
+    transmissionCapacities = LocalTransmissionCapacities::enabled;
     assetType = Data::atAC;
     color[0] = 112;
     color[1] = 112;
@@ -387,7 +421,9 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
         bool copperPlate;
         if (value.to<bool>(copperPlate))
         {
-            link.transmissionCapacities = (copperPlate) ? Data::tncInfinite : Data::tncEnabled;
+            using LocalNTCtype = Data::LocalTransmissionCapacities;
+            link.transmissionCapacities
+              = copperPlate ? LocalNTCtype::infinite : LocalNTCtype::enabled;
             return true;
         }
         return false;
@@ -450,15 +486,16 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
     }
     if (key == "transmission-capacities")
     {
+        using LocalNTCtype = Data::LocalTransmissionCapacities;
         if (value == "enabled")
-            link.transmissionCapacities = tncEnabled;
+            link.transmissionCapacities = LocalNTCtype::enabled;
         else if (value == "infinite")
-            link.transmissionCapacities = tncInfinite;
+            link.transmissionCapacities = LocalNTCtype::infinite;
         else if (value == "ignore")
-            link.transmissionCapacities = tncIgnore;
+            link.transmissionCapacities = LocalNTCtype::null;
         else
         {
-            link.transmissionCapacities = tncIgnore;
+            link.transmissionCapacities = LocalNTCtype::null;
             return false;
         }
         return true;
@@ -688,27 +725,27 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
         // From the solver only
         if (study.usedByTheSolver)
         {
+            link.overrideTransmissionCapacityAccordingToGlobalParameter(
+              study.parameters.transmissionCapacities);
+
             if (!link.useHurdlesCost || !study.parameters.include.hurdleCosts)
             {
                 link.parameters.columnToZero(Data::fhlHurdlesCostDirect);
                 link.parameters.columnToZero(Data::fhlHurdlesCostIndirect);
             }
-            // Global Optimization override
-            if (study.parameters.transmissionCapacities != Data::tncEnabled)
-                link.transmissionCapacities = study.parameters.transmissionCapacities;
 
             switch (link.transmissionCapacities)
             {
-            case Data::tncEnabled:
+            case Data::LocalTransmissionCapacities::enabled:
                 break;
-            case Data::tncIgnore:
+            case Data::LocalTransmissionCapacities::null:
             {
                 // Ignore transmission capacities
                 link.directCapacities.zero();
                 link.indirectCapacities.zero();
                 break;
             }
-            case Data::tncInfinite:
+            case Data::LocalTransmissionCapacities::infinite:
             {
                 // Copper plate mode
                 auto infinity = +std::numeric_limits<double>::infinity();
@@ -716,6 +753,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 link.indirectCapacities.fill(infinity);
                 break;
             }
+            default:
+                return false;
             }
         }
     }

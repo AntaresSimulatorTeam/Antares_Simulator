@@ -71,15 +71,15 @@ namespace Window
 
         switch (link->transmissionCapacities)
         {
-        case Data::tncEnabled:
+        case Data::LocalTransmissionCapacities::enabled:
             getButton()->caption(wxT("Use transmission capacities"));
             getButton()->image("images/16x16/light_green.png");
             break;
-        case Data::tncIgnore:
+        case Data::LocalTransmissionCapacities::null:
             getButton()->caption(wxT("Set transmission capacities to null"));
             getButton()->image("images/16x16/light_orange.png");
             break;
-        case Data::tncInfinite:
+        case Data::LocalTransmissionCapacities::infinite:
             getButton()->caption(wxT("Set transmission capacities to infinite"));
             getButton()->image("images/16x16/infinity.png");
             break;
@@ -124,7 +124,7 @@ namespace Window
     {
         if (!getCurrentLink())
             return;
-        getCurrentLink()->transmissionCapacities = Data::tncEnabled;
+        getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::enabled;
         broadCastChange();
     }
 
@@ -132,7 +132,7 @@ namespace Window
     {
         if (!getCurrentLink())
             return;
-        getCurrentLink()->transmissionCapacities = Data::tncIgnore;
+        getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::null;
         broadCastChange();
     }
 
@@ -140,7 +140,7 @@ namespace Window
     {
         if (!getCurrentLink())
             return;
-        getCurrentLink()->transmissionCapacities = Data::tncInfinite;
+        getCurrentLink()->transmissionCapacities = Data::LocalTransmissionCapacities::infinite;
         broadCastChange();
     }
 

@@ -102,24 +102,11 @@ static void ResetButtonSpecify(Component::Button* button, bool value)
     }
 }
 
-static void ResetButton(Component::Button* button, Data::TransmissionCapacities value)
+static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
     assert(button != NULL);
-    switch (value)
-    {
-    case Data::tncEnabled:
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("local values"));
-        break;
-    case Data::tncIgnore:
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("set to null"));
-        break;
-    case Data::tncInfinite:
-        button->image("images/16x16/infinity.png");
-        button->caption(wxT("set to infinite"));
-        break;
-    }
+    button->image(transmissionCapacityIcon(value));
+    button->caption(GlobalTransmissionCapacitiesToString_Display(value));
 }
 
 static void ResetButton(Component::Button* button, Data::LinkType value)
@@ -150,6 +137,20 @@ const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
         return "images/16x16/light_green.png";
     case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return "images/16x16/light_green.png";
+    default:
+        return "images/16x16/light_orange.png";
+    }
+}
+const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity)
+{
+    using GTransmission = Data::GlobalTransmissionCapacities;
+    switch (capacity)
+    {
+    case GTransmission::localValuesForAllLinks:
+        return "images/16x16/light_green.png";
+    case GTransmission::infiniteForAllLinks:
+    case GTransmission::infiniteForPhysicalLinks:
+        return "images/16x16/infinity.png";
     default:
         return "images/16x16/light_orange.png";
     }
@@ -341,14 +342,12 @@ Optimization::Optimization(wxWindow* parent) :
         label = Component::CreateLabel(this, wxT("Export mps"));
 
         const Data::mpsExportStatus& defaultValue = Data::mpsExportStatus::NO_EXPORT;
-        button = new Component::Button( this, 
-                                        mpsExportStatusToString(defaultValue), 
-                                        mpsExportIcon(defaultValue));
+        button = new Component::Button(
+          this, mpsExportStatusToString(defaultValue), mpsExportIcon(defaultValue));
 
         button->SetBackgroundColour(bgColor);
         button->menu(true);
-        onPopup.bind(this,
-                     &Optimization::onPopupMenuExportMPSstatus);
+        onPopup.bind(this, &Optimization::onPopupMenuExportMPSstatus);
         button->onPopupMenu(onPopup);
         s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
@@ -528,7 +527,8 @@ void Optimization::onResetToDefault(void*)
             auto& study = *studyptr;
             study.parameters.include.constraints = true;
             study.parameters.include.hurdleCosts = true;
-            study.parameters.transmissionCapacities = Data::tncEnabled;
+            study.parameters.transmissionCapacities
+              = Data::GlobalTransmissionCapacities::localValuesForAllLinks;
             study.parameters.linkType = Data::ltLocal;
             study.parameters.include.thermal.minStablePower = true;
             study.parameters.include.thermal.minUPTime = true;
@@ -720,43 +720,21 @@ void Optimization::onPopupMenuSimplex(Component::Button&, wxMenu& menu, void*)
 
 void Optimization::onPopupMenuTransmissionCapacities(Component::Button&, wxMenu& menu, void*)
 {
-    wxMenuItem* it;
-
-    it = Menu::CreateItem(&menu,
-                          wxID_ANY,
-                          wxString() << wxT("local values"),
-                          "images/16x16/light_green.png",
-                          wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInclude),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to null"), "images/16x16/light_orange.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapIgnore),
-                 nullptr,
-                 this);
-
-    it = Menu::CreateItem(
-      &menu, wxID_ANY, wxT("set to infinite"), "images/16x16/infinity.png", wxEmptyString);
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(Optimization::onSelectTransCapInfinite),
-                 nullptr,
-                 this);
+    using GT = Data::GlobalTransmissionCapacities;
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::localValuesForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForAllLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::nullForPhysicalLinks>(menu);
+    createGlobalTransmissionCapacitiesItemIntoMenu<GT::infiniteForPhysicalLinks>(menu);
 }
-
 
 void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*)
 {
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::NO_EXPORT>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_FIRST_OPIM>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_SECOND_OPIM>(menu);
-    this->createMPSexportItemIntoMenu<Data::mpsExportStatus::EXPORT_BOTH_OPTIMS>(menu);
+    using MPS = Data::mpsExportStatus;
+    createMPSexportItemIntoMenu<MPS::NO_EXPORT>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_FIRST_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_SECOND_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_BOTH_OPTIMS>(menu);
 }
 
 void Optimization::onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*)
@@ -859,46 +837,21 @@ void Optimization::onSelectSimplexWeek(wxCommandEvent&)
     }
 }
 
-void Optimization::onSelectTransCapInclude(wxCommandEvent&)
+void Optimization::setTransmissionCapacity(Data::GlobalTransmissionCapacities newCapacity)
 {
     auto study = Data::Study::Current::Get();
-    if (!(!study))
+    if (study && study->parameters.transmissionCapacities != newCapacity)
     {
-        if (study->parameters.transmissionCapacities != Data::tncEnabled)
-        {
-            study->parameters.transmissionCapacities = Data::tncEnabled;
-            refresh();
-            MarkTheStudyAsModified();
-        }
+        study->parameters.transmissionCapacities = newCapacity;
+        refresh();
+        MarkTheStudyAsModified();
     }
 }
 
-void Optimization::onSelectTransCapIgnore(wxCommandEvent&)
+template<Data::GlobalTransmissionCapacities capacity>
+void Optimization::onSelectTransmissionCapacity(wxCommandEvent&)
 {
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncIgnore)
-        {
-            study->parameters.transmissionCapacities = Data::tncIgnore;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
-}
-
-void Optimization::onSelectTransCapInfinite(wxCommandEvent&)
-{
-    auto study = Data::Study::Current::Get();
-    if (!(!study))
-    {
-        if (study->parameters.transmissionCapacities != Data::tncInfinite)
-        {
-            study->parameters.transmissionCapacities = Data::tncInfinite;
-            refresh();
-            MarkTheStudyAsModified();
-        }
-    }
+    setTransmissionCapacity(capacity);
 }
 
 void Optimization::onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*)

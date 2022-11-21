@@ -8,6 +8,7 @@ on:
       - features/*
       - fix/*
       - release/*
+      - doc/*
 
 jobs:
   doc_generation:
@@ -47,14 +48,14 @@ jobs:
           git submodule update --init vcpkg
 
     - name: Download userguide
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: pdf-doc
         path: docs/ref_guides
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         # The first path is the location of vcpkg (it contains the vcpkg executable and data files).
         # The other paths starting with '!' are exclusions: they contain termporary files generated during the build of the installed packages.
@@ -140,6 +141,13 @@ jobs:
            cd _build
            ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end" -LE ortools
 
+    - name: Run kirchhoff-constraint-tests
+      shell: bash
+      run: |
+           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
+
     # simtest
     - name: Read simtest version
       id: simtest-version
@@ -162,6 +170,8 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
+
+
     - name: NSIS Installer creation
       shell: bash
       run: |
@@ -178,20 +188,20 @@ jobs:
            cpack -G ZIP
 
     - name: Installer upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
 
     - name: Archive upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: antares-windows-archive
         path: _build/*.zip
 
     - name: Upload build on failure
       if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: build-after-failure
         path: ${{ github.workspace }}/_build
