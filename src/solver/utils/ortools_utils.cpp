@@ -164,11 +164,6 @@ MPSolver* convert_to_MPSolver(
                    problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
                    problemeSimplexe->NombreDeContraintes);
 
-    solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
-
-    if (study.parameters.ortoolsVerbosityOn)
-        solver->EnableOutput();
-
     return solver;
 }
 } // namespace Optimization
@@ -461,6 +456,12 @@ OrtoolsUtils::OrtoolsUtils()
 bool OrtoolsUtils::isOrtoolsSolverAvailable(OrtoolsSolver ortoolsSolver)
 {
     bool result = false;
+
+    // GLOP solver fail for too many examples. For now support is disabled
+    if (ortoolsSolver == OrtoolsSolver::glop_scip || ortoolsSolver == OrtoolsSolver::glop_cbc)
+    {
+        return false;
+    }
 
     try
     {

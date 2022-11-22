@@ -109,23 +109,11 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
 
     //--ortools-solver
     parser->add(options.ortoolsSolver,
-               ' ',
-               "ortools-solver",
-               "Ortools solver used for simulation (only available with use-ortools "
-               "option)\nAvailable solver list : "
-                 + availableOrToolsSolversString());
-    
-    //--ortools-parameters
-    parser->add(options.ortoolsParamsString,
                 ' ',
-                "ortools-parameters",
-                "String containing the specific parameters to tune the solver used by Ortools");
-
-    //--ortools-verbose
-    parser->addFlag(options.ortoolsVerbose,
-                ' ',
-                "ortools-verbose",
-                "Activate verbosity for Ortools solver");
+                "ortools-solver",
+                "Ortools solver used for simulation (only available with use-ortools "
+                "option)\nAvailable solver list : "
+                  + availableOrToolsSolversString());
 
     parser->addParagraph("\nParameters");
     // --name

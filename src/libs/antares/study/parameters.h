@@ -543,12 +543,8 @@ public:
     //@{
     //! Define if ortools is used
     bool ortoolsUsed;
-    //! Ortools solver used for simulation
+    //! Ortool solver used for simulation
     OrtoolsSolver ortoolsEnumUsed;
-    //! Specific parameters string for ortools solver
-    string ortoolsParamsString;
-    //! Define if Ortools verbosity should be activated
-    bool ortoolsVerbosityOn;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
