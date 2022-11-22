@@ -120,11 +120,9 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
-    optimizationStatistics* optimizationStatistics_object;
-    if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 1)
-        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_FirstOptim);
-    else if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == 2)
-        optimizationStatistics_object = &(ProblemeHebdo->optimizationStatistics_SecondOptim);
+    const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
+    assert(opt > 0 && opt < 2);
+    OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
 RESOLUTION:
 
@@ -182,7 +180,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            optimizationStatistics_object->addUpdateTime(measure.duration_ms());
+            optimizationStatistics->addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -270,7 +268,7 @@ RESOLUTION:
     }
     measure.tick();
     solveTime = measure.duration_ms();
-    optimizationStatistics_object->addSolveTime(solveTime);
+    optimizationStatistics->addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)

@@ -361,13 +361,13 @@ bool Adequacy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << "(First optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim.toString();
-    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim;
+    logs.info() << "(First optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics[0].toString();
+    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[0];
     state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
     firstOptStat.reset();
 
-    logs.info() << "(Second optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics_SecondOptim.toString();
-    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_SecondOptim;
+    logs.info() << "(Second optimization) " << pProblemesHebdo[numSpace]->optimizationStatistics[1].toString();
+    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
     secondOptStat.reset();
     return true;

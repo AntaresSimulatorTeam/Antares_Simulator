@@ -592,8 +592,7 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
-    optimizationStatistics optimizationStatistics_FirstOptim;
-    optimizationStatistics optimizationStatistics_SecondOptim;
+    OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;

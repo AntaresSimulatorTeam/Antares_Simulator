@@ -314,11 +314,11 @@ bool Economy::year(Progression::Task& progression,
              << state.year + 1 << ".txt";
     study.resultWriter->addEntryFromBuffer(filename.c_str(), weekResolutionBuffer);
 
-    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_FirstOptim;
+    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[0];
     state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
     firstOptStat.reset();
 
-    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics_SecondOptim;
+    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[1];
     state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
     secondOptStat.reset();
     return true;
