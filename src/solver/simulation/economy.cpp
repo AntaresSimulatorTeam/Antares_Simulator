@@ -36,8 +36,6 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 
-#include <cstring>
-
 using namespace Yuni;
 
 namespace Antares
