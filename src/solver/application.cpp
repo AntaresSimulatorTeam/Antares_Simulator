@@ -490,47 +490,5 @@ Application::~Application()
         LocalPolicy::Close();
     }
 }
-
-static void NotEnoughMemory()
-{
-    logs.fatal() << "Not enough memory. aborting.";
-    exit(42);
-}
-
-
-int launch_antares(LpsFromAntares & lps, int argc, char** argv)
-{
-    // Name of the running application for the logger
-    logs.applicationName("solver");
-
-    // Dealing with the lack of memory
-    std::set_new_handler(&NotEnoughMemory);
-
-    // Antares SWAP
-    if (not memory.initialize())
-        return EXIT_FAILURE;
-
-    // locale
-    InitializeDefaultLocale();
-
-    // Getting real UTF8 arguments
-    argv = AntaresGetUTF8Arguments(argc, argv);
-
-    int ret = EXIT_FAILURE;
-
-    auto application = new Application();
-    //lps.clear();
-    application->pStudy->_lps = (void*)&lps;
-
-    application->prepare(argc, argv);
-    application->execute();
-    delete application;
-
-    FreeUTF8Arguments(argc, argv);
-
-    // to avoid a bug from wxExecute, we should wait a little before returning
-    Yuni::SuspendMilliSeconds(200 /*ms*/);
-    return ret;
-}
 } // namespace Solver
 } // namespace Antares

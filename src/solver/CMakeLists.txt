@@ -95,9 +95,11 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	model_antares
 	antares-core)
 
+find_package (Boost REQUIRED COMPONENTS serialization)
 target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
+		Boost::serialization
 		)
 
 target_include_directories(antares-solver

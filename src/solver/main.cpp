@@ -36,6 +36,7 @@
 
 #include "optimisation/LpsFromAntares.h"
 #include <fstream>
+#include <boost/archive/text_oarchive.hpp>
 
 using namespace Antares;
 using namespace Yuni;
@@ -134,11 +135,13 @@ int main(int argc, char** argv)
         std::tie(argc, argv) = toUTF8ArgsTranslator.convert();
         Antares::Solver::Application application;
         application.prepare(argc, argv);
+        LpsFromAntares lps;
+        application.pStudy->_lps = &lps;
         application.execute();
 
         std::ofstream ofs("fichierDeSerialisation");
         boost::archive::text_oarchive oa(ofs);
-        oa << application.pStudy->_lps;
+        oa << lps;
 
         application.writeExectutionInfo();
 
