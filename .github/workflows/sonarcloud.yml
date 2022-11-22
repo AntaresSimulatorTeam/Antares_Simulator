@@ -146,8 +146,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: | 
-          sonar-scanner \ 
-            --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" \ 
-            --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-            --define sonar.coverageReportPaths=$GITHUB_WORKSPACE/_build/coverage/coverage.xml"
+        run: sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}"
