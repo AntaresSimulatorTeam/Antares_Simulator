@@ -32,8 +32,6 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 
-using namespace Antares::Data;
-
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
 {
     int Interco;
