@@ -126,17 +126,8 @@ MPSolver* convert_to_MPSolver(
     auto& study = *Data::Study::Current::Get();
 
     // Define solver used depending on study option
-
-    MPSolver::OptimizationProblemType solverType;
-    if (problemeSimplexe->isMIP())
-    {
-        solverType
-          = OrtoolsUtils().getMixedIntegerOptimProblemType(study.parameters.ortoolsEnumUsed);
-    }
-    else
-    {
-        solverType = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
-    }
+    MPSolver::OptimizationProblemType solverType
+      = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
@@ -174,21 +165,13 @@ static void extract_from_MPSolver(const MPSolver* solver,
 {
     auto& variables = solver->variables();
     int nbVar = problemeSimplexe->NombreDeVariables;
-    bool isMIP = problemeSimplexe->isMIP();
 
     // Extracting variable values and reduced costs
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
         auto& var = variables[idxVar];
         problemeSimplexe->X[idxVar] = var->solution_value();
-        if (isMIP)
-        {
-            problemeSimplexe->CoutsReduits[idxVar] = 0;
-        }
-        else
-        {
-            problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
-        }
+        problemeSimplexe->CoutsReduits[idxVar] = var->reduced_cost();
     }
 
     auto& constraints = solver->constraints();
@@ -196,14 +179,7 @@ static void extract_from_MPSolver(const MPSolver* solver,
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
         auto& row = constraints[idxRow];
-        if (isMIP)
-        {
-            problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = 0;
-        }
-        else
-        {
-            problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
-        }
+        problemeSimplexe->CoutsMarginauxDesContraintes[idxRow] = row->dual_value();
     }
 }
 
