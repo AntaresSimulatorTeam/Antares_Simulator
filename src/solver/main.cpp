@@ -57,6 +57,7 @@
 #include <unistd.h>
 #include "optimisation/LpsFromAntares.h"
 #include <fstream>
+#include <boost/archive/text_oarchive.hpp>
 
 #endif
 
@@ -158,11 +159,13 @@ int main(int argc, char** argv)
         AntaresSolverEmergencyShutdown();
     }
 
+    LpsFromAntares lps;
+    application.pStudy->_lps = &lps;
     application.execute();
 
     std::ofstream ofs("fichierDeSerialisation");
     boost::archive::text_oarchive oa(ofs);
-    oa << application.pStudy->_lps;
+    oa << lps;
 
     application.writeExectutionInfo();
 
