@@ -203,7 +203,7 @@ bool Economy::year(Progression::Task& progression,
     bool reinitOptim = true;
 
     Yuni::Clob weekResolutionBuffer;
-    weekResolutionBuffer << "Week; Optimization 1 (ms); Optimization 2 (ms)\n";
+    weekResolutionBuffer << "Week Optimization_1_ms Optimization_2_ms\n";
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -266,8 +266,8 @@ bool Economy::year(Progression::Task& progression,
 
             // Write indiv res times into files
             {
-                weekResolutionBuffer << w << "; " << pProblemesHebdo[numSpace]->tempsResolution1[0]
-                                     << "; " << pProblemesHebdo[numSpace]->tempsResolution2[0]
+                weekResolutionBuffer << w << " " << pProblemesHebdo[numSpace]->tempsResolution1[0]
+                                     << " " << pProblemesHebdo[numSpace]->tempsResolution2[0]
                                      << "\n";
             }
         }
@@ -308,8 +308,7 @@ bool Economy::year(Progression::Task& progression,
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
     String filename;
-    filename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_"
-             << state.year + 1 << ".txt";
+    filename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_" << state.year + 1 << ".txt";
     study.resultWriter->addEntryFromBuffer(filename.c_str(), weekResolutionBuffer);
 
     auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[0];
