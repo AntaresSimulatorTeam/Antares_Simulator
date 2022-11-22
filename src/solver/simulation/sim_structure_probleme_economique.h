@@ -707,7 +707,4 @@ public:
 
     double maxPminThermiqueByDay[366];
 
-    /* Debug */
-    char debugFolder[1024];
-};
 #endif

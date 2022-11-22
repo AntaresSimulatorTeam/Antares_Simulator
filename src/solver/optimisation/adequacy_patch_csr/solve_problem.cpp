@@ -118,8 +118,7 @@ void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
 }
 
-void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                               HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     double* pt;
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
@@ -142,7 +141,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
 {
     const int hoursInWeek = 168;
     const bool checkCost
-      = hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->CheckCsrCostFunctionValue;
+      = hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue;
     double deltaCost = costAfterCsr - costPriorToCsr;
 
     if (checkCost)
@@ -153,7 +152,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
     }
 
     if (!checkCost || (checkCost && deltaCost < 0.0))
-        storeInteriorPointResults(ProblemeAResoudre, hourlyCsrProblem);
+        storeInteriorPointResults(ProblemeAResoudre);
     else if (checkCost && deltaCost >= 0.0)
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
@@ -167,7 +166,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
 {
     logs.debug() << "calculateCsrCostFunctionValue! ";
     double cost = 0.0;
-    if (!hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->CheckCsrCostFunctionValue)
+    if (!hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue)
     {
         logs.debug() << "CheckCsrCostFunctionValue = FALSE";
         return cost;
@@ -187,7 +186,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
         }
         bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
         if (inLinkSet
-            && hourlyCsrProblem.pWeeklyProblemBelongedTo->adqPatchParams->IncludeHurdleCostCsr)
+            && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (ProblemeAResoudre->X[Var] >= 0)
             {
