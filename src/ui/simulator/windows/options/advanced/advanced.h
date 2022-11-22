@@ -99,9 +99,8 @@ private:
     void onSelectSHPMinimizeDuration(wxCommandEvent& evt);
 
     void onUnitCommitmentMode(Component::Button&, wxMenu& menu, void*);
-    void onSelectUCHeuristicFast(wxCommandEvent& evt);
-    void onSelectUCHeuristicAccurate(wxCommandEvent& evt);
-    void onSelectUCMILP(wxCommandEvent& evt);
+    void onSelectUCHeuristic(wxCommandEvent& evt);
+    void onSelectUCMixedIntegerLinearProblem(wxCommandEvent& evt);
 
     void onNumberOfCores(Component::Button&, wxMenu& menu, void*);
     template<Antares::Data::NumberOfCoresMode>

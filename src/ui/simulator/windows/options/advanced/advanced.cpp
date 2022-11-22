@@ -366,7 +366,7 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.power.fluctuations = Data::lssFreeModulations;
         parameters.shedding.policy = Data::shpShavePeaks;
         parameters.reserveManagement.daMode = Data::daGlobal;
-        parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
+        parameters.unitCommitment.ucMode = Data::ucHeuristic;
         parameters.nbCores.ncMode = Data::ncAvg;
 
         parameters.renewableGeneration.rgModelling = Data::rgAggregated;
@@ -841,65 +841,41 @@ void AdvancedParameters::onUnitCommitmentMode(Component::Button&, wxMenu& menu, 
     wxMenuItem* it;
     wxString text;
 
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicFast)); // Fast
+    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristic)); // Fast
     text << wxT("   [default]");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicFast),
-                 nullptr,
-                 this);
-
-    text.clear();
-    text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucHeuristicAccurate)); // Accurate
-    text << wxT("   (slow)");
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristicAccurate),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCHeuristic),
                  nullptr,
                  this);
 
     text.clear();
     text = wxStringFromUTF8(UnitCommitmentModeToCString(Data::ucMILP)); // Accurate
-    text << wxT("   ");
+    text << wxT("   (slow)");
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
     menu.Connect(it->GetId(),
                  wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectUCMILP),
+                 wxCommandEventHandler(AdvancedParameters::onSelectUCMixedIntegerLinearProblem),
                  nullptr,
                  this);
 }
 
-void AdvancedParameters::onSelectUCHeuristicFast(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCHeuristic(wxCommandEvent& /* evt */)
 {
     auto& study = *Data::Study::Current::Get();
     if (not Data::Study::Current::Valid())
         return;
 
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicFast)
+    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristic)
     {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristicFast;
+        study.parameters.unitCommitment.ucMode = Data::ucHeuristic;
         MarkTheStudyAsModified();
         refresh();
     }
 }
 
-void AdvancedParameters::onSelectUCHeuristicAccurate(wxCommandEvent& /* evt */)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.unitCommitment.ucMode != Data::ucHeuristicAccurate)
-    {
-        study.parameters.unitCommitment.ucMode = Data::ucHeuristicAccurate;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectUCMILP(wxCommandEvent& /* evt */)
+void AdvancedParameters::onSelectUCMixedIntegerLinearProblem(wxCommandEvent& /* evt */)
 {
     if (not Data::Study::Current::Valid())
         return;

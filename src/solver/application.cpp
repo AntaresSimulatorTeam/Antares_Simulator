@@ -63,14 +63,12 @@ void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
 }
 
 // CHECK incompatible de choix simultané des options « simplex range= daily » et «
-// unit-commitment = Accurate » ou « unit-commitment = MILP ».
+// unit-commitment = MILP ».
 void checkSimplexRangeUnitCommitmentMode(Antares::Data::SimplexOptimization optRange,
                                          Antares::Data::UnitCommitmentMode ucMode)
 {
-    using namespace Antares::Data;
-    if (optRange == SimplexOptimization::sorDay
-        && (ucMode == UnitCommitmentMode::ucHeuristicAccurate
-            || ucMode == UnitCommitmentMode::ucMILP))
+    if (optRange == Antares::Data::SimplexOptimization::sorDay
+        && ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
     {
         throw Error::IncompatibleOptRangeUCMode();
     }

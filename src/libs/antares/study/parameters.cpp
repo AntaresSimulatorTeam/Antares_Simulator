@@ -319,7 +319,7 @@ void Parameters::reset()
     power.fluctuations = lssFreeModulations;
     shedding.policy = shpShavePeaks;
 
-    unitCommitment.ucMode = ucHeuristicFast;
+    unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
     reserveManagement.daMode = daGlobal;
@@ -786,7 +786,7 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         }
         logs.warning() << "parameters: invalid unit commitment mode. Got '" << value
                        << "'. reset to fast mode";
-        d.unitCommitment.ucMode = ucHeuristicFast;
+        d.unitCommitment.ucMode = ucHeuristic;
         return false;
     }
     // Renewable generation modelling
