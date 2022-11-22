@@ -203,7 +203,7 @@ bool Economy::year(Progression::Task& progression,
     bool reinitOptim = true;
 
     Yuni::Clob weekResolutionBuffer;
-    weekResolutionBuffer << "Week Optimization_1_ms Optimization_2_ms\n";
+    weekResolutionBuffer << "# Week Optimization_1_ms Optimization_2_ms\n";
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
