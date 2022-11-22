@@ -178,7 +178,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
 
     ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
     ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
-    ProblemeAResoudre->VariablesEntieres.resize(ProblemeAResoudre->NombreDeVariables);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -264,7 +263,6 @@ void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 
         ProblemeAResoudre->NomDesVariables.clear();
         ProblemeAResoudre->NomDesContraintes.clear();
-        ProblemeAResoudre->VariablesEntieres.clear();
 
         MemFree(ProblemeAResoudre);
 

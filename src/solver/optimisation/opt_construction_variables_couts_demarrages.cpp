@@ -79,8 +79,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -89,8 +87,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -98,8 +94,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -112,8 +106,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 #endif
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
             }
         }

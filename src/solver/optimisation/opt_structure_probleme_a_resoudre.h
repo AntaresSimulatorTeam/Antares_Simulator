@@ -142,8 +142,6 @@ typedef struct
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
-    std::vector<bool> VariablesEntieres; // true = int, false = continuous
-private:
     using BasisStatus = operations_research::MPSolver::BasisStatus;
 public:
     std::vector<BasisStatus> StatutDesVariables;

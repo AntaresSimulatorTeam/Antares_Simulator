@@ -7,12 +7,10 @@ namespace Optimization
 {
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
-                                                 const std::vector<bool>& VariablesEntieres,
                                                  std::vector<BasisStatus>& StatutDesVariables,
                                                  std::vector<BasisStatus>& StatutDesContraintes) :
   NomDesVariables(NomDesVariables),
   NomDesContraintes(NomDesContraintes),
-  VariablesEntieres(VariablesEntieres),
   StatutDesVariables(StatutDesVariables),
   StatutDesContraintes(StatutDesContraintes)
 {
@@ -20,8 +18,9 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
 
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
 {
-    return std::any_of(
-      VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
+    // TODO replace implementation when MIP is introduced
+    // For now, no problem is MIP.
+    return false;
 }
 
 bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
