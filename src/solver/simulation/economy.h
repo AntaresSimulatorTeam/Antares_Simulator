@@ -43,20 +43,19 @@ namespace Solver
 {
 namespace Simulation
 {
-class EconomyWeeklyOptimization
+class interfaceWeeklyOptimization
 {
 public:
-    using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
     virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) = 0;
     virtual void solveCSR(const Variable::State& state, uint numSpace, uint week) = 0;
-    static Ptr create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
+    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
-    explicit EconomyWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
+    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
     PROBLEME_HEBDO** pProblemesHebdo;
 };
 
-class AdequacyPatchOptimization : public EconomyWeeklyOptimization
+class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
@@ -69,10 +68,10 @@ private:
     std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace) const;
 };
 
-class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
+class weeklyOptimization : public interfaceWeeklyOptimization
 {
 public:
-    explicit NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
+    explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(Variable::State&, int, uint numSpace, uint week) override;
     void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
 };
@@ -138,7 +137,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    EconomyWeeklyOptimization::Ptr weeklyOptProblem;
+    std::unique_ptr<interfaceWeeklyOptimization> weeklyOptProblem;
 }; // class Economy
 
 } // namespace Simulation
