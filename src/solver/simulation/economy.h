@@ -46,7 +46,7 @@ namespace Simulation
 class interfaceWeeklyOptimization
 {
 public:
-    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) = 0;
+    virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
     virtual void solveCSR(const Variable::State& state, uint numSpace, uint week) = 0;
     static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
@@ -59,7 +59,7 @@ class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) override;
+    void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) override;
     void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
 
 private:
@@ -72,7 +72,7 @@ class weeklyOptimization : public interfaceWeeklyOptimization
 {
 public:
     explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State&, int, uint numSpace, uint week) override;
+    void solve(uint, int, uint numSpace) override;
     void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
 };
 

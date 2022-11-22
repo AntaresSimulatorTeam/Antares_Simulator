@@ -206,9 +206,6 @@ public:
     */
     bool simplexHasBeenRan;
 
-    // Working variable for output water values computation
-    Antares::Data::h2oValueWorkVarsType h2oValueWorkVars;
-
     // Annual costs to be printed in output into separate files
     // -----------------------------------------------------------------
     // Sum over all year's hours of  :

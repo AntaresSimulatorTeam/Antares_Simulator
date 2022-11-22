@@ -130,17 +130,17 @@ void interpolateWaterValue(const Data::Study& study,
         double* niv = weeklyResults->niveauxHoraires;
 
         Antares::Data::getWaterValue(
-          problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
-          area.hydro.waterValues,
-          weekFirstDay,
-          state.h2oValueWorkVars,
-          waterVal[0]);
+                problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
+                area.hydro.waterValues,
+                weekFirstDay,
+                waterVal[0]);
         for (uint h = 1; h < nbHoursInAWeek; h++)
-            Antares::Data::getWaterValue(niv[h - 1],
+        {
+            Antares::Data::getWaterValue(niv[h - 1], 
                                          area.hydro.waterValues,
-                                         daysOfWeek[h / 24],
-                                         state.h2oValueWorkVars,
+                                         daysOfWeek[h / 24], 
                                          waterVal[h]);
+        }
     });
 }
 

@@ -49,8 +49,6 @@ State::State(Data::Study& s) :
  optimalSolutionCost2(0.),
  averageOptimizationTime(0.)
 {
-    h2oValueWorkVars.levelUp = 0.;
-    h2oValueWorkVars.levelDown = 0.;
 }
 
 void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)

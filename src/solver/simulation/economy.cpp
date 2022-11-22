@@ -72,10 +72,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesH
  interfaceWeeklyOptimization(problemesHebdo)
 {
 }
-void AdequacyPatchOptimization::solve(Variable::State& state,
+void AdequacyPatchOptimization::solve(uint weekInTheYear,
                                       int hourInTheYear,
-                                      uint numSpace,
-                                      uint w)
+                                      uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
@@ -97,7 +96,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
+    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, weekInTheYear, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
 
@@ -106,7 +105,7 @@ weeklyOptimization::weeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
  interfaceWeeklyOptimization(problemesHebdo)
 {
 }
-void weeklyOptimization::solve(Variable::State&, int, uint numSpace, uint)
+void weeklyOptimization::solve(uint, int, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
@@ -273,7 +272,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -281,7 +280,7 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
+            weeklyOptProblem->solve(w, hourInTheYear, numSpace);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
