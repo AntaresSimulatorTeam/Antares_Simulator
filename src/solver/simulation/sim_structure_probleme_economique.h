@@ -492,7 +492,7 @@ struct AdequacyPatchParameters
     bool IncludeHurdleCostCsr;
     bool CheckCsrCostFunctionValue;
     AdqPatchPTO PriceTakingOrder;
-    double ThresholdInitiateCurtailmentSharingRule;
+    double ThresholdRunCurtailmentSharingRule;
     double ThresholdDisplayLocalMatchingRuleViolations;
     double ThresholdCSRVarBoundsRelaxation;
 };

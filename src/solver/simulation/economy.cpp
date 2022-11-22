@@ -212,7 +212,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std:
                                                                             uint numSpace) const
 {
     double threshold
-      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdInitiateCurtailmentSharingRule;
+      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
