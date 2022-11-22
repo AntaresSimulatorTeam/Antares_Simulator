@@ -135,12 +135,12 @@ jobs:
         run: |
           cmake --build $GITHUB_WORKSPACE/_build --target code-coverage
       
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-report
-          path: _build/coverage/
-          retention-days: 1
+      # - name: Archive code coverage results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: code-coverage-report
+      #     path: _build/coverage/
+      #     retention-days: 1
 
       - name: Run sonar-scanner
         env:
@@ -150,4 +150,4 @@ jobs:
           sonar-scanner \ 
             --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" \ 
             --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}" \
-            --define sonar.coverageReportPaths="${{ env.BUILD_WRAPPER_OUT_DIR }}"/coverage/coverage.xml
+            --define sonar.coverageReportPaths=$GITHUB_WORKSPACE/_build/coverage/coverage.xml"
