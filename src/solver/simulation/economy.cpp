@@ -51,25 +51,25 @@ enum
     nbHoursInAWeek = 168,
 };
 
-EconomyWeeklyOptimization::EconomyWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
+interfaceWeeklyOptimization::interfaceWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
  pProblemesHebdo(problemesHebdo)
 {
 }
 
-EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled,
+std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create(bool adqPatchEnabled,
                                                                  PROBLEME_HEBDO** problemesHebdo)
 {
     if (adqPatchEnabled)
         return std::make_unique<AdequacyPatchOptimization>(problemesHebdo);
     else
-        return std::make_unique<NoAdequacyPatchOptimization>(problemesHebdo);
+        return std::make_unique<weeklyOptimization>(problemesHebdo);
 
     return nullptr;
 }
 
 // Adequacy patch
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
- EconomyWeeklyOptimization(problemesHebdo)
+ interfaceWeeklyOptimization(problemesHebdo)
 {
 }
 void AdequacyPatchOptimization::solve(Variable::State& state,
@@ -102,16 +102,16 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
 }
 
 // No adequacy patch
-NoAdequacyPatchOptimization::NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
- EconomyWeeklyOptimization(problemesHebdo)
+weeklyOptimization::weeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ interfaceWeeklyOptimization(problemesHebdo)
 {
 }
-void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace, uint)
+void weeklyOptimization::solve(Variable::State&, int, uint numSpace, uint)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
-void NoAdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
+void weeklyOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
 {
     return;
 }
@@ -175,7 +175,7 @@ bool Economy::simulationBegin()
         }
 
         weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled, pProblemesHebdo);
+          = interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled, pProblemesHebdo);
 
         SIM_InitialisationResultats();
     }
@@ -292,7 +292,7 @@ bool Economy::year(Progression::Task& progression,
 
             RemixHydroForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
-            
+
             adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);

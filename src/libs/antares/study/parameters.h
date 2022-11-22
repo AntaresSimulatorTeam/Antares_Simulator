@@ -143,6 +143,14 @@ public:
     */
     void resetThresholdsAdqPatch();
     /*!
+    ** \brief Reset to default values related to local matching
+    */
+    void resetAdqPatch_LocalMatching();
+    /*!
+    ** \brief Reset to default values related to curtailment sharing
+    */
+    void resetAdqPatch_CurtailmentSharing();
+    /*!
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();

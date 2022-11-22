@@ -29,7 +29,6 @@
 #include "opt_fonctions.h"
 #include "adequacy_patch.h"
 #include <math.h>
-#include "../simulation/sim_structure_probleme_economique.h"
 #include "../study/area/scratchpad.h"
 
 using namespace Yuni;

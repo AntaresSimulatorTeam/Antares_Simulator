@@ -277,14 +277,24 @@ void Parameters::resetThresholdsAdqPatch()
       = defaultValueThresholdVarBoundsRelaxation;
 }
 
-void Parameters::resetAdqPatchParameters()
+void Parameters::resetAdqPatch_LocalMatching()
 {
-    adqPatch.enabled = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+}
+
+void Parameters::resetAdqPatch_CurtailmentSharing()
+{
     adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
     adqPatch.curtailmentSharing.includeHurdleCost = false;
     adqPatch.curtailmentSharing.checkCsrCostFunction = false;
+}
+
+void Parameters::resetAdqPatchParameters()
+{
+    adqPatch.enabled = false;
+    resetAdqPatch_LocalMatching();
+    resetAdqPatch_CurtailmentSharing();
     resetThresholdsAdqPatch();
 }
 
@@ -1829,7 +1839,7 @@ void Parameters::saveToINI(IniFile& ini) const
                      PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
         section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
         section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
-        // Threshholds
+        // Thresholds
         section->add("threshold-initiate-curtailment-sharing-rule",
                      adqPatch.curtailmentSharing.thresholdRun);
         section->add("threshold-display-local-matching-rule-violations",
