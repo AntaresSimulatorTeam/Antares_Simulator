@@ -134,8 +134,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                 copy(neles, ProblemeHebdo->ProblemeAResoudre->IndicesColonnes, year_ptr->IndicesColonnes);
 
                 copy(ncons, ProblemeHebdo->ProblemeAResoudre->IndicesDebutDeLigne, year_ptr->Mdeb);
-                copy(ncons, ProblemeHebdo->ProblemeAResoudre->NombreDeTermesDesLignes, year_ptr->Nbterm);
-                lps->_constant[year] = year_ptr;
+                lps->_constant = year_ptr;
             }
             {
                 HebdoDataFromAntaresPtr week_ptr(new HebdoDataFromAntares);
@@ -147,7 +146,7 @@ bool runWeeklyOptimization(const OptimizationOptions& options,
                 copy(ncons, ProblemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
                 copy(ncons, ProblemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
 
-                lps->_hedbo[{year, week, n}] = week_ptr;
+                lps->_hebdo[{year, week}] = week_ptr;
             }
         }
         /* Fin */
