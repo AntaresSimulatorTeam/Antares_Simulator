@@ -383,7 +383,7 @@ void AdequacyPatchOptions::refresh()
     {
         if (pThresholdCSRStart)
             pThresholdCSRStart->SetValue(
-              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdInitiate);
+              wxString() << study.parameters.adqPatch.curtailmentSharing.thresholdRun);
         if (pThresholdLMRviolations)
             pThresholdLMRviolations->SetValue(
               wxString()
@@ -576,9 +576,9 @@ void AdequacyPatchOptions::onEditThresholds(wxCommandEvent& evt)
         }
         else
         {
-            if (newthreshold != study.parameters.adqPatch.curtailmentSharing.thresholdInitiate)
+            if (newthreshold != study.parameters.adqPatch.curtailmentSharing.thresholdRun)
             {
-                study.parameters.adqPatch.curtailmentSharing.thresholdInitiate = newthreshold;
+                study.parameters.adqPatch.curtailmentSharing.thresholdRun = newthreshold;
                 MarkTheStudyAsModified();
             }
         }

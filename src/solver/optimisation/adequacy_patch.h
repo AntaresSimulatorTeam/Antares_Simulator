@@ -38,9 +38,9 @@ namespace Data
 namespace AdequacyPatch
 {
 //! A default threshold value for initiate curtailment sharing rule
-const double defaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
+const double defaultThresholdToRunCurtailmentSharing = 0.0;
 //! A default threshold value for display local matching rule violations
-const double defaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
+const double defaultThresholdDisplayLocalMatchingRuleViolations = 0.0;
 //! CSR Variables relaxation threshold
 const int defaultValueThresholdVarBoundsRelaxation = 3;
 /*!

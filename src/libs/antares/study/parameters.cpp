@@ -209,23 +209,23 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
-bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdqPatchPTO& out)
+bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
 {
-    CString<24, false> s = text;
+    CString<24, false> s = PTO_as_string;
     s.trim();
     s.toLower();
     if (s == "dens")
     {
-        out = AdequacyPatch::AdqPatchPTO::isDens;
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
         return true;
     }
     if (s == "load")
     {
-        out = AdequacyPatch::AdqPatchPTO::isLoad;
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isLoad;
         return true;
     }
 
-    logs.warning() << "parameters: invalid price taking order. Got '" << text << "'";
+    logs.warning() << "parameters: invalid price taking order. Got '" << PTO_as_string << "'";
 
     return false;
 }
@@ -269,10 +269,10 @@ void Parameters::resetSeeds()
 void Parameters::resetThresholdsAdqPatch()
 {
     // Initialize all thresholds values for adequacy patch
-    adqPatch.curtailmentSharing.thresholdInitiate
-      = defaultValueThresholdInitiateCurtailmentSharingRule;
+    adqPatch.curtailmentSharing.thresholdRun
+      = defaultThresholdToRunCurtailmentSharing;
     adqPatch.curtailmentSharing.thresholdDisplayViolations
-      = defaultValueThresholdDisplayLocalMatchingRuleViolations;
+      = defaultThresholdDisplayLocalMatchingRuleViolations;
     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
       = defaultValueThresholdVarBoundsRelaxation;
 }
@@ -731,7 +731,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.curtailmentSharing.checkCsrCostFunction);
     // Thresholds
     if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdInitiate);
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdRun);
     if (key == "threshold-display-local-matching-rule-violations")
         return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
     if (key == "threshold-csr-variable-bounds-relaxation")
@@ -1831,7 +1831,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
         // Threshholds
         section->add("threshold-initiate-curtailment-sharing-rule",
-                     adqPatch.curtailmentSharing.thresholdInitiate);
+                     adqPatch.curtailmentSharing.thresholdRun);
         section->add("threshold-display-local-matching-rule-violations",
                      adqPatch.curtailmentSharing.thresholdDisplayViolations);
         section->add("threshold-csr-variable-bounds-relaxation",
