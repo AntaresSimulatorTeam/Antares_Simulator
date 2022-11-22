@@ -323,7 +323,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
-        if (keepBasis)
+        if (keepBasis && !Probleme->isMIP())
         {
             solver->GetFinalLpBasis(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
         }
