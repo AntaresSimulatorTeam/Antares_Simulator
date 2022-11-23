@@ -47,7 +47,7 @@ class interfaceWeeklyOptimization
 {
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
-    virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) = 0;
+    virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) {};
     static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
@@ -73,7 +73,6 @@ class weeklyOptimization : public interfaceWeeklyOptimization
 public:
     explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(uint, int, uint numSpace) override;
-    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 };
 
 class Economy

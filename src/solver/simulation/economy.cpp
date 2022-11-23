@@ -110,10 +110,7 @@ void weeklyOptimization::solve(uint, int, uint numSpace)
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
-void weeklyOptimization::solveCSR(Antares::Data::AreaList&, uint, uint, uint)
-{
-    return;
-}
+
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
