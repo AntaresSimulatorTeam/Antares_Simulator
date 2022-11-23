@@ -29,7 +29,6 @@
 
 #include <vector>
 #include <string>
-#include <ortools/linear_solver/linear_solver.h>
 
 #define PREMIERE_OPTIMISATION 1
 #define DEUXIEME_OPTIMISATION 2
@@ -142,10 +141,9 @@ typedef struct
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
-    using BasisStatus = operations_research::MPSolver::BasisStatus;
 public:
-    std::vector<BasisStatus> StatutDesVariables;
-    std::vector<BasisStatus> StatutDesContraintes;
+    std::vector<int> StatutDesVariables;
+    std::vector<int> StatutDesContraintes;
 
 } PROBLEME_ANTARES_A_RESOUDRE;
 
