@@ -65,11 +65,11 @@ function(code_coverage)
         COMMAND ${CMAKE_COMMAND} -E remove_directory ${Coverage_OUTPUT_DIR}
 
         # Generating report
-        # COMMAND ${CMAKE_COMMAND} -E make_directory ${Coverage_OUTPUT_DIR}/reports
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${Coverage_OUTPUT_DIR}/reports
         COMMAND ${GCOVR_CMD} ${CMAKE_CURRENT_BINARY_DIR}
         --gcov-executable "${GCOV_CMD}"
         --root ${CMAKE_SOURCE_DIR}
-        --keep --object-directory ${Coverage_OUTPUT_DIR}
+        --keep --object-directory ${Coverage_OUTPUT_DIR}/reports
         --html --html-details --output ${Coverage_OUTPUT_DIR}/index.html --sonarqube coverage.xml
         ${GCOVR_OPTIONS}
 
