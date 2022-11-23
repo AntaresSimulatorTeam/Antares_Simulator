@@ -9,13 +9,13 @@ include(CMakeParseArguments)
 
 # Compilation flags
 set(COVERAGE_CXX_FLAGS "-g -O0 -fprofile-arcs -ftest-coverage")
-# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_CXX_FLAGS}")
-# set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_CXX_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_CXX_FLAGS}")
 
 # Linker flags
-set(COVERAGE_LINKER_FLAGS "--coverage -lgcov")
-# set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
-# set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
+set(COVERAGE_LINKER_FLAGS "--coverage")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${COVERAGE_LINKER_FLAGS}")
 
 function(code_coverage)
     set(options NONE)
@@ -70,7 +70,7 @@ function(code_coverage)
         --gcov-executable "${GCOV_CMD}"
         --root ${CMAKE_SOURCE_DIR}
         --keep --object-directory ${Coverage_OUTPUT_DIR}/reports
-        --html --html-details --output ${Coverage_OUTPUT_DIR}/index.html --sonarqube coverage.xml
+        --html --html-details --output ${Coverage_OUTPUT_DIR}/index.html --sonarqube ${Coverage_OUTPUT_DIR}/coverage.xml
         ${GCOVR_OPTIONS}
 
         WORKING_DIRECTORY ${PROJECT_BINARY_DIR}

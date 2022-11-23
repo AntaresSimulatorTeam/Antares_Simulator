@@ -21,7 +21,6 @@ jobs:
       SONAR_SCANNER_VERSION: 4.7.0.2747 # Find the latest version in the "Linux" link on this page:
       # https://sonarcloud.io/documentation/analysis/scan/sonarscanner/
       SONAR_SERVER_URL: "https://sonarcloud.io"
-      BUILD_WRAPPER_OUT_DIR: $GITHUB_WORKSPACE/_build/output
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
       ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip"
 
@@ -29,9 +28,6 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      
-      - name: Install sonar-scanner and build-wrapper
-        uses: SonarSource/sonarcloud-github-c-cpp@v1
 
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
@@ -46,22 +42,24 @@ jobs:
           key: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
           restore-keys: ${{ runner.os }}-sonar-${{ env.SONAR_SCANNER_VERSION }}
 
-      # - name: Download and setup sonar-scanner
-      #   shell: bash
-      #   env:
-      #     SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
-      #   run: |
-      #     mkdir -p $HOME/.sonar
-      #     curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
-      #     unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
+      - name: Download and setup sonar-scanner
+        shell: bash
+        env:
+          SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-linux.zip
+        if: steps.sonarcloud-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p $HOME/.sonar
+          curl -sSLo $HOME/.sonar/sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
+          unzip -o $HOME/.sonar/sonar-scanner.zip -d $HOME/.sonar/
 
-      # - name: Download and setup build-wrapper
-      #   shell: bash
-      #   env:
-      #     BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-linux-x86.zip
-      #   run: |
-      #     curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
-      #     unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
+      - name: Download and setup build-wrapper
+        shell: bash
+        env:
+          BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-linux-x86.zip
+        if: steps.sonarcloud-cache.outputs.cache-hit != 'true'
+        run: |
+          curl -sSLo $HOME/.sonar/build-wrapper-linux-x86.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
+          unzip -o $HOME/.sonar/build-wrapper-linux-x86.zip -d $HOME/.sonar/
 
       - name: Set build-wrapper and sonar-scanner paths
         run: |
@@ -87,7 +85,6 @@ jobs:
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
-          buildtype: Debug
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -97,7 +94,7 @@ jobs:
           python-version: 3.8
 
       - name: Install gcovr
-        run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing
+        run: sudo pip install gcovr
 
       - name: Install dependencies
         run: |
@@ -113,9 +110,9 @@ jobs:
              cmake -B _build -S src \
              -DCMAKE_C_COMPILER_LAUNCHER=ccache \
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-             -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
+             -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
              -DCODE_COVERAGE=ON \
-             -DCMAKE_BUILD_TYPE=debug \
+             -DCMAKE_BUILD_TYPE=release \
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_TESTING=ON \
              -DMZ_CODE_COVERAGE=ON \
@@ -130,21 +127,10 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/_build
           ctest -C Release --output-on-failure -L "unit"
-          
-      # - name: Collect coverage into one XML report
-      #   run: |
-      #       gcovr --sonarqube > coverage.xml
 
-      - name: Compile coverage reports
+      - name: Collect coverage into one XML report
         run: |
-          cmake --build $GITHUB_WORKSPACE/_build --target code-coverage
-      
-      - name: Archive code coverage results
-        uses: actions/upload-artifact@v3
-        with:
-          name: code-coverage-report
-          path: _build/coverage/coverage.xml
-          retention-days: 7
+          gcovr --sonarqube > coverage.xml
 
       - name: Run sonar-scanner
         env:
