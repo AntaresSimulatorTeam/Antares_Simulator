@@ -45,12 +45,12 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                                    uint hourInYear)
 {
     assert(study.parameters.mode == Data::stdmEconomy);
-    const uint nbHours = 168;
+    const uint nbHoursInWeek = 168;
 
     study.areas.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
-        for (uint i = 0; i != nbHours; ++i)
-            dtgmrg[i] = 0.;
+        for (uint h = 0; h != nbHoursInWeek; ++h)
+            dtgmrg[h] = 0.;
 
         if (not area.thermal.list.empty())
         {
@@ -65,13 +65,13 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
                 auto& matrix = cluster.series->series;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
-                assert(hourInYear + nbHours <= matrix.height && "index out of bounds");
+                assert(hourInYear + nbHoursInWeek <= matrix.height && "index out of bounds");
 
-                for (uint y = 0; y != nbHours; ++y)
+                for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
-                    double production = hourlyResults.ProductionThermique[y]
+                    double production = hourlyResults.ProductionThermique[h]
                                           ->ProductionThermiqueDuPalier[cluster.index];
-                    dtgmrg[y] += column[y + hourInYear] - production;
+                    dtgmrg[h] += column[h + hourInYear] - production;
                 }
             }
         }

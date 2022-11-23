@@ -141,11 +141,44 @@ void setBoundsAdqPatch(double& Xmax,
         Xmin = 0.;
         break;
     }
-    case setOrigineExtremityToZero:
+    return 0.0;
+}
+
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+                                            AreaList& areas,
+                                            uint numSpace)
+{
+    double netPositionInit;
+    double densNew;
+    double totalNodeBalance;
+    double totalLmrViolation = 0.0;
+    const int numOfHoursInWeek = 168;
+
+    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
     {
-        Xmax = 0.;
-        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-        break;
+        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        {
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                std::tie(netPositionInit, densNew, totalNodeBalance)
+                  = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
+                // adjust densNew according to the new specification/request by ELIA
+                /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
+                                        + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
+                auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
+                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+                densNew = Math::Max(0.0, densNew - dtgMrg);
+                // write down densNew values for all the hours
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+                // copy spilled Energy values into spilled Energy values after CSR
+                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
+                  = ProblemeHebdo->ResultatsHoraires[Area]
+                      ->ValeursHorairesDeDefaillanceNegative[hour];
+                // check LMR violations
+                totalLmrViolation
+                  += LmrViolationAreaHour(ProblemeHebdo, totalNodeBalance, Area, hour);
+            }
+        }
     }
     case setExtremityOriginToZero:
     {
@@ -397,7 +430,7 @@ void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
     ADQ_PATCH_CSR(problemeHebdo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& state)
+void HOURLY_CSR_PROBLEM::run(uint week, uint year)
 {
     resetProblem();
     calculateCsrParameters();
@@ -406,5 +439,5 @@ void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& 
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, state.year);
+    solveProblem(week, year);
 }
