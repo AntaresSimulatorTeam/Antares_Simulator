@@ -155,7 +155,7 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
 }
 
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
-                                            const Study& study,
+                                            AreaList& areas,
                                             uint numSpace)
 {
     double netPositionInit;
@@ -175,7 +175,7 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
-                auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+                auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 densNew = Math::Max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
@@ -363,7 +363,7 @@ void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
     ADQ_PATCH_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& state)
+void HOURLY_CSR_PROBLEM::run(uint week, uint year)
 {
     resetProblem();
     calculateCsrParameters();
@@ -372,5 +372,5 @@ void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& 
     setVariableBounds();
     buildProblemConstraintsRHS();
     setProblemCost();
-    solveProblem(week, state.year);
+    solveProblem(week, year);
 }

@@ -47,7 +47,7 @@ class interfaceWeeklyOptimization
 {
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
-    virtual void solveCSR(const Variable::State& state, uint numSpace, uint week) = 0;
+    virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) = 0;
     static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
@@ -60,7 +60,7 @@ class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) override;
-    void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
+    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 
 private:
     vector<double> calculateENSoverAllAreasForEachHour(uint numSpace) const;
@@ -73,7 +73,7 @@ class weeklyOptimization : public interfaceWeeklyOptimization
 public:
     explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
     void solve(uint, int, uint numSpace) override;
-    void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
+    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 };
 
 class Economy

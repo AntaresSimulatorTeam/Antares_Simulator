@@ -723,7 +723,7 @@ private:
     void setProblemCost();
     void solveProblem(uint week, int year);
 public:
-    void run(uint week, const Antares::Solver::Variable::State& state);
+    void run(uint week, uint year);
     
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;

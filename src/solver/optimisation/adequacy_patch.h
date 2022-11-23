@@ -120,7 +120,7 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
  * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
-                                            const Study& study,
+                                            AreaList& areas,
                                             uint numSpace);
 
 /*!
