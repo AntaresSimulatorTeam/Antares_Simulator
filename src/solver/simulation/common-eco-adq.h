@@ -176,6 +176,8 @@ int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<Yuni::uint32>& tsNumbers,
                        std::vector<double>& avg);
 
+void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
+                                    Antares::Solver::Variable::State& state);
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

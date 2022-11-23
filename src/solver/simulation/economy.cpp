@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include "opt_time_writer.h"
 
 using namespace Yuni;
 
@@ -202,8 +203,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
-    Yuni::Clob weekResolutionBuffer;
-    weekResolutionBuffer << "# Week Optimization_1_ms Optimization_2_ms\n";
+    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -263,13 +263,9 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
                 state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
             }
-
-            // Write indiv res times into files
-            {
-                weekResolutionBuffer << w << " " << pProblemesHebdo[numSpace]->tempsResolution1[0]
-                                     << " " << pProblemesHebdo[numSpace]->tempsResolution2[0]
-                                     << "\n";
-            }
+            optWriter.addTime(w,
+                              pProblemesHebdo[numSpace]->tempsResolution1[0],
+                              pProblemesHebdo[numSpace]->tempsResolution2[0]);
         }
         catch (Data::AssertionError& ex)
         {
@@ -307,17 +303,9 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    String filename;
-    filename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_" << state.year + 1 << ".txt";
-    study.resultWriter->addEntryFromBuffer(filename.c_str(), weekResolutionBuffer);
+    optWriter.finalize();
+    finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
 
-    auto& firstOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[0];
-    state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
-    firstOptStat.reset();
-
-    auto& secondOptStat = pProblemesHebdo[numSpace]->optimizationStatistics[1];
-    state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
-    secondOptStat.reset();
     return true;
 }
 
