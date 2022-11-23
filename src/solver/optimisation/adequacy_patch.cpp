@@ -304,21 +304,21 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
     double spillageInit;
     int hour = hourInWeekTriggeredCsr;
 
-    for (int Area = 0; Area < pWeeklyProblemBelongedTo->NombreDePays; Area++)
+    for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
     {
-        if (pWeeklyProblemBelongedTo->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
-            pWeeklyProblemBelongedTo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour]
+            problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour]
               = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, ignore, ignore)
-              = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
+              = calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
-            ensInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+            ensInit = problemeHebdo->ResultatsHoraires[Area]
                         ->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit = pWeeklyProblemBelongedTo->ResultatsHoraires[Area]
+            spillageInit = problemeHebdo->ResultatsHoraires[Area]
                              ->ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
@@ -329,38 +329,38 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 
 void HOURLY_CSR_PROBLEM::resetProblem()
 {
-    OPT_LiberationProblemesSimplexe(pWeeklyProblemBelongedTo);
+    OPT_LiberationProblemesSimplexe(problemeHebdo);
 }
 
 void HOURLY_CSR_PROBLEM::buildProblemVariables()
 {
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo,
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo,
                                                                          *this);
 }
 
 void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
 {
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
 void HOURLY_CSR_PROBLEM::setVariableBounds()
 {
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
 void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
 {
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(pWeeklyProblemBelongedTo, *this);
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
 void HOURLY_CSR_PROBLEM::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(pWeeklyProblemBelongedTo, *this);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, *this);
 }
 
 void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
 {
-    ADQ_PATCH_CSR(pWeeklyProblemBelongedTo->ProblemeAResoudre, *this, week, year);
+    ADQ_PATCH_CSR(problemeHebdo->ProblemeAResoudre, *this, week, year);
 }
 
 void HOURLY_CSR_PROBLEM::run(uint week, uint year)
