@@ -48,11 +48,11 @@ class interfaceWeeklyOptimization
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
     virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) = 0;
-    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
+    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** problemesHebdo);
 
 protected:
-    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
-    PROBLEME_HEBDO** pProblemesHebdo;
+    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
+    PROBLEME_HEBDO** problemesHebdo_;
 };
 
 class AdequacyPatchOptimization : public interfaceWeeklyOptimization

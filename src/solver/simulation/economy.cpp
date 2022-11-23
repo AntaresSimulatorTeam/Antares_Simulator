@@ -52,7 +52,7 @@ enum
 };
 
 interfaceWeeklyOptimization::interfaceWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
- pProblemesHebdo(problemesHebdo)
+ problemesHebdo_(problemesHebdo)
 {
 }
 
@@ -76,7 +76,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear,
                                       int hourInTheYear,
                                       uint numSpace)
 {
-    auto problemeHebdo = pProblemesHebdo[numSpace];
+    auto problemeHebdo = problemesHebdo_[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
     problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
@@ -107,7 +107,7 @@ weeklyOptimization::weeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
 }
 void weeklyOptimization::solve(uint, int, uint numSpace)
 {
-    auto problemeHebdo = pProblemesHebdo[numSpace];
+    auto problemeHebdo = problemesHebdo_[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
 void weeklyOptimization::solveCSR(Antares::Data::AreaList&, uint, uint, uint)
@@ -193,12 +193,12 @@ bool Economy::simulationBegin()
 vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
-    for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
+    for (int area = 0; area < problemesHebdo_[numSpace]->NombreDePays; ++area)
     {
-        if (pProblemesHebdo[numSpace]->adequacyPatchRuntimeData.areaMode[area]
+        if (problemesHebdo_[numSpace]->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             addArray(sumENS,
-                     pProblemesHebdo[numSpace]
+                     problemesHebdo_[numSpace]
                        ->ResultatsHoraires[area]
                        ->ValeursHorairesDeDefaillancePositive);
     }
@@ -209,7 +209,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
                                                                             uint numSpace) const
 {
     double threshold
-      = pProblemesHebdo[numSpace]->adqPatchParams->ThresholdRunCurtailmentSharingRule;
+      = problemesHebdo_[numSpace]->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (int i = 0; i < nbHoursInAWeek; ++i)
     {
@@ -230,7 +230,7 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
 
 void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace)
 {
-    auto problemeHebdo = pProblemesHebdo[numSpace];
+    auto problemeHebdo = problemesHebdo_[numSpace];
     double totalLmrViolation
       = calculateDensNewAndTotalLmrViolation(problemeHebdo, areas, numSpace);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
