@@ -143,7 +143,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: coverage.xml
+          path: _build/coverage/coverage.xml
           retention-days: 7
 
       - name: Run sonar-scanner
