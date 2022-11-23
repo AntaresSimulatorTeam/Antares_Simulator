@@ -51,8 +51,8 @@ public:
     static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
-    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
-    PROBLEME_HEBDO** pProblemesHebdo;
+    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
+    PROBLEME_HEBDO** problemesHebdo_;
 };
 
 class AdequacyPatchOptimization : public interfaceWeeklyOptimization
