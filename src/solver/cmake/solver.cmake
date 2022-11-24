@@ -52,6 +52,11 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
 		optimisation/base_weekly_optimization.h
+		optimisation/base_weekly_optimization.cpp
+		optimisation/adequacy_patch_weekly_optimization.h
+		optimisation/adequacy_patch_weekly_optimization.cpp
+		optimisation/weekly_optimization.h
+		optimisation/weekly_optimization.cpp
 		optimisation/adequacy_patch.h
 		optimisation/adequacy_patch.cpp
 		optimisation/adequacy_patch_csr/solve_problem.cpp

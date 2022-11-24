@@ -1,5 +1,8 @@
 #pragma once
 
+#include <yuni/yuni.h> // for "uint" definition
+#include "../simulation/sim_structure_probleme_economique.h"
+
 namespace Antares
 {
 namespace Solver
