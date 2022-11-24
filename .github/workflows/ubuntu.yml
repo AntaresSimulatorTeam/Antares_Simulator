@@ -53,10 +53,10 @@ jobs:
       run: |
         echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
-    # - name: ccache
-    #   uses: hendrikmuhs/ccache-action@v1.2
-    #   with:
-    #       key: xpress-${{ matrix.compiler }}-${{ matrix.os }}
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+          key: xpress-${{ matrix.compiler }}-${{ matrix.os }}
 
     - name: Install libraries
       run: |
@@ -120,15 +120,15 @@ jobs:
              export CC=/usr/bin/clang
              export CXX=/usr/bin/clang++
            fi
-           cmake -B _build -S src \
-           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
-           -DCMAKE_BUILD_TYPE=release \
-           -DBUILD_TESTING=ON \
-           -DBUILD_not_system=OFF \
-           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+           cmake -B _build -S src #\
            # -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            # -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           # -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
+           # -DCMAKE_BUILD_TYPE=release \
+           # -DBUILD_TESTING=ON \
+           # -DBUILD_not_system=OFF \
+           # -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+           # -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Build
       run: |
