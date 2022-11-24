@@ -41,7 +41,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
+vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -54,8 +54,7 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(ui
     return sumENS;
 }
 
-std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
-                                                                            uint numSpace) const
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS) const
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
@@ -70,10 +69,10 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
     return triggerCsrSet;
 }
 
-std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() const
 {
-    vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
-    return identifyHoursForCurtailmentSharing(sumENS, numSpace);
+    vector<double> sumENS = calculateENSoverAllAreasForEachHour();
+    return identifyHoursForCurtailmentSharing(sumENS);
 }
 
 void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
@@ -86,7 +85,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
-      = getHoursRequiringCurtailmentSharing(numSpace);
+      = getHoursRequiringCurtailmentSharing();
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
