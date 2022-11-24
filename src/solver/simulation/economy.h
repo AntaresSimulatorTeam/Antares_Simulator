@@ -76,7 +76,6 @@ class weeklyOptimization : public interfaceWeeklyOptimization
 public:
     explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
     void solve(uint, int) override;
-    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 };
 
 class Economy

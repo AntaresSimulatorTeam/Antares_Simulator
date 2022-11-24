@@ -117,7 +117,6 @@ void weeklyOptimization::solve(uint, int)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
