@@ -111,15 +111,15 @@ jobs:
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
-        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
-        ls -la ${{ env.XPRESSDIR }}
+           git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+           ls -la ${{ env.XPRESSDIR }}
 
     - name: Configure push
       run: |
-            if [ "${{ matrix.compiler }}" == "clang" ]; then
-              export CC=/usr/bin/clang
-              export CXX=/usr/bin/clang++
-            fi
+           if [ "${{ matrix.compiler }}" == "clang" ]; then
+             export CC=/usr/bin/clang
+             export CXX=/usr/bin/clang++
+           fi
            cmake -B _build -S src \
            -DCMAKE_C_COMPILER_LAUNCHER=ccache \
            -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
