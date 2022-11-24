@@ -41,7 +41,7 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
-        ortools-xpress: [ON, OFF]
+        compiler: [gcc, clang]
 
 
     steps:
@@ -55,13 +55,14 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
+          key: xpress-${{ matrix.compiler }}-${{ matrix.os }}
 
     - name: Install libraries
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
+           sudo apt-get install clang
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -73,13 +74,13 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+          # if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
             echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
-          else
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-            echo "LABEL=" >> $GITHUB_ENV
-          fi
+          # else
+          #   echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+          #   echo "LABEL=" >> $GITHUB_ENV
+          # fi
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -105,10 +106,18 @@ jobs:
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
+      # if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
         ls -la ${{ env.XPRESSDIR }}
+
+    - name: Configure compiler
+      run: |
+        if [ "${{ matrix.compiler }}" == "clang" ]; then
+          export CC=/usr/bin/clang
+          export CXX=/usr/bin/clang++
+        fi
+
 
     - name: Configure push
       run: |
