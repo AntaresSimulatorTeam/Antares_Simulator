@@ -41,7 +41,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
+std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -54,8 +54,7 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
     return sumENS;
 }
 
-std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std::vector<double> sumENS,
-                                                                            uint numSpace) const
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
@@ -70,9 +69,9 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std:
     return triggerCsrSet;
 }
 
-std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
+std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() const
 {
-    std::vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
+    std::vector<double> sumENS = calculateENSoverAllAreasForEachHour();
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
@@ -86,7 +85,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
-      = getHoursRequiringCurtailmentSharing(numSpace);
+      = getHoursRequiringCurtailmentSharing();
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
