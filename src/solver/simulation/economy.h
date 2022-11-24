@@ -46,25 +46,6 @@ namespace Solver
 namespace Simulation
 {
 
-class AdequacyPatchOptimization : public interfaceWeeklyOptimization
-{
-public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    void solve(uint weekInTheYear, int hourInTheYear) override;
-    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
-
-private:
-    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace) const;
-    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace) const;
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace) const;
-};
-
-class weeklyOptimization : public interfaceWeeklyOptimization
-{
-public:
-    explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    void solve(uint, int) override;
-};
 
 class Economy
 {
