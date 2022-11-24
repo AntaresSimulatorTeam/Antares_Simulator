@@ -36,7 +36,6 @@
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
 #include <set>
-#include "../optimisation/adequacy_patch.h"
 
 using namespace Yuni;
 

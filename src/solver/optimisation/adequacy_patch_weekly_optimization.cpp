@@ -10,7 +10,6 @@ namespace Solver
 {
 namespace Simulation
 {
-
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
  interfaceWeeklyOptimization(problemeHebdo, thread_number)
@@ -48,8 +47,11 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() 
     {
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            addArray(sumENS,
-                     problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive);
+        {
+            double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            for (uint h = 0; h < nbHoursInAWeek; ++h)
+                sumENS[h] += ENS[h];
+        }
     }
     return sumENS;
 }
@@ -84,8 +86,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
       = calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
-    const std::set<int> hoursRequiringCurtailmentSharing
-      = getHoursRequiringCurtailmentSharing();
+    const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
@@ -94,7 +95,6 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
         hourlyCsrProblem.run(week, year);
     }
 }
-
 
 } // namespace Simulation
 } // namespace Solver

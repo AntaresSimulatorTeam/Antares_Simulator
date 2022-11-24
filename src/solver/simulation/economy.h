@@ -33,7 +33,6 @@
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
-#include "common-eco-adq.h"
 
 #include "../optimisation/base_weekly_optimization.h"
 

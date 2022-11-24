@@ -251,11 +251,6 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     }
 }
 
-void addArray(std::vector<double>& A, const double* B)
-{
-    for (uint i = 0; i < A.size(); ++i)
-        A[i] += B[i];
-}
 
 void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
 {
