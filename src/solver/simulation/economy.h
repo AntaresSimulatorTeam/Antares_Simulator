@@ -46,20 +46,23 @@ namespace Simulation
 class interfaceWeeklyOptimization
 {
 public:
-    virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
+    virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
     virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) = 0;
-    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** problemesHebdo);
+    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled,
+                                                               PROBLEME_HEBDO* problemesHebdo,
+                                                               uint numSpace);
 
 protected:
-    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
-    PROBLEME_HEBDO** problemesHebdo_;
+    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
+    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
+    uint thread_number_ = 0;
 };
 
 class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
 public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) override;
+    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    void solve(uint weekInTheYear, int hourInTheYear) override;
     void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 
 private:
@@ -71,8 +74,8 @@ private:
 class weeklyOptimization : public interfaceWeeklyOptimization
 {
 public:
-    explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(uint, int, uint numSpace) override;
+    explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    void solve(uint, int) override;
     void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 };
 
@@ -137,7 +140,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    std::unique_ptr<interfaceWeeklyOptimization> weeklyOptProblem;
+    std::vector<unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
 }; // class Economy
 
 } // namespace Simulation
