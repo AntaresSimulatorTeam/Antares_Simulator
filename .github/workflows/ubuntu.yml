@@ -132,6 +132,10 @@ jobs:
 
     - name: Build
       run: |
+           if [ "${{ matrix.compiler }}" == "clang" ]; then
+             export CC=/usr/bin/clang
+             export CXX=/usr/bin/clang++
+           fi
            cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
