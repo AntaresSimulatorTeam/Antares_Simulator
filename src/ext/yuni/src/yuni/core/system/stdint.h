@@ -131,12 +131,3 @@ typedef double yfloat64;
 /*! Convenient typedef around unsigned int */
 typedef unsigned int uint;
 #endif
-
-#ifdef YUNI_OS_CLANG
-/* Try to fix issues with clang which does not yet support __float128, and produces
-** compilation error in the STL */
-/* typedef struct __float128 */
-/* { */
-/*     double x, y; */
-/* } __float128; */
-#endif
