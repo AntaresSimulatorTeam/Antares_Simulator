@@ -29,7 +29,7 @@
 
 #include "../../../array/matrix.h"
 #include "../../fwd.h"
-
+#include "../common/series.h" //for DataSeriesCommon
 namespace Antares
 {
 namespace Data
@@ -145,6 +145,119 @@ public:
     Matrix<Yuni::uint32> timeseriesNumbers;
 
 }; // class DataSeriesHydro
+
+
+class DataSeriesHydrocluster : public DataSeriesCommon //### todo DataSeriesHydrocluster method
+{
+public:
+    //! \name Constructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    */
+    DataSeriesHydrocluster();
+    //@}
+
+    //! \name Data
+    //@{
+    /*!
+    ** \brief Reset all data, as if it were a new area
+    */
+    void reset();
+
+    /*!
+    ** \brief Flush all matrix-related data
+    */
+    void flush();
+
+    /*!
+    ** \brief Load all data not already loaded
+    **
+    ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
+    */
+    bool invalidate(bool reload = false) const;
+
+    void markAsModified() const;
+    //@}
+
+    //! \name Save / Load
+    //@{
+    /*!
+    ** \brief Load data series for hydro from a folder
+    **
+    ** \param d The data series for hydro
+    ** \param folder The source folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    bool loadFromFolder(Study& s, const AreaName& areaID, const AnyString& folder);
+
+    /*!
+    ** \brief Save data series for hydro into a folder (`input/hydro/series`)
+    **
+    ** Nothing will be done if the pointer to the structure is null.
+    **
+    ** \param d The data series for hydro
+    ** \param folder The target folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    bool saveToFolder(const AreaName& areaID, const AnyString& folder) const;
+    //@}
+
+    //! \name Memory
+    //@{
+    /*!
+    ** \brief Get the size (bytes) in memory occupied by a `DataSeriesHydrocluster` structure
+    */
+    Yuni::uint64 memoryUsage() const;
+    /*!
+    ** \brief Try to estimate the amount of memory required for launching a simulation
+    */
+    void estimateMemoryUsage(StudyMemoryUsage&) const;
+    //@}
+
+public:
+    /*!
+    ** \brief Run-of-the-river - ROR (MW)
+    **
+
+    ** (it was DAYS_PER_YEAR before 3.9)
+    */
+    Matrix<double, Yuni::sint32> ror;
+
+    /*!
+    ** \brief Mod (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * 365 values
+    ** This matrix is not used in `adequation` mode.
+    */
+    Matrix<double, Yuni::sint32> storage;
+
+    /*!
+    ** \brief Minimum Generation (MW)
+    **
+    ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
+    */
+    Matrix<double, Yuni::sint32> mingen;
+
+    /*!
+    ** \brief The number of time-series
+    **
+    ** This value must be the same as the width of the matrices `mod` and `fatal`.
+    ** It is only provided for convenience to avoid same strange and ambiguous code
+    ** (for example using `fatal.width` and `mod.width` in the same routine, it might
+    ** indicate that the two values are not strictly equal)
+    */
+    uint count;
+
+    /*!
+    ** \brief Monte-Carlo
+    */
+    Matrix<Yuni::uint32> timeseriesNumbers;
+
+}; // class DataSeriesHydrocluster
+
+
+
 
 } // namespace Data
 } // namespace Antares

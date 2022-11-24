@@ -830,6 +830,7 @@ void AreaListEnsureDataWindPrepro(AreaList* l);
 ** \brief Ensure data for hydro time-series are initialized
 */
 void AreaListEnsureDataHydroTimeSeries(AreaList* l);
+void AreaListEnsureDataHydroclusterTimeSeries(AreaList* l); //CR13 1124
 
 /*!
 ** \brief Ensure data for hydro prepro are initialized

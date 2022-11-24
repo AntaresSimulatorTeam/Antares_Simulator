@@ -40,6 +40,7 @@ void HydroclusterClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 #define SEP IO::Separator
 
+
 bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
 {
     // Make sure the folder is created

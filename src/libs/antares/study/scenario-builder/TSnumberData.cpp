@@ -95,7 +95,7 @@ static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
 }
 
 template<>
-inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
+inline bool CheckValidity<Data::DataSeriesHydro>(uint value, //### todo ? need to add CheckValidity<Data::DataSeriesHydrocluster> or not?
                                                  const Data::DataSeriesHydro& data,
                                                  uint tsGenMax)
 {
@@ -308,10 +308,13 @@ bool hydroTSNumberData::apply(Study& study)
         const MatrixType::ColumnType& col = pTSNumberRules[areaIndex];
 
         logprefix.clear() << "Hydro: Area '" << area.name << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret;
+        ret = ApplyToMatrix(errors, logprefix, *area.hydro.series, col, tsGenCountHydro) && ret; //### todo for hydrocluster
     }
     return ret;
 }
+
+//### todo for hydrocluster in ScenarioBuilder, as in Thermal and Renewable below
+
 
 // ================================
 // Thermal ...

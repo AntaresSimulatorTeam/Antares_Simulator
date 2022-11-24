@@ -162,7 +162,7 @@ inline CString<512, false> solarTSNumberData::get_prefix() const
 // Hydro ...
 // =====================
 
-class hydroTSNumberData : public TSNumberData
+class hydroTSNumberData : public TSNumberData //### todo for hydrocluster
 {
 public:
     bool apply(Study& study) override;
@@ -174,6 +174,8 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
 {
     return "h,";
 }
+
+//### todo for hydrocluster in ScenarioBuilder as in thermalTSNumberData and renewableTSNumberData
 
 // =====================
 // Thermal ...

@@ -237,6 +237,11 @@ void StudyEnsureDataHydroTimeSeries(Study* s)
     AreaListEnsureDataHydroTimeSeries(&s->areas);
 }
 
+void StudyEnsureDataHydroclusterTimeSeries(Study* s) //CR13 1124
+{
+    AreaListEnsureDataHydroclusterTimeSeries(&s->areas);
+}
+
 void StudyEnsureDataHydroPrepro(Study* s)
 {
     AreaListEnsureDataHydroPrepro(&s->areas);
@@ -284,6 +289,8 @@ void Study::ensureDataAreInitializedAccordingParameters()
     StudyEnsureDataSolarTimeSeries(this);
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
+    StudyEnsureDataHydroclusterTimeSeries(this); //CR13 1124
+
     StudyEnsureDataThermalTimeSeries(this);
     StudyEnsureDataRenewableTimeSeries(this);
 
@@ -310,6 +317,8 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataSolarTimeSeries(this);
     StudyEnsureDataWindTimeSeries(this);
     StudyEnsureDataHydroTimeSeries(this);
+    StudyEnsureDataHydroclusterTimeSeries(this); //CR13 1124
+
     StudyEnsureDataThermalTimeSeries(this);
     StudyEnsureDataRenewableTimeSeries(this);
 

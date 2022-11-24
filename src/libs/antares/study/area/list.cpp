@@ -1452,6 +1452,13 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     });
 }
 
+void AreaListEnsureDataHydroclusterTimeSeries(AreaList* l) //CR13 1124
+{
+    /* Asserts */
+    assert(l);
+    l->each([&](Data::Area& area) { area.hydrocluster.list.ensureDataTimeSeries(); });
+}
+
 void AreaListEnsureDataHydroPrepro(AreaList* l)
 {
     /* Asserts */

@@ -32,6 +32,7 @@
 #include "../../../array/matrix.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
+#include "series.h"
 
 namespace Antares
 {
@@ -180,6 +181,8 @@ public:
     enum HydroclusterGroup groupID;
 
     enum TimeSeriesMode tsMode;
+    //! Series
+    DataSeriesHydrocluster* series;
 
     friend class HydroclusterClusterList;
 

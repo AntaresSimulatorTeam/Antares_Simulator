@@ -91,10 +91,16 @@ void Data::HydroclusterCluster::copyFrom(const HydroclusterCluster& cluster)
 
     // Making sure that the data related to the timeseries are present
     if (not series)
-        series = new DataSeriesCommon();
+        series = new DataSeriesHydrocluster(); //###
 
     // timseries
-    series->series = cluster.series->series;
+    
+
+    // series->series = cluster.series->series;
+    series->ror = cluster.series->ror;
+    series->storage = cluster.series->storage;
+    series->mingen = cluster.series->mingen;
+
     cluster.series->series.unloadFromMemory();
     series->timeseriesNumbers.clear();
 

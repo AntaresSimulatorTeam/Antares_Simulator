@@ -178,7 +178,7 @@ public:
     //! Data for the pre-processor
     PreproHydro* prepro;
     //! Data for time-series
-    DataSeriesHydro* series;
+    DataSeriesHydro* series; //CR13 1124
 
 }; // class PartHydro
 

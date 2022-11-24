@@ -261,6 +261,8 @@ void Area::ensureAllDataAreCreated()
         wind.series = new DataSeriesWind();
     if (!hydro.series)
         hydro.series = new DataSeriesHydro();
+
+    hydrocluster.list.ensureDataTimeSeries(); //CR13 1124
     thermal.list.ensureDataTimeSeries();
     renewable.list.ensureDataTimeSeries();
 

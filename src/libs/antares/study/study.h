@@ -879,6 +879,7 @@ void StudyEnsureDataWindPrepro(Study* s);
 ** \see Study::ensureDataAreAllInitializedAccordingParameters()
 */
 void StudyEnsureDataHydroTimeSeries(Study* s);
+void StudyEnsureDataHydroclusterTimeSeries(Study* s); //CR13 1124
 
 /*!
 ** \brief Ensure data for hydro prepro are initialized

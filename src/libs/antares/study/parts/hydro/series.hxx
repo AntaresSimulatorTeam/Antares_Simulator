@@ -36,6 +36,10 @@ inline void DataSeriesHydro::flush()
 {
     // do nothing
 }
+inline void DataSeriesHydrocluster::flush()
+{
+    // do nothing
+}
 #endif
 
 } // namespace Data

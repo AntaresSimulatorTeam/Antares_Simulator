@@ -79,13 +79,14 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         }
         // Hydro
         {
-            const Data::DataSeriesHydro& data = *area.hydro.series;
+            const Data::DataSeriesHydro& data = *area.hydro.series; //### todo for hydrocluster
             assert(year < data.timeseriesNumbers.height);
             ptchro.Hydraulique
               = (data.count != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
             // Hydro - mod
             memset(ptvalgen.HydrauliqueModulableQuotidien, 0, nbDaysPerYearDouble);
         }
+        //### todo for hydrocluster as in Renewable, avec ptchro.HydroclusterParPalier
         // Wind
         {
             const Data::DataSeriesWind& data = *area.wind.series;
@@ -145,7 +146,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     // ptvalgen.AleaCoutDeProductionParPalier[index] =
                     //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
                     // MBO
-                    // 15/04/2014 : bornage du coût thermique
+                    // 15/04/2014 : bornage du coï¿½t thermique
                     // 01/12/2014 : prise en compte du spreadCost non nul
 
                     if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4

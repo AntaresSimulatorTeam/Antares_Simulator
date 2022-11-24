@@ -423,6 +423,19 @@ int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
+
+template<>
+void ClusterList<HydroclusterCluster>::ensureDataTimeSeries()
+{
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        SharedPtr cluster = it->second;
+        if (not cluster->series)
+            cluster->series = new DataSeriesHydrocluster();
+    }
+}
+
 template<class ClusterT>
 void ClusterList<ClusterT>::ensureDataTimeSeries()
 {
