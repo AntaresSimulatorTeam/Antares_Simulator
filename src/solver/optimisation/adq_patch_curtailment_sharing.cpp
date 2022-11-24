@@ -1,33 +1,7 @@
-/*
-** Copyright 2007-2022 RTE
-** Authors: RTE-international / Redstork / Antares_Simulator Team
-**
-** This file is part of Antares_Simulator.
-**
-** Antares_Simulator is free software: you can redistribute it and/or modify
-** it under the terms of the GNU General Public License as published by
-** the Free Software Foundation, either version 3 of the License, or
-** (at your option) any later version.
-**
-** There are special exceptions to the terms and conditions of the
-** license as they are applied to this software. View the full text of
-** the exceptions in file COPYING.txt in the directory of this software
-** distribution
-**
-** Antares_Simulator is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-** GNU General Public License for more details.
-**
-** You should have received a copy of the GNU General Public License
-** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
-**
-** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
-*/
+﻿
+#include "adq_patch_curtailment_sharing.h"
 
-#include "../simulation/simulation.h"
 #include "opt_fonctions.h"
-#include "adequacy_patch.h"
 #include <math.h>
 #include "../study/area/scratchpad.h"
 
@@ -39,100 +13,6 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
-{
-    AdequacyPatchMode OriginNodeAdequacyPatchType
-      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
-    AdequacyPatchMode ExtremityNodeAdequacyPatchType
-      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
-    bool setToZeroNTCfromOutToIn_AdqPatch
-      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
-    bool setToZeroNTCfromOutToOut_AdqPatch
-      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
-
-    switch (OriginNodeAdequacyPatchType)
-    {
-    case physicalAreaInsideAdqPatch:
-        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType);
-
-    case physicalAreaOutsideAdqPatch:
-        return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                      setToZeroNTCfromOutToIn_AdqPatch,
-                                                      setToZeroNTCfromOutToOut_AdqPatch);
-    default:
-        return leaveLocalValues;
-    }
-}
-
-ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
-{
-    switch (ExtremityNodeAdequacyPatchType)
-    {
-    case physicalAreaInsideAdqPatch:
-    case physicalAreaOutsideAdqPatch:
-        return setToZero;
-    default:
-        return leaveLocalValues;
-    }
-}
-
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch)
-{
-    switch (ExtremityNodeAdequacyPatchType)
-    {
-    case physicalAreaInsideAdqPatch:
-        return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOrigineToZero;
-    case physicalAreaOutsideAdqPatch:
-        return setToZeroNTCfromOutToOut_AdqPatch ? setToZero : leaveLocalValues;
-    default:
-        return leaveLocalValues;
-    }
-}
-
-void setNTCbounds(double& Xmax,
-                  double& Xmin,
-                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                  const int Interco,
-                  PROBLEME_HEBDO* ProblemeHebdo)
-{
-    ntcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
-
-    // set as default values
-    Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-    Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-
-    // set for adq patch first step
-    if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
-    {
-        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
-
-        switch (ntcToZeroStatusForAdqPatch)
-        {
-        case setToZero:
-        {
-            Xmax = 0.;
-            Xmin = 0.;
-            break;
-        }
-        case setOrigineExtremityToZero:
-        {
-            Xmax = 0.;
-            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            break;
-        }
-        case setExtremityOrigineToZero:
-        {
-            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin = 0.;
-            break;
-        }
-        }
-    }
-}
 
 double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
@@ -251,7 +131,6 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     }
 }
 
-
 void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
 {
     if (!study.parameters.adqPatch.enabled)
@@ -288,9 +167,9 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
     }
 }
 
-} // end namespace Antares
+} // namespace AdequacyPatch
 } // end namespace Data
-} // end namespace AdequacyPatch
+} // namespace Antares
 
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
@@ -301,20 +180,18 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
-            == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
-            problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour]
-              = -1.0;
+            problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, ignore, ignore)
               = calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
-            ensInit = problemeHebdo->ResultatsHoraires[Area]
-                        ->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit = problemeHebdo->ResultatsHoraires[Area]
-                             ->ValeursHorairesDeDefaillanceNegative[hour];
+            ensInit
+              = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+            spillageInit
+              = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
@@ -329,8 +206,7 @@ void HOURLY_CSR_PROBLEM::resetProblem()
 
 void HOURLY_CSR_PROBLEM::buildProblemVariables()
 {
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo,
-                                                                         *this);
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
 void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()

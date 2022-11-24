@@ -4,7 +4,8 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "adequacy_patch.h"
+#include "adq_patch_local_matching.h"
+#include "adq_patch_curtailment_sharing.h"
 
 #include <vector>
 #include <tuple>

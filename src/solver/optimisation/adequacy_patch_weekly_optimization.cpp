@@ -60,11 +60,11 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
-    for (int i = 0; i < nbHoursInAWeek; ++i)
+    for (int h = 0; h < nbHoursInAWeek; ++h)
     {
-        if (sumENS[i] > threshold)
+        if (sumENS[h] > threshold)
         {
-            triggerCsrSet.insert(i);
+            triggerCsrSet.insert(h);
         }
     }
     logs.debug() << "number of triggered hours: " << triggerCsrSet.size();

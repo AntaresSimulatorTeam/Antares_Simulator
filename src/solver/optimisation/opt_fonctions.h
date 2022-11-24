@@ -30,7 +30,7 @@
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
-#include "../optimisation/adequacy_patch.h"
+#include "../optimisation/adq_patch_curtailment_sharing.h"
 
 void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);

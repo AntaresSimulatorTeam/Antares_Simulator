@@ -34,7 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include "adequacy_patch.h"
+#include "adq_patch_local_matching.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
