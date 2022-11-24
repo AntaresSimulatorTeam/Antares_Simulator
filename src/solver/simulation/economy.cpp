@@ -98,6 +98,8 @@ bool Economy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
@@ -110,11 +112,10 @@ bool Economy::simulationBegin()
                 return false;
             }
 
-            weeklyOptProblems_.push_back(
-                    interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled,
-                                                        pProblemesHebdo[numSpace], 
-                                                        numSpace)
-            );
+            weeklyOptProblems_[numSpace] = 
+                interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled, 
+                                                    pProblemesHebdo[numSpace], 
+                                                    numSpace);
         }
 
         SIM_InitialisationResultats();
