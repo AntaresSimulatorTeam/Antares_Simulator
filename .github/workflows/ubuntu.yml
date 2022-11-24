@@ -25,7 +25,7 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build (compiler =${{ matrix.compiler }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
@@ -42,6 +42,7 @@ jobs:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
         compiler: [gcc, clang]
+        ortools-xpress: [ON, OFF]
 
 
     steps:
@@ -62,7 +63,9 @@ jobs:
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
            sudo apt-get install libboost-test-dev
-           sudo apt-get install clang
+           if [ "${{ matrix.compiler }}" == "clang" ]; then
+               sudo apt-get install clang
+           fi
 
     - name: Read antares-deps version
       id: antares-deps-version
@@ -74,13 +77,13 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          # if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
             echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
             echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
-          # else
-          #   echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-          #   echo "LABEL=" >> $GITHUB_ENV
-          # fi
+          else
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "LABEL=" >> $GITHUB_ENV
+          fi
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -106,7 +109,7 @@ jobs:
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
 
     - name: Download XPRESS if needed
-      # if: ${{ matrix.ortools-xpress == 'ON' }}
+      if: ${{ matrix.ortools-xpress == 'ON' }}
       run: |
         git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
         ls -la ${{ env.XPRESSDIR }}
