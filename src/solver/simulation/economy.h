@@ -35,6 +35,8 @@
 #include "../variable/state.h"
 #include "common-eco-adq.h"
 
+#include "../optimisation/base_weekly_optimization.h"
+
 #include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares
@@ -43,20 +45,6 @@ namespace Solver
 {
 namespace Simulation
 {
-class interfaceWeeklyOptimization
-{
-public:
-    virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
-    virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) {};
-    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled,
-                                                               PROBLEME_HEBDO* problemesHebdo,
-                                                               uint numSpace);
-
-protected:
-    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
-    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
-    uint thread_number_ = 0;
-};
 
 class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
