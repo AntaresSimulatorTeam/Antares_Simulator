@@ -11,7 +11,7 @@ v8.4.0-rc1 (11/2022)
 * Do not export BC MARG PRICE variable by default by #928
 
 ### Bug fix
-* Remove error message printed on -h/--help #895
+* Remove error message printed on -h/--help in antares-solver #895
 * Use average for BC MARG PRICE (daily & weekly) #940
 * Fix crash when exporting MPS with OR-Tools #923
 * Remove obsolete option `include-split-exported-mps` #956
@@ -25,11 +25,18 @@ v8.4.0-rc1 (11/2022)
 * Refactor average results #946
 * Feature/xpress extract basis by @flomnes in #957
 * CI: upgrade deprecated Github actions #938
+* CI: activate automatic gcov report on SonarCloud #967
 * Use GIT_SHALLOW for OR-Tools's FetchContent #904
 
 ### Documentation
 * Document how to run JSON tests #902
 * OR-Tools build #880
+
+## New Contributor
+* @kathvargasr #967
+
+## Contributors
+* @guilpier-code, @payetvin, @flomnes
 
 v8.3.2 (09/2022)
 --------------------
