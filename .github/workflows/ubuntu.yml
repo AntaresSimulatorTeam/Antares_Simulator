@@ -240,15 +240,14 @@ jobs:
     name: Publish assets
     needs: build
     runs-on: ${{needs.build.outputs.os}}
-    if: ${{ env.IS_RELEASE == 'true' }}
     steps:
     - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
 
-    - name: List artifacts
-      run: ls -R
 
     - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.3.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
