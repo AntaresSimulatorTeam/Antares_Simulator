@@ -1,6 +1,10 @@
 Antares Changelog
 =================
 
+v8.4.0-rc2 (11/2022)
+--------------------
+Re-publish v8.4.0-rc1, assets not uploaded.
+
 v8.4.0-rc1 (11/2022)
 --------------------
 ### Features
