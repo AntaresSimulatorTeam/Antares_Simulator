@@ -111,10 +111,10 @@ jobs:
     - name: Config OR-Tools URL
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
             echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
           else
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
             echo "LABEL=" >> $GITHUB_ENV
           fi
 

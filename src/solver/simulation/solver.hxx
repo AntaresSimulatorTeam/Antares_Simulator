@@ -1473,8 +1473,10 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
             pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
             pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
             pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
-            pAnnualCostsStatistics.optimizationTime.addCost(
-              state[numSpace].averageOptimizationTime);
+            pAnnualCostsStatistics.optimizationTime1.addCost(
+              state[numSpace].averageOptimizationTime1);
+            pAnnualCostsStatistics.optimizationTime2.addCost(
+              state[numSpace].averageOptimizationTime2);
         }
     }
 }

@@ -29,7 +29,7 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -61,11 +61,11 @@ jobs:
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
 
-    - name: Setup Python 3.10
+    - name: Setup Python 3.11
       uses: actions/setup-python@v4
       with:
         architecture: 'x64'
-        python-version: '3.10.6'
+        python-version: '3.11'
 
     - name : Install deps with VCPKG
       run: |
