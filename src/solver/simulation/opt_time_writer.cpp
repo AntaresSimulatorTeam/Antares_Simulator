@@ -23,5 +23,6 @@ void OptimizationStatisticsWriter::addTime(uint week, double opt_1_ms, double op
 
 void OptimizationStatisticsWriter::finalize()
 {
-    pWriter->addEntryFromBuffer(pFilename.c_str(), pBuffer);
+    if (pWriter)
+        pWriter->addEntryFromBuffer(pFilename.c_str(), pBuffer);
 }
