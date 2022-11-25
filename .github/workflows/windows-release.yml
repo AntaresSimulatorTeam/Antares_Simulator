@@ -151,7 +151,6 @@ jobs:
 
     - name: Run medium-tests
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
@@ -159,7 +158,6 @@ jobs:
 
     - name: Run long-tests-1
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
@@ -167,14 +165,12 @@ jobs:
 
     - name: Run long-tests-2
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}

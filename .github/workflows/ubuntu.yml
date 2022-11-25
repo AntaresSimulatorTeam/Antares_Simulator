@@ -155,7 +155,6 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
-      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -164,7 +163,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      continue-on-error: false
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -173,7 +171,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -182,7 +179,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -191,7 +187,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -200,7 +195,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
