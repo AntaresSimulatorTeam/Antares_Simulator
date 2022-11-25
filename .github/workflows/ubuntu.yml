@@ -31,7 +31,6 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     outputs:
-        is_release: ${{steps.release_flag.outputs.is_release}}
         os: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
@@ -46,11 +45,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Export release flag
-      id: release_flag
-      run: |
-        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -252,7 +246,7 @@ jobs:
     name: Publish assets
     needs: build
     runs-on: ${{needs.build.outputs.os}}
-    if: ${{needs.build.outputs.is_release == 'true'}}
+    if: ${{ env.IS_RELEASE == 'true' }}
     steps:
     - name: Download all artifacts
       uses: actions/download-artifact@v3
