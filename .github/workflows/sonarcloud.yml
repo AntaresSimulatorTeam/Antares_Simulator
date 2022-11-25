@@ -85,6 +85,7 @@ jobs:
         with:
           antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
           os: ${{matrix.os}}
+          buildtype: Debug
           ortools-url: ${{env.ORTOOLS_URL}}
           ortools-dir: ${{env.ORTOOLS_DIR}}
 
@@ -94,7 +95,7 @@ jobs:
           python-version: 3.8
 
       - name: Install gcovr
-        run: sudo pip install gcovr
+        run: sudo pip install gcovr==5.0 #5.1 generate issues with sonarcloud report parsing
 
       - name: Install dependencies
         run: |
@@ -110,9 +111,9 @@ jobs:
              cmake -B _build -S src \
              -DCMAKE_C_COMPILER_LAUNCHER=ccache \
              -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
-             -DDEPS_INSTALL_DIR=./rte-antares-deps-Release \
+             -DDEPS_INSTALL_DIR=./rte-antares-deps-Debug \
              -DCODE_COVERAGE=ON \
-             -DCMAKE_BUILD_TYPE=release \
+             -DCMAKE_BUILD_TYPE=debug \
              -DCMAKE_PREFIX_PATH="../install;${{ env.ORTOOLS_DIR }}/install" \
              -DBUILD_TESTING=ON \
              -DMZ_CODE_COVERAGE=ON \
@@ -128,9 +129,9 @@ jobs:
           cd $GITHUB_WORKSPACE/_build
           ctest -C Release --output-on-failure -L "unit"
 
-      - name: Compile coverage reports
+      - name: Collect coverage into one XML report
         run: |
-          cmake --build $GITHUB_WORKSPACE/_build --target code-coverage
+          gcovr --sonarqube --output coverage.xml
 
       - name: Run sonar-scanner
         env:
