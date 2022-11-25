@@ -6,8 +6,8 @@ v8.4.0-rc1 (11/2022)
 ### Features
 * Add option & command-line argument to write results into a single zip archive #794
 * Add option to set link capacity to null/infinity for physical links only #792
+* Speed up simulations by extracting simplex basis in XPRESS/OR-Tools #957
 * Move Kirchhoff constraint generator to an executable #909
-* Remove antares-solver swap variant & librairies, reduce build duration #906
 * Do not export BC MARG PRICE variable by default by #928
 
 ### Bug fix
@@ -23,20 +23,14 @@ v8.4.0-rc1 (11/2022)
 ### For developers
 * Cleaning, renaming (#896, #897, #898, #935, #937, #944, #945, #950, #954, #959 , #966)
 * Refactor average results #946
-* Feature/xpress extract basis by @flomnes in #957
 * CI: upgrade deprecated Github actions #938
 * CI: activate automatic gcov report on SonarCloud #967
 * Use GIT_SHALLOW for OR-Tools's FetchContent #904
+* Remove antares-solver swap variant & librairies, reduce build duration #906
 
 ### Documentation
 * Document how to run JSON tests #902
 * OR-Tools build #880
-
-## New Contributor
-* @kathvargasr #967
-
-## Contributors
-* @guilpier-code, @payetvin, @flomnes
 
 v8.3.2 (09/2022)
 --------------------
