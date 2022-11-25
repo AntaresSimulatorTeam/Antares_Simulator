@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      3)
-set(ANTARES_VERSION_REVISION  2)
+set(ANTARES_VERSION_LO	      4)
+set(ANTARES_VERSION_REVISION  0)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
@@ -15,7 +15,7 @@ set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 0)
+set(ANTARES_RC 1)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
