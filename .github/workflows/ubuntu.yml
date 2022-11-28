@@ -226,6 +226,12 @@ jobs:
            TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
+
+    - name: Solver archive creation
+      run: |
+           cd _build
+           tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3
       with:
@@ -242,12 +248,14 @@ jobs:
     runs-on: ${{needs.build.outputs.os}}
     steps:
     - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
+      # comment to test on push
+      # if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
+      # comment to test on push
+      # if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.3.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
