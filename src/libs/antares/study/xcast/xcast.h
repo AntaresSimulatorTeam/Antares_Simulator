@@ -158,17 +158,12 @@ public:
     /*!
     ** \brief Make sure that all data are loaded in memory
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the load data as modified
     */
     void markAsModified() const;
-
-    /*!
-    ** \brief Flush memory to swap files
-    */
-    void flush();
 
     /*!
     ** \brief Get the amount of memory currently used by the XCast data

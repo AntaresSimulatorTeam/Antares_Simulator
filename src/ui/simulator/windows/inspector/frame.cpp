@@ -859,14 +859,10 @@ void Frame::apply(const InspectorData::Ptr& data)
             p->SetLabel(wxString() << data->links.size() << wxT(" LINKS"));
         Accumulator<PLinkArea<true>>::Apply(PROPERTY("link.from"), data->links);
         Accumulator<PLinkArea<false>>::Apply(PROPERTY("link.to"), data->links);
-        // Accumulator<PLinkCopperPlate>    ::Apply(PROPERTY("link.transmission-capacities"),
-        // data->links);
         Accumulator<PLinkHurdlesCost>::Apply(PROPERTY("link.hurdles_cost"), data->links);
         Accumulator<PLinkLoopFlow>::Apply(PROPERTY("link.use_loop_flow"), data->links);
         Accumulator<PLinkPhaseShift>::Apply(PROPERTY("link.use_phase_shifter"), data->links);
         Accumulator<PLinkComments>::Apply(PROPERTY("link.comments"), data->links);
-        // Accumulator<PLinkColor>			 ::Apply(PROPERTY("link.color"),
-        // data->links);
         Accumulator<PLinkColor>::Apply(pPGLinkColor, data->links);
         Accumulator<PLinkStyle>::Apply(pPGLinkStyle, data->links);
         Accumulator<PLinkWidth>::Apply(pPGLinkWidth, data->links);

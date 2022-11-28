@@ -31,12 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-inline void PreproThermal::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    data.flush();
-#endif
-}
 
 inline Yuni::uint64 PreproThermal::memoryUsage() const
 {

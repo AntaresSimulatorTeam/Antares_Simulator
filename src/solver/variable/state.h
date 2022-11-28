@@ -137,11 +137,6 @@ public:
     */
     void yearEndResetThermal();
 
-    /*!
-    ** \brief Reset renewable internal data for end of year calculations
-    */
-    void yearEndResetRenewable();
-
 public:
     //! Current year
     unsigned int year;
@@ -220,7 +215,6 @@ public:
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
-    double renewableClusterProductionForYear[Variable::maxHoursInAYear];
 
     //! Dispatchable margin for the current area (valid only from weekForEachArea)
     const double* dispatchableMargin;
@@ -260,8 +254,10 @@ public:
     double optimalSolutionCost1;
     // Sum of the weekly optimal costs over the year (second optimisation step)
     double optimalSolutionCost2;
-    // Average time spent in optimization over the year (ms)
-    double averageOptimizationTime;
+    // Average time spent in first optimization over the year (ms)
+    double averageOptimizationTime1;
+    // Average time spent in second optimization over the year (ms)
+    double averageOptimizationTime2;
     // -----------------------------------------------------------------
 }; // class State
 

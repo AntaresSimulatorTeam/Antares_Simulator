@@ -271,7 +271,6 @@ static void ReadCommandLineOptions(int argc, char** argv)
 {
     String::Vector optOutputs;
     uint optJobs = FindNbProcessors();
-    String optSwap;
     String::Vector optTimes;
     String::Vector optColumns;
     String::Vector optDatum;
@@ -307,17 +306,6 @@ static void ReadCommandLineOptions(int argc, char** argv)
                     "jobs",
                     String() << "The number of jobs to run simultaneously (default: " << optJobs
                              << ", 4 should be a maxmimum due to i/o performance considerations)");
-        // --swap
-        options.add(optSwap,
-                    ' ',
-                    "swap-folder",
-#ifdef ANTARES_SWAP_SUPPORT
-                    String("Folder where the swap files will be written. (default: '")
-                      << Antares::memory.cacheFolder() << "')"
-#else
-                    "Folder where the swap files will be written. This option has no effect"
-#endif
-        );
 
         options.addParagraph("\nMisc.");
 
@@ -328,7 +316,7 @@ static void ReadCommandLineOptions(int argc, char** argv)
         bool optVersion = false;
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
-        if (!options(argc, argv))
+        if (options(argc, argv) == GetOpt::ReturnCode::error)
         {
             LocalPolicy::Close();
             AntaresSolverEmergencyShutdown(options.errors() ? 1 : 0);
@@ -371,17 +359,6 @@ static void ReadCommandLineOptions(int argc, char** argv)
             optJobs = 1;
         queueService.maximumThreadCount(optJobs);
     }
-
-#ifdef ANTARES_SWAP_SUPPORT
-    // Changing the swap folder
-    if (not optSwap.empty())
-    {
-        logs.info() << "  memory pool: scratch folder:" << optSwap;
-        Antares::memory.cacheFolder(optSwap);
-    }
-    else
-        logs.info() << "  memory pool: scratch folder:" << Antares::memory.cacheFolder();
-#endif
 
     // Starting !
     {
@@ -460,9 +437,6 @@ static void ReadCommandLineOptions(int argc, char** argv)
 
 static bool WriteAggregates()
 {
-    // Flush the whole content to disk
-    memory.flushAll();
-
     const Output::Vector::iterator end = AllOutputs.end();
     for (Output::Vector::iterator i = AllOutputs.begin(); i != end; ++i)
     {
@@ -610,8 +584,7 @@ int main(int argc, char* argv[])
     // logs
     logs.applicationName("yby-aggregator");
 
-    // Swap memory
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     argv = AntaresGetUTF8Arguments(argc, argv);
@@ -657,8 +630,6 @@ int main(int argc, char* argv[])
 
         // early Release !
         AllOutputs.clear();
-        // Removing all unused spwa files
-        Antares::memory.removeAllUnusedSwapFiles();
     }
     else
     {

@@ -59,13 +59,7 @@ public:
 
     Yuni::uint64 dynamicMemoryUsage() const
     {
-        return
-#ifdef ANTARES_SWAP_SUPPORT
-          0
-#else
-          sizeof(double) * maxHoursInAYear
-#endif
-          + sizeof(double) * nbYearsCapacity;
+        return sizeof(double) * maxHoursInAYear + sizeof(double) * nbYearsCapacity;
     }
 
 public:

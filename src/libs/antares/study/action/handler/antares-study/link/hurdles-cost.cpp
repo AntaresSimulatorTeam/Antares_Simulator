@@ -80,8 +80,8 @@ bool HurdlesCost::performWL(Context& ctx)
 
         if (source && source != ctx.link)
         {
-            source->parameters.invalidate(true);
-            ctx.link->parameters.invalidate(true);
+            source->parameters.forceReload(true);
+            ctx.link->parameters.forceReload(true);
 
             ctx.link->parameters.pasteToColumn(
               (uint)Data::fhlHurdlesCostDirect,

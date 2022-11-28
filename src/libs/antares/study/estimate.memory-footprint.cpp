@@ -26,7 +26,6 @@
 */
 
 #include <yuni/yuni.h>
-#include "../memory/memory.h"
 #include "study.h"
 #include "memory-usage.h"
 #include "runtime.h"
@@ -141,7 +140,7 @@ void Study::estimateMemoryUsageForInput(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (dataBuffer.chunkSize * 2u); // estimation
 
     // Simulation
-    u.requiredMemoryForInput += simulation.memoryUsage();
+    u.requiredMemoryForInput += simulationComments.memoryUsage();
     // Areas
     areas.estimateMemoryUsage(u);
 

@@ -37,9 +37,9 @@ inline bool Study::readonly() const
 }
 
 template<int TimeSeriesT>
-inline bool Study::storeTimeSeriesNumbers()
+inline void Study::storeTimeSeriesNumbers() const
 {
-    return areas.storeTimeseriesNumbers<TimeSeriesT>(*this);
+    areas.storeTimeseriesNumbers<TimeSeriesT>(resultWriter);
 }
 
 template<enum TimeSeries TS>

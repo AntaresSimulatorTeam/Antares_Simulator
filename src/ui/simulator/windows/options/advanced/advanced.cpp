@@ -364,7 +364,6 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.hydroHeuristicPolicy.hhPolicy = Data::hhpAccommodateRuleCurves;
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
-        // parameters.shedding.strategy = Data::shsShareMargins;
         parameters.shedding.policy = Data::shpShavePeaks;
         parameters.reserveManagement.daMode = Data::daGlobal;
         parameters.unitCommitment.ucMode = Data::ucHeuristicFast;

@@ -143,6 +143,8 @@ typedef struct
     std::vector<std::string> NomDesContraintes;
 
     std::vector<bool> VariablesEntieres; // true = int, false = continuous
+    std::vector<int> StatutDesVariables;
+    std::vector<int> StatutDesContraintes;
 
 } PROBLEME_ANTARES_A_RESOUDRE;
 

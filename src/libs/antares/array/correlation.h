@@ -166,7 +166,7 @@ public:
     /*!
     ** \brief Invalidate all matrices
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark as modified

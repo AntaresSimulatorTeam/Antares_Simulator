@@ -77,9 +77,6 @@ public:
         {
             // resetting the text of the status bar
             pWindow.resetDefaultStatusBarText();
-            // restart the time in background, used to flush from time
-            // to time the memory to their swap files
-            pWindow.backgroundTimerStart();
             // The Form may have lost its focus
             // This action must be delayed
             pWindow.delayForceFocus();

@@ -105,7 +105,7 @@ void ByAlphaOrder::refresh(const wxString& search)
                   std::make_shared<Antares::Component::HTMLListbox::Item::BindingConstraint>(*j));
         }
     }
-    pParent.invalidate();
+    pParent.forceReload();
 }
 
 ByAlphaReverseOrder::ByAlphaReverseOrder(HTMLListbox::Component& parent) : IDatasource(parent)
@@ -136,7 +136,7 @@ void ByAlphaReverseOrder::refresh(const wxString& search)
                   std::make_shared<Antares::Component::HTMLListbox::Item::BindingConstraint>(*j));
         }
     }
-    pParent.invalidate();
+    pParent.forceReload();
 }
 
 } // namespace BindingConstraints

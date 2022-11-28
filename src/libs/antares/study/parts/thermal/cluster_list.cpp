@@ -362,8 +362,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                 }
                 // keeping track of the cluster
                 mapping[cluster->id()] = added;
-
-                cluster->flush();
             }
         }
 
@@ -689,7 +687,7 @@ bool ThermalClusterList::remove(const ClusterName& id)
     // Removing it from the list
     cluster.erase(i);
     // Invalidating the parent area
-    c->parentArea->invalidate();
+    c->parentArea->forceReload();
 
     // Remove all cluster coupling
     if (not c->coupling.empty())
@@ -698,7 +696,7 @@ bool ThermalClusterList::remove(const ClusterName& id)
         for (auto j = c->coupling.begin(); j != end; ++j)
         {
             auto* link = *j;
-            link->parentArea->invalidate();
+            link->parentArea->forceReload();
             link->coupling.erase(c.get());
         }
     }

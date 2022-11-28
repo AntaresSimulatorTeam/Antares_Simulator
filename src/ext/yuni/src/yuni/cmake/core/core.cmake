@@ -46,18 +46,6 @@ include("${CMAKE_CURRENT_LIST_DIR}/check-extras.cmake")
 
 set(CMAKE_REQUIRED_FLAGS ${CMAKE_REQUIRED_FLAGS_PREVIOUS})
 
-
-
-
-
-
-
-
-
-
-
-
-
 if (NOT WIN32)
 	find_package(Threads REQUIRED)
 	link_libraries(${CMAKE_THREAD_LIBS_INIT})

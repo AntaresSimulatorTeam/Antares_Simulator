@@ -27,7 +27,6 @@
 
 #include "progress.h"
 #include <antares/logs.h>
-#include <antares/memory/memory.h>
 
 using namespace Yuni;
 using namespace Antares;

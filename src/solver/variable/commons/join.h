@@ -91,18 +91,22 @@ struct VCardJoin
 /*!
 ** \brief Join
 */
-template<class LeftT, class RightT>
-class Join : public Variable::IVariable<Join<LeftT, RightT>, Yuni::Default, VCardJoin>,
+template<class LeftT, class RightT, class BindConstT>
+class Join : public Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardJoin>,
              public LeftT,
-             public RightT
+             public RightT,
+             public BindConstT
 {
 public:
     typedef LeftT LeftType;
     typedef RightT RightType;
+    typedef BindConstT BindConstType;
+
     //! VCard
     typedef VCardJoin VCardType;
     //! Ancestor
-    typedef Variable::IVariable<Join<LeftT, RightT>, Yuni::Default, VCardType> AncestorType;
+    typedef Variable::IVariable<Join<LeftT, RightT, BindConstT>, Yuni::Default, VCardType>
+      AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -121,7 +125,8 @@ public:
         enum
         {
             count = LeftType::template Statistics<CDataLevel, CFile>::count
-                    + RightType::template Statistics<CDataLevel, CFile>::count,
+                    + RightType::template Statistics<CDataLevel, CFile>::count 
+                    + BindConstType::template Statistics<CDataLevel, CFile>::count,
         };
     };
 
@@ -133,6 +138,7 @@ public:
     {
         LeftType::EstimateMemoryUsage(u);
         RightType::EstimateMemoryUsage(u);
+        BindConstType::EstimateMemoryUsage(u);
     }
 
     /*!
@@ -145,6 +151,7 @@ public:
     {
         LeftType::RetrieveVariableList(predicate);
         RightType::RetrieveVariableList(predicate);
+        BindConstType::RetrieveVariableList(predicate);
     }
 
 public:
@@ -152,6 +159,7 @@ public:
     {
         LeftType::initializeFromStudy(study);
         RightType::initializeFromStudy(study);
+        BindConstType::initializeFromStudy(study);
     }
 
     void initializeFromArea(Data::Study* study, Data::Area* area)
@@ -190,6 +198,7 @@ public:
     {
         LeftType::yearBegin(year, numSpace);
         RightType::yearBegin(year, numSpace);
+        BindConstType::yearBegin(year, numSpace);
     }
 
     void yearEndBuildPrepareDataForEachThermalCluster(State& state, uint year)
@@ -216,18 +225,22 @@ public:
     {
         LeftType::yearEnd(year, numSpace);
         RightType::yearEnd(year, numSpace);
+        BindConstType::yearEnd(year, numSpace);
     }
 
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary)
     {
         LeftType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        RightType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
+        BindConstType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
     void weekBegin(State& state)
     {
         LeftType::weekBegin(state);
         RightType::weekBegin(state);
+        BindConstType::weekBegin(state);
     }
 
     void weekForEachArea(State& state, unsigned int numSpace)
@@ -246,6 +259,7 @@ public:
     {
         LeftType::hourBegin(hourInTheYear);
         RightType::hourBegin(hourInTheYear);
+        BindConstType::hourBegin(hourInTheYear);
     }
 
     void hourForEachArea(State& state, unsigned int numSpace)
@@ -270,6 +284,7 @@ public:
     {
         LeftType::hourEnd(state, hourInTheYear);
         RightType::hourEnd(state, hourInTheYear);
+        BindConstType::hourEnd(state, hourInTheYear);
     }
 
     void buildSurveyReport(SurveyResults& results,
@@ -279,6 +294,7 @@ public:
     {
         LeftType::buildSurveyReport(results, dataLevel, fileLevel, precision);
         RightType::buildSurveyReport(results, dataLevel, fileLevel, precision);
+        BindConstType::buildSurveyReport(results, dataLevel, fileLevel, precision);
     }
 
     void buildAnnualSurveyReport(SurveyResults& results,
@@ -289,6 +305,7 @@ public:
     {
         LeftType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
         RightType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
+        BindConstType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
 
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
@@ -346,7 +363,7 @@ public:
 
     Yuni::uint64 memoryUsage() const
     {
-        return LeftType::memoryUsage() + RightType::memoryUsage();
+        return LeftType::memoryUsage() + RightType::memoryUsage() + BindConstType::memoryUsage();
     }
 
     template<class I>
@@ -354,11 +371,13 @@ public:
     {
         LeftType ::provideInformations(infos);
         RightType::provideInformations(infos);
+        BindConstType::provideInformations(infos);
     }
 
     template<class VCardToFindT>
     const double* retrieveHourlyResultsForCurrentYear() const
     {
+        // Is this function ever called ?
         auto* result = LeftType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>();
         return (!result) ? RightType::template retrieveHourlyResultsForCurrentYear<VCardToFindT>()
                          : result;
@@ -393,6 +412,7 @@ public:
     {
         LeftType::localBuildAnnualSurveyReport(results, fileLevel, precision);
         RightType::localBuildAnnualSurveyReport(results, fileLevel, precision);
+        BindConstType::localBuildAnnualSurveyReport(results, fileLevel, precision);
     }
 
 }; // class Join

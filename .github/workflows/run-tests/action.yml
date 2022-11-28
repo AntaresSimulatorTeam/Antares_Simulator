@@ -23,12 +23,15 @@ runs:
            rm batch.zip
 
   - name: Run tests
-    shell: bash
+    # Disable "fail fast" behavior
+    shell: bash {0}
     run: |
            cd _build
            ctest -C Release --output-on-failure -R json
+           echo "RET_CODE=$?" >> GITTHUB_ENV
 
   - name: Clean batches
     shell: bash
     run: |
            rm -rf src/tests/resources/batches/*
+           (exit ${{env.RET_CODE}})

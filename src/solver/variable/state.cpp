@@ -47,7 +47,8 @@ State::State(Data::Study& s) :
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
  optimalSolutionCost2(0.),
- averageOptimizationTime(0.)
+ averageOptimizationTime1(0.),
+ averageOptimizationTime2(0.)
 {
     h2oValueWorkVars.levelUp = 0.;
     h2oValueWorkVars.levelDown = 0.;

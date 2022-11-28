@@ -46,7 +46,6 @@
 #include "menus.h"
 #include <map>
 #include "../windows/inspector/inspector.h"
-#include <antares/memory/memory.h>
 #include <ui/common/lock.h>
 
 #include <wx/wupdlock.h>
@@ -330,9 +329,9 @@ protected:
             // all data (and load all missing files)
             study->areas.each([&](Data::Area& area) {
                 logs.info() << "Preparing the area " << area.name;
-                area.invalidate(true);
+                area.forceReload(true);
             });
-            study->invalidate(true);
+            study->forceReload(true);
             // We have to mark the whole study as modified
             study->markAsModified();
 
@@ -1114,7 +1113,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         return;
 
     GUILocker locker;
-    // Checking for orphan swap files
     auto& mainFrm = *Forms::ApplWnd::Instance();
 
     bool result = false;
@@ -1209,22 +1207,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
             if (preproOnly)
                 cmd << " --generators-only";
 
-            // Temp folder
-            {
-                String cacheFolder = Antares::memory.cacheFolder();
-                if (!cacheFolder.empty())
-                {
-                    if (cacheFolder.last() == '\\' || cacheFolder.last() == '/')
-                        cacheFolder.removeLast();
-                    if (!cacheFolder.empty())
-                    {
-                        cmd << ' ';
-                        tmp.clear() << "--swap-folder=" << cacheFolder;
-                        AppendWithQuotes(cmd, tmp);
-                    }
-                }
-            }
-
             cmd << ' ';
             // The input data
             AppendWithQuotes(cmd, study->folder);
@@ -1290,11 +1272,6 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
         if (!(!studyptr)) // should never be null
             OnStudyChanged(*studyptr);
     }
-
-    // Checking for orphan swap files
-    // We may have to clean the cache folder, if the user canceled the simulation
-    // or if the program crashed
-    mainFrm.timerCleanSwapFiles(4000); // ms
 
     if (result)
     {

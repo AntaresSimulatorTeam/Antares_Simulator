@@ -8,10 +8,14 @@ namespace Optimization
 PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  const std::vector<bool>& VariablesEntieres,
+                                                 std::vector<int>& StatutDesVariables,
+                                                 std::vector<int>& StatutDesContraintes,
                                                  int NumeroOptimisation):
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
+ StatutDesVariables(StatutDesVariables),
+ StatutDesContraintes(StatutDesContraintes),
  NumeroOptimisation(NumeroOptimisation)
 {
 }
@@ -19,6 +23,11 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
 {
     return std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
+}
+
+bool PROBLEME_SIMPLEXE_NOMME::basisExists() const
+{
+    return !StatutDesVariables.empty() && !StatutDesContraintes.empty();
 }
 
 } // namespace Optimization
