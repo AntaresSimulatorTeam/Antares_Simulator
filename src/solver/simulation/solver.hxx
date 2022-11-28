@@ -40,7 +40,6 @@
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
 
-
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>

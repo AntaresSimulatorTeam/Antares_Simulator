@@ -10,7 +10,7 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  const std::vector<bool>& VariablesEntieres,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes,
-                                                 int NumeroOptimisation):
+                                                 int NumeroOptimisation) :
  NomDesVariables(NomDesVariables),
  NomDesContraintes(NomDesContraintes),
  VariablesEntieres(VariablesEntieres),
@@ -22,7 +22,8 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
 
 bool PROBLEME_SIMPLEXE_NOMME::isMIP() const
 {
-    return std::any_of(VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
+    return std::any_of(
+      VariablesEntieres.cbegin(), VariablesEntieres.cend(), [](bool x) { return x; });
 }
 
 bool PROBLEME_SIMPLEXE_NOMME::basisExists() const

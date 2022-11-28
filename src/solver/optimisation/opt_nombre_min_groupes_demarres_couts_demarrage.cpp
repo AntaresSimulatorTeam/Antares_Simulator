@@ -231,7 +231,6 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                     NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
                       = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
                 }
-
             }
         }
     }

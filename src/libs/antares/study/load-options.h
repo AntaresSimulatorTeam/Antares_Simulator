@@ -93,7 +93,7 @@ public:
     OrtoolsSolver ortoolsEnumUsed = OrtoolsSolver::sirius;
 
     //! Parameters string for Ortools solver
-    std::string ortoolsParamsString; 
+    std::string ortoolsParamsString;
 
     //! Activate ortools solver verbosity
     bool ortoolsVerbose;

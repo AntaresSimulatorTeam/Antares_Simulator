@@ -421,7 +421,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 logs.error() << "internal error. Please submit a full bug report";
                 break;
             }
-            }        }
+            }
+        }
     }
 
     int weekDayIndex[8];

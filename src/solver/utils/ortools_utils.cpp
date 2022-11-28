@@ -19,8 +19,7 @@ static void transferVariables(MPSolver* solver,
                               const std::vector<std::string>& NomDesVariables,
                               const std::vector<bool>& VariablesEntieres,
                               int NumeroOptimisation)
-{   
-    
+{
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
     {
@@ -184,8 +183,6 @@ MPSolver* convert_to_MPSolver(
         solver->EnableOutput();
 
     return solver;
-
-
 }
 } // namespace Optimization
 } // namespace Antares
@@ -346,7 +343,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (keepBasis && !Probleme->isMIP())
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
+                                       Probleme->StatutDesContraintes);
         }
     }
 
