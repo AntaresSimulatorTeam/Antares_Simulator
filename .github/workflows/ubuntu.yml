@@ -120,9 +120,9 @@ jobs:
     - name: Build
       run: |
            if [ "${{ matrix.solver-only }}" == "NO" ];
-               cmake --build _build --config release -j2
+             cmake --build _build --config release -j2
            else
-               cmake --build _build --config release --target antares-${GITHUB_REF#refs/*/}-solver -j2
+             cmake --build _build --config release --target antares-${GITHUB_REF#refs/*/}-solver -j2
            fi
 
     - name: Run unfeasibility-related tests
