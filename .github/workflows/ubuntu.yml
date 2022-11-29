@@ -119,10 +119,11 @@ jobs:
 
     - name: Build
       run: |
+           echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
            if [ "${{ matrix.solver-only }}" == "NO" ];
              cmake --build _build --config release -j2
            else
-             cmake --build _build --config release --target antares-${GITHUB_REF#refs/*/}-solver -j2
+             cmake --build _build --config release --target antares-${{ env.RELEASE_VERSION }}-solver -j2
            fi
 
     - name: Run unfeasibility-related tests
