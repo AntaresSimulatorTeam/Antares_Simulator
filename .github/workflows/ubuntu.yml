@@ -84,6 +84,9 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
+    - name: Get Latest Tag
+      uses: WyriHaximus/github-action-get-previous-tag@v1
+
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -122,7 +125,7 @@ jobs:
            if [ "${{ matrix.solver-only }}" == "NO" ]; then
              cmake --build _build --config release -j2
            else
-             cmake --build _build --config release --target antares-${{github.ref_name}}-solver -j2
+             cmake --build _build --config release --target antares-${{ steps.previoustag.outputs.tag }}-solver -j2
            fi
 
     - name: Run unfeasibility-related tests
