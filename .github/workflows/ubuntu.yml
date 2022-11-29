@@ -25,7 +25,7 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (Solver only=${{ matrix.solver-only }}) (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
