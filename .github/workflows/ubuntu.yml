@@ -25,7 +25,7 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build (Solver only: ${{ matrix.solver-only }}) (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
@@ -41,6 +41,7 @@ jobs:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
         ortools-xpress: [ON, OFF]
+        solver-only: [YES, NO]
 
 
     steps:
@@ -118,7 +119,11 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+           if [ "${{ matrix.solver-only }}" == "NO" ];
+               cmake --build _build --config release -j2
+           else
+               cmake --build _build --config release --target antares-${GITHUB_REF#refs/*/}-solver -j2
+           fi
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
