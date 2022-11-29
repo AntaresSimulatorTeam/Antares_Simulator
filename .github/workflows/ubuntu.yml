@@ -41,7 +41,6 @@ jobs:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
         ortools-xpress: [ON, OFF]
-        solver-only: [YES, NO]
 
 
     steps:
@@ -84,9 +83,6 @@ jobs:
         ortools-url: ${{env.ORTOOLS_URL}}
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
-    - name: Get Latest Tag
-      uses: WyriHaximus/github-action-get-previous-tag@v1
-
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
@@ -122,11 +118,7 @@ jobs:
 
     - name: Build
       run: |
-           if [ "${{ matrix.solver-only }}" == "NO" ]; then
              cmake --build _build --config release -j2
-           else
-             cmake --build _build --config release --target antares-${{ steps.previoustag.outputs.tag }}-solver -j2
-           fi
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
