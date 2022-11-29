@@ -165,7 +165,7 @@ INSTALL(EXPORT antares-ui-simulator
 )
 
 import_std_libs(${execname})
-executable_strip(${execname})
+#executable_strip(${execname})
 
 copy_dependency(sirius_solver ${execname})
 
