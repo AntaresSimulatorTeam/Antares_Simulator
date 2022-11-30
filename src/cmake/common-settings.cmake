@@ -218,14 +218,11 @@ endmacro()
 
 macro(executable_strip TARGET)
 	if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
-        set(EXEC_NAME $<TARGET_FILE:${TARGET}>)
 		if(NOT MSVC)
 			if(WIN32)
-				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${EXEC_NAME}
-					COMMENT "Stripping the executable '${EXEC_NAME}'")
+				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${TARGET}>)
 			else()
-				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all ${EXEC_NAME}
-					COMMENT "Stripping the executable '${EXEC_NAME}'")
+				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all $<TARGET_FILE:${TARGET}>)
 			endif()
 		endif()
 	endif()
