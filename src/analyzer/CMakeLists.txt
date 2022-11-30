@@ -57,5 +57,5 @@ target_link_libraries(antares-${ANTARES_PRG_VERSION}-analyzer
 		)
 
 import_std_libs(antares-${ANTARES_PRG_VERSION}-analyzer)
-#executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)
+executable_strip(antares-${ANTARES_PRG_VERSION}-analyzer)
 

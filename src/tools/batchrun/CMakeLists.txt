@@ -48,5 +48,5 @@ target_link_libraries(${execname}
 		)
 
 import_std_libs(${execname})
-#executable_strip(${execname})
+executable_strip(${execname})
 

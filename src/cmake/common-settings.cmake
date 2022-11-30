@@ -216,8 +216,10 @@ macro(import_std_libs  TARGET)
 endmacro()
 
 
-macro(executable_strip TARGET EXEC_NAME)
+macro(executable_strip TARGET)
 	if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
+        get_target_property(EXEC_NAME ${NAME} OUTPUT_NAME)
+        message(STATUS "DEBUG TOTO ${EXEC_NAME}")
 		if(NOT MSVC)
 			if(WIN32)
 				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${EXEC_NAME}.exe

@@ -31,4 +31,4 @@ target_link_libraries(${execname} PRIVATE libantares-solver-constraints-builder)
 target_link_libraries(${execname} PRIVATE ${KIRCHHOFF_CBUILDER_LIBS} )
 
 import_std_libs(${execname})
-#executable_strip(${execname})
+executable_strip(${execname})

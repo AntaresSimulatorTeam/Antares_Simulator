@@ -100,7 +100,7 @@ target_link_libraries(antares-solver
 		)
 
 import_std_libs(antares-solver)
-executable_strip(antares-solver ${exec_name})
+executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
 
