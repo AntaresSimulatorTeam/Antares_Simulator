@@ -218,7 +218,7 @@ endmacro()
 
 macro(executable_strip TARGET)
 	if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
-        get_target_property(EXEC_NAME ${NAME} OUTPUT_NAME)
+        get_target_property(EXEC_NAME ${TARGET} OUTPUT_NAME)
         message(STATUS "DEBUG TOTO ${EXEC_NAME}")
 		if(NOT MSVC)
 			if(WIN32)
