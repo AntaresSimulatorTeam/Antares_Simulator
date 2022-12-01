@@ -63,36 +63,20 @@ public:
     enum HydroclusterGroup
     {
         //! Wind offshore
-        windOffShore = 0,
-        //! Wind onshore
-        windOnShore,
-        //! Concentration solar
-        thermalSolar,
-        //! PV solar
-        PVSolar,
-        //! Rooftop solar
-        rooftopSolar,
-        //! Other 1
-        renewableOther1,
-        //! Other 2
-        renewableOther2,
-        //! Other 3
-        renewableOther3,
-        //! Other 4
-        renewableOther4,
-
+        hydroclusterGroup = 0,
         //! The highest value
         groupMax
     };
 
-       enum TimeSeriesMode
+    enum TimeSeriesMode
     {
-        //! TS contain power generation for each unit
-        //! Nominal capacity is *ignored*
-        powerGeneration = 0,
-        //! TS contain production factor for each unit
-        //! Nominal capacity is used as a multiplicative factor
-        productionFactor
+        // //! TS contain power generation for each unit
+        // //! Nominal capacity is *ignored*
+        // powerGeneration = 0,
+        // //! TS contain production factor for each unit
+        // //! Nominal capacity is used as a multiplicative factor
+        // productionFactor
+        hydroclusterMode
     }; 
     enum
     {

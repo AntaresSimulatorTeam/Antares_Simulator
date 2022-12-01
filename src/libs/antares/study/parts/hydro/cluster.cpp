@@ -183,60 +183,60 @@ void Data::HydroclusterCluster::setGroup(Data::ClusterName newgrp)
 {
     if (not newgrp)
     {
-        groupID = renewableOther1;
+        groupID = hydroclusterGroup;
         pGroup.clear();
         return;
     }
     pGroup = newgrp;
     newgrp.toLower();
 
-    if (newgrp == "solar thermal")
-    {
-        groupID = thermalSolar;
-        return;
-    }
-    if (newgrp == "solar pv")
-    {
-        groupID = PVSolar;
-        return;
-    }
-    if (newgrp == "solar rooftop")
-    {
-        groupID = rooftopSolar;
-        return;
-    }
-    if (newgrp == "wind onshore")
-    {
-        groupID = windOnShore;
-        return;
-    }
-    if (newgrp == "wind offshore")
-    {
-        groupID = windOffShore;
-        return;
-    }
-    if (newgrp == "other renewable 1")
-    {
-        groupID = renewableOther1;
-        return;
-    }
-    if (newgrp == "other renewable 2")
-    {
-        groupID = renewableOther2;
-        return;
-    }
-    if (newgrp == "other renewable 3")
-    {
-        groupID = renewableOther3;
-        return;
-    }
-    if (newgrp == "other renewable 4")
-    {
-        groupID = renewableOther4;
-        return;
-    }
+    // if (newgrp == "solar thermal")
+    // {
+    //     groupID = thermalSolar;
+    //     return;
+    // }
+    // if (newgrp == "solar pv")
+    // {
+    //     groupID = PVSolar;
+    //     return;
+    // }
+    // if (newgrp == "solar rooftop")
+    // {
+    //     groupID = rooftopSolar;
+    //     return;
+    // }
+    // if (newgrp == "wind onshore")
+    // {
+    //     groupID = windOnShore;
+    //     return;
+    // }
+    // if (newgrp == "wind offshore")
+    // {
+    //     groupID = windOffShore;
+    //     return;
+    // }
+    // if (newgrp == "other renewable 1")
+    // {
+    //     groupID = renewableOther1;
+    //     return;
+    // }
+    // if (newgrp == "other renewable 2")
+    // {
+    //     groupID = renewableOther2;
+    //     return;
+    // }
+    // if (newgrp == "other renewable 3")
+    // {
+    //     groupID = renewableOther3;
+    //     return;
+    // }
+    // if (newgrp == "other renewable 4")
+    // {
+    //     groupID = renewableOther4;
+    //     return;
+    // }
     // assigning a default value
-    groupID = renewableOther1;
+    groupID = hydroclusterGroup;
 }
 bool Data::HydroclusterCluster::invalidate(bool reload) const
 {
@@ -294,24 +294,26 @@ const char* Data::HydroclusterCluster::GroupName(enum HydroclusterGroup grp)
 {
     switch (grp)
     {
-    case windOffShore:
-        return "Wind offshore";
-    case windOnShore:
-        return "Wind onshore";
-    case thermalSolar:
-        return "Solar thermal";
-    case PVSolar:
-        return "Solar PV";
-    case rooftopSolar:
-        return "Solar rooftop";
-    case renewableOther1:
-        return "Other RES 1";
-    case renewableOther2:
-        return "Other RES 2";
-    case renewableOther3:
-        return "Other RES 3";
-    case renewableOther4:
-        return "Other RES 4";
+    // case windOffShore:
+    //     return "Wind offshore";
+    // case windOnShore:
+    //     return "Wind onshore";
+    // case thermalSolar:
+    //     return "Solar thermal";
+    // case PVSolar:
+    //     return "Solar PV";
+    // case rooftopSolar:
+    //     return "Solar rooftop";
+    // case renewableOther1:
+    //     return "Other RES 1";
+    // case renewableOther2:
+    //     return "Other RES 2";
+    // case renewableOther3:
+    //     return "Other RES 3";
+    // case renewableOther4:
+    //     return "Other RES 4";
+    case hydroclusterGroup:
+        return "hydroclusterGroup";
     case groupMax:
         return "";
     }
@@ -320,28 +322,28 @@ const char* Data::HydroclusterCluster::GroupName(enum HydroclusterGroup grp)
 
 bool Data::HydroclusterCluster::setTimeSeriesModeFromString(const YString& value)
 {
-    if (value == "power-generation")
-    {
-        tsMode = powerGeneration;
-        return true;
-    }
-    if (value == "production-factor")
-    {
-        tsMode = productionFactor;
-        return true;
-    }
+    // if (value == "power-generation")
+    // {
+    //     tsMode = powerGeneration;
+    //     return true;
+    // }
+    // if (value == "production-factor")
+    // {
+    //     tsMode = productionFactor;
+    //     return true;
+    // }
     return false;
 }
 
 YString Data::HydroclusterCluster::getTimeSeriesModeAsString() const
 {
-    switch (tsMode)
-    {
-    case powerGeneration:
-        return "power-generation";
-    case productionFactor:
-        return "production-factor";
-    }
+    // switch (tsMode)
+    // {
+    // case powerGeneration:
+    //     return "power-generation";
+    // case productionFactor:
+    //     return "production-factor";
+    // }
     return "unknown";
 }
 
@@ -353,13 +355,13 @@ double HydroclusterCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepI
     assert(timeStepIndex < series->series.height);
     assert(timeSeriesIndex < series->series.width);
     const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
-    switch (tsMode)
-    {
-    case powerGeneration:
-        return tsValue;
-    case productionFactor:
-        return unitCount * nominalCapacity * tsValue;
-    }
+    // switch (tsMode)
+    // {
+    // case powerGeneration:
+    //     return tsValue;
+    // case productionFactor:
+    //     return unitCount * nominalCapacity * tsValue;
+    // }
     return 0.;
 }
 
