@@ -275,8 +275,7 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
         }
 
         // Default is first available solver
-        options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
-          availableSolverList.front());
+        MPSolver::ParseSolverType(availableSolverList.front(), &options.ortoolsEnumUsed);
 
         // Check if solver is available
         bool found
@@ -286,13 +285,12 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 
         if (found)
         {
-            options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
-              options.ortoolsSolver);
+            MPSolver::ParseSolverType(options.ortoolsSolver, &options.ortoolsEnumUsed);
         }
         else
         {
             logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
+                           << "'. reset to " << (std::string)operations_research::ToString(options.ortoolsEnumUsed);
         }
     }
 }

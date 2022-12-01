@@ -353,7 +353,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsEnumUsed = operations_research::MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
 
     resultFormat = legacyFilesDirectories;
 
@@ -1608,7 +1608,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
+        logs.info() << "  :: ortools solver " << (std::string)operations_research::ToString(ortoolsEnumUsed)
                     << " used for problem resolution";
     }
 }
@@ -1981,3 +1981,29 @@ bool Parameters::RenewableGeneration::isClusters() const
 
 } // namespace Data
 } // namespace Antares
+
+
+//FIXME VPA improve this so solve include errors
+void Antares::Date::Calendar::reset(const Data::Parameters& parameters)
+{
+    reset(parameters, parameters.leapYear);
+}
+
+void Antares::Date::Calendar::reset(const Data::Parameters& parameters, bool leapyear)
+{
+    // retrieve the new settings
+    settings.weekday1rstJanuary = parameters.dayOfThe1stJanuary;
+    settings.firstMonth = parameters.firstMonthInYear;
+    settings.weekFirstDay = parameters.firstWeekday;
+
+    // We do not retrieve directly the `leapyear` parameters
+    // A simulation should be made in ignoring this parameter (aka false)
+    // but the outputs should rely on it (for printing).
+    // It goes the same for the GUI : since it is _merely_ printing,
+    // it should be taken into consideration.
+    // Consequently, we will let the calling code specifying this value
+    settings.leapYear = leapyear; // parameters.leapYear;
+
+    // re-initialize the calendar with the new settings
+    reset();
+}

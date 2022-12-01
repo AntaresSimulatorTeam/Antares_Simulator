@@ -126,8 +126,7 @@ MPSolver* convert_to_MPSolver(
     auto& study = *Data::Study::Current::Get();
 
     // Define solver used depending on study option
-    MPSolver::OptimizationProblemType solverType
-      = OrtoolsUtils().getLinearOptimProblemType(study.parameters.ortoolsEnumUsed);
+    MPSolver::OptimizationProblemType solverType = study.parameters.ortoolsEnumUsed;
 
     // Create the linear solver instance
     MPSolver* solver = new MPSolver("simple_lp_program", solverType);
@@ -471,16 +470,40 @@ std::list<OrtoolsSolver> OrtoolsUtils::getAvailableOrtoolsSolver()
 
 std::list<std::string> OrtoolsUtils::getAvailableOrtoolsSolverName()
 {
+    /* std::list<std::string> result; */
+
+    /* std::list<OrtoolsSolver> solverList = getAvailableOrtoolsSolver(); */
+
+    /* for (OrtoolsSolver solver : solverList) */
+    /* { */
+    /*     result.push_back(Enum::toString(solver)); */
+    /* } */
+
+    /* return result; */
+
     std::list<std::string> result;
 
-    std::list<OrtoolsSolver> solverList = getAvailableOrtoolsSolver();
+    if (MPSolver::SupportsProblemType(MPSolver::XPRESS_LINEAR_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::XPRESS_LINEAR_PROGRAMMING));
+    if (MPSolver::SupportsProblemType(MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING));
 
-    for (OrtoolsSolver solver : solverList)
-    {
-        result.push_back(Enum::toString(solver));
-    }
+    if (MPSolver::SupportsProblemType(MPSolver::SIRIUS_LINEAR_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::SIRIUS_LINEAR_PROGRAMMING));
+    if (MPSolver::SupportsProblemType(MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING));
 
-    return result;
+    if (MPSolver::SupportsProblemType(MPSolver::CLP_LINEAR_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::CLP_LINEAR_PROGRAMMING));
+    if (MPSolver::SupportsProblemType(MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::CBC_MIXED_INTEGER_PROGRAMMING));
+
+    if (MPSolver::SupportsProblemType(MPSolver::GLPK_LINEAR_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::GLPK_LINEAR_PROGRAMMING));
+    if (MPSolver::SupportsProblemType(MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING))
+        result.push_back((std::string)operations_research::ToString(MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING));
+
+   return result;
 }
 
 MPSolver::OptimizationProblemType OrtoolsUtils::getLinearOptimProblemType(

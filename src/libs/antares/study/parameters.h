@@ -40,7 +40,9 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
+/* #include <antares/study/OrtoolsSolver.hpp> */
+#include <ortools/linear_solver/linear_solver.h>
+
 
 using namespace std;
 
@@ -544,7 +546,7 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    operations_research::MPSolver::OptimizationProblemType ortoolsEnumUsed;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;

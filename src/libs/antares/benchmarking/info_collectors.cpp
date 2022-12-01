@@ -6,7 +6,7 @@
 
 using namespace Antares::Data;
 
-namespace Benchmarking 
+namespace Benchmarking
 {
 	// Collecting data study
 	// ---------------------------
@@ -131,7 +131,7 @@ namespace Benchmarking
         std::string ortoolsSolver = "none";
         if (ortoolsUsed)
         {
-            ortoolsSolver = Enum::toString<OrtoolsSolver>(study_.parameters.ortoolsEnumUsed);
+            ortoolsSolver = operations_research::ToString(study_.parameters.ortoolsEnumUsed);
         }
         file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
     }
