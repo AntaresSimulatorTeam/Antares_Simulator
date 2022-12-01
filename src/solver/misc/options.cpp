@@ -56,8 +56,7 @@ using namespace Antares::Data;
 
 static std::string availableOrToolsSolversString()
 {
-    const std::list<std::string> availableSolverList
-      = OrtoolsUtils().getAvailableOrtoolsSolverName();
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
     std::string availableSolverListStr;
     for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
     {
@@ -267,8 +266,7 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
     // ortools solver
     if (options.ortoolsUsed)
     {
-        const std::list<std::string> availableSolverList
-          = OrtoolsUtils().getAvailableOrtoolsSolverName();
+        const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
         if (availableSolverList.empty())
         {
             throw Error::InvalidSolver(options.ortoolsSolver);
