@@ -49,13 +49,13 @@ if(Python3_Interpreter_FOUND)
       # TODO : add more study batches
       add_test(
         NAME unfeasible
-        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME json
-        COMMAND Python3::Interpreter -m pytest -n 2 -m json --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        COMMAND Python3::Interpreter -m pytest -n 2 -m json --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
