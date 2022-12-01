@@ -1,0 +1,24 @@
+name: Publish docker images
+on:
+  push:
+    branches:
+      - 'docker/*'
+
+jobs:
+  docker_publish:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master 
+
+    - name: Docker file push
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: antaresrte/rte-antares
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        workdir: docker
+        dockerfile: centos7-basic-requirements
+        cache: true
+        tags: centos7-simulator

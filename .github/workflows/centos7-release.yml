@@ -7,6 +7,7 @@ on:
 env:
   GITHUB_TOKEN: ${{ github.token }}
   
+jobs:
   build:
 
     runs-on: ubuntu-latest
