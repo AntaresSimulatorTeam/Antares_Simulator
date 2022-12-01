@@ -189,13 +189,13 @@ _**Notes**_
 
 ### Objective function
 
-- Minimize [∑(ENS/PTO)$^2$ + ∑(hurdle_cost_direct x flow_direct) + ∑(hurdle_cost_indirect x flow_indirect)] 
+- Minimize [∑(ENS$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct) + ∑(hurdle_cost_indirect x flow_indirect)] 
 
 The 2 latest terms are introduced to minimize loop flows in the considering domain.   
 In order to assess the quality of the CSR solution additional verification can be imposed by activating GUI option “Check CSR cost function value prior and after CSR optimization”. Values of the objective function prior to and after quadratic optimization will be calculated and compared. If the objective function value after the quadratic optimization has decreased, the new CSR solution will be accepted and presented in the Antares output. However, if after quadratic optimization the objective function value has increased (or stayed the same), LMR solution will be adopted as the final one and warning will be logged out with the appropriate information (year, hour cost prior to quad optimization, cost after quadratic optimization). 
 
-- QUAD$_0$ = [∑(ENS_init/PTO)$^2$ + ∑(hurdle_cost_direct x flow_direct_init) + ∑(hurdle_cost_indirect x flow_indirect_init)] 
-- QUAD$_1$ = [∑(ENS_final/PTO)$^2$ + ∑(hurdle_cost_direct x flow_direct_final) + ∑(hurdle_cost_indirect x flow_indirect_final)] 
+- QUAD$_0$ = [∑(ENS_init$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct_init) + ∑(hurdle_cost_indirect x flow_indirect_init)] 
+- QUAD$_1$ = [∑(ENS_final$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct_final) + ∑(hurdle_cost_indirect x flow_indirect_final)] 
  
 If:
 
