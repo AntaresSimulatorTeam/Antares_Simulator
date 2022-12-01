@@ -31,8 +31,6 @@
 #include <yuni/core/string.h>
 #include "parameters.h"
 
-#include <antares/study/OrtoolsSolver.hpp>
-
 namespace Antares
 {
 namespace Data

@@ -2,7 +2,6 @@
 
 #include <map>
 
-#include <antares/study/OrtoolsSolver.hpp>
 #include <i_writer.h>
 
 #include "ortools/linear_solver/linear_solver.h"
