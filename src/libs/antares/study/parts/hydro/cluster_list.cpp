@@ -72,7 +72,7 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
             if (not Math::Zero(c.unitCount))
                 s->add("unitCount", c.unitCount);
 
-            s->add("ts-interpretation", c.getTimeSeriesModeAsString());
+            // s->add("ts-interpretation", c.getTimeSeriesModeAsString());
         });
 
         // Write the ini file
@@ -88,31 +88,28 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
     return true;
 }
 
-static bool ClusterLoadFromProperty(HydroclusterCluster& cluster, const IniFile::Property* p)
+static bool ClusterLoadFromProperty(HydroclusterCluster& cluster, const IniFile::Property* p) //CF13
 {
-    if (p->key.empty())
-        return false;
+    // if (p->key.empty())
+    //     return false;
 
-    if (p->key == "group")
-    {
-        cluster.setGroup(p->value);
-        return true;
-    }
+    // if (p->key == "group")
+    // {
+    //     cluster.setGroup(p->value);
+    //     return true;
+    // }
 
-    if (p->key == "name")
-        return true;
+    // if (p->key == "name")
+    //     return true;
 
-    if (p->key == "enabled")
-        return p->value.to<bool>(cluster.enabled);
+    // if (p->key == "enabled")
+    //     return p->value.to<bool>(cluster.enabled);
 
-    if (p->key == "unitcount")
-        return p->value.to<uint>(cluster.unitCount);
+    // if (p->key == "unitcount")
+    //     return p->value.to<uint>(cluster.unitCount);
 
-    if (p->key == "nominalcapacity")
-        return p->value.to<double>(cluster.nominalCapacity);
-
-    if (p->key == "ts-interpretation")
-        return cluster.setTimeSeriesModeFromString(p->value);
+    // if (p->key == "nominalcapacity")
+    //     return p->value.to<double>(cluster.nominalCapacity);
 
     // The property is unknown
     return false;
@@ -138,11 +135,11 @@ static bool ClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (not ClusterLoadFromProperty(cluster, property))
-            {
-                logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
-                               << property->key << "`: The property is unknown and ignored";
-            }
+            // if (not ClusterLoadFromProperty(cluster, property))
+            // {
+            //     logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
+            //                    << property->key << "`: The property is unknown and ignored";
+            // }
         }
         // update the minUpDownTime
     }

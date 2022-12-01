@@ -33,6 +33,7 @@
 #include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
+#include <antares/study/parts/hydro/containerhydrocluster.h>
 
 using namespace Yuni;
 

@@ -253,6 +253,9 @@ source_group("study\\part\\wind" FILES ${SRC_STUDY_PART_WIND})
 set(SRC_STUDY_PART_HYDRO
 	study/parts/hydro/container.h
 	study/parts/hydro/container.cpp
+	study/parts/hydro/containerhydrocluster.h
+	study/parts/hydro/containerhydrocluster.cpp
+	study/parts/hydro/containerhydrocluster.hxx
 	study/parts/hydro/series.h
 	study/parts/hydro/series.hxx
 	study/parts/hydro/series.cpp
@@ -261,7 +264,6 @@ set(SRC_STUDY_PART_HYDRO
 	study/parts/hydro/allocation.h
 	study/parts/hydro/allocation.hxx
 	study/parts/hydro/allocation.cpp
-	study/parts/hydro/container.hxx
 	study/parts/hydro/cluster.h
 	study/parts/hydro/cluster.hxx
 	study/parts/hydro/cluster.cpp

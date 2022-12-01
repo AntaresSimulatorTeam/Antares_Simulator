@@ -147,7 +147,7 @@ public:
 }; // class DataSeriesHydro
 
 
-class DataSeriesHydrocluster : public DataSeriesCommon //### todo DataSeriesHydrocluster method
+class DataSeriesHydrocluster : public DataSeriesCommon //### todo DataSeriesHydrocluster method filled in with PartHydro
 {
 public:
     //! \name Constructor

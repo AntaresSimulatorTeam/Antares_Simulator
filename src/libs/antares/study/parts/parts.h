@@ -39,6 +39,7 @@
 #include "hydro/prepro.h"
 #include "hydro/series.h"
 #include "hydro/container.h"
+#include "hydro/containerhydrocluster.h"
 #include "hydro/cluster.h"
 
 // Wind

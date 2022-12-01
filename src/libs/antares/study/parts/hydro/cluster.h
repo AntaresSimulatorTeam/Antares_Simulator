@@ -34,6 +34,9 @@
 #include "../../fwd.h"
 #include "series.h"
 
+#include "prepro.h"
+#include "allocation.h"
+
 namespace Antares
 {
 namespace Data
@@ -49,10 +52,13 @@ enum HydroclusterModulation
 */
 
 /*
-** \brief A single renewable cluster
+** \brief A single Hydrocluster  //### Todo HydroclusterCluster is filled in with PartHydro
+** //CR13 todo note there is a list of Hydrocluster inside PartHydrocluster in area,
+** //CR13 : one HydroclusterCluster contains one DataSeriesHydrocluster (ror, storage, mingen)
 */
 class HydroclusterCluster final : public Cluster
 {
+
 public:
     enum HydroclusterGroup
     {
@@ -79,7 +85,7 @@ public:
         groupMax
     };
 
-    enum TimeSeriesMode
+       enum TimeSeriesMode
     {
         //! TS contain power generation for each unit
         //! Nominal capacity is *ignored*
@@ -87,11 +93,36 @@ public:
         //! TS contain production factor for each unit
         //! Nominal capacity is used as a multiplicative factor
         productionFactor
+    }; 
+    enum
+    {
+        //! The minimum value
+        minimum = 0,
+        //! The average value
+        average,
+        //! The maximum value
+        maximum,
     };
 
-    //! Set of hydrocluster clusters
-    using Set = std::set<HydroclusterCluster*, CompareClusterName>;
+    enum powerDailyE
+    {
+        //! Generated max power
+        genMaxP = 0,
+        //! Generated max energy
+        genMaxE,
+        //! Pumping max Power
+        pumpMaxP,
+        // Pumping max Energy
+        pumpMaxE,
+    };
 
+    enum weeklyHydroMod
+    {
+        //! Weekly generating modulation
+        genMod = 0,
+        //! Weekly pumping modulation
+        pumpMod,
+    };
     /*!
     ** \brief Get the group name string
     ** \return A valid CString
@@ -110,6 +141,35 @@ public:
     //@}
 
     /*!
+    ** \brief Load data for hydro container from a folder
+    **
+    ** \param folder The targer folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool LoadFromFolder(Study& study, const AnyString& folder);
+
+    /*!
+    ** \brief Save data from several containers to a folder (except data for the prepro and
+    *time-series)
+    **
+    ** \param l List of areas
+    ** \param folder The targer folder
+    ** \return A non-zero value if the operation succeeded, 0 otherwise
+    */
+    static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
+
+public:
+    /*!
+    ** \brief Reset to default values
+    **
+    ** This method should only be called from the GUI
+    */
+    void reset() override;
+    void setGroup(Data::ClusterName newgrp) override;
+
+    void copyFrom(const HydroclusterCluster& cluster);
+
+    /*!
     ** \brief Invalidate all data associated to the hydrocluster cluster
     */
     bool invalidate(bool reload) const override;
@@ -119,30 +179,85 @@ public:
     */
     void markAsModified() const override;
 
-    /*!
-    ** \brief Reset to default values
-    **
-    ** This method should only be called from the GUI
-    */
-    void reset() override;
+public:
+    //! Inter-daily breakdown (previously called Smoothing Factor or alpha)
+    double interDailyBreakdown;
+    //! Intra-daily modulation
+    double intraDailyModulation;
 
-    //! Set the group
-    void setGroup(Data::ClusterName newgrp) override;
-    //@}
+    //! Intermonthly breakdown
+    double intermonthlyBreakdown;
 
+    //! Enabled reservoir management
+    bool reservoirManagement;
+
+    //! Following load modulation
+    bool followLoadModulations;
+    //! Use water values
+    bool useWaterValue;
+    //! Hard bound on rule curves
+    bool hardBoundsOnRuleCurves;
+    //! Use heuristic target
+    bool useHeuristicTarget;
+    //! Reservoir capacity (MWh)
+    double reservoirCapacity;
+    // gp : pb - initializeReservoirLevelDate must be an enum from january (= 0) to december (= 11)
+    //! Initialize reservoir level date (month)
+    int initializeReservoirLevelDate;
+    //! Use Leeway
+    bool useLeeway;
+    //! Power to level modulations
+    bool powerToLevel;
+    //! Leeway low bound
+    double leewayLowerBound;
+    //! Leeway upper bound
+    double leewayUpperBound;
+    //! Puming efficiency
+    double pumpingEfficiency;
+    //! Daily max power ({generating max Power, generating max energy, pumping max power, pumping
+    //! max energy}x365)
+    Matrix<double, double> maxPower;
+    //! Credit Modulation (default 0, 101 * 2)
+    Matrix<double, double> creditModulation;
+
+    //! Daily Inflow Patern ([default 1, 0<x<dayspermonth]x365)
+    Matrix<double> inflowPattern;
+
+    // Useful for solver RAM estimation
+    bool hydroModulable;
+
+    //! Daily reservoir level ({min,avg,max}x365)
+    Matrix<double> reservoirLevel;
+
+    //! Daily water value ({0,1,2%...100%}x365)
+    Matrix<double> waterValues;
+
+    //! Hydro allocation, from other areas
+    HydroAllocation allocation;
+
+    //! Data for the pre-processor
+    PreproHydro* prepro;
+    //! Data for time-series
+    DataSeriesHydrocluster* series;
+
+    // DataSeriesHydro* series; //CR13 1124
+
+
+public:
+
+    //! Set of hydrocluster clusters
+    using Set = std::set<HydroclusterCluster*, CompareClusterName>;
+    //! Series
+
+    friend class HydroclusterClusterList;
+
+public:
     /*!
     ** \brief Check and fix all values of a hydrocluster cluster
     **
     ** \return False if an error has been detected and fixed with a default value
     */
     bool integrityCheck() override;
-
-    /*!
-    ** \brief Copy data from another cluster
-    **
-    ** The name and the id will remain untouched.
-    */
-    void copyFrom(const HydroclusterCluster& cluster);
 
     //! \name Memory management
     //@{
@@ -151,11 +266,7 @@ public:
     */
     void flush() override;
 
-    /*!
-    ** \brief Group ID as an uint
-    */
     uint groupId() const override;
-
     /*!
     ** \brief Get the memory consummed by the hydrocluster cluster (in bytes)
     */
@@ -171,21 +282,10 @@ public:
     */
     double valueAtTimeStep(uint timeSeriesIndex, uint timeStepIndex) const;
 
-public:
-    /*!
-    ** \brief The group ID
-    **
-    ** This value is computed from the field 'group' in 'group()
-    ** \see group()
-    */
+public:    
     enum HydroclusterGroup groupID;
 
     enum TimeSeriesMode tsMode;
-    //! Series
-    DataSeriesHydrocluster* series;
-
-    friend class HydroclusterClusterList;
-
 private:
     unsigned int precision() const override;
 }; // class HydroclusterCluster

@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/parts/hydro/container.h>
+#include <antares/study/parts/hydro/containerhydrocluster.h>
 
 namespace Antares
 {
