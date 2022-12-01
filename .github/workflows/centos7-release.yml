@@ -29,6 +29,15 @@ jobs:
       run: |
            git submodule update --init --recursive src
            
+    - name: Get antares-deps
+      run: |
+           ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
+           cd /
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release-solver.tar.gz
+           tar -xvf rte-antares-deps-centos7-Release-solver.tar.gz
+           rm -rf rte-antares-deps-centos7-Release-solver.tar.gz
+
+
     - name: Configure
       run: |
            source /opt/rh/devtoolset-9/enable
