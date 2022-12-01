@@ -51,7 +51,7 @@ double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
     if (priceTakingOrders <= 0.0)
         return 0.0;
     else
-        return (1 / (priceTakingOrders * priceTakingOrders));
+        return (1 / priceTakingOrders);
 }
 
 void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
