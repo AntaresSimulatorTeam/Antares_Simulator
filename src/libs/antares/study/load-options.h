@@ -90,7 +90,7 @@ public:
     bool ortoolsUsed;
 
     //! Ortool solver used for simulation
-    operations_research::MPSolver::OptimizationProblemType ortoolsEnumUsed = operations_research::MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+    operations_research::MPSolver::OptimizationProblemType ortoolsEnumUsed = operations_research::MPSolver::SIRIUS_LINEAR_PROGRAMMING;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

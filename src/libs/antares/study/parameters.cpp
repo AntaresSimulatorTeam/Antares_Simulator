@@ -353,7 +353,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = operations_research::MPSolver::OptimizationProblemType::SIRIUS_LINEAR_PROGRAMMING;
+    ortoolsEnumUsed = operations_research::MPSolver::SIRIUS_LINEAR_PROGRAMMING;
 
     resultFormat = legacyFilesDirectories;
 

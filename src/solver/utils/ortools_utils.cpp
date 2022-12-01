@@ -352,25 +352,18 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 {
     std::list<std::string> result;
 
-    if (MPSolver::SupportsProblemType(MPSolver::XPRESS_LINEAR_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::XPRESS_LINEAR_PROGRAMMING));
-    if (MPSolver::SupportsProblemType(MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING));
-
-    if (MPSolver::SupportsProblemType(MPSolver::SIRIUS_LINEAR_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::SIRIUS_LINEAR_PROGRAMMING));
-    if (MPSolver::SupportsProblemType(MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING));
-
-    if (MPSolver::SupportsProblemType(MPSolver::CLP_LINEAR_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::CLP_LINEAR_PROGRAMMING));
-    if (MPSolver::SupportsProblemType(MPSolver::CBC_MIXED_INTEGER_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::CBC_MIXED_INTEGER_PROGRAMMING));
-
-    if (MPSolver::SupportsProblemType(MPSolver::GLPK_LINEAR_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::GLPK_LINEAR_PROGRAMMING));
-    if (MPSolver::SupportsProblemType(MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING))
-        result.push_back((std::string)operations_research::ToString(MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING));
+    for (auto solverType : {MPSolver::XPRESS_LINEAR_PROGRAMMING,
+        MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING,
+        MPSolver::SIRIUS_LINEAR_PROGRAMMING,
+        MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING,
+        MPSolver::CLP_LINEAR_PROGRAMMING,
+        MPSolver::CBC_MIXED_INTEGER_PROGRAMMING,
+        MPSolver::GLPK_LINEAR_PROGRAMMING,
+        MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING})
+    {
+        if (MPSolver::SupportsProblemType(solverType))
+            result.push_back((std::string)ToString(solverType));
+    }
 
     return result;
 }
