@@ -172,7 +172,7 @@ _**Notes**_
 - _“Spillage” variable and “Spillage_init” parameter have been introduced only to deal with some situations for which “Flowbased” constraints, combining with adequacy patch rules, lead to an increase of Total ENS over the different nodes “2”. Such increase of Total ENS could happen for 2 reasons:_ 
 
    - _We have new violations of Local Matching rule and the optimal solution found by Antares is no longer a valid solution, regards to this rule;_ 
-   - _The curtailment sharing rule target is to minimize ∑(ENS/PTO)$^2$ and such objective is not exactly equivalent than minimizing Total ENS._  
+   - _The curtailment sharing rule target is to minimize ∑(ENS$^2$/PTO) and such objective is not exactly equivalent than minimizing Total ENS._  
 
   _As a matter of fact, if we sum over all nodes “2” the relation induced by node balancing conservation, as the sum of all “net_position” is null, it leads to:_   
 
