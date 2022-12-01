@@ -73,9 +73,9 @@ int DataSeriesWindSaveToFolder(DataSeriesWind* d, const AreaName& areaID, const 
     return ret;
 }
 
-bool DataSeriesWind::invalidate(bool reload) const
+bool DataSeriesWind::forceReload(bool reload) const
 {
-    return series.invalidate(reload);
+    return series.forceReload(reload);
 }
 
 void DataSeriesWind::markAsModified() const

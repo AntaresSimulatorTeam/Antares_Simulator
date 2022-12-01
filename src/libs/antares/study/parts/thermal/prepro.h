@@ -70,7 +70,7 @@ public:
     explicit PreproThermal(std::shared_ptr<const ThermalCluster> cluster);
     //@}
 
-    bool invalidate(bool reload) const;
+    bool forceReload(bool reload) const;
 
     void markAsModified() const;
 

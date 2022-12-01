@@ -75,9 +75,6 @@ jobs:
       XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
-    outputs:
-        is_release: ${{steps.release_flag.outputs.is_release}}
-
     runs-on: ubuntu-latest
     needs:
       - docker_publish
@@ -93,11 +90,6 @@ jobs:
       run: |
           git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
 
-    - name: Export release flag
-      id: release_flag
-      run: |
-        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
-
     - name: Init submodule
       run: |
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
@@ -111,10 +103,10 @@ jobs:
     - name: Config OR-Tools URL
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
             echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
           else
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
+            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
             echo "LABEL=" >> $GITHUB_ENV
           fi
 
@@ -190,15 +182,15 @@ jobs:
     name: Publish assets
     needs: build
     runs-on: ubuntu-latest
-    if: ${{needs.build.outputs.is_release == 'true'}}
+
     steps:
     - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
 
-    - name: List artifacts
-      run: ls -R
 
     - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.3.0
       env:
           GITHUB_TOKEN: ${{ github.token }}

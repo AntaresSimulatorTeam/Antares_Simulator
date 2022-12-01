@@ -404,7 +404,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
             (*i)->displayComments = v;
             OnStudyLinkChanged(*i);
         }
-        mainFrm.map()->invalidate();
+        mainFrm.map()->forceReload();
         mainFrm.map()->refresh();
         return true;
     }
@@ -418,7 +418,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
             (*i)->comments = s;
             OnStudyLinkChanged(*i);
         }
-        mainFrm.map()->invalidate();
+        mainFrm.map()->forceReload();
         mainFrm.map()->refresh();
         return true;
     }

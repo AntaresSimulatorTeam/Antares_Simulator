@@ -285,13 +285,24 @@ MPSolver* ORTOOLS_ConvertIfNeeded(const Antares::Optimization::PROBLEME_SIMPLEXE
 }
 
 MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probleme,
-                           MPSolver* solver)
+                           MPSolver* solver,
+                           bool keepBasis)
 {
     MPSolverParameters params;
+    // Provide an initial simplex basis, if any
+    if (Probleme->basisExists() && !Probleme->isMIP())
+    {
+        solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+    }
 
     if (solveAndManageStatus(solver, Probleme->ExistenceDUneSolution, params))
     {
         extract_from_MPSolver(solver, Probleme);
+        // Save the final simplex basis for next resolutions
+        if (keepBasis && !Probleme->isMIP())
+        {
+            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+        }
     }
 
     return solver;
@@ -353,7 +364,7 @@ OrtoolsUtils::OrtoolsUtils()
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::coin] = "cbc";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_lp";
-    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress_mip";
+    _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::xpress] = "xpress";
 
     _solverLinearProblemOptimStringMap[OrtoolsSolver::glop_scip] = "glop";
     _solverMixedIntegerProblemOptimStringMap[OrtoolsSolver::glop_scip] = "scip";

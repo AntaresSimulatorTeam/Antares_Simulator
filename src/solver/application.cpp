@@ -55,8 +55,8 @@ void printSolvers()
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && hpMode == Antares::Data::HydroPricingMode::hpMILP)
+    using namespace Antares::Data;
+    if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
     {
         throw Error::IncompatibleOptRangeHydroPricing();
     }
@@ -171,15 +171,6 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
         }
     }
 }
-
-void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
-{
-    if (ortoolsUsed && splitExportedMPS)
-    {
-        throw Error::InvalidParametersORTools_SplitMPS();
-    }
-}
-
 } // namespace
 
 namespace Antares
@@ -298,8 +289,6 @@ void Application::prepare(int argc, char* argv[])
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
-
-    checkSplitMPSWithORTOOLS(pParameters->ortoolsUsed, pParameters->include.splitExportedMPS);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);

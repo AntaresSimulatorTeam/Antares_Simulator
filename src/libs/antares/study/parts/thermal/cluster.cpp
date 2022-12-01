@@ -281,7 +281,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
@@ -376,14 +376,14 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
     groupID = thermalDispatchGrpOther1;
 }
 
-bool Data::ThermalCluster::invalidate(bool reload) const
+bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.invalidate(reload) and ret;
+    ret = modulation.forceReload(reload) and ret;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     if (prepro)
-        ret = prepro->invalidate(reload) and ret;
+        ret = prepro->forceReload(reload) and ret;
     return ret;
 }
 

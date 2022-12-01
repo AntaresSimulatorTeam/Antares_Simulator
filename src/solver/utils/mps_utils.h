@@ -16,12 +16,6 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_dump_spx_fixed_part(const PROBLEME_SIMPLEXE* Pb,
-                             uint numSpace,
-                             Solver::IResultWriter::Ptr writer);
-void OPT_dump_spx_variable_part(const PROBLEME_SIMPLEXE* Pb,
-                                uint numSpace,
-                                Solver::IResultWriter::Ptr writer);
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
                                                uint,
                                                uint,
@@ -64,23 +58,6 @@ private:
     uint thread_number_;
 };
 
-class splitMPSwriter : public I_MPS_writer
-{
-public:
-    splitMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                   int currentOptimNumber,
-                   uint thread_nb,
-                   bool simu_1st_week);
-
-    void runIfNeeded(Solver::IResultWriter::Ptr writer);
-
-private:
-    PROBLEME_SIMPLEXE_NOMME* named_splx_problem_;
-    int current_optim_number_;
-    uint thread_nb_;
-    bool simu_1st_week_;
-};
-
 class nullMPSwriter : public I_MPS_writer
 {
 public:
@@ -118,6 +95,5 @@ private:
     int current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    bool split_mps_;
     bool is_first_week_of_year_;
 };

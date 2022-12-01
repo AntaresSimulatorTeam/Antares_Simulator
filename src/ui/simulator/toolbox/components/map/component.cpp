@@ -704,7 +704,7 @@ void Component::Drawer::drawFromDevice(wxDC& dc)
         pComponent.pMapActiveLayer->nodes.drawExternalDrawer(drawingContext);
 }
 
-void Component::invalidate()
+void Component::forceReload()
 {
     if (pMapActiveLayer)
         pMapActiveLayer->nodes.invalidateAllNodes();
@@ -856,7 +856,7 @@ void Component::reverseSelection()
     {
         pMapActiveLayer->reset();
         pMapActiveLayer->nodes.reverseSelection();
-        pMapActiveLayer->invalidate();
+        pMapActiveLayer->forceReload();
         refresh();
     }
 }

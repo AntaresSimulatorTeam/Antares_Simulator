@@ -406,7 +406,7 @@ public:
     ** \param reload True to load all JIT data
     ** \return True if the data was really loaded (reload = true)
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Try to remove from memory all data from the matrix

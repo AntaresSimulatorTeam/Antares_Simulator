@@ -97,7 +97,7 @@ int Cluster::loadDataSeriesFromFolder(Study& s, const AnyString& folder)
 void Cluster::invalidateArea()
 {
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 bool Cluster::isVisibleOnLayer(const size_t& layerID) const

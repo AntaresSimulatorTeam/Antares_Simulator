@@ -31,7 +31,6 @@ jobs:
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     outputs:
-        is_release: ${{steps.release_flag.outputs.is_release}}
         os: ${{ matrix.os }}
 
     runs-on: ${{ matrix.os }}
@@ -46,11 +45,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Export release flag
-      id: release_flag
-      run: |
-        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
 
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
@@ -74,10 +68,10 @@ jobs:
     - name: Config OR-Tools URL
       run: |
           if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
             echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
           else
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
             echo "LABEL=" >> $GITHUB_ENV
           fi
 
@@ -161,7 +155,6 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests about infinity on BCs RHS
-      continue-on-error: true
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -170,7 +163,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
-      continue-on-error: false
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -179,7 +171,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -188,7 +179,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-1
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -197,7 +187,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-2
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -206,7 +195,6 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      continue-on-error: true
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
@@ -252,15 +240,14 @@ jobs:
     name: Publish assets
     needs: build
     runs-on: ${{needs.build.outputs.os}}
-    if: ${{needs.build.outputs.is_release == 'true'}}
     steps:
     - name: Download all artifacts
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
 
-    - name: List artifacts
-      run: ls -R
 
     - name: Publish assets
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.3.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
