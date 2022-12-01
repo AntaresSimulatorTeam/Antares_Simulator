@@ -24,51 +24,6 @@ jobs:
     with:
       artifact_name: pdf-doc
 
-  docker_publish:
-
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 2
-
-    - name: Get changed files
-      id: changed-files
-      uses: tj-actions/changed-files@v34
-      with:
-        files: |
-          docker/centos7-basic-requirements
-          antares-deps-version.json
-
-    - name: Get branch name
-      id: branch_name
-      if: ${{ env.IS_RELEASE == 'true' }}
-      uses: tj-actions/branch-names@v6
-
-    - name: Read antares-deps version
-      id: antares-deps-version
-      if: ${{ env.IS_RELEASE == 'true' || steps.changed-files.outputs.modified_files != '' }}
-      uses: notiz-dev/github-action-json-property@release
-      with:
-        path: 'antares-deps-version.json'
-        prop_path: 'antares_deps_version'
-
-    - name: Docker file push
-      id: docker_push
-      if: ${{ env.IS_RELEASE == 'true' || steps.changed-files.outputs.modified_files != '' }}
-      uses: elgohr/Publish-Docker-Github-Action@master
-      env:
-        ANTARES_DEPS_VERSION: ${{steps.antares-deps-version.outputs.prop}}
-      with:
-        name: antaresrte/rte-antares
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-        workdir: docker
-        dockerfile: centos7-basic-requirements
-        cache: true
-        tags: centos7-simulator
-        buildargs: ANTARES_DEPS_VERSION
-
   build:
     name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
     env:
@@ -77,7 +32,6 @@ jobs:
 
     runs-on: ubuntu-latest
     needs:
-      - docker_publish
       - doc_generation
     container: 'antaresrte/rte-antares:centos7-simulator'
     strategy:
@@ -93,6 +47,14 @@ jobs:
     - name: Init submodule
       run: |
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
+
+    - name: Get antares-deps
+      run: |
+           ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
+           cd /
+           wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v${ANTARES_DEPS_VERSION}/rte-antares-deps-centos7-Release.tar.gz
+           tar -xvf rte-antares-deps-centos7-Release.tar.gz
+           rm -rf rte-antares-deps-centos7-Release.tar.gz
 
     - name: Download XPRESS if needed
       if: ${{ matrix.ortools-xpress == 'ON' }}
