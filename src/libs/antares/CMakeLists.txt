@@ -66,6 +66,8 @@ add_library(antares-core
 	${SRC}
 )
 
+find_package (Boost REQUIRED COMPONENTS serialization)
+
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
 target_include_directories(antares-core
@@ -78,6 +80,7 @@ target_link_libraries(antares-core
 		yuni-static-core
 		Antares::logs
         Antares::exception
+        Boost::serialization
 	)
 
 import_std_libs(antares-core)
