@@ -728,7 +728,7 @@ private:
     Component::Notebook::Page* pageHydroAllocation;
     
     Component::Notebook::Page* pageHydroclusterClusterList;
-    Component::Notebook::Page* pageHydroclusterCommon;
+    Component::Notebook::Page* pageHydroclusterLocaldata;
 
 
     Component::Notebook::Page* pageWindTimeSeries;

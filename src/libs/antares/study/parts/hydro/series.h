@@ -222,23 +222,23 @@ public:
 
     ** (it was DAYS_PER_YEAR before 3.9)
     */
-    Matrix<double, Yuni::sint32> ror;
-
+    // Matrix<double, Yuni::sint32> ror;
+    Matrix<double> ror;
     /*!
     ** \brief Mod (MW)
     **
     ** Merely a matrix of TimeSeriesCount * 365 values
     ** This matrix is not used in `adequation` mode.
     */
-    Matrix<double, Yuni::sint32> storage;
-
+    // Matrix<double, Yuni::sint32> storage;
+    Matrix<double> storage;
     /*!
     ** \brief Minimum Generation (MW)
     **
     ** Merely a matrix of TimeSeriesCount * HOURS_PER_YEAR values
     */
-    Matrix<double, Yuni::sint32> mingen;
-
+    // Matrix<double, Yuni::sint32> mingen;
+    Matrix<double> mingen;
     /*!
     ** \brief The number of time-series
     **

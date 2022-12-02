@@ -59,11 +59,13 @@ public:
 
 public:
     //! The page related to the cluster's timeseries
-    Component::Notebook::Page* pageHydroclusterTimeSeries;
+    Component::Notebook::Page* pageHydroclusterTimeSeriesRor; //todo change this for Hyrdocluster Time-series (Run-of-the-river(ROR) + Hydro Storage)
+    Component::Notebook::Page* pageHydroclusterTimeSeriesStorage; //CR13 Hydro Storage
+    Component::Notebook::Page* pageHydroclusterTimeSeriesMingen; //CR13 Mingen
     //! The page related to the cluster's properties
-    Component::Notebook::Page* pageHydroclusterCommon;
+    Component::Notebook::Page* pageHydroclusterLocaldata; //CR13: todo change this for "Local data"
     //! The page related to the cluster list view
-    Component::Notebook::Page* pageHydroclusterClusterList;
+    Component::Notebook::Page* pageHydroclusterClusterList; //CR13: todo use this for new "Hydrocluster cluster list"
 
 private:
     //! A thermal cluster has just been selected, we have to update the GUI accordinly

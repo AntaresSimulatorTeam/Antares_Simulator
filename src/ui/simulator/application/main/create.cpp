@@ -671,7 +671,7 @@ void ApplWnd::createNBHydrocluster()
 
     auto* panel = new Window::Hydro::Panel(pNotebook);
     pNotebook->add(panel, wxT("hydroCluster"), wxT("Hydrocluster"));
-    pageHydroclusterCommon = panel->pageHydroclusterCommon ;
+    pageHydroclusterLocaldata = panel->pageHydroclusterLocaldata ;
     pageHydroclusterClusterList = panel->pageHydroclusterClusterList;
 }
 

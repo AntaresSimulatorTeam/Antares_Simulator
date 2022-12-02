@@ -47,11 +47,11 @@ Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
 
     auto* com = new Component::Datagrid::Component(notebook);
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroFatal(com, notifier));
-    pPageFatal = notebook->add(com, wxT("Run-of-the-river (ROR)-HydroFatal"));
+    pPageFatal = notebook->add(com, wxT("Run-of-the-river (ROR) (HydroFatal)"));
 
     com = new Component::Datagrid::Component(notebook);
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMod(com, notifier));
-    notebook->add(com, wxT("Hydro Storage-HydroMod"));
+    notebook->add(com, wxT("Hydro Storage (HydroMod)"));
 
     com = new Component::Datagrid::Component(notebook);
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMinGen(com, notifier));

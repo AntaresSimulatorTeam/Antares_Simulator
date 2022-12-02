@@ -482,22 +482,61 @@ private:
 //   HYDROCLUSTER CLUSTERS
 // ----------------------
 
-class TimeSeriesHydroclusterCluster final : public TimeSeriesCluster
+//ROR
+class TimeSeriesHydroclusterClusterRor final : public TimeSeriesCluster
 {
 public:
-    TimeSeriesHydroclusterCluster(wxWindow* control,
+    TimeSeriesHydroclusterClusterRor(wxWindow* control,
                                Toolbox::InputSelector::HydroclusterCluster* notifier);
 
-    virtual ~TimeSeriesHydroclusterCluster();
+    virtual ~TimeSeriesHydroclusterClusterRor();
 
 private:
     void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
     {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->ror) : NULL); //CR13 ROR
+        // matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL); //CR13 series->series is not used
     }
 
     void onStudyClosed() override;
 };
+
+//Hydro storage
+class TimeSeriesHydroclusterClusterStorage final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesHydroclusterClusterStorage(wxWindow* control,
+                               Toolbox::InputSelector::HydroclusterCluster* notifier);
+
+    virtual ~TimeSeriesHydroclusterClusterStorage();
+
+private:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+    {
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->storage) : NULL); //CR13 Storage
+    }
+
+    void onStudyClosed() override;
+};
+
+//Mingen
+class TimeSeriesHydroclusterClusterMingen final : public TimeSeriesCluster
+{
+public:
+    TimeSeriesHydroclusterClusterMingen(wxWindow* control,
+                               Toolbox::InputSelector::HydroclusterCluster* notifier);
+
+    virtual ~TimeSeriesHydroclusterClusterMingen();
+
+private:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+    {
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->mingen) : NULL); //CR13 Mingen
+    }
+
+    void onStudyClosed() override;
+};
+
 
 } // namespace Renderer
 } // namespace Datagrid
@@ -505,3 +544,4 @@ private:
 } // namespace Antares
 
 #endif // __ANTARES_TOOLBOX_COMPONENT_DATAGRID_RENDERER_AREA_TIMESERIES_H__
+ 

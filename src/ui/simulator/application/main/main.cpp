@@ -249,7 +249,7 @@ ApplWnd::ApplWnd() :
  pageHydroCorrelation(nullptr),
  pageHydroAllocation(nullptr),
  pageHydroclusterClusterList(nullptr),
- pageHydroclusterCommon(nullptr),
+ pageHydroclusterLocaldata(nullptr),
  pageWindTimeSeries(nullptr),
  pageWindPrepro(nullptr),
  pageWindPreproDailyProfile(nullptr),
@@ -986,8 +986,8 @@ void ApplWnd::selectAllDefaultPages()
         pageHydroTimeSeries->select();
     if (pageHydroclusterClusterList)
         pageHydroclusterClusterList->select(); 
-    if (pageHydroclusterCommon)
-        pageHydroclusterCommon->select();        
+    if (pageHydroclusterLocaldata)
+        pageHydroclusterLocaldata->select();        
     if (pageWindTimeSeries)
         pageWindTimeSeries->select();
     if (pageThermalClusterList)

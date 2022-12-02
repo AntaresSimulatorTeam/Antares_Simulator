@@ -421,27 +421,68 @@ void TimeSeriesRenewableCluster::onStudyClosed()
 //   HYDROCLUSTER CLUSTERS
 // ----------------------
 
-TimeSeriesHydroclusterCluster::TimeSeriesHydroclusterCluster(
+//ROR
+TimeSeriesHydroclusterClusterRor::TimeSeriesHydroclusterClusterRor(
   wxWindow* control,
   Toolbox::InputSelector::HydroclusterCluster* notifier) :
  TimeSeriesCluster(control)
 {
     if (notifier)
         notifier->onClusterChanged.connect(
-          this, &TimeSeriesHydroclusterCluster::internalHydroclusterClusterChanged);
+          this, &TimeSeriesHydroclusterClusterRor::internalHydroclusterClusterChanged);
 }
 
-TimeSeriesHydroclusterCluster::~TimeSeriesHydroclusterCluster()
+TimeSeriesHydroclusterClusterRor::~TimeSeriesHydroclusterClusterRor()
 {
 }
 
-void TimeSeriesHydroclusterCluster::onStudyClosed()
+void TimeSeriesHydroclusterClusterRor::onStudyClosed()
 {
     internalHydroclusterClusterChanged(nullptr);
     AncestorType::onStudyClosed();
 }
 
+//Storage
+TimeSeriesHydroclusterClusterStorage::TimeSeriesHydroclusterClusterStorage(
+  wxWindow* control,
+  Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onClusterChanged.connect(
+          this, &TimeSeriesHydroclusterClusterStorage::internalHydroclusterClusterChanged);
+}
 
+TimeSeriesHydroclusterClusterStorage::~TimeSeriesHydroclusterClusterStorage()
+{
+}
+
+void TimeSeriesHydroclusterClusterStorage::onStudyClosed()
+{
+    internalHydroclusterClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
+
+//Mingen
+TimeSeriesHydroclusterClusterMingen::TimeSeriesHydroclusterClusterMingen(
+  wxWindow* control,
+  Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ TimeSeriesCluster(control)
+{
+    if (notifier)
+        notifier->onClusterChanged.connect(
+          this, &TimeSeriesHydroclusterClusterMingen::internalHydroclusterClusterChanged);
+}
+
+TimeSeriesHydroclusterClusterMingen::~TimeSeriesHydroclusterClusterMingen()
+{
+}
+
+void TimeSeriesHydroclusterClusterMingen::onStudyClosed()
+{
+    internalHydroclusterClusterChanged(nullptr);
+    AncestorType::onStudyClosed();
+}
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

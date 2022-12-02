@@ -47,7 +47,7 @@ namespace Hydro
 {
 Panel::Panel(Component::Notebook* parent) :
  Component::Panel(parent),
- pageHydroclusterCommon(nullptr),
+ pageHydroclusterLocaldata(nullptr),
  pNotebookCluster(nullptr),
  pAreaForCommonData(nullptr),
  pAreaSelector(nullptr),
@@ -105,14 +105,26 @@ Panel::Panel(Component::Notebook* parent) :
         subbook->theme(Component::Notebook::themeLight);
 
         // Common properties of the current thermal cluster
-        pageHydroclusterCommon
-          = subbook->add(new Window::Hydro::CommonProperties(subbook, tag), wxT("Common"));
+        pageHydroclusterLocaldata
+          = subbook->add(new Window::Hydro::CommonProperties(subbook, tag), wxT("Local data"));
 
-        // Time Series
-        pageHydroclusterTimeSeries = subbook->add(
+        // Time Series ROR
+        pageHydroclusterTimeSeriesRor = subbook->add(
           new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterCluster(subbook, tag)),
-          wxT("Time-Series"));
+            subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterRor(subbook, tag)),
+          wxT("Run-of-the-river (ROR)"));
+
+        // Time Series Storage
+        pageHydroclusterTimeSeriesStorage = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterStorage(subbook, tag)),
+          wxT("Hydro Storage"));
+
+        //Minimum Generation
+        pageHydroclusterTimeSeriesMingen = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
+          wxT("Minimum Generation"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);
