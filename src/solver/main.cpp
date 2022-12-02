@@ -37,6 +37,8 @@
 #include "optimisation/LpsFromAntares.h"
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
+#include "optimisation/LpsFromAntares.h"
+#include <boost/serialization/shared_ptr.hpp>
 
 using namespace Antares;
 using namespace Yuni;
