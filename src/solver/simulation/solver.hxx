@@ -45,6 +45,9 @@
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
+#include "../optimisation/LpsFromAntares.h"
+#include <fstream>
+#include <boost/archive/text_oarchive.hpp>
 
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
@@ -373,6 +376,7 @@ void ISimulation<Impl>::run()
             timer.stop();
             pDurationCollector->addDuration("mc_years", timer.get_duration());
         }
+
         // Destroy the TS Generators if any
         // It will export the time-series into the output in the same time
         Solver::TSGenerator::DestroyAll(study);

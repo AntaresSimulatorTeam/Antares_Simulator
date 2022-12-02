@@ -138,7 +138,7 @@ OptimisationHebdo:
                 copy(ncons, ProblemeHebdo->ProblemeAResoudre->SecondMembre, week_ptr->SecondMembre);
                 copy(ncons, ProblemeHebdo->ProblemeAResoudre->Sens, week_ptr->Sens);
 
-                lps->_hebdo[{year, week}] = week_ptr;
+                lps->_hebdo[{static_cast<unsigned int>(year), static_cast<unsigned int>(week)}] = week_ptr;
             }
         }
         /* Fin */

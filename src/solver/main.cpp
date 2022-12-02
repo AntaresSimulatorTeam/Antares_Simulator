@@ -163,7 +163,8 @@ int main(int argc, char** argv)
     application.pStudy->_lps = &lps;
     application.execute();
 
-    std::ofstream ofs("fichierDeSerialisation");
+    auto path = std::string(application.pStudy->folder.c_str()) + "/fichierDeSerialisation";
+    std::ofstream ofs(path);
     boost::archive::text_oarchive oa(ofs);
     oa << lps;
 
