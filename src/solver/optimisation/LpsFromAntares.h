@@ -13,8 +13,26 @@
 #include <boost/serialization/vector.hpp>
 #include <boost/serialization/array.hpp>
 
-using YearWeek =
-        std::array<int, 2>;  // On n'a besoin que du pb de la 1ère optim
+struct ProblemHebdoId {
+    unsigned int year;
+    unsigned int week;
+
+    bool operator <(const ProblemHebdoId& other) const {
+        if (year < other.year)
+            return true;
+        if (year == other.year)
+            return week < other.week;
+        return false;
+    }
+
+    friend class boost::serialization::access;
+    template <class Archive>
+    void serialize(Archive& ar, [[maybe_unused]] const unsigned int version) {
+        ar& year;
+        ar& week;
+    }
+};
+
 class ConstantDataFromAntares;
 class HebdoDataFromAntares;
 
@@ -26,7 +44,7 @@ using HebdoDataFromAntaresPtr = std::shared_ptr<HebdoDataFromAntares>;
 // couplantes peuvent varier au cours du temps (ex: rendement d'une pompe à
 // chaleur qui varie selon la température, FlowBased ?, etc)
 using YearWeekHebdoDataFromAntares =
-        std::map<YearWeek, HebdoDataFromAntaresPtr>;
+        std::map<ProblemHebdoId, HebdoDataFromAntaresPtr>;
 
 class ConstantDataFromAntares {
 public:
@@ -94,6 +112,7 @@ public:
         ar& NombreDeContraintes;
         ar& NombreDeCoefficients;
         ar& TypeDeVariable;
+        ar& Mdeb;
         ar& Nbterm;
         ar& IndicesColonnes;
         ar& CoefficientsDeLaMatriceDesContraintes;
