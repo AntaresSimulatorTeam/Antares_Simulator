@@ -549,6 +549,7 @@ add_library(libantares-core
 	${SRC_STDCXX}
 )
 
+find_package (Boost REQUIRED COMPONENTS serialization)
 
 #TODO : needed for include yuni : why yuni must be include first ??? cheat : made it public so everybody will have this include (should be done in yuni)
 #TODO : needed for include
@@ -567,6 +568,7 @@ target_link_libraries(libantares-core
 		libantares-core-calendar
 		libantares-solver-variable-info
         result_writer
+		Boost::serialization
 	)
 
 
