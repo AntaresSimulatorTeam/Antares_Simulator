@@ -3,25 +3,24 @@
 
 #pragma once
 #include <array>
+#include <boost/serialization/access.hpp>
+#include <boost/serialization/array.hpp>
+#include <boost/serialization/list.hpp>
+#include <boost/serialization/map.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/string.hpp>
+#include <boost/serialization/vector.hpp>
 #include <map>
 #include <memory>
 #include <vector>
-#include <boost/serialization/access.hpp>
-#include <boost/serialization/shared_ptr.hpp>
-#include <boost/serialization/list.hpp>
-#include <boost/serialization/map.hpp>
-#include <boost/serialization/vector.hpp>
-#include <boost/serialization/array.hpp>
 
 struct ProblemHebdoId {
     unsigned int year;
     unsigned int week;
 
-    bool operator <(const ProblemHebdoId& other) const {
-        if (year < other.year)
-            return true;
-        if (year == other.year)
-            return week < other.week;
+    bool operator<(const ProblemHebdoId& other) const {
+        if (year < other.year) return true;
+        if (year == other.year) return week < other.week;
         return false;
     }
 
@@ -33,24 +32,18 @@ struct ProblemHebdoId {
     }
 };
 
-class ConstantDataFromAntares;
-class HebdoDataFromAntares;
 
-using ConstantDataFromAntaresPtr = std::shared_ptr<ConstantDataFromAntares>;
-using HebdoDataFromAntaresPtr = std::shared_ptr<HebdoDataFromAntares>;
 
 // Type de données inutile car les matrices de tous les pbs hebdo sont
 // identiques. Cela pourra changer à l'avenir si des coefficients de contraintes
 // couplantes peuvent varier au cours du temps (ex: rendement d'une pompe à
 // chaleur qui varie selon la température, FlowBased ?, etc)
-using YearWeekHebdoDataFromAntares =
-        std::map<ProblemHebdoId, HebdoDataFromAntaresPtr>;
 
 class ConstantDataFromAntares {
 public:
-    int NombreDeVariables;     // Mathématiquement : Nb colonnes de la matrice,
+    int NombreDeVariables;  // Mathématiquement : Nb colonnes de la matrice,
     // Informatiquement = TypeDeVariable.size()
-    int NombreDeContraintes;   // Mathématiqument : Nb lignes de la matrice,
+    int NombreDeContraintes;  // Mathématiqument : Nb lignes de la matrice,
     // Informatiquement = Mdeb.size()
     int NombreDeCoefficients;  // Mathématiquement : Nb coeffs non nuls de la
     // matrice, Informatiquement = Nbterm.size() =
@@ -67,8 +60,7 @@ public:
     // à partir de 0)
     std::vector<int> Nbterm;  // Nombre de termes non nuls sur chaque ligne.
     // Inutile car NbTerm[i] = Mdeb[i+1] - Mdeb[i]
-    std::vector<int>
-            IndicesColonnes;  // Id des colonnes des termes de
+    std::vector<int> IndicesColonnes;  // Id des colonnes des termes de
     // CoefficientsDeLaMatriceDesContraintes : Ex
     // IndicesColonnes[3] = 8 ->
     // CoefficientsDeLaMatriceDesContraintes[8] donne la
@@ -123,16 +115,18 @@ public:
 
 class HebdoDataFromAntares {
 public:
-    std::vector<char> Sens;  // Sens de la contrainte : < ou > ou =, taille = NombreDeContraintes
-    std::vector<double>
-            Xmax;  // Borne max des variables de la semaine considérée, taille = NombreDeVariables
-    std::vector<double>
-            Xmin;  // Borne min des variables de la semaine considérée, taille =  NombreDeVariables
+    std::vector<char> Sens;    // Sens de la contrainte : < ou > ou =, taille =
+    // NombreDeContraintes
+    std::vector<double> Xmax;  // Borne max des variables de la semaine
+    // considérée, taille = NombreDeVariables
+    std::vector<double> Xmin;  // Borne min des variables de la semaine
+    // considérée, taille =  NombreDeVariables
     std::vector<double>
             CoutLineaire;  // Coefficients du vecteur de coût de la fonction objectif,
     // taille = NombreDeVariables
     std::vector<double>
-            SecondMembre;  // Vecteur des second membre des contraintes, taille = NombreDeContraintes
+            SecondMembre;  // Vecteur des second membre des contraintes, taille =
+    // NombreDeContraintes
 
     friend class boost::serialization::access;
     template <class Archive>
@@ -144,6 +138,11 @@ public:
         ar& SecondMembre;
     }
 };
+
+using ConstantDataFromAntaresPtr = std::shared_ptr<ConstantDataFromAntares>;
+using HebdoDataFromAntaresPtr = std::shared_ptr<HebdoDataFromAntares>;
+using YearWeekHebdoDataFromAntares =
+        std::map<ProblemHebdoId, HebdoDataFromAntaresPtr>;
 
 class LpsFromAntares {
 public:
