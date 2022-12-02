@@ -348,7 +348,15 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 }
 
 
-std::list<std::string> getAvailableOrtoolsSolverName()
+const std::map<std::string, std::pair<std::string, std::string>> OrtoolsUtils::solverMap =
+{
+    {"xpress", std::pair("xpress_lp", "xpress")},
+    {"sirius", std::pair("sirius_lp", "sirius")},
+    {"coin", std::pair("clp", "cbc")},
+    {"glpk", std::pair("glpk_lp", "glpk")}
+};
+
+std::list<std::string> getAvailableOrtoolsSolverNameLinearAndMixed()
 {
     std::list<std::string> result;
 
@@ -363,6 +371,23 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     {
         if (MPSolver::SupportsProblemType(solverType))
             result.push_back((std::string)ToString(solverType));
+    }
+
+    return result;
+}
+
+
+std::list<std::string> getAvailableOrtoolsSolverName()
+{
+    std::list<std::string> result;
+
+    for (auto solverName : OrtoolsUtils::solverMap)
+    {
+        MPSolver::OptimizationProblemType solverType;
+        MPSolver::ParseSolverType(solverName.second.first, &solverType);
+
+        if (MPSolver::SupportsProblemType(solverType))
+            result.push_back(solverName.first);
     }
 
     return result;
