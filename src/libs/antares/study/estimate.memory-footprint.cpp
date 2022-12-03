@@ -102,6 +102,20 @@ protected:
                         return false;
                 }
             }
+            // Hydrocluster
+            {
+                auto end = area.hydrocluster.list.end();
+                for (auto i = area.hydrocluster.list.begin(); i != end; ++i)
+                {
+                    auto& cluster = *(i->second);
+
+                    if (cluster.series)
+                        cluster.series->estimateMemoryUsage(m);
+
+                    if (shouldAbort())
+                        return false;
+                }
+            }            
             area.estimateMemoryUsage(m);
 
             if (shouldAbort())

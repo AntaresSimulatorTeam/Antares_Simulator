@@ -296,6 +296,18 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = area.thermal.list.saveDataSeriesToFolder(buffer) and ret;
     }
 
+    // Hydrocluster cluster list
+    {
+        buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "clusters" << SEP
+                       << area.id;
+        ret = area.hydrocluster.list.saveToFolder(buffer) and ret;
+
+        // buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "prepro";
+        // ret = area.hydrocluster.list.savePreproToFolder(buffer) and ret;
+        buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "series";
+        ret = area.hydrocluster.list.saveDataSeriesToFolder(buffer) and ret;
+    }    
+
     // Renewable cluster list
     {
         buffer.clear() << folder << SEP << "input" << SEP << "renewables" << SEP << "clusters"
@@ -1100,6 +1112,14 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.renewable.list.flush();
     }
 
+    if (study.header.version >= 810)
+    {
+        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
+        ret = area.hydrocluster.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
+        // flush
+        area.hydrocluster.list.flush();
+    }    
+
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
 
@@ -1275,6 +1295,24 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             area.renewable.prepareAreaWideIndexes();
         }
     }
+    
+    if (pStudy.header.version >= 810)
+    {
+        // The cluster list must be loaded before the method
+        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // in order to allocate data with all renewable clusters.
+        CString<30, false> hydroclusterPlant;
+        hydroclusterPlant << SEP << "hydroclusters" << SEP << "clusters" << SEP;
+
+        auto end = areas.end();
+        for (auto i = areas.begin(); i != end; ++i)
+        {
+            Area& area = *(i->second);
+            buffer.clear() << pStudy.folderInput << hydroclusterPlant << area.id;
+            ret = area.hydrocluster.list.loadFromFolder(buffer.c_str(), &area) and ret;
+            area.hydrocluster.prepareAreaWideIndexes();
+        }
+    } 
 
     // Prepare
     if (options.loadOnlyNeeded)
@@ -1452,13 +1490,6 @@ void AreaListEnsureDataHydroTimeSeries(AreaList* l)
     });
 }
 
-void AreaListEnsureDataHydroclusterTimeSeries(AreaList* l) //CR13 1124
-{
-    /* Asserts */
-    assert(l);
-    l->each([&](Data::Area& area) { area.hydrocluster.list.ensureDataTimeSeries(); });
-}
-
 void AreaListEnsureDataHydroPrepro(AreaList* l)
 {
     /* Asserts */
@@ -1474,6 +1505,13 @@ void AreaListEnsureDataThermalTimeSeries(AreaList* l)
 {
     assert(l);
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataTimeSeries(); });
+}
+
+void AreaListEnsureDataHydroclusterTimeSeries(AreaList* l) //CR13 1124
+{
+    /* Asserts */
+    assert(l);
+    l->each([&](Data::Area& area) { area.hydrocluster.list.ensureDataTimeSeries(); });
 }
 
 void AreaListEnsureDataRenewableTimeSeries(AreaList* l)
@@ -1780,6 +1818,16 @@ void AreaList::removeThermalTimeseries()
     each([&](Data::Area& area) {
         area.thermal.list.each(
           [&](Data::ThermalCluster& cluster) { cluster.series->series.reset(1, HOURS_PER_YEAR); });
+    });
+}
+
+void AreaList::removeHydroclusterTimeseries()
+{
+    each([&](Data::Area& area) {
+        area.hydrocluster.list.each(
+          [&](Data::HydroclusterCluster& cluster) { cluster.series->ror.reset(1, HOURS_PER_YEAR);
+          cluster.series->storage.reset(1, HOURS_PER_YEAR);
+          cluster.series->mingen.reset(1, HOURS_PER_YEAR); });
     });
 }
 

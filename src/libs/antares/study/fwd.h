@@ -208,7 +208,7 @@ enum TimeSeries
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
-
+    timeSeriesHydrocluster = 128,
     //! The maximum number of time-series that we can encounter
     timeSeriesCount = 7,
 

@@ -280,6 +280,7 @@ public:
     uint nbTimeSeriesWind;
     //! Nb of timeSeries : Thermal
     uint nbTimeSeriesThermal;
+    uint nbTimeSeriesHydrocluster;
     //! Nb of timeSeries : Solar
     uint nbTimeSeriesSolar;
     //@}

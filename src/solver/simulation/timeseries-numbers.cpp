@@ -209,6 +209,30 @@ public:
     }
 };
 
+
+class hydroclusterAreaNumberOfTSretriever : public areaNumberOfTSretriever
+{
+public:
+    hydroclusterAreaNumberOfTSretriever(Study& study) : areaNumberOfTSretriever(study)
+    {
+    }
+    std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
+    {
+        std::vector<uint> to_return;
+        uint clusterCount = (uint)area.hydrocluster.clusterCount();
+        for (uint i = 0; i != clusterCount; ++i)
+        {
+            auto& cluster = *(area.hydrocluster.clusters[i]);
+            to_return.push_back(cluster.series->ror.width); //### CR13 todo? storage?
+        }
+        return to_return;
+    }
+    uint getGeneratedTimeSeriesNumber()
+    {
+        return study_.parameters.nbTimeSeriesHydrocluster;
+    }
+};
+
 class renewClustersAreaNumberOfTSretriever : public areaNumberOfTSretriever
 {
 public:
@@ -347,6 +371,8 @@ bool checkIntraModalConsistency(array<uint, timeSeriesCount>& nbTimeseriesByMode
     ts_to_numberOfTSretrievers[timeSeriesSolar] = make_shared<solarAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesThermal]
       = make_shared<thermalAreaNumberOfTSretriever>(study);
+    ts_to_numberOfTSretrievers[timeSeriesHydrocluster]
+      = make_shared<hydroclusterAreaNumberOfTSretriever>(study);      
     ts_to_numberOfTSretrievers[timeSeriesRenewable]
       = make_shared<renewClustersAreaNumberOfTSretriever>(study);
     ts_to_numberOfTSretrievers[timeSeriesTransmissionCapacities]
@@ -433,6 +459,19 @@ bool checkInterModalConsistencyForArea(Area& area,
         }
     }
 
+    // Hydrocluster : Add Hydrocluster's number of TS of each cluster in area ...
+    indexTS = ts_to_tsIndex.at(timeSeriesHydrocluster);
+    if (isTSintermodal[indexTS])
+    {
+        const uint clusterCount = (uint)area.hydrocluster.clusterCount();
+        for (uint j = 0; j != clusterCount; ++j)
+        {
+            auto& cluster = *(area.hydrocluster.clusters[j]);
+            uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesHydrocluster
+                                                       : cluster.series->ror.width; //CR13 todo ? storage
+            listNumberTsOverArea.push_back(nbTimeSeries);
+        }
+    }
     // Renewable clusters : Add renewable's number of TS of each cluster in area ...
     indexTS = ts_to_tsIndex.at(timeSeriesRenewable);
     if (isTSintermodal[indexTS])

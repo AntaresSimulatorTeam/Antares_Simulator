@@ -62,7 +62,7 @@ void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries 
         break;
     case timeSeriesRenewable:
         nbTimeSeries = 1;
-        break;
+        break;      
     default:
         nbTimeSeries = 0;
     }

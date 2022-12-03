@@ -650,6 +650,7 @@ public:
     void removeWindTimeseries();
     //! Remove all thermal timeseries
     void removeThermalTimeseries();
+    void removeHydroclusterTimeseries();
     //@}
 
     //! \name Memory management

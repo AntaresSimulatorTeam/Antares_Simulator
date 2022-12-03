@@ -1088,6 +1088,7 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     enum
     {
         kThermal,
+        kHydrocluster,
         kRenewable,
         kUnknown
     } type = kUnknown;
@@ -1096,6 +1097,11 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
     {
         found = area.thermal.list.find(newID);
         type = kThermal;
+    }
+    else if (dynamic_cast<HydroclusterCluster*>(cluster))
+    {
+        found = area.hydrocluster.list.find(newID);
+        type = kHydrocluster;
     }
     else if (dynamic_cast<RenewableCluster*>(cluster))
     {
@@ -1138,6 +1144,10 @@ bool Study::clusterRename(Cluster* cluster, ClusterName newName)
         ret = area.thermal.list.rename(cluster->id(), newName);
         area.thermal.prepareAreaWideIndexes();
         break;
+    case kHydrocluster:
+        ret = area.hydrocluster.list.rename(cluster->id(), newName);
+        area.hydrocluster.prepareAreaWideIndexes();
+        break;        
     case kUnknown:
         logs.error() << "Unknown cluster type";
         break;
@@ -1182,6 +1192,19 @@ void Study::destroyAllThermalTSGeneratorData()
         }
     });
 }
+
+void Study::destroyAllHydroclusterTSGeneratorData()
+{
+    areas.each([&](Data::Area& area) {
+        auto pend = area.hydrocluster.list.end();
+        for (auto j = area.hydrocluster.list.begin(); j != pend; ++j)
+        {
+            HydroclusterCluster& cluster = *(j->second);
+            FreeAndNil(cluster.prepro);
+        }
+    });
+}
+
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
@@ -1581,6 +1604,8 @@ void Study::removeTimeseriesIfTSGeneratorEnabled()
             areas.removeWindTimeseries();
         if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
             areas.removeThermalTimeseries();
+        if (0 != (parameters.timeSeriesToGenerate & timeSeriesThermal))
+            areas.removeHydroclusterTimeseries();            
     }
 }
 

@@ -116,7 +116,7 @@ public:
     std::vector<thermalTSNumberData> thermal;
     //! Renewable (array [0..pAreaCount - 1])
     std::vector<renewableTSNumberData> renewable;
-
+    std::vector<hydroclusterTSNumberData> hydrocluster;
     //! hydro levels
     hydroLevelsData hydroLevels;
 

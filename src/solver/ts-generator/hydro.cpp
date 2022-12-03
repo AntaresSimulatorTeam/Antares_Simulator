@@ -51,6 +51,9 @@ namespace Solver
 {
 namespace TSGenerator
 {
+
+//CR13 todo add for hydrocluster
+
 static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
 {
     study.areas.each([&](Data::Area& area) {

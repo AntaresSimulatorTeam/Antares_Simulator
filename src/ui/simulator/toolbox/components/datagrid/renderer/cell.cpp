@@ -180,6 +180,7 @@ void NumberTsCell::onStudyLoaded()
 {
     tsToNumberTs_[timeSeriesLoad] = &(study_->parameters.nbTimeSeriesLoad);
     tsToNumberTs_[timeSeriesThermal] = &(study_->parameters.nbTimeSeriesThermal);
+    tsToNumberTs_[timeSeriesHydrocluster] = &(study_->parameters.nbTimeSeriesHydrocluster); 
     tsToNumberTs_[timeSeriesHydro] = &(study_->parameters.nbTimeSeriesHydro);
     tsToNumberTs_[timeSeriesWind] = &(study_->parameters.nbTimeSeriesWind);
     tsToNumberTs_[timeSeriesSolar] = &(study_->parameters.nbTimeSeriesSolar);

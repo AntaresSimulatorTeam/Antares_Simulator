@@ -396,6 +396,7 @@ public:
     void destroyAllHydroTSGeneratorData();
     //! Destroy all data of the thermal TS generator
     void destroyAllThermalTSGeneratorData();
+    void destroyAllHydroclusterTSGeneratorData();
 
     /*!
     ** \brief Import all time-series into the input folder

@@ -681,14 +681,14 @@ void DataSeriesHydrocluster::markAsModified() const
 
 void DataSeriesHydrocluster::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
-    u.requiredMemoryForInput += sizeof(DataSeriesHydro);
+    u.requiredMemoryForInput += sizeof(DataSeriesHydrocluster);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
     // series
     if ((timeSeriesHydro & u.study.parameters.timeSeriesToGenerate))
     {
-        ror.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
-        storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, 12);
-        mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydro, HOURS_PER_YEAR);
+        ror.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydrocluster, HOURS_PER_YEAR);
+        storage.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydrocluster, HOURS_PER_YEAR);
+        mingen.estimateMemoryUsage(u, true, u.study.parameters.nbTimeSeriesHydrocluster, HOURS_PER_YEAR);
     }
     else
     {

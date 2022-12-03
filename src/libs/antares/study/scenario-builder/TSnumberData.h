@@ -175,7 +175,51 @@ inline CString<512, false> hydroTSNumberData::get_prefix() const
     return "h,";
 }
 
-//### todo for hydrocluster in ScenarioBuilder as in thermalTSNumberData and renewableTSNumberData
+//### todo for hydrocluster in ScenarioBuilder 
+// =====================
+// Hydrocluster ...
+// =====================
+
+class hydroclusterTSNumberData : public TSNumberData
+{
+public:
+    hydroclusterTSNumberData() = default;
+
+    bool reset(const Study& study) override;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
+
+    void attachArea(const Area* area)
+    {
+        pArea = area;
+    }
+
+    void set(const Antares::Data::HydroclusterCluster* cluster, const uint year, uint value);
+    uint get(const Antares::Data::HydroclusterCluster* cluster, const uint year) const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
+    uint get_tsGenCount(const Study& study) const override;
+
+private:
+    //! The attached area, if any
+    const Area* pArea = nullptr;
+};
+
+inline uint hydroclusterTSNumberData::get(const Antares::Data::HydroclusterCluster* cluster,
+                                     const uint year) const
+{
+    assert(cluster != nullptr);
+    if (year < pTSNumberRules.height && cluster->areaWideIndex < pTSNumberRules.width)
+    {
+        const uint index = cluster->areaWideIndex;
+        return pTSNumberRules[index][year];
+    }
+    return 0;
+}
+
+inline CString<512, false> hydroclusterTSNumberData::get_prefix() const
+{
+    return "hc,";
+}
 
 // =====================
 // Thermal ...

@@ -62,6 +62,9 @@ inline void Study::destroyTSGeneratorData()
     case timeSeriesThermal:
         destroyAllThermalTSGeneratorData();
         break;
+    case timeSeriesHydrocluster:
+        destroyAllHydroclusterTSGeneratorData();
+        break;        
     case timeSeriesCount:
         break;
     }

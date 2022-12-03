@@ -295,6 +295,7 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
+    nbTimeSeriesHydrocluster = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalLoad = 100;
@@ -493,6 +494,8 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<uint>(d.nbTimeSeriesWind);
     if (key == "nbtimeseriesthermal")
         return value.to<uint>(d.nbTimeSeriesThermal);
+    if (key == "nbtimeserieshydrocluster")
+        return value.to<uint>(d.nbTimeSeriesHydrocluster);        
     if (key == "nbtimeseriessolar")
         return value.to<uint>(d.nbTimeSeriesSolar);
     // Interval values
@@ -1317,6 +1320,8 @@ void Parameters::fixBadValues()
         nbTimeSeriesLoad = 1;
     if (!nbTimeSeriesThermal)
         nbTimeSeriesThermal = 1;
+    if (!nbTimeSeriesHydrocluster)
+        nbTimeSeriesHydrocluster = 1;        
     if (!nbTimeSeriesHydro)
         nbTimeSeriesHydro = 1;
     if (!nbTimeSeriesWind)
@@ -1722,6 +1727,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesHydro   ", nbTimeSeriesHydro);
         section->add("nbTimeSeriesWind    ", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal ", nbTimeSeriesThermal);
+        section->add("nbTimeSeriesHydrocluster ", nbTimeSeriesHydrocluster);
         section->add("nbTimeSeriesSolar   ", nbTimeSeriesSolar);
 
         // Refresh

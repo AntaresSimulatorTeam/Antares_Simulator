@@ -423,6 +423,25 @@ int ClusterList<RenewableCluster>::loadDataSeriesFromFolder(Study& s,
     return ret;
 }
 
+template<>
+int ClusterList<HydroclusterCluster>::loadDataSeriesFromFolder(Study& s,
+                                                            const StudyLoadOptions& options,
+                                                            const AnyString& folder)
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    each([&](Cluster& cluster) {
+        if (cluster.series)
+            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
+
+        ++options.progressTicks;
+        options.pushProgressLogs();
+    });
+    return ret;
+}
 
 template<>
 void ClusterList<HydroclusterCluster>::ensureDataTimeSeries()

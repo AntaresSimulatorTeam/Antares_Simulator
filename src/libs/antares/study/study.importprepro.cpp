@@ -124,6 +124,21 @@ bool Study::importTimeseriesIntoInput()
             });
         }
 
+        // Hydrocluster
+        if (parameters.haveToImport(timeSeriesHydrocluster))
+        {
+            logs.info() << "Importing hydrocluster timeseries...";
+            String msg;
+
+            areas.each([&](Data::Area& area) {
+                msg.clear() << "Importing hydrocluster timeseries : " << area.name;
+
+                buffer.clear() << folderInput << SEP << "hydrocluster" << SEP << "series"; //CR13 todo
+                ret = area.hydrocluster.list.saveDataSeriesToFolder(buffer.c_str(), msg) && ret;
+                ++progression;
+            });
+        }
+
         return ret;
     }
     return true;
