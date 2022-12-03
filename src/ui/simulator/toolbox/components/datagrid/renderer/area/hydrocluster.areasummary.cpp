@@ -50,94 +50,96 @@ HydroclusterClusterSummarySingleArea::~HydroclusterClusterSummarySingleArea()
 
 wxString HydroclusterClusterSummarySingleArea::rowCaption(int rowIndx) const
 {
-    if (pArea)
-        return wxStringFromUTF8(pArea->hydrocluster.list.byIndex[rowIndx]->name());
+    // if (pArea)
+    //     return wxStringFromUTF8(pArea->hydrocluster.list.byIndex[rowIndx]->name());
     return wxEmptyString;
 }
 
 wxString HydroclusterClusterSummarySingleArea::columnCaption(int colIndx) const
 {
-    // note: Those ugly white-spaces are required (for now)
-    //  to fix the min width of the column. A method should be added for this purpose.
-    static const wxChar* const rows[] = {
-      wxT("          Group          "),
-      wxT("  Enabled  "),
-      wxT("  Unit count  "),
-      wxT("   Nom. Capacity  \n        MW        "),
-    };
-    return (colIndx < 5 and colIndx >= 0) ? rows[colIndx] : wxT("");
+    return wxT("");
+    // // note: Those ugly white-spaces are required (for now)
+    // //  to fix the min width of the column. A method should be added for this purpose.
+    // static const wxChar* const rows[] = {
+    //   wxT("          Group          "),
+    //   wxT("  Enabled  "),
+    //   wxT("  Unit count  "),
+    //   wxT("   Nom. Capacity  \n        MW        "),
+    // };
+    // return (colIndx < 5 and colIndx >= 0) ? rows[colIndx] : wxT("");
 }
 
 wxString HydroclusterClusterSummarySingleArea::cellValue(int x, int y) const
 {
-    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
-                                        ? pArea->hydrocluster.list.byIndex[y]
-                                        : nullptr;
-    switch (x)
-    {
-    case 0:
-        return wxStringFromUTF8(cluster->group());
-    case 1:
-        return cluster->enabled ? wxT("Yes") : wxT("No");
-    case 2:
-        return wxString() << cluster->unitCount;
-    case 3:
-        return DoubleToWxString(cluster->nominalCapacity);
-    }
+    // Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+    //                                     ? pArea->hydrocluster.list.byIndex[y]
+    //                                     : nullptr;
+    // switch (x)
+    // {
+    // case 0:
+    //     return wxStringFromUTF8(cluster->group());
+    // case 1:
+    //     return cluster->enabled ? wxT("Yes") : wxT("No");
+    // case 2:
+    //     return wxString() << cluster->unitCount;
+    // case 3:
+    //     return DoubleToWxString(cluster->nominalCapacity);
+    // }
     return wxEmptyString;
 }
 
 double HydroclusterClusterSummarySingleArea::cellNumericValue(int x, int y) const
 {
-    Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
-                                        ? pArea->hydrocluster.list.byIndex[y]
-                                        : nullptr;
-    // gp : do we wish to have the line empty if cluster disabled
-    // if (!cluster->enabled)
+    // Data::HydroclusterCluster* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+    //                                     ? pArea->hydrocluster.list.byIndex[y]
+    //                                     : nullptr;
+    // // gp : do we wish to have the line empty if cluster disabled
+    // // if (!cluster->enabled)
+    // //     return 0.;
+    // switch (x)
+    // {
+    // case 0:
     //     return 0.;
-    switch (x)
-    {
-    case 0:
-        return 0.;
-    case 1:
-        return cluster->enabled ? 1. : 0.;
-    case 2:
-        return cluster->unitCount;
-    case 3:
-        return cluster->nominalCapacity;
-    }
+    // case 1:
+    //     return cluster->enabled ? 1. : 0.;
+    // case 2:
+    //     return cluster->unitCount;
+    // case 3:
+    //     return cluster->nominalCapacity;
+    // }
     return 0.;
 }
 
 bool HydroclusterClusterSummarySingleArea::cellValue(int x, int y, const String& v)
 {
-    auto* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
-                      ? pArea->hydrocluster.list.byIndex[y]
-                      : nullptr;
+    return true;
+    // auto* cluster = (pArea and (uint) y < pArea->hydrocluster.list.size())
+    //                   ? pArea->hydrocluster.list.byIndex[y]
+    //                   : nullptr;
 
-    if (cluster)
-    {
-        switch (x)
-        {
-        case 0:
-        {
-            if (cluster->group() != v)
-            {
-                cluster->setGroup(v);
-                return true;
-            }
-            break;
-        }
-        case 1:
-            return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
-        case 2:
-            return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
-              cluster->unitCount, v);
-        case 3:
-            return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
-        }
-    }
-    return false;
+    // if (cluster)
+    // {
+    //     switch (x)
+    //     {
+    //     case 0:
+    //     {
+    //         if (cluster->group() != v)
+    //         {
+    //             cluster->setGroup(v);
+    //             return true;
+    //         }
+    //         break;
+    //     }
+    //     case 1:
+    //         return Update<bool, NoCheck, RefeshInspector>(cluster->enabled, v);
+    //     case 2:
+    //         return Update<uint, CheckUnitCount, RefeshInspectorAndMarkAsModified>(
+    //           cluster->unitCount, v);
+    //     case 3:
+    //         return Update<double, NoCheck, RefeshInspector>(cluster->nominalCapacity, v);
+    //     }
+    // }
+    // return false;
 }
 
 } // namespace Renderer
