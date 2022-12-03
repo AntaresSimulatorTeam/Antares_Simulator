@@ -90,6 +90,33 @@ uint HydroclusterCluster::groupId() const
     return groupID;
 }
 
+
+int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "ror.txt";
+            ret = series->ror.saveToCSVFile(buffer, precision()) && ret;
+
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "storage.txt";
+            ret = series->storage.saveToCSVFile(buffer, precision()) && ret;
+
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
+            ret = series->mingen.saveToCSVFile(buffer, precision()) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
 void Data::HydroclusterCluster::copyFrom(const HydroclusterCluster& cluster)
 {
 

@@ -49,6 +49,7 @@ void InspectorData::clear()
         links.clear();
         ThClusters.clear();
         RnClusters.clear();
+        HydroclusterClusters.clear();
         constraints.clear();
         studies.clear();
         empty = true;

@@ -216,14 +216,9 @@ void ClusterUpdaterRenewable::OnStudyClusterRenamed(Data::Cluster* cluster)
 ClusterUpdaterHydrocluster::ClusterUpdaterHydrocluster(InspectorData::Ptr data, Frame& frame) :
  ClusterUpdater(frame)
 {
-    // // wxProperties
-    // unitCount = frame.pPGRnClusterUnitCount; //cr13
-    // installedCapacity = frame.pPGRnClusterInstalled;
-    // nominalCapacity = frame.pPGRnClusterNominalCapacity;
-
-    // clusters = Data::Cluster::Set(data->HydroclusterClusters.begin(), data->HydroclusterClusters.end());
-    // groups = std::vector<const wxChar*>(arrayRnClusterGroup,
-    //                                     arrayRnClusterGroup + arrayRnClusterGroupCount);
+    // wxProperties
+    unitCount = frame.pPGHydroclusterClusterUnitCount; //cr13
+    clusters = Data::Cluster::Set(data->HydroclusterClusters.begin(), data->HydroclusterClusters.end());
 }
 
 void ClusterUpdaterHydrocluster::OnCommonSettingsChanged()

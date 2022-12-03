@@ -359,6 +359,24 @@ int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder) const
     return ret;
 }
 
+template<>
+int ClusterList<HydroclusterCluster>::saveDataSeriesToFolder(const AnyString& folder) const
+{
+    if (empty())
+        return 1;
+
+    int ret = 1;
+
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        HydroclusterCluster& cluster = *(it->second);
+        if (cluster.series)
+            ret = cluster.saveDataSeriesToFolderHydroclusterCluster(folder) and ret;
+    }
+    return ret;
+}
+
 template<class ClusterT>
 int ClusterList<ClusterT>::saveDataSeriesToFolder(const AnyString& folder, const String& msg) const
 {

@@ -141,6 +141,7 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
+    int saveDataSeriesToFolderHydroclusterCluster(const AnyString& folder) const;
 
 public:
     /*!

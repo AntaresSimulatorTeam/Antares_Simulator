@@ -548,12 +548,22 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterLawForced = P_ENUM("Law (forced)", "cluster.forcedlaw", thermalLaws);
     pPGThClusterLawPlanned = P_ENUM("Law (planned)", "cluster.plannedlaw", thermalLaws);
 
+    // --- Hydrocluster CLUSTERS ---
+    pPGHydroclusterClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
+    Group(pg, wxT("HYDROCLUSTER CLUSTERS"), wxT("hydrocluster-cluster.title"));
+    pPGHydroclusterClusterGeneral = Category(pg, wxT("General"), wxT("hydrocluster-cluster.general"));
+    pPGHydroclusterClusterName = P_STRING("Name", "hydrocluster-cluster.name");
+
+    pPGHydroclusterClusterArea = P_STRING("area", "hydrocluster-cluster.area");
+    pg->DisableProperty(pPGHydroclusterClusterArea);
+    pPGHydroclusterClusterUnitCount = P_UINT("Unit", "hydrocluster-cluster.unit");
+
+
     // --- RENEWABLE CLUSTERS ---
     pPGRnClusterSeparator = Group(pg, wxEmptyString, wxEmptyString);
     Group(pg, wxT("RENEWABLE CLUSTERS"), wxT("rn-cluster.title"));
     pPGRnClusterGeneral = Category(pg, wxT("General"), wxT("rn-cluster.general"));
     pPGRnClusterName = P_STRING("Name", "rn-cluster.name");
-    //cr13 todo add hydrocluster
     wxPGChoices RnGroupChoices;
     for (uint i = 0; i != arrayRnClusterGroupCount; ++i)
         RnGroupChoices.Add(arrayRnClusterGroup[i], i);
@@ -1030,8 +1040,33 @@ void Frame::apply(const InspectorData::Ptr& data)
     pPGRnClusterParams->Hide(hide);
     pPGRnClusterGeneral->Hide(hide);
 
-    //cr13 todo add hydrocluster
+    // --------------------
+    // HYDROCLUSTER CLUSTERS
+    // --------------------
+    hide = !data || data->HydroclusterClusters.empty();
+    multiple = (data and data->HydroclusterClusters.size() > 1);
+    pPGHydroclusterClusterSeparator->Hide(hide);
+    p = PROPERTY("hydrocluster-cluster.title");
+    p->Hide(hide);
+    if (!hide)
+    {
+        pPGHydroclusterClusterName->Hide(multiple);
+        if (!multiple) // only one Hydrocluster cluster
+        {
+            p->SetLabel(wxT("HYDROCLUSTER CLUSTER"));
+            pPGHydroclusterClusterName->SetValueFromString(
+              wxStringFromUTF8((*(data->HydroclusterClusters.begin()))->name()));
+        }
+        else
+            p->SetLabel(wxString() << data->HydroclusterClusters.size() << wxT(" HYDROCLUSTER CLUSTERS"));
 
+        // Parent Area
+        Accumulator<PClusterArea>::Apply(pPGHydroclusterClusterArea, data->HydroclusterClusters);
+        Accumulator<PClusterUnitCount>::Apply(pPGHydroclusterClusterUnitCount, data->HydroclusterClusters);
+
+    }
+
+    pPGHydroclusterClusterGeneral->Hide(hide);
     
     // -----------
     // CONSTRAINTS
