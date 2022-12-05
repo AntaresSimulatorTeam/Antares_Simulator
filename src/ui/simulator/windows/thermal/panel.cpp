@@ -118,12 +118,6 @@ Panel::Panel(Component::Notebook* parent) :
             subbook, new Component::Datagrid::Renderer::ThermalClusterPrepro(subbook, tag)),
           wxT("TS generator"));
 
-        // Time Series
-        pageThermalTimeSeries = subbook->add(
-          new Component::Datagrid::Component(
-            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
-          wxT("Time-Series"));
-
         pageThermalTimeSeriesFuelCost = subbook->add(
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterFuelCost(subbook, tag)),
@@ -133,6 +127,12 @@ Panel::Panel(Component::Notebook* parent) :
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesThermalClusterCO2Cost(subbook, tag)),
           wxT("CO2 Cost"));
+
+        // Availability (ex Time Series)
+        pageThermalTimeSeries = subbook->add(
+          new Component::Datagrid::Component(
+            subbook, new Component::Datagrid::Renderer::TimeSeriesThermalCluster(subbook, tag)),
+          wxT("Availability"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);
