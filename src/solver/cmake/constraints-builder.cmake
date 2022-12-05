@@ -23,4 +23,3 @@ add_library(libantares-solver-constraints-builder
 
 
 target_link_libraries(libantares-solver-constraints-builder PRIVATE libantares-core)
-

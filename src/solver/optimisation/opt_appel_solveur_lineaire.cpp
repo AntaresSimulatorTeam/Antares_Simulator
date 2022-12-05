@@ -102,12 +102,15 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     double* pt;
     char PremierPassage;
     double CoutOpt;
+    long long solveTime;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                                   ProblemeAResoudre->NomDesContraintes);
+                                                   ProblemeAResoudre->NomDesContraintes,
+                                                   ProblemeAResoudre->StatutDesVariables,
+                                                   ProblemeAResoudre->StatutDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
@@ -116,6 +119,10 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
+
+    const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
+    assert(opt >= 0 && opt < 2);
+    OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
 RESOLUTION:
 
@@ -173,7 +180,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
+            optimizationStatistics->addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -230,17 +237,22 @@ RESOLUTION:
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    // We create the MPS writer here (and not at the beginning of the current function) because
-    // MPS writer uses the solver that can be updated earlier in the function.
+    if (ortoolsUsed)
+    {
+        solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
+    }
+
     mpsWriterFactory mps_writer_factory(
       ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded();
+    mps_writer->runIfNeeded(study->resultWriter);
 
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme, solver);
+        const bool keepBasis
+          = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
+        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
@@ -255,10 +267,10 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
+    solveTime = measure.duration_ms();
+    optimizationStatistics->addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
@@ -310,16 +322,22 @@ RESOLUTION:
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->X[Var];
+
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+        {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+            ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+        }
         else
+        {
             ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-
+            ProblemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+        }
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
@@ -352,7 +370,7 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded();
+        mps_writer_on_error->runIfNeeded(study->resultWriter);
 
         return false;
     }

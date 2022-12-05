@@ -43,36 +43,22 @@ typedef struct
     int* NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
     int* NumeroDeVariableDuPalierThermique;
-    int* NumeroDeVariableDuPalierThermiqueUp;
-    int* NumeroDeVariableDuPalierThermiqueDown;
 
     int* NumeroDeVariablesDeLaProdHyd;
-    int* NumeroDeVariablesDeLaProdHydUp;
-    int* NumeroDeVariablesDeLaProdHydDown;
 
     int* NumeroDeVariablesDePompage;
     int* NumeroDeVariablesDeNiveau;
     int* NumeroDeVariablesDeDebordement;
 
     int* NumeroDeVariableDefaillancePositive;
-    int* NumeroDeVariableDefaillancePositiveUp;
-    int* NumeroDeVariableDefaillancePositiveDown;
-    int* NumeroDeVariableDefaillancePositiveAny;
 
     int* NumeroDeVariableDefaillanceNegative;
-    int* NumeroDeVariableDefaillanceNegativeUp;
-    int* NumeroDeVariableDefaillanceNegativeDown;
-    int* NumeroDeVariableDefaillanceNegativeAny;
 
     int* NumeroDeVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
-    int* NumeroDeVariablesVariationHydALaBaisseUp;
-    int* NumeroDeVariablesVariationHydALaBaisseDown;
 
     int* NumeroDeVariablesVariationHydALaHausse;
-    int* NumeroDeVariablesVariationHydALaHausseUp;
-    int* NumeroDeVariablesVariationHydALaHausseDown;
 
     int* NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
@@ -561,7 +547,6 @@ struct PROBLEME_HEBDO
     char ReinitOptimisation;
 
     Data::mpsExportStatus ExportMPS;
-    bool SplitExportedMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 
@@ -606,11 +591,12 @@ struct PROBLEME_HEBDO
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
 
+    OptimizationStatistics optimizationStatistics[2];
+
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
 
-    optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -623,6 +609,9 @@ struct PROBLEME_HEBDO
 
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
+
+    double* tempsResolution1;
+    double* tempsResolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */
@@ -710,6 +699,9 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    /* Debug */
+    char debugFolder[1024];
 };
 
 #endif

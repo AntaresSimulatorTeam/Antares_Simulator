@@ -153,7 +153,7 @@ void ThermalClusterCommonModulation::internalThermalClusterChanged(
     {
         pCluster = cluster;
         if (cluster != nullptr)
-            cluster->modulation.invalidate(true);
+            cluster->modulation.forceReload(true);
         matrix(cluster ? &cluster->modulation : nullptr);
     }
 }

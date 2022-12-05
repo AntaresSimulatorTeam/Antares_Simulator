@@ -153,7 +153,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
     if (study.header.version < 390)
     {
-        data.invalidate(true);
+        data.forceReload(true);
         auto& colFoDuration = data[foDuration];
         auto& colPoDuration = data[poDuration];
         for (uint i = 0; i != DAYS_PER_YEAR; ++i)
@@ -243,9 +243,9 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     return ret;
 }
 
-bool PreproThermal::invalidate(bool reload) const
+bool PreproThermal::forceReload(bool reload) const
 {
-    return data.invalidate(reload);
+    return data.forceReload(reload);
 }
 
 void PreproThermal::markAsModified() const

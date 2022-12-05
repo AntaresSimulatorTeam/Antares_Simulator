@@ -6,3 +6,4 @@ add_subdirectory(yby-aggregator)
 add_subdirectory(config)
 add_subdirectory(vacuum)
 
+add_subdirectory(kirchhoff-cbuilder)

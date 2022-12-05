@@ -101,7 +101,7 @@ public:
     **
     ** \param reload True to load all missing data
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the data associated to the link as modified
@@ -124,6 +124,9 @@ public:
     bool isVisibleOnLayer(const size_t& layerID) const;
 
     Yuni::String getName() const;
+
+    bool isLinkPhysical() const;
+    void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
     bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
@@ -165,7 +168,7 @@ public:
 
     //! Flag for the transmission capacities (NTC +infinite)
     // previously called copper plate
-    TransmissionCapacities transmissionCapacities;
+    LocalTransmissionCapacities transmissionCapacities;
     //@}
 
     //! Flag for the asset type (AC/DC/Other)

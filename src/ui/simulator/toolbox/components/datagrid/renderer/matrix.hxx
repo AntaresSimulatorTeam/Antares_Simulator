@@ -196,7 +196,7 @@ bool Matrix<T, ReadWriteT, PrecisionT>::ensureDataAreLoaded()
             logs.info() << "loading '" << jit.sourceFilename << "'";
         }
 
-        if (not pMatrix->invalidate(true))
+        if (not pMatrix->forceReload(true))
         {
             if (pMatrix->jit)
                 logs.error() << "I/O Error: Impossible to load '" << jit.sourceFilename << "'";

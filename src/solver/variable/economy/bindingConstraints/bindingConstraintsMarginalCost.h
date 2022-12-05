@@ -193,13 +193,13 @@ public:
         switch (associatedBC_->type)
         {
         case BindingConstraint::typeHourly:
-            pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
             break;
         case BindingConstraint::typeDaily:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromDailyValues();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromDailyResults();
             break;
         case BindingConstraint::typeWeekly:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromWeeklyValues();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromWeeklyResults();
             break;
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
@@ -263,13 +263,10 @@ public:
 
             pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
 
-            // Even if not printed for weekly BC, we need daily values as : (weekly values) / 7
-            double dailyValue = weeklyValue / 7;
-
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = dailyValue;
+                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = weeklyValue;
                 dayInTheYear++;
             }
             break;

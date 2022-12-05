@@ -405,7 +405,6 @@ private:
     std::map<Data::Area*, std::set<linkInfo*>> areaToLinks;
 
     Antares::Data::Study::Ptr pStudy;
-    uint NLinks;
 
     Graph::Grid<Antares::Data::Area> _grid;
 

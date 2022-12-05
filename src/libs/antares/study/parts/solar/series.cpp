@@ -92,9 +92,9 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
     return 0;
 }
 
-bool DataSeriesSolar::invalidate(bool reload) const
+bool DataSeriesSolar::forceReload(bool reload) const
 {
-    return series.invalidate(reload);
+    return series.forceReload(reload);
 }
 
 void DataSeriesSolar::markAsModified() const

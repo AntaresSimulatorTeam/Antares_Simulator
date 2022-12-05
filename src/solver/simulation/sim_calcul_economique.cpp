@@ -95,7 +95,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
     problem.ExportMPS = study.parameters.include.exportMPS;
-    problem.SplitExportedMPS = study.parameters.include.splitExportedMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
@@ -316,11 +315,6 @@ void SIM_InitialisationResultats()
             interconnexion.TransitMaximum[j] = (double)-LINFINI_ENTIER;
         }
     }
-
-    for (uint i = 0; i < study.runtime->bindingConstraintCount; i++)
-    {
-        memset(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
-    }
 }
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
@@ -344,6 +338,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         problem.numeroOptimisation[opt] = 0;
         problem.coutOptimalSolution1[opt] = 0.;
         problem.coutOptimalSolution2[opt] = 0.;
+        problem.tempsResolution1[opt] = 0.;
+        problem.tempsResolution2[opt] = 0.;
     }
 
     for (uint k = 0; k < studyruntime.interconnectionsCount; ++k)
@@ -655,20 +651,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 Pt.PuissanceDisponibleDuPalierThermique[j]
                   = cluster.series->series[tsIndex.ThermiqueParPalier[cluster.areaWideIndex]][indx];
 
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-                if (Pt.PuissanceDisponibleDuPalierThermique[j] == 0.)
-                {
-                    Pt.CoutHoraireDeProductionDuPalierThermique[j] = studyruntime.globalMaximumCost;
-                }
-                else
-                    Pt.CoutHoraireDeProductionDuPalierThermique[j]
-                      = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
-                        + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
-#else
                 Pt.CoutHoraireDeProductionDuPalierThermique[j]
                   = cluster.marketBidCost * cluster.modulation[thermalModulationMarketBid][indx]
                     + PtValGen.AleaCoutDeProductionParPalier[cluster.areaWideIndex];
-#endif
 
                 Pt.PuissanceMinDuPalierThermique[j]
                   = (Pt.PuissanceDisponibleDuPalierThermique[j] < cluster.PthetaInf[indx])
@@ -696,27 +681,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     }
 
     {
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-        double sum;
-        for (uint k = 0; k < nbPays; ++k)
-        {
-            studyruntime.hydroCostByAreaShouldBeInfinite[k] = false;
-            if (problem.CaracteristiquesHydrauliques[k]->PresenceDHydrauliqueModulable > 0)
-            {
-                sum = 0;
-                for (int j = 0; j < 7; ++j)
-                {
-                    uint dayYear = study.calendar.hours[PasDeTempsDebut + j * 24].dayYear;
-                    problem.CaracteristiquesHydrauliques[k]->ContrainteDEnergieHydrauliqueParJour[j]
-                      = ValeursGenereesParPays[numSpace][k]->HydrauliqueModulableQuotidien[dayYear];
-                    sum += problem.CaracteristiquesHydrauliques[k]
-                             ->ContrainteDEnergieHydrauliqueParJour[j];
-                }
-                if (sum < DBL_EPSILON)
-                    studyruntime.hydroCostByAreaShouldBeInfinite[k] = true;
-            }
-        }
-#else
         for (uint k = 0; k < nbPays; ++k)
         {
             if (problem.CaracteristiquesHydrauliques[k]->PresenceDHydrauliqueModulable > 0)
@@ -985,7 +949,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 }
             }
         }
-#endif
     }
 
     for (uint k = 0; k < nbPays; ++k)

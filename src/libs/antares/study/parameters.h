@@ -160,15 +160,6 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
-    ** \brief Check if some general data seem valid
-    **
-    ** \return The error if any (stErrNone otherwise)
-    */
-    StudyError checkIntegrity() const;
-
-    void removeExtraSettings();
-
-    /*!
     ** \brief Get the amount of memory used by the general data
     */
     Yuni::uint64 memoryUsage() const;
@@ -423,9 +414,6 @@ public:
         //! Flag to export mps files
         mpsExportStatus exportMPS;
 
-        //! if MPS files are exported, a flag to split them
-        bool splitExportedMPS;
-
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -503,7 +491,7 @@ public:
     } reserveManagement;
 
     //! Transmission capacities
-    TransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
     LinkType linkType;
     //! Simplex optimization range (day/week)

@@ -336,7 +336,7 @@ inline void Matrix<T, ReadWriteT>::fillUnit()
 }
 
 template<class T, class ReadWriteT>
-bool Matrix<T, ReadWriteT>::invalidate(bool reload) const
+bool Matrix<T, ReadWriteT>::forceReload(bool reload) const
 {
     JIT::Invalidate(jit);
     return (reload) ? loadAllJITData() : true;
@@ -1404,7 +1404,7 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
 {
     assert((void*)(&rhs) != (void*)this and "Undefined behavior");
 
-    rhs.invalidate(true);
+    rhs.forceReload(true);
     if (rhs.empty())
     {
         clear();

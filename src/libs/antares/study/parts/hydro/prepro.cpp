@@ -336,9 +336,9 @@ bool PreproHydro::loadFromFolder(Study& s, const AreaName& areaID, const char* f
     return ret;
 }
 
-bool PreproHydro::invalidate(bool reload) const
+bool PreproHydro::forceReload(bool reload) const
 {
-    return data.invalidate(reload);
+    return data.forceReload(reload);
 }
 
 void PreproHydro::markAsModified() const

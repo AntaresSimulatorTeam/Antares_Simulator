@@ -633,7 +633,7 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
         {
             logs.info() << "Preparing the area " << area.name;
             // invalidating all data belonging to the area
-            ret = area.invalidate(true) and ret;
+            ret = area.forceReload(true) and ret;
             // marking the area as modified to force the incremental save
             area.markAsModified();
             ++count;
@@ -871,7 +871,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
                 // Copy
                 (void)memcpy(area.miscGen[fhhBioMass], m[0], (size_t)(8760 * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhCHP], m[2], (size_t)(8760 * sizeof(double)));
@@ -895,7 +895,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
 
                 (void)memcpy(area.miscGen[fhhCHP], m[0], (size_t)(m.height * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhBioMass], m[2], (size_t)(m.height * sizeof(double)));
@@ -1063,7 +1063,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             {
                 // We may have some strange name/id in older studies
                 // force full reloading
-                cluster->invalidate(true);
+                cluster->forceReload(true);
                 // marking the thermal plant as modified
                 cluster->markAsModified();
 
@@ -1559,7 +1559,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 #endif
         // Renaming the entry
 
-        link->invalidate(true);
+        link->forceReload(true);
         link->markAsModified();
 
         link->detach();
@@ -1607,10 +1607,10 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
     });
 }
 
-bool AreaList::invalidate(bool reload) const
+bool AreaList::forceReload(bool reload) const
 {
     bool ret = true;
-    each([&](Data::Area& area) { ret = area.invalidate(reload) and ret; });
+    each([&](Data::Area& area) { ret = area.forceReload(reload) and ret; });
     return ret;
 }
 

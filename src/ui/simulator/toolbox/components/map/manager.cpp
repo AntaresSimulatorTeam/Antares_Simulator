@@ -282,7 +282,7 @@ void Manager::invalidateAllNodes()
         {
             NodeMap::const_iterator jEnd = i->second.end();
             for (NodeMap::const_iterator j = i->second.begin(); j != jEnd; ++j)
-                j->first->invalidate();
+                j->first->forceReload();
         }
     }
 }
@@ -370,7 +370,7 @@ void Manager::selectOnly(const Data::Area::Vector& areaList)
                 }
                 else
                     j->first->selected(false);
-                j->first->invalidate();
+                j->first->forceReload();
             }
         }
         Window::Inspector::AddAreas(areaList);
@@ -440,7 +440,7 @@ void Manager::selectOnly(const Data::Area::Vector& areaList, const Data::AreaLin
 
                 // We don't care of this item
                 j->first->selected(false);
-                j->first->invalidate();
+                j->first->forceReload();
             }
         }
         Window::Inspector::AddAreas(areaList);

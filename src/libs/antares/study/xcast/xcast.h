@@ -158,7 +158,7 @@ public:
     /*!
     ** \brief Make sure that all data are loaded in memory
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the load data as modified

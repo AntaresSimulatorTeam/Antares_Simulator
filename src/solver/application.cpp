@@ -5,6 +5,8 @@
 #include <antares/hostinfo.h>
 #include <antares/exception/LoadingError.hpp>
 #include <antares/emergency.h>
+#include <antares/benchmarking/timer.h>
+#include <antares/version.h>
 #include "../config.h"
 
 #include "misc/system-memory.h"
@@ -38,15 +40,6 @@ void checkStudyVersion(const AnyString& optStudyFolder)
     }
 }
 
-void printVersion()
-{
-#ifdef GIT_SHA1_SHORT_STRING
-    std::cout << ANTARES_VERSION_STR << " (revision " << GIT_SHA1_SHORT_STRING << ")" << std::endl;
-#else
-    std::cout << ANTARES_VERSION_STR << std::endl;
-#endif
-}
-
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
@@ -62,8 +55,8 @@ void printSolvers()
 void checkSimplexRangeHydroPricing(Antares::Data::SimplexOptimization optRange,
                                    Antares::Data::HydroPricingMode hpMode)
 {
-    if (optRange == Antares::Data::SimplexOptimization::sorDay
-        && hpMode == Antares::Data::HydroPricingMode::hpMILP)
+    using namespace Antares::Data;
+    if (optRange == SimplexOptimization::sorDay && hpMode == HydroPricingMode::hpMILP)
     {
         throw Error::IncompatibleOptRangeHydroPricing();
     }
@@ -178,15 +171,6 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
         }
     }
 }
-
-void checkSplitMPSWithORTOOLS(bool ortoolsUsed, bool splitExportedMPS)
-{
-    if (ortoolsUsed && splitExportedMPS)
-    {
-        throw Error::InvalidParametersORTools_SplitMPS();
-    }
-}
-
 } // namespace
 
 namespace Antares
@@ -221,20 +205,33 @@ void Application::prepare(int argc, char* argv[])
     // The parser contains references to members of pSettings and options,
     // don't de-allocate these.
     auto parser = CreateParser(pSettings, options);
-
     // Parse the command line arguments
-    if (!parser->operator()(argc, argv))
-        throw Antares::Error::CommandLineArguments(parser->errors());
+
+    switch (auto ret = parser->operator()(argc, argv); ret)
+    {
+        using namespace Yuni::GetOpt;
+    case ReturnCode::error:
+        throw Error::CommandLineArguments(parser->errors());
+        break;
+    case ReturnCode::help:
+        // End the program
+        pStudy = nullptr;
+        return;
+    default:
+        break;
+    }
 
     if (options.displayVersion)
     {
-        printVersion();
+        PrintVersionToStdCout();
+        pStudy = nullptr;
         return;
     }
 
     if (options.listSolvers)
     {
         printSolvers();
+        pStudy = nullptr;
         return;
     }
 
@@ -250,10 +247,10 @@ void Application::prepare(int argc, char* argv[])
 
     // Starting !
 #ifdef GIT_SHA1_SHORT_STRING
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR << " ("
-                      << GIT_SHA1_SHORT_STRING << ")";
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR << " (" << GIT_SHA1_SHORT_STRING
+                      << ")";
 #else
-    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_PUB_STR;
+    logs.checkpoint() << "Antares Solver v" << ANTARES_VERSION_STR;
 #endif
     WriteHostInfoIntoLogs();
     logs.info();
@@ -292,8 +289,6 @@ void Application::prepare(int argc, char* argv[])
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
-
-    checkSplitMPSWithORTOOLS(pParameters->ortoolsUsed, pParameters->include.splitExportedMPS);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
@@ -347,6 +342,7 @@ void Application::onLogMessage(int level, const Yuni::String& /*message*/)
 
 void Application::execute()
 {
+    // pStudy == nullptr e.g when the -h flag is given
     if (!pStudy)
         return;
 
@@ -433,9 +429,6 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
 {
     processCaption(Yuni::String() << "antares: loading \"" << pSettings.studyFolder << "\"");
     auto& study = *pStudy;
-
-    // Init the global variable for backward compatibility
-    AppelEnModeSimulateur = OUI_ANTARES;
 
     // Name of the simulation
     if (!pSettings.simulationName.empty())
