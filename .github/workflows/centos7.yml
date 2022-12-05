@@ -48,6 +48,10 @@ jobs:
       run: |
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
+    - name: Install libraries
+      run: |
+        yum install -y boost-serialization
+
     - name: Get antares-deps
       run: |
            ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
