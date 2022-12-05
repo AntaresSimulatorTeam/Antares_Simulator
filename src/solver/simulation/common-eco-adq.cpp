@@ -95,8 +95,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
             auto& mtxParamaters = link->parameters;
             ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
-
-            link->flush();
         }
     }
 
@@ -166,8 +164,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                     for (uint h = 0; h != series.height; ++h)
                         mrs[h] += column[h];
                 }
-
-                series.flush();
             }
         }
 
@@ -188,8 +184,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 auto& column = series[tsIndex];
                 for (uint h = 0; h != series.height; ++h)
                     adq[h] += column[h];
-
-                series.flush();
             }
         }
 
@@ -219,12 +213,9 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
-                lnk.parameters.flush();
                 return true;
             }
         }
-
-        lnk.parameters.flush();
     }
     return false;
 }

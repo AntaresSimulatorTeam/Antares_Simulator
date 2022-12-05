@@ -120,42 +120,6 @@ public:
 
 }; // class StatusBar
 
-class MemoryFlushTimer : public wxTimer
-{
-public:
-    MemoryFlushTimer() : pDelayedCount()
-    {
-    }
-
-    void Notify() override
-    {
-        // Releasing all the memory currently used
-        if (Antares::Memory::swapSupport)
-        {
-            if (CanPerformMemoryFlush())
-            {
-                Antares::memory.flushAll();
-                pDelayedCount = 0;
-            }
-            else
-            {
-                if (pDelayedCount++ == 0)
-                    logs.info()
-                      << "memory flush delayed because a data update is currently performed";
-                else
-                {
-                    if (pDelayedCount > 5)
-                        pDelayedCount = 0;
-                }
-            }
-        }
-    }
-
-private:
-    //! Variable to reduce verbosity on logs
-    uint pDelayedCount;
-
-}; // class MemoryFlushTimer
 
 static void CreateWindowToolbar(ApplWnd& mainfrm, wxAuiManager& auimanager)
 {
@@ -357,8 +321,6 @@ void ApplWnd::internalInitialize()
     // A gray background color
     // SetBackgroundColour(wxColour(128, 128, 128));
 
-    pFlushMemoryTimer = new MemoryFlushTimer();
-
     // The menu for the window
     pMenu = this->createMenu();
     this->SetMenuBar(pMenu);
@@ -495,10 +457,6 @@ void ApplWnd::startAntares()
         message.add(Window::Message::btnContinue, true);
         message.showModal();
     }
-
-    // start the flushing timer
-    if (pFlushMemoryTimer)
-        pFlushMemoryTimer->Start(23000, wxTIMER_CONTINUOUS); // 23s
 
     // we may have to load a study given from the command line
     // otherwise, the startup wizard will be launched

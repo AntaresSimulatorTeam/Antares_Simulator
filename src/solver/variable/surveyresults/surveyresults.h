@@ -34,6 +34,7 @@
 #include "../categories.h"
 #include "data.h"
 #include <antares/study/variable-print-info.h>
+#include <i_writer.h>
 
 namespace Antares
 {
@@ -69,7 +70,10 @@ public:
     ** \param o The output folder
     ** \param year The current year, if any
     */
-    SurveyResults(uint maxVars, const Data::Study& s, const Yuni::String& o);
+    SurveyResults(uint maxVars,
+                  const Data::Study& s,
+                  const Yuni::String& o,
+                  IResultWriter::Ptr writer);
     /*!
     ** \brief Destructor
     */
@@ -89,17 +93,15 @@ public:
     */
     void exportGridInfos();
 
-    bool createDigestFile();
-
     // Reset a line of values to zero.
     void resetValuesAtLine(uint);
 
     /*!
     ** \brief Export the digest file
     */
-    void exportDigestAllYears();
+    void exportDigestAllYears(std::string& buffer);
 
-    void exportDigestMatrix(const char* title);
+    void exportDigestMatrix(const char* title, std::string& buffer);
 
 public:
     //! Data (not related to the template parameter)
@@ -144,13 +146,10 @@ public:
     bool* isCurrentVarNA;
     //! Same thing for print status (do we print the current output variable ?)
     bool* isPrinted;
+    // File writer
+    IResultWriter::Ptr pResultWriter;
 
 private:
-    /*!
-    ** \brief Export informations about each area (and its sub-components - thermal clusters, links)
-    */
-    void exportGridInfosAreas(const Yuni::String& folder);
-
     template<class StringT, class ConvertT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,

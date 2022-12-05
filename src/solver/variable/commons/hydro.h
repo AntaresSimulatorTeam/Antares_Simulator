@@ -202,7 +202,7 @@ public:
         const unsigned int nbchro
           = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
         pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
-        ror.flush();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }

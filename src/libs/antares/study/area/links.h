@@ -32,6 +32,7 @@
 #include <yuni/core/string.h>
 #include "../fwd.h"
 #include "../../array/matrix.h"
+#include <i_writer.h>
 #include <set>
 
 //! The minimal allowed value for hurdle costs when not null
@@ -73,7 +74,7 @@ public:
 
     bool loadTimeSeries(Study& study, const AnyString& folder);
 
-    bool storeTimeseriesNumbers(const AnyString& folder) const;
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     //! \name Area
     //@{
@@ -100,7 +101,7 @@ public:
     **
     ** \param reload True to load all missing data
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the data associated to the link as modified
@@ -124,7 +125,8 @@ public:
 
     Yuni::String getName() const;
 
-    void flush();
+    bool isLinkPhysical() const;
+    void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
     bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
@@ -166,7 +168,7 @@ public:
 
     //! Flag for the transmission capacities (NTC +infinite)
     // previously called copper plate
-    TransmissionCapacities transmissionCapacities;
+    LocalTransmissionCapacities transmissionCapacities;
     //@}
 
     //! Flag for the asset type (AC/DC/Other)

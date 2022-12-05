@@ -1,0 +1,268 @@
+name: Ubuntu CI (push and/or release)
+
+on:
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - release/*
+      - doc/*
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
+  IS_PUSH: ${{ github.event_name == 'push' }}
+
+jobs:
+
+  doc_generation:
+    uses: ./.github/workflows/build-userguide.yml
+    with:
+      artifact_name: pdf-doc
+
+  build:
+    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    env:
+      XPRESSDIR: ${{ github.workspace }}/xpressmp813
+      ORTOOLS_DIR: ${{ github.workspace }}/or-tools
+
+    outputs:
+        is_release: ${{steps.release_flag.outputs.is_release}}
+        os: ${{ matrix.os }}
+
+    runs-on: ${{ matrix.os }}
+    needs: doc_generation
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        test-platform: [ubuntu-20.04]
+        ortools-xpress: [ON, OFF]
+
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Export release flag
+      id: release_flag
+      run: |
+        echo "{is_release}=${{env.IS_RELEASE}}" >> $GITHUB_OUTPUT
+
+    - name: ccache
+      uses: hendrikmuhs/ccache-action@v1.2
+      with:
+          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
+
+    - name: Install libraries
+      run: |
+           sudo apt-get update
+           sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+           sudo apt-get install libboost-test-dev
+
+    - name: Read antares-deps version
+      id: antares-deps-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'antares-deps-version.json'
+        prop_path: 'antares_deps_version'
+
+
+    - name: Config OR-Tools URL
+      run: |
+          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
+            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
+          else
+            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
+            echo "LABEL=" >> $GITHUB_ENV
+          fi
+
+    - name: Download pre-compiled librairies
+      uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
+      with:
+        antares-deps-version: ${{steps.antares-deps-version.outputs.prop}}
+        os: ${{matrix.os}}
+        ortools-url: ${{env.ORTOOLS_URL}}
+        ortools-dir: ${{env.ORTOOLS_DIR}}
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.x
+
+    - name: Install dependencies
+      run: |
+          python -m pip install --upgrade pip
+          pip3 install -r src/tests/examples/requirements.txt
+
+    - name: Init submodule
+      run: |
+          git submodule update --init src/antares-deps
+          git submodule update --init src/tests/resources/Antares_Simulator_Tests
+
+    - name: Download XPRESS if needed
+      if: ${{ matrix.ortools-xpress == 'ON' }}
+      run: |
+        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
+        ls -la ${{ env.XPRESSDIR }}
+
+    - name: Configure push
+      run: |
+           cmake -B _build -S src \
+           -DCMAKE_C_COMPILER_LAUNCHER=ccache \
+           -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+           -DDEPS_INSTALL_DIR=${{github.workspace}}/rte-antares-deps-Release \
+           -DCMAKE_BUILD_TYPE=release \
+           -DBUILD_TESTING=ON \
+           -DBUILD_not_system=OFF \
+           -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
+           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
+
+    - name: Build
+      run: |
+           cmake --build _build --config release -j2
+
+    - name: Run unfeasibility-related tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R unfeasible
+
+    - name: Run adq-patch related test
+      if: ${{ env.IS_PUSH == 'true' }}
+
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R test-adq-patch
+
+    - name: Run unit and end-to-end tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      run: |
+           cd _build
+           ctest -C ${{ matrix.buildtype }} --output-on-failure -L "unit|end-to-end"
+
+    - name: Run kirchhoff constraints tests
+      shell: bash
+      run: |
+           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
+           cd _build
+           ctest -C Release --output-on-failure -R kirchhoff
+
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run tests about infinity on BCs RHS
+      continue-on-error: true
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
+
+    - name: Run short-tests
+      continue-on-error: false
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run medium-tests
+      continue-on-error: true
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      continue-on-error: true
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      continue-on-error: true
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      continue-on-error: true
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
+
+    - name: Installer .deb creation
+      run: |
+           cd _build
+           cpack -G DEB
+
+    - name: Rename .deb file
+      run: |
+           cd _build
+           DEB_NAME=$(ls *.deb)
+           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ env.LABEL }}.deb}
+           mv "${DEB_NAME}" "${DEB_NAME_WITH_SUFFIX}" || true
+
+    - name: .tar.gz creation
+      run: |
+           cd _build
+           cpack -G TGZ
+
+    - name: Rename .tgz file
+      run: |
+           cd _build
+           TGZ_NAME=$(ls *.tar.gz)
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
+           mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
+
+    - name: Installer archive upload push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.tar.gz
+
+    - name: Installer deb upload push
+      uses: actions/upload-artifact@v3
+      with:
+        path: _build/*.deb
+
+  publish_assets:
+    name: Publish assets
+    needs: build
+    runs-on: ${{needs.build.outputs.os}}
+    if: ${{needs.build.outputs.is_release == 'true'}}
+    steps:
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+
+    - name: List artifacts
+      run: ls -R
+
+    - name: Publish assets
+      uses: alexellis/upload-assets@0.3.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: '["*/*.tar.gz", "*/*.deb"]'

@@ -29,6 +29,5 @@
 
 #include "benchmarking/timer.h"
 #include "benchmarking/info_collectors.h"
-#include "benchmarking/file_writer.h"
 
 #endif // __ANTARES_LIBS_BENCHMARKING_H__

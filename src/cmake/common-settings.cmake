@@ -1,6 +1,8 @@
 #
 # Common FLAGS for all compilers
 #
+set(CMAKE_CXX_STANDARD 17)
+
 set(COMMON_GCC_FLAGS "-Wall -W -Wextra -Wfatal-errors")
 if (NOT WIN32)
 	set(COMMON_GCC_FLAGS "${COMMON_GCC_FLAGS} -pipe -msse -msse2 -Wunused-but-set-variable -Wunused-but-set-parameter")

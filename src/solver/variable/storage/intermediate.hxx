@@ -38,11 +38,6 @@ inline IntermediateValues::~IntermediateValues()
     Antares::Memory::Release(hour);
 }
 
-inline void IntermediateValues::flush() const
-{
-    Antares::Memory::Flush(hour);
-}
-
 inline void IntermediateValues::reset()
 {
     Antares::Memory::Zero(maxHoursInAYear, hour);
@@ -69,13 +64,7 @@ inline void IntermediateValues::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 
 inline Yuni::uint64 IntermediateValues::MemoryUsage()
 {
-    return
-#ifdef ANTARES_SWAP_SUPPORT
-      0
-#else
-      +sizeof(Type) * maxHoursInAYear
-#endif
-      ;
+    return +sizeof(Type) * maxHoursInAYear;
 }
 
 template<class VCardT>

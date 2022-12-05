@@ -37,12 +37,10 @@ inline bool AreaList::empty() const
 }
 
 template<int TimeSeriesT>
-bool AreaList::storeTimeseriesNumbers(Study& study)
+void AreaList::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
 {
-    auto end = areas.end();
-    for (auto i = areas.begin(); i != end; ++i)
-        (i->second)->storeTimeseriesNumbers<TimeSeriesT>(study);
-    return true;
+    // Each area in the list
+    each([&writer](const Area& area) { area.storeTimeseriesNumbers<TimeSeriesT>(writer); });
 }
 
 } // namespace Data

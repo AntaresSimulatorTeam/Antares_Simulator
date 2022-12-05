@@ -123,8 +123,7 @@ void computingHydroLevels(const Data::Study& study,
 void DispatchableMarginForAllAreas(const Data::Study& study,
                                    PROBLEME_HEBDO& problem,
                                    uint numSpace,
-                                   uint hourInYear,
-                                   uint nbHours);
+                                   uint hourInYear);
 
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only

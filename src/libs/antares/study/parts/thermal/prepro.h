@@ -70,7 +70,7 @@ public:
     explicit PreproThermal(std::shared_ptr<const ThermalCluster> cluster);
     //@}
 
-    bool invalidate(bool reload) const;
+    bool forceReload(bool reload) const;
 
     void markAsModified() const;
 
@@ -99,11 +99,6 @@ public:
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
     bool saveToFolder(const AnyString& folder);
-
-    /*!
-    ** \brief Flush memory to swap file
-    */
-    void flush();
 
     /*!
     ** \brief Get the amount of memory used by the class

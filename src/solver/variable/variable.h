@@ -218,8 +218,6 @@ public:
     */
     void yearEndBuildForEachThermalCluster(State& state, uint year, uint numSpace);
 
-    void yearEndBuildPrepareDataForEachRenewableCluster(State& state, uint year, uint numSpace);
-
     /*!
     ** \brief Notify to all variables that the year is now over
     **

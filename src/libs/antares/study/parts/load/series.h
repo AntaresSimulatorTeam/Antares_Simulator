@@ -42,7 +42,7 @@ class DataSeriesLoad
 public:
     void estimateMemoryUsage(StudyMemoryUsage&) const;
 
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the load data as modified

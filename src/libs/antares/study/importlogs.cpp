@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <string>
 #include <yuni/yuni.h>
 #include "study.h"
 #include "../logs.h"
@@ -41,22 +42,7 @@ void Study::importLogsToOutputFolder() const
     if (!logs.logfile())
         return;
 
-    String buffer;
-    buffer.reserve(this->folderOutput.size() + 20);
-
-    // Double check: Since this method might be call after some memory starvation,
-    // we should make sure that we have a valid buffer
-    if (!buffer.data())
-    {
-        logs.error() << "I/O Error: Impossible to create the folder '" << buffer << "'";
-        return;
-    }
-    buffer << this->folderOutput;
-    if (not IO::Directory::Create(buffer))
-        return;
-
-    buffer << IO::Separator << "simulation.log";
-    logs.info() << " Writing log file: " << buffer;
+    std::string logPath("simulation.log");
     String from;
     IO::Normalize(from, logs.logfile());
 
@@ -67,23 +53,7 @@ void Study::importLogsToOutputFolder() const
         logs.closeLogfile();
     }
 
-    switch (IO::File::Copy(from, buffer))
-    {
-    case IO::errNone:
-        break;
-    case IO::errOverwriteNotAllowed:
-        logs.error() << from << ": File already exists";
-        buffer.clear().shrink();
-        break;
-    case IO::errMemoryLimit:
-        logs.error() << "Hard limit reached: Impossible to copy '" << from << "'";
-        buffer.clear().shrink();
-        break;
-    default:
-        logs.error() << "Impossible to copy '" << from << "' to '" << buffer << "'";
-        buffer.clear().shrink();
-        break;
-    }
+    resultWriter->addEntryFromFile(logPath, from.c_str());
 
     if (System::windows)
     {

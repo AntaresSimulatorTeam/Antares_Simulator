@@ -14,7 +14,7 @@ jobs:
     container: 'centos:7'
 
     steps:
-    
+
     - name: Set up Python
       run: |
            yum update -y
@@ -27,18 +27,16 @@ jobs:
            yum install -y cmake3 devtoolset-9
            yum install -y rh-git227-git
            yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
-                      
-    
-    - uses: nelonoel/branch-name@v1.0.1
-    
+
+
     - name: Checkout
       run: |
-          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b ${BRANCH_NAME} .
-    
+          git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git -b $GITHUB_REF_NAME .
+
     - name: Init submodule
       run: |
            git submodule update --init --recursive src .
-          
+
     - name: Install dependencies
       run: |
           pip3 install -r src/tests/examples/requirements.txt
@@ -55,25 +53,25 @@ jobs:
            source /opt/rh/devtoolset-9/enable
            source /opt/rh/rh-git227/enable
            cmake3 --build _build --config release -j2
-    
+
     - name: Installer .rpm creation
       run: |
            cd _build
            cpack3 -G RPM
-           
+
     - name: Installer .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
-           
+
     - name: Installer archive upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: antares-centos7-archive
         path: _build/*.tar.gz
-        
+
     - name: Installer rpm upload
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: antares-centos7-rpm
         path: _build/*.rpm

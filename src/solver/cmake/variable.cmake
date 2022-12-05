@@ -16,6 +16,8 @@ set(SRC_VARIABLE
 		variable/area.inc.hxx
 		variable/setofareas.h
 		variable/setofareas.hxx
+		variable/bindConstraints.h
+		variable/bindConstraints.hxx
 		variable/constants.h
 		variable/categories.h
 		variable/surveyresults.h
@@ -97,6 +99,7 @@ set(SRC_VARIABLE_ADEQUACY
 		variable/adequacy/all.h
 		variable/adequacy/area.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/adequacy/links.h
 		variable/adequacy/links.cpp
 		variable/adequacy/spilledEnergy.h
@@ -111,6 +114,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links.cpp
 		variable/economy/area.cpp
 		variable/economy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
 		variable/economy/co2.h
@@ -156,9 +160,11 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/links/congestionFeeAbs.h
 		variable/economy/links/marginalCost.h
 		variable/economy/links/congestionProbability.h
+		
+		# Binding constraints
+		variable/economy/bindingConstraints/bindingConstraintsMarginalCost.h
 		)
 source_group("variable\\economy" FILES ${SRC_VARIABLE_ECONOMY})
-
 
 
 
@@ -177,21 +183,6 @@ add_library(libantares-solver-variable
 target_include_directories(libantares-solver-variable PUBLIC .)
 target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
-if(BUILD_SWAP)
-
-    add_library(libantares-solver-variable-swap
-            ${SRC_VARIABLE}
-            ${SRC_VARIABLE_COMMON}
-            ${SRC_VARIABLE_STORAGE}
-            ${SRC_VARIABLE_ADEQUACY_DRAFT}
-            ${SRC_VARIABLE_ADEQUACY}
-            ${SRC_VARIABLE_ECONOMY}  )
-
-    target_include_directories(libantares-solver-variable-swap PUBLIC .)
-    target_link_libraries(libantares-solver-variable-swap PRIVATE libantares-core-swap)
-    set_target_properties(libantares-solver-variable-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-
-endif()
 
 add_library(libantares-solver-variable-info
 		variable/adequacy-draft/all.h
@@ -200,30 +191,12 @@ add_library(libantares-solver-variable-info
 		variable/economy/area.memory-estimation.cpp
 		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
+		variable/economy/bc.memory-estimation.cpp
+		variable/adequacy/bc.memory-estimation.cpp
 		variable/surveyresults.h
 		variable/surveyresults/surveyresults.h
 		variable/surveyresults/data.h
 		variable/surveyresults/surveyresults.cpp
 )
-target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core)
-
-if(BUILD_SWAP)
-
-    add_library(libantares-solver-variable-info-swap
-            variable/adequacy-draft/all.h
-            variable/adequacy/all.h
-            variable/economy/all.h
-            variable/economy/area.memory-estimation.cpp
-            variable/adequacy-draft/area.memory-estimation.cpp
-            variable/adequacy/area.memory-estimation.cpp
-            variable/surveyresults.h
-            variable/surveyresults/surveyresults.h
-            variable/surveyresults/data.h
-            variable/surveyresults/surveyresults.cpp
-    )
-
-    target_link_libraries(libantares-solver-variable-info-swap PRIVATE libantares-core-swap)
-    set_target_properties(libantares-solver-variable-info-swap PROPERTIES COMPILE_FLAGS " -DANTARES_SWAP_SUPPORT=1")
-    
-endif()
+target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
 

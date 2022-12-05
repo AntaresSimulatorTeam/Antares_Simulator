@@ -16,9 +16,7 @@ The content of this library may depend on the type of installation package it co
 
 - The [https://antares-simulator.org](https://antares-simulator.org/) website
 
-Please report misprints or other errors to:
-
-[support@antares-simulator.org](mailto:support@antares-simulator.org)
+If you notice an issue in the documentation, please report it on [github.com](https://github.com/AntaresSimulatorTeam/Antares_Simulator/issues/new/choose).
 
 # General content of Antares\_Simulator sessions
 

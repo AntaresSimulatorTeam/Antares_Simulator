@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 	link->useHurdlesCost = true;
 	link->useLoopFlow = true;
 	link->usePST = true;
-	link->transmissionCapacities = tncInfinite;
+	link->transmissionCapacities = LocalTransmissionCapacities::infinite;
 	link->assetType = atDC;
 	link->style = stDash;
 	link->linkWidth = 3;
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(one_link_with_none_default_values)
 BOOST_AUTO_TEST_CASE(one_link_with_transmission_capacity_to_ignore__all_others_properties_are_default)
 {
 	AreaLink* link = createLinkBetweenAreas(area_1, area_2);
-	link->transmissionCapacities = tncIgnore;
+	link->transmissionCapacities = LocalTransmissionCapacities::null;
 
 	saveAreaLinksOntoDisk(area_1);
 

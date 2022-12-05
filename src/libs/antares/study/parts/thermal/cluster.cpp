@@ -192,17 +192,6 @@ Data::ThermalCluster::~ThermalCluster()
         delete[] pminOfAGroup;
 }
 
-void ThermalCluster::flush()
-{
-#ifdef ANTARES_SWAP_SUPPORT
-    modulation.flush();
-    if (prepro)
-        prepro->flush();
-    if (series)
-        series->flush();
-#endif
-}
-
 uint ThermalCluster::groupId() const
 {
     return groupID;
@@ -292,7 +281,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
@@ -387,14 +376,14 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
     groupID = thermalDispatchGrpOther1;
 }
 
-bool Data::ThermalCluster::invalidate(bool reload) const
+bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.invalidate(reload) and ret;
+    ret = modulation.forceReload(reload) and ret;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     if (prepro)
-        ret = prepro->invalidate(reload) and ret;
+        ret = prepro->forceReload(reload) and ret;
     return ret;
 }
 
@@ -430,7 +419,6 @@ void Data::ThermalCluster::calculationOfSpinning()
         // already does this test.
         nominalCapacityWithSpinning *= 1 - (spinning / 100.);
         ts.multiplyAllEntriesBy(1. - (spinning / 100.));
-        ts.flush();
     }
 }
 
@@ -455,7 +443,6 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         // already does this test.
         ts.multiplyAllEntriesBy(1. / (1. - (spinning / 100.)));
         ts.roundAllEntries();
-        ts.flush();
     }
 }
 
@@ -506,7 +493,6 @@ void Data::ThermalCluster::reset()
     modulation.resize(thermalModulationMax, HOURS_PER_YEAR);
     modulation.fill(1.);
     modulation.fillColumn(thermalMinGenModulation, 0.);
-    modulation.flush();
 
     // prepro
     // warning: the variables `prepro` and `series` __must__ not be destroyed
@@ -568,12 +554,6 @@ bool Data::ThermalCluster::integrityCheck()
                      << ": The Nominal capacity must be positive or null";
         nominalCapacity = 0.;
         nominalCapacityWithSpinning = 0.;
-        ret = false;
-    }
-    if (unitCount > 100)
-    {
-        logs.error() << "Thermal cluster " << pID << ": The variable `unitCount` must be < 100";
-        unitCount = 100;
         ret = false;
     }
     if (spinning < 0. or spinning > 100.)

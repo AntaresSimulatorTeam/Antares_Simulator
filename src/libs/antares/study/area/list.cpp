@@ -580,19 +580,14 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     return true;
 }
 
-bool AreaList::saveLinkListToFile(const AnyString& filename) const
+void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
-    IO::File::Stream file;
-    if (not file.openRW(filename))
-        return false;
-
     each([&](const Data::Area& area) {
-        file << area.id << '\n';
+        buffer << area.id << '\n';
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
-            file << '\t' << (i->second)->with->id << '\n';
+            buffer << '\t' << (i->second)->with->id << '\n';
     });
-    return true;
 }
 
 bool AreaList::saveListToFile(const AnyString& filename) const
@@ -638,7 +633,7 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
         {
             logs.info() << "Preparing the area " << area.name;
             // invalidating all data belonging to the area
-            ret = area.invalidate(true) and ret;
+            ret = area.forceReload(true) and ret;
             // marking the area as modified to force the incremental save
             area.markAsModified();
             ++count;
@@ -838,8 +833,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         // Release
         delete[] tmp;
-        // flush
-        area.reserves.flush();
     }
     else
     {
@@ -857,7 +850,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.reserves.columnToZero(fhrStrategicReserve);
         if (not study.parameters.include.reserve.primary)
             area.reserves.columnToZero(fhrPrimaryReserve);
-        area.reserves.flush();
     }
 
     // Fatal hors hydro - Misc Gen.
@@ -879,7 +871,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
                 // Copy
                 (void)memcpy(area.miscGen[fhhBioMass], m[0], (size_t)(8760 * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhCHP], m[2], (size_t)(8760 * sizeof(double)));
@@ -903,7 +895,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
 
                 (void)memcpy(area.miscGen[fhhCHP], m[0], (size_t)(m.height * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhBioMass], m[2], (size_t)(m.height * sizeof(double)));
@@ -940,7 +932,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << "Misc Gen: `" << area.id << '`';
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
     }
-    area.miscGen.flush();
 
     ++options.progressTicks;
     options.pushProgressLogs();
@@ -1072,7 +1063,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             {
                 // We may have some strange name/id in older studies
                 // force full reloading
-                cluster->invalidate(true);
+                cluster->forceReload(true);
                 // marking the thermal plant as modified
                 cluster->markAsModified();
 
@@ -1086,9 +1077,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
-
-        // flush
-        area.thermal.list.flush();
     }
 
     // Renewable cluster list
@@ -1096,8 +1084,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
-        // flush
-        area.renewable.list.flush();
     }
 
     // Adequacy patch
@@ -1573,7 +1559,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 #endif
         // Renaming the entry
 
-        link->invalidate(true);
+        link->forceReload(true);
         link->markAsModified();
 
         link->detach();
@@ -1621,10 +1607,10 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
     });
 }
 
-bool AreaList::invalidate(bool reload) const
+bool AreaList::forceReload(bool reload) const
 {
     bool ret = true;
-    each([&](Data::Area& area) { ret = area.invalidate(reload) and ret; });
+    each([&](Data::Area& area) { ret = area.forceReload(reload) and ret; });
     return ret;
 }
 

@@ -146,14 +146,10 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                                       Matrix<>::optFixedSize | Matrix<>::optImmediate,
                                       &study.dataBuffer))
             {
-                // days per month, immutable values for version prior to 3.9 for sure
-                // these values was hard-coded before 3.9
-                static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
                 uint dayYear = 0;
                 for (uint m = 0; m != 12; ++m)
                 {
-                    uint nbDays = daysPerMonth[m];
+                    uint nbDays = Constants::daysPerMonth[m];
                     uint power = array.entry[0][m];
 
                     for (uint d = 0; d != nbDays; ++d, ++dayYear)
@@ -286,30 +282,11 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                   && ret;
 
             double temp[3][DAYS_PER_YEAR];
-            static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-            uint daysPerMonthDecals[12];
-            for (int oldMonth = 0; oldMonth < 12; oldMonth++)
-            {
-                int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-                daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
-                if (study.parameters.leapYear)
-                {
-                    if (realMonth == 1) // February
-                    {
-                        daysPerMonthDecals[oldMonth]++;
-                    }
-                    if (oldMonth == 11) // Last month of the year
-                    {
-                        daysPerMonthDecals[oldMonth]--;
-                    }
-                }
-            }
             uint firstDayMonth[13];
-            firstDayMonth[0] = 0;
-            for (int i = 1; i < 13; i++)
-            {
-                firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
-            }
+            uint daysPerMonthDecals[12];
+
+            DataSeriesHydro::AdjustMonth(study, firstDayMonth, daysPerMonthDecals);
+
             for (int x = area.hydro.minimum; x <= area.hydro.maximum; x++)
             {
                 auto& col = area.hydro.reservoirLevel[x];
@@ -482,7 +459,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<double>(area->hydro.interDailyBreakdown) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -512,7 +489,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -531,7 +508,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.reservoirManagement) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -557,7 +534,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -596,7 +573,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -614,7 +591,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.followLoadModulations) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -632,7 +609,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.useWaterValue) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -650,7 +627,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.hardBoundsOnRuleCurves) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -668,7 +645,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.useHeuristicTarget) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -686,7 +663,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.powerToLevel) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -711,7 +688,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -730,7 +707,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                 if (area)
                     ret = property->value.to<bool>(area->hydro.useLeeway) && ret;
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -759,7 +736,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -788,7 +765,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -823,7 +800,7 @@ bool PartHydro::LoadFromFolder(Study& study, const AnyString& folder)
                     }
                 }
                 else
-                    logs.warning() << buffer << ": `" << property->value << "`: Unknown area";
+                    logs.warning() << buffer << ": `" << id << "`: Unknown area";
             }
         }
     }
@@ -924,19 +901,19 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     return ini.save(buffer) && ret;
 }
 
-bool PartHydro::invalidate(bool reload) const
+bool PartHydro::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = maxPower.invalidate(reload) && ret;
-    ret = creditModulation.invalidate(reload) && ret;
-    ret = inflowPattern.invalidate(reload) && ret;
-    ret = reservoirLevel.invalidate(reload) && ret;
-    ret = waterValues.invalidate(reload) && ret;
+    ret = maxPower.forceReload(reload) && ret;
+    ret = creditModulation.forceReload(reload) && ret;
+    ret = inflowPattern.forceReload(reload) && ret;
+    ret = reservoirLevel.forceReload(reload) && ret;
+    ret = waterValues.forceReload(reload) && ret;
 
     if (series)
-        ret = series->invalidate(reload) && ret;
+        ret = series->forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->invalidate(reload) && ret;
+        ret = prepro->forceReload(reload) && ret;
 
     return ret;
 }

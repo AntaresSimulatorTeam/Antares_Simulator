@@ -46,11 +46,11 @@ PartThermal::PartThermal() : unsuppliedEnergyCost(0.), spilledEnergyCost(0.)
 {
 }
 
-bool PartThermal::invalidate(bool reload) const
+bool PartThermal::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = list.invalidate(reload) && ret;
-    ret = mustrunList.invalidate(reload) && ret;
+    ret = list.forceReload(reload) && ret;
+    ret = mustrunList.forceReload(reload) && ret;
     return ret;
 }
 

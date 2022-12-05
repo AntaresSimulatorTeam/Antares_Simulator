@@ -40,6 +40,7 @@ void Application::runSimulationInAdequacyMode()
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Adequacy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    simulation.checkWriter();
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))

@@ -45,36 +45,22 @@ typedef struct
     int* NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion;
 
     int* NumeroDeVariableDuPalierThermique;
-    int* NumeroDeVariableDuPalierThermiqueUp;
-    int* NumeroDeVariableDuPalierThermiqueDown;
 
     int* NumeroDeVariablesDeLaProdHyd;
-    int* NumeroDeVariablesDeLaProdHydUp;
-    int* NumeroDeVariablesDeLaProdHydDown;
 
     int* NumeroDeVariablesDePompage;
     int* NumeroDeVariablesDeNiveau;
     int* NumeroDeVariablesDeDebordement;
 
     int* NumeroDeVariableDefaillancePositive;
-    int* NumeroDeVariableDefaillancePositiveUp;
-    int* NumeroDeVariableDefaillancePositiveDown;
-    int* NumeroDeVariableDefaillancePositiveAny;
 
     int* NumeroDeVariableDefaillanceNegative;
-    int* NumeroDeVariableDefaillanceNegativeUp;
-    int* NumeroDeVariableDefaillanceNegativeDown;
-    int* NumeroDeVariableDefaillanceNegativeAny;
 
     int* NumeroDeVariableDefaillanceEnReserve;
 
     int* NumeroDeVariablesVariationHydALaBaisse;
-    int* NumeroDeVariablesVariationHydALaBaisseUp;
-    int* NumeroDeVariablesVariationHydALaBaisseDown;
 
     int* NumeroDeVariablesVariationHydALaHausse;
-    int* NumeroDeVariablesVariationHydALaHausseUp;
-    int* NumeroDeVariablesVariationHydALaHausseDown;
 
     int* NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
@@ -167,6 +153,11 @@ typedef struct
     int* OffsetTemporelSurLePalierDispatch;
     const char* NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
+
+typedef struct
+{
+    double* variablesDuales;
+} RESULTATS_CONTRAINTES_COUPLANTES;
 
 typedef struct
 {
@@ -560,13 +551,13 @@ struct PROBLEME_HEBDO
 
     int NombreDeContraintesCouplantes;
     CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
+    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes;
 
     SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
     char ReinitOptimisation;
 
-    char ExportMPS;
-    bool SplitExportedMPS;
+    Data::mpsExportStatus ExportMPS;
     bool exportMPSOnError;
     bool ExportStructure;
 

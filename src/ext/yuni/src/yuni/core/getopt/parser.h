@@ -9,11 +9,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include "../validator/text/default.h"
+#include "option.h"
 #include "../../yuni.h"
 #include <map>
-#include "option.h"
 #include <string.h>
-#include "../validator/text/default.h"
 
 namespace Yuni
 {
@@ -23,6 +23,14 @@ namespace GetOpt
 ** \brief A command line options parser
 ** \ingroup Core
 */
+// Return codes
+enum class ReturnCode
+{
+    ok,
+    error,
+    help
+};
+
 class YUNI_DECL Parser final
 {
 public:
@@ -159,7 +167,7 @@ public:
     ** \param argv The list of arguments
     ** \return False if the program should abort
     */
-    bool operator()(int argc, char* argv[]);
+    ReturnCode operator()(int argc, char* argv[]);
     //@}
 
     //! \name Help usage

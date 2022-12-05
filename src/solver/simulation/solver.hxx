@@ -31,6 +31,7 @@
 #include <antares/logs.h>
 #include <antares/date.h>
 #include <antares/benchmarking.h>
+#include <antares/exception/InitializationError.hpp>
 #include "../variable/print.h"
 #include <yuni/io/io.h>
 #include "../aleatoire/alea_fonctions.h"
@@ -38,13 +39,12 @@
 #include "apply-scenario.h"
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
-#include <antares/memory/memory.h>
+
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-#include <yuni/job/queue/service.h>
 
 #define SEP Yuni::IO::Separator
 #define HYDRO_HOT_START 0
@@ -159,7 +159,7 @@ private:
                     randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
             }
 
-            // 3 - Preparing the Time-series numbers
+            // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
             ALEA_TirageAuSortChroniques(thermalNoisesByArea, numSpace);
 
@@ -181,10 +181,6 @@ private:
             // 5 - Resetting all variables for the output
             simulationObj->variables.yearBegin(y, numSpace);
 
-            // Flush all memory into the swap files
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
-
             // 6 - The Solver itself
             bool isFirstPerformedYearOfSimulation
               = isFirstPerformedYearOfASet[y] && not firstSetParallelWithAPerformedYearWasRun;
@@ -200,21 +196,11 @@ private:
             // Log failing weeks
             logFailedWeek(y, study, failedWeekList);
 
-            // 6.5 - Flush all memory into the swap files
-            // This is mandatory for big studies, with numerous areas and thermal clusters
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
-
             simulationObj->variables.yearEndBuild(state[numSpace], y, numSpace);
 
             // 7 - End of the year, this is the last stade where the variables can retrieve
             // their data for this year.
             simulationObj->variables.yearEnd(y, numSpace);
-
-            // 7.5 - Flush all memory into the swap files
-            // This is mandatory for big studies, with numerous areas and thermal clusters
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
 
             // 8 - Spatial clusters
             // Notifying all variables to perform spatial aggregates.
@@ -245,10 +231,6 @@ private:
 
         } // End if(performCalculations)
 
-        // 10 - Flush all memory into the swap files
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-
     } // End of onExecute() method
 };
 
@@ -264,8 +246,9 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
  pYearByYear(study.parameters.yearByYear),
  pHydroManagement(study),
  pFirstSetParallelWithAPerformedYearWasRun(false),
- pAnnualCostsStatistics(study),
- pDurationCollector(duration_collector)
+ pDurationCollector(duration_collector),
+ pQueueService(study.pQueueService),
+ pResultWriter(study.resultWriter)
 {
     // Ask to the interface to show the messages
     logs.info();
@@ -282,6 +265,21 @@ inline ISimulation<Impl>::ISimulation(Data::Study& study,
 }
 
 template<class Impl>
+inline void ISimulation<Impl>::checkWriter() const
+{
+    // The zip writer needs a queue service (async mutexed write)
+    if (!pQueueService)
+    {
+        throw Solver::Initialization::Error::NoQueueService();
+    }
+
+    if (!pResultWriter)
+    {
+        throw Solver::Initialization::Error::NoResultWriter();
+    }
+}
+
+template<class Impl>
 inline ISimulation<Impl>::~ISimulation()
 {
 }
@@ -295,13 +293,6 @@ void ISimulation<Impl>::run()
     ImplementationType::variables.initializeFromStudy(study);
 
     logs.info() << "Allocating resources...";
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-    {
-        Antares::memory.flushAll();
-        Antares::memory.dumpSwapFilesInfos();
-    }
 
     // Memory usage
     {
@@ -330,6 +321,7 @@ void ISimulation<Impl>::run()
         // in general data of the study.
         logs.info();
         logs.info() << " Only the preprocessors are enabled.";
+
         regenerateTimeSeries(0);
 
         // Destroy the TS Generators if any
@@ -411,6 +403,10 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 {
     using namespace Yuni;
 
+    // The writer might need the job queue, after it's been stopped
+    // this is the case e.g if synthesis == true (writing mc-all)
+    // Don't restart the queue if the writer doesn't need it
+
     assert(!settings.noOutput);
     assert(!settings.tsGeneratorsOnly);
 
@@ -422,11 +418,6 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
     }
     else
     {
-        // Flush all memory into the swap files
-        // The check is required to avoid to create an instance of `Antares::Memory`
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
-
         if (synthesis)
         {
             auto& parameters = *(study.runtime->parameters);
@@ -439,8 +430,7 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
 
         // The target folder
         String newPath;
-        newPath << study.folderOutput << IO::Separator << ImplementationType::Name()
-                << IO::Separator;
+        newPath << ImplementationType::Name() << IO::Separator;
         if (synthesis)
             newPath << "mc-all";
         else
@@ -452,10 +442,8 @@ void ISimulation<Impl>::writeResults(bool synthesis, uint year, uint numSpace)
         }
 
         // Dumping
-        if (IO::Directory::Create(newPath))
-            ImplementationType::variables.exportSurveyResults(synthesis, newPath, numSpace);
-        else
-            logs.fatal() << "impossible to create `" << newPath << "`";
+        ImplementationType::variables.exportSurveyResults(
+          synthesis, newPath, numSpace, pResultWriter);
     }
 }
 
@@ -1034,13 +1022,12 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     // * The option "Preprocessor" is checked in the interface _and_ year == 0
     // * Both options "Preprocessor" and "Refresh" are checked in the interface
     //   _and_ the refresh must be done for the given year (always done for the first year).
-
     using namespace Solver::TSGenerator;
     // Load
     if (pData.haveToRefreshTSLoad && (year % pData.refreshIntervalLoad == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesLoad>(study, year);
+        GenerateTimeSeries<Data::timeSeriesLoad>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_load", timer.get_duration());
     }
@@ -1048,7 +1035,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSSolar && (year % pData.refreshIntervalSolar == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesSolar>(study, year);
+        GenerateTimeSeries<Data::timeSeriesSolar>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_solar", timer.get_duration());
     }
@@ -1056,7 +1043,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSWind && (year % pData.refreshIntervalWind == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesWind>(study, year);
+        GenerateTimeSeries<Data::timeSeriesWind>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_wind", timer.get_duration());
     }
@@ -1064,7 +1051,7 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     if (pData.haveToRefreshTSHydro && (year % pData.refreshIntervalHydro == 0))
     {
         Benchmarking::Timer timer;
-        GenerateTimeSeries<Data::timeSeriesHydro>(study, year);
+        GenerateTimeSeries<Data::timeSeriesHydro>(study, year, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_hydro", timer.get_duration());
     }
@@ -1072,7 +1059,8 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     const bool refreshTSonCurrentYear = (year % pData.refreshIntervalThermal == 0);
     {
         Benchmarking::Timer timer;
-        GenerateThermalTimeSeries(study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear);
+        GenerateThermalTimeSeries(
+          study, year, pData.haveToRefreshTSThermal, refreshTSonCurrentYear, pResultWriter);
         timer.stop();
         pDurationCollector->addDuration("tsgen_thermal", timer.get_duration());
     }
@@ -1493,13 +1481,14 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
 
 static void logPerformedYearsInAset(setOfParallelYears& set)
 {
-    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears << " perfomed)";
-    
+    logs.info() << "parallel batch size : " << set.nbYears << " (" << set.nbPerformedYears
+                << " perfomed)";
+
     std::string performedYearsToLog = "";
     std::for_each(std::begin(set.yearsIndices), std::end(set.yearsIndices), [&](uint const& y) {
         if (set.isYearPerformed[y])
             performedYearsToLog += std::to_string(y + 1) + " ";
-        });
+    });
 
     logs.info() << "Year(s) " << performedYearsToLog;
 }
@@ -1509,11 +1498,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                                          uint endYear,
                                          std::vector<Variable::State>& state)
 {
-    // (only if the support is available)
-    // The check is required to avoid to create an instance of `Antares::Memory`
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
-
     assert(endYear <= study.parameters.nbYears);
 
     // List of parallel years sets
@@ -1535,10 +1519,14 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     // Allocating memory to store random numbers of all parallel years
     allocateMemoryForRandomNumbers(randomForParallelYears);
 
-    // The queue service that runs every set of parallel years
-    Yuni::Job::QueueService qs;
     // Number of threads to perform the jobs waiting in the queue
-    qs.maximumThreadCount(pNbMaxPerformedYearsInParallel);
+    {
+        int numThreads = pNbMaxPerformedYearsInParallel;
+        // If the result writer uses the job queue, add one more thread for it
+        if (pResultWriter && pResultWriter->needsTheJobQueue())
+            numThreads++;
+        pQueueService->maximumThreadCount(numThreads);
+    }
 
     // Loop over sets of parallel years
     std::vector<setOfParallelYears>::iterator set_it;
@@ -1599,31 +1587,33 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 study.runtime->currentYear[numSpace] = y;
             }
 
-            // If the year has not to be rerun, we skip the computation of the year. 
-            // Note that, when we enter for the first time in the "for" loop, all years of the set have to be rerun
-            // (meaning : they must be run once). if(!set_it->yearFailed[y]) continue;
+            // If the year has not to be rerun, we skip the computation of the year.
+            // Note that, when we enter for the first time in the "for" loop, all years of the set
+            // have to be rerun (meaning : they must be run once). if(!set_it->yearFailed[y])
+            // continue;
 
-            qs.add(new yearJob<ImplementationType>(this,
-                                                   y,
-                                                   set_it->yearFailed,
-                                                   set_it->isFirstPerformedYearOfASet,
-                                                   pFirstSetParallelWithAPerformedYearWasRun,
-                                                   numSpace,
-                                                   randomForParallelYears,
-                                                   performCalculations,
-                                                   study,
-                                                   state,
-                                                   pYearByYear,
-                                                   pDurationCollector));
+            pQueueService->add(
+              new yearJob<ImplementationType>(this,
+                                              y,
+                                              set_it->yearFailed,
+                                              set_it->isFirstPerformedYearOfASet,
+                                              pFirstSetParallelWithAPerformedYearWasRun,
+                                              numSpace,
+                                              randomForParallelYears,
+                                              performCalculations,
+                                              study,
+                                              state,
+                                              pYearByYear,
+                                              pDurationCollector));
 
         } // End loop over years of the current set of parallel years
 
         logPerformedYearsInAset(*set_it);
 
-        qs.start();
+        pQueueService->start();
 
-        qs.wait(Yuni::qseIdle);
-        qs.stop();
+        pQueueService->wait(Yuni::qseIdle);
+        pQueueService->stop();
 
         // At this point, the first set of parallel year(s) was run with at least one year performed
         if (!pFirstSetParallelWithAPerformedYearWasRun && yearPerformed)
@@ -1646,7 +1636,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
             logs.fatal() << "At least one year has failed in the previous set of parallel year.";
             AntaresSolverEmergencyShutdown();
         }
-
         // Computing the summary : adding the contribution of MC years
         // previously computed in parallel
         ImplementationType::variables.computeSummary(set_it->spaceToPerformedYear,
@@ -1667,10 +1656,10 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft())
+    if (not study.parameters.adequacyDraft() && pResultWriter)
     {
         pAnnualCostsStatistics.endStandardDeviations();
-        pAnnualCostsStatistics.writeToOutput();
+        pAnnualCostsStatistics.writeToOutput(pResultWriter);
     }
 }
 

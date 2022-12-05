@@ -392,11 +392,6 @@ protected:
                         }
                     }
                 }
-
-#ifdef ANTARES_SWAP_SUPPORT
-                rawdata.flush();
-                ops.flush();
-#endif
             }
         } // all filenames
 
@@ -446,11 +441,6 @@ protected:
                         }
                     }
                 }
-#ifdef ANTARES_SWAP_SUPPORT
-                opscol.flush();
-                invcol.flush();
-                rescol.flush();
-#endif
             }
         }
 
