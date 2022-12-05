@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+v8.2.3 (11/2022)
+--------------------
+## Bug fixes
+- Round renewable prod
+
 v8.2.2 (04/2022)
 --------------------
 ## Bug fixes
