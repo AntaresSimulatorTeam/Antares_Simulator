@@ -58,7 +58,6 @@
 #include <fstream>
 #include <boost/archive/text_oarchive.hpp>
 #include "optimisation/LpsFromAntares.h"
-#include <boost/serialization/shared_ptr.hpp>
 
 #endif
 
