@@ -152,7 +152,7 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername.to<std::string>();
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -188,7 +188,7 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            string clusterId = (area->id).to<string>() + "." + clustername.to<string>();
+            std::string clusterId = (area->id).to<std::string>() + "." + clustername.to<std::string>();
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -367,14 +367,14 @@ void Rules::sendWarningsForDisabledClusters()
         // Listing the 10 first years for which the current cluster was given a specific TS number 
         // in the scenario builder.
         // Note that this list of years size could be less then 10, but are at least 1.
-        std::string listYears = to_string(*itv);
+        std::string listYears = std::to_string(*itv);
         itv++;
         for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10; itv++, year_count++)
-            listYears += ", " + to_string(*itv);
+            listYears += ", " + std::to_string(*itv);
 
         // Adding last scenario to the list
         if (nbScenariiForCluster > 10)
-            listYears += ", ..., " + to_string(scenariiForCurrentCluster.back());
+            listYears += ", ..., " + std::to_string(scenariiForCurrentCluster.back());
 
         logs.warning()
           << "Cluster " << it->first

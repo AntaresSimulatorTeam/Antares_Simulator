@@ -97,7 +97,7 @@ private:
     void onStudyLoaded();
 
 private:
-    map<TimeSeries, uint*> tsToNumberTs_;
+    std::map<TimeSeries, uint*> tsToNumberTs_;
 };
 
 class NumberTsCellThermal : public NumberTsCell
@@ -139,7 +139,7 @@ private:
     void onStudyLoaded();
 
 private:
-    map<TimeSeries, uint*> tsToRefreshSpan_;
+    std::map<TimeSeries, uint*> tsToRefreshSpan_;
 };
 
 class RefreshSpanCellThermal : public RefreshSpanCell
@@ -163,7 +163,7 @@ private:
     void onStudyLoaded();
 
 private:
-    map<TimeSeries, Correlation*> tsToCorrelation_;
+    std::map<TimeSeries, Correlation*> tsToCorrelation_;
 };
 
 class SeasonalCorrelationCellThermal : public SeasonalCorrelationCell
