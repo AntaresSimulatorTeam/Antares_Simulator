@@ -168,7 +168,8 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 
 Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(Study::Ptr pStudy)
 {
-	// Runtime data dedicated for the solver
+    std::cout << "PLIP " << pStudy << std::endl;
+    // Runtime data dedicated for the solver
 	BOOST_CHECK(pStudy->initializeRuntimeInfos());
 
 	Settings pSettings;
@@ -252,7 +253,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 {
 	//Create study
 	Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-
+    std::cout << "PLOP " << pStudy << std::endl;
 	//On year  and one TS
 	int nbYears = 2;
 	int  nbTS	= 1;
@@ -265,8 +266,9 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	//Create area
 	double load = 7.0;
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
+    std::cout << "PLOP " << pStudy << std::endl;
 
-	//Initialize time series
+    //Initialize time series
 	pArea->load.series->series.fillColumn(0, load);
 
 	//Add thermal  cluster
@@ -277,6 +279,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 
 	//Initialize time series
 	pCluster->series->series.fillColumn(0, availablePower);
+    std::cout << "PLOP " << pStudy << std::endl;
 
 	//Launch simulation
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
