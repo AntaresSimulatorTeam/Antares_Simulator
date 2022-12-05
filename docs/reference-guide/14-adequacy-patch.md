@@ -53,7 +53,7 @@ Once the first iteration is completed, we have access to the DENS value, which r
 
 During the second iteration, all link capacities between physical nodes are set to the values provided as input data (as it is done in the current Antares version). The only change compared to a simulation without the adequacy patch is that the upper bound of the ENS on the areas included in the patch is now constrained by the DENS found during the first iteration. This is introduced in the optimization problem for physical areas that are declared in the adequacy patch domain (areas declared as "physical inside"):
 
-- ENS ≤ DENS
+- ENS <= DENS
  (for all physical areas inside the adequacy patch).
 
 ## Curtailment sharing rule
@@ -160,12 +160,12 @@ The value of “net_position (node A)” is deduced from “flow” variable as 
 
 - **Constraint induced by Local matching rule:** 
 
-  - ENS (node A) ≤ DENS_new(node A)  
+  - ENS (node A) <= DENS_new(node A)  
  
 - **Positivity constraints:** 
 
-   - ENS (node A) ≥ 0 
-   - spillage (node A) ≥ 0 
+   - ENS (node A) >= 0 
+   - spillage (node A) >= 0 
 
 _**Notes**_
 
@@ -183,8 +183,8 @@ _**Notes**_
 - _Spillage results after curtailment sharing rule quadratic optimization are presented in the separate column inside Antares output, titled “SPIL. ENRG. CSR” so the user has access to the spillage results both prior to and after CSR optimization._ 
 
 - _In order to avoid solver issues, lower and upper boundaries of the ENS and Spillage variables can be relaxed using GUI option “Relax CSR variable boundaries”. Following relaxations can be imposed:_ 
-   - -10$^-$$^m$ ≤ ENS (node A) ≤ DENS_new (node A) + 10$^-$$^m$ 
-   - -10$^-$$^m$ ≤ spillage (node A) ≤ + infinity   
+   - -10$^-$$^m$ <= ENS (node A) <= DENS_new (node A) + 10$^-$$^m$ 
+   - -10$^-$$^m$ <= spillage (node A) <= + infinity   
       Where _m_ is an integer defined by the user. 
 
 ### Objective function
@@ -199,7 +199,7 @@ In order to assess the quality of the CSR solution additional verification can b
  
 If:
 
-- QUAD$_0$ ≤ QUAD$_1$   
+- QUAD$_0$ <= QUAD$_1$   
 (CSR does not improve QUAD) then the “_init” solution is kept and the CSR solution is hence disregarded.   
 - QUAD$_0$ > QUAD$_1$   
 (CSR does improve QUAD) then the “CSR” solution is kept as final result updating the “_init” solution as stated above. 
