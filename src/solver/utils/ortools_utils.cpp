@@ -392,3 +392,21 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 
     return result;
 }
+
+
+MPSolver* factory(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
+{
+    std::list<std::string> solverList = getAvailableOrtoolsSolverName();
+
+    auto it = std::find(solverList.begin(), solverList.end(), solverName);
+    if (it != solverList.end())
+    {
+        Antares::logs.fatal() << "Solver doesn't exist";
+        return NULL;
+    }
+
+    if (probleme->isMIP())
+        return MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).second);
+
+    return MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).first);
+}

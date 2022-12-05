@@ -26,6 +26,9 @@ std::list<std::string> getAvailableOrtoolsSolverName();
  */
 std::list<std::string> getAvailableOrtoolsSolverNameLinearAndMixed();
 
+MPSolver* factory(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName);
+
+
 class OrtoolsUtils
 {
 public:
