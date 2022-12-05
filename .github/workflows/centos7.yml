@@ -34,6 +34,10 @@ jobs:
       run: |
           git submodule update --init --remote src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
+    - name: Install libraries
+      run: |
+        yum install -y boost-serialization
+
     - name: Download & extract precompiled deps at root
       run: |
            ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
