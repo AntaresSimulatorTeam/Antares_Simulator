@@ -237,11 +237,11 @@ jobs:
         path: _build/*.deb
 
     - name: Upload build on failure
-        if: ${{ failure() }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-after-failure
-          path: ${{ github.workspace }}/_build
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-after-failure
+        path: ${{ github.workspace }}/_build
 
   publish_assets:
     name: Publish assets
