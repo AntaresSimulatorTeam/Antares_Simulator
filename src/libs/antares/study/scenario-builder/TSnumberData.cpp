@@ -404,7 +404,7 @@ bool hydroclusterTSNumberData::apply(Study& study)
 
         logprefix.clear() << "Hydrocluster: Area '" << area.name << "', cluster: '" << cluster.name()
                           << "': ";
-        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountHydrocluster) && ret;
+        ret = ApplyToMatrix(errors, logprefix, *cluster.series, col, tsGenCountHydrocluster) && ret; //CR13 todo
     }
     return ret;
 }

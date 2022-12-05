@@ -117,6 +117,35 @@ int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const A
     return 1;
 }
 
+int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study& s, const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
+
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+                       << s.inputExtension;
+        ret = series->ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series->storage.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series->mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+        {
+            // series->series.averageTimeseries();
+            series->ror.averageTimeseries();
+            series->storage.averageTimeseries();
+            series->mingen.averageTimeseries();                                    
+        }
+
+        series->timeseriesNumbers.clear();
+
+        return ret;
+    }
+    return 1;
+}
+
+
 void Data::HydroclusterCluster::copyFrom(const HydroclusterCluster& cluster)
 {
 
@@ -141,12 +170,16 @@ void Data::HydroclusterCluster::copyFrom(const HydroclusterCluster& cluster)
     // timseries
     
 
-    // series->series = cluster.series->series;
+    series->series = cluster.series->series;
     series->ror = cluster.series->ror;
     series->storage = cluster.series->storage;
     series->mingen = cluster.series->mingen;
 
     cluster.series->series.unloadFromMemory();
+    cluster.series->ror.unloadFromMemory();
+    cluster.series->storage.unloadFromMemory();
+    cluster.series->mingen.unloadFromMemory();
+    
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -379,9 +412,13 @@ double HydroclusterCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepI
     if (!enabled)
         return 0.;
 
-    assert(timeStepIndex < series->series.height);
-    assert(timeSeriesIndex < series->series.width);
-    const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
+    // assert(timeStepIndex < series->series.height);
+    // assert(timeSeriesIndex < series->series.width);
+    // const double tsValue = series->series[timeSeriesIndex][timeStepIndex];
+
+    assert(timeStepIndex < series->ror.height);
+    assert(timeSeriesIndex < series->ror.width);
+    const double tsValue = series->ror[timeSeriesIndex][timeStepIndex];    
     // switch (tsMode)
     // {
     // case powerGeneration:
@@ -1263,7 +1300,24 @@ void Data::HydroclusterCluster::reset()
         prepro->reset();
     if (series)
         series->reset();
-    Cluster::reset();
+    // Cluster::reset();
+    unitCount = 0;
+    enabled = true;
+    nominalCapacity = 0.;
+
+    if (not series)
+        series = new DataSeriesHydrocluster(); //CR13 todo new DataSeriesCommon(); //### CR13 todo
+
+    series->ror.reset(1, HOURS_PER_YEAR);
+    series->ror.flush();
+    series->storage.reset(1, HOURS_PER_YEAR);
+    series->storage.flush();
+    series->mingen.reset(1, HOURS_PER_YEAR);
+    series->mingen.flush();
+
+
+    series->series.reset(1, HOURS_PER_YEAR);
+    series->series.flush();    
 }
 
 

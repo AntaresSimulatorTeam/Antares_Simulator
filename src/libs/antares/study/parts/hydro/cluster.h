@@ -142,6 +142,7 @@ public:
     */
     static bool SaveToFolder(const AreaList& areas, const AnyString& folder);
     int saveDataSeriesToFolderHydroclusterCluster(const AnyString& folder) const;
+    int loadDataSeriesFromFolderHydroclusterCluster(Study& s, const AnyString& folder);
 
 public:
     /*!

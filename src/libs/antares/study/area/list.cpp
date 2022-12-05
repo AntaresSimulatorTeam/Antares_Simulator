@@ -1114,7 +1114,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     if (study.header.version >= 810)
     {
-        buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
+        buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
         area.hydrocluster.list.flush();
@@ -1302,7 +1302,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         // Study::ensureDataAreInitializedAccordingParameters() is called
         // in order to allocate data with all renewable clusters.
         CString<30, false> hydroclusterPlant;
-        hydroclusterPlant << SEP << "hydroclusters" << SEP << "clusters" << SEP;
+        hydroclusterPlant << SEP << "hydrocluster" << SEP << "clusters" << SEP;
 
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)

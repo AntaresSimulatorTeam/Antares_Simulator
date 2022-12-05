@@ -451,9 +451,9 @@ int ClusterList<HydroclusterCluster>::loadDataSeriesFromFolder(Study& s,
 
     int ret = 1;
 
-    each([&](Cluster& cluster) {
+    each([&](HydroclusterCluster& cluster) {
         if (cluster.series)
-            ret = cluster.loadDataSeriesFromFolder(s, folder) and ret;
+            ret = cluster.loadDataSeriesFromFolderHydroclusterCluster(s, folder) and ret;
 
         ++options.progressTicks;
         options.pushProgressLogs();
