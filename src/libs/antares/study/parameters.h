@@ -545,7 +545,7 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    operations_research::MPSolver::OptimizationProblemType ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;

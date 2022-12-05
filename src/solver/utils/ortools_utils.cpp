@@ -125,11 +125,8 @@ MPSolver* convert_to_MPSolver(
 {
     auto& study = *Data::Study::Current::Get();
 
-    // Define solver used depending on study option
-    MPSolver::OptimizationProblemType solverType = study.parameters.ortoolsEnumUsed;
-
-    // Create the linear solver instance
-    MPSolver* solver = new MPSolver("simple_lp_program", solverType);
+    // Create the MPSolver
+    MPSolver* solver = factory(problemeSimplexe, study.parameters.ortoolsSolver);
 
     tuneSolverSpecificOptions(solver);
 
@@ -381,7 +378,7 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 {
     std::list<std::string> result;
 
-    for (auto solverName : OrtoolsUtils::solverMap)
+    for (const auto solverName : OrtoolsUtils::solverMap)
     {
         MPSolver::OptimizationProblemType solverType;
         MPSolver::ParseSolverType(solverName.second.first, &solverType);
@@ -394,7 +391,7 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 }
 
 
-MPSolver* factory(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
+MPSolver* factory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
 {
     std::list<std::string> solverList = getAvailableOrtoolsSolverName();
 

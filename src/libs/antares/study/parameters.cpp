@@ -353,7 +353,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = operations_research::MPSolver::SIRIUS_LINEAR_PROGRAMMING;
+    ortoolsSolver = "sirius";
 
     resultFormat = legacyFilesDirectories;
 
@@ -1171,7 +1171,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1604,13 +1604,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
         logs.info() << "  :: ignoring hurdle costs";
-
-    // Indicate ortools solver used
-    if (ortoolsUsed)
-    {
-        logs.info() << "  :: ortools solver " << (std::string)operations_research::ToString(ortoolsEnumUsed)
-                    << " used for problem resolution";
-    }
 }
 
 void Parameters::years(uint y)

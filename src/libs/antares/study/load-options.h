@@ -88,7 +88,7 @@ public:
     bool ortoolsUsed;
 
     //! Ortool solver used for simulation
-    operations_research::MPSolver::OptimizationProblemType ortoolsEnumUsed = operations_research::MPSolver::SIRIUS_LINEAR_PROGRAMMING;
+    std::string ortoolsSolver = "sirius";
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
@@ -111,7 +111,6 @@ public:
 
     YString studyFolder;
     YString simulationName;
-    std::string ortoolsSolver;
 }; // class StudyLoadOptions
 
 } // namespace Data

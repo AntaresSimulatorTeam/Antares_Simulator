@@ -263,7 +263,7 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    // ortools solver
+    std::string baseSolver = "sirius";
     if (options.ortoolsUsed)
     {
         const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
@@ -272,23 +272,17 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
             throw Error::InvalidSolver(options.ortoolsSolver);
         }
 
-        // Default is first available solver
-        MPSolver::ParseSolverType(availableSolverList.front(), &options.ortoolsEnumUsed);
-
         // Check if solver is available
         bool found
           = (std::find(
                availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
 
-        if (found)
+        if (!found)
         {
-            MPSolver::ParseSolverType(options.ortoolsSolver, &options.ortoolsEnumUsed);
-        }
-        else
-        {
+            options.ortoolsSolver = baseSolver;
             logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << (std::string)operations_research::ToString(options.ortoolsEnumUsed);
+                           << "'. reset to " << baseSolver;
         }
     }
 }
