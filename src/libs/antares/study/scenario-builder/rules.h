@@ -146,7 +146,7 @@ private:
     //! Name of the rules
     RulesScenarioName pName;
     // Disabled clusters when current rule is active (useful for sending warnings)
-    map<string, vector<uint>> disabledClustersOnRuleActive;
+    std::map<std::string, std::vector<uint>> disabledClustersOnRuleActive;
 
 }; // class Rules
 

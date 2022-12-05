@@ -32,8 +32,6 @@
 #include "column.h"
 #include "../../../../application/study.h"
 
-using namespace std;
-
 namespace Antares
 {
 namespace Component

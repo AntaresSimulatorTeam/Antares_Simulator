@@ -356,18 +356,18 @@ bool Rules::apply()
 
 void Rules::sendWarningsForDisabledClusters()
 {
-    for (map<string, vector<uint>>::iterator it = disabledClustersOnRuleActive.begin();
+    for (auto it = disabledClustersOnRuleActive.begin();
          it != disabledClustersOnRuleActive.end();
          it++)
     {
-        vector<uint>& scenariiForCurrentCluster = it->second;
+        std::vector<uint>& scenariiForCurrentCluster = it->second;
         int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
-        vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
+        std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
         // Listing the 10 first years for which the current cluster was given a specific TS number 
         // in the scenario builder.
         // Note that this list of years size could be less then 10, but are at least 1.
-        string listYears = to_string(*itv);
+        std::string listYears = to_string(*itv);
         itv++;
         for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10; itv++, year_count++)
             listYears += ", " + to_string(*itv);

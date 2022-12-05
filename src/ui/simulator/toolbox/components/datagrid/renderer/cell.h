@@ -16,7 +16,6 @@ namespace Datagrid
 namespace Renderer
 {
 using namespace Antares::Data;
-using namespace std;
 
 class Cell : public Yuni::IEventObserver<Cell>
 {
