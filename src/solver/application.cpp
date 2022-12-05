@@ -114,6 +114,38 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
             throw Error::NoAreaInsideAdqPatchMode();
     }
 }
+// Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
+// TS
+void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
+{
+    bool error = false;
+    for (uint i = 0; i < areas.size(); ++i)
+    {
+        const auto& area = *(areas.byIndex[i]);
+        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+        {
+            const auto& cluster = *(area.thermal.clusters[j]);
+            bool setCostManual = cluster.costgeneration == Antares::Data::setManually;
+            uint fuelCostWidth = cluster.prepro->fuelcost.width;
+            uint co2CostWidth = cluster.prepro->co2cost.width;
+            uint tsWidth = cluster.series->series.width;
+            if (fuelCostWidth != 1 && fuelCostWidth != tsWidth && !setCostManual)
+            {
+                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
+                               << ". Fuel Cost column mismatch";
+                error = true;
+            }
+            if (co2CostWidth != 1 && co2CostWidth != tsWidth && !setCostManual)
+            {
+                logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
+                               << ". CO2 Cost column mismatch";
+                error = true;
+            }
+        }
+    }
+    if (error)
+        throw Error::IncompatibleFuelOrCo2CostColumns();
+}
 
 void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
                                     const bool includeHurdleCost,
@@ -304,6 +336,8 @@ void Application::prepare(int argc, char* argv[])
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
 
     checkMinStablePower(tsGenThermal, pStudy->areas);
+
+    checkFuelAndCo2ColumnNumber(pStudy->areas);
 
     // Start the progress meter
     pStudy->initializeProgressMeter(pSettings.tsGeneratorsOnly);
