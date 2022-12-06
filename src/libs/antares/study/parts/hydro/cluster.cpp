@@ -116,12 +116,12 @@ void Data::HydroclusterCluster::copyFrom(const HydroclusterCluster& cluster)
     // timseries
     
 
-    series->series = cluster.series->series;
+    // series->series = cluster.series->series;
     series->ror = cluster.series->ror;
     series->storage = cluster.series->storage;
     series->mingen = cluster.series->mingen;
 
-    cluster.series->series.unloadFromMemory();
+    // cluster.series->series.unloadFromMemory();
     cluster.series->ror.unloadFromMemory();
     cluster.series->storage.unloadFromMemory();
     cluster.series->mingen.unloadFromMemory();
@@ -333,10 +333,13 @@ int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study
         auto& buffer = s.bufferLoadingTS;
 
         int ret = 1;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                       << s.inputExtension;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "ror.txt";
         ret = series->ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "storage.txt";
         ret = series->storage.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
         ret = series->mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
 
         if (s.usedByTheSolver && s.parameters.derated)
@@ -348,14 +351,6 @@ int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study
         }
 
         series->timeseriesNumbers.clear();
-
-
-
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP  << "reservoir" <<".txt";
-        ret = reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &s.dataBuffer) && ret;
-
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP  << "waterValues" <<".txt";
-        ret = waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &s.dataBuffer) && ret; 
 
         return ret;                         
     }
@@ -982,12 +977,12 @@ int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const A
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
             ret = series->mingen.saveToCSVFile(buffer, precision()) && ret;
 
-            // reservoir
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "reservoir" << ".txt";
-            ret = reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-            // waterValues
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "waterValues" << ".txt";
-            ret = waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+            // // reservoir
+            // buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "reservoir" << ".txt";
+            // ret = reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+            // // waterValues
+            // buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "waterValues" << ".txt";
+            // ret = waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
             return ret;
         }
@@ -1138,8 +1133,8 @@ void Data::HydroclusterCluster::reset()
     series->mingen.flush();
 
 
-    series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();    //to remove
+    // series->series.reset(1, HOURS_PER_YEAR);
+    // series->series.flush();    //to remove
 }
 
 

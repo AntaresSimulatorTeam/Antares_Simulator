@@ -491,14 +491,10 @@ public:
 
     virtual ~TimeSeriesHydroclusterClusterRor();
 
-private:
-    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
-    {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->ror) : NULL); //CR13 ROR
-        // matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL); //CR13 series->series is not used
-    }
-
+protected:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster);
     void onStudyClosed() override;
+    
 };
 
 //Hydro storage
@@ -510,12 +506,8 @@ public:
 
     virtual ~TimeSeriesHydroclusterClusterStorage();
 
-private:
-    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
-    {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->storage) : NULL); //CR13 Storage
-    }
-
+protected:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster);
     void onStudyClosed() override;
 };
 
@@ -528,12 +520,8 @@ public:
 
     virtual ~TimeSeriesHydroclusterClusterMingen();
 
-private:
-    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
-    {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->mingen) : NULL); //CR13 Mingen
-    }
-
+protected:
+    void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster);
     void onStudyClosed() override;
 };
 

@@ -420,7 +420,6 @@ void TimeSeriesRenewableCluster::onStudyClosed()
 // ----------------------
 //   HYDROCLUSTER CLUSTERS
 // ----------------------
-
 //ROR
 TimeSeriesHydroclusterClusterRor::TimeSeriesHydroclusterClusterRor(
   wxWindow* control,
@@ -429,7 +428,7 @@ TimeSeriesHydroclusterClusterRor::TimeSeriesHydroclusterClusterRor(
 {
     if (notifier)
         notifier->onClusterChanged.connect(
-          this, &TimeSeriesHydroclusterClusterRor::internalHydroclusterClusterChanged);
+          this, &TimeSeriesHydroclusterClusterRor::internalHydroclusterClusterChanged);          
 }
 
 TimeSeriesHydroclusterClusterRor::~TimeSeriesHydroclusterClusterRor()
@@ -439,7 +438,12 @@ TimeSeriesHydroclusterClusterRor::~TimeSeriesHydroclusterClusterRor()
 void TimeSeriesHydroclusterClusterRor::onStudyClosed()
 {
     internalHydroclusterClusterChanged(nullptr);
-    AncestorType::onStudyClosed();
+    AncestorType::onStudyClosed();    
+}
+
+void TimeSeriesHydroclusterClusterRor::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+{
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->ror) : NULL);
 }
 
 //Storage
@@ -463,6 +467,11 @@ void TimeSeriesHydroclusterClusterStorage::onStudyClosed()
     AncestorType::onStudyClosed();
 }
 
+void TimeSeriesHydroclusterClusterStorage::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+{
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->storage) : NULL);
+}
+
 //Mingen
 TimeSeriesHydroclusterClusterMingen::TimeSeriesHydroclusterClusterMingen(
   wxWindow* control,
@@ -483,6 +492,14 @@ void TimeSeriesHydroclusterClusterMingen::onStudyClosed()
     internalHydroclusterClusterChanged(nullptr);
     AncestorType::onStudyClosed();
 }
+
+void TimeSeriesHydroclusterClusterMingen::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* cluster)
+{
+    matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->mingen) : NULL);
+}
+
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

@@ -165,7 +165,34 @@ static bool ClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool HydroclusterClusterList::loadFromFolder(const AnyString& folder, Area* area)
+
+bool HydroclusterClusterList::loadHydroclusterClusterDataFromFolder(Study& study,
+                                              const StudyLoadOptions& options,
+                                              const AnyString& folder)
+{
+    if (empty())
+        return true;
+
+
+    Clob buffer;
+    bool ret = true;
+
+    for (auto it = begin(); it != end(); ++it)
+    {
+        auto& c = *(it->second);
+
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "reservoir" <<".txt";
+        ret = c.reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "waterValues" <<".txt";
+        ret = c.waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
+
+    }
+    return ret;
+}
+
+
+bool HydroclusterClusterList::loadFromFolder(Study& study, const AnyString& folder, Area* area)
 {
     assert(area and "A parent area is required");
 
@@ -195,6 +222,15 @@ bool HydroclusterClusterList::loadFromFolder(const AnyString& folder, Area* area
                 {
                     continue;
                 }
+
+
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "reservoir" <<".txt";
+                ret = cluster->reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
+
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "waterValues" <<".txt";
+                ret = cluster->waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
+
+
 
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();

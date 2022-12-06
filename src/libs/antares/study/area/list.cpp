@@ -303,7 +303,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
         ret = area.hydrocluster.list.saveToFolder(buffer) and ret;
 
         // buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "prepro";
-        // ret = area.hydrocluster.list.savePreproToFolder(buffer) and ret;
+        // ret = area.hydrocluster.list.saveHydroclusterClusterDataToFolder(buffer) and ret;
 
         buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.saveDataSeriesToFolder(buffer) and ret;
@@ -1123,6 +1123,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     if (study.header.version >= 810)
     {
+        buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "clusters";
+        ret = area.hydrocluster.list.loadHydroclusterClusterDataFromFolder(study, options, buffer) && ret;
         buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
@@ -1318,7 +1320,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << hydroclusterPlant << area.id;
-            ret = area.hydrocluster.list.loadFromFolder(buffer.c_str(), &area) and ret;
+            ret = area.hydrocluster.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.hydrocluster.prepareAreaWideIndexes();
         }
     } 
