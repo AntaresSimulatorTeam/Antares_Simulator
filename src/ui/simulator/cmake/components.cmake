@@ -118,6 +118,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		toolbox/components/datagrid/renderer/area/reservoirlevelshydrocluster.cpp	
 		toolbox/components/datagrid/renderer/area/watervalues.h
 		toolbox/components/datagrid/renderer/area/watervalues.cpp
+		toolbox/components/datagrid/renderer/area/watervalueshydrocluster.h
+		toolbox/components/datagrid/renderer/area/watervalueshydrocluster.cpp		
 		toolbox/components/datagrid/renderer/area/inflowpattern.h
 		toolbox/components/datagrid/renderer/area/inflowpattern.cpp
 		toolbox/components/datagrid/renderer/correlation.h

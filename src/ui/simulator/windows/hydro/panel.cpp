@@ -133,8 +133,8 @@ Panel::Panel(Component::Notebook* parent) :
         //     subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
         //   wxT("Reservoir levels and water values"));
 
-      auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
-      pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));
+        auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
+        pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);

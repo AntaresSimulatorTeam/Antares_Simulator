@@ -85,8 +85,10 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
             if (IO::Directory::Create(buffer))
             {
                 buffer.clear() << folder << SEP << c.id() << SEP << "reservoir.txt";
-
                 ret = c.reservoirLevel.saveToCSVFile(buffer) and ret;
+
+                buffer.clear() << folder << SEP << c.id() << SEP << "waterValues.txt";
+                ret = c.waterValues.saveToCSVFile(buffer) and ret;                
             }
             else
                 ret = 0;

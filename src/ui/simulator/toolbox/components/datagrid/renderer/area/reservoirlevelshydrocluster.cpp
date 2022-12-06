@@ -124,9 +124,9 @@ void ReservoirLevelsHydrocluster::internalHydroclusterClusterChanged(Antares::Da
         study = Data::Study::Current::Get();
     pHydroclusterCluster = hydroclusterCluster;
     // onClusterChanged(hydroclusterCluster);
-    if (hydroclusterCluster)
+    if (pHydroclusterCluster)
     {
-        MatrixAncestorType::matrix(&hydroclusterCluster->reservoirLevel);
+        MatrixAncestorType::matrix(&pHydroclusterCluster->reservoirLevel);
 
     }
     else

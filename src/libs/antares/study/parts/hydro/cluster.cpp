@@ -353,7 +353,11 @@ int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study
 
         buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP  << "reservoir" <<".txt";
         ret = reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &s.dataBuffer) && ret;
-        return ret;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP  << "waterValues" <<".txt";
+        ret = waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &s.dataBuffer) && ret; 
+
+        return ret;                         
     }
     return 1;
 }
@@ -474,24 +478,24 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
         }
 
 
-        if (study.header.version >= 620)
-        {
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                           << area.id << '.' << study.inputExtension;
-            ret = area.hydro.reservoirLevel.loadFromCSVFile(
-                    buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                  && ret;
-        }
+        // if (study.header.version >= 620)
+        // {
+        //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
+        //                    << area.id << '.' << study.inputExtension;
+        //     ret = area.hydro.reservoirLevel.loadFromCSVFile(
+        //             buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+        //           && ret;
+        // }
     
 
-        if (study.header.version >= 620)
-        {
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                           << "waterValues_" << area.id << '.' << study.inputExtension;
-            ret = area.hydro.waterValues.loadFromCSVFile(
-                    buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                  && ret;
-        }
+        // if (study.header.version >= 620)
+        // {
+        //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+        //                    << "waterValues_" << area.id << '.' << study.inputExtension;
+        //     ret = area.hydro.waterValues.loadFromCSVFile(
+        //             buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+        //           && ret;
+        // }
 
         if (study.header.version >= 620)
         {
@@ -981,6 +985,9 @@ int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const A
             // reservoir
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "reservoir" << ".txt";
             ret = reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+            // waterValues
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "waterValues" << ".txt";
+            ret = waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
 
             return ret;
         }
