@@ -104,7 +104,7 @@ OptimisationHebdo:
 
         /* rend accessible les problems à haut niveau */
         auto& study = *Antares::Data::Study::Current::Get();
-        if (study._lps != NULL) {
+        if (study._lps != nullptr) {
             LpsFromAntares * lps = (LpsFromAntares*)study._lps;
             int const year = study.runtime->currentYear[numSpace] + 1;
             int const week = study.runtime->weekInTheYear[numSpace] + 1;

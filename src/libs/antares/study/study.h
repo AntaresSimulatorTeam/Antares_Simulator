@@ -69,7 +69,7 @@ namespace Data
 class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
-    void * _lps;
+    void * _lps = nullptr;
 
 public:
     using Ptr = std::shared_ptr<Study>;
