@@ -53,7 +53,7 @@ Once the first iteration is completed, we have access to the DENS value, which r
 
 During the second iteration, all link capacities between physical nodes are set to the values provided as input data (as it is done in the current Antares version). The only change compared to a simulation without the adequacy patch is that the upper bound of the ENS on the areas included in the patch is now constrained by the DENS found during the first iteration. This is introduced in the optimization problem for physical areas that are declared in the adequacy patch domain (areas declared as "physical inside"):
 
-- ENS <= DENS
+- ENS $\le$ DENS   
  (for all physical areas inside the adequacy patch).
 
 ## Curtailment sharing rule
@@ -122,14 +122,14 @@ These variables should have exactly the same constraints than the ones considere
 - **Relation between “Flows” over links and “net_position” on nodes:**   
 The value of “net_position (node A)” is deduced from “flow” variable as follows:
 
-  - net_position (node A) = ∑ algebraic “Flows” over links involving node A  
+  - net_position (node A) = $\sum$ algebraic “Flows” over links involving node A  
   Remember that:
    
     - a “Flow” that goes from another node “2” to node A is an import for node A and should be counted positively  
     - a “Flow” that goes from node A to another node “2” is an export for node A and should be counted negatively. 
 
 - **The detailed formulation for calculating the value of “net_position (node A)” is, for all “nodes 2 upstream” and all “nodes 2 downstream”:**   
-  - net_position (node A) = ∑ flow_direct (node 2 upstream -> node A) + ∑ flow_indirect (node A <- node 2 downstream) - ∑ flow_indirect (node 2 upstream <- node A) - ∑ flow_direct (node A -> node 2 downstream)
+  - net_position (node A) = $\sum$ flow_direct (node 2 upstream -> node A) + $\sum$ flow_indirect (node A <- node 2 downstream) - $\sum$ flow_indirect (node 2 upstream <- node A) - $\sum$ flow_direct (node A -> node 2 downstream)
       
    Considering that:
 
@@ -141,11 +141,11 @@ The value of “net_position (node A)” is deduced from “flow” variable as 
      
     Depending on the parameter in the GUI that includes or not possible imports from nodes “1” to nodes “2” in the DENS calculation, we should modify this formula. Precisely, it is when “NTC from physical areas outside to physical areas inside adequacy patch” is set to null then the formulation such be modified as follows:
 
-   - DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A) + ∑ flows (node 1 -> node A) - DTG.MRG (node A)]
+   - DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A) + $\sum$ flows (node 1 -> node A) - DTG.MRG (node A)]
      
     The detailed formulation for calculating the last term is, for all “nodes 1 upstream” and all “nodes 1 downstream”:
 
-   - ∑ flows (node 1 -> node A) = ∑ flow_direct (node 1 upstream -> node A) + ∑ flow_indirect (node A <- node 1 downstream)
+   - $\sum$ flows (node 1 -> node A) = $\sum$ flow_direct (node 1 upstream -> node A) + $\sum$ flow_indirect (node A <- node 1 downstream)
      
       Considering that: 
       - “Node 1 upstream” is any node “1” which name in alphabetic order is before node A 
@@ -160,19 +160,19 @@ The value of “net_position (node A)” is deduced from “flow” variable as 
 
 - **Constraint induced by Local matching rule:** 
 
-  - ENS (node A) <= DENS_new(node A)  
+  - ENS (node A) $\le$ DENS_new(node A)  
  
 - **Positivity constraints:** 
 
-   - ENS (node A) >= 0 
-   - spillage (node A) >= 0 
+   - ENS (node A) $\ge$ 0 
+   - spillage (node A) $\ge$ 0 
 
 _**Notes**_
 
 - _“Spillage” variable and “Spillage_init” parameter have been introduced only to deal with some situations for which “Flowbased” constraints, combining with adequacy patch rules, lead to an increase of Total ENS over the different nodes “2”. Such increase of Total ENS could happen for 2 reasons:_ 
 
    - _We have new violations of Local Matching rule and the optimal solution found by Antares is no longer a valid solution, regards to this rule;_ 
-   - _The curtailment sharing rule target is to minimize ∑(ENS$^2$/PTO) and such objective is not exactly equivalent than minimizing Total ENS._  
+   - _The curtailment sharing rule target is to minimize $\sum$(ENS$^2$/PTO) and such objective is not exactly equivalent than minimizing Total ENS._  
 
   _As a matter of fact, if we sum over all nodes “2” the relation induced by node balancing conservation, as the sum of all “net_position” is null, it leads to:_   
 
@@ -183,23 +183,23 @@ _**Notes**_
 - _Spillage results after curtailment sharing rule quadratic optimization are presented in the separate column inside Antares output, titled “SPIL. ENRG. CSR” so the user has access to the spillage results both prior to and after CSR optimization._ 
 
 - _In order to avoid solver issues, lower and upper boundaries of the ENS and Spillage variables can be relaxed using GUI option “Relax CSR variable boundaries”. Following relaxations can be imposed:_ 
-   - -10$^-$$^m$ <= ENS (node A) <= DENS_new (node A) + 10$^-$$^m$ 
-   - -10$^-$$^m$ <= spillage (node A) <= + infinity   
+   - -10$^-$$^m$ $\le$ ENS (node A) $\le$ DENS_new (node A) + 10$^-$$^m$ 
+   - -10$^-$$^m$ $\le$ spillage (node A) $\le$ + infinity   
       Where _m_ is an integer defined by the user. 
 
 ### Objective function
 
-- Minimize [∑(ENS$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct) + ∑(hurdle_cost_indirect x flow_indirect)] 
+- Minimize [$\sum$(ENS$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct) + $\sum$(hurdle_cost_indirect x flow_indirect)] 
 
 The 2 latest terms are introduced to minimize loop flows in the considering domain.   
 In order to assess the quality of the CSR solution additional verification can be imposed by activating GUI option “Check CSR cost function value prior and after CSR optimization”. Values of the objective function prior to and after quadratic optimization will be calculated and compared. If the objective function value after the quadratic optimization has decreased, the new CSR solution will be accepted and presented in the Antares output. However, if after quadratic optimization the objective function value has increased (or stayed the same), LMR solution will be adopted as the final one and warning will be logged out with the appropriate information (year, hour cost prior to quad optimization, cost after quadratic optimization). 
 
-- QUAD$_0$ = [∑(ENS_init$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct_init) + ∑(hurdle_cost_indirect x flow_indirect_init)] 
-- QUAD$_1$ = [∑(ENS_final$^2$/PTO) + ∑(hurdle_cost_direct x flow_direct_final) + ∑(hurdle_cost_indirect x flow_indirect_final)] 
+- QUAD$_0$ = [$\sum$(ENS_init$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct_init) + $\sum$(hurdle_cost_indirect x flow_indirect_init)] 
+- QUAD$_1$ = [$\sum$(ENS_final$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct_final) + $\sum$(hurdle_cost_indirect x flow_indirect_final)] 
  
 If:
 
-- QUAD$_0$ <= QUAD$_1$   
+- QUAD$_0$ $\le$ QUAD$_1$   
 (CSR does not improve QUAD) then the “_init” solution is kept and the CSR solution is hence disregarded.   
 - QUAD$_0$ > QUAD$_1$   
 (CSR does improve QUAD) then the “CSR” solution is kept as final result updating the “_init” solution as stated above. 
@@ -229,9 +229,9 @@ _**Notes**_
 LMR violation check is performed for all hours (CSR triggered or not) after LMR linear optimization (prior to CSR quadratic optimization). Hourly value of LMR violation is set to value one if all following conditions are met:_ 
 
   - _ENS_init (node A) > 0;_ 
-  - _net_position_init (node A) + ∑ flows (node 1 -> node A) < 0;_  
-  - _Abs[net_position_init (node A) + ∑ flows (node 1 -> node A)] > ENS_init (node A) + GUI_defined_threshold._ 
+  - _net_position_init (node A) + $\sum$ flows (node 1 -> node A) < 0;_  
+  - _Abs[net_position_init (node A) + $\sum$ flows (node 1 -> node A)] > ENS_init (node A) + GUI_defined_threshold._ 
 
-    _Second equation is satisfied if the area is exporting power. Depending on the GUI option member (∑ flows (node 1 -> node A)) is optional._  
+    _Second equation is satisfied if the area is exporting power. Depending on the GUI option member ($\sum$ flows (node 1 -> node A)) is optional._  
 
 
