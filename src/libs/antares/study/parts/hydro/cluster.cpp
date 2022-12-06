@@ -47,6 +47,7 @@ namespace Data
 {
 Data::HydroclusterCluster::HydroclusterCluster(Area* parent) :
  Cluster(parent),
+ groupID(hydroclusterGroup), 
  interDailyBreakdown(0.),
  intraDailyModulation(2.),
  intermonthlyBreakdown(0),
@@ -88,61 +89,6 @@ void HydroclusterCluster::flush()
 uint HydroclusterCluster::groupId() const
 {
     return groupID;
-}
-
-
-int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const AnyString& folder) const
-{
-    if (not folder.empty())
-    {
-        Yuni::Clob buffer;
-
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
-        if (Yuni::IO::Directory::Create(buffer))
-        {
-            int ret = 1;
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "ror.txt";
-            ret = series->ror.saveToCSVFile(buffer, precision()) && ret;
-
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "storage.txt";
-            ret = series->storage.saveToCSVFile(buffer, precision()) && ret;
-
-            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
-            ret = series->mingen.saveToCSVFile(buffer, precision()) && ret;
-
-            return ret;
-        }
-        return 0;
-    }
-    return 1;
-}
-
-int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study& s, const AnyString& folder)
-{
-    if (not folder.empty())
-    {
-        auto& buffer = s.bufferLoadingTS;
-
-        int ret = 1;
-        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
-                       << s.inputExtension;
-        ret = series->ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-        ret = series->storage.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-        ret = series->mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
-
-        if (s.usedByTheSolver && s.parameters.derated)
-        {
-            // series->series.averageTimeseries();
-            series->ror.averageTimeseries();
-            series->storage.averageTimeseries();
-            series->mingen.averageTimeseries();                                    
-        }
-
-        series->timeseriesNumbers.clear();
-
-        return ret;
-    }
-    return 1;
 }
 
 
@@ -250,51 +196,6 @@ void Data::HydroclusterCluster::setGroup(Data::ClusterName newgrp)
     pGroup = newgrp;
     newgrp.toLower();
 
-    // if (newgrp == "solar thermal")
-    // {
-    //     groupID = thermalSolar;
-    //     return;
-    // }
-    // if (newgrp == "solar pv")
-    // {
-    //     groupID = PVSolar;
-    //     return;
-    // }
-    // if (newgrp == "solar rooftop")
-    // {
-    //     groupID = rooftopSolar;
-    //     return;
-    // }
-    // if (newgrp == "wind onshore")
-    // {
-    //     groupID = windOnShore;
-    //     return;
-    // }
-    // if (newgrp == "wind offshore")
-    // {
-    //     groupID = windOffShore;
-    //     return;
-    // }
-    // if (newgrp == "other renewable 1")
-    // {
-    //     groupID = renewableOther1;
-    //     return;
-    // }
-    // if (newgrp == "other renewable 2")
-    // {
-    //     groupID = renewableOther2;
-    //     return;
-    // }
-    // if (newgrp == "other renewable 3")
-    // {
-    //     groupID = renewableOther3;
-    //     return;
-    // }
-    // if (newgrp == "other renewable 4")
-    // {
-    //     groupID = renewableOther4;
-    //     return;
-    // }
     // assigning a default value
     groupID = hydroclusterGroup;
 }
@@ -354,24 +255,6 @@ const char* Data::HydroclusterCluster::GroupName(enum HydroclusterGroup grp)
 {
     switch (grp)
     {
-    // case windOffShore:
-    //     return "Wind offshore";
-    // case windOnShore:
-    //     return "Wind onshore";
-    // case thermalSolar:
-    //     return "Solar thermal";
-    // case PVSolar:
-    //     return "Solar PV";
-    // case rooftopSolar:
-    //     return "Solar rooftop";
-    // case renewableOther1:
-    //     return "Other RES 1";
-    // case renewableOther2:
-    //     return "Other RES 2";
-    // case renewableOther3:
-    //     return "Other RES 3";
-    // case renewableOther4:
-    //     return "Other RES 4";
     case hydroclusterGroup:
         return "hydroclusterGroup";
     case groupMax:
@@ -443,7 +326,37 @@ unsigned int HydroclusterCluster::precision() const
 }
 
 
+int Data::HydroclusterCluster::loadDataSeriesFromFolderHydroclusterCluster(Study& s, const AnyString& folder)
+{
+    if (not folder.empty())
+    {
+        auto& buffer = s.bufferLoadingTS;
 
+        int ret = 1;
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "series."
+                       << s.inputExtension;
+        ret = series->ror.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series->storage.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+        ret = series->mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret;
+
+        if (s.usedByTheSolver && s.parameters.derated)
+        {
+            // series->series.averageTimeseries();
+            series->ror.averageTimeseries();
+            series->storage.averageTimeseries();
+            series->mingen.averageTimeseries();                                    
+        }
+
+        series->timeseriesNumbers.clear();
+
+
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP  << "reservoir" <<".txt";
+        ret = reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &s.dataBuffer) && ret;
+        return ret;
+    }
+    return 1;
+}
 
 bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& folder) //### CR13 todo need to adapt
 {
@@ -469,41 +382,7 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
         area.hydro.pumpingEfficiency = 1.;
 
         // maximum capacity expectation
-        if (study.header.version < 390)
-        {
-            area.hydro.maxPower.reset(4, DAYS_PER_YEAR, true);
-
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                           << "maxcapacityexpectation_" << area.id << '.' << study.inputExtension;
-            Matrix<uint> array;
-            if (array.loadFromCSVFile(buffer,
-                                      1,
-                                      12,
-                                      Matrix<>::optFixedSize | Matrix<>::optImmediate,
-                                      &study.dataBuffer))
-            {
-                // days per month, immutable values for version prior to 3.9 for sure
-                // these values was hard-coded before 3.9
-                static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
-                uint dayYear = 0;
-                for (uint m = 0; m != 12; ++m)
-                {
-                    uint nbDays = daysPerMonth[m];
-                    uint power = array.entry[0][m];
-
-                    for (uint d = 0; d != nbDays; ++d, ++dayYear)
-                    {
-                        for (uint x = 0; x != area.hydro.maxPower.width; ++x)
-                            area.hydro.maxPower.entry[x][dayYear] = power;
-                    }
-                }
-            }
-            else
-                area.hydro.maxPower.reset(4, DAYS_PER_YEAR, true);
-            area.hydro.maxPower.markAsModified();
-        }
-        else
+        if (study.header.version >= 390)
         {
             buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
                            << area.id << '.' << study.inputExtension;
@@ -593,11 +472,7 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
                     buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
                   && ret;
         }
-        else
-        {
-            area.hydro.creditModulation.reset(101, 2, true);
-            area.hydro.creditModulation.fill(1);
-        }
+
 
         if (study.header.version >= 620)
         {
@@ -607,90 +482,7 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
                     buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
                   && ret;
         }
-        else if (study.header.version >= 390)
-        {
-            bool enabledModeIsChanged = false;
-            if (JIT::enabled)
-            {
-                JIT::enabled = false; // Allowing to read the area's daily max power
-                enabledModeIsChanged = true;
-            }
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
-                           << area.id << '.' << study.inputExtension;
-            ret = area.hydro.reservoirLevel.loadFromCSVFile(
-                    buffer, 3, 12, Matrix<>::optFixedSize, &study.dataBuffer)
-                  && ret;
-
-            double temp[3][DAYS_PER_YEAR];
-            static const uint daysPerMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-            uint daysPerMonthDecals[12];
-            for (int oldMonth = 0; oldMonth < 12; oldMonth++)
-            {
-                int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-                daysPerMonthDecals[oldMonth] = daysPerMonth[realMonth];
-                if (study.parameters.leapYear)
-                {
-                    if (realMonth == 1) // February
-                    {
-                        daysPerMonthDecals[oldMonth]++;
-                    }
-                    if (oldMonth == 11) // Last month of the year
-                    {
-                        daysPerMonthDecals[oldMonth]--;
-                    }
-                }
-            }
-            uint firstDayMonth[13];
-            firstDayMonth[0] = 0;
-            for (int i = 1; i < 13; i++)
-            {
-                firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
-            }
-            for (int x = area.hydro.minimum; x <= area.hydro.maximum; x++)
-            {
-                auto& col = area.hydro.reservoirLevel[x];
-                for (int month = 0; month < 12; month++)
-                {
-                    int realMonth = (month + study.parameters.firstMonthInYear) % 12;
-                    double valDiff;
-                    if (realMonth < 11)
-                    {
-                        valDiff = col[realMonth + 1] - col[realMonth];
-                    }
-                    else
-                    {
-                        valDiff = col[0] - col[realMonth];
-                    }
-                    for (uint day = firstDayMonth[month]; day < firstDayMonth[month + 1]; day++)
-                    {
-                        temp[x][day] = Math::Round(
-                          col[realMonth]
-                            + (day - firstDayMonth[month]) * (valDiff / daysPerMonthDecals[month]),
-                          3);
-                    }
-                }
-            }
-            area.hydro.reservoirLevel.reset(3, DAYS_PER_YEAR, true);
-            for (int x = area.hydro.minimum; x <= area.hydro.maximum; x++)
-            {
-                auto& col = area.hydro.reservoirLevel[x];
-                for (int i = 0; i < DAYS_PER_YEAR; i++)
-                {
-                    col[i] = temp[x][i];
-                }
-            }
-
-            if (enabledModeIsChanged)
-                JIT::enabled = true; // Back to the previous loading mode.
-        }
-        else
-        {
-            area.hydro.reservoirLevel.reset(3, DAYS_PER_YEAR, true);
-            area.hydro.reservoirLevel.fillColumn(area.hydro.minimum, 0.0);
-            area.hydro.reservoirLevel.fillColumn(area.hydro.average, 0.5);
-            area.hydro.reservoirLevel.fillColumn(area.hydro.maximum, 1.);
-            area.hydro.reservoirLevel.markAsModified();
-        }
+    
 
         if (study.header.version >= 620)
         {
@@ -700,11 +492,6 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
                     buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
                   && ret;
         }
-        else
-        {
-            area.hydro.waterValues.reset(101, DAYS_PER_YEAR, true);
-            area.hydro.waterValues.markAsModified();
-        }
 
         if (study.header.version >= 620)
         {
@@ -713,12 +500,6 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
             ret = area.hydro.inflowPattern.loadFromCSVFile(
                     buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
                   && ret;
-        }
-        else
-        {
-            area.hydro.inflowPattern.reset(1, DAYS_PER_YEAR, true);
-            area.hydro.inflowPattern.fillColumn(0, 1.0);
-            area.hydro.inflowPattern.markAsModified();
         }
 
         if (study.usedByTheSolver)
@@ -1176,6 +957,40 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
     return ret;
 }
 
+
+
+int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const AnyString& folder) const
+{
+    if (not folder.empty())
+    {
+        Yuni::Clob buffer;
+
+        buffer.clear() << folder << SEP << parentArea->id << SEP << id();
+        if (Yuni::IO::Directory::Create(buffer))
+        {
+            int ret = 1;
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "ror.txt";
+            ret = series->ror.saveToCSVFile(buffer, precision()) && ret;
+
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "storage.txt";
+            ret = series->storage.saveToCSVFile(buffer, precision()) && ret;
+
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
+            ret = series->mingen.saveToCSVFile(buffer, precision()) && ret;
+
+            // reservoir
+            buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "reservoir" << ".txt";
+            ret = reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+
+            return ret;
+        }
+        return 0;
+    }
+    return 1;
+}
+
+
+
 bool Data::HydroclusterCluster::SaveToFolder(const AreaList& areas, const AnyString& folder) //### CR13 todo need to adapt
 {
     if (!folder)
@@ -1306,7 +1121,7 @@ void Data::HydroclusterCluster::reset()
     nominalCapacity = 0.;
 
     if (not series)
-        series = new DataSeriesHydrocluster(); //CR13 todo new DataSeriesCommon(); //### CR13 todo
+        series = new DataSeriesHydrocluster(); //CR13 replace new DataSeriesCommon(); 
 
     series->ror.reset(1, HOURS_PER_YEAR);
     series->ror.flush();
@@ -1317,7 +1132,7 @@ void Data::HydroclusterCluster::reset()
 
 
     series->series.reset(1, HOURS_PER_YEAR);
-    series->series.flush();    
+    series->series.flush();    //to remove
 }
 
 

@@ -43,17 +43,21 @@ void HydroclusterClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
 {
+
     // Make sure the folder is created
     if (IO::Directory::Create(folder))
     {
         Clob buffer;
         bool ret = true;
+        bool hasCoupling = false;
 
         // Allocate the inifile structure
         IniFile ini;
 
         // Browse all clusters
         each([&](const Data::HydroclusterCluster& c) {
+
+
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c.name());
 
@@ -65,14 +69,27 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
                 s->add("group", c.group());
             if (not c.enabled)
                 s->add("enabled", "false");
-
-            if (not Math::Zero(c.nominalCapacity))
-                s->add("nominalCapacity", c.nominalCapacity);
-
             if (not Math::Zero(c.unitCount))
                 s->add("unitCount", c.unitCount);
+            if (not Math::Zero(c.nominalCapacity))
+                s->add("nominalCapacity", c.nominalCapacity);
+            // // costs
+            // if (c.costgeneration != setManually)
+            //     s->add("costgeneration", c.costgeneration);            
+            // if (not Math::Zero(c.marginalCost))
+            //     s->add("marginal-cost", Math::Round(c.marginalCost, 3));
 
-            // s->add("ts-interpretation", c.getTimeSeriesModeAsString());
+
+
+            buffer.clear() << folder << SEP << c.id();
+            if (IO::Directory::Create(buffer))
+            {
+                buffer.clear() << folder << SEP << c.id() << SEP << "reservoir.txt";
+
+                ret = c.reservoirLevel.saveToCSVFile(buffer) and ret;
+            }
+            else
+                ret = 0;
         });
 
         // Write the ini file
@@ -84,8 +101,8 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
         logs.error() << "I/O Error: impossible to create '" << folder << "'";
         return false;
     }
-
     return true;
+
 }
 
 static bool ClusterLoadFromProperty(HydroclusterCluster& cluster, const IniFile::Property* p) //CF13

@@ -37,6 +37,8 @@
 #include "ui/simulator/application/study.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydrocluster.areasummary.h" 
 
+#include "levelsandvalues.h"
+
 using namespace Yuni;
 
 namespace Antares
@@ -125,6 +127,14 @@ Panel::Panel(Component::Notebook* parent) :
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
           wxT("Minimum Generation"));
+
+        // pageLevelsAndValuesHydrocluster = subbook->add(
+        //   new Component::Datagrid::Component(
+        //     subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
+        //   wxT("Reservoir levels and water values"));
+
+      auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
+      pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);

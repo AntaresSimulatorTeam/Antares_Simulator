@@ -673,6 +673,10 @@ void ApplWnd::createNBHydrocluster()
     pNotebook->add(panel, wxT("hydroCluster"), wxT("Hydrocluster"));
     pageHydroclusterLocaldata = panel->pageHydroclusterLocaldata ;
     pageHydroclusterClusterList = panel->pageHydroclusterClusterList;
+    pageHydroclusterTimeSeriesRor = panel->pageHydroclusterTimeSeriesRor;
+    pageHydroclusterTimeSeriesStorage = panel->pageHydroclusterTimeSeriesStorage;
+    pageHydroclusterTimeSeriesMingen = panel->pageHydroclusterTimeSeriesMingen;
+    pageLevelsAndValuesHydrocluster = panel->pageLevelsAndValuesHydrocluster;
 }
 
 void ApplWnd::createNBBindingConstraints()

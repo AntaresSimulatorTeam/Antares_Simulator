@@ -114,6 +114,8 @@ SET(SRC_TOOLBOX_COM_DBGRID_RENDERERS_AREAS
 		# Areas
 		toolbox/components/datagrid/renderer/area/reservoirlevels.h
 		toolbox/components/datagrid/renderer/area/reservoirlevels.cpp
+		toolbox/components/datagrid/renderer/area/reservoirlevelshydrocluster.h
+		toolbox/components/datagrid/renderer/area/reservoirlevelshydrocluster.cpp	
 		toolbox/components/datagrid/renderer/area/watervalues.h
 		toolbox/components/datagrid/renderer/area/watervalues.cpp
 		toolbox/components/datagrid/renderer/area/inflowpattern.h

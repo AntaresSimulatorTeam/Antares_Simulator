@@ -30,6 +30,8 @@
 #include <antares/wx-wrapper.h>
 #include "../../toolbox/components/datagrid/component.h"
 #include "../../toolbox/input/area.h"
+#include "../../toolbox/input/hydrocluster-cluster.h"
+
 #include <ui/common/component/panel.h>
 #include "../../toolbox/components/button.h"
 
@@ -65,6 +67,36 @@ private:
     Component::Panel* pSupport;
 
 }; // class Prepro
+
+class LevelsAndValuesHydrocluster : public Component::Panel, public Yuni::IEventObserver<LevelsAndValuesHydrocluster>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    // LevelsAndValuesHydrocluster(wxWindow* parent, Toolbox::InputSelector::Area* notifier);
+    LevelsAndValuesHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier);
+
+    //! Destructor
+    virtual ~LevelsAndValuesHydrocluster();
+    //@}
+
+private:
+    void createComponents();
+    void onStudyClosed();
+    // void onAreaChanged(Data::Area* area);
+    void onClusterChanged(Data::HydroclusterCluster* hydroclusterCluster);
+
+private:
+    //! The input area selector
+    Toolbox::InputSelector::HydroclusterCluster* pInputHydroclusterClusterSelector;// pInputAreaSelector;
+    Data::HydroclusterCluster* pHydroclusterCluster; //pArea;
+    bool pComponentsAreReady;
+    Component::Panel* pSupport;
+
+};
 
 } // namespace Hydro
 } // namespace Window

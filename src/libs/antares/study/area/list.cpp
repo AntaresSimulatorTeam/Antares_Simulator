@@ -304,6 +304,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
 
         // buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "prepro";
         // ret = area.hydrocluster.list.savePreproToFolder(buffer) and ret;
+
         buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.saveDataSeriesToFolder(buffer) and ret;
     }    
@@ -735,6 +736,14 @@ bool AreaList::saveToFolder(const AnyString& folder) const
     ret = IO::Directory::Create(buffer) and ret;
     buffer.clear() << folder << SEP << "input" << SEP << "thermal" << SEP << "clusters";
     ret = IO::Directory::Create(buffer) and ret;
+
+    buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "series";
+    ret = IO::Directory::Create(buffer) and ret;
+    buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "prepro";
+    ret = IO::Directory::Create(buffer) and ret;
+    buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "clusters";
+    ret = IO::Directory::Create(buffer) and ret;
+
 
     // Write the list of areas to a flat file
     buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << "list.txt";

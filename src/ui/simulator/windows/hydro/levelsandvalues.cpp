@@ -28,6 +28,8 @@
 #include "levelsandvalues.h"
 #include <wx/stattext.h>
 #include "../../toolbox/components/datagrid/renderer/area/reservoirlevels.h"
+#include "../../toolbox/components/datagrid/renderer/area/reservoirlevelshydrocluster.h"
+
 #include "../../toolbox/components/datagrid/renderer/area/watervalues.h"
 #include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
@@ -122,6 +124,91 @@ void LevelsAndValues::onStudyClosed()
     if (GetSizer())
         GetSizer()->Show(pSupport, false);
 }
+
+
+
+LevelsAndValuesHydrocluster::LevelsAndValuesHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ Component::Panel(parent),
+ pInputHydroclusterClusterSelector(notifier),
+ pHydroclusterCluster(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr)
+{
+    OnStudyClosed.connect(this, &LevelsAndValuesHydrocluster::onStudyClosed);
+    if (notifier)
+        notifier->onClusterChanged.connect(this, &LevelsAndValuesHydrocluster::onClusterChanged); 
+}
+
+void LevelsAndValuesHydrocluster::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
+
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
+
+    wxBoxSizer* ssGrids = new wxBoxSizer(wxHORIZONTAL);
+    pSupport->SetSizer(ssGrids);
+
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   new Component::Datagrid::Renderer::ReservoirLevelsHydrocluster(this, pInputHydroclusterClusterSelector), //CR13 todo
+                   wxT("Reservoir levels")),
+                 2,
+                 wxALL | wxEXPAND | wxFIXED_MINSIZE,
+                 5);
+
+    ssGrids->Add(
+      new wxStaticLine(pSupport, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL),
+      0,
+      wxALL | wxEXPAND);
+
+    ssGrids->Add(new Component::Datagrid::Component(
+                   pSupport,
+                   //NULL, //new Component::Datagrid::Renderer::WaterValues(this, pInputHydroclusterClusterSelector), //CR13 todo
+                   new Component::Datagrid::Renderer::ReservoirLevelsHydrocluster(this, pInputHydroclusterClusterSelector), //CR13 todo
+                   wxT("Water values")),
+                 3,
+                 wxALL | wxEXPAND | wxFIXED_MINSIZE,
+                 5);
+
+    ssGrids->Layout();
+}
+
+LevelsAndValuesHydrocluster::~LevelsAndValuesHydrocluster()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
+
+void LevelsAndValuesHydrocluster::onClusterChanged(Data::HydroclusterCluster* hydrocluster)
+{
+    pHydroclusterCluster = hydrocluster;
+    // if (hydrocluster and hydrocluster->prepro)
+    if(hydrocluster)
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
+    }
+}
+
+void LevelsAndValuesHydrocluster::onStudyClosed()
+{
+    pHydroclusterCluster = nullptr;
+
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
+
 
 } // namespace Hydro
 } // namespace Window
