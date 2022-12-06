@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include <map>
@@ -19,19 +20,13 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numS
  */
 std::list<std::string> getAvailableOrtoolsSolverName();
 
-/*!
- *  \brief Return list of available ortools solver name, linear and mixed
- *
- *  \return List of available ortools solver name
- */
-std::list<std::string> getAvailableOrtoolsSolverNameLinearAndMixed();
 
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
  */
-MPSolver* factory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName);
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName);
 
 
 class OrtoolsUtils

@@ -1604,6 +1604,13 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
         logs.info() << "  :: ignoring hurdle costs";
+
+    // Indicate ortools solver used
+    if (ortoolsUsed)
+    {
+        logs.info() << "  :: ortools solver " << ortoolsSolver
+                    << " used for problem resolution";
+    }
 }
 
 void Parameters::years(uint y)

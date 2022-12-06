@@ -126,7 +126,7 @@ MPSolver* convert_to_MPSolver(
     auto& study = *Data::Study::Current::Get();
 
     // Create the MPSolver
-    MPSolver* solver = factory(problemeSimplexe, study.parameters.ortoolsSolver);
+    MPSolver* solver = MPSolverFactory(problemeSimplexe, study.parameters.ortoolsSolver);
 
     tuneSolverSpecificOptions(solver);
 
@@ -347,32 +347,11 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 
 const std::map<std::string, std::pair<std::string, std::string>> OrtoolsUtils::solverMap =
 {
-    {"xpress", std::pair("xpress_lp", "xpress")},
-    {"sirius", std::pair("sirius_lp", "sirius")},
-    {"coin", std::pair("clp", "cbc")},
-    {"glpk", std::pair("glpk_lp", "glpk")}
+    {"xpress", {"xpress_lp", "xpress"}},
+    {"sirius", {"sirius_lp", "sirius"}},
+    {"coin", {"clp", "cbc"}},
+    {"glpk", {"glpk_lp", "glpk"}}
 };
-
-std::list<std::string> getAvailableOrtoolsSolverNameLinearAndMixed()
-{
-    std::list<std::string> result;
-
-    for (auto solverType : {MPSolver::XPRESS_LINEAR_PROGRAMMING,
-        MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING,
-        MPSolver::SIRIUS_LINEAR_PROGRAMMING,
-        MPSolver::SIRIUS_MIXED_INTEGER_PROGRAMMING,
-        MPSolver::CLP_LINEAR_PROGRAMMING,
-        MPSolver::CBC_MIXED_INTEGER_PROGRAMMING,
-        MPSolver::GLPK_LINEAR_PROGRAMMING,
-        MPSolver::GLPK_MIXED_INTEGER_PROGRAMMING})
-    {
-        if (MPSolver::SupportsProblemType(solverType))
-            result.push_back((std::string)ToString(solverType));
-    }
-
-    return result;
-}
-
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
@@ -390,20 +369,21 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-
-MPSolver* factory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
 {
+    MPSolver *solver;
     std::list<std::string> solverList = getAvailableOrtoolsSolverName();
 
-    auto it = std::find(solverList.begin(), solverList.end(), solverName);
-    if (it != solverList.end())
+    if (probleme->isMIP())
+        solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).second);
+    else
+        solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).first);
+
+    if (!solver)
     {
-        Antares::logs.fatal() << "Solver doesn't exist";
-        return NULL;
+        Antares::logs.fatal() << "Solver not found";
+        return nullptr;
     }
 
-    if (probleme->isMIP())
-        return MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).second);
-
-    return MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).first);
+    return solver;
 }
