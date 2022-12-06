@@ -357,7 +357,7 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 {
     std::list<std::string> result;
 
-    for (const auto solverName : OrtoolsUtils::solverMap)
+    for (const auto& solverName : OrtoolsUtils::solverMap)
     {
         MPSolver::OptimizationProblemType solverType;
         MPSolver::ParseSolverType(solverName.second.first, &solverType);
@@ -369,7 +369,7 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName)
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName)
 {
     MPSolver *solver;
     std::list<std::string> solverList = getAvailableOrtoolsSolverName();

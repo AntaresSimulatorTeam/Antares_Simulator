@@ -30,6 +30,7 @@
 #include <cassert>
 #include "date.h"
 #include <time.h>
+#include "../study/parameters.h"
 #include <yuni/io/file.h>
 #include "../logs.h"
 
@@ -404,6 +405,30 @@ Calendar::Calendar()
     settings.leapYear = false;
     settings.weekFirstDay = monday;
     settings.weekday1rstJanuary = monday;
+}
+
+void Antares::Date::Calendar::reset(const Data::Parameters& parameters)
+{
+    reset(parameters, parameters.leapYear);
+}
+
+void Antares::Date::Calendar::reset(const Data::Parameters& parameters, bool leapyear)
+{
+    // retrieve the new settings
+    settings.weekday1rstJanuary = parameters.dayOfThe1stJanuary;
+    settings.firstMonth = parameters.firstMonthInYear;
+    settings.weekFirstDay = parameters.firstWeekday;
+
+    // We do not retrieve directly the `leapyear` parameters
+    // A simulation should be made in ignoring this parameter (aka false)
+    // but the outputs should rely on it (for printing).
+    // It goes the same for the GUI : since it is _merely_ printing,
+    // it should be taken into consideration.
+    // Consequently, we will let the calling code specifying this value
+    settings.leapYear = leapyear;
+
+    // re-initialize the calendar with the new settings
+    reset();
 }
 
 static inline DayOfTheWeek NextDayOfTheWeek(DayOfTheWeek weekday)

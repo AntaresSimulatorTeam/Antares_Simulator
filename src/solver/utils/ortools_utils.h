@@ -26,7 +26,7 @@ std::list<std::string> getAvailableOrtoolsSolverName();
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, std::string solverName);
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName);
 
 
 class OrtoolsUtils
