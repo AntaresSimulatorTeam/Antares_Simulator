@@ -21,4 +21,4 @@ jobs:
         workdir: docker
         dockerfile: centos7-basic-requirements
         cache: true
-        tags: centos7-simulator
+        tags: centos7-simulator-no-deps
