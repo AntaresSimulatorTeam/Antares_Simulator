@@ -156,11 +156,16 @@ jobs:
            RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ env.LABEL }}.rpm}
            mv "${RPM_NAME}" "${RPM_NAME_WITH_SUFFIX}" || true
 
+    - name: Solver archive creation
+      run: |
+           cd _build
+           tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+
     - name: .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
-    
+
     - name: Rename .tgz file
       run: |
            cd _build

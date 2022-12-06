@@ -170,7 +170,10 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-
+    - name: Solver archive creation
+      run: |
+           cd _build
+           tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: NSIS Installer creation
       shell: bash
