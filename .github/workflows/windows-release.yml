@@ -186,12 +186,9 @@ jobs:
            echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
     - name: Upload .zip installer
-      uses: actions/upload-release-asset@v1.0.2
+      uses: softprops/action-gh-release@v0.1.15
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.ZIP_NAME}}
-        asset_name: ${{env.ZIP_NAME}}
-        asset_content_type: application/octet-stream
+        files: _build/${{env.ZIP_NAME}}
 
     - name: Remove zip to free some disk space
       shell: bash
