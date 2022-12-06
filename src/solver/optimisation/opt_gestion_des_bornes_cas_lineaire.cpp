@@ -386,7 +386,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                     && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
                          == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                     Xmax[Var]
-                      = min(Xmax[Var],
+                      = std::min(Xmax[Var],
                             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
 
                 ProblemeHebdo->ResultatsHoraires[Pays]
