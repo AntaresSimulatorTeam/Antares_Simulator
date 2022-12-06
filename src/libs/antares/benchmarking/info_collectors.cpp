@@ -6,7 +6,7 @@
 
 using namespace Antares::Data;
 
-namespace Benchmarking 
+namespace Benchmarking
 {
 	// Collecting data study
 	// ---------------------------
@@ -149,7 +149,7 @@ namespace Benchmarking
 	// -------------------------------------
 	void DurationCollector::toFileContent(FileContent& file_content)
 	{		
-        for (auto& element : duration_items_)
+        for (const auto& element : duration_items_)
 		{
 			const std::string& name = element.first;
 			const auto& durations = element.second;
