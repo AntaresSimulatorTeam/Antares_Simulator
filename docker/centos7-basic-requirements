@@ -1,7 +1,5 @@
 FROM centos:7
 
-ARG ANTARES_DEPS_VERSION
-
 # Install requirements : update repo
 RUN yum update -y
 
