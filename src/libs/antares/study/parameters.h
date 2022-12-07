@@ -137,6 +137,10 @@ public:
     */
     void resetSeeds();
     /*!
+    ** \brief Reset to default all threshold values in adequacy patch
+    */
+    void resetThresholdsAdqPatch();
+    /*!
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
@@ -511,6 +515,24 @@ public:
         };
         bool enabled;
         LocalMatching localMatching;
+
+        struct CurtailmentSharing
+        {
+            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
+            //! Threshold to initiate curtailment sharing rule
+            double thresholdInitiate;
+            //! Threshold to display Local Matching Rule violations
+            double thresholdDisplayViolations;
+            //! CSR Variables relaxation threshold
+            int thresholdVarBoundsRelaxation;
+            //! Include hurdle cost in CSR cost function
+            bool includeHurdleCost;
+            //! Check CSR cost function prior & after CSR optimization
+            bool checkCsrCostFunction;
+        };
+        CurtailmentSharing curtailmentSharing;
+
         void addExcludedVariables(std::vector<std::string>&) const;
     };
 

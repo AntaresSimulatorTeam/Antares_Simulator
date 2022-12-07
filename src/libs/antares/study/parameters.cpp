@@ -39,6 +39,7 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
+#include "../solver/optimisation/adequacy_patch.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
@@ -208,6 +209,39 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
+bool StringToPriceTakingOrder(const AnyString& text, AdequacyPatch::AdqPatchPTO& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "dens")
+    {
+        out = AdequacyPatch::AdqPatchPTO::isDens;
+        return true;
+    }
+    if (s == "load")
+    {
+        out = AdequacyPatch::AdqPatchPTO::isLoad;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid price taking order. Got '" << text << "'";
+
+    return false;
+}
+
+const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
+{
+    switch (pto)
+    {
+    case AdequacyPatch::AdqPatchPTO::isDens:
+        return "DENS";
+    case AdequacyPatch::AdqPatchPTO::isLoad:
+        return "Load";
+    default:
+        return "";
+    }
+}
 
 Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
 {
@@ -232,12 +266,26 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
+void Parameters::resetThresholdsAdqPatch()
+{
+    // Initialize all thresholds values for adequacy patch
+    adqPatch.curtailmentSharing.thresholdInitiate
+      = defaultValueThresholdInitiateCurtailmentSharingRule;
+    adqPatch.curtailmentSharing.thresholdDisplayViolations
+      = defaultValueThresholdDisplayLocalMatchingRuleViolations;
+    adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+      = defaultValueThresholdVarBoundsRelaxation;
+}
 
 void Parameters::resetAdqPatchParameters()
 {
     adqPatch.enabled = false;
     adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+    adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+    adqPatch.curtailmentSharing.includeHurdleCost = false;
+    adqPatch.curtailmentSharing.checkCsrCostFunction = false;
+    resetThresholdsAdqPatch();
 }
 
 void Parameters::reset()
@@ -672,6 +720,22 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    // Price taking order
+    if (key == "price-taking-order")
+        return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
+    // Include Hurdle Cost
+    if (key == "include-hurdle-cost-csr")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
+    // Check CSR cost function prior and after CSR
+    if (key == "check-csr-cost-function")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.checkCsrCostFunction);
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdInitiate);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+    if (key == "threshold-csr-variable-bounds-relaxation")
+        return value.to<int>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
 
     return false;
 }
@@ -1761,7 +1825,19 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+        section->add("price-taking-order",
+                     PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
+        section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
+        section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
+        // Threshholds
+        section->add("threshold-initiate-curtailment-sharing-rule",
+                     adqPatch.curtailmentSharing.thresholdInitiate);
+        section->add("threshold-display-local-matching-rule-violations",
+                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        section->add("threshold-csr-variable-bounds-relaxation",
+                     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
+
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1940,7 +2016,12 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
 void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
 {
     if (!enabled)
-        out.emplace_back("dens");
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("DTG MRG CSR");
+    }
 }
 
 bool Parameters::haveToImport(int tsKind) const

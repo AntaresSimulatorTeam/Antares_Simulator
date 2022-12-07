@@ -1,6 +1,6 @@
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2022 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -37,75 +37,111 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-    /*!
-    * Determines restriction type for transmission links for first step of adequacy patch.
-    *
-    * @param OriginNodeAdequacyPatchType uint: The adq type of the node at the start of the link.
-    *
-    * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
-    *
-    * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
-    * (type 1) towards nodes inside adq patch (type 2).
-    *
-    * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
-    * (type 1).
-    *
-    * @return uint from an enumeration that describes the type of restrictions to put on this link for
-    * adq purposes.
-    */
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-        AdequacyPatchMode OriginNodeAdequacyPatchType,
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch,
-        bool SetToZero11LinksForAdequacyPatch);
+//! A default threshold value for initiate curtailment sharing rule
+const double defaultValueThresholdInitiateCurtailmentSharingRule = 0.0;
+//! A default threshold value for display local matching rule violations
+const double defaultValueThresholdDisplayLocalMatchingRuleViolations = 0.0;
+//! CSR Variables relaxation threshold
+const int defaultValueThresholdVarBoundsRelaxation = 3;
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch.
+ *
+ * @param ProblemeHebdo PROBLEME_HEBDO*: Weekly problem structure.
+ *
+ * @param Interco int: Index of the link.
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco);
 
-    /*!
-    * Determines restriction type for transmission links for first step of adequacy patch, when start
-    * node is inside adq path (type 2).
-    *
-    * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
-    *
-    * @return uint from an enumeration that describes the type of restrictions to put on this link for
-    * adq purposes.
-    */
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType);
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is inside adq path (type 2).
+ *
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType);
 
-    /*!
-    * Determines restriction type for transmission links for first step of adequacy patch, when start
-    * node is outside adq path (type 1).
-    *
-    * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
-    *
-    * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
-    * (type 1) towards nodes inside adq patch (type 2).
-    *
-    * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
-    * (type 1).
-    *
-    * @return uint from an enumeration that describes the type of restrictions to put on this link for
-    * adq purposes.
-    */
-    LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
-        AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-        bool SetToZero12LinksForAdequacyPatch,
-        bool SetToZero11LinksForAdequacyPatch);
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is outside adq path (type 1).
+ *
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq
+ * patch (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
+  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
+  bool setToZeroNTCfromOutToIn_AdqPatch,
+  bool setToZeroNTCfromOutToOut_AdqPatch);
 
-    /*!
-    * Sets link bounds for first step of adequacy patch.
-    */
-    void setBoundsAdqPatch(double& Xmax,
-        double& Xmin,
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-        const int Interco,
-        PROBLEME_HEBDO* ProblemeHebdo);
-    /*!
-    * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
-    */
-    void setBoundsNoAdqPatch(double& Xmax,
-        double& Xmin,
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-        const int Interco);
+/*!
+ * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
+ * not used.
+ */
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* ProblemeHebdo);
+
+/*!
+ * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
+ * given area and hour.
+ */
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+                                                            int Area,
+                                                            int hour);
+
+/*!
+ * Calculate total local matching rule violation per one area, per one hour.
+ */
+double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+                            double totalNodeBalance,
+                            int Area,
+                            int hour);
+
+/*!
+ * Calculate densNew values for all hours and areas inside adequacy patch and places them into
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * copy-pastes spilled Energy values into spilled Energy values after CSR
+ * calculates total LMR violations and LMR violations per area per hour inside
+ * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
+ */
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+                                            const Study& study,
+                                            uint numSpace);
+
+/*!
+** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
+** **
+** ** \param A A vector
+** ** \param B An array
+** ** \return
+** */
+void addArray(std::vector<double>& A, const double* B);
+
+/*!
+** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
+** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
+** **
+** ** \param study The Antares study
+** ** \param problem The weekly problem, from the solver
+** ** \return
+** */
+void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
+
 } // end namespace Antares
 } // end namespace Data
 } // end namespace AdequacyPatch
