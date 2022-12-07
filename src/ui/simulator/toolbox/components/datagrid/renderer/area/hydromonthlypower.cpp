@@ -177,7 +177,7 @@ HydroMonthlyPowerHydroclusterCluster::~HydroMonthlyPowerHydroclusterCluster()
 
 wxString HydroMonthlyPowerHydroclusterCluster::columnCaption(int colIndx) const
 {
-    switch (colIndx) //todo
+    switch (colIndx)
     {
     case Data::PartHydro::genMaxP:
         return wxT("  Generating Max Power  \n   (MW)   ");

@@ -122,6 +122,97 @@ void CreditModulations::onStudyLoaded()
     Renderer::ARendererArea::onStudyLoaded();
 }
 
+///////////////////
+
+
+CreditModulationsHydroclusterCluster::CreditModulationsHydroclusterCluster(wxWindow* control, 
+    Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ MatrixAncestorType(control), Renderer::ARendererHydroclusterCluster(control, notifier)
+{
+}
+
+CreditModulationsHydroclusterCluster::~CreditModulationsHydroclusterCluster()
+{
+    destroyBoundEvents();
+}
+
+wxString CreditModulationsHydroclusterCluster::columnCaption(int colIndx) const
+{
+    return wxStringFromUTF8(colIndx);
+}
+
+wxString CreditModulationsHydroclusterCluster::cellValue(int x, int y) const
+{
+    return MatrixAncestorType::cellValue(x, y);
+}
+
+double CreditModulationsHydroclusterCluster::cellNumericValue(int x, int y) const
+{
+    return MatrixAncestorType::cellNumericValue(x, y);
+}
+
+bool CreditModulationsHydroclusterCluster::cellValue(int x, int y, const String& value)
+{
+    double v;
+    if (not value.to(v))
+        return MatrixAncestorType::cellValue(x, y, "0");
+    if (v < 0)
+        return MatrixAncestorType::cellValue(x, y, "0");
+    if (v > 1000000)
+        return MatrixAncestorType::cellValue(x, y, "1000000");
+
+    return MatrixAncestorType::cellValue(x, y, String() << Math::Round(v, 2));
+}
+
+void CreditModulationsHydroclusterCluster::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* hydroclusterCluster)
+{
+    // FIXME for some reasons, the variable study here is not properly initialized
+    if (hydroclusterCluster && !study)
+        study = Data::Study::Current::Get();
+
+    // Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
+    pHydroclusterCluster = hydroclusterCluster;
+    Renderer::ARendererHydroclusterCluster::internalHydroclusterClusterChanged(hydroclusterCluster);
+    if (pHydroclusterCluster)
+        MatrixAncestorType::matrix(&pHydroclusterCluster->creditModulation);//(&pHydro->maxPower);//todo
+    else
+        MatrixAncestorType::matrix(nullptr);
+}
+
+IRenderer::CellStyle CreditModulationsHydroclusterCluster::cellStyle(int col, int row) const
+{
+    auto& matrix = pHydroclusterCluster->creditModulation;
+    double d = matrix[col][row];
+    if (d < 0)
+        return IRenderer::cellStyleError;
+    return IRenderer::cellStyleWithNumericCheck(col, row);
+}
+
+wxString CreditModulationsHydroclusterCluster::rowCaption(int row) const
+{
+    if (row == 0)
+    {
+        return wxT("Generating Power");
+    }
+    else
+    {
+        return wxT("Pumping Power");
+    }
+}
+
+void CreditModulationsHydroclusterCluster::onStudyClosed()
+{
+    MatrixAncestorType::onStudyClosed();
+    Renderer::ARendererHydroclusterCluster::onStudyClosed();
+}
+
+void CreditModulationsHydroclusterCluster::onStudyLoaded()
+{
+    MatrixAncestorType::onStudyLoaded();
+    Renderer::ARendererHydroclusterCluster::onStudyLoaded();
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

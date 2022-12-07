@@ -463,14 +463,14 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
             }
         }
 
-        if (study.header.version >= 620)
-        {
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                           << "creditmodulations_" << area.id << '.' << study.inputExtension;
-            ret = area.hydro.creditModulation.loadFromCSVFile(
-                    buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
-                  && ret;
-        }
+        // if (study.header.version >= 620)
+        // {
+        //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+        //                    << "creditmodulations_" << area.id << '.' << study.inputExtension;
+        //     ret = area.hydro.creditModulation.loadFromCSVFile(
+        //             buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer)
+        //           && ret;
+        // }
 
 
         // if (study.header.version >= 620)

@@ -183,8 +183,7 @@ void DailypowerHydrocluster::createComponents()
 
     sizerHigh->Add(new Component::Datagrid::Component(
                      pSupport,
-                     NULL, //new Component::Datagrid::Renderer::HydroMonthlyPowerHydroclusterCluster(this, pInputHydroclusterClusterSelector), //CR3 todo
-                     //new Component::Datagrid::Renderer::CreditModulations(this, pInputAreaSelector),
+                     new Component::Datagrid::Renderer::CreditModulationsHydroclusterCluster(this, pInputHydroclusterClusterSelector),
                      wxT("Credit Modulations (reservoir level)")),
                    3,
                    wxALL | wxEXPAND,

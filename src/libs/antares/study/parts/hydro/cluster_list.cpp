@@ -85,13 +85,17 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
             if (IO::Directory::Create(buffer))
             {
                 buffer.clear() << folder << SEP << c.id() << SEP << "reservoir.txt";
-                ret = c.reservoirLevel.saveToCSVFile(buffer) and ret;
+                ret = c.reservoirLevel.saveToCSVFile(buffer, 3) and ret;
 
                 buffer.clear() << folder << SEP << c.id() << SEP << "waterValues.txt";
-                ret = c.waterValues.saveToCSVFile(buffer) and ret;   
+                ret = c.waterValues.saveToCSVFile(buffer, 2) and ret;   
 
                 buffer.clear() << folder << SEP << c.id() << SEP << "maxPower.txt";
-                ret = c.maxPower.saveToCSVFile(buffer) and ret;                                
+                ret = c.maxPower.saveToCSVFile(buffer, 2) and ret;   
+
+                buffer.clear() << folder << SEP << c.id() << SEP << "creditmodulations.txt";
+                ret = c.creditModulation.saveToCSVFile(buffer, 2) and ret;                                                
+
             }
             else
                 ret = 0;
@@ -195,6 +199,9 @@ bool HydroclusterClusterList::loadHydroclusterClusterDataFromFolder(Study& study
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "maxPower" <<".txt";
         ret = c.maxPower.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
 
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "creditmodulations" <<".txt";
+        ret = c.creditModulation.loadFromCSVFile(buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
+
     }
     return ret;
 }
@@ -241,6 +248,9 @@ bool HydroclusterClusterList::loadFromFolder(Study& study, const AnyString& fold
                 //CR13 todo see maxPower.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
                 buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "maxPower" <<".txt";
                 ret = cluster->maxPower.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
+
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "creditmodulations" <<".txt";
+                ret = cluster->creditModulation.loadFromCSVFile(buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
 
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();
