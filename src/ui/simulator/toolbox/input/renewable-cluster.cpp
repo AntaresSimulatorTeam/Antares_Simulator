@@ -508,7 +508,7 @@ void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr ite
 
 void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    auto a = dynamic_pointer_cast<Component::HTMLListbox::Item::RenewableClusterItem>(item);
+    auto a = std::dynamic_pointer_cast<Component::HTMLListbox::Item::RenewableClusterItem>(item);
     if (a)
     {
         // Lock the window to prevent flickering

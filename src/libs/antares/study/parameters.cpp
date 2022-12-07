@@ -984,9 +984,9 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
         return true;
     }
     if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
     if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
