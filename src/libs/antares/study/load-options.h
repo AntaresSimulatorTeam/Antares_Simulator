@@ -88,7 +88,7 @@ public:
     bool ortoolsUsed;
 
     //! Ortool solver used for simulation
-    std::string ortoolsSolver = "sirius";
+    std::string ortoolsSolver;
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;

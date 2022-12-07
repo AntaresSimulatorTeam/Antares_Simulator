@@ -280,9 +280,9 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 
         if (!found)
         {
-            options.ortoolsSolver = baseSolver;
             logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
                            << "'. reset to " << baseSolver;
+            options.ortoolsSolver = baseSolver;
         }
     }
 }
