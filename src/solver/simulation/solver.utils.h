@@ -148,16 +148,18 @@ public:
         systemCost.setNbPerformedYears(n);
         criterionCost1.setNbPerformedYears(n);
         criterionCost2.setNbPerformedYears(n);
-        optimizationTime.setNbPerformedYears(n);
-    }
+        optimizationTime1.setNbPerformedYears(n);
+        optimizationTime2.setNbPerformedYears(n);
+    };
 
     void endStandardDeviations()
     {
         systemCost.endStandardDeviation();
         criterionCost1.endStandardDeviation();
         criterionCost2.endStandardDeviation();
-        optimizationTime.endStandardDeviation();
-    }
+        optimizationTime1.endStandardDeviation();
+        optimizationTime2.endStandardDeviation();
+    };
 
     void writeToOutput(IResultWriter::Ptr writer)
     {
@@ -221,10 +223,17 @@ private:
     void writeOptimizationTimeToOutput(IResultWriter::Ptr writer)
     {
         Yuni::Clob buffer;
-        buffer << "EXP (ms) : " << optimizationTime.costAverage << "\n";
-        buffer << "STD (ms) : " << optimizationTime.costStdDeviation << "\n";
-        buffer << "MIN (ms) : " << optimizationTime.costMin << "\n";
-        buffer << "MAX (ms) : " << optimizationTime.costMax << "\n";
+        buffer << "First optimization :\n";
+        buffer << "EXP (ms) : " << optimizationTime1.costAverage << "\n";
+        buffer << "STD (ms) : " << optimizationTime1.costStdDeviation << "\n";
+        buffer << "MIN (ms) : " << optimizationTime1.costMin << "\n";
+        buffer << "MAX (ms) : " << optimizationTime1.costMax << "\n";
+
+        buffer << "Second optimization :\n";
+        buffer << "EXP (ms) : " << optimizationTime2.costAverage << "\n";
+        buffer << "STD (ms) : " << optimizationTime2.costStdDeviation << "\n";
+        buffer << "MIN (ms) : " << optimizationTime2.costMin << "\n";
+        buffer << "MAX (ms) : " << optimizationTime2.costMax << "\n";
 
         writer->addEntryFromBuffer(optimizationTimeFilename, buffer);
     }
@@ -234,7 +243,8 @@ public:
     costStatistics systemCost;
     costStatistics criterionCost1;
     costStatistics criterionCost2;
-    costStatistics optimizationTime;
+    costStatistics optimizationTime1;
+    costStatistics optimizationTime2;
 
 private:
     const std::string systemCostFilename;
