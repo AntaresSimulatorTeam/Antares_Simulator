@@ -14,8 +14,8 @@ set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
-set(ANTARES_BETA 11)
-set(ANTARES_RC 0)
+set(ANTARES_BETA 0)
+set(ANTARES_RC 3)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)

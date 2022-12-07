@@ -88,10 +88,6 @@ public:
         cellStyleFilterSynthesisOn,
         cellStyleFilterSynthesisOff,
         cellStyleFilterUndefined,
-        cellStyleAdqPatchVirtual,
-        cellStyleAdqPatchOutside,
-        cellStyleAdqPatchInside,
-
 
         cellStyleMax /* Max items in the list */
     };

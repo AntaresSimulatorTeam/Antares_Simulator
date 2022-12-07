@@ -47,8 +47,7 @@ class EconomyWeeklyOptimization
 {
 public:
     using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
-    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) = 0;
-    virtual void solveCSR(const Variable::State& state, uint numSpace, uint week) = 0;
+    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
     static Ptr create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
 
 protected:
@@ -60,21 +59,14 @@ class AdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State& state, int hourInTheYear, uint numSpace, uint week) override;
-    void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
-
-private:
-    vector<double> calculateENSoverAllAreasForEachHour(uint numSpace) const;
-    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS, uint numSpace) const;
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace) const;
+    void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
 };
 
 class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
 {
 public:
     explicit NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State&, int, uint numSpace, uint week) override;
-    void solveCSR(const Variable::State& state, uint numSpace, uint week) override;
+    void solve(Variable::State&, int, uint numSpace) override;
 };
 
 class Economy

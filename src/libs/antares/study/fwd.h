@@ -614,7 +614,7 @@ enum AdequacyPatchMode
 /*!
 ** \brief Setting Link Capacity (NTC) for Adequacy patch first step
 */
-enum ntcSetToZeroStatus_AdqPatchStep1
+enum LinkCapacityForAdequacyPatchFirstStep
 {
     //! Leave NTC local values
     leaveLocalValues = 0,
@@ -626,19 +626,6 @@ enum ntcSetToZeroStatus_AdqPatchStep1
     setExtremityOrigineToZero
 
 }; // enum NTC
-
-/*!
-** \brief Types of Price Taking Order (PTO) for Adequacy Patch
-*/
-enum class AdqPatchPTO
-{
-    //! PTO is DENS
-    isDens = 0,
-    //! PTO is Load
-    isLoad
-
-}; // enum AdqPatchPTO
-
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares

@@ -61,9 +61,6 @@
 #include "hydroCost.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
-#include "localMatchingRuleViolations.h"
-#include "spilledEnergyAfterCSR.h"
-#include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
 
 #include "lold.h"
@@ -155,24 +152,18 @@ typedef          // Prices
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
-                          <LMRViolations           // LMR Violations
-                           <SpilledEnergy          // Spilled Energy
-                            <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
-                             <LOLD                 // LOLD
-                              <LOLP                // LOLP
-                               <AvailableDispatchGen<DispatchableGenMargin<
-                                 DtgMarginCsr // DTG MRG CSR
-                                 <Marge<NonProportionalCost<
-                                   NonProportionalCostByDispatchablePlant // Startup cost + Fixed
-                                                                          // cost per thermal
-                                                                          // plant detail
-                                   <NbOfDispatchedUnits         // Number of Units Dispatched
-                                    <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
-                                                                // plant
-                                     <ProfitByPlant
-                                      // Links
-                                      <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          <SpilledEnergy           // Spilled Energy
+                           <LOLD                   // LOLD
+                            <LOLP                  // LOLP
+                             <AvailableDispatchGen<DispatchableGenMargin<Marge<NonProportionalCost<
+                               NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
+                                                                      // per thermal plant detail
+                               <NbOfDispatchedUnits                   // Number of Units Dispatched
+                                <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
+                                 <ProfitByPlant
+                                    // Links
+                                    <Variable::Economy::Links // All links
+                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -231,41 +222,31 @@ typedef // Prices
                                               Common::SpatialAggregate<
                                                 DomesticUnsuppliedEnergy,
                                                 Common::SpatialAggregate<
-                                                  LMRViolations,
+                                                  SpilledEnergy,
+                                                  // LOLD
                                                   Common::SpatialAggregate<
-                                                    SpilledEnergy,
+                                                    LOLD,
                                                     Common::SpatialAggregate<
-                                                      SpilledEnergyAfterCSR,
-                                                      // LOLD
+                                                      LOLP,
+
                                                       Common::SpatialAggregate<
-                                                        LOLD,
+                                                        AvailableDispatchGen,
                                                         Common::SpatialAggregate<
-                                                          LOLP,
+                                                          DispatchableGenMargin,
                                                           Common::SpatialAggregate<
-                                                            AvailableDispatchGen,
+                                                            Marge,
+
+                                                            // Detail Prices
                                                             Common::SpatialAggregate<
-                                                              DispatchableGenMargin,
+                                                              NonProportionalCost, // MBO 13/05/2014
+                                                                                   // - refs: #21
+
+                                                              // Number Of Dispatched Units
                                                               Common::SpatialAggregate<
-                                                                DtgMarginCsr,
-                                                                Common::SpatialAggregate<
-                                                                  Marge,
-
-                                                                  // Detail Prices
-                                                                  Common::SpatialAggregate<
-                                                                    NonProportionalCost, // MBO
-                                                                                         // 13/05/2014
-                                                                                         // -
-                                                                                         // refs:
-                                                                                         // #21
-
-                                                                    // Number Of Dispatched Units
-                                                                    Common::SpatialAggregate<
-                                                                      NbOfDispatchedUnits // MBO
-                                                                                          // 25/02/2016
-                                                                                          // -
-                                                                                          // refs:
-                                                                                          // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                NbOfDispatchedUnits // MBO
+                                                                                    // 25/02/2016
+                                                                                    // - refs: #55
+                                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
     
