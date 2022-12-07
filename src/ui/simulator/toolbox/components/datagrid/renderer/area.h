@@ -29,6 +29,8 @@
 
 #include <antares/wx-wrapper.h>
 #include "../../../input/area.h"
+#include "../../../input/hydrocluster-cluster.h"
+
 #include "../renderer.h"
 #include <yuni/core/event.h>
 
@@ -124,6 +126,94 @@ private:
     void onAreaDelete(Data::Area* area);
 
 }; // class ARendererArea
+
+
+
+class ARendererHydroclusterCluster : public virtual IRenderer
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    **
+    ** \param parent The parent window
+    ** \param notifier The HydroclusterCluster notifier
+    */
+    ARendererHydroclusterCluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier);
+    //! Destructor
+    virtual ~ARendererHydroclusterCluster();
+    //@}
+
+    //! \name Dimensions
+    //@{
+    //! Get the current width
+    virtual int width() const = 0;
+    //! Get the current height
+    virtual int height() const = 0;
+    //@}
+
+    //! \name Captions
+    //@{
+    /*!
+    ** \brief Get the column caption
+    ** \param colIndx The column index
+    */
+    virtual wxString columnCaption(int colIndx) const = 0;
+    /*!
+    ** \brief Get the row caption
+    ** \param rowIndx The row index
+    */
+    virtual wxString rowCaption(int rowIndx) const = 0;
+    //@}
+
+    /*!
+    ** \brief Get the string representation of a cell
+    ** \param x The X-Coordinate
+    ** \param y The Y-Coordinate
+    ** \return The value
+    */
+    virtual wxString cellValue(int x, int y) const = 0;
+
+    /*!
+    ** \brief Set the value of a cell
+    **
+    ** \param x The X-Coordinate
+    ** \param y The Y-Coordinate
+    ** \param value The new value
+    ** \return True if the operation was successful
+    */
+    virtual bool cellValue(int x, int y, const Yuni::String& value) = 0;
+
+    virtual void resetColors(int x,
+                             int y,
+                             wxColour& background,
+                             wxColour& textForeground) const = 0;
+
+    virtual bool valid() const
+    {
+        return (pHydroclusterCluster != NULL);
+    }
+
+protected:
+    virtual void internalHydroclusterClusterChanged(Data::HydroclusterCluster* hydroclusterCluster);
+    //! The study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
+
+protected:
+    //! The attached control
+    wxWindow* pControl;
+    //! The current HydroclusterCluster
+    Data::HydroclusterCluster* pHydroclusterCluster;
+
+private:
+    void onHydroclusterClusterChanged(Data::HydroclusterCluster* pHydroclusterCluster);
+    void onHydroclusterClusterDelete(Data::HydroclusterCluster* pHydroclusterCluster);
+
+}; // class ARendererHydroclusterCluster
+
 
 } // namespace Renderer
 } // namespace Datagrid

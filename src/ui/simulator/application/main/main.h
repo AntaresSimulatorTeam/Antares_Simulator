@@ -733,7 +733,8 @@ private:
     Component::Notebook::Page* pageHydroclusterTimeSeriesStorage;
     Component::Notebook::Page* pageHydroclusterTimeSeriesMingen;
     Component::Notebook::Page* pageLevelsAndValuesHydrocluster;
-
+    Component::Notebook::Page* pageDailypowerHydrocluster;
+    
     Component::Notebook::Page* pageWindTimeSeries;
     Component::Notebook::Page* pageWindPrepro;
     Component::Notebook::Page* pageWindPreproDailyProfile;

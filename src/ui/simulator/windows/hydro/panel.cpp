@@ -38,6 +38,7 @@
 #include "../../toolbox/components/datagrid/renderer/area/hydrocluster.areasummary.h" 
 
 #include "levelsandvalues.h"
+#include "dailypower.h"
 
 using namespace Yuni;
 
@@ -128,10 +129,8 @@ Panel::Panel(Component::Notebook* parent) :
             subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
           wxT("Minimum Generation"));
 
-        // pageLevelsAndValuesHydrocluster = subbook->add(
-        //   new Component::Datagrid::Component(
-        //     subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
-        //   wxT("Reservoir levels and water values"));
+        auto* page3 = new Antares::Window::Hydro::DailypowerHydrocluster(subbook, tag);
+        pageDailypowerHydrocluster = subbook->add(page3, wxT("Daily Power and Energy Credits"));
 
         auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
         pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));

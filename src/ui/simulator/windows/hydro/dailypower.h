@@ -32,6 +32,7 @@
 #include "../../toolbox/input/area.h"
 #include <ui/common/component/panel.h>
 #include "../../toolbox/components/button.h"
+#include "../../toolbox/input/hydrocluster-cluster.h"
 
 namespace Antares
 {
@@ -65,6 +66,36 @@ private:
     Component::Panel* pSupport;
 
 }; // class Dailypower
+
+
+
+class DailypowerHydrocluster : public Component::Panel, public Yuni::IEventObserver<DailypowerHydrocluster>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    DailypowerHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier);
+    //! Destructor
+    virtual ~DailypowerHydrocluster();
+    //@}
+
+private:
+    void createComponents();
+    void onStudyClosed();
+    // void onAreaChanged(Data::Area* area);
+    void onClusterChanged(Data::HydroclusterCluster* hydroclusterCluster);
+
+private:
+    //! The input area selector
+    Toolbox::InputSelector::HydroclusterCluster* pInputHydroclusterClusterSelector;// pInputAreaSelector;
+    Data::HydroclusterCluster* pHydroclusterCluster; //pArea;
+    bool pComponentsAreReady;
+    Component::Panel* pSupport;
+
+}; // class DailypowerHydrocluster
 
 } // namespace Hydro
 } // namespace Window

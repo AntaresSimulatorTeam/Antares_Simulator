@@ -111,6 +111,79 @@ protected:
 
 }; // class HydroMonthlyPower
 
+
+
+class HydroMonthlyPowerHydroclusterCluster final : public Renderer::Matrix<double, double, 2>,
+                                public Renderer::ARendererHydroclusterCluster
+{
+public:
+    using MatrixAncestorType = Renderer::Matrix<double, double, 2>;
+
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    HydroMonthlyPowerHydroclusterCluster(wxWindow* control, Toolbox::InputSelector::HydroclusterCluster* notifier);
+    //! Destructor
+    virtual ~HydroMonthlyPowerHydroclusterCluster();
+    //@}
+
+    virtual int width() const
+    {
+        return 4;
+    }
+    virtual int height() const
+    {
+        return DAYS_PER_YEAR;
+    }
+
+    virtual wxString columnCaption(int colIndx) const;
+
+    virtual wxString rowCaption(int rowIndx) const;
+
+    virtual wxString cellValue(int x, int y) const;
+
+    virtual double cellNumericValue(int x, int y) const;
+
+    virtual bool cellValue(int, int, const Yuni::String&);
+
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
+
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+
+    virtual Date::Precision precision()
+    {
+        return Date::daily;
+    }
+
+    virtual bool valid() const
+    {
+        return MatrixAncestorType::valid();
+    }
+
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
+
+protected:
+    virtual void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* hydroclusterCluster);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
+
+}; // class HydroMonthlyPowerHydroclusterCluster
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

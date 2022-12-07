@@ -162,6 +162,136 @@ void HydroMonthlyPower::onStudyLoaded()
     Renderer::ARendererArea::onStudyLoaded();
 }
 
+///////////////////
+
+HydroMonthlyPowerHydroclusterCluster::HydroMonthlyPowerHydroclusterCluster(wxWindow* control, 
+    Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ MatrixAncestorType(control), Renderer::ARendererHydroclusterCluster(control, notifier)
+{
+}
+
+HydroMonthlyPowerHydroclusterCluster::~HydroMonthlyPowerHydroclusterCluster()
+{
+    destroyBoundEvents();
+}
+
+wxString HydroMonthlyPowerHydroclusterCluster::columnCaption(int colIndx) const
+{
+    switch (colIndx) //todo
+    {
+    case Data::PartHydro::genMaxP:
+        return wxT("  Generating Max Power  \n   (MW)   ");
+    case Data::PartHydro::genMaxE:
+        return wxT("  Generating Max Energy  \n   (Hours at Pmax)   ");
+    case Data::PartHydro::pumpMaxP:
+        return wxT(" Pumping Max Power  \n   (MW)   ");
+    case Data::PartHydro::pumpMaxE:
+        return wxT("  Pumping Max Energy \n   (Hours at Pmax)   ");
+    default:
+        return wxEmptyString;
+    }
+    return wxEmptyString;
+}
+
+wxString HydroMonthlyPowerHydroclusterCluster::cellValue(int x, int y) const
+{
+    return MatrixAncestorType::cellValue(x, y);
+}
+
+double HydroMonthlyPowerHydroclusterCluster::cellNumericValue(int x, int y) const
+{
+    return MatrixAncestorType::cellNumericValue(x, y);
+}
+
+bool HydroMonthlyPowerHydroclusterCluster::cellValue(int x, int y, const String& value)
+{
+    double v;
+    if (not value.to(v))
+        return MatrixAncestorType::cellValue(x, y, "0");
+    if (v < 0)
+        return MatrixAncestorType::cellValue(x, y, "0");
+    if (v > 1000000)
+        return MatrixAncestorType::cellValue(x, y, "1000000");
+    int round;
+    if (x == 0 || x == 2)
+        round = 0;
+    else
+        round = 2;
+
+    return MatrixAncestorType::cellValue(x, y, String() << Math::Round(v, round));
+}
+
+void HydroMonthlyPowerHydroclusterCluster::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* hydroclusterCluster)
+{
+    // FIXME for some reasons, the variable study here is not properly initialized
+    if (hydroclusterCluster && !study)
+        study = Data::Study::Current::Get();
+
+    // Data::PartHydro* pHydro = (area) ? &(area->hydro) : nullptr;
+    pHydroclusterCluster = hydroclusterCluster;
+    Renderer::ARendererHydroclusterCluster::internalHydroclusterClusterChanged(hydroclusterCluster);
+    if (pHydroclusterCluster)
+        MatrixAncestorType::matrix(&pHydroclusterCluster->maxPower);//(&pHydro->maxPower);//todo
+    else
+        MatrixAncestorType::matrix(nullptr);
+}
+
+IRenderer::CellStyle HydroMonthlyPowerHydroclusterCluster::cellStyle(int col, int row) const
+{
+    switch (col)
+    {
+    case 0:
+    {
+        double genMaxP = MatrixAncestorType::cellNumericValue(0, row);
+        if (genMaxP < 0.)
+            return IRenderer::cellStyleError;
+        break;
+    }
+    case 1:
+    {
+        double genMaxE = MatrixAncestorType::cellNumericValue(1, row);
+        if (genMaxE < 0. || genMaxE > 24.)
+            return IRenderer::cellStyleError;
+        break;
+    }
+    case 2:
+    {
+        double PumpMaxP = MatrixAncestorType::cellNumericValue(2, row);
+        if (PumpMaxP < 0.)
+            return IRenderer::cellStyleError;
+        break;
+    }
+    case 3:
+    {
+        double PumpMaxE = MatrixAncestorType::cellNumericValue(3, row);
+        if (PumpMaxE < 0. || PumpMaxE > 24.)
+            return IRenderer::cellStyleError;
+        break;
+    }
+    }
+    return IRenderer::cellStyleWithNumericCheck(col, row);
+}
+
+wxString HydroMonthlyPowerHydroclusterCluster::rowCaption(int row) const
+{
+    if (!study || row >= study->calendar.maxDaysInYear)
+        return wxEmptyString;
+    return wxStringFromUTF8(study->calendar.text.daysYear[row]);
+}
+
+void HydroMonthlyPowerHydroclusterCluster::onStudyClosed()
+{
+    MatrixAncestorType::onStudyClosed();
+    Renderer::ARendererHydroclusterCluster::onStudyClosed();
+}
+
+void HydroMonthlyPowerHydroclusterCluster::onStudyLoaded()
+{
+    MatrixAncestorType::onStudyLoaded();
+    Renderer::ARendererHydroclusterCluster::onStudyLoaded();
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

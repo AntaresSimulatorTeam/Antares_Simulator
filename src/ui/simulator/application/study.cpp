@@ -101,6 +101,7 @@ Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
 
 Event<void()> OnStudyHydroclusterClusterCommonSettingsChanged;
 Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterRenamed;
+Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterDelete;
 Event<void(Data::Area*)> OnStudyHydroclusterClusterGroupChanged;
 
 Event<void()> OnStudyUpdatePlaylist;

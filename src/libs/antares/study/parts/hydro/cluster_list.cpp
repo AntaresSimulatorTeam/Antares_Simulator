@@ -88,7 +88,10 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
                 ret = c.reservoirLevel.saveToCSVFile(buffer) and ret;
 
                 buffer.clear() << folder << SEP << c.id() << SEP << "waterValues.txt";
-                ret = c.waterValues.saveToCSVFile(buffer) and ret;                
+                ret = c.waterValues.saveToCSVFile(buffer) and ret;   
+
+                buffer.clear() << folder << SEP << c.id() << SEP << "maxPower.txt";
+                ret = c.maxPower.saveToCSVFile(buffer) and ret;                                
             }
             else
                 ret = 0;
@@ -181,11 +184,16 @@ bool HydroclusterClusterList::loadHydroclusterClusterDataFromFolder(Study& study
     {
         auto& c = *(it->second);
 
+        //CR13 todo see reservoirLevel.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "reservoir" <<".txt";
         ret = c.reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
 
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "waterValues" <<".txt";
         ret = c.waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
+
+        //CR13 todo see maxPower.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "maxPower" <<".txt";
+        ret = c.maxPower.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
 
     }
     return ret;
@@ -223,14 +231,16 @@ bool HydroclusterClusterList::loadFromFolder(Study& study, const AnyString& fold
                     continue;
                 }
 
-
+                //CR13 todo see reservoirLevel.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
                 buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "reservoir" <<".txt";
                 ret = cluster->reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
 
                 buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "waterValues" <<".txt";
                 ret = cluster->waterValues.loadFromCSVFile(buffer, 101, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
 
-
+                //CR13 todo see maxPower.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "maxPower" <<".txt";
+                ret = cluster->maxPower.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
 
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();

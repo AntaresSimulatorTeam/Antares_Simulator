@@ -31,6 +31,7 @@
 #include "../../toolbox/components/datagrid/renderer/area/inflowpattern.h"
 #include "../../toolbox/components/datagrid/renderer/area/hydromonthlypower.h"
 #include "../../toolbox/components/datagrid/renderer/area/creditmodulations.h"
+
 #include "../../toolbox/components/button.h"
 #include "../../toolbox/validator.h"
 #include "../../toolbox/create.h"
@@ -136,6 +137,107 @@ void Dailypower::onStudyClosed()
     if (GetSizer())
         GetSizer()->Show(pSupport, false);
 }
+
+
+//////////////////
+
+DailypowerHydrocluster::DailypowerHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ Component::Panel(parent),
+ pInputHydroclusterClusterSelector(notifier),
+ pHydroclusterCluster(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr)
+{
+    OnStudyClosed.connect(this, &DailypowerHydrocluster::onStudyClosed);
+    if (notifier)
+        notifier->onClusterChanged.connect(this, &DailypowerHydrocluster::onClusterChanged);
+}
+
+void DailypowerHydrocluster::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
+
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
+
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    pSupport->SetSizer(sizer);
+
+    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
+
+    enum
+    {
+        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+    };
+
+    wxBoxSizer* sizerHigh = new wxBoxSizer(wxHORIZONTAL);
+
+    sizer->Add(sizerHigh, 2, wxALL | wxEXPAND | wxFIXED_MINSIZE);
+
+    sizerHigh->Add(new Component::Datagrid::Component(
+                     pSupport,
+                     NULL, //new Component::Datagrid::Renderer::HydroMonthlyPowerHydroclusterCluster(this, pInputHydroclusterClusterSelector), //CR3 todo
+                     //new Component::Datagrid::Renderer::CreditModulations(this, pInputAreaSelector),
+                     wxT("Credit Modulations (reservoir level)")),
+                   3,
+                   wxALL | wxEXPAND,
+                   5);
+    sizerHigh->SetMinSize(10, 200);
+
+    wxBoxSizer* ssGridsLow = new wxBoxSizer(wxHORIZONTAL);
+
+    ssGridsLow->Add(
+      new Component::Datagrid::Component(
+        pSupport,
+        new Component::Datagrid::Renderer::HydroMonthlyPowerHydroclusterCluster(this, pInputHydroclusterClusterSelector),
+        wxT("Standard Credits (calendar)")),
+      3,
+      wxALL | wxEXPAND,
+      5);
+    sizer->Add(ssGridsLow, 4, wxALL | wxEXPAND | wxFIXED_MINSIZE);
+
+    sizer->Layout();
+}
+
+DailypowerHydrocluster::~DailypowerHydrocluster()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
+
+void DailypowerHydrocluster::onClusterChanged(Data::HydroclusterCluster* hydroclusterCluster)
+{
+    pHydroclusterCluster = hydroclusterCluster;
+    // if (area and area->hydro.prepro)
+    if(pHydroclusterCluster)
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
+    }
+}
+
+void DailypowerHydrocluster::onStudyClosed()
+{
+    pHydroclusterCluster = nullptr;
+
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
+
+
+
+
 
 } // namespace Hydro
 } // namespace Window

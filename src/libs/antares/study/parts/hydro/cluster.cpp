@@ -977,13 +977,6 @@ int Data::HydroclusterCluster::saveDataSeriesToFolderHydroclusterCluster(const A
             buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "mingen.txt";
             ret = series->mingen.saveToCSVFile(buffer, precision()) && ret;
 
-            // // reservoir
-            // buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "reservoir" << ".txt";
-            // ret = reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
-            // // waterValues
-            // buffer.clear() << folder << SEP << parentArea->id << SEP << id() << SEP << "waterValues" << ".txt";
-            // ret = waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
-
             return ret;
         }
         return 0;

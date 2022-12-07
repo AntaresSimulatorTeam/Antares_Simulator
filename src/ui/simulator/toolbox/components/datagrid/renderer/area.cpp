@@ -97,6 +97,66 @@ void ARendererArea::onStudyLoaded()
     IRenderer::onStudyLoaded();
 }
 
+
+ARendererHydroclusterCluster::ARendererHydroclusterCluster(wxWindow* control, Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ pControl(control), pHydroclusterCluster(nullptr)
+{
+    // Event: The current selected HydroclusterCluster
+    if (notifier)
+        notifier->onClusterChanged.connect(this, &ARendererHydroclusterCluster::onHydroclusterClusterChanged);
+
+    // Event: An HydroclusterCluster has been deletde
+    OnStudyHydroclusterClusterDelete.connect(this, &ARendererHydroclusterCluster::onHydroclusterClusterDelete);
+}
+
+ARendererHydroclusterCluster::~ARendererHydroclusterCluster()
+{
+    onRefresh.clear();
+    destroyBoundEvents();
+}
+
+void ARendererHydroclusterCluster::onHydroclusterClusterChanged(Data::HydroclusterCluster* hydroclusterCluster)
+{
+    // FIXME
+    if (hydroclusterCluster && !study)
+        study = Data::Study::Current::Get();
+
+    pHydroclusterCluster = !study ? nullptr : hydroclusterCluster;
+    internalHydroclusterClusterChanged(hydroclusterCluster);
+    onRefresh();
+    if (pControl)
+        RefreshAllControls(pControl);
+}
+
+void ARendererHydroclusterCluster::onHydroclusterClusterDelete(Data::HydroclusterCluster* hydroclusterCluster)
+{
+    if (hydroclusterCluster == pHydroclusterCluster)
+    {
+        pHydroclusterCluster = nullptr;
+        internalHydroclusterClusterChanged(nullptr);
+        onRefresh();
+        if (pControl)
+            RefreshAllControls(pControl);
+    }
+}
+
+void ARendererHydroclusterCluster::internalHydroclusterClusterChanged(Data::HydroclusterCluster*)
+{
+    // Do nothing
+}
+
+void ARendererHydroclusterCluster::onStudyClosed()
+{
+    onHydroclusterClusterChanged(nullptr);
+    IRenderer::onStudyClosed();
+}
+
+void ARendererHydroclusterCluster::onStudyLoaded()
+{
+    IRenderer::onStudyLoaded();
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

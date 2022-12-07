@@ -304,6 +304,7 @@ extern Yuni::Event<void(Data::Area*)> OnStudyRenewableClusterGroupChanged;
 
 extern Yuni::Event<void()> OnStudyHydroclusterClusterCommonSettingsChanged;
 extern Yuni::Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterRenamed;
+extern Yuni::Event<void(Data::HydroclusterCluster*)> OnStudyHydroclusterClusterDelete;
 extern Yuni::Event<void(Data::Area*)> OnStudyHydroclusterClusterGroupChanged;
 
 /*!
