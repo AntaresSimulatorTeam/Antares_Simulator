@@ -217,7 +217,7 @@ jobs:
     - name: .tar.gz creation
       run: |
            cd _build
-           cpack -G TGZ -D CPACK_PACKAGE_VERSION=8.4.0-serialize
+           cpack -G TGZ -D CPACK_PACKAGE_FILE_NAME=antares-8.4.0-serialize-Ubuntu-20.04
 
     - name: Rename .tgz file
       run: |
