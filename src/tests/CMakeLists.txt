@@ -67,7 +67,7 @@ if(Python3_Interpreter_FOUND)
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()
-      message(FATAL_ERROR "Module pytest or numpy not installed : can't run python scripts for end to end tests")
+      message(FATAL "Module pytest or numpy not installed : can't run python scripts for end to end tests")
   endif()
 
 endif()
