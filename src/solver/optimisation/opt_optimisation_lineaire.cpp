@@ -147,7 +147,7 @@ OptimisationHebdo:
 
         if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->isExpansion)
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
+              ProblemeHebdo, numSpace, NumeroDeLIntervalle);
 
         if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;

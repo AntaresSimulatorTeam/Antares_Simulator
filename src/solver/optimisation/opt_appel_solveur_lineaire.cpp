@@ -378,26 +378,24 @@ RESOLUTION:
     return true;
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(PROBLEME_HEBDO *Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
     Yuni::Clob buffer;
     double CoutOptimalDeLaSolution;
-    PROBLEME_HEBDO* Probleme;
-
-    Probleme = (PROBLEME_HEBDO*)Prob;
+    auto const* probleme_hebdo = static_cast<const PROBLEME_HEBDO *>(Prob);
 
     CoutOptimalDeLaSolution = 0.;
-    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    if (probleme_hebdo->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
+        CoutOptimalDeLaSolution = probleme_hebdo->coutOptimalSolution1[NumeroDeLIntervalle];
     else
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+        CoutOptimalDeLaSolution = probleme_hebdo->coutOptimalSolution2[NumeroDeLIntervalle];
 
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
     auto study = Data::Study::Current::Get();
-    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
+    auto optNumber = probleme_hebdo->numeroOptimisation[NumeroDeLIntervalle];
     auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);

@@ -83,7 +83,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void*, uint, int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(PROBLEME_HEBDO *Prob, uint numSpace, int NumeroDeLIntervalle);
 
 /*------------------------------*/
 
