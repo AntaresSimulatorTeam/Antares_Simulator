@@ -57,7 +57,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     auto& parameters = study.parameters;
 
-    problem.Expansion = parameters.expansion ? OUI_ANTARES : NON_ANTARES;
+    problem.isExpansion = parameters.expansion;
     problem.firstWeekOfSimulation = false;
 
     problem.hydroHotStart

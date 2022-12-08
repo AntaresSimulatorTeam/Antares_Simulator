@@ -145,7 +145,7 @@ OptimisationHebdo:
         if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
             return false;
 
-        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->isExpansion)
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
               (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
 
@@ -169,7 +169,7 @@ OptimisationHebdo:
 
         ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation = DEUXIEME_OPTIMISATION;
 
-        if (ProblemeHebdo->Expansion == NON_ANTARES)
+        if (ProblemeHebdo->isExpansion == NON_ANTARES)
             goto OptimisationHebdo;
     }
 

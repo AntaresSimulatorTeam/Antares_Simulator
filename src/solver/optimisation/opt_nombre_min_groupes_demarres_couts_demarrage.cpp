@@ -105,7 +105,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
 
         for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
         {
-            if (ProblemeHebdo->Expansion)
+            if (ProblemeHebdo->isExpansion)
             {
                 NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[Index]->NombreMinDeGroupesEnMarcheDuPalierThermique;

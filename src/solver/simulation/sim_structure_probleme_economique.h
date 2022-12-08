@@ -566,7 +566,7 @@ struct PROBLEME_HEBDO
     int* IndexDebutIntercoExtremite;
     int* IndexSuivantIntercoExtremite;
 
-    char Expansion;
+    bool isExpansion;
 
     int* NumeroDeContrainteEnergieHydraulique;
     int* NumeroDeContrainteMinEnergieHydraulique;
