@@ -27,7 +27,7 @@ public:
 
     bool isMIP() const;
     bool basisExists() const;
-    mutable bool isXpress = false;
+    mutable bool solverSupportsWarmStart = false;
 };
 } // namespace Optimization
 } // namespace Antares
