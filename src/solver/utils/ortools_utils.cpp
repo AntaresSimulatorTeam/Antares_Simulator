@@ -295,7 +295,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
-        if (keepBasis && !Probleme->isMIP())
+        if (keepBasis && !Probleme->isMIP() && Probleme->isXpress)
         {
             solver->GetFinalLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
         }
@@ -384,6 +384,9 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *
         Antares::logs.fatal() << "Solver not found";
         return nullptr;
     }
+
+    if (solverName == "xpress")
+        probleme->isXpress = true;
 
     return solver;
 }
