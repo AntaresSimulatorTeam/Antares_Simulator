@@ -380,10 +380,7 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *
         solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).first);
 
     if (!solver)
-    {
-        Antares::logs.fatal() << "Solver not found";
-        return nullptr;
-    }
+        throw Antares::Data::AssertionError("Solver not found: " + solverName);
 
     if (solverName == "xpress")
         probleme->solverSupportsWarmStart = true;

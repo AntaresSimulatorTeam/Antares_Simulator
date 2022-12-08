@@ -407,12 +407,12 @@ Calendar::Calendar()
     settings.weekday1rstJanuary = monday;
 }
 
-void Antares::Date::Calendar::reset(const Data::Parameters& parameters)
+void Calendar::reset(const Data::Parameters& parameters)
 {
     reset(parameters, parameters.leapYear);
 }
 
-void Antares::Date::Calendar::reset(const Data::Parameters& parameters, bool leapyear)
+void Calendar::reset(const Data::Parameters& parameters, bool leapyear)
 {
     // retrieve the new settings
     settings.weekday1rstJanuary = parameters.dayOfThe1stJanuary;
