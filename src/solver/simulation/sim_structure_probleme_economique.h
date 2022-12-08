@@ -562,7 +562,7 @@ struct PROBLEME_HEBDO
     std::vector<int> IndexDebutIntercoExtremite;
     std::vector<int> IndexSuivantIntercoExtremite;
 
-    bool Expansion = false;
+    bool isExpansion = false;
 
     std::vector<int> NumeroDeContrainteEnergieHydraulique;
     std::vector<int> NumeroDeContrainteMinEnergieHydraulique;
