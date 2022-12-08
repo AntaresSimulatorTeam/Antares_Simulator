@@ -300,7 +300,7 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
     {
         buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "clusters" << SEP
                        << area.id;
-        ret = area.hydrocluster.list.saveToFolder(buffer) and ret;
+        ret = area.hydrocluster.list.saveToFolder(buffer) and ret; //prepro / allocation is also saved inside 
 
         // buffer.clear() << folder << SEP << "input" << SEP << "hydrocluster" << SEP << "prepro";
         // ret = area.hydrocluster.list.saveHydroclusterClusterDataToFolder(buffer) and ret;
@@ -1121,10 +1121,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.renewable.list.flush();
     }
 
+    // Hydrocluster 
     if (study.header.version >= 810)
     {
+
+        //todo: other options for series as (!options.loadOnlyNeeded or !area.hydro.prepro
         buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "clusters";
-        ret = area.hydrocluster.list.loadHydroclusterClusterDataFromFolder(study, options, buffer) && ret;
+        ret = area.hydrocluster.list.loadHydroclusterClusterDataFromFolder(study, options, buffer) && ret; //allocation is inside
         buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
@@ -1535,6 +1538,12 @@ void AreaListEnsureDataThermalPrepro(AreaList* l)
 {
     assert(l and "The area list must not be nullptr");
     l->each([&](Data::Area& area) { area.thermal.list.ensureDataPrepro(); });
+}
+
+void AreaListEnsureDataHydroclusterPrepro(AreaList* l)
+{
+    assert(l and "The area list must not be nullptr");
+    l->each([&](Data::Area& area) { area.hydrocluster.list.ensureDataPrepro(); });
 }
 
 uint64 AreaList::memoryUsage() const

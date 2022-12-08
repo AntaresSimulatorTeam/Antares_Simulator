@@ -492,14 +492,14 @@ bool Data::HydroclusterCluster::LoadFromFolder(Study& study, const AnyString& fo
         //           && ret;
         // }
 
-        if (study.header.version >= 620)
-        {
-            buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
-                           << "inflowPattern_" << area.id << '.' << study.inputExtension;
-            ret = area.hydro.inflowPattern.loadFromCSVFile(
-                    buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
-                  && ret;
-        }
+        // if (study.header.version >= 620)
+        // {
+        //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+        //                    << "inflowPattern_" << area.id << '.' << study.inputExtension;
+        //     ret = area.hydro.inflowPattern.loadFromCSVFile(
+        //             buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+        //           && ret;
+        // }
 
         if (study.usedByTheSolver)
         {

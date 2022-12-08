@@ -21,7 +21,7 @@ public:
     // Overriden virtual methods
     YString typeID() const override;
     void estimateMemoryUsage(StudyMemoryUsage&) const override;
-
+    void ensureDataPrepro();
     bool loadHydroclusterClusterDataFromFolder(Study& study, const StudyLoadOptions& options, const AnyString& folder);    
     bool loadFromFolder(Study& study, const AnyString& folder, Area* area);  
     bool saveToFolder(const AnyString& folder) const override;

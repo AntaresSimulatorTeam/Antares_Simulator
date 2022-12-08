@@ -678,6 +678,7 @@ void ApplWnd::createNBHydrocluster()
     pageHydroclusterTimeSeriesMingen = panel->pageHydroclusterTimeSeriesMingen;
     pageLevelsAndValuesHydrocluster = panel->pageLevelsAndValuesHydrocluster;
     pageDailypowerHydrocluster = panel->pageDailypowerHydrocluster;
+    pageInflowStructureHydrocluster = panel->pageInflowStructureHydrocluster;
 }
 
 void ApplWnd::createNBBindingConstraints()

@@ -48,7 +48,7 @@ class AreaList;
 class AreaUI;
 class ThermalCluster;
 class RenewableCluster;
-
+class HydroclusterCluster;
 class AreaScratchpad;
 
 class Parameters;
@@ -68,6 +68,7 @@ using AreaName = Yuni::CString<ant_k_area_name_max_length, false>;
 using AreaLinkName = Yuni::CString<ant_k_area_name_max_length * 2 + 1, false>;
 //! Name of a single thermal
 using ClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
+using HydroclusterClusterName = Yuni::CString<ant_k_cluster_name_max_length, false>;
 
 using ConstraintName = Yuni::CString<ant_k_constraint_name_max_length, false>;
 

@@ -39,6 +39,7 @@
 
 #include "levelsandvalues.h"
 #include "dailypower.h"
+#include "prepro.h"
 
 using namespace Yuni;
 
@@ -128,6 +129,13 @@ Panel::Panel(Component::Notebook* parent) :
           new Component::Datagrid::Component(
             subbook, new Component::Datagrid::Renderer::TimeSeriesHydroclusterClusterMingen(subbook, tag)),
           wxT("Minimum Generation"));
+
+
+        // auto* page1 = new Antares::Window::Hydro::Management(notebook, notifier);
+        // pPageFatal = notebook->add(page1, wxT("Management Options"));
+
+        auto* page2 = new Antares::Window::Hydro::PreproHydrocluster(subbook, tag);
+        pageInflowStructureHydrocluster = subbook->add(page2, wxT("Inflow Structure"));
 
         auto* page3 = new Antares::Window::Hydro::DailypowerHydrocluster(subbook, tag);
         pageDailypowerHydrocluster = subbook->add(page3, wxT("Daily Power and Energy Credits"));

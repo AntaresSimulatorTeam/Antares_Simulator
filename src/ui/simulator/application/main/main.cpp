@@ -255,6 +255,7 @@ ApplWnd::ApplWnd() :
  pageHydroclusterTimeSeriesMingen(nullptr),
  pageLevelsAndValuesHydrocluster(nullptr),
  pageDailypowerHydrocluster(nullptr),
+ pageInflowStructureHydrocluster(nullptr),
  pageWindTimeSeries(nullptr),
  pageWindPrepro(nullptr),
  pageWindPreproDailyProfile(nullptr),
@@ -1002,7 +1003,9 @@ void ApplWnd::selectAllDefaultPages()
     if (pageLevelsAndValuesHydrocluster)
         pageLevelsAndValuesHydrocluster->select();
     if (pageDailypowerHydrocluster)
-        pageDailypowerHydrocluster->select();        
+        pageDailypowerHydrocluster->select();
+    if (pageInflowStructureHydrocluster)
+        pageInflowStructureHydrocluster->select();        
     if (pageWindTimeSeries)
         pageWindTimeSeries->select();
     if (pageThermalClusterList)

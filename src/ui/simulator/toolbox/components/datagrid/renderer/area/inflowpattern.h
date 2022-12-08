@@ -104,6 +104,71 @@ protected:
 
 }; // class InflowPattern
 
+
+class InflowPatternHydroclusterCluster final : public Renderer::Matrix<double, double, 3>,
+                            public Renderer::ARendererHydroclusterCluster
+{
+public:
+    using MatrixAncestorType = Renderer::Matrix<double, double, 3>;
+
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    InflowPatternHydroclusterCluster(wxWindow* control, Toolbox::InputSelector::HydroclusterCluster* notifier);
+    //! Destructor
+    virtual ~InflowPatternHydroclusterCluster();
+    //@}
+
+    virtual int width() const;
+    virtual int height() const;
+
+    virtual wxString columnCaption(int colIndx) const;
+
+    virtual wxString rowCaption(int rowIndx) const;
+
+    virtual wxString cellValue(int x, int y) const;
+
+    virtual double cellNumericValue(int x, int y) const;
+
+    virtual bool cellValue(int, int, const Yuni::String&);
+
+    virtual void resetColors(int, int, wxColour&, wxColour&) const
+    { /*Do nothing*/
+    }
+
+    virtual Date::Precision precision()
+    {
+        return Date::daily;
+    }
+
+    virtual IRenderer::CellStyle cellStyle(int col, int row) const;
+
+    virtual bool valid() const;
+
+    virtual uint maxWidthResize() const
+    {
+        return 0;
+    }
+    virtual uint maxHeightResize() const
+    {
+        return 0;
+    }
+
+    // virtual bool circularShiftRowsUntilDate(MonthName month, uint daymonth);
+
+protected:
+    virtual void internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* hydroclusterCluster);
+    //! Event: the study has been closed
+    virtual void onStudyClosed() override;
+    //! Event: the study has been loaded
+    virtual void onStudyLoaded() override;
+
+}; // class InflowPatternHydroclusterCluster
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

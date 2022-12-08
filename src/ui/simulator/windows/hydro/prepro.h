@@ -32,6 +32,7 @@
 #include "../../toolbox/input/area.h"
 #include <ui/common/component/panel.h>
 #include "../../toolbox/components/button.h"
+#include "../../toolbox/input/hydrocluster-cluster.h"
 
 namespace Antares
 {
@@ -70,6 +71,41 @@ private:
     // wxTextCtrl* pPumpingEfficiency;
 
 }; // class Prepro
+
+class PreproHydrocluster : public Component::Panel, public Yuni::IEventObserver<PreproHydrocluster>
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Constructor
+    */
+    PreproHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier);
+    //! Destructor
+    virtual ~PreproHydrocluster();
+    //@}
+
+private:
+    void createComponents();
+    void onStudyClosed();
+    void onClusterChanged(Data::HydroclusterCluster* hydroclusterCluster);
+
+    void onIntermonthlyCorrelationChanged(wxCommandEvent& evt);
+    // void onPumpingEfficiencyChanged(wxCommandEvent& evt);
+
+private:
+    //! The input area selector
+    Toolbox::InputSelector::HydroclusterCluster* pInputHydroclusterClusterSelector;// pInputAreaSelector;
+    Data::HydroclusterCluster* pHydroclusterCluster; //pArea;
+    bool pComponentsAreReady;
+    Component::Panel* pSupport;
+    wxTextCtrl* pIntermonthlyCorrelation;
+    // wxTextCtrl* pPumpingEfficiency;
+
+}; // class PreproHydrocluster
+
+
+
 
 } // namespace Hydro
 } // namespace Window

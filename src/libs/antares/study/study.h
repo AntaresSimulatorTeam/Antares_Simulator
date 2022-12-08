@@ -908,6 +908,7 @@ void StudyEnsureDataThermalTimeSeries(Study* s);
 ** \see Study::ensureDataAreAllInitializedAccordingParameters()
 */
 void StudyEnsureDataThermalPrepro(Study* s);
+void StudyEnsureDataHydroclusterPrepro(Study* s);
 
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);

@@ -2,6 +2,7 @@
 #include "../../../inifile.h"
 #include "../../study.h"
 #include "../../area.h"
+#include "../parts.h"
 
 using namespace Yuni;
 
@@ -38,9 +39,19 @@ void HydroclusterClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     });
 }
 
+
+void HydroclusterClusterList::ensureDataPrepro()
+{
+    auto end = cluster.end();
+    for (auto it = cluster.begin(); it != end; ++it)
+    {
+        auto c = it->second;
+        if (not c->prepro)
+            c->prepro = new PreproHydro();
+    }
+}
+
 #define SEP IO::Separator
-
-
 bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
 {
 
@@ -84,6 +95,18 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
             buffer.clear() << folder << SEP << c.id();
             if (IO::Directory::Create(buffer))
             {
+                // Allocation
+                buffer.clear() << folder << SEP << c.id() << SEP << "allocation" << ".ini";
+                ret = c.allocation.saveToFile(buffer) and ret;
+
+                // prepro
+                if(c.prepro)
+                {
+                    buffer.clear() << folder << SEP << c.id() << SEP << "prepro";
+                    ret = c.prepro->saveToFolder(c.id(), buffer.c_str()) and ret;
+                }
+
+
                 buffer.clear() << folder << SEP << c.id() << SEP << "reservoir.txt";
                 ret = c.reservoirLevel.saveToCSVFile(buffer, 3) and ret;
 
@@ -95,6 +118,10 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
 
                 buffer.clear() << folder << SEP << c.id() << SEP << "creditmodulations.txt";
                 ret = c.creditModulation.saveToCSVFile(buffer, 2) and ret;                                                
+        
+                // inflow pattern
+                buffer.clear() << folder << SEP << c.id() << SEP << "inflowPattern.txt";
+                ret = c.inflowPattern.saveToCSVFile(buffer, 3) and ret;
 
             }
             else
@@ -187,6 +214,15 @@ bool HydroclusterClusterList::loadHydroclusterClusterDataFromFolder(Study& study
     for (auto it = begin(); it != end(); ++it)
     {
         auto& c = *(it->second);
+        // allocation
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "allocation" <<".ini";
+        ret = c.allocation.loadFromFile(c.id(), buffer) && ret;
+
+        if(c.prepro)
+        {
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "prepro";
+            ret = c.prepro->loadFromFolder(study, c.id(), buffer.c_str()) and ret;
+        }
 
         //CR13 todo see reservoirLevel.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "reservoir" <<".txt";
@@ -201,6 +237,9 @@ bool HydroclusterClusterList::loadHydroclusterClusterDataFromFolder(Study& study
 
         buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "creditmodulations" <<".txt";
         ret = c.creditModulation.loadFromCSVFile(buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
+
+        buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id() << SEP  << "inflowPattern" <<".txt";
+        ret = c.inflowPattern.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
 
     }
     return ret;
@@ -238,6 +277,17 @@ bool HydroclusterClusterList::loadFromFolder(Study& study, const AnyString& fold
                     continue;
                 }
 
+
+                // allocation
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "allocation" <<".ini";
+                ret = cluster->allocation.loadFromFile(cluster->id(), buffer) && ret;
+
+                if(cluster->prepro)
+                {
+                    buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "prepro";
+                    ret = cluster->prepro->loadFromFolder(study, cluster->id(), buffer.c_str()) and ret;
+                }
+
                 //CR13 todo see reservoirLevel.loadFromCSVFile, note. need to check enabledModeIsChanged, and post processing
                 buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "reservoir" <<".txt";
                 ret = cluster->reservoirLevel.loadFromCSVFile(buffer, 3, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
@@ -251,6 +301,10 @@ bool HydroclusterClusterList::loadFromFolder(Study& study, const AnyString& fold
 
                 buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "creditmodulations" <<".txt";
                 ret = cluster->creditModulation.loadFromCSVFile(buffer, 101, 2, Matrix<>::optFixedSize, &study.dataBuffer) && ret; 
+
+                buffer.clear() << folder << SEP << cluster->parentArea->id << SEP << cluster->id() << SEP  << "inflowPattern" <<".txt";
+                ret = cluster->inflowPattern.loadFromCSVFile(buffer, 1, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer) && ret;
+
 
                 // Check the data integrity of the cluster
                 cluster->integrityCheck();

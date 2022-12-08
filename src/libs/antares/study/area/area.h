@@ -852,6 +852,7 @@ void AreaListEnsureDataRenewableTimeSeries(AreaList* l);
 ** \brief Ensure data for thermal prepro are initialized
 */
 void AreaListEnsureDataThermalPrepro(AreaList* l);
+void AreaListEnsureDataHydroclusterPrepro(AreaList* l);
 
 } // namespace Data
 } // namespace Antares

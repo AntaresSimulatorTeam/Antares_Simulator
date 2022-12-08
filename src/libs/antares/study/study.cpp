@@ -262,6 +262,11 @@ void StudyEnsureDataThermalPrepro(Study* s)
     AreaListEnsureDataThermalPrepro(&s->areas);
 }
 
+void StudyEnsureDataHydroclusterPrepro(Study* s)
+{
+    AreaListEnsureDataHydroclusterPrepro(&s->areas);
+}
+
 uint64 Study::memoryUsage() const
 {
     return folder.capacity()
@@ -308,6 +313,8 @@ void Study::ensureDataAreInitializedAccordingParameters()
         StudyEnsureDataWindPrepro(this);
     // Thermal
     StudyEnsureDataThermalPrepro(this);
+    StudyEnsureDataHydroclusterPrepro(this);
+
 }
 
 void Study::ensureDataAreAllInitialized()
@@ -328,6 +335,8 @@ void Study::ensureDataAreAllInitialized()
     StudyEnsureDataHydroPrepro(this);
     StudyEnsureDataWindPrepro(this);
     StudyEnsureDataThermalPrepro(this);
+    StudyEnsureDataHydroclusterPrepro(this);
+
 }
 
 std::map<std::string, uint> Study::getRawNumberCoresPerLevel()

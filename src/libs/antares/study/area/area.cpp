@@ -276,6 +276,7 @@ void Area::ensureAllDataAreCreated()
     if (!hydro.prepro)
         hydro.prepro = new PreproHydro();
     thermal.list.ensureDataPrepro();
+    hydrocluster.list.ensureDataPrepro(); //CR13
 }
 
 void Area::resetToDefaultValues()

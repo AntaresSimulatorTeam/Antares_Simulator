@@ -153,6 +153,126 @@ void InflowPattern::onStudyLoaded()
     Renderer::ARendererArea::onStudyLoaded();
 }
 
+///////////////////////////
+
+
+InflowPatternHydroclusterCluster::InflowPatternHydroclusterCluster(wxWindow* control,
+ Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ MatrixAncestorType(control), Renderer::ARendererHydroclusterCluster(control, notifier)
+{
+}
+
+InflowPatternHydroclusterCluster::~InflowPatternHydroclusterCluster()
+{
+    destroyBoundEvents();
+}
+
+int InflowPatternHydroclusterCluster::width() const
+{
+    return 1;
+}
+
+int InflowPatternHydroclusterCluster::height() const
+{
+    return DAYS_PER_YEAR;
+}
+
+wxString InflowPatternHydroclusterCluster::columnCaption(int colIndx) const
+{
+    switch (colIndx)
+    {
+    case 0:
+        return wxT(" Inflow Pattern \n (X)");
+    default:
+        return wxEmptyString;
+    }
+    return wxEmptyString;
+}
+
+wxString InflowPatternHydroclusterCluster::cellValue(int x, int y) const
+{
+    return MatrixAncestorType::cellValue(x, y);
+}
+
+double InflowPatternHydroclusterCluster::cellNumericValue(int x, int y) const
+{
+    return MatrixAncestorType::cellNumericValue(x, y);
+}
+
+bool InflowPatternHydroclusterCluster::cellValue(int x, int y, const String& value)
+{
+    double v;
+    if (!value.to(v))
+        return false;
+    if (v < 0)
+        return false;
+
+    return MatrixAncestorType::cellValue(x, y, value);
+}
+
+void InflowPatternHydroclusterCluster::internalHydroclusterClusterChanged(Antares::Data::HydroclusterCluster* hydroclusterCluster)
+{
+    // FIXME for some reasons, the variable study here is not properly initialized
+    if (hydroclusterCluster && !study)
+        study = Data::Study::Current::Get();
+    pHydroclusterCluster = hydroclusterCluster;
+    Renderer::ARendererHydroclusterCluster::internalHydroclusterClusterChanged(hydroclusterCluster);
+    if (pHydroclusterCluster)
+    {
+        MatrixAncestorType::matrix(&pHydroclusterCluster->inflowPattern);
+    }
+    else
+    {
+        MatrixAncestorType::matrix(nullptr);
+    }
+}
+
+IRenderer::CellStyle InflowPatternHydroclusterCluster::cellStyle(int col, int row) const
+{
+    if (!pMatrix || (uint)Data::PreproHydro::hydroPreproMax > pMatrix->width
+        || (uint)row >= pMatrix->height)
+        return IRenderer::cellStyleWithNumericCheck(col, row);
+
+    if (col == 0)
+    {
+        if ((*pMatrix)[Data::PreproHydro::expectation][row] < 0.)
+            return IRenderer::cellStyleError;
+    }
+    return IRenderer::cellStyleWithNumericCheck(col, row);
+}
+
+wxString InflowPatternHydroclusterCluster::rowCaption(int rowIndx) const
+{
+    if (!study || rowIndx >= study->calendar.maxDaysInYear)
+        return wxEmptyString;
+    return wxStringFromUTF8(study->calendar.text.daysYear[rowIndx]);
+}
+
+bool InflowPatternHydroclusterCluster::valid() const
+{
+    return MatrixAncestorType::valid();
+}
+
+/*bool InflowPattern::circularShiftRowsUntilDate(MonthName month, uint daymonth)
+{
+        if (pArea)
+                pArea->hydro.inflowPattern.circularShiftRows(month, daymonth);
+        return MatrixAncestorType::circularShiftRowsUntilDate(month, daymonth);
+}*/
+
+void InflowPatternHydroclusterCluster::onStudyClosed()
+{
+    MatrixAncestorType::onStudyClosed();
+    Renderer::ARendererHydroclusterCluster::onStudyClosed();
+}
+
+void InflowPatternHydroclusterCluster::onStudyLoaded()
+{
+    MatrixAncestorType::onStudyLoaded();
+    Renderer::ARendererHydroclusterCluster::onStudyLoaded();
+}
+
+
 } // namespace Renderer
 } // namespace Datagrid
 } // namespace Component

@@ -67,9 +67,9 @@ public:
     //! The page related to the cluster list view
     Component::Notebook::Page* pageHydroclusterClusterList; //CR13: todo use this for new "Hydrocluster cluster list"
 
-
     Component::Notebook::Page* pageLevelsAndValuesHydrocluster; //CR13
     Component::Notebook::Page* pageDailypowerHydrocluster;
+    Component::Notebook::Page* pageInflowStructureHydrocluster;
 private:
     //! A thermal cluster has just been selected, we have to update the GUI accordinly
     void onClusterChanged(Data::HydroclusterCluster* cluster);

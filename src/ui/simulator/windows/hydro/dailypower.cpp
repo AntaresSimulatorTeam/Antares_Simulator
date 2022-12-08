@@ -235,9 +235,6 @@ void DailypowerHydrocluster::onStudyClosed()
 }
 
 
-
-
-
 } // namespace Hydro
 } // namespace Window
 } // namespace Antares
