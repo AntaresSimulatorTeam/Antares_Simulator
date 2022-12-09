@@ -50,10 +50,8 @@ class Value<std::basic_string<C>>
 public:
     static bool Add(std::basic_string<C>& out, const char* c_str, const String::size_type len)
     {
-        if (len || !strcmp(c_str, "sirius") || !strcmp(c_str, "xpress") || !strcmp(c_str, "coin") || !strcmp(c_str, "gplk"))
+        if (len)
             out = c_str;
-        else if (len)
-            out += c_str;
         else
             out.clear();
         return true;
