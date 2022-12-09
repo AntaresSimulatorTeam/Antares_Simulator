@@ -753,7 +753,7 @@ static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
         buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                        << "adequacy_patch.ini";
         IniFile ini;
-        if (ini.open(buffer))
+        if (ini.open(buffer, false))
         {
             auto* section = ini.find("adequacy-patch");
             for (auto* p = section->firstProperty; p; p = p->next)
