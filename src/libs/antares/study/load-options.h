@@ -87,9 +87,6 @@ public:
     //! Force ortools use
     bool ortoolsUsed;
 
-    //! Ortool solver used for simulation
-    std::string ortoolsSolver;
-
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
     //! Porgression, tick count
@@ -111,6 +108,7 @@ public:
 
     YString studyFolder;
     YString simulationName;
+    std::string ortoolsSolver;
 }; // class StudyLoadOptions
 
 } // namespace Data
