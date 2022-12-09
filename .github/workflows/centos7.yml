@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - doc_generation
-    container: 'antaresrte/rte-antares:centos7-simulator'
+    container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
     strategy:
       matrix:
         ortools-xpress: [ON, OFF]
@@ -48,7 +48,7 @@ jobs:
       run: |
           git submodule update --init --recursive src/antares-deps src/tests/resources/Antares_Simulator_Tests
 
-    - name: Get antares-deps
+    - name: Download & extract precompiled deps at root
       run: |
            ANTARES_DEPS_VERSION=$(cut -d'"' -f4 antares-deps-version.json | grep -Ev '\{|\}')
            cd /
