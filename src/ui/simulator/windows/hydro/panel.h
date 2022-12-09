@@ -70,6 +70,7 @@ public:
     Component::Notebook::Page* pageLevelsAndValuesHydrocluster; //CR13
     Component::Notebook::Page* pageDailypowerHydrocluster;
     Component::Notebook::Page* pageInflowStructureHydrocluster;
+    Component::Notebook::Page* pageHydroclusterManagementOptions;
 private:
     //! A thermal cluster has just been selected, we have to update the GUI accordinly
     void onClusterChanged(Data::HydroclusterCluster* cluster);

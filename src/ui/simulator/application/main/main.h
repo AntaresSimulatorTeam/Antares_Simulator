@@ -735,6 +735,7 @@ private:
     Component::Notebook::Page* pageLevelsAndValuesHydrocluster;
     Component::Notebook::Page* pageDailypowerHydrocluster;
     Component::Notebook::Page* pageInflowStructureHydrocluster;
+    Component::Notebook::Page* pageHydroclusterManagementOptions;
     
     Component::Notebook::Page* pageWindTimeSeries;
     Component::Notebook::Page* pageWindPrepro;

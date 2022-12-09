@@ -40,6 +40,7 @@
 #include "levelsandvalues.h"
 #include "dailypower.h"
 #include "prepro.h"
+#include "management.h"
 
 using namespace Yuni;
 
@@ -110,7 +111,19 @@ Panel::Panel(Component::Notebook* parent) :
 
         // Common properties of the current thermal cluster
         pageHydroclusterLocaldata
-          = subbook->add(new Window::Hydro::CommonProperties(subbook, tag), wxT("Local data"));
+          = subbook->add(new Window::Hydro::CommonProperties(subbook, tag), wxT("Common"));
+
+        auto* page1 = new Antares::Window::Hydro::ManagementHydrocluster(subbook, tag);
+        pageHydroclusterManagementOptions = subbook->add(page1, wxT("Management Options"));
+
+        auto* page2 = new Antares::Window::Hydro::PreproHydrocluster(subbook, tag);
+        pageInflowStructureHydrocluster = subbook->add(page2, wxT("Inflow Structure"));
+
+        auto* page3 = new Antares::Window::Hydro::DailypowerHydrocluster(subbook, tag);
+        pageDailypowerHydrocluster = subbook->add(page3, wxT("Daily Power and Energy Credits"));
+
+        auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
+        pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));
 
         // Time Series ROR
         pageHydroclusterTimeSeriesRor = subbook->add(
@@ -131,17 +144,7 @@ Panel::Panel(Component::Notebook* parent) :
           wxT("Minimum Generation"));
 
 
-        // auto* page1 = new Antares::Window::Hydro::Management(notebook, notifier);
-        // pPageFatal = notebook->add(page1, wxT("Management Options"));
 
-        auto* page2 = new Antares::Window::Hydro::PreproHydrocluster(subbook, tag);
-        pageInflowStructureHydrocluster = subbook->add(page2, wxT("Inflow Structure"));
-
-        auto* page3 = new Antares::Window::Hydro::DailypowerHydrocluster(subbook, tag);
-        pageDailypowerHydrocluster = subbook->add(page3, wxT("Daily Power and Energy Credits"));
-
-        auto* page4 = new Antares::Window::Hydro::LevelsAndValuesHydrocluster(subbook, tag);
-        pageLevelsAndValuesHydrocluster = subbook->add(page4, wxT("Reservoir levels and water values"));
 
         // Split the view
         pSplitter->SetMinimumPaneSize(70);

@@ -679,6 +679,7 @@ void ApplWnd::createNBHydrocluster()
     pageLevelsAndValuesHydrocluster = panel->pageLevelsAndValuesHydrocluster;
     pageDailypowerHydrocluster = panel->pageDailypowerHydrocluster;
     pageInflowStructureHydrocluster = panel->pageInflowStructureHydrocluster;
+    pageHydroclusterManagementOptions = panel->pageHydroclusterManagementOptions;
 }
 
 void ApplWnd::createNBBindingConstraints()

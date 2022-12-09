@@ -54,21 +54,16 @@ void HydroclusterClusterList::ensureDataPrepro()
 #define SEP IO::Separator
 bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
 {
-
     // Make sure the folder is created
     if (IO::Directory::Create(folder))
     {
         Clob buffer;
         bool ret = true;
-        bool hasCoupling = false;
 
         // Allocate the inifile structure
         IniFile ini;
-
         // Browse all clusters
         each([&](const Data::HydroclusterCluster& c) {
-
-
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c.name());
 
@@ -84,13 +79,13 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
                 s->add("unitCount", c.unitCount);
             if (not Math::Zero(c.nominalCapacity))
                 s->add("nominalCapacity", c.nominalCapacity);
-            // // costs
-            // if (c.costgeneration != setManually)
-            //     s->add("costgeneration", c.costgeneration);            
-            // if (not Math::Zero(c.marginalCost))
-            //     s->add("marginal-cost", Math::Round(c.marginalCost, 3));
+        });
+        // Write the ini file
+        buffer.clear() << folder << SEP << "list.ini";
+        ret = ini.save(buffer) and ret;
 
-
+        //Hydrocluster data
+        each([&](const Data::HydroclusterCluster& c){
 
             buffer.clear() << folder << SEP << c.id();
             if (IO::Directory::Create(buffer))
@@ -128,9 +123,134 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
                 ret = 0;
         });
 
+
+
+    // String buffer;
+    // buffer.clear() << folder << SEP << "common" << SEP << "capacity";
+
+    // // Init
+    // IniFile ini;
+    // auto* s = ini.addSection("inter-daily-breakdown");
+    // auto* smod = ini.addSection("intra-daily-modulation");
+    // auto* sIMB = ini.addSection("inter-monthly-breakdown");
+    // auto* sreservoir = ini.addSection("reservoir");
+    // auto* sreservoirCapacity = ini.addSection("reservoir capacity");
+    // auto* sFollowLoad = ini.addSection("follow load");
+    // auto* sUseWater = ini.addSection("use water");
+    // auto* sHardBounds = ini.addSection("hard bounds");
+    // auto* sInitializeReservoirDate = ini.addSection("initialize reservoir date");
+    // auto* sUseHeuristic = ini.addSection("use heuristic");
+    // auto* sUseLeeway = ini.addSection("use leeway");
+    // auto* sPowerToLevel = ini.addSection("power to level");
+    // auto* sLeewayLow = ini.addSection("leeway low");
+    // auto* sLeewayUp = ini.addSection("leeway up");
+    // auto* spumpingEfficiency = ini.addSection("pumping efficiency");
+
+    // // return status
+    // bool ret = true;
+
+    // // Add all alpha values for each area
+    // areas.each([&](const Data::Area& area) {
+    //     s->add(area.id, area.hydro.interDailyBreakdown);
+    //     smod->add(area.id, area.hydro.intraDailyModulation);
+    //     sIMB->add(area.id, area.hydro.intermonthlyBreakdown);
+    //     sInitializeReservoirDate->add(area.id, area.hydro.initializeReservoirLevelDate);
+    //     sLeewayLow->add(area.id, area.hydro.leewayLowerBound);
+    //     sLeewayUp->add(area.id, area.hydro.leewayUpperBound);
+    //     spumpingEfficiency->add(area.id, area.hydro.pumpingEfficiency);
+    //     if (area.hydro.reservoirCapacity > 1e-6)
+    //         sreservoirCapacity->add(area.id, area.hydro.reservoirCapacity);
+    //     if (area.hydro.reservoirManagement)
+    //         sreservoir->add(area.id, true);
+    //     if (!area.hydro.followLoadModulations)
+    //         sFollowLoad->add(area.id, false);
+    //     if (area.hydro.useWaterValue)
+    //         sUseWater->add(area.id, true);
+    //     if (area.hydro.hardBoundsOnRuleCurves)
+    //         sHardBounds->add(area.id, true);
+    //     if (!area.hydro.useHeuristicTarget)
+    //         sUseHeuristic->add(area.id, false);
+    //     if (area.hydro.useLeeway)
+    //         sUseLeeway->add(area.id, true);
+    //     if (area.hydro.powerToLevel)
+    //         sPowerToLevel->add(area.id, true);
+    //     // max power
+    //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "maxpower_"
+    //                    << area.id << ".txt";
+    //     ret = area.hydro.maxPower.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    //     // credit modulations
+    //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP
+    //                    << "creditmodulations_" << area.id << ".txt";
+    //     ret = area.hydro.creditModulation.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    //     // inflow pattern
+    //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "inflowPattern_"
+    //                    << area.id << ".txt";
+    //     ret = area.hydro.inflowPattern.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+    //     // reservoir
+    //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "reservoir_"
+    //                    << area.id << ".txt";
+    //     ret = area.hydro.reservoirLevel.saveToCSVFile(buffer, /*decimal*/ 3) && ret;
+    //     buffer.clear() << folder << SEP << "common" << SEP << "capacity" << SEP << "waterValues_"
+    //                    << area.id << ".txt";
+    //     ret = area.hydro.waterValues.saveToCSVFile(buffer, /*decimal*/ 2) && ret;
+    // });
+
+    // // Write the ini file
+    // buffer.clear() << folder << SEP << "hydro.ini";
+    // return ini.save(buffer) && ret;
+
+
+
+
+
+
+
+
+
+        // Allocate the inifile structure Hydro management options
+        IniFile inimanagement;
+        auto* s = inimanagement.addSection("inter-daily-breakdown");
+        auto* smod = inimanagement.addSection("intra-daily-modulation");
+        auto* sIMB = inimanagement.addSection("inter-monthly-breakdown");
+        auto* sreservoir = inimanagement.addSection("reservoir");
+        auto* sreservoirCapacity = inimanagement.addSection("reservoir capacity");
+        auto* sFollowLoad = inimanagement.addSection("follow load");
+        auto* sUseWater = inimanagement.addSection("use water");
+        auto* sHardBounds = inimanagement.addSection("hard bounds");
+        auto* sInitializeReservoirDate = iniinimanagement.addSection("initialize reservoir date");
+        auto* sUseHeuristic = inimanagement.addSection("use heuristic");
+        auto* sUseLeeway = inimanagement.addSection("use leeway");
+        auto* sPowerToLevel = inimanagement.addSection("power to level");
+        auto* sLeewayLow = inimanagement.addSection("leeway low");
+        auto* sLeewayUp = inimanagement.addSection("leeway up");
+        auto* spumpingEfficiency = inimanagement.addSection("pumping efficiency");
+
+        // Browse all clusters
+        each([&](const Data::HydroclusterCluster& c) {
+            // Adding a section to the inifile
+            IniFile::Section* s = inimanagement.addSection(c.name());
+
+            // The section must not be empty
+            // This key will be silently ignored the next time
+            s->add("name", c.name());
+
+            // if (not c.group().empty())
+            //     s->add("group", c.group());
+            // if (not c.enabled)
+            //     s->add("enabled", "false");
+            // if (not Math::Zero(c.unitCount))
+            //     s->add("unitCount", c.unitCount);
+            // if (not Math::Zero(c.nominalCapacity))
+            //     s->add("nominalCapacity", c.nominalCapacity);.
+
+            //todo save management options here:
+
+
+            //
+        });
         // Write the ini file
-        buffer.clear() << folder << SEP << "list.ini";
-        ret = ini.save(buffer) and ret;
+        buffer.clear() << folder << SEP << "managementoptions.ini";
+        ret = inimanagement.save(buffer) and ret;
     }
     else
     {
@@ -138,6 +258,11 @@ bool HydroclusterClusterList::saveToFolder(const AnyString& folder) const
         return false;
     }
     return true;
+
+
+
+
+
 
 }
 

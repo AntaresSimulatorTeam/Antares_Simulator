@@ -1161,6 +1161,1133 @@ void Management::onChangingInitializeReservoirLevelDate(wxCommandEvent& evt)
     }
 }
 
+
+/////////////////////////////
+
+
+
+ManagementHydrocluster::ManagementHydrocluster(wxWindow* parent, Toolbox::InputSelector::HydroclusterCluster* notifier) :
+ wxScrolledWindow(parent),
+ pInputHydroclusterClusterSelector(notifier),
+ pHydroclusterCluster(nullptr),
+ pComponentsAreReady(false),
+ pSupport(nullptr)
+{
+    OnStudyClosed.connect(this, &ManagementHydrocluster::onStudyClosed);
+    if (notifier)
+        notifier->onClusterChanged.connect(this, &ManagementHydrocluster::onClusterChanged);
+}
+
+void ManagementHydrocluster::createComponents()
+{
+    if (pComponentsAreReady)
+        return;
+    pComponentsAreReady = true;
+
+    {
+        wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+        SetSizer(sizer);
+        pSupport = new Component::Panel(this);
+        sizer->Add(pSupport, 1, wxALL | wxEXPAND);
+    }
+    wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+    pSupport->SetSizer(sizer);
+
+    const wxSize ourDefaultSize(55, wxDefaultSize.GetHeight());
+
+    enum
+    {
+        right = wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL,
+        left = wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL,
+    };
+
+    auto* pGrid = new wxFlexGridSizer(6, 0, 8);
+    sizer->Add(pGrid, 0, wxALL, 15);
+
+    // Follow load modulations
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("Follow load modulations")), 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleFollowLoad);
+        pGrid->Add(button, 0, left);
+        pFollowLoad = button;
+    }
+    // Interdaily breakdown
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("Inter-daily breakdown")), 0, right);
+
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pInterdailyBreakdown = edit;
+    }
+
+    // Interdaily modulation
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("Intra-daily modulation")), 0, right);
+
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pIntradailyModulation = edit;
+    }
+
+    // Space
+    {
+        enum
+        {
+            verticalSpace = 10
+        };
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+    }
+
+    // Reservoir management
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("Reservoir management")), 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleReservoirManagement);
+        pGrid->Add(button, 0, left);
+        pReservoirManagement = button;
+    }
+
+    // Use Water Value
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Use water value"));
+        pLabelUseWaterValues = label;
+        pGrid->Add(label, 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleUseWaterValue);
+        pGrid->Add(button, 0, left);
+        pUseWaterValue = button;
+    }
+
+    // Use heuristic target
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Use heuristic target"));
+        pLabelUseHeuristicTarget = label;
+        pGrid->Add(label, 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleUseHeuristicTarget);
+        pGrid->Add(button, 0, left);
+        pUseHeuristicTarget = button;
+    }
+
+    // Space
+    {
+        enum
+        {
+            verticalSpace = 10
+        };
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+    }
+
+    // Reservoir capacity
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Reservoir capacity (MWh)"));
+        pLabelReservoirCapacity = label;
+        pGrid->Add(label, 0, right);
+
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pReservoirCapacity = edit;
+    }
+
+    // Initialize reservoir level date
+    {
+        pGrid->Add(
+          Component::CreateLabel(pSupport, wxT("Initialize reservoir level on ")), 0, right);
+        auto* button = new Component::Button(pSupport, Antares::Date::MonthToString(0, 0));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleInitializeReservoirLevelDate);
+        pGrid->Add(button, 0, left);
+        pInitializeReservoirLevelDate = button;
+    }
+
+    // Intermonthly breakdown
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("    Inter-monthly breakdown")), 0, right);
+
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pIntermonthlyBreakdown = edit;
+    }
+
+    // Space
+    {
+        enum
+        {
+            verticalSpace = 10
+        };
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+    }
+
+    // Use Leeway
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Use Leeway"));
+        pLabelUseLeeway = label;
+        pGrid->Add(label, 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleUseLeeway);
+        pGrid->Add(button, 0, left);
+        pUseLeeway = button;
+    }
+
+    // Leeway low bound
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Leeway low bound"));
+        pLabelLeewayLow = label;
+        pGrid->Add(label, 0, right);
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pLeewayLowerBound = edit;
+    }
+
+    // Leeway upper bound
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Leeway upper bound"));
+        pLabelLeewayUp = label;
+        pGrid->Add(label, 0, right);
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pLeewayUpperBound = edit;
+    }
+
+    // Space
+    {
+        enum
+        {
+            verticalSpace = 10
+        };
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+        pGrid->AddSpacer(verticalSpace);
+    }
+
+    // Hard Bounds on rules curves
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Hard bounds on rules curves"));
+        pLabelHardBounds = label;
+        pGrid->Add(label, 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onToggleHardBoundsOnRuleCurves);
+        pGrid->Add(button, 0, left);
+        pHardBoundsOnRuleCurves = button;
+    }
+
+    // Power to level modulations
+    {
+        auto* label = Component::CreateLabel(pSupport, wxT("Power to level modulations :"));
+        pLabelPowerToLevel = label;
+        pGrid->Add(label, 0, right);
+
+        auto* button = new Component::Button(pSupport, wxT("Yes"));
+        button->menu(true);
+        button->onPopupMenu(this, &ManagementHydrocluster::onTogglePowerToLevel);
+        pGrid->Add(button, 0, left);
+        pPowerToLevel = button;
+    }
+
+    // Pumping Efficiency
+    {
+        pGrid->Add(Component::CreateLabel(pSupport, wxT("  Pumping Efficiency Ratio")), 0, right);
+
+        auto* edit = new wxTextCtrl(pSupport,
+                                    wxID_ANY,
+                                    wxT("0.0"),
+                                    wxDefaultPosition,
+                                    ourDefaultSize,
+                                    0,
+                                    Toolbox::Validator::Numeric());
+        pGrid->Add(edit, 0, wxALL | wxEXPAND);
+        pPumpingEfficiency = edit;
+    }
+
+    pGrid->SetItemMinSize(pIntermonthlyBreakdown, 64, 10);
+    pGrid->SetItemMinSize(pReservoirCapacity, 64, 10);
+
+    sizer->Layout();
+
+    pInterdailyBreakdown->Connect(pInterdailyBreakdown->GetId(),
+                                  wxEVT_COMMAND_TEXT_UPDATED,
+                                  wxCommandEventHandler(ManagementHydrocluster::onInterdailyBreakdownChanged),
+                                  nullptr,
+                                  this);
+    pIntradailyModulation->Connect(pIntradailyModulation->GetId(),
+                                   wxEVT_COMMAND_TEXT_UPDATED,
+                                   wxCommandEventHandler(ManagementHydrocluster::onIntradailyModulationChanged),
+                                   nullptr,
+                                   this);
+
+    pIntermonthlyBreakdown->Connect(
+      pIntermonthlyBreakdown->GetId(),
+      wxEVT_COMMAND_TEXT_UPDATED,
+      wxCommandEventHandler(ManagementHydrocluster::onIntermonthlyBreakdownChanged),
+      nullptr,
+      this);
+
+    pReservoirCapacity->Connect(pReservoirCapacity->GetId(),
+                                wxEVT_COMMAND_TEXT_UPDATED,
+                                wxCommandEventHandler(ManagementHydrocluster::onReservoirCapacityChanged),
+                                nullptr,
+                                this);
+
+    pLeewayUpperBound->Connect(pLeewayUpperBound->GetId(),
+                               wxEVT_COMMAND_TEXT_UPDATED,
+                               wxCommandEventHandler(ManagementHydrocluster::onLeewayUpperBoundChanged),
+                               nullptr,
+                               this);
+    pLeewayLowerBound->Connect(pLeewayLowerBound->GetId(),
+                               wxEVT_COMMAND_TEXT_UPDATED,
+                               wxCommandEventHandler(ManagementHydrocluster::onLeewayLowBoundChanged),
+                               nullptr,
+                               this);
+
+    pPumpingEfficiency->Connect(pPumpingEfficiency->GetId(),
+                                wxEVT_COMMAND_TEXT_UPDATED,
+                                wxCommandEventHandler(ManagementHydrocluster::onPumpingEfficiencyChanged),
+                                nullptr,
+                                this);
+}
+
+ManagementHydrocluster::~ManagementHydrocluster()
+{
+    destroyBoundEvents();
+    // destroy all children as soon as possible to prevent against corrupt vtable
+    DestroyChildren();
+}
+
+
+void ManagementHydrocluster::onClusterChanged(Data::HydroclusterCluster* hydroclusterCluster)
+{
+    pHydroclusterCluster = hydroclusterCluster;
+    if(pHydroclusterCluster and pHydroclusterCluster->prepro)   
+    {
+        // create components on-demand
+        if (!pComponentsAreReady)
+            createComponents();
+        else
+            GetSizer()->Show(pSupport, true);
+
+        pIntermonthlyBreakdown->ChangeValue(wxString() << pHydroclusterCluster->intermonthlyBreakdown);
+        pInterdailyBreakdown->ChangeValue(wxString() << pHydroclusterCluster->interDailyBreakdown);
+        pIntradailyModulation->ChangeValue(wxString() << pHydroclusterCluster->intraDailyModulation);
+        pReservoirCapacity->ChangeValue(wxString() << pHydroclusterCluster->reservoirCapacity);
+        pLeewayUpperBound->ChangeValue(wxString() << pHydroclusterCluster->leewayUpperBound);
+        pLeewayLowerBound->ChangeValue(wxString() << pHydroclusterCluster->leewayLowerBound);
+        pPumpingEfficiency->ChangeValue(wxString() << pHydroclusterCluster->pumpingEfficiency);
+        if (pHydroclusterCluster->reservoirManagement)
+        {
+            pReservoirManagement->caption(wxT("Yes"));
+            pReservoirManagement->image("images/16x16/light_green.png");
+            pLabelReservoirCapacity->Enable(true);
+            pReservoirCapacity->Enable(true);
+            pLabelUseHeuristicTarget->Enable(true);
+            pUseWaterValue->Enable(true);
+            pLabelUseWaterValues->Enable(true);
+            pUseHeuristicTarget->Enable(true);
+            if (pHydroclusterCluster->useHeuristicTarget && pHydroclusterCluster->useWaterValue)
+            {
+                pUseLeeway->Enable(true);
+                pLabelUseLeeway->Enable(true);
+            }
+            pHardBoundsOnRuleCurves->Enable(true);
+            pLabelHardBounds->Enable(true);
+            pPumpingEfficiency->Enable(true);
+            pInitializeReservoirLevelDate->Enable(true);
+            pIntermonthlyBreakdown->Enable(true);
+        }
+        else
+        {
+            pReservoirManagement->caption(wxT("No"));
+            pReservoirManagement->image("images/16x16/light_orange.png");
+            pLabelReservoirCapacity->Enable(false);
+            pReservoirCapacity->Enable(false);
+            pLabelUseHeuristicTarget->Enable(false);
+            pUseWaterValue->Enable(false);
+            pLabelUseWaterValues->Enable(false);
+            pHydroclusterCluster->useWaterValue = false;
+            pUseWaterValue->Enable(false);
+            pHydroclusterCluster->hardBoundsOnRuleCurves = false;
+            pHardBoundsOnRuleCurves->Enable(false);
+            pLabelHardBounds->Enable(false);
+            pHydroclusterCluster->useHeuristicTarget = true;
+            pUseHeuristicTarget->Enable(false);
+            pUseLeeway->Enable(false);
+            pLabelUseLeeway->Enable(false);
+            pHydroclusterCluster->useLeeway = false;
+            pPumpingEfficiency->Enable(false);
+            pInitializeReservoirLevelDate->Enable(false);
+            pIntermonthlyBreakdown->Enable(false);
+        }
+
+        if (pHydroclusterCluster->followLoadModulations)
+        {
+            pFollowLoad->caption(wxT("Yes"));
+            pFollowLoad->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            pFollowLoad->caption(wxT("No"));
+            pFollowLoad->image("images/16x16/light_orange.png");
+        }
+
+        if (pHydroclusterCluster->useWaterValue)
+        {
+            pUseWaterValue->caption(wxT("Yes"));
+            pUseWaterValue->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            pUseWaterValue->caption(wxT("No"));
+            pUseWaterValue->image("images/16x16/light_orange.png");
+            pUseLeeway->Enable(false);
+            pLabelUseLeeway->Enable(false);
+            pHydroclusterCluster->useLeeway = false;
+        }
+
+        if (pHydroclusterCluster->hardBoundsOnRuleCurves)
+        {
+            pHardBoundsOnRuleCurves->caption(wxT("Yes"));
+            pHardBoundsOnRuleCurves->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            pHardBoundsOnRuleCurves->caption(wxT("No"));
+            pHardBoundsOnRuleCurves->image("images/16x16/light_orange.png");
+        }
+
+        if (pHydroclusterCluster->initializeReservoirLevelDate)
+        {
+            pInitializeReservoirLevelDate->caption(
+              Antares::Date::MonthToString(pHydroclusterCluster->initializeReservoirLevelDate, 0));
+        }
+        else
+        {
+            pInitializeReservoirLevelDate->caption(Antares::Date::MonthToString(0, 0));
+        }
+
+        if (pHydroclusterCluster->useHeuristicTarget)
+        {
+            pUseHeuristicTarget->caption(wxT("Yes"));
+            pUseHeuristicTarget->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            pUseHeuristicTarget->caption(wxT("No"));
+            pUseHeuristicTarget->image("images/16x16/light_orange.png");
+            pHydroclusterCluster->useLeeway = false;
+            pUseLeeway->Enable(false);
+            pLabelUseLeeway->Enable(false);
+        }
+        if (pHydroclusterCluster->useLeeway)
+        {
+            pUseLeeway->caption(wxT("Yes"));
+            pUseLeeway->image("images/16x16/light_green.png");
+            if (pHydroclusterCluster->reservoirManagement && pHydroclusterCluster->useWaterValue)
+            {
+                pLeewayLowerBound->Enable(true);
+                pLabelLeewayLow->Enable(true);
+                pLeewayUpperBound->Enable(true);
+                pLabelLeewayUp->Enable(true);
+            }
+        }
+        else
+        {
+            pUseLeeway->caption(wxT("No"));
+            pUseLeeway->image("images/16x16/light_orange.png");
+
+            pLeewayLowerBound->Enable(false);
+            pLabelLeewayLow->Enable(false);
+            pLeewayUpperBound->Enable(false);
+            pLabelLeewayUp->Enable(false);
+        }
+        // Condition equivalent to generating between bounds
+        if ((pHydroclusterCluster->useHeuristicTarget && pHydroclusterCluster->useLeeway)
+            or not pHydroclusterCluster->useHeuristicTarget)
+        {
+            pPowerToLevel->Enable(true);
+            pLabelPowerToLevel->Enable(true);
+        }
+        else
+        {
+            pPowerToLevel->Enable(false);
+            pLabelPowerToLevel->Enable(false);
+            pHydroclusterCluster->powerToLevel = false;
+        }
+        if (pHydroclusterCluster->powerToLevel)
+        {
+            pPowerToLevel->caption(wxT("Yes"));
+            pPowerToLevel->image("images/16x16/light_green.png");
+        }
+        else
+        {
+            pPowerToLevel->caption(wxT("No"));
+            pPowerToLevel->image("images/16x16/light_orange.png");
+        }
+    }
+    else
+    {
+        if (pComponentsAreReady)
+        {
+            pIntermonthlyBreakdown->ChangeValue(wxString(wxT("0.0")));
+            pInterdailyBreakdown->ChangeValue(wxString(wxT("0.0")));
+            pIntradailyModulation->ChangeValue(wxString(wxT("0.0")));
+            pReservoirCapacity->ChangeValue(wxString(wxT("0")));
+            pLeewayUpperBound->ChangeValue(wxString(wxT("0")));
+            pLeewayLowerBound->ChangeValue(wxString(wxT("0")));
+            pPumpingEfficiency->ChangeValue(wxString(wxT("0.0")));
+            pReservoirManagement->caption(wxT("No"));
+            pReservoirManagement->image("images/16x16/light_orange.png");
+            pFollowLoad->caption(wxT("No"));
+            pFollowLoad->image("images/16x16/light_orange.png");
+            pUseWaterValue->caption(wxT("No"));
+            pUseWaterValue->image("images/16x16/light_orange.png");
+            pUseLeeway->caption(wxT("No"));
+            pUseLeeway->image("images/16x16/light_orange.png");
+            pPowerToLevel->caption(wxT("No"));
+            pPowerToLevel->image("images/16x16/light_orange.png");
+            pHardBoundsOnRuleCurves->caption(wxT("No"));
+            pHardBoundsOnRuleCurves->image("images/16x16/light_orange.png");
+            pUseHeuristicTarget->caption(wxT("No"));
+            pUseHeuristicTarget->image("images/16x16/light_orange.png");
+            pLabelReservoirCapacity->Enable(false);
+            pInitializeReservoirLevelDate->caption(Antares::Date::MonthToString(0, 0));
+        }
+    }
+
+    this->FitInside(); // ask the sizer about the needed size
+    this->SetScrollRate(5, 5);
+}
+
+void ManagementHydrocluster::onIntermonthlyBreakdownChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pHydroclusterCluster->intermonthlyBreakdown))
+        {
+            if (d < 0.)
+            {
+                d = 0.;
+                pIntermonthlyBreakdown->ChangeValue(wxT("0.0"));
+            }
+            pHydroclusterCluster->intermonthlyBreakdown = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void ManagementHydrocluster::onInterdailyBreakdownChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pHydroclusterCluster->interDailyBreakdown))
+        {
+            pHydroclusterCluster->interDailyBreakdown = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void ManagementHydrocluster::onIntradailyModulationChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pHydroclusterCluster->intraDailyModulation))
+        {
+            if (d < 1.)
+            {
+                d = 1.;
+                pIntradailyModulation->ChangeValue(wxT("1"));
+            }
+
+            pHydroclusterCluster->intraDailyModulation = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void ManagementHydrocluster::onReservoirCapacityChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (d < 1e-6)
+            d = 0;
+        if (not Math::Equals(d, pHydroclusterCluster->reservoirCapacity))
+        {
+            pHydroclusterCluster->reservoirCapacity = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void ManagementHydrocluster::onLeewayLowBoundChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pHydroclusterCluster->leewayLowerBound))
+        {
+            if (d >= 0 && d <= pHydroclusterCluster->leewayUpperBound)
+            {
+                pHydroclusterCluster->leewayLowerBound = d;
+                MarkTheStudyAsModified();
+            }
+
+            if (d < 0)
+            {
+                pHydroclusterCluster->leewayLowerBound = 0;
+                pLeewayLowerBound->ChangeValue(wxT("0"));
+            }
+
+            if (d > pHydroclusterCluster->leewayUpperBound)
+            {
+                pHydroclusterCluster->leewayLowerBound = pHydroclusterCluster->leewayUpperBound;
+                pLeewayLowerBound->ChangeValue(wxString() << pHydroclusterCluster->leewayUpperBound);
+            }
+        }
+    }
+}
+
+void ManagementHydrocluster::onLeewayUpperBoundChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+        if (not Math::Equals(d, pHydroclusterCluster->leewayUpperBound))
+        {
+            if (d >= 0 && d >= pHydroclusterCluster->leewayLowerBound)
+            {
+                pHydroclusterCluster->leewayUpperBound = d;
+                MarkTheStudyAsModified();
+            }
+
+            if (d < 0)
+            {
+                pHydroclusterCluster->leewayUpperBound = 0.;
+                pLeewayUpperBound->ChangeValue(wxT("0"));
+            }
+
+            if (d < pHydroclusterCluster->leewayLowerBound)
+            {
+                pHydroclusterCluster->leewayUpperBound = pHydroclusterCluster->leewayLowerBound;
+                pLeewayUpperBound->ChangeValue(wxString() << pHydroclusterCluster->leewayLowerBound);
+            }
+        }
+    }
+}
+
+void ManagementHydrocluster::onPumpingEfficiencyChanged(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        if (evt.GetString().empty())
+            return;
+        double d;
+        evt.GetString().ToDouble(&d);
+
+        if (not Math::Equals(d, pHydroclusterCluster->pumpingEfficiency))
+        {
+            if (d < 0.)
+            {
+                d = 0.;
+                pPumpingEfficiency->ChangeValue(wxT("0.0"));
+            }
+            pHydroclusterCluster->pumpingEfficiency = d;
+            MarkTheStudyAsModified();
+        }
+    }
+}
+
+void ManagementHydrocluster::onStudyClosed()
+{
+    pHydroclusterCluster = nullptr;
+
+    if (GetSizer())
+        GetSizer()->Show(pSupport, false);
+}
+
+void ManagementHydrocluster::onToggleReservoirManagement(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Use reservoir management"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnableReserveManagement),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onDisableReserveManagement),
+                 nullptr,
+                 this);
+}
+
+void ManagementHydrocluster::onToggleFollowLoad(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Follow load modulations"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onFollowingLoadModulations),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onUnfollowingLoadModulations),
+                 nullptr,
+                 this);
+}
+
+void ManagementHydrocluster::onToggleUseWaterValue(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("Use water value"), "images/16x16/light_green.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnableUseWaterValue),
+                 nullptr,
+                 this);
+    if (pHydroclusterCluster->useHeuristicTarget)
+    {
+        it = Menu::CreateItem(
+          &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+                     wxEVT_COMMAND_MENU_SELECTED,
+                     wxCommandEventHandler(ManagementHydrocluster::onDisableUseWaterValue),
+                     nullptr,
+                     this);
+    }
+}
+
+void ManagementHydrocluster::onToggleHardBoundsOnRuleCurves(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Hard bounds on rule curves"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnableHardBoundsOnRuleCurves),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onDisableHardBoundsOnRuleCurves),
+                 nullptr,
+                 this);
+}
+
+void ManagementHydrocluster::onToggleUseHeuristicTarget(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("Use heuristic target"), "images/16x16/light_green.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnableUseHeuristicTarget),
+                 nullptr,
+                 this);
+
+    if (pHydroclusterCluster->useWaterValue)
+    {
+        it = Menu::CreateItem(
+          &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+        menu.Connect(it->GetId(),
+                     wxEVT_COMMAND_MENU_SELECTED,
+                     wxCommandEventHandler(ManagementHydrocluster::onDisableUseHeuristicTarget),
+                     nullptr,
+                     this);
+    }
+}
+
+void ManagementHydrocluster::onToggleUseLeeway(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("Use Leeway"), "images/16x16/light_green.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnableUseLeeway),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onDisableUseLeeway),
+                 nullptr,
+                 this);
+}
+
+void ManagementHydrocluster::onToggleInitializeReservoirLevelDate(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    for (int i = 0; i < 12; i++)
+    {
+        it = Menu::CreateItem(&menu, i, Antares::Date::MonthToString(i, 0), NULL, wxEmptyString);
+        menu.Connect(it->GetId(),
+                     wxEVT_COMMAND_MENU_SELECTED,
+                     wxCommandEventHandler(ManagementHydrocluster::onChangingInitializeReservoirLevelDate),
+                     nullptr,
+                     this);
+    }
+}
+
+void ManagementHydrocluster::onTogglePowerToLevel(Component::Button&, wxMenu& menu, void*)
+{
+    if (!pHydroclusterCluster)
+    {
+        Menu::CreateItem(&menu,
+                         wxID_ANY,
+                         wxT("Please select an area"),
+                         "images/16x16/light_orange.png",
+                         wxEmptyString);
+        return;
+    }
+    wxMenuItem* it;
+
+    it = Menu::CreateItem(&menu,
+                          wxID_ANY,
+                          wxT("Power to Level Modulations"),
+                          "images/16x16/light_green.png",
+                          wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onEnablePowerToLevel),
+                 nullptr,
+                 this);
+    it = Menu::CreateItem(
+      &menu, wxID_ANY, wxT("No"), "images/16x16/light_orange.png", wxEmptyString);
+    menu.Connect(it->GetId(),
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(ManagementHydrocluster::onDisablePowerToLevel),
+                 nullptr,
+                 this);
+}
+
+void ManagementHydrocluster::onEnableReserveManagement(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->reservoirManagement)
+    {
+        pHydroclusterCluster->reservoirManagement = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisableReserveManagement(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->reservoirManagement)
+    {
+        pHydroclusterCluster->reservoirManagement = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onFollowingLoadModulations(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->followLoadModulations)
+    {
+        pHydroclusterCluster->followLoadModulations = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onUnfollowingLoadModulations(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->followLoadModulations)
+    {
+        pHydroclusterCluster->followLoadModulations = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onEnableUseWaterValue(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->useWaterValue)
+    {
+        pHydroclusterCluster->useWaterValue = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisableUseWaterValue(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->useWaterValue)
+    {
+        pHydroclusterCluster->useWaterValue = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onEnableHardBoundsOnRuleCurves(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->hardBoundsOnRuleCurves)
+    {
+        pHydroclusterCluster->hardBoundsOnRuleCurves = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisableHardBoundsOnRuleCurves(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->hardBoundsOnRuleCurves)
+    {
+        pHydroclusterCluster->hardBoundsOnRuleCurves = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onEnableUseHeuristicTarget(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->useHeuristicTarget)
+    {
+        pHydroclusterCluster->useHeuristicTarget = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisableUseHeuristicTarget(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->useHeuristicTarget)
+    {
+        pHydroclusterCluster->useHeuristicTarget = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onEnableUseLeeway(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->useLeeway)
+    {
+        pHydroclusterCluster->useLeeway = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisableUseLeeway(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->useLeeway)
+    {
+        pHydroclusterCluster->useLeeway = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onEnablePowerToLevel(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and not pHydroclusterCluster->powerToLevel)
+    {
+        pHydroclusterCluster->powerToLevel = true;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onDisablePowerToLevel(wxCommandEvent&)
+{
+    if (pHydroclusterCluster and pHydroclusterCluster->powerToLevel)
+    {
+        pHydroclusterCluster->powerToLevel = false;
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
+void ManagementHydrocluster::onChangingInitializeReservoirLevelDate(wxCommandEvent& evt)
+{
+    if (pHydroclusterCluster)
+    {
+        pHydroclusterCluster->initializeReservoirLevelDate = evt.GetId();
+        MarkTheStudyAsModified();
+        onClusterChanged(pHydroclusterCluster);
+    }
+}
+
 } // namespace Hydro
 } // namespace Window
 } // namespace Antares
