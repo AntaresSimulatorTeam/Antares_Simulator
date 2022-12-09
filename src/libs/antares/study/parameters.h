@@ -42,8 +42,6 @@
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 
-using namespace std;
-
 namespace Antares
 {
 namespace Data

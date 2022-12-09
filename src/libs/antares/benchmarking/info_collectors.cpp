@@ -149,7 +149,7 @@ namespace Benchmarking
 	// -------------------------------------
 	void DurationCollector::toFileContent(FileContent& file_content)
 	{		
-		for (pair<string, vector<int64_t>> element : duration_items_)
+        for (const auto& element : duration_items_)
 		{
 			const std::string& name = element.first;
 			const auto& durations = element.second;
