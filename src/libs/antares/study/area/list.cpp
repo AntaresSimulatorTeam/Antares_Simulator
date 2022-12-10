@@ -1127,7 +1127,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         //todo: other options for series as (!options.loadOnlyNeeded or !area.hydro.prepro
         buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "clusters";
-        ret = area.hydrocluster.list.loadHydroclusterClusterDataFromFolder(study, options, buffer) && ret; //allocation is inside
+        ret = area.hydrocluster.list.loadHydroclusterClusterDataFromFolder(study, options, buffer) && ret; //allocation is inside //###221210
         buffer.clear() << study.folderInput << SEP << "hydrocluster" << SEP << "series";
         ret = area.hydrocluster.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
         // flush
@@ -1323,7 +1323,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             Area& area = *(i->second);
             buffer.clear() << pStudy.folderInput << hydroclusterPlant << area.id;
-            ret = area.hydrocluster.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
+            ret = area.hydrocluster.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret; //###221210
             area.hydrocluster.prepareAreaWideIndexes();
         }
     } 
@@ -1345,7 +1345,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         logs.info() << options.logMessage;
 
         // Load a single area
-        ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer, options) and ret;
+        ret = AreaListLoadFromFolderSingleArea(pStudy, this, area, buffer, options) and ret; //###221210
     });
 
     // update nameid set
