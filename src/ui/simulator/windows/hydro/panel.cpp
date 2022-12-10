@@ -82,12 +82,17 @@ Panel::Panel(Component::Notebook* parent) :
         n->addCommonControl(page.second);
     }
 
-    // Summary for the area
+    //Hydrocluster Allocation and Spatial correlation // Summary for the area
     {
-        Component::Datagrid::Component* summary = new Component::Datagrid::Component(
+        Component::Datagrid::Component* compallocation = new Component::Datagrid::Component(
           page.first,
-          new Component::Datagrid::Renderer::HydroclusterClusterSummarySingleArea(this, page.second));
-        page.first->add(summary, wxT("Summary for the area"));
+          new Component::Datagrid::Renderer::HydroclusterClusterSummarySingleArea(this, page.second)); //CR13 todo
+        page.first->add(compallocation, wxT("Allocation(Todo)"));
+
+        Component::Datagrid::Component* compapatial = new Component::Datagrid::Component(
+          page.first,
+          new Component::Datagrid::Renderer::HydroclusterClusterSummarySingleArea(this, page.second)); //CR13 todo
+        page.first->add(compapatial, wxT("Spatial correlation(Todo)"));        
     }
 
     // Hydrocluster cluster list
