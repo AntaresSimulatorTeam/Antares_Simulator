@@ -54,8 +54,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-           echo "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
-           echo "LABEL=" >> $GITHUB_ENV
+           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download OR-Tools
       id: ortools
@@ -99,7 +98,7 @@ jobs:
       run: |
            cd _build
            RPM_NAME=$(ls *.rpm)
-           RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm/${{ env.LABEL }}.rpm}
+           RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm}
            mv "${RPM_NAME}" "${RPM_NAME_WITH_SUFFIX}" || true
 
     - name: .tar.gz creation
@@ -111,7 +110,7 @@ jobs:
       run: |
            cd _build
            TGZ_NAME=$(ls *.tar.gz)
-           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz}
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer TGZ push

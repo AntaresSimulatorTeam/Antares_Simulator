@@ -65,7 +65,6 @@ jobs:
     - name: Config OR-Tools URL
       run: |
           echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-          echo "LABEL=" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -196,7 +195,7 @@ jobs:
       run: |
            cd _build
            DEB_NAME=$(ls *.deb)
-           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ env.LABEL }}.deb}
+           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb}
            mv "${DEB_NAME}" "${DEB_NAME_WITH_SUFFIX}" || true
 
     - name: .tar.gz creation
@@ -208,7 +207,7 @@ jobs:
       run: |
            cd _build
            TGZ_NAME=$(ls *.tar.gz)
-           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
+           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz}
            mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer archive upload push
