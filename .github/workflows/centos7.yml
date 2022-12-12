@@ -33,8 +33,6 @@ jobs:
     needs:
       - doc_generation
     container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
-    strategy:
-      matrix:
 
     steps:
 
