@@ -25,9 +25,8 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build
     env:
-      XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     outputs:
@@ -40,8 +39,6 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
-        ortools-xpress: [ON, OFF]
-
 
     steps:
     - uses: actions/checkout@v3
@@ -49,7 +46,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
+          key: ${{ matrix.os }}
 
     - name: Install libraries
       run: |
@@ -67,13 +64,8 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.7/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
-            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
-          else
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.7/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-            echo "LABEL=" >> $GITHUB_ENV
-          fi
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.0/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
+          echo "LABEL=" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -98,12 +90,6 @@ jobs:
           git submodule update --init src/antares-deps
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
 
-    - name: Download XPRESS if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
-      run: |
-        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
-        ls -la ${{ env.XPRESSDIR }}
-
     - name: Configure push
       run: |
            cmake -B _build -S src \
@@ -114,7 +100,6 @@ jobs:
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Build
       run: |
