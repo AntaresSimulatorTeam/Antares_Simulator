@@ -25,9 +25,8 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build
     env:
-      XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
@@ -36,7 +35,6 @@ jobs:
     container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
     strategy:
       matrix:
-        ortools-xpress: [ON, OFF]
 
     steps:
 
@@ -56,19 +54,9 @@ jobs:
            tar -xvf rte-antares-deps-centos7-Release.tar.gz
            rm -rf rte-antares-deps-centos7-Release.tar.gz
 
-    - name: Download XPRESS if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
-      run: |
-        source /opt/rh/rh-git227/enable
-        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
-
     - name: Config OR-Tools URL
       run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.7/ortools_cxx_centos7_static_sirius_xprs.zip " >> $GITHUB_ENV
-            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
-          else
-            echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.7/ortools_cxx_centos7_static_sirius.zip " >> $GITHUB_ENV
+            echo "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
             echo "LABEL=" >> $GITHUB_ENV
           fi
 
@@ -97,7 +85,6 @@ jobs:
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLSDIR }}/install \
-           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Build
       run: |
@@ -122,7 +109,7 @@ jobs:
       run: |
            cd _build
            cpack3 -G TGZ
-    
+
     - name: Rename .tgz file
       run: |
            cd _build
