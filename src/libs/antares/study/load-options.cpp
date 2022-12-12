@@ -50,8 +50,7 @@ StudyLoadOptions::StudyLoadOptions() :
  forceParallel(false),
  maxNbYearsInParallel(0),
  usedByTheSolver(false),
- ortoolsUsed(false),
- ortoolsSolver("sirius")
+ ortoolsUsed(false)
 {
 }
 

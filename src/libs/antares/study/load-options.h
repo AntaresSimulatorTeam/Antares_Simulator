@@ -86,6 +86,8 @@ public:
 
     //! Force ortools use
     bool ortoolsUsed;
+    //! THe solver name, sirius is the default
+    std::string ortoolsSolver = "sirius";
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
@@ -108,7 +110,6 @@ public:
 
     YString studyFolder;
     YString simulationName;
-    std::string ortoolsSolver;
 }; // class StudyLoadOptions
 
 } // namespace Data
