@@ -31,7 +31,11 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *
 class OrtoolsUtils
 {
 public:
-    static const std::map<std::string, std::pair<std::string, std::string>> solverMap;
+    struct SolverNames
+    {
+        std::string LPSolverName, MIPSolverName;
+    };
+    static const std::map<std::string, struct SolverNames> solverMap;
 
 };
 

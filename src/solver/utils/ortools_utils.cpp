@@ -5,6 +5,7 @@
 #include <antares/study.h>
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hpp>
+#include <antares/emergency.h>
 #include <filesystem>
 
 using namespace operations_research;
@@ -345,7 +346,7 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
 }
 
 
-const std::map<std::string, std::pair<std::string, std::string>> OrtoolsUtils::solverMap =
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap =
 {
     {"xpress", {"xpress_lp", "xpress"}},
     {"sirius", {"sirius_lp", "sirius"}},
@@ -360,7 +361,7 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     for (const auto& solverName : OrtoolsUtils::solverMap)
     {
         MPSolver::OptimizationProblemType solverType;
-        MPSolver::ParseSolverType(solverName.second.first, &solverType);
+        MPSolver::ParseSolverType(solverName.second.LPSolverName, &solverType);
 
         if (MPSolver::SupportsProblemType(solverType))
             result.push_back(solverName.first);
@@ -372,15 +373,21 @@ std::list<std::string> getAvailableOrtoolsSolverName()
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName)
 {
     MPSolver *solver;
-    std::list<std::string> solverList = getAvailableOrtoolsSolverName();
+    try
+    {
+        if (probleme->isMIP())
+            solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).MIPSolverName);
+        else
+            solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).LPSolverName);
 
-    if (probleme->isMIP())
-        solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).second);
-    else
-        solver = MPSolver::CreateSolver((OrtoolsUtils::solverMap.at(solverName)).first);
-
-    if (!solver)
-        throw Antares::Data::AssertionError("Solver not found: " + solverName);
+        if (!solver)
+            throw Antares::Data::AssertionError("Solver not found: " + solverName);
+    }
+    catch (...)
+    {
+        logs.error() << "Solver creation failed";
+        AntaresSolverEmergencyShutdown();
+    }
 
     if (solverName == "xpress")
         probleme->solverSupportsWarmStart = true;
