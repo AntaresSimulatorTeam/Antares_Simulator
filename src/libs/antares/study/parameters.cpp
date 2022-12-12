@@ -353,7 +353,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsSolver = "sirius";
 
     resultFormat = legacyFilesDirectories;
 
@@ -1171,7 +1171,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1608,7 +1608,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
+        logs.info() << "  :: ortools solver " << ortoolsSolver
                     << " used for problem resolution";
     }
 }

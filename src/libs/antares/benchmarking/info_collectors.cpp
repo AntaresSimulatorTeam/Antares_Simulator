@@ -131,7 +131,7 @@ namespace Benchmarking
         std::string ortoolsSolver = "none";
         if (ortoolsUsed)
         {
-            ortoolsSolver = Enum::toString<OrtoolsSolver>(study_.parameters.ortoolsEnumUsed);
+            ortoolsSolver = study_.parameters.ortoolsSolver;
         }
         file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
     }

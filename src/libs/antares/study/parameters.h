@@ -40,7 +40,7 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
+
 
 namespace Antares
 {
@@ -542,7 +542,7 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;

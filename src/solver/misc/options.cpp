@@ -56,8 +56,7 @@ using namespace Antares::Data;
 
 static std::string availableOrToolsSolversString()
 {
-    const std::list<std::string> availableSolverList
-      = OrtoolsUtils().getAvailableOrtoolsSolverName();
+    const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
     std::string availableSolverListStr;
     for (auto it = availableSolverList.begin(); it != availableSolverList.end(); it++)
     {
@@ -264,19 +263,14 @@ void checkAndCorrectSettingsAndOptions(Settings& settings, Data::StudyLoadOption
 
 void checkOrtoolsSolver(Data::StudyLoadOptions& options)
 {
-    // ortools solver
+    std::string baseSolver = "sirius";
     if (options.ortoolsUsed)
     {
-        const std::list<std::string> availableSolverList
-          = OrtoolsUtils().getAvailableOrtoolsSolverName();
+        const std::list<std::string> availableSolverList = getAvailableOrtoolsSolverName();
         if (availableSolverList.empty())
         {
             throw Error::InvalidSolver(options.ortoolsSolver);
         }
-
-        // Default is first available solver
-        options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
-          availableSolverList.front());
 
         // Check if solver is available
         bool found
@@ -284,15 +278,11 @@ void checkOrtoolsSolver(Data::StudyLoadOptions& options)
                availableSolverList.begin(), availableSolverList.end(), options.ortoolsSolver)
              != availableSolverList.end());
 
-        if (found)
-        {
-            options.ortoolsEnumUsed = Antares::Data::Enum::fromString<Antares::Data::OrtoolsSolver>(
-              options.ortoolsSolver);
-        }
-        else
+        if (!found)
         {
             logs.warning() << "Invalid ortools-solver option. Got '" << options.ortoolsSolver
-                           << "'. reset to " << Enum::toString(options.ortoolsEnumUsed);
+                           << "'. reset to " << baseSolver;
+            options.ortoolsSolver = baseSolver;
         }
     }
 }
