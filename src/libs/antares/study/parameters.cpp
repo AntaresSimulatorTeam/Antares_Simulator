@@ -322,7 +322,6 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -335,7 +334,6 @@ void Parameters::reset()
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
-    include.reserve.dayAhead = true;
     include.reserve.strategic = true;
     include.reserve.spinning = true;
     include.reserve.primary = true;
@@ -587,8 +585,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.thermal.minStablePower);
     if (key == "include-tc-min-ud-time")
         return value.to<bool>(d.include.thermal.minUPTime);
-    if (key == "include-dayahead")
-        return value.to<bool>(d.include.reserve.dayAhead);
     if (key == "include-strategicreserve")
         return value.to<bool>(d.include.reserve.strategic);
     if (key == "include-spinningreserve")
@@ -682,19 +678,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -1016,6 +999,11 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
 
     if (key == "shedding-strategy") // Was never used
+        return true;
+
+    if (key == "include-dayahead") // ignored since 8.4
+        return true;
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
 
     // deprecated
@@ -1584,8 +1572,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
     if (!include.constraints)
         logs.info() << "  :: ignoring binding constraints";
-    if (!include.reserve.dayAhead)
-        logs.info() << "  :: ignoring day ahead reserves";
     if (!include.reserve.primary)
         logs.info() << "  :: ignoring primary reserves";
     if (!include.reserve.strategic)
@@ -1740,7 +1726,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-hurdlecosts", include.hurdleCosts);
         section->add("include-tc-minstablepower", include.thermal.minStablePower);
         section->add("include-tc-min-ud-time", include.thermal.minUPTime);
-        section->add("include-dayahead", include.reserve.dayAhead);
         section->add("include-strategicreserve", include.reserve.strategic);
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
@@ -1776,8 +1761,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters

@@ -482,12 +482,6 @@ public:
     //     (obvious if the parallel mode is not required : answer is yes).
     bool allSetsHaveSameSize;
 
-    struct
-    {
-        //! Day ahead reserve allocation mode
-        DayAheadReserveManagement daMode;
-    } reserveManagement;
-
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
