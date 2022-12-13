@@ -147,6 +147,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  PthetaInf(HOURS_PER_YEAR, 0),
  marketBidCostPerHour(HOURS_PER_YEAR, 0),
  marginalCostPerHour(HOURS_PER_YEAR, 0),
+ productionCostTs(),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -195,6 +196,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  PthetaInf(HOURS_PER_YEAR, 0),
  marketBidCostPerHour(HOURS_PER_YEAR, 0.0),
  marginalCostPerHour(HOURS_PER_YEAR, 0.0),
+ productionCostTs(),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -237,6 +239,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         else
             memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
     }
+    if (!productionCostTs.empty() && !cluster.productionCostTs.empty())
+        productionCostTs = cluster.productionCostTs;
 
     // mustrun
     mustrun = cluster.mustrun;
@@ -457,7 +461,6 @@ void Data::ThermalCluster::calculationOfSpinning()
     }
 }
 
-
 void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 {
     if (costgeneration == Data::setManually || !prepro || efficiency <= 0.0)
@@ -466,21 +469,48 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
         std::fill(marginalCostPerHour.begin(), marginalCostPerHour.end(), marginalCost);
         return;
     }
-    else //costgeneration == Data::useCostTimeseries
+    else // costgeneration == Data::useCostTimeseries
     {
+        std::array<double, 8760> productionCostTmp = {0.0};
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            marketBidCostPerHour[hour] = prepro->fuelcost[0][hour] * 360.0 / efficiency + co2 * prepro->co2cost[0][hour] + variableomcost;
+            marketBidCostPerHour[hour] = prepro->fuelcost[0][hour] * 360.0 / efficiency
+                                         + co2 * prepro->co2cost[0][hour] + variableomcost;
             marginalCostPerHour[hour] = marketBidCostPerHour[hour];
-            if(modulation.width > 0) //we should update production cost when modulation is ready 
+            if (modulation.width > 0) // we should update production cost when modulation is ready
             {
-                productionCost[hour] = marginalCostPerHour[hour] * modulation[Data::thermalModulationCost][hour];
-            }           
+                productionCost[hour]
+                  = marginalCostPerHour[hour] * modulation[Data::thermalModulationCost][hour];
+                productionCostTmp[hour] = productionCost[hour];
+            }
+        }
+        // multiple TS
+        uint fuelCostWidth = prepro->fuelcost.width;
+        uint co2CostWidth = prepro->co2cost.width;
+        uint tsCount = Math::Max(fuelCostWidth, co2CostWidth);
+        if (tsCount == 1)
+            return;
+        productionCostTs.push_back(productionCostTmp);
+        for (uint tsIndex = 2; tsIndex <= tsCount; ++tsIndex)
+        {
+            productionCostTmp = {0.0};
+            uint tsIndexFuel = Math::Min(fuelCostWidth, tsIndex);
+            uint tsIndexCo2 = Math::Min(co2CostWidth, tsIndex);
+            for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+            {
+                if (modulation.width > 0)
+                {
+                    productionCostTmp[hour]
+                      = (prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / efficiency
+                         + co2 * prepro->co2cost[tsIndexCo2 - 1][hour] + variableomcost)
+                        * modulation[Data::thermalModulationCost][hour];
+                }
+            }
+            productionCostTs.push_back(productionCostTmp);
         }
         return;
     }
 }
-
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
 {
@@ -513,6 +543,8 @@ void Data::ThermalCluster::reset()
     // solver
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
+    if (!productionCostTs.empty())
+        productionCostTs.clear();
 
     Cluster::reset();
 

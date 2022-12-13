@@ -364,6 +364,11 @@ public:
     double* productionCost;
 
     /*!
+    ** \brief Production Cost Matrix - Per Hour and per Time Series
+    */ 
+    std::vector<std::array<double, 8760>> productionCostTs;
+
+    /*!
     ** \brief Market Bid Cost Per Hour
     */ 
     std::vector<double> marketBidCostPerHour;
