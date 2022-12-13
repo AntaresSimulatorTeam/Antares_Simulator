@@ -94,24 +94,10 @@ jobs:
            cd _build
            cpack3 -G RPM
 
-    - name: Rename .rpm file
-      run: |
-           cd _build
-           RPM_NAME=$(ls *.rpm)
-           RPM_NAME_WITH_SUFFIX=${RPM_NAME/.rpm}
-           mv "${RPM_NAME}" "${RPM_NAME_WITH_SUFFIX}" || true
-
     - name: .tar.gz creation
       run: |
            cd _build
            cpack3 -G TGZ
-
-    - name: Rename .tgz file
-      run: |
-           cd _build
-           TGZ_NAME=$(ls *.tar.gz)
-           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz}
-           mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
 
     - name: Installer TGZ push
       uses: actions/upload-artifact@v3
