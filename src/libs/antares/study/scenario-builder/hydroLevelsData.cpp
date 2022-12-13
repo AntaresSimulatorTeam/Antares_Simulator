@@ -73,7 +73,7 @@ void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& 
             value_into_string << value;
             file << prefix << study.areas.byIndex[index]->id << ',' << y << " = "
                  << value_into_string.str() << '\n';
-            value_into_string.str(string()); // Clearing converter
+            value_into_string.str(std::string()); // Clearing converter
         }
     }
 }

@@ -43,8 +43,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
-    OrtoolsUtils utils;
-    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    for (const auto& solver : getAvailableOrtoolsSolverName())
     {
         std::cout << solver << std::endl;
     }

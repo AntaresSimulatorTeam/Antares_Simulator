@@ -1,6 +1,10 @@
 Antares Changelog
 =================
 
+v8.4.0-rc3 (11/2022)
+--------------------
+* Enable MPS write with OR-Tools+Sirius
+
 v8.4.0-rc2 (11/2022)
 --------------------
 Re-publish v8.4.0-rc1, assets not uploaded.
