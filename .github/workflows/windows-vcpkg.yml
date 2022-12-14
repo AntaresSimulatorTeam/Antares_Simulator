@@ -176,6 +176,8 @@ jobs:
            cd _build
            ls -la
            ls -la solver
+           ls -la solver/antares-solver.dir
+           ls -la solver/win32
            tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: NSIS Installer creation
