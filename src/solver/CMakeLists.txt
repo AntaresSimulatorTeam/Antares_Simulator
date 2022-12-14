@@ -45,32 +45,36 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
-add_executable(antares-solver
-	memory/mem.h
+add_library(solver-lib
+		memory/mem.h
 
-	misc/options.h
-	misc/options.cpp
-	misc/process-priority.cpp
-	misc/cholesky.h
-	misc/cholesky.hxx
-	misc/matrix-dp-make.h
-	misc/matrix-dp-make.hxx
+		misc/options.h
+		misc/options.cpp
+		misc/process-priority.cpp
+		misc/cholesky.h
+		misc/cholesky.hxx
+		misc/matrix-dp-make.h
+		misc/matrix-dp-make.hxx
 
-	misc/system-memory.h
-	misc/system-memory.cpp
+		misc/system-memory.h
+		misc/system-memory.cpp
 
-	mps/mps_define.h
-	mps/mps_extern_global.h
-	mps/mps_global.c
-	${SRCS}
-	main.cpp
+		mps/mps_define.h
+		mps/mps_extern_global.h
+		mps/mps_global.c
+		${SRCS}
 		application/application.h application/application.cpp
 
-    signal-handling/common.h
-    signal-handling/public.h
-    signal-handling/common.cpp
-    signal-handling/linux.cpp
-    signal-handling/windows.cpp
+		signal-handling/common.h
+		signal-handling/public.h
+		signal-handling/common.cpp
+		signal-handling/linux.cpp
+		signal-handling/windows.cpp
+		)
+
+
+add_executable(antares-solver
+	main.cpp
     )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
@@ -94,9 +98,14 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libmodel_antares
 	libantares-core)
 
+target_link_libraries(solver-lib
+		PUBLIC
+		${ANTARES_SOLVER_LIBS}
+		)
+
 target_link_libraries(antares-solver
 		PRIVATE
-			${ANTARES_SOLVER_LIBS}
+		solver-lib
 		)
 
 import_std_libs(antares-solver)
