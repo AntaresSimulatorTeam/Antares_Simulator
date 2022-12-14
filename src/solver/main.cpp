@@ -35,7 +35,7 @@
 #include <antares/study/study.h>
 #include <antares/logs.h>
 #include <antares/exception/LoadingError.hpp>
-#include "application.h"
+#include "application/application.h"
 #include "../ui/common/winmain.hxx"
 
 #include <time.h>

@@ -2,7 +2,7 @@
 #ifndef YUNI_OS_WINDOWS
 #include <csignal>
 #include "common.h"
-#include "../application.h"
+#include "application/application.h"
 
 namespace Antares::Solver
 {

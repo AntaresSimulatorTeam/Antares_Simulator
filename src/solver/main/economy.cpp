@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../application.h"
+#include "../application/application.h"
 #include "../simulation/solver.h"
 #include "../simulation/economy.h"
 #include <antares/benchmarking.h>

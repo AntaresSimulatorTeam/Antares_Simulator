@@ -1,14 +1,14 @@
 #pragma once
 
-#include "misc/options.h"
-#include <antares/study.h>
-#include <antares/study/load-options.h>
-#include <antares/benchmarking.h>
-#include "simulation/simulation.h"
+#include "../misc/options.h"
+#include "antares/study.h"
+#include "antares/study/load-options.h"
+#include "antares/benchmarking.h"
+#include "../simulation/simulation.h"
 
-#include <i_writer.h>
+#include "../writer/i_writer.h"
 
-#include <yuni/core/string.h>
+#include "yuni/core/string.h"
 
 namespace Antares
 {

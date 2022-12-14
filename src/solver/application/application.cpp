@@ -1,22 +1,22 @@
 #include "application.h"
 
-#include <antares/sys/policy.h>
-#include <antares/resources/resources.h>
-#include <antares/hostinfo.h>
-#include <antares/exception/LoadingError.hpp>
-#include <antares/emergency.h>
-#include <antares/benchmarking/timer.h>
-#include <antares/version.h>
-#include "../config.h"
+#include "antares/sys/policy.h"
+#include "antares/resources/resources.h"
+#include "antares/hostinfo.h"
+#include "antares/exception/LoadingError.hpp"
+#include "antares/emergency.h"
+#include "antares/benchmarking/timer.h"
+#include "antares/version.h"
+#include "../../config.h"
 
 #include "misc/system-memory.h"
 #include "utils/ortools_utils.h"
 
-#include <antares/exception/InitializationError.hpp>
+#include "antares/exception/InitializationError.hpp"
 
-#include <yuni/io/io.h>
-#include <yuni/datetime/timestamp.h>
-#include <yuni/core/process/rename.h>
+#include "yuni/io/io.h"
+#include "yuni/datetime/timestamp.h"
+#include "yuni/core/process/rename.h"
 
 #include <algorithm>
 

@@ -64,7 +64,7 @@ add_executable(antares-solver
 	mps/mps_global.c
 	${SRCS}
 	main.cpp
-	application.h application.cpp
+		application/application.h application/application.cpp
 
     signal-handling/common.h
     signal-handling/public.h
