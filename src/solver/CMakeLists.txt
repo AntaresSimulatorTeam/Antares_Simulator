@@ -61,7 +61,7 @@ add_executable(antares-solver
 
 	${SRCS}
 	main.cpp
-	application.h application.cpp
+		application/application.h application/application.cpp
 
     signal-handling/common.h
     signal-handling/public.h

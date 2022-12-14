@@ -18,7 +18,7 @@
 #include "misc/write-command-line.h"
 
 #include "utils/ortools_utils.h"
-#include "../config.h"
+
 #include <antares/infoCollection/StudyInfoCollector.h>
 
 #include <yuni/io/io.h>
