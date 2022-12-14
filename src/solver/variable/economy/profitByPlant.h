@@ -300,7 +300,8 @@ public:
 
         // Thermal cluster profit
         pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = hourlyClusterProduction
+          = hourlyClusterProduction 
+            * (1. - cluster->modulation[Data::thermalMinGenModulation][hourInTheYear])
             * (-areaMarginalCosts[hourInTheWeek]
                - cluster->marginalCost
                    * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
