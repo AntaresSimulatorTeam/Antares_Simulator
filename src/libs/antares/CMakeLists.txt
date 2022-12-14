@@ -447,6 +447,8 @@ set(SRC
 	study.h
 	study/estimate.memory-footprint.cpp
 	study/study.cpp
+	study/parallel-years.cpp
+	study/parallel-years.h
 	study/correlation-updater.hxx
 	study/study.importprepro.cpp
 	study/memory-usage.h

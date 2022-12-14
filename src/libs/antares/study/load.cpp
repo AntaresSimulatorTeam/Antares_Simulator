@@ -148,15 +148,8 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // -------------------------
     // Getting the number of logical cores to use before loading and creating the areas :
     // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-    // In case the study is run in the draft mode, only 1 core is allowed
-    if (parameters.mode == Data::stdmAdequacyDraft)
-        maxNbYearsInParallel = 1;
-
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
-        maxNbYearsInParallel = 1;
+    getNumberOfCores(options.forceParallel, options.enableParallel, options.maxNbYearsInParallel);
 
     // End logical core --------
 

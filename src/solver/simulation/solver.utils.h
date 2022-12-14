@@ -45,43 +45,6 @@ namespace Solver
 {
 namespace Simulation
 {
-struct setOfParallelYears
-{
-    // Un lot d'année à exécuter en parallèle.
-    // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
-
-public:
-    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
-    // play-list "trouée")
-    std::vector<unsigned int> yearsIndices;
-
-    // Une annee doit-elle être rejouée ?
-    std::map<uint, bool> yearFailed;
-
-    // Associe le numero d'une année jouée à l'indice de l'espace
-    std::map<unsigned int, unsigned int> performedYearToSpace;
-
-    // L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
-    std::map<unsigned int, unsigned int> spaceToPerformedYear;
-
-    // Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
-    std::map<unsigned int, bool> isFirstPerformedYearOfASet;
-
-    // Pour chaque année du lot, est-elle jouée ou non ?
-    std::map<unsigned int, bool> isYearPerformed;
-
-    // Nbre d'années en parallele vraiment jouées pour ce lot
-    unsigned int nbPerformedYears;
-
-    // Nbre d'années en parallele jouées ou non pour ce lot
-    unsigned int nbYears;
-
-    // Regenere-t-on des times series avant de jouer les annees du lot courant
-    bool regenerateTS;
-
-    // Annee a passer a la fonction "regenerateTimeSeries<false>(y)" (si regenerateTS is "true")
-    unsigned int yearForTSgeneration;
-};
 
 class costStatistics
 {
@@ -93,6 +56,11 @@ public:
      costMax(0.),
      nbPerformedYears(0)
     {
+    }
+
+    uint getNbPerformedYears() const
+    {
+        return nbPerformedYears;
     }
 
     void setNbPerformedYears(uint n)
@@ -211,11 +179,14 @@ private:
         buffer << to_scientific(criterionCost1.costStdDeviation) << "\n";
         buffer << to_scientific(criterionCost1.costMin) << "\n";
         buffer << to_scientific(criterionCost1.costMax) << "\n";
+        // buffer << to_scientific(criterionCost1.getNbPerformedYears()) << "\n";
+
 
         buffer << to_scientific(criterionCost2.costAverage) << "\n";
         buffer << to_scientific(criterionCost2.costStdDeviation) << "\n";
         buffer << to_scientific(criterionCost2.costMin) << "\n";
         buffer << to_scientific(criterionCost2.costMax) << "\n";
+        // buffer << to_scientific(criterionCost2.getNbPerformedYears()) << "\n";
 
         writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
     }

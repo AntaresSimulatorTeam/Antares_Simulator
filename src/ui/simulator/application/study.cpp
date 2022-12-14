@@ -319,7 +319,7 @@ protected:
 
         // Updating the number of logical cores to use when saving the study
         // so that the run window is up to date.
-        study->getNumberOfCores(false, 0);
+        study->getNumberOfCores(false, false, 0);
 
         if (pSaveAs || pShouldInvalidateStudy)
         {

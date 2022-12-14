@@ -39,6 +39,7 @@
 #include "apply-scenario.h"
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
+#include "../../libs/antares/study/parallel-years.h"
 
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
@@ -284,6 +285,7 @@ template<class Impl>
 void ISimulation<Impl>::run()
 {
     pNbMaxPerformedYearsInParallel = study.maxNbYearsInParallel;
+    pNbYearsReallyPerformed = study.pNbYearsReallyPerformed;
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
@@ -362,10 +364,10 @@ void ISimulation<Impl>::run()
             ImplementationType::initializeState(state[numSpace], numSpace);
 
         logs.info() << " Starting the simulation";
-        uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
         {
             Benchmarking::Timer timer;
-            loopThroughYears(0, finalYear, state);
+            uint finalYear = 1 + study.runtime->rangeLimits.year[Data::rangeEnd];
+            loopThroughYears(finalYear, state);
             timer.stop();
             pDurationCollector->addDuration("mc_years", timer.get_duration());
         }
@@ -1062,120 +1064,6 @@ void ISimulation<Impl>::regenerateTimeSeries(uint year)
     }
 }
 
-template<class Impl>
-uint ISimulation<Impl>::buildSetsOfParallelYears(
-  uint firstYear,
-  uint endYear,
-  std::vector<setOfParallelYears>& setsOfParallelYears)
-{
-    // Filter on the years
-    const auto& yearsFilter = study.parameters.yearsFilter;
-
-    // number max of years (to be executed or not) in a set of parallel years
-    uint maxNbYearsPerformed = 0;
-
-    setOfParallelYears* set = nullptr;
-    bool buildNewSet = true;
-    bool foundFirstPerformedYearOfCurrentSet = false;
-
-    // Gets information on each parallel years set
-    for (uint y = firstYear; y < endYear; ++y)
-    {
-        unsigned int indexSpace = 999999;
-        bool performCalculations = yearsFilter[y];
-
-        // Do we refresh just before this year ? If yes a new set of parallel years has to be
-        // created
-        bool refreshing = false;
-        refreshing = pData.haveToRefreshTSLoad && (y % pData.refreshIntervalLoad == 0);
-        refreshing
-          = refreshing || (pData.haveToRefreshTSSolar && (y % pData.refreshIntervalSolar == 0));
-        refreshing
-          = refreshing || (pData.haveToRefreshTSWind && (y % pData.refreshIntervalWind == 0));
-        refreshing
-          = refreshing || (pData.haveToRefreshTSHydro && (y % pData.refreshIntervalHydro == 0));
-
-        // Some thermal clusters may override the global parameter.
-        // Therefore, we may want to refresh TS even if pData.haveToRefreshTSThermal == false
-        bool haveToRefreshTSThermal
-          = pData.haveToRefreshTSThermal || study.runtime->thermalTSRefresh;
-        refreshing
-          = refreshing || (haveToRefreshTSThermal && (y % pData.refreshIntervalThermal == 0));
-
-        // We build a new set of parallel years if one of these conditions is fulfilled :
-        //	- We have to refresh (or regenerate) some or all time series before running the
-        //    current year
-        //	- This is the first year (to be executed or not) after the previous set is full with
-        //    years to be executed. That is : in the previous set filled, the max number of
-        //    years to be actually run is reached.
-        buildNewSet = buildNewSet || refreshing;
-
-        if (buildNewSet)
-        {
-            setOfParallelYears setToCreate;
-            setsOfParallelYears.push_back(setToCreate);
-            set = &(setsOfParallelYears.back());
-
-            // Initializations
-            set->nbPerformedYears = 0;
-            set->nbYears = 0;
-            set->regenerateTS = false;
-            set->yearForTSgeneration = 999999;
-
-            // In case we have to regenerate times series before run the current set of parallel
-            // years
-            if (refreshing)
-            {
-                set->regenerateTS = true;
-                set->yearForTSgeneration = y;
-            }
-        }
-
-        set->yearsIndices.push_back(y);
-        set->nbYears++;
-        set->yearFailed[y] = true;
-        set->isFirstPerformedYearOfASet[y] = false;
-
-        if (performCalculations)
-        {
-            // Another year performed
-            ++pNbYearsReallyPerformed;
-
-            // Number of actually performed years in the current set (up to now).
-            set->nbPerformedYears++;
-            // Index of the MC year's space (useful if this year is actually run)
-            indexSpace = set->nbPerformedYears - 1;
-
-            set->isYearPerformed[y] = true;
-            set->performedYearToSpace[y] = indexSpace;
-            set->spaceToPerformedYear[indexSpace] = y;
-
-            if (!foundFirstPerformedYearOfCurrentSet)
-            {
-                set->isFirstPerformedYearOfASet[y] = true;
-                foundFirstPerformedYearOfCurrentSet = true;
-            }
-        }
-        else
-        {
-            set->isYearPerformed[y] = false;
-        }
-
-        // Do we build a new set at next iteration (for years to be executed or not) ?
-        if (indexSpace == pNbMaxPerformedYearsInParallel - 1 || y == endYear - 1)
-        {
-            buildNewSet = true;
-            foundFirstPerformedYearOfCurrentSet = false;
-            if (set->nbPerformedYears > maxNbYearsPerformed)
-                maxNbYearsPerformed = set->nbPerformedYears;
-        }
-        else
-            buildNewSet = false;
-
-    } // End of loop over years
-
-    return maxNbYearsPerformed;
-}
 
 template<class Impl>
 void ISimulation<Impl>::allocateMemoryForRandomNumbers(randomNumbers& randomForParallelYears)
@@ -1492,21 +1380,22 @@ static void logPerformedYearsInAset(setOfParallelYears& set)
 }
 
 template<class Impl>
-void ISimulation<Impl>::loopThroughYears(uint firstYear,
-                                         uint endYear,
+void ISimulation<Impl>::loopThroughYears(uint endYear,
                                          std::vector<Variable::State>& state)
 {
     assert(endYear <= study.parameters.nbYears);
 
     // List of parallel years sets
-    std::vector<setOfParallelYears> setsOfParallelYears;
+
+    std::vector<setOfParallelYears> setsOfParallelYears = study.setsOfParallelYears;
 
     // Gets information on each set of parallel years and returns the max number of years performed
     // in a set The variable "maxNbYearsPerformedInAset" is the maximum numbers of years to be
     // actually executed in a set. A set contains some years to be actually executed (at most
     // "pNbMaxPerformedYearsInParallel" years) and some others to skip.
-    uint maxNbYearsPerformedInAset
-      = buildSetsOfParallelYears(firstYear, endYear, setsOfParallelYears);
+
+    uint maxNbYearsPerformedInAset = pNbMaxPerformedYearsInParallel;
+
     // Related to annual costs statistics (printed in output into separate files)
     pAnnualCostsStatistics.setNbPerformedYears(pNbYearsReallyPerformed);
 

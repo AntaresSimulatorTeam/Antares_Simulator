@@ -158,7 +158,7 @@ private:
     ** \param firstYear The first real MC year
     ** \param endYear   The last MC year
     */
-    void loopThroughYears(uint firstYear, uint endYear, std::vector<Variable::State>& state);
+    void loopThroughYears(uint endYear, std::vector<Variable::State>& state);
 
 private:
     //! Some temporary to avoid performing useless complex checks

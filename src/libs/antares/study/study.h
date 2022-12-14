@@ -51,6 +51,7 @@
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
+#include "parallel-years.h"
 
 #include <memory>
 
@@ -442,21 +443,12 @@ public:
     //@{
 
     /*!
-    ** \brief Computes a raw number of cores table.
-    **
-    ** The table associetes a raw number of cores to each level ("min", "low", "med", "high",
-    *"max").
-    **
-    */
-    std::map<std::string, uint> getRawNumberCoresPerLevel();
-
-    /*!
-    ** \brief Computes number of cores
+    ** \brief Gets the number of cores calculated in SetsOfParallelYearCalculator class
     **
     ** From the "Number of Cores" level (in GUI --> Advanced parameters), computes
     ** the real numbers of logical cores to be involved in the MC years parallelisation.
     */
-    void getNumberOfCores(const bool forceParallel, const uint nbYearsParallelForced);
+    void getNumberOfCores(const bool forceParallel, const bool enableParallel, const uint nbYearsParallelForced);
 
     /*!
     ** \brief In case hydro hot start is enabled, checking all conditions are met.
@@ -618,6 +610,11 @@ public:
     // Allows storing the minimum number of years in a set of parallel years.
     // Useful to populate the run window's simulation cores field.
     uint minNbYearsInParallel_save;
+
+    // Used in solver
+    std::vector<setOfParallelYears> setsOfParallelYears;
+
+    uint pNbYearsReallyPerformed;
 
     //! Parameters
     Parameters parameters;

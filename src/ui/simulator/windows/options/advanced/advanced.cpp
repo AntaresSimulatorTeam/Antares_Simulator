@@ -916,7 +916,7 @@ void AdvancedParameters::onSelectNumberOfCoresLevel(Data::NumberOfCoresMode ncMo
     {
         study->parameters.nbCores.ncMode = ncMode;
         // Force refresh for study->nbYearsParallelRaw
-        study->getNumberOfCores(false, 1 /* ignored */);
+        study->getNumberOfCores(false, false, 1 /* ignored */);
         MarkTheStudyAsModified();
         refresh();
     }
