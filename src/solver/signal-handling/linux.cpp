@@ -22,6 +22,7 @@
 #include <csignal>
 
 #include "common.h"
+#include "application/application.h"
 #include "public.h"
 
 namespace Antares::Solver
