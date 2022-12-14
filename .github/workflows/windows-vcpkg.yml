@@ -171,8 +171,11 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Solver archive creation
+      shell: bash
       run: |
            cd _build
+           ls -la
+           ls -la solver
            tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: NSIS Installer creation
