@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2023 RTE
+** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,31 +25,32 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "application/application.h"
-#include <yuni/core/preprocessor/capabilities.h>
-
-#ifdef YUNI_OS_WINDOWS
-#include <yuni/core/system/windows.hdr.h>
-#include <yuni/core/system/cpu.h>
-#include <antares/logs/logs.h>
-
-using namespace Yuni;
-using namespace Antares;
-#endif
+#include "../application/application.h"
+#include "../simulation/solver.h"
+#include "../simulation/adequacy-draft.h"
+#include <antares/benchmarking.h>
+#include <antares/logs.h>
 
 namespace Antares
 {
 namespace Solver
 {
-void Application::resetProcessPriority() const
+void Application::runSimulationInAdequacyDraftMode()
 {
-#ifdef YUNI_OS_WINDOWS
-    if (System::CPU::Count() <= 2)
+    // Type of the simulation
+    typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
+    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    simulation.checkWriter();
+    simulation.run();
+
+    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
     {
-        if (not SetPriorityClass(GetCurrentProcess(), BELOW_NORMAL_PRIORITY_CLASS))
-            logs.info() << "  :: impossible to reset the process priority";
+        Benchmarking::Timer timer;
+        simulation.writeResults(/*synthesis:*/ true);
+        timer.stop();
+        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
     }
-#endif
 }
+
 } // namespace Solver
 } // namespace Antares
