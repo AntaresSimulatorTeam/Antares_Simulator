@@ -108,8 +108,6 @@ executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
 
-
-
 #TODO : not working inside macro
 install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)
 
