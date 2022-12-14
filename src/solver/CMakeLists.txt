@@ -44,7 +44,7 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
-add_executable(antares-solver
+add_library(solver-lib
 	misc/options.h
 	misc/options.cpp
 	misc/process-priority.cpp
@@ -60,14 +60,19 @@ add_executable(antares-solver
     misc/write-command-line.cpp
 
 	${SRCS}
-	main.cpp
-		application/application.h application/application.cpp
+
+    application/application.h application/application.cpp
 
     signal-handling/common.h
     signal-handling/public.h
     signal-handling/common.cpp
     signal-handling/linux.cpp
     signal-handling/windows.cpp
+    )
+
+
+add_executable(antares-solver
+	main.cpp
     )
 
 set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
@@ -95,9 +100,14 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	model_antares
 	antares-core)
 
+target_link_libraries(solver-lib
+		PUBLIC
+		${ANTARES_SOLVER_LIBS}
+		)
+
 target_link_libraries(antares-solver
 		PRIVATE
-			${ANTARES_SOLVER_LIBS}
+		solver-lib
 		)
 
 target_include_directories(antares-solver
