@@ -322,7 +322,6 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -682,19 +681,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -1016,6 +1002,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
 
     if (key == "shedding-strategy") // Was never used
+        return true;
+
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
 
     // deprecated
@@ -1776,8 +1765,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters
