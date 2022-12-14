@@ -113,10 +113,26 @@ executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
 
+set(public_headers
+		application/application.h
+		)
+set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
+include(GNUInstallDirs)
+install(TARGETS solver-lib
+		EXPORT "solver-libTargets"
+		# these get default values from GNUInstallDirs, no need to set them
+		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
+		#LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+		#ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+		# except for public headers, as we want them to be inside a library folder
+		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/solver-lib # include/SomeLibrary
+		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+		)
 
 
 #TODO : not working inside macro
 install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)
+INSTALL(TARGETS solver-lib)
 
 INSTALL(EXPORT antares-solver
 	FILE antares-solverConfig.cmake
