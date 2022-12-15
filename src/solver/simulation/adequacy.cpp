@@ -91,6 +91,7 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
+    state.numSpace = numSpace;
 }
 
 bool Adequacy::simulationBegin()
