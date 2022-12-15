@@ -178,7 +178,7 @@ jobs:
            ls -la solver
            ls -la solver/Release
            ls -la solver/antares-solver.dir/Release
-           tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           tar czf solver.tar.gz solver/Release/antares-*-solver.exe solver/Release/sirius_solver.dll
 
     - name: NSIS Installer creation
       shell: bash
