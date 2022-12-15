@@ -1,6 +1,30 @@
 Antares Changelog
 =================
 
+### Bugfix
+* Fix BC MARG COST values in parallel by @flomnes in #1015
+* Use min gen modulation to compute variable "profit by plant" by @guilpier-code in #1016
+* Round renewable power generation by @flomnes in #985
+* Make logs more expressive when checking link values by @flomnes in #1005
+* Add condition to avoid null pointer by @payetvin in #989
+
+### For developers
+* Case insensitive option for build type by @payetvin in #986
+* [DEV] Refactored ortools_utils by @payetvin in #978
+* [CI] Integrate ortools v9.2-rte2.0 by @payetvin in #1007
+* [FIX] Cleaned day ahead reserve management by @payetvin in #1010
+* [CentOS 7] Remove deps from docker image by @flomnes in #994
+
+### Documentation
+* [DOC] OR-Tools build by @flomnes in #880
+* Document how to run JSON tests by @flomnes in #902
+* Document option --list-solvers by @flomnes in #770
+
+## New Contributors
+* @kathvargasr made their first contribution in #967
+
+**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.0-rc3...v8.4.0
+
 v8.4.0-rc3 (11/2022)
 --------------------
 * Enable MPS write with OR-Tools+Sirius
