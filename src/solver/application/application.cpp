@@ -11,7 +11,7 @@
 #include <antares/version.h>
 #include <antares/writer/writer_factory.h>
 
-#include "signal-handling/public.h"
+#include "antares/signal-handling/public.h"
 
 #include "antares/solver/misc/system-memory.h"
 #include "antares/solver/misc/write-command-line.h"
