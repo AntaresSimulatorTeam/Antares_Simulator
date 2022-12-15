@@ -4,9 +4,9 @@ set(SRC_PROJ
         LoadingError.cpp
         UnfeasibleProblemError.cpp
 
-        antares/exception/AssertionError.hpp
-        antares/exception/UnfeasibleProblemError.hpp
-        antares/exception/LoadingError.hpp
+        include/antares/exception/AssertionError.hpp
+        include/antares/exception/UnfeasibleProblemError.hpp
+        include/antares/exception/LoadingError.hpp
 )
 source_group("exception" FILES ${SRC_PROJ})
 
@@ -19,7 +19,9 @@ target_link_libraries(${PROJ}
 )
 
 target_include_directories(${PROJ}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
-        ${CMAKE_SOURCE_DIR}/libs #fwd
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs> #fwd
+        $<INSTALL_INTERFACE:libs> #fwd
 )

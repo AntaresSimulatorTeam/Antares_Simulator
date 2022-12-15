@@ -21,6 +21,7 @@
 #pragma once
 
 #include <memory>
+#include "antares/writer/i_writer.h"
 
 namespace Antares::Solver
 {

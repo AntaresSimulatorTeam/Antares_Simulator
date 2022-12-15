@@ -1,10 +1,10 @@
 set(PROJ logs)
 set(HEADERS
-        antares/${PROJ}/cleaner.h
-        antares/${PROJ}/logs.h
-        antares/${PROJ}/logs.hxx
-        antares/${PROJ}/hostinfo.h
-        antares/${PROJ}/hostname.hxx
+        include/antares/${PROJ}/cleaner.h
+        include/antares/${PROJ}/logs.h
+        include/antares/${PROJ}/logs.hxx
+        include/antares/${PROJ}/hostinfo.h
+        include/antares/${PROJ}/hostname.hxx
 )
 set(SRC_LOGS
         ${HEADERS}
@@ -28,6 +28,7 @@ target_link_libraries(${PROJ}
         )
 
 target_include_directories(${PROJ}
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )

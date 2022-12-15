@@ -42,7 +42,7 @@
 #include "load-options.h"
 #include <antares/date/date.h>
 #include "layerdata.h"
-#include <antares/correlation/antares/correlation/correlation.h> //TODO Collision
+#include <antares/correlation/include/antares/correlation/correlation.h> //TODO Collision
 #include "area/store-timeseries-numbers.h"
 #include "antares/study/binding_constraint/BindingConstraintsRepository.h"
 #include "antares/study/binding_constraint/BindingConstraintGroupRepository.h"

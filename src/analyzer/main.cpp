@@ -28,7 +28,7 @@
 #include <antares/logs/hostinfo.h>
 #include <antares/inifile/inifile.h>
 #include <antares/sys/policy.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 
 using namespace Yuni;
 using namespace Antares;

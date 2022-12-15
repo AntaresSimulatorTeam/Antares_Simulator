@@ -1,6 +1,6 @@
 set(PROJ date)
 set(HEADERS
-        antares/${PROJ}/date.h
+        include/antares/${PROJ}/date.h
 )
 set(SRC_DATE
         ${HEADERS}
@@ -19,5 +19,6 @@ target_link_libraries(${PROJ}
 
 target_include_directories(${PROJ}
         PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
 )

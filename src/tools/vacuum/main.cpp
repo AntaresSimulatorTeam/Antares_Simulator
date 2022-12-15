@@ -31,7 +31,7 @@
 #include <antares/logs/logs.h>
 #include <antares/args/args_to_utf8.h>
 #include <antares/version.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include "modified-inode.h"
 #include "antares-study.h"
 #include "io.h"
