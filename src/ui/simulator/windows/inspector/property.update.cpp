@@ -727,8 +727,13 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->efficiency = d;
+                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
+            } // update
         }
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
         return true;
     }
     if (name == "cluster.costgeneration")
@@ -913,8 +918,13 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         else
         {
             for (; i != end; ++i)
+            {
                 (*i)->variableomcost = d;
+                (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour(); // update
+            }
         }
+        OnStudyThermalClusterCommonSettingsChanged();
+        pFrame.Refresh();
         return true;
     }
     if (name == "cluster.forcedvolatility")
