@@ -42,7 +42,7 @@
 #include <yuni/core/system/cpu.h>
 #include <yuni/core/system/memory.h>
 #include <antares/sys/hostname.hxx>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include "../../../config.h"
 #include <antares/sys/policy.h>
 

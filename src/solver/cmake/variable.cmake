@@ -177,7 +177,9 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE_ADEQUACY}
 		${SRC_VARIABLE_ECONOMY}  )
 
-target_include_directories(libantares-solver-variable PUBLIC .)
+target_include_directories(libantares-solver-variable PUBLIC
+		$<INSTALL_INTERFACE:include/libantares-solver-variable>
+		)
 target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
 
@@ -195,5 +197,13 @@ add_library(libantares-solver-variable-info
 		variable/surveyresults/data.h
 		variable/surveyresults/surveyresults.cpp
 )
+
+target_include_directories(libantares-solver-variable-info PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs>
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/libs/antares>
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/ext/yuni/src/>
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver/writer>
+		$<INSTALL_INTERFACE:include/libantares-solver-variable-info>
+		)
 target_link_libraries(libantares-solver-variable-info PRIVATE libantares-core result_writer)
 

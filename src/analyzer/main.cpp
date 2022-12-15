@@ -36,7 +36,7 @@
 #include <antares/hostinfo.h>
 #include <antares/inifile.h>
 #include <antares/sys/policy.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include "../config.h"
 
 using namespace Yuni;

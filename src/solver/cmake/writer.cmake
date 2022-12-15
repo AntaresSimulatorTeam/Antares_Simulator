@@ -19,7 +19,8 @@ add_library(result_writer
   writer/zip_writer.h)
 
 target_include_directories(result_writer PUBLIC
-                          ${CMAKE_SOURCE_DIR}/solver/writer)
+        $<INSTALL_INTERFACE:solver/writer>
+        )
 
 target_link_libraries(result_writer
                       PRIVATE

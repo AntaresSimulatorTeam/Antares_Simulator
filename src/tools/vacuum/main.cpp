@@ -37,7 +37,7 @@
 #include <antares/logs.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/version.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include "modified-inode.h"
 #include "antares-study.h"
 #include "io.h"

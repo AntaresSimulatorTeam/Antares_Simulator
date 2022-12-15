@@ -37,7 +37,7 @@
 #include <antares/study/finder.h>
 #include "../../ui/common/winmain.hxx"
 #include <antares/version.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include <yuni/core/preprocessor/capabilities.h>
 
 #ifdef YUNI_OS_WINDOWS

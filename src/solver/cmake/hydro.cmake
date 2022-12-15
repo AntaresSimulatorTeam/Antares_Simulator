@@ -64,6 +64,10 @@ add_library(libantares-solver-hydro
 	${SRC_EXT_SOLVER_H2O2_DAILY}
 	${SRC_MANAGEMENT} )
 
+target_include_directories(libantares-solver-hydro PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver>
+		)
+
 target_link_libraries(libantares-solver-hydro
 	PRIVATE
 	libmodel_antares

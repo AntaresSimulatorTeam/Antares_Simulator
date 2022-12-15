@@ -31,7 +31,7 @@
 #include "../../ui/common/winmain.hxx"
 #include <antares/utils.h>
 #include <antares/version.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 
 using namespace Yuni;
 using namespace Antares;

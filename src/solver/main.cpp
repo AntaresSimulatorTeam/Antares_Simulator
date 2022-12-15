@@ -46,7 +46,7 @@
 #include <antares/emergency.h>
 #include <antares/memory/memory.h>
 #include <antares/sys/policy.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include "misc/system-memory.h"
 
 #include "signal-handling/public.h"

@@ -39,7 +39,7 @@
 #include <yuni/io/file.h>
 #include <antares/memory/memory.h>
 #include <antares/hostinfo.h>
-#include <antares/locale.h>
+#include <antares/antares_locale.h>
 #include <antares/emergency.h>
 #include "../../config.h"
 

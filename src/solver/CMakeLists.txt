@@ -118,7 +118,7 @@ set(public_headers
 		)
 set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
 include(GNUInstallDirs)
-install(TARGETS solver-lib
+install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS} result_writer infeasible_problem_analysis libantares-solver-variable-info
 		EXPORT "solver-libTargets"
 		# these get default values from GNUInstallDirs, no need to set them
 		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
@@ -132,10 +132,43 @@ install(TARGETS solver-lib
 
 #TODO : not working inside macro
 install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)
-INSTALL(TARGETS solver-lib)
 
 INSTALL(EXPORT antares-solver
 	FILE antares-solverConfig.cmake
 	DESTINATION cmake
 )
 
+
+#########
+
+# generate and install export file
+install(EXPORT "solver-libTargets"
+		FILE "solver-libTargets.cmake"
+		NAMESPACE ${namespace}::
+		DESTINATION cmake
+		)
+
+include(CMakePackageConfigHelpers)
+
+# generate the version file for the config file
+write_basic_package_version_file(
+		"${CMAKE_CURRENT_BINARY_DIR}/solver-libConfigVersion.cmake"
+		VERSION "${version}"
+		COMPATIBILITY AnyNewerVersion
+)
+# create config file
+configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
+		"${CMAKE_CURRENT_BINARY_DIR}/solver-libConfig.cmake"
+		INSTALL_DESTINATION cmake
+		)
+# install config files
+install(FILES
+		"${CMAKE_CURRENT_BINARY_DIR}/solver-libConfig.cmake"
+		"${CMAKE_CURRENT_BINARY_DIR}/solver-libConfigVersion.cmake"
+		DESTINATION cmake
+		)
+# generate the export targets for the build tree
+export(EXPORT "solver-libTargets"
+		FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/solver-libTargets.cmake"
+		NAMESPACE ${namespace}::
+		)

@@ -365,7 +365,7 @@ set(SRC
     xpansion.h
 	# Misc
 
-	locale.h
+		antares_locale.h
 	locale.cpp
 
 	emergency.h emergency.cpp
@@ -551,10 +551,10 @@ add_library(libantares-core
 #TODO : needed for include
 target_include_directories(libantares-core
 		PUBLIC
-			${CMAKE_SOURCE_DIR}/ext/yuni/src
-			${CMAKE_SOURCE_DIR}/libs
-			${CMAKE_SOURCE_DIR}/libs/antares/logs
-            ${CMAKE_SOURCE_DIR}/solver/writer
+		$<INSTALL_INTERFACE:ext/yuni/src>
+		$<INSTALL_INTERFACE:libs>
+		$<INSTALL_INTERFACE:libs/antares/logs>
+		$<INSTALL_INTERFACE:solver/writer>
 		)
 
 target_link_libraries(libantares-core
