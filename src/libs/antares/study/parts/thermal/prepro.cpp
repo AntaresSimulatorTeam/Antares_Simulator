@@ -302,9 +302,9 @@ void PreproThermal::estimateMemoryUsage(StudyMemoryUsage& u) const
     {
         data.estimateMemoryUsage(u, true, thermalPreproMax, DAYS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);
-        fuelcost.estimateMemoryUsage(u, true, 1, HOURS_PER_YEAR);
+        fuelcost.estimateMemoryUsage(u, true, fuelcost.width, HOURS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);
-        co2cost.estimateMemoryUsage(u, true, 1, HOURS_PER_YEAR);
+        co2cost.estimateMemoryUsage(u, true, co2cost.width, HOURS_PER_YEAR);
         u.requiredMemoryForInput += sizeof(PreproThermal);
     }
 }

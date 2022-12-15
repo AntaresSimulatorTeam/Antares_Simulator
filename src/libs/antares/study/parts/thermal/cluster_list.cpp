@@ -35,12 +35,13 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
     each([&](const ThermalCluster& cluster) {
+        uint prepoCnt = Math::Max(cluster.prepro->co2cost.width, cluster.prepro->fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // productionCost
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // marketBidCostPerHour
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // marginalCostPerHour
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marketBidCostPerHour
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marginalCostPerHour
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
         cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
 
@@ -337,7 +338,8 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     }
                     else
                     {
-                        std::vector<double> marginalCostPerHour = cluster->marginalCostPerHour;
+                        std::array<double, HOURS_PER_YEAR> marginalCostPerHour
+                          = cluster->marginalCostPerHourTs[0];
                         for (uint h = 0; h != cluster->modulation.height; ++h)
                             prodCost[h] = marginalCostPerHour[h] * modulation[h];
                     }
