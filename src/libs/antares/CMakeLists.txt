@@ -29,7 +29,7 @@ set(SRC
     xpansion.h
 	# Misc
 
-	locale.h
+    antares_locale.h
 	locale.cpp
 
 	fatal-error.h
@@ -70,7 +70,7 @@ add_library(antares-core
 #TODO : needed for include
 target_include_directories(antares-core
 		PRIVATE
-			${CMAKE_SOURCE_DIR}/libs
+        $<INSTALL_INTERFACE:/libs>
 		)
 
 target_link_libraries(antares-core

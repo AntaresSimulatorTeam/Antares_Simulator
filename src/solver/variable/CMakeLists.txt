@@ -158,10 +158,12 @@ add_library(antares-solver-variable
 		${SRC_VARIABLE_ECONOMY}  )
 
 target_include_directories(antares-solver-variable
-		PRIVATE
-		${CMAKE_SOURCE_DIR}/libs
+        PRIVATE
+        $<INSTALL_INTERFACE:libs>
 		PUBLIC
-		.)
+		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+		$<INSTALL_INTERFACE:include>
+)
 target_link_libraries(antares-solver-variable PRIVATE antares-core
 	Antares::study
 )
@@ -180,8 +182,8 @@ add_library(antares-solver-variable-info
 		surveyresults/surveyresults.cpp
 )
 target_include_directories(antares-solver-variable-info
-		PRIVATE
-		${CMAKE_SOURCE_DIR}/libs
+        PRIVATE
+        $<INSTALL_INTERFACE:libs>
 )
 target_link_libraries(antares-solver-variable-info PRIVATE antares-core
 	Antares::study

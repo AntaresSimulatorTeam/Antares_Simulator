@@ -33,6 +33,7 @@ target_link_libraries(utils
         )
 
 target_include_directories(utils
-    PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+            PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>/include
 )

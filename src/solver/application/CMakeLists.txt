@@ -23,14 +23,17 @@ target_link_libraries(application
         Antares::logs
         Antares::sys
         Antares::solverUtils
+        Antares::signal-handling
 )
 
 target_include_directories(application
-        PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+                PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include/plap>
 )
 
-set_target_properties(application PROPERTIES PUBLIC_HEADER "${HEADERS}")
+set_target_properties(application PROPERTIES PUBLIC_HEADER
+        $<INSTALL_INTERFACE:include/antares/application/application.h>)
 include(GNUInstallDirs)
 install(TARGETS application
         EXPORT "applicationTargets"
@@ -40,5 +43,5 @@ install(TARGETS application
         #ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
         # except for public headers, as we want them to be inside a library folder
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/antares # include/SomeLibrary
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/ # include
 )

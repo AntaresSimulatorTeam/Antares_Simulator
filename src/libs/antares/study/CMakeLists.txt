@@ -308,7 +308,8 @@ target_link_libraries(study
 )
 
 target_include_directories(study
-     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/../.. #Dirty trick to allow inclusion via <antares/study/X>
+             PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>/../.. #Dirty trick to allow inclusion via <antares/study/X>
         # Make more than just study visible but it's the lesser evil for now
 )
