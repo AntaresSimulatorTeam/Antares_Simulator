@@ -1,7 +1,26 @@
 Antares Changelog
 =================
 
+v8.4.0 (12/2022)
+--------------------
+
+### Features
+* Add option & command-line argument to write results into a single zip archive #794
+* Add option to set link capacity to null/infinity for physical links only #792
+* Speed up simulations by extracting simplex basis in XPRESS/OR-Tools #957
+* Move Kirchhoff constraint generator to an executable #909
+* Do not export BC MARG PRICE variable by default by #928
+* Enable MPS write with OR-Tools+Sirius
+
+### GUI
+* Make sure that RC/beta are displayed in version numbers #739
+
 ### Bugfix
+* Remove error message printed on -h/--help in antares-solver #895
+* Use average for BC MARG PRICE (daily & weekly) #940
+* Fix crash when exporting MPS with OR-Tools #923
+* Remove obsolete option `include-split-exported-mps` #956
+* Fix crash when many binding constraints are present in a study #924
 * Fix BC MARG COST values in parallel by @flomnes in #1015
 * Use min gen modulation to compute variable "profit by plant" by @guilpier-code in #1016
 * Round renewable power generation by @flomnes in #985
@@ -14,6 +33,13 @@ Antares Changelog
 * [CI] Integrate ortools v9.2-rte2.0 by @payetvin in #1007
 * [FIX] Cleaned day ahead reserve management by @payetvin in #1010
 * [CentOS 7] Remove deps from docker image by @flomnes in #994
+* Cleaning, renaming (#896, #897, #898, #935, #937, #944, #945, #950, #954, #959 , #966)
+* Refactor average results #946
+* CI: upgrade deprecated Github actions #938
+* CI: activate automatic gcov report on SonarCloud #967
+* Use GIT_SHALLOW for OR-Tools's FetchContent #904
+* Remove antares-solver swap variant & librairies, reduce build duration #906
+
 
 ### Documentation
 * [DOC] OR-Tools build by @flomnes in #880
@@ -23,46 +49,10 @@ Antares Changelog
 ## New Contributors
 * @kathvargasr made their first contribution in #967
 
-**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.0-rc3...v8.4.0
+**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
-v8.4.0-rc3 (11/2022)
---------------------
-* Enable MPS write with OR-Tools+Sirius
-
-v8.4.0-rc2 (11/2022)
---------------------
-Re-publish v8.4.0-rc1, assets not uploaded.
-
-v8.4.0-rc1 (11/2022)
---------------------
-### Features
-* Add option & command-line argument to write results into a single zip archive #794
-* Add option to set link capacity to null/infinity for physical links only #792
-* Speed up simulations by extracting simplex basis in XPRESS/OR-Tools #957
-* Move Kirchhoff constraint generator to an executable #909
-* Do not export BC MARG PRICE variable by default by #928
-
-### Bug fix
-* Remove error message printed on -h/--help in antares-solver #895
-* Use average for BC MARG PRICE (daily & weekly) #940
-* Fix crash when exporting MPS with OR-Tools #923
-* Remove obsolete option `include-split-exported-mps` #956
-* Fix crash when many binding constraints are present in a study #924
-
-### GUI
-* Make sure that RC/beta are displayed in version numbers #739
-
-### For developers
-* Cleaning, renaming (#896, #897, #898, #935, #937, #944, #945, #950, #954, #959 , #966)
-* Refactor average results #946
-* CI: upgrade deprecated Github actions #938
-* CI: activate automatic gcov report on SonarCloud #967
-* Use GIT_SHALLOW for OR-Tools's FetchContent #904
-* Remove antares-solver swap variant & librairies, reduce build duration #906
 
 ### Documentation
-* Document how to run JSON tests #902
-* OR-Tools build #880
 
 v8.3.2 (09/2022)
 --------------------
