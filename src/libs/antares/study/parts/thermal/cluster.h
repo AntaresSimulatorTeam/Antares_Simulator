@@ -365,17 +365,16 @@ public:
 
     /*!
     ** \brief Production Cost Matrix - Per Hour and per Time Series
-    */ 
-    std::vector<std::array<double, 8760>> productionCostTs;
-
+    */
+    std::vector<std::array<double, HOURS_PER_YEAR>> productionCostTs;
     /*!
     ** \brief Market Bid Cost Per Hour
-    */ 
-    std::vector<double> marketBidCostPerHour;
+    */
+    std::vector<std::array<double, HOURS_PER_YEAR>> marketBidCostPerHourTs;
     /*!
     ** \brief Marginal Cost Per Hour
-    */     
-    std::vector<double> marginalCostPerHour;
+    */
+    std::vector<std::array<double, HOURS_PER_YEAR>> marginalCostPerHourTs;
 
     /*!
     ** \brief The number of units used the last hour in the simulation
