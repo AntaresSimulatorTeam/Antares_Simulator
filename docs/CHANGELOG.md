@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+v8.4.1 (12/2022)
+--------------------
+### Bugfix
+* Fix formula for profit calculation #1022
+
 v8.4.0 (12/2022)
 --------------------
 
