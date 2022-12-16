@@ -42,6 +42,13 @@ jobs:
         ortools-xpress: [ON, OFF]
 
     steps:
+    - name: Download & extract precompiled antares-deps
+      run: |
+        cd /
+        wget https://github.com/AntaresSimulatorTeam/antares-deps/releases/download/v2.0.2/rte-antares-deps-centos7-Release.tar.gz
+        tar xvf rte-antares-deps-centos7-Release.tar.gz
+        rm rte-antares-deps-centos7-Release.tar.gz
+
     - uses: nelonoel/branch-name@v1.0.1
 
     - name: Checkout
