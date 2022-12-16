@@ -297,13 +297,10 @@ public:
         double hourlyClusterProduction = state.thermalClusterProduction;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
-        const double maxCapacity
-          = cluster->nominalCapacityWithSpinning
-            * cluster->modulation[Data::thermalMinGenModulation][hourInTheYear];
 
         // Thermal cluster profit
         pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = (hourlyClusterProduction - maxCapacity)
+          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
             * (-areaMarginalCosts[hourInTheWeek]
                - cluster->marginalCost
                    * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
