@@ -53,32 +53,6 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-static std::string generateTempPath(const std::string& filename)
-{
-    namespace fs = std::filesystem;
-    std::ostringstream tmpPath;
-    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
-    return tmpPath.str();
-}
-
-static void removeTemporaryFile(const std::string& tmpPath)
-{
-    namespace fs = std::filesystem;
-    bool ret = false;
-    try
-    {
-        ret = fs::remove(tmpPath);
-    }
-    catch (fs::filesystem_error& e)
-    {
-        Antares::logs.error() << e.what();
-    }
-    if (!ret)
-    {
-        Antares::logs.warning() << "Could not remove temporary file " << tmpPath;
-    }
-}
-
 void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
 {
     dest->NbVar = src->NombreDeVariables;
