@@ -1,5 +1,6 @@
 #include <antares/study.h>
 #include <antares/emergency.h>
+#include <filesystem>
 
 #include "../simulation/simulation.h"
 
@@ -51,269 +52,67 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-static void printHeader(Clob& buffer, int NombreDeVariables, int NombreDeContraintes)
+static std::string generateTempPath(const std::string& filename)
 {
-    buffer.appendFormat("* Number of variables:   %d\n", NombreDeVariables);
-    buffer.appendFormat("* Number of constraints: %d\n", NombreDeContraintes);
-    buffer.appendFormat("NAME          Pb Solve\n");
+    namespace fs = std::filesystem;
+    std::ostringstream tmpPath;
+    tmpPath << fs::temp_directory_path().string() << Yuni::IO::SeparatorAsString << filename;
+    return tmpPath.str();
 }
 
-static void printColumnsObjective(Clob& buffer,
-                                  int NombreDeVariables,
-                                  const int* NumeroDeContrainte,
-                                  const double* CoefficientsDeLaMatriceDesContraintes,
-                                  const int* Cdeb,
-                                  const int* Csui,
-                                  const double* CoutLineaire)
+static void removeTemporaryFile(const std::string& tmpPath)
 {
-    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
-    int il;
-
-    buffer.appendFormat("COLUMNS\n");
-    for (int Var = 0; Var < NombreDeVariables; Var++)
+    namespace fs = std::filesystem;
+    bool ret = false;
+    try
     {
-        if (CoutLineaire && CoutLineaire[Var] != 0.0)
-        {
-            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.10lf", CoutLineaire[Var]);
-            buffer.appendFormat("    C%07d  OBJECTIF  %s\n", Var, printBuffer);
-        }
-
-        il = Cdeb[Var];
-        while (il >= 0)
-        {
-            SNPRINTF(printBuffer,
-                     OPT_APPEL_SOLVEUR_BUFFER_SIZE,
-                     "%-.10lf",
-                     CoefficientsDeLaMatriceDesContraintes[il]);
-            buffer.appendFormat("    C%07d  R%07d  %s\n", Var, NumeroDeContrainte[il], printBuffer);
-            il = Csui[il];
-        }
+        ret = fs::remove(tmpPath);
+    }
+    catch (fs::filesystem_error& e)
+    {
+        Antares::logs.error() << e.what();
+    }
+    if (!ret)
+    {
+        Antares::logs.warning() << "Could not remove temporary file " << tmpPath;
     }
 }
 
-static void printBounds(Clob& buffer,
-                        int NombreDeVariables,
-                        const int* TypeDeBorneDeLaVariable,
-                        const double* Xmin,
-                        const double* Xmax)
+void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
 {
-    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
+    dest->NbVar = src->NombreDeVariables;
+    dest->NbCnt = src->NombreDeContraintes;
 
-    buffer.appendFormat("BOUNDS\n");
+    dest->A = src->CoefficientsDeLaMatriceDesContraintes;
+    dest->Nuvar = src->IndicesColonnes;
+    dest->NbTerm = src->NombreDeTermesDesLignes;
+    dest->B = src->SecondMembre;
+    dest->SensDeLaContrainte = src->Sens;
+    /* dest->VariablesDualesDesContraintes = src->VariablesDualesDesContraintes; */
 
-    for (int Var = 0; Var < NombreDeVariables; Var++)
-    {
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_FIXE)
-        {
-            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-            buffer.appendFormat(" FX BNDVALUE  C%07d  %s\n", Var, printBuffer);
-            continue;
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                buffer.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, printBuffer);
-            }
-
-            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-            buffer.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, printBuffer);
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_INFERIEUREMENT)
-        {
-            if (Xmin[Var] != 0.0)
-            {
-                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmin[Var]);
-                buffer.appendFormat(" LO BNDVALUE  C%07d  %s\n", Var, printBuffer);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_BORNEE_SUPERIEUREMENT)
-        {
-            buffer.appendFormat(" MI BNDVALUE  C%07d\n", Var);
-            if (Xmax[Var] != 0.0)
-            {
-                SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", Xmax[Var]);
-                buffer.appendFormat(" UP BNDVALUE  C%07d  %s\n", Var, printBuffer);
-            }
-        }
-
-        if (TypeDeBorneDeLaVariable[Var] == VARIABLE_NON_BORNEE)
-        {
-            buffer.appendFormat(" FR BNDVALUE  C%07d\n", Var);
-        }
-    }
-}
-
-static void printRHS(Clob& buffer, int NombreDeContraintes, const double* SecondMembre)
-{
-    char printBuffer[OPT_APPEL_SOLVEUR_BUFFER_SIZE];
-
-    buffer.appendFormat("RHS\n");
-    for (int Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if (SecondMembre[Cnt] != 0.0)
-        {
-            SNPRINTF(printBuffer, OPT_APPEL_SOLVEUR_BUFFER_SIZE, "%-.9lf", SecondMembre[Cnt]);
-            buffer.appendFormat("    RHSVAL    R%07d  %s\n", Cnt, printBuffer);
-        }
-    }
+    dest->TypeDeVariable = src->TypeDeVariable;
+    /* dest->TypeDeBorneDeLaVariable = src->TypeDeBorneDeLaVariable; //FIXME */
+    dest->U = src->X;
+    dest->L = src->CoutLineaire;
+    dest->Umax = src->Xmax;
+    dest->Umin = src->Xmin;
+    dest->Mdeb = src->IndicesDebutDeLigne;
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace
     , Solver::IResultWriter::Ptr writer)
 {
-    Clob buffer;
-    int Cnt;
-    int Var;
-    int il;
-    int ilk;
-    int ilMax;
-    int* Cder;
-    int* Cdeb;
-    int* NumeroDeContrainte;
-    int* Csui;
-    double CoutOpt;
-    PROBLEME_SIMPLEXE* Probleme;
+    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
 
-    int NombreDeVariables;
-    double* CoutLineaire;
-    int NombreDeContraintes;
-    char* Sens;
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    int* IndicesColonnes;
-    int ExistenceDUneSolution;
-    double* X;
+    const auto tmpPath = generateTempPath(filename);
 
-    Probleme = (PROBLEME_SIMPLEXE*)Prob;
+    auto mps = std::make_shared<PROBLEME_MPS>();
+    copyProbSimplexeToProbMps(mps.get(), (PROBLEME_SIMPLEXE*)Prob);
+    SRSwritempsprob(mps.get(), tmpPath.c_str());
 
-    ExistenceDUneSolution = Probleme->ExistenceDUneSolution;
-    if (ExistenceDUneSolution == OUI_SPX)
-        ExistenceDUneSolution = OUI_ANTARES;
+    writer->addEntryFromFile(filename, tmpPath);
 
-    NombreDeVariables = Probleme->NombreDeVariables;
-    X = Probleme->X;
-    CoutLineaire = Probleme->CoutLineaire;
-    NombreDeContraintes = Probleme->NombreDeContraintes;
-    Sens = Probleme->Sens;
-    IndicesDebutDeLigne = Probleme->IndicesDebutDeLigne;
-    NombreDeTermesDesLignes = Probleme->NombreDeTermesDesLignes;
-    IndicesColonnes = Probleme->IndicesColonnes;
-
-    if (ExistenceDUneSolution == OUI_ANTARES)
-    {
-        CoutOpt = 0;
-        for (Var = 0; Var < NombreDeVariables; Var++)
-            CoutOpt += CoutLineaire[Var] * X[Var];
-    }
-
-    for (ilMax = -1, Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if ((IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1) > ilMax)
-        {
-            ilMax = IndicesDebutDeLigne[Cnt] + NombreDeTermesDesLignes[Cnt] - 1;
-        }
-    }
-
-    ilMax += NombreDeContraintes;
-
-    Cder = (int*)malloc(NombreDeVariables * sizeof(int));
-    Cdeb = (int*)malloc(NombreDeVariables * sizeof(int));
-    NumeroDeContrainte = (int*)malloc(ilMax * sizeof(int));
-    Csui = (int*)malloc(ilMax * sizeof(int));
-
-    if (Cder == nullptr || Cdeb == nullptr || NumeroDeContrainte == nullptr || Csui == nullptr)
-    {
-        logs.fatal() << "Not enough memory";
-        AntaresSolverEmergencyShutdown();
-    }
-
-    for (Var = 0; Var < NombreDeVariables; Var++)
-        Cdeb[Var] = -1;
-
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        il = IndicesDebutDeLigne[Cnt];
-        ilMax = il + NombreDeTermesDesLignes[Cnt];
-        while (il < ilMax)
-        {
-            Var = IndicesColonnes[il];
-            if (Cdeb[Var] < 0)
-            {
-                Cdeb[Var] = il;
-                NumeroDeContrainte[il] = Cnt;
-                Csui[il] = -1;
-                Cder[Var] = il;
-            }
-            else
-            {
-                ilk = Cder[Var];
-                Csui[ilk] = il;
-                NumeroDeContrainte[il] = Cnt;
-                Csui[il] = -1;
-                Cder[Var] = il;
-            }
-
-            il++;
-        }
-    }
-
-    free(Cder);
-
-    printHeader(buffer, NombreDeVariables, NombreDeContraintes);
-    buffer.appendFormat("ROWS\n");
-    buffer.appendFormat(" N  OBJECTIF\n");
-
-    for (Cnt = 0; Cnt < NombreDeContraintes; Cnt++)
-    {
-        if (Sens[Cnt] == '=')
-        {
-            buffer.appendFormat(" E  R%07d\n", Cnt);
-        }
-        else if (Sens[Cnt] == '<')
-        {
-            buffer.appendFormat(" L  R%07d\n", Cnt);
-        }
-        else if (Sens[Cnt] == '>')
-        {
-            buffer.appendFormat(" G  R%07d\n", Cnt);
-        }
-        else
-        {
-            logs.error() << "OPT_EcrireJeuDeDonneesMPS : Wrong direction for constraint no. "
-                         << Sens[Cnt];
-            AntaresSolverEmergencyShutdown();
-        }
-    }
-
-    printColumnsObjective(buffer,
-                          Probleme->NombreDeVariables,
-                          NumeroDeContrainte,
-                          Probleme->CoefficientsDeLaMatriceDesContraintes,
-                          Cdeb,
-                          Csui,
-                          Probleme->CoutLineaire);
-
-    printRHS(buffer, Probleme->NombreDeContraintes, Probleme->SecondMembre);
-
-    printBounds(buffer,
-                Probleme->NombreDeVariables,
-                Probleme->TypeDeVariable,
-                Probleme->Xmin,
-                Probleme->Xmax);
-
-    buffer.appendFormat("ENDATA\n");
-
-    auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
-    writer->addEntryFromBuffer(filename, buffer);
-
-    free(Cdeb);
-    free(NumeroDeContrainte);
-    free(Csui);
+    removeTemporaryFile(tmpPath);
 }
 
 // --------------------
