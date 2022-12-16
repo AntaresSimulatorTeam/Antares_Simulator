@@ -4,6 +4,7 @@
 
 #include "../simulation/simulation.h"
 
+#include "ortools_utils.h"
 #include "mps_utils.h"
 
 using namespace Antares;
@@ -103,7 +104,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint n
     , Solver::IResultWriter::Ptr writer)
 {
     const auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
-
     const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();

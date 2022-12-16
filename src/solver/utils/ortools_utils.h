@@ -27,6 +27,9 @@ std::list<std::string> getAvailableOrtoolsSolverName();
  */
 MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName);
 
+static std::string generateTempPath(const std::string& filename);
+static void removeTemporaryFile(const std::string& tmpPath);
+
 
 class OrtoolsUtils
 {
