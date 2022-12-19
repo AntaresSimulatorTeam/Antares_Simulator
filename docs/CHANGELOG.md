@@ -56,8 +56,10 @@ v8.4.0 (12/2022)
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
-
-### Documentation
+v8.3.3 (12/2022)
+--------------------
+### Bugfix
+- Round renewable production (#985)
 
 v8.3.2 (09/2022)
 --------------------
