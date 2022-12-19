@@ -304,7 +304,7 @@ void ApplWnd::internalInitialize()
         statusbar->SetMinHeight(14);
         statusbar->Connect(statusbar->GetId(),
                            wxEVT_CONTEXT_MENU,
-                           wxContextMenuEventHandler(ApplWnd::evtOnContextMenuStatusBar),
+                           nullptr,
                            nullptr,
                            this);
 

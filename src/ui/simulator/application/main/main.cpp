@@ -186,14 +186,6 @@ EVT_MENU(mnInternalLogMessage, ApplWnd::onLogMessage)
 EVT_MENU(mnIDLaunchAnalyzer, ApplWnd::evtLaunchAnalyzer)
 EVT_MENU(mnIDLaunchConstraintsBuilder, ApplWnd::evtLaunchConstraintsBuilder)
 
-// Context menu : Operator for selected cells (grid)
-EVT_MENU(mnIDPopupOpNone, ApplWnd::evtOnContextMenuChangeOperator)
-EVT_MENU(mnIDPopupOpAverage, ApplWnd::evtOnContextMenuChangeOperator)
-EVT_MENU(mnIDPopupOpCellCount, ApplWnd::evtOnContextMenuChangeOperator)
-EVT_MENU(mnIDPopupOpMinimum, ApplWnd::evtOnContextMenuChangeOperator)
-EVT_MENU(mnIDPopupOpMaximum, ApplWnd::evtOnContextMenuChangeOperator)
-EVT_MENU(mnIDPopupOpSum, ApplWnd::evtOnContextMenuChangeOperator)
-
 EVT_MENU_OPEN(ApplWnd::evtOnMenuOpen)
 EVT_MENU_CLOSE(ApplWnd::evtOnMenuClose)
 
@@ -367,34 +359,6 @@ void ApplWnd::selectSystem()
         pNotebook->select(wxT("sys"), true);
 }
 
-void ApplWnd::evtOnContextMenuChangeOperator(wxCommandEvent& evt)
-{
-    switch (evt.GetId())
-    {
-    case mnIDPopupOpNone:
-        gridOperatorSelectedCells(nullptr);
-        break;
-    case mnIDPopupOpAverage:
-        gridOperatorSelectedCells(new Component::Datagrid::Selection::Average());
-        break;
-    case mnIDPopupOpCellCount:
-        gridOperatorSelectedCells(new Component::Datagrid::Selection::CellCount());
-        break;
-    case mnIDPopupOpMinimum:
-        gridOperatorSelectedCells(new Component::Datagrid::Selection::Minimum());
-        break;
-    case mnIDPopupOpMaximum:
-        gridOperatorSelectedCells(new Component::Datagrid::Selection::Maximum());
-        break;
-    case mnIDPopupOpSum:
-        gridOperatorSelectedCells(new Component::Datagrid::Selection::Sum());
-        break;
-    default:
-        break;
-    }
-    evt.Skip();
-}
-
 static inline void EnableItem(wxMenuBar* menu, int id, bool opened)
 {
     auto* item = menu->FindItem(id);
@@ -541,7 +505,6 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
 
     // Reset the status bar
     resetDefaultStatusBarText();
-    gridOperatorSelectedCellsUpdateResult(pGridSelectionAttachedGrid);
 
     // reload the user notes and districts
     if (not aboutToQuit and study)
@@ -825,24 +788,6 @@ void ApplWnd::onRenewableGenerationModellingChanged(bool init)
     refreshHomePageOnRenewableModellingChanged(aggregated, init);
     refreshScenarioBuilderPagOnRenewableModellingChanged(aggregated);
     refreshInputMenuOnRenewableModellingChanged(aggregated);
-}
-
-void ApplWnd::gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v)
-{
-    delete pGridSelectionOperator;
-    pGridSelectionOperator = v;
-    gridOperatorSelectedCellsUpdateResult(pGridSelectionAttachedGrid);
-}
-
-Component::Datagrid::Selection::IOperator* ApplWnd::gridOperatorSelectedCells() const
-{
-    return pGridSelectionOperator;
-}
-
-void ApplWnd::disableGridOperatorIfGrid(wxGrid* grid)
-{
-    if (pGridSelectionAttachedGrid == grid)
-        gridOperatorSelectedCellsUpdateResult(nullptr);
 }
 
 void ApplWnd::title()

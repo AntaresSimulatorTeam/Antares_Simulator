@@ -133,20 +133,6 @@ public:
     */
     void gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v);
 
-    /*!
-    ** \brief Update the GUI to display the result of the grid operator
-    **
-    ** This method should be called each time the cells selection changes.
-    ** \param grid The `wxGrid` that has currently the focus (may be NULL)
-    */
-    void gridOperatorSelectedCellsUpdateResult(wxGrid* grid);
-
-    /*!
-    ** \brief Disable the grid operator
-    */
-    void disableGridOperatorIfGrid(wxGrid* grid);
-    //@}
-
     //! \name Title of the Window
     //@{
     void title();
@@ -369,8 +355,6 @@ private:
 
     //! Create a complete menu for the window
     wxMenuBar* createMenu();
-    //! Create a popup menu for all available operators on selected cells (grid)
-    wxMenu* createPopupMenuOperatorsOnGrid();
 
     //! Create menu: File
     wxMenu* createMenuFiles();
@@ -442,9 +426,6 @@ private:
 
     //! \name Event: Context menu
     //@{
-    //! Show the context menu associated to the status bar
-    void evtOnContextMenuStatusBar(wxContextMenuEvent& evt);
-    void evtOnContextMenuChangeOperator(wxCommandEvent& evt);
     void evtOnContextMenuMap(int x, int y);
     //@}
 
