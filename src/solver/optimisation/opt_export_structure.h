@@ -78,7 +78,6 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace);
 void OPT_ExportAreaName(const Antares::Data::Study& study,
-                        PROBLEME_HEBDO* ProblemeHebdo,
                         uint numSpace);
 void OPT_ExportVariables(const Antares::Data::Study& study,
                          const std::vector<std::string>& varname,

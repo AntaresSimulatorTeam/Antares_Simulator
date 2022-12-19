@@ -83,21 +83,16 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
 }
 
 void OPT_ExportAreaName(const Antares::Data::Study& study,
-                        PROBLEME_HEBDO* ProblemeHebdo,
                         uint numSpace)
 {
-    // Area name are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
+    auto filename = getFilenameWithExtension("area", "txt", numSpace);
+    Yuni::Clob Flot;
+    for (uint i = 0; i < study.areas.size(); ++i)
     {
-        auto filename = getFilenameWithExtension("area", "txt", numSpace);
-        Yuni::Clob Flot;
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
-        }
-        auto writer = study.resultWriter;
-        writer->addEntryFromBuffer(filename, Flot);
+        Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
     }
+    auto writer = study.resultWriter;
+    writer->addEntryFromBuffer(filename, Flot);
 }
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
