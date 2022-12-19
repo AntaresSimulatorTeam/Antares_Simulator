@@ -371,9 +371,9 @@ bool mpsWriterFactory::doWeExportMPS()
     {
     case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return true;
-    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+    case Data::mpsExportStatus::EXPORT_FIRST_OPTIM:
         return current_optim_number_ == PREMIERE_OPTIMISATION;
-    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+    case Data::mpsExportStatus::EXPORT_SECOND_OPTIM:
         return current_optim_number_ == DEUXIEME_OPTIMISATION;
     default:
         return false;

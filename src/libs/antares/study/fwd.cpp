@@ -347,9 +347,9 @@ std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
     {
     case mpsExportStatus::NO_EXPORT:
         return "none";
-    case mpsExportStatus::EXPORT_FIRST_OPIM:
+    case mpsExportStatus::EXPORT_FIRST_OPTIM:
         return "optim-1";
-    case mpsExportStatus::EXPORT_SECOND_OPIM:
+    case mpsExportStatus::EXPORT_SECOND_OPTIM:
         return "optim-2";
     case mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return "both-optims";
@@ -373,9 +373,9 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     if (v == "none" || v == "false")   // Case "false" : for compatibily with older study versions
         return mpsExportStatus::NO_EXPORT;
     if (v == "optim-1")
-        return mpsExportStatus::EXPORT_FIRST_OPIM;
+        return mpsExportStatus::EXPORT_FIRST_OPTIM;
     if (v == "optim-2")
-        return mpsExportStatus::EXPORT_SECOND_OPIM;
+        return mpsExportStatus::EXPORT_SECOND_OPTIM;
 
     return mpsExportStatus::UNKNOWN_EXPORT;
 }
