@@ -26,9 +26,6 @@
 */
 
 #include <sstream>
-
-#include <antares/study.h>
-
 #include "../simulation/sim_structure_probleme_economique.h"
 
 #include "opt_export_structure.h"
@@ -81,15 +78,15 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
     writer->addEntryFromBuffer(filename, Flot);
 }
 
-void OPT_ExportAreaName(const Antares::Data::Study& study,
+void OPT_ExportAreaName(const Antares::Data::AreaList& areas,
                         Antares::Solver::IResultWriter::Ptr writer,
                         uint numSpace)
 {
     auto filename = getFilenameWithExtension("area", "txt", numSpace);
     Yuni::Clob Flot;
-    for (uint i = 0; i < study.areas.size(); ++i)
+    for (uint i = 0; i < areas.size(); ++i)
     {
-        Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
+        Flot.appendFormat("%s\n", areas[i]->name.c_str());
     }
     writer->addEntryFromBuffer(filename, Flot);
 }
