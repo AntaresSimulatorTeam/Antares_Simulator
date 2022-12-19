@@ -65,25 +65,21 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 } // namespace Data
 } // namespace Antares
 
-void OPT_ExportInterco(const Antares::Data::Study& study,
+void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace)
 {
-    // Interco are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
+    Yuni::Clob Flot;
+    for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
     {
-        Yuni::Clob Flot;
-        for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
-        {
-            Flot.appendFormat("%d %d %d\n",
-                              i,
-                              ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                              ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
-        }
-        auto filename = getFilenameWithExtension("interco", "txt", numSpace);
-        auto writer = study.resultWriter;
-        writer->addEntryFromBuffer(filename, Flot);
+        Flot.appendFormat("%d %d %d\n",
+                            i,
+                            ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
+                            ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
+    auto filename = getFilenameWithExtension("interco", "txt", numSpace);
+    // auto writer = study.resultWriter;
+    writer->addEntryFromBuffer(filename, Flot);
 }
 
 void OPT_ExportAreaName(const Antares::Data::Study& study,

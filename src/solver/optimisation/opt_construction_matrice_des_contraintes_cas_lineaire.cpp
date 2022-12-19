@@ -92,10 +92,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     Study::Ptr study = Study::Current::Get();
     bool exportStructure = ProblemeHebdo->ExportStructure;
+    bool firstWeekOfSimulation = ProblemeHebdo->firstWeekOfSimulation;
 
-    if (exportStructure)
+    if (exportStructure && firstWeekOfSimulation)
     {
-        OPT_ExportInterco(*study, ProblemeHebdo, numSpace);
+        OPT_ExportInterco(study->resultWriter, ProblemeHebdo, numSpace);
         OPT_ExportAreaName(*study, ProblemeHebdo, numSpace);
     }
 

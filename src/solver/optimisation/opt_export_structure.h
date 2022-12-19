@@ -33,6 +33,7 @@
 #include <yuni/yuni.h>
 
 #include <antares/Enum.hpp>
+#include "../writer/i_writer.h"
 
 namespace Antares
 {
@@ -73,7 +74,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int firstVal,
                              int ts);
 
-void OPT_ExportInterco(const Antares::Data::Study& study,
+void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* ProblemeHebdo,
                        uint numSpace);
 void OPT_ExportAreaName(const Antares::Data::Study& study,
