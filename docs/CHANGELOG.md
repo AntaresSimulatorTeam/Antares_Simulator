@@ -142,6 +142,11 @@ v8.3.0 (07/2022)
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
 
+v8.2.3 (11/2022)
+--------------------
+### Bug fixes
+- Round renewable production (#985)
+
 v8.2.2 (04/2022)
 --------------------
 ### Bug fixes
