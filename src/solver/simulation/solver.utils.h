@@ -179,14 +179,11 @@ private:
         buffer << to_scientific(criterionCost1.costStdDeviation) << "\n";
         buffer << to_scientific(criterionCost1.costMin) << "\n";
         buffer << to_scientific(criterionCost1.costMax) << "\n";
-        // buffer << to_scientific(criterionCost1.getNbPerformedYears()) << "\n";
-
 
         buffer << to_scientific(criterionCost2.costAverage) << "\n";
         buffer << to_scientific(criterionCost2.costStdDeviation) << "\n";
         buffer << to_scientific(criterionCost2.costMin) << "\n";
         buffer << to_scientific(criterionCost2.costMax) << "\n";
-        // buffer << to_scientific(criterionCost2.getNbPerformedYears()) << "\n";
 
         writer->addEntryFromBuffer(criterionsCostsFilename, buffer);
     }

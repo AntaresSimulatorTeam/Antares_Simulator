@@ -27,44 +27,42 @@
 #pragma once
 
 #include <vector>
-#include "../../../solver/simulation/solver.utils.h" // KVR se debarraser de ce include
 
 namespace Antares
 {
 
 using namespace Data;
-// using namespace Solver::Simulation;
 
 struct setOfParallelYears
 {
-    // Un lot d'ann�e � ex�cuter en parall�le.
-    // En fonction d'une �ventuelle play-list, certaines seront jou�es et d'autres non.
+    // Un lot d'année à exécuter en parallèle.
+    // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
 
 public:
     std::vector<unsigned int> setsSizes;
-    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jou�es en cas de
-    // play-list "trou�e")
+    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
+    // play-list "trouée")
     std::vector<unsigned int> yearsIndices;
 
-    // Une annee doit-elle �tre rejou�e ?
+    // Une annee doit-elle être rejouée ?
     std::map<uint, bool> yearFailed;
 
-    // Associe le numero d'une ann�e jou�e � l'indice de l'espace
+    // Associe le numero d'une année jouée à l'indice de l'espace
     std::map<unsigned int, unsigned int> performedYearToSpace;
 
-    // L'inverse : pour une ann�e jou�e, associe l'indice de l'espace au numero de l'ann�e
+    // L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
     std::map<unsigned int, unsigned int> spaceToPerformedYear;
 
-    // Pour chaque ann�e, est-elle la premi�re � devoir �tre jou�e dans son lot d'ann�es ?
+    // Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
     std::map<unsigned int, bool> isFirstPerformedYearOfASet;
 
-    // Pour chaque ann�e du lot, est-elle jou�e ou non ?
+    // Pour chaque année du lot, est-elle jouée ou non ?
     std::map<unsigned int, bool> isYearPerformed;
 
-    // Nbre d'ann�es en parallele vraiment jou�es pour ce lot
+    // Nbre d'années en parallele vraiment jouées pour ce lot
     unsigned int nbPerformedYears;
 
-    // Nbre d'ann�es en parallele jou�es ou non pour ce lot
+    // Nbre d'années en parallele jouées ou non pour ce lot
     unsigned int nbYears;
 
     // Regenere-t-on des times series avant de jouer les annees du lot courant
@@ -74,6 +72,19 @@ public:
     unsigned int yearForTSgeneration;
 };
 
+/*!
+** \brief Temporary Area List Holder
+**
+** \warning TODO: REMOVE THIS CLASS ONCE THE TSGEN HAS BEEN DECOUPLED FROM SOLVER
+**
+** To compute the sets of parallel years while using the Time Series Generator
+** we need to know in advance if the area's thermal clusters will be refresehd during generation
+** Although, since the max number of parallel years is needed to create the areas, this info
+** is not available yet (and tht's why, originally, this calculation was done twice)
+**
+** This temporary holder will load the area list and will check for each one if
+** their clusters will require refreshing during generation
+*/
 class TempAreaListHolder
 {
 public:
@@ -91,8 +102,6 @@ private:
 class SetsOfParallelYearCalculator
 {
 public:
-
-    friend class SetsOfParallelYearCalculatorWrapper; 
     
     SetsOfParallelYearCalculator(
         bool forceParallel_,

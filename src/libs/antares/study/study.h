@@ -612,6 +612,8 @@ public:
     uint minNbYearsInParallel_save;
 
     // Used in solver
+    // -----------------
+    // Stores the sets of parallel years to be used by the solver
     std::vector<setOfParallelYears> setsOfParallelYears;
 
     uint pNbYearsReallyPerformed;

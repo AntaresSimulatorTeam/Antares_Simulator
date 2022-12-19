@@ -27,7 +27,7 @@
 
 #include <vector>
 #include <climits>
-#include <assert.h>
+#include <cassert>
 
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <yuni/yuni.h>
@@ -39,7 +39,16 @@
 #include "parameters.h"
 #include "parallel-years.h"
 
-namespace Antares{
+#define SEP Yuni::IO::Separator
+
+namespace Antares
+{
+
+/*!
+** \brief Checks if clusters have the "gen-ts" param
+**
+** \warning TODO: REMOVE THIS METHOD ONCE THE TSGEN HAS BEEN DECOUPLED FROM SOLVER
+*/
 
 bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
 {
@@ -52,6 +61,7 @@ bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
             Yuni::Clob thermalPlant = folder << SEP << "thermal" << SEP << "clusters" << SEP << areaName << SEP << "list.ini";
 
             IniFile ini;
+            bool ret = false;
             if (ini.open(thermalPlant))
             {
                 if(ini.firstSection)
@@ -60,12 +70,12 @@ bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
                     {
                         for (IniFile::Property* property = section->firstProperty; property; property = property->next)
                         {
-                            return property->key == "gen-ts";
+                            ret = ret || (property->key == "gen-ts");
                         }
                     }
 
                 }
-                return false;
+                return ret;
             }
             logs.error() << "Thermal Cluster Ini file cannot be opened: " << thermalPlant.c_str();
             return false;
@@ -74,6 +84,12 @@ bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
     );
 
 }
+
+/*!
+** \brief Loads Area List to later check Thermal Cluster's refresh
+**
+** \warning TODO: REMOVE THIS METHOD ONCE THE TSGEN HAS BEEN DECOUPLED FROM SOLVER
+*/
 
 void TempAreaListHolder::loadAreaList()
 {
@@ -105,11 +121,13 @@ void TempAreaListHolder::loadAreaList()
 
 void SetsOfParallelYearCalculator::computeRawNbParallelYear()
 {
+    // In case solver option '--force-parallel n' is used, this computation is not needed
+    // and n will remain the forcedNbOfParallelYears
     if (forceParallel)
         return;
 
     std::map<NumberOfCoresMode, int> numberOfMCYearThreads;
-    uint nbLogicalCores = Yuni::System::CPU::Count();
+    const uint nbLogicalCores = Yuni::System::CPU::Count();
 
     numberOfMCYearThreads[ncMin] = 1;
     switch (nbLogicalCores)
@@ -222,20 +240,15 @@ void SetsOfParallelYearCalculator::limitNbOfParallelYearsbyMinRefreshSpan()
     if ((p.timeSeriesToGenerate & timeSeriesLoad) && (p.timeSeriesToRefresh & timeSeriesLoad))
         TSlimit = p.refreshIntervalLoad;
     if ((p.timeSeriesToGenerate & timeSeriesSolar) && (p.timeSeriesToRefresh & timeSeriesSolar))
-        TSlimit = (p.refreshIntervalSolar < TSlimit) ? p.refreshIntervalSolar : TSlimit;
+        TSlimit = std::min(p.refreshIntervalSolar,  TSlimit);
     if ((p.timeSeriesToGenerate & timeSeriesHydro) && (p.timeSeriesToRefresh & timeSeriesHydro))
-        TSlimit = (p.refreshIntervalHydro < TSlimit) ? p.refreshIntervalHydro : TSlimit;
+        TSlimit = std::min(p.refreshIntervalHydro, TSlimit);
     if ((p.timeSeriesToGenerate & timeSeriesWind) && (p.timeSeriesToRefresh & timeSeriesWind))
-        TSlimit = (p.refreshIntervalWind < TSlimit) ? p.refreshIntervalWind : TSlimit;
+        TSlimit = std::min(p.refreshIntervalWind, TSlimit);
     if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
-        TSlimit = (p.refreshIntervalThermal < TSlimit) ? p.refreshIntervalThermal : TSlimit;
+        TSlimit = std::min(p.refreshIntervalThermal, TSlimit);
 
-    if (TSlimit < forcedNbOfParallelYears)
-        forcedNbOfParallelYears = TSlimit;
-
-    // Limiting the number of parallel years by the total number of years
-    if (p.nbYears < forcedNbOfParallelYears)
-        forcedNbOfParallelYears = p.nbYears;
+    forcedNbOfParallelYears = std::min({p.nbYears, TSlimit, forcedNbOfParallelYears});
 }
 
 bool SetsOfParallelYearCalculator::isRefreshNeededForCurrentYear(uint y)
@@ -243,19 +256,19 @@ bool SetsOfParallelYearCalculator::isRefreshNeededForCurrentYear(uint y)
     bool refreshing = false;
     refreshing = (p.timeSeriesToGenerate & timeSeriesLoad)
                     && (p.timeSeriesToRefresh & timeSeriesLoad)
-                    && (!y || ((y % p.refreshIntervalLoad) == 0));
+                    && ((y % p.refreshIntervalLoad) == 0);
     refreshing = refreshing
                     || ((p.timeSeriesToGenerate & timeSeriesSolar)
                         && (p.timeSeriesToRefresh & timeSeriesSolar)
-                        && (!y || ((y % p.refreshIntervalSolar) == 0)));
+                        && (y % p.refreshIntervalSolar) == 0);
     refreshing = refreshing
                     || ((p.timeSeriesToGenerate & timeSeriesWind)
                         && (p.timeSeriesToRefresh & timeSeriesWind)
-                        && (!y || ((y % p.refreshIntervalWind) == 0)));
+                        && (y % p.refreshIntervalWind) == 0);
     refreshing = refreshing
                     || ((p.timeSeriesToGenerate & timeSeriesHydro)
                         && (p.timeSeriesToRefresh & timeSeriesHydro)
-                        && (!y || ((y % p.refreshIntervalHydro) == 0)));
+                        && (y % p.refreshIntervalHydro) == 0);
 
     bool haveToRefreshTSThermal 
         = ((p.timeSeriesToGenerate & timeSeriesThermal)
@@ -403,7 +416,7 @@ void SetsOfParallelYearCalculator::computeForcedNbYearsInParallelYearSet()
             maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].setsSizes.size();
     }
 
-    forcedNbOfParallelYears = maxNbYearsOverAllSets; //j'aime pas
+    forcedNbOfParallelYears = maxNbYearsOverAllSets;
 
 }
 
