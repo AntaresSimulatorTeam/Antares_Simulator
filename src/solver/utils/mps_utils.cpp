@@ -1,6 +1,5 @@
 #include <antares/study.h>
 #include <antares/emergency.h>
-#include <filesystem>
 
 #include "../simulation/simulation.h"
 
