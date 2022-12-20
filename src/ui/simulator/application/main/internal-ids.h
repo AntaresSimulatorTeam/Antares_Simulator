@@ -176,16 +176,6 @@ enum MenusID
     mnIDLaunchAnalyzer,
     mnIDLaunchConstraintsBuilder,
 
-    //! \name Popup Menu Operator for selected cells on any grid
-    //@{
-    mnIDPopupOpNone,
-    mnIDPopupOpAverage,
-    mnIDPopupOpCellCount,
-    mnIDPopupOpMinimum,
-    mnIDPopupOpMaximum,
-    mnIDPopupOpSum,
-    //@}
-
     //! \name Popup Menu Operator for selected nodes on any layer
     //@{
     mnIDPopupSelectionHide,
