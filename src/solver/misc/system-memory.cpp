@@ -25,7 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "system-memory.h"
+#include "misc/headers/system-memory.h"
 #include <antares/logs.h>
 #include <yuni/core/system/memory.h>
 

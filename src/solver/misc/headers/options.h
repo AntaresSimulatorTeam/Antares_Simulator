@@ -28,11 +28,11 @@
 #define __SOLVER_MISC_GETOPT_H__
 
 #include <memory>
-#include <yuni/yuni.h>
-#include <yuni/core/string.h>
-#include <yuni/core/getopt.h>
+#include "yuni/yuni.h"
+#include "yuni/core/string.h"
+#include "yuni/core/getopt.h"
 
-#include <antares/study/study.h>
+#include "antares/study/study.h"
 
 /*!
 ** \brief Command line settings for launching the simulation

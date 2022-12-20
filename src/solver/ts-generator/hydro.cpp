@@ -35,8 +35,8 @@
 #include <antares/logs.h>
 #include <antares/study.h>
 #include <i_writer.h>
-#include "../misc/cholesky.h"
-#include "../misc/matrix-dp-make.h"
+#include "../misc/headers/cholesky.h"
+#include "../misc/headers/matrix-dp-make.h"
 
 using namespace Antares;
 using namespace Yuni;

@@ -27,8 +27,8 @@
 #ifndef __ANTARES_SOLVER_MISC_MATRIX_DP_MAKE_H__
 #define __ANTARES_SOLVER_MISC_MATRIX_DP_MAKE_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
+#include "yuni/yuni.h"
+#include "yuni/core/math.h"
 #include "cholesky.h"
 
 namespace Antares
@@ -67,6 +67,6 @@ T MatrixDPMake(U1& L, U2& A, U3& B, U4& C, unsigned int size, T* temp, bool CIsI
 } // namespace Solver
 } // namespace Antares
 
-#include "matrix-dp-make.hxx"
+#include "../matrix-dp-make.hxx"
 
 #endif // __ANTARES_SOLVER_MISC_MATRIX_DP_MAKE_H__

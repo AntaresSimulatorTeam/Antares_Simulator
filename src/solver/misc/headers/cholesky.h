@@ -27,9 +27,9 @@
 #ifndef __ANTARES_SOLVER_MISC_CHOLESKY_H__
 #define __ANTARES_SOLVER_MISC_CHOLESKY_H__
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
-#include <antares/array/matrix.h>
+#include "yuni/yuni.h"
+#include "yuni/core/math.h"
+#include "antares/array/matrix.h"
 
 namespace Antares
 {
@@ -59,6 +59,6 @@ bool Cholesky(U1& L, U2& A, uint size, T* temp);
 } // namespace Solver
 } // namespace Antares
 
-#include "cholesky.hxx"
+#include "misc/cholesky.hxx"
 
 #endif // __ANTARES_SOLVER_MISC_CHOLESKY_H__

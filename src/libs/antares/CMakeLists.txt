@@ -551,6 +551,7 @@ add_library(libantares-core
 #TODO : needed for include
 target_include_directories(libantares-core
 		PUBLIC
+		$<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver>
 		$<INSTALL_INTERFACE:ext/yuni/src>
 		$<INSTALL_INTERFACE:libs>
 		$<INSTALL_INTERFACE:libs/antares/logs>

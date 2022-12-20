@@ -13,9 +13,18 @@ set(SRC_SOLVER_MAIN_ADEQUACY       main/adequacy.cpp)
 
 add_library(libantares-solver-main-adequacy-draft  ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
 target_link_libraries(libantares-solver-main-adequacy-draft PRIVATE libantares-core)
+target_include_directories(libantares-solver-main-adequacy-draft PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver>
+)
 
 add_library(libantares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
 target_link_libraries(libantares-solver-main-adequacy PRIVATE libantares-core)
+target_include_directories(libantares-solver-main-adequacy PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver>
+        )
 
 add_library(libantares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
 target_link_libraries(libantares-solver-main-economy PRIVATE libantares-core)
+target_include_directories(libantares-solver-main-economy PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/solver>
+        )

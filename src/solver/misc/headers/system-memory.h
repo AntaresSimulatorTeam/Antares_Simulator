@@ -27,8 +27,8 @@
 #ifndef __SOLVER_MISC_SYSTEM_MEMORY_H__
 #define __SOLVER_MISC_SYSTEM_MEMORY_H__
 
-#include <yuni/yuni.h>
-#include <yuni/thread/timer.h>
+#include "yuni/yuni.h"
+#include "yuni/thread/timer.h"
 
 class SystemMemoryLogger : public Yuni::Thread::Timer
 {

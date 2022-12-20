@@ -48,15 +48,15 @@ set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 add_library(solver-lib
 		memory/mem.h
 
-		misc/options.h
+		misc/headers/options.h
 		misc/options.cpp
 		misc/process-priority.cpp
-		misc/cholesky.h
+		misc/headers/cholesky.h
 		misc/cholesky.hxx
-		misc/matrix-dp-make.h
+		misc/headers/matrix-dp-make.h
 		misc/matrix-dp-make.hxx
 
-		misc/system-memory.h
+		misc/headers/system-memory.h
 		misc/system-memory.cpp
 
 		mps/mps_define.h
@@ -113,21 +113,41 @@ executable_strip(antares-solver)
 
 copy_dependency(sirius_solver antares-solver)
 
+include(GNUInstallDirs)
+
 set(public_headers
 		application/application.h
+		misc/headers/cholesky.h
+		misc/headers/matrix-dp-make.h
+		misc/headers/options.h
+		misc/headers/system-memory.h
 		)
-set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
-include(GNUInstallDirs)
-install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS} result_writer infeasible_problem_analysis libantares-solver-variable-info
+#set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
+install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS}
+		result_writer infeasible_problem_analysis libantares-solver-variable-info
+		minizip
 		EXPORT "solver-libTargets"
-		# these get default values from GNUInstallDirs, no need to set them
-		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
-		#LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
-		#ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
-		# except for public headers, as we want them to be inside a library folder
-		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/solver-lib # include/SomeLibrary
-		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
+#		# these get default values from GNUInstallDirs, no need to set them
+#		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
+#		#LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+#		#ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} # lib
+#		# except for public headers, as we want them to be inside a library folder
+#		PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/solver-lib # include/SomeLibrary
+#		INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} # include
 		)
+
+foreach(header ${public_headers})
+	message(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
+	message(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+	FILE(RELATIVE_PATH header_file_path ${CMAKE_CURRENT_SOURCE_DIR}/solver ${CMAKE_CURRENT_SOURCE_DIR}/${header})
+	message(header_file_path ${header_file_path})
+	get_filename_component(header_directory_path "${header_file_path}" DIRECTORY)
+	message("header_directory_path: " ${header_directory_path})
+	install(
+			FILES ${header}
+			DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}/solver-lib/${header_directory_path}"
+	)
+endforeach()
 
 
 #TODO : not working inside macro

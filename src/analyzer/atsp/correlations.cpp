@@ -27,7 +27,7 @@
 
 #include "atsp.h"
 #include <antares/date.h>
-#include "../solver/misc/matrix-dp-make.h"
+#include "../../solver/misc/headers/matrix-dp-make.h"
 
 using namespace Yuni;
 

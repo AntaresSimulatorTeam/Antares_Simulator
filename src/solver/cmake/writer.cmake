@@ -26,5 +26,3 @@ target_link_libraries(result_writer
                       PRIVATE
                       libantares-core
                       MINIZIP::minizip)
-
-

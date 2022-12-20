@@ -36,7 +36,7 @@
 #include <yuni/core/string.h>
 #include <yuni/job/queue/service.h>
 #include "../variable/state.h"
-#include "../misc/options.h"
+#include "misc/headers/options.h"
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "../hydro/management/management.h"

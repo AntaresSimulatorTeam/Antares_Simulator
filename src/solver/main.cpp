@@ -47,7 +47,7 @@
 #include <antares/memory/memory.h>
 #include <antares/sys/policy.h>
 #include <antares/antares_locale.h>
-#include "misc/system-memory.h"
+#include "misc/headers/system-memory.h"
 
 #include "signal-handling/public.h"
 #include <yuni/core/preprocessor/capabilities.h>
