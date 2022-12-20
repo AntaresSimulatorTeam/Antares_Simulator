@@ -302,13 +302,7 @@ void ApplWnd::internalInitialize()
         statusbar->SetStatusStyles(2, styles);
 
         statusbar->SetMinHeight(14);
-        statusbar->Connect(statusbar->GetId(),
-                           wxEVT_CONTEXT_MENU,
-                           nullptr,
-                           nullptr,
-                           this);
-
-        statusbar->SetStatusText(wxT("|  "), 1);
+        statusbar->SetStatusText(wxT(""), 1);
 
         wxFont f = statusbar->GetFont();
         f.SetPointSize(f.GetPointSize() - 1);
