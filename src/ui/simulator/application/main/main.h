@@ -32,7 +32,6 @@
 #include <wx/aui/aui.h>
 
 #include "../../toolbox/components/notebook/notebook.h"
-#include "../../toolbox/components/datagrid/selectionoperation.h"
 #include "../../toolbox/components/map/settings.h"
 #include <list>
 #include "fwd.h"
@@ -111,27 +110,6 @@ public:
     ** \brief Get the component used for the map
     */
     Map::Component* map() const;
-
-    /*!
-    ** \name Grid operator (for selected cells)
-    **
-    ** A grid operator computes an operation (Sum, average...) on all selected
-    ** cells of the grid that currently has the focus. The result of this
-    ** computation is displayed in the status bar.
-    **
-    ** \see Antares::Component::Datagrid::Component::onGridEnter()
-    ** \see Antares::Component::Datagrid::Component::onGridLeave()
-    */
-    //@{
-    /*!
-    ** \brief Get the current grid operator for selected cells
-    */
-    Component::Datagrid::Selection::IOperator* gridOperatorSelectedCells() const;
-
-    /*!
-    ** \brief Set the grid operator for selected cells
-    */
-    void gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v);
 
     //! \name Title of the Window
     //@{
