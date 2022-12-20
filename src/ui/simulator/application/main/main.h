@@ -721,10 +721,6 @@ private:
     Component::Notebook::Page* pageScBuilderRenewable;
     Component::Notebook::Page* pageScBuilderHydroLevels;
 
-    //! The current grid operator to use on selected cells
-    Component::Datagrid::Selection::IOperator* pGridSelectionOperator;
-    wxGrid* pGridSelectionAttachedGrid;
-
     //! A context menu for the map
     wxMenu* pMapContextMenu;
 

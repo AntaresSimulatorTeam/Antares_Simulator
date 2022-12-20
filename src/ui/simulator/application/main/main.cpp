@@ -249,8 +249,6 @@ ApplWnd::ApplWnd() :
  pageRenewableCommon(nullptr),
  pageNodalOptim(nullptr),
  pWndBindingConstraints(nullptr),
- pGridSelectionOperator(new Component::Datagrid::Selection::CellCount()),
- pGridSelectionAttachedGrid(nullptr),
  pMapContextMenu(nullptr),
  pUserNotes(nullptr),
  pMainNotebookAlreadyHasItsComponents(false),
@@ -313,13 +311,6 @@ ApplWnd::~ApplWnd()
     OnStudyLoaded.clear();
     OnStudyAreasChanged.clear();
     OnStudyAreaDelete.clear();
-
-    // Delete the grid operator
-    if (pGridSelectionOperator)
-    {
-        delete pGridSelectionOperator;
-        pGridSelectionOperator = nullptr; // May be needed in some cases
-    }
 
     // Disconnect all events
     destroyBoundEvents();
@@ -530,7 +521,6 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         {
             GetSizer()->Clear(true);
             pUserNotes = nullptr;
-            pGridSelectionAttachedGrid = nullptr;
             pBigDaddy = nullptr;
             pMainSizer = nullptr;
             pData->wipPanel = nullptr;
