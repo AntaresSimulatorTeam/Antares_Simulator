@@ -63,8 +63,7 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 } // namespace Antares
 
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       uint numSpace)
+                       PROBLEME_HEBDO* ProblemeHebdo)
 {
     Yuni::Clob Flot;
     for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
@@ -74,15 +73,14 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                             ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
                             ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
-    auto filename = getFilenameWithExtension("interco", "txt", numSpace);
+    std::string filename = "interco.txt";
     writer->addEntryFromBuffer(filename, Flot);
 }
 
 void OPT_ExportAreaName(const Antares::Data::AreaList& areas,
-                        Antares::Solver::IResultWriter::Ptr writer,
-                        uint numSpace)
+                        Antares::Solver::IResultWriter::Ptr writer)
 {
-    auto filename = getFilenameWithExtension("area", "txt", numSpace);
+    std::string filename = "area.txt";
     Yuni::Clob Flot;
     for (uint i = 0; i < areas.size(); ++i)
     {
@@ -127,18 +125,14 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
     }
 }
 
-void OPT_ExportVariables(const Antares::Data::Study& study,
-                         const std::vector<std::string>& varname,
-                         const std::string& fileName,
-                         const std::string& fileExtension,
-                         uint numSpace)
+void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
+                         const std::vector<std::string>& varname)
 {
     Yuni::Clob Flot;
-    auto filename = getFilenameWithExtension(fileName, fileExtension, numSpace);
+    std::string filename = "Variables.txt";
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());
     }
-    auto writer = study.resultWriter;
     writer->addEntryFromBuffer(filename, Flot);
 }

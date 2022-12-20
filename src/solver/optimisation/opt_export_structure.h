@@ -76,15 +76,10 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int ts);
 
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       uint numSpace);
+                       PROBLEME_HEBDO* ProblemeHebdo);
 void OPT_ExportAreaName(const Antares::Data::AreaList& areas,
-                        Antares::Solver::IResultWriter::Ptr writer,
-                        uint numSpace);
-void OPT_ExportVariables(const Antares::Data::Study& study,
-                         const std::vector<std::string>& varname,
-                         const std::string& fileName,
-                         const std::string& fileExtension,
-                         uint numSpace);
+                        Antares::Solver::IResultWriter::Ptr writer);
+void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
+                         const std::vector<std::string>& varname);
 
 #endif

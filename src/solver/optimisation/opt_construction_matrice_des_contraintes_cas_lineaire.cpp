@@ -93,12 +93,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     Study::Ptr study = Study::Current::Get();
     bool exportStructure = ProblemeHebdo->ExportStructure;
     bool firstWeekOfSimulation = ProblemeHebdo->firstWeekOfSimulation;
-
-    if (exportStructure && firstWeekOfSimulation)
-    {
-        OPT_ExportInterco(study->resultWriter, ProblemeHebdo, numSpace);
-        OPT_ExportAreaName(study->areas, study->resultWriter, numSpace);
-    }
+    bool doWeExport = exportStructure && firstWeekOfSimulation;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
@@ -141,7 +136,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(
                           varname,
@@ -164,7 +159,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(
                           varname,
@@ -190,7 +185,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
@@ -209,7 +204,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (exportStructure)
+                if (doWeExport)
                 {
                     OPT_Export_add_variable(
                       varname, Var, Enum::ExportStructDict::ProdHyd, Pays, timeStepInYear);
@@ -231,7 +226,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (exportStructure)
+                if (doWeExport)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
@@ -247,7 +242,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (exportStructure)
+                if (doWeExport)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
@@ -277,7 +272,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
@@ -296,7 +291,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (exportStructure)
+                if (doWeExport)
                 {
                     OPT_Export_add_variable(
                       varname, Var, Enum::ExportStructDict::ProdHyd, Pays, timeStepInYear);
@@ -310,7 +305,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (exportStructure)
+                if (doWeExport)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
@@ -343,7 +338,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
@@ -361,7 +356,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(
                           varname,
@@ -379,7 +374,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (exportStructure)
+                    if (doWeExport)
                     {
                         OPT_Export_add_variable(
                           varname,
@@ -468,7 +463,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
 
-                        if (exportStructure)
+                        if (doWeExport)
                         {
                             OPT_Export_add_variable(
                               varname,
@@ -1239,13 +1234,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     }
 
     // Export structure
-    if (exportStructure)
+    if (doWeExport)
     {
-        OPT_ExportVariables(*study, varname, "variables", "txt", numSpace);
-
-        // TODO : for now empty constraints.txt file needed
-        std::vector<std::string> conname;
-        OPT_ExportVariables(*study, conname, "constraints", "txt", numSpace);
+        OPT_ExportInterco(study->resultWriter, ProblemeHebdo);
+        OPT_ExportAreaName(study->areas, study->resultWriter);
+        OPT_ExportVariables(study->resultWriter, varname);
     }
 
     return;
