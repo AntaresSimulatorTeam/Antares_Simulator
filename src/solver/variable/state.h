@@ -231,7 +231,8 @@ public:
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
-
+    //! Index of the state in the state vector
+    unsigned int numSpace;
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
     **
