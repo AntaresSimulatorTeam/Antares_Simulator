@@ -4,14 +4,14 @@
 
 std::string getFilenameWithExtension(const YString& prefix,
                                      const YString& extension,
-                                     uint numSpace,
+                                     int year,
+                                     int week,
                                      int optNumber)
 {
-    auto study = Data::Study::Current::Get();
     std::ostringstream outputFile;
-    outputFile << prefix.c_str() << "-" // problem ou criterion
-               << std::to_string(study->runtime->currentYear[numSpace] + 1) << "-"
-               << std::to_string(study->runtime->weekInTheYear[numSpace] + 1);
+    outputFile << prefix.c_str() << "-"
+               << std::to_string(year + 1) << "-"
+               << std::to_string(week + 1);
 
     if (optNumber)
         outputFile << "--optim-nb-" << std::to_string(optNumber);

@@ -196,16 +196,6 @@ public:
     */
     bool quadraticOptimizationHasFailed;
 
-    /*!
-    ** \brief Store the current week of the simulation during the optimization
-    */
-    unsigned int* weekInTheYear;
-
-    /*!
-    ** \brief Store the current year of the simulation during the optimization
-    */
-    unsigned int* currentYear;
-
 private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);

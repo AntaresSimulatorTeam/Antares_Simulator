@@ -25,16 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "opt_structure_probleme_a_resoudre.h"
-
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 #include <antares/logs.h>
-#include <antares/study.h>
 #include <antares/emergency.h>
 
 using namespace Antares;
@@ -94,12 +89,12 @@ OptimisationHebdo:
 
         ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle]++;
 
-        if (!OPT_AppelDuSimplexe(ProblemeHebdo, numSpace, NumeroDeLIntervalle))
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle))
             return false;
 
         if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              (void*)ProblemeHebdo, numSpace, NumeroDeLIntervalle);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(ProblemeHebdo,
+                                                           NumeroDeLIntervalle);
 
         if (ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] == DEUXIEME_OPTIMISATION)
             ProblemeHebdo->numeroOptimisation[NumeroDeLIntervalle] = 0;

@@ -95,7 +95,7 @@ private:
     clock::time_point end_;
 };
 
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, int NumIntervalle)
 {
     int Var;
     int Cnt;
@@ -243,7 +243,7 @@ RESOLUTION:
     }
 
     mpsWriterFactory mps_writer_factory(
-      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter);
 
@@ -378,15 +378,11 @@ RESOLUTION:
     return true;
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
-                                                    uint numSpace,
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(PROBLEME_HEBDO* Probleme,
                                                     int NumeroDeLIntervalle)
 {
     Yuni::Clob buffer;
     double CoutOptimalDeLaSolution;
-    PROBLEME_HEBDO* Probleme;
-
-    Probleme = (PROBLEME_HEBDO*)Prob;
 
     CoutOptimalDeLaSolution = 0.;
     if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
@@ -397,8 +393,10 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
     auto study = Data::Study::Current::Get();
+    int year = Probleme->year;
+    int week = Probleme->weekInTheYear;
     auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
-    auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
+    auto filename = getFilenameWithExtension("criterion", "txt", year, week, optNumber);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 }

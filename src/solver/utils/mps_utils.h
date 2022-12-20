@@ -28,39 +28,52 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
 class I_MPS_writer
 {
 public:
-    I_MPS_writer() = default;
+    I_MPS_writer(int year, int week, int currentOptimNumber) : 
+       year_(year), week_(week), current_optim_number_(currentOptimNumber)
+    {}
+    I_MPS_writer()
+    {}
     virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
+
+protected:
+    int week_ = 0;
+    int year_ = 0;
+    int current_optim_number_ = 0;
 };
 
 class fullMPSwriter final : public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                  int currentOptimNumber,
-                  uint thread_number);
+                  int year,
+                  int week,
+                  int currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter::Ptr writer);
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
-    int current_optim_number_;
-    uint thread_number_;
 };
 
 class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
-    fullOrToolsMPSwriter(MPSolver* solver, int currentOptimNumber, uint thread_number);
+    fullOrToolsMPSwriter(MPSolver* solver, 
+                         int year, 
+                         int week, 
+                         int currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter::Ptr writer);
 
 private:
     MPSolver* solver_ = nullptr;
-    int current_optim_number_;
-    uint thread_number_;
 };
 
 class nullMPSwriter : public I_MPS_writer
 {
 public:
+    nullMPSwriter() : I_MPS_writer()
+    {
+    }
+
     void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/) override
     {
         // Does nothing
@@ -74,8 +87,7 @@ public:
                      int NumIntervalle,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                      bool ortoolsUsed,
-                     MPSolver* solver,
-                     uint thread_number);
+                     MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -91,9 +103,11 @@ private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;
-    uint thread_number_;
     int current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    bool is_first_week_of_year_;
+
+    // About optimization period
+    int week_ = 0;
+    int year_ = 0;
 };

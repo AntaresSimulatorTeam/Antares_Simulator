@@ -31,16 +31,10 @@
 #include "opt_export_structure.h"
 
 #include "../simulation/simulation.h"
-#include "../simulation/sim_structure_donnees.h"
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
 
 #include <antares/study.h>
-#include <antares/study/area/scratchpad.h>
-#include "../simulation/sim_structure_donnees.h"
 
 using namespace Antares::Data;
 
@@ -117,7 +111,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
 
     for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
     {
-        int timeStepInYear = study->runtime->weekInTheYear[numSpace] * 168 + Pdt;
+        int timeStepInYear = ProblemeHebdo->weekInTheYear * 168 + Pdt;
 
         CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
         CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
@@ -1034,7 +1028,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
         CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
         CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
 
-        int timeStepInYear = study->runtime->weekInTheYear[numSpace] * 168 + Pdt;
+        int timeStepInYear = ProblemeHebdo->weekInTheYear * 168 + Pdt;
 
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
         {
