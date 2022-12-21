@@ -9,6 +9,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - issue-*
       - release/*
       - doc/*
 
