@@ -65,7 +65,7 @@ void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
     /* dest->VariablesDualesDesContraintes = src->VariablesDualesDesContraintes; */
 
     dest->TypeDeVariable = src->TypeDeVariable;
-    /* dest->TypeDeBorneDeLaVariable = src->TypeDeBorneDeLaVariable; //FIXME */
+    dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;
     dest->U = src->X;
     dest->L = src->CoutLineaire;
     dest->Umax = src->Xmax;
