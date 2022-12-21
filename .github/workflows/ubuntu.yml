@@ -130,6 +130,11 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
+    - name: Run MPS comparison test
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R mps
+
     # simtest
     - name: Read simtest version
       id: simtest-version
