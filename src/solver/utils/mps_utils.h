@@ -31,13 +31,12 @@ public:
     I_MPS_writer(int year, int week, int currentOptimNumber) : 
        year_(year), week_(week), current_optim_number_(currentOptimNumber)
     {}
-    I_MPS_writer()
-    {}
+    I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
 
 protected:
-    int week_ = 0;
     int year_ = 0;
+    int week_ = 0;
     int current_optim_number_ = 0;
 };
 
@@ -48,7 +47,7 @@ public:
                   int year,
                   int week,
                   int currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -61,7 +60,7 @@ public:
                          int year, 
                          int week, 
                          int currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -70,10 +69,7 @@ private:
 class nullMPSwriter : public I_MPS_writer
 {
 public:
-    nullMPSwriter() : I_MPS_writer()
-    {
-    }
-
+    using I_MPS_writer::I_MPS_writer;
     void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/) override
     {
         // Does nothing

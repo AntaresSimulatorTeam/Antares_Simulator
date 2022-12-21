@@ -378,7 +378,7 @@ RESOLUTION:
     return true;
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(PROBLEME_HEBDO* Probleme,
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(const PROBLEME_HEBDO* Probleme,
                                                     int NumeroDeLIntervalle)
 {
     Yuni::Clob buffer;
