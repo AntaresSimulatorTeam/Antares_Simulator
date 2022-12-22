@@ -62,21 +62,25 @@ void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE_NOMME *src)
     dest->NbVar = src->NombreDeVariables;
     dest->NbCnt = src->NombreDeContraintes;
 
+    dest->Mdeb = src->IndicesDebutDeLigne;
     dest->A = src->CoefficientsDeLaMatriceDesContraintes;
     dest->Nuvar = src->IndicesColonnes;
     dest->NbTerm = src->NombreDeTermesDesLignes;
     dest->B = src->SecondMembre;
     dest->SensDeLaContrainte = src->Sens;
-    /* dest->VariablesDualesDesContraintes = src->VariablesDualesDesContraintes; */
+
     mVariableType.resize(src->NombreDeVariables);
     std::fill_n(mVariableType.begin(), src->NombreDeVariables, SRS_CONTINUOUS_VAR);
     dest->TypeDeVariable = mVariableType.data();
     dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;     // VARIABLE_BORNEE_DES_DEUX_COTES, VARIABLE_BORNEE_INFERIEUREMENT, etc.
+
+	  dest->VariablesDualesDesContraintes = src->CoutsMarginauxDesContraintes;
+
     dest->U = src->X;
     dest->L = src->CoutLineaire;
     dest->Umax = src->Xmax;
     dest->Umin = src->Xmin;
-    dest->Mdeb = src->IndicesDebutDeLigne;
+
 }
 private:
     std::vector<int> mVariableType;
