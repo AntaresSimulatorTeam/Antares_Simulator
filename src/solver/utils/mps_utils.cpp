@@ -59,15 +59,8 @@ class ProblemConverter
 public:
     void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src)
     {
+        // Variables
         dest->NbVar = src->NombreDeVariables;
-        dest->NbCnt = src->NombreDeContraintes;
-
-        dest->Mdeb = src->IndicesDebutDeLigne;
-        dest->A = src->CoefficientsDeLaMatriceDesContraintes;
-        dest->Nuvar = src->IndicesColonnes;
-        dest->NbTerm = src->NombreDeTermesDesLignes;
-        dest->B = src->SecondMembre;
-        dest->SensDeLaContrainte = src->Sens;
 
         mVariableType.resize(src->NombreDeVariables);
         // TODO[FOM] use actual variable types when MIP resolution is integrated
@@ -76,9 +69,20 @@ public:
         dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
                                                              // VARIABLE_BORNEE_INFERIEUREMENT, etc.
 
-        dest->L = src->CoutLineaire;
         dest->Umax = src->Xmax;
         dest->Umin = src->Xmin;
+
+        // Objective function
+        dest->L = src->CoutLineaire;
+
+        // Constraints (sparse)
+        dest->NbCnt = src->NombreDeContraintes;
+        dest->Mdeb = src->IndicesDebutDeLigne;
+        dest->A = src->CoefficientsDeLaMatriceDesContraintes;
+        dest->Nuvar = src->IndicesColonnes;
+        dest->NbTerm = src->NombreDeTermesDesLignes;
+        dest->B = src->SecondMembre;
+        dest->SensDeLaContrainte = src->Sens;
     }
 
 private:
@@ -94,9 +98,13 @@ static void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* P
     const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();
-    ProblemConverter converter;
-    converter.copyProbSimplexeToProbMps(mps.get(), Prob);
-    SRSwritempsprob(mps.get(), tmpPath.c_str());
+
+    {
+        ProblemConverter
+          converter; // This object must not be destroyed until SRSwritempsprob has been run
+        converter.copyProbSimplexeToProbMps(mps.get(), Prob);
+        SRSwritempsprob(mps.get(), tmpPath.c_str());
+    }
 
     writer->addEntryFromFile(filename, tmpPath);
 
