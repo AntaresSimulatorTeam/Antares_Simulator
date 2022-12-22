@@ -57,12 +57,13 @@ void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
     dest->NbVar = src->NombreDeVariables;
     dest->NbCnt = src->NombreDeContraintes;
 
+    dest->Mdeb = src->IndicesDebutDeLigne;
     dest->A = src->CoefficientsDeLaMatriceDesContraintes;
     dest->Nuvar = src->IndicesColonnes;
     dest->NbTerm = src->NombreDeTermesDesLignes;
     dest->B = src->SecondMembre;
     dest->SensDeLaContrainte = src->Sens;
-    /* dest->VariablesDualesDesContraintes = src->VariablesDualesDesContraintes; */
+	dest->VariablesDualesDesContraintes = src->CoutsMarginauxDesContraintes;
 
     dest->TypeDeVariable = src->TypeDeVariable;
     dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;
@@ -70,7 +71,7 @@ void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
     dest->L = src->CoutLineaire;
     dest->Umax = src->Xmax;
     dest->Umin = src->Xmin;
-    dest->Mdeb = src->IndicesDebutDeLigne;
+
 }
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace
