@@ -157,11 +157,10 @@ jobs:
 
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
-      uses: ./.github/workflows/run-tests
+      shell: bash
       with:
            cd _build
            ctest -C Release --output-on-failure -R json
-           echo "RET_CODE=$?" >> GITTHUB_ENV
 
     - name: Run medium-tests
       if: ${{ env.IS_RELEASE == 'true' }}
