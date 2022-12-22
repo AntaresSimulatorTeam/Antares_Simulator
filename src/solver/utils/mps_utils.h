@@ -16,11 +16,6 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
-                                               uint,
-                                               uint,
-                                               Solver::IResultWriter::Ptr writer);
-
 // ======================
 // MPS files writing
 // ======================

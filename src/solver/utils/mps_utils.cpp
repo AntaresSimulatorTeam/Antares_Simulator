@@ -57,45 +57,54 @@ using namespace Yuni;
 class ProblemConverter
 {
 public:
-void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE_NOMME *src)
-{
-    dest->NbVar = src->NombreDeVariables;
-    dest->NbCnt = src->NombreDeContraintes;
+    void copyProbSimplexeToProbMps(PROBLEME_MPS* dest, PROBLEME_SIMPLEXE_NOMME* src)
+    {
+        // Variables
+        dest->NbVar = src->NombreDeVariables;
 
-    dest->Mdeb = src->IndicesDebutDeLigne;
-    dest->A = src->CoefficientsDeLaMatriceDesContraintes;
-    dest->Nuvar = src->IndicesColonnes;
-    dest->NbTerm = src->NombreDeTermesDesLignes;
-    dest->B = src->SecondMembre;
-    dest->SensDeLaContrainte = src->Sens;
+        mVariableType.resize(src->NombreDeVariables);
+        // TODO[FOM] use actual variable types when MIP resolution is integrated
+        std::fill(mVariableType.begin(), mVariableType.end(), SRS_CONTINUOUS_VAR);
+        dest->TypeDeVariable = mVariableType.data();
+        dest->TypeDeBorneDeLaVariable = src->TypeDeVariable; // VARIABLE_BORNEE_DES_DEUX_COTES,
+                                                             // VARIABLE_BORNEE_INFERIEUREMENT, etc.
 
-    mVariableType.resize(src->NombreDeVariables);
-    std::fill_n(mVariableType.begin(), src->NombreDeVariables, SRS_CONTINUOUS_VAR);
-    dest->TypeDeVariable = mVariableType.data();
-    dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;     // VARIABLE_BORNEE_DES_DEUX_COTES, VARIABLE_BORNEE_INFERIEUREMENT, etc.
+        dest->Umax = src->Xmax;
+        dest->Umin = src->Xmin;
 
-	  dest->VariablesDualesDesContraintes = src->CoutsMarginauxDesContraintes;
+        // Objective function
+        dest->L = src->CoutLineaire;
 
-    dest->U = src->X;
-    dest->L = src->CoutLineaire;
-    dest->Umax = src->Xmax;
-    dest->Umin = src->Xmin;
+        // Constraints (sparse)
+        dest->NbCnt = src->NombreDeContraintes;
+        dest->Mdeb = src->IndicesDebutDeLigne;
+        dest->A = src->CoefficientsDeLaMatriceDesContraintes;
+        dest->Nuvar = src->IndicesColonnes;
+        dest->NbTerm = src->NombreDeTermesDesLignes;
+        dest->B = src->SecondMembre;
+        dest->SensDeLaContrainte = src->Sens;
+    }
 
-}
 private:
     std::vector<int> mVariableType;
 };
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob, int optNumber, uint numSpace
-    , Solver::IResultWriter::Ptr writer)
+static void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
+                                                      int optNumber,
+                                                      uint numSpace,
+                                                      Solver::IResultWriter::Ptr writer)
 {
     const auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
     const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();
-    ProblemConverter converter;
-    converter.copyProbSimplexeToProbMps(mps.get(), Prob);
-    SRSwritempsprob(mps.get(), tmpPath.c_str());
+
+    {
+        ProblemConverter
+          converter; // This object must not be destroyed until SRSwritempsprob has been run
+        converter.copyProbSimplexeToProbMps(mps.get(), Prob);
+        SRSwritempsprob(mps.get(), tmpPath.c_str());
+    }
 
     writer->addEntryFromFile(filename, tmpPath);
 
@@ -129,7 +138,8 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, int optNumber, uint
 void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
     // Make or-tools print the MPS files leads to a crash !
-    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, thread_number_, current_optim_number_, writer);
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(
+      solver_, thread_number_, current_optim_number_, writer);
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
