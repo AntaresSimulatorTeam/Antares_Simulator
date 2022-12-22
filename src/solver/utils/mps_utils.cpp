@@ -46,13 +46,18 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 */
 #include <antares/study.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "filename.h"
 
 using namespace Yuni;
 
 #define SEP IO::Separator
 
-void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
+class ProblemConverter
+{
+public:
+void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE_NOMME *src)
 {
     dest->NbVar = src->NombreDeVariables;
     dest->NbCnt = src->NombreDeContraintes;
@@ -63,25 +68,33 @@ void copyProbSimplexeToProbMps(PROBLEME_MPS *dest, PROBLEME_SIMPLEXE *src)
     dest->NbTerm = src->NombreDeTermesDesLignes;
     dest->B = src->SecondMembre;
     dest->SensDeLaContrainte = src->Sens;
-	dest->VariablesDualesDesContraintes = src->CoutsMarginauxDesContraintes;
 
-    dest->TypeDeVariable = src->TypeDeVariable;
-    dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;
+    mVariableType.resize(src->NombreDeVariables);
+    std::fill_n(mVariableType.begin(), src->NombreDeVariables, SRS_CONTINUOUS_VAR);
+    dest->TypeDeVariable = mVariableType.data();
+    dest->TypeDeBorneDeLaVariable = src->TypeDeVariable;     // VARIABLE_BORNEE_DES_DEUX_COTES, VARIABLE_BORNEE_INFERIEUREMENT, etc.
+
+	  dest->VariablesDualesDesContraintes = src->CoutsMarginauxDesContraintes;
+
     dest->U = src->X;
     dest->L = src->CoutLineaire;
     dest->Umax = src->Xmax;
     dest->Umin = src->Xmin;
 
 }
+private:
+    std::vector<int> mVariableType;
+};
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void* Prob, int optNumber, uint numSpace
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob, int optNumber, uint numSpace
     , Solver::IResultWriter::Ptr writer)
 {
     const auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
     const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();
-    copyProbSimplexeToProbMps(mps.get(), (PROBLEME_SIMPLEXE*)Prob);
+    ProblemConverter converter;
+    converter.copyProbSimplexeToProbMps(mps.get(), Prob);
     SRSwritempsprob(mps.get(), tmpPath.c_str());
 
     writer->addEntryFromFile(filename, tmpPath);
@@ -103,7 +116,7 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
 void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-      (void*)named_splx_problem_, current_optim_number_, thread_number_, writer);
+      named_splx_problem_, current_optim_number_, thread_number_, writer);
 }
 
 // ---------------------------------
