@@ -147,13 +147,21 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
+  - id: download-extract
+    shell: bash
+    run: |
+           cd src/tests/resources/batches
+           wget -q https://github.com/AntaresSimulatorTeam/SimTest/releases/download/ ${{steps.simtest-version.outputs.prop}}/short-tests-${{ matrix.test-platform  }}.zip -O batch.zip
+           unzip -q batch.zip
+           rm batch.zip
+
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests
-        os: ${{ matrix.test-platform }}
+           cd _build
+           ctest -C Release --output-on-failure -R json
+           echo "RET_CODE=$?" >> GITTHUB_ENV
 
     - name: Run medium-tests
       if: ${{ env.IS_RELEASE == 'true' }}
