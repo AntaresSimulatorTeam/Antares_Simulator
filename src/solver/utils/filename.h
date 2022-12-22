@@ -5,6 +5,6 @@
 
 std::string getFilenameWithExtension(const YString& prefix,
                                      const YString& extension,
-                                     int year,
-                                     int week,
-                                     int optNumber = 0);
+                                     uint year,
+                                     uint week,
+                                     uint optNumber = 0);

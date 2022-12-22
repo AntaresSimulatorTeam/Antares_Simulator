@@ -165,9 +165,9 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
     void* Prob,
-    int year,
-    int week,
-    int optNumber,
+    uint year,
+    uint week,
+    uint optNumber,
     Solver::IResultWriter::Ptr writer)
 {
     Clob buffer;
@@ -324,9 +324,9 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
 // Full mps writing
 // --------------------
 fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                             int year,
-                             int week,
-                             int optNumber) :
+                             uint year,
+                             uint week,
+                             uint optNumber) :
     I_MPS_writer(year, week, optNumber),
     named_splx_problem_(named_splx_problem)
 {}
@@ -344,16 +344,15 @@ void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 // Full mps writing by or-tools
 // ---------------------------------
 fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver,
-                                           int year,
-                                           int week,
-                                           int optNumber) :
+                                           uint year,
+                                           uint week,
+                                           uint optNumber) :
     I_MPS_writer(year, week, optNumber),
     solver_(solver)
 {
 }
 void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 {
-    // Make or-tools print the MPS files leads to a crash !
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_,
                                                   year_,
                                                   week_,

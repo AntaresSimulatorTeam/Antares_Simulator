@@ -19,6 +19,7 @@ using namespace operations_research;
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
                                                uint,
                                                uint,
+                                               uint,
                                                Solver::IResultWriter::Ptr writer);
 
 // ======================
@@ -28,25 +29,25 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
 class I_MPS_writer
 {
 public:
-    I_MPS_writer(int year, int week, int currentOptimNumber) : 
-       year_(year), week_(week), current_optim_number_(currentOptimNumber)
+    I_MPS_writer(uint year, uint week, uint currentOptimNumber) :
+        year_(year), week_(week), current_optim_number_(currentOptimNumber)
     {}
     I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
 
 protected:
-    int year_ = 0;
-    int week_ = 0;
-    int current_optim_number_ = 0;
+    uint year_ = 0;
+    uint week_ = 0;
+    uint current_optim_number_ = 0;
 };
 
 class fullMPSwriter final : public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                  int year,
-                  int week,
-                  int currentOptimNumber);
+                  uint year,
+                  uint week,
+                  uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
@@ -57,9 +58,9 @@ class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
     fullOrToolsMPSwriter(MPSolver* solver, 
-                         int year, 
-                         int week, 
-                         int currentOptimNumber);
+                         uint year, 
+                         uint week, 
+                         uint currentOptimNumber);
     void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
@@ -99,11 +100,11 @@ private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;
-    int current_optim_number_;
+    uint current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
 
     // About optimization period
-    int week_ = 0;
-    int year_ = 0;
+    uint week_ = 0;
+    uint year_ = 0;
 };

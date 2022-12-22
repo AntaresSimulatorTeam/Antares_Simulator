@@ -4,9 +4,9 @@
 
 std::string getFilenameWithExtension(const YString& prefix,
                                      const YString& extension,
-                                     int year,
-                                     int week,
-                                     int optNumber)
+                                     uint year,
+                                     uint week,
+                                     uint optNumber)
 {
     std::ostringstream outputFile;
     outputFile << prefix.c_str() << "-"

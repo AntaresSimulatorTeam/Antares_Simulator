@@ -234,9 +234,9 @@ static void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   int year,
-                                                   int week,
-                                                   int const numOptim,
+                                                   uint year,
+                                                   uint week,
+                                                   uint const numOptim,
                                                    Antares::Solver::IResultWriter::Ptr writer)
 {
     // 1. Determine filename

@@ -11,9 +11,9 @@
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   int year,
-                                                   int week,
-                                                   int const numOptim,
+                                                   uint year,
+                                                   uint week,
+                                                   uint const numOptim,
                                                    Antares::Solver::IResultWriter::Ptr writer);
 
 /*!
