@@ -158,7 +158,7 @@ jobs:
     - name: Run short-tests
       if: ${{ env.IS_PUSH == 'true' }}
       shell: bash
-      with:
+      run: |
            cd _build
            ctest -C Release --output-on-failure -R json
 
