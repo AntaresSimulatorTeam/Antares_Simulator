@@ -147,9 +147,9 @@ jobs:
         batch-name: valid-v830
         os: ${{ matrix.test-platform }}
 
-  - id: download-extract
-    shell: bash
-    run: |
+    - id: download-extract
+      shell: bash
+      run: |
            cd src/tests/resources/batches
            wget -q https://github.com/AntaresSimulatorTeam/SimTest/releases/download/ ${{steps.simtest-version.outputs.prop}}/short-tests-${{ matrix.test-platform  }}.zip -O batch.zip
            unzip -q batch.zip
