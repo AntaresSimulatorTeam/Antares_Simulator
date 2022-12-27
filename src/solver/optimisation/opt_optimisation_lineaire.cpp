@@ -118,7 +118,5 @@ OptimisationHebdo:
             goto OptimisationHebdo;
     }
 
-    numeroOptimisation = 0;
-
     return true;
 }
