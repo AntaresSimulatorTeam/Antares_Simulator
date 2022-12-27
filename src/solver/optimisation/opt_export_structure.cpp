@@ -77,8 +77,8 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
     writer->addEntryFromBuffer(filename, Flot);
 }
 
-void OPT_ExportAreaName(const Antares::Data::AreaList& areas,
-                        Antares::Solver::IResultWriter::Ptr writer)
+void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
+                        const Antares::Data::AreaList& areas)
 {
     std::string filename = "area.txt";
     Yuni::Clob Flot;
@@ -93,8 +93,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int firstVal,
-                             int secondVal,
-                             int ts)
+                             int secondVal)
 {
     if ((int)varname.size() > Var && varname[Var].empty())
     {
@@ -102,8 +101,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
         buffer << Var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
         buffer << firstVal << " ";
-        buffer << secondVal << " ";
-        buffer << ts << " ";
+        buffer << secondVal;
         varname[Var] = buffer.str();
     }
 }
@@ -111,16 +109,14 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
 void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal,
-                             int ts)
+                             int firstVal)
 {
     if ((int)varname.size() > Var && varname[Var].empty())
     {
         std::stringstream buffer;
         buffer << Var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal << " ";
-        buffer << ts << " ";
+        buffer << firstVal;
         varname[Var] = buffer.str();
     }
 }
@@ -129,7 +125,7 @@ void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
                          const std::vector<std::string>& varname)
 {
     Yuni::Clob Flot;
-    std::string filename = "Variables.txt";
+    std::string filename = "variables.txt";
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());

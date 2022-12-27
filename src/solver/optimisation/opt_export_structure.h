@@ -67,18 +67,16 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int firstVal,
-                             int secondVal,
-                             int ts);
+                             int secondVal);
 void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal,
-                             int ts);
+                             int firstVal);
 
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* ProblemeHebdo);
-void OPT_ExportAreaName(const Antares::Data::AreaList& areas,
-                        Antares::Solver::IResultWriter::Ptr writer);
+void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
+                        const Antares::Data::AreaList& areas);
 void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
                          const std::vector<std::string>& varname);
 
