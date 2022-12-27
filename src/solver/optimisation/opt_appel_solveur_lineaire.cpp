@@ -95,7 +95,9 @@ private:
     clock::time_point end_;
 };
 
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, int NumIntervalle)
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
+                         int NumIntervalle,
+                         const int numeroOptimisation)
 {
     int Var;
     int Cnt;
@@ -120,7 +122,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, int NumIntervalle)
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
-    const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
+    const int opt = numeroOptimisation - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
@@ -243,15 +245,14 @@ RESOLUTION:
     }
 
     mpsWriterFactory mps_writer_factory(
-      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver);
+      ProblemeHebdo, NumIntervalle, numeroOptimisation, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter);
 
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        const bool keepBasis
-          = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
+        const bool keepBasis = (numeroOptimisation == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
@@ -328,7 +329,7 @@ RESOLUTION:
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
-        if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+        if (numeroOptimisation == PREMIERE_OPTIMISATION)
         {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
@@ -379,13 +380,14 @@ RESOLUTION:
 }
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(const PROBLEME_HEBDO* Probleme,
-                                                    int NumeroDeLIntervalle)
+                                                    int NumeroDeLIntervalle,
+                                                    const int numeroOptimisation)
 {
     Yuni::Clob buffer;
     double CoutOptimalDeLaSolution;
 
     CoutOptimalDeLaSolution = 0.;
-    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
+    if (numeroOptimisation == PREMIERE_OPTIMISATION)
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
@@ -395,8 +397,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(const PROBLEME_HEBDO* Proble
     auto study = Data::Study::Current::Get();
     int year = Probleme->year;
     int week = Probleme->weekInTheYear;
-    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
-    auto filename = getFilenameWithExtension("criterion", "txt", year, week, optNumber);
+    auto filename = getFilenameWithExtension("criterion", "txt", year, week, numeroOptimisation);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 }

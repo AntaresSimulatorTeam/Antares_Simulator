@@ -102,7 +102,8 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle)
+                                                            const int DernierPdtDeLIntervalle, 
+                                                            const int numeroOptimisation)
 {
     int PdtHebdo;
     int PdtJour;
@@ -359,7 +360,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
 
             bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
-            bool opt1 = (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+            bool opt1 = (numeroOptimisation == PREMIERE_OPTIMISATION);
             if (reserveJm1 && opt1)
             {
                 C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
