@@ -899,6 +899,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     MemFree(problem.BruitSurCoutHydraulique);
 
+    MemFree(problem.coutOptimalSolution1);
     MemFree(problem.coutOptimalSolution2);
     MemFree(problem.tempsResolution1);
     MemFree(problem.tempsResolution2);
