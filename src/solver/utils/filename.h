@@ -20,7 +20,7 @@ class optDaily : public optPeriod
 {
 public:
     optDaily(unsigned int day, unsigned int week, unsigned int year);
-    std::string to_string() const; // Shouldn't we have override key-word as well ?
+    std::string to_string() const override;
 
 private:
     unsigned int day_ = 0;
@@ -36,7 +36,7 @@ class optWeekly : public optPeriod
 {
 public:
     optWeekly(unsigned int week, unsigned int year);
-    std::string to_string() const;
+    std::string to_string() const override;
 
 private:
     unsigned int week_ = 0;
