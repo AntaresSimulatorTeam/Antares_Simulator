@@ -31,9 +31,21 @@
 
 #include <antares/logs.h>
 #include <antares/emergency.h>
+#include "../utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
+
+double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
+                                   const int NumeroDeLIntervalle,
+                                   const int numeroOptimisation)
+{
+    if (numeroOptimisation == PREMIERE_OPTIMISATION)
+        return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    else
+        return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+}
+
 
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
@@ -89,13 +101,20 @@ OptimisationHebdo:
         OPT_InitialiserLesCoutsLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
-        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation))
+        std::shared_ptr<optPeriod> opt_period = 
+            createOptimizationPeriod(ProblemeHebdo->OptimisationAuPasHebdomadaire,
+                                     NumeroDeLIntervalle,
+                                     ProblemeHebdo->weekInTheYear,
+                                     ProblemeHebdo->year);
+
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation, opt_period))
             return false;
 
         if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(ProblemeHebdo,
-                                                           NumeroDeLIntervalle, 
-                                                           numeroOptimisation);
+        {
+            double CoutOptimalSolution = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(CoutOptimalSolution, opt_period, numeroOptimisation);
+        }
     }
 
     if (numeroOptimisation == PREMIERE_OPTIMISATION)

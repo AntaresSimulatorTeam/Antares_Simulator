@@ -490,7 +490,6 @@ struct AdequacyPatchParameters
 
 struct PROBLEME_HEBDO
 {
-    uint dayInTheYear = 0;
     uint weekInTheYear = 0;
     uint year = 0;
     

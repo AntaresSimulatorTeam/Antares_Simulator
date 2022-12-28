@@ -165,10 +165,8 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
     void* Prob,
-    uint year,
-    uint week,
-    uint optNumber,
-    Solver::IResultWriter::Ptr writer)
+    Solver::IResultWriter::Ptr writer,
+    std::string filename)
 {
     Clob buffer;
     int Cnt;
@@ -312,7 +310,6 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
 
     buffer.appendFormat("ENDATA\n");
 
-    auto filename = getFilenameWithExtension("problem", "mps", year, week, optNumber);
     writer->addEntryFromBuffer(filename, buffer);
 
     free(Cdeb);
@@ -324,40 +321,28 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
 // Full mps writing
 // --------------------
 fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                             uint year,
-                             uint week,
                              uint optNumber) :
-    I_MPS_writer(year, week, optNumber),
+    I_MPS_writer(optNumber),
     named_splx_problem_(named_splx_problem)
 {}
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename)
 {
-    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_,
-                                              year_,
-                                              week_,
-                                              current_optim_number_,
-                                              writer);
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_, writer, filename);
 }
 
 // ---------------------------------
 // Full mps writing by or-tools
 // ---------------------------------
 fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver,
-                                           uint year,
-                                           uint week,
                                            uint optNumber) :
-    I_MPS_writer(year, week, optNumber),
+    I_MPS_writer(optNumber),
     solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename)
 {
-    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_,
-                                                  year_,
-                                                  week_,
-                                                  current_optim_number_,
-                                                  writer);
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
@@ -370,10 +355,7 @@ mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),
  solver_(solver)
-{
-    week_ = pb_hebdo_->weekInTheYear;
-    year_ = pb_hebdo_->year;
-    
+{    
     export_mps_ = pb_hebdo_->ExportMPS;
     export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
 }
@@ -418,15 +400,11 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
     if (ortools_used_)
     {
         return std::make_unique<fullOrToolsMPSwriter>(solver_,
-                                                      year_,
-                                                      week_,
                                                       current_optim_number_);
     }
     else
     {
         return std::make_unique<fullMPSwriter>(named_splx_problem_,
-                                               year_,
-                                               week_,
                                                current_optim_number_);
     }
 }
