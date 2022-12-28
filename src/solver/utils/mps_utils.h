@@ -81,7 +81,6 @@ class mpsWriterFactory
 {
 public:
     mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
-                     int NumIntervalle,
                      const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                      bool ortoolsUsed,
@@ -97,7 +96,6 @@ private:
 
     // Member data...
     PROBLEME_HEBDO* pb_hebdo_ = nullptr;
-    int num_intervalle_;
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;

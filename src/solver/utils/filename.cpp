@@ -1,20 +1,21 @@
 #include <sstream>
-#include <antares/study.h>
+#include <antares/logs/logs.h>
 #include "filename.h"
 
-std::string getFilenameWithExtension(const YString& prefix,
-                                     const YString& extension,
-                                     uint year,
-                                     uint week,
-                                     uint optNumber)
+using namespace Antares;
+
+std::string getFilenameWithExtension(const std::string& prefix,
+                                     const std::string& extension,
+                                     unsigned int year,
+                                     unsigned int week,
+                                     unsigned int optNumber)
 {
     std::ostringstream outputFile;
     outputFile << prefix.c_str() << "-"
                << std::to_string(year + 1) << "-"
                << std::to_string(week + 1);
 
-    if (optNumber)
-        outputFile << "--optim-nb-" << std::to_string(optNumber);
+    outputFile << "--optim-nb-" << std::to_string(optNumber);
 
     outputFile << "." << extension.c_str();
 

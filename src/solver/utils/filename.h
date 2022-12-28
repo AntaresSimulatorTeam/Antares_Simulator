@@ -1,10 +1,9 @@
 #pragma once
 
 #include <string>
-#include <yuni/core/string.h>
 
-std::string getFilenameWithExtension(const YString& prefix,
-                                     const YString& extension,
-                                     uint year,
-                                     uint week,
-                                     uint optNumber = 0);
+std::string getFilenameWithExtension(const std::string& prefix,
+                                     const std::string& extension,
+                                     const unsigned int year,
+                                     const unsigned int week,
+                                     const unsigned int optNumber);

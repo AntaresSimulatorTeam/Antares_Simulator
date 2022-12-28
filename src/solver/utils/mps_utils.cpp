@@ -361,13 +361,11 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
-                                   int NumIntervalle,
                                    const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    bool ortoolsUsed,
                                    MPSolver* solver) :
  pb_hebdo_(ProblemeHebdo),
- num_intervalle_(NumIntervalle),
  current_optim_number_(current_optim_number),
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),

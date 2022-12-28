@@ -244,8 +244,11 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
 
-    mpsWriterFactory mps_writer_factory(
-      ProblemeHebdo, NumIntervalle, numeroOptimisation, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(ProblemeHebdo, 
+                                        numeroOptimisation, 
+                                        &Probleme, 
+                                        ortoolsUsed,
+                                        solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter);
 
