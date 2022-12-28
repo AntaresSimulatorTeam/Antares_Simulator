@@ -14,9 +14,9 @@ optDaily::optDaily(unsigned int day, unsigned int week, unsigned int year) :
 
 std::string optDaily::to_string() const
 {
-    std::string to_return = std::to_string(day_ + 1) + "-";
+    std::string to_return = std::to_string(year_ + 1) + "-";
     to_return += std::to_string(week_ + 1) + "-";
-    to_return += std::to_string(year_ + 1);
+    to_return += std::to_string(day_ + 1);
     return to_return;
 }
 
@@ -30,8 +30,8 @@ optWeekly::optWeekly(unsigned int week, unsigned int year) :
 
 std::string optWeekly::to_string() const
 {
-    std::string to_return = std::to_string(week_ + 1) + "-";
-    to_return += std::to_string(year_ + 1);
+    std::string to_return = std::to_string(year_ + 1) + "-";
+    to_return += std::to_string(week_ + 1);
     return to_return;
 }
 
