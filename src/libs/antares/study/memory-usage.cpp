@@ -54,9 +54,9 @@ StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
 {
     // alias to parameters
     auto& parameters = study.parameters;
-
+    assert(parameters.yearsFilter.size() == years && "Invalid size for yearsFilter");
     // playlist
-    if (parameters.userPlaylist and parameters.yearsFilter)
+    if (parameters.userPlaylist && !parameters.yearsFilter.empty())
     {
         uint y = 0;
         for (uint i = 0; i != years; ++i)
