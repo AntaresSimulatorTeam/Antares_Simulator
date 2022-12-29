@@ -8,11 +8,11 @@ using namespace Antares;
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-optDaily::optDaily(unsigned int day, unsigned int week, unsigned int year) :
+optDailyAsString::optDailyAsString(unsigned int day, unsigned int week, unsigned int year) :
     day_(day), week_(week), year_(year)
 {}
 
-std::string optDaily::to_string() const
+std::string optDailyAsString::to_string() const
 {
     std::string to_return = std::to_string(year_ + 1) + "-";
     to_return += std::to_string(week_ + 1) + "-";
@@ -24,11 +24,11 @@ std::string optDaily::to_string() const
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-optWeekly::optWeekly(unsigned int week, unsigned int year) :
+optWeeklyAsString::optWeeklyAsString(unsigned int week, unsigned int year) :
     week_(week), year_(year)
 {}
 
-std::string optWeekly::to_string() const
+std::string optWeeklyAsString::to_string() const
 {
     std::string to_return = std::to_string(year_ + 1) + "-";
     to_return += std::to_string(week_ + 1);
@@ -39,27 +39,27 @@ std::string optWeekly::to_string() const
 // ------------------------------------
 // Optimization period factory
 // ------------------------------------
-std::shared_ptr<optPeriod> createOptimizationPeriod(bool isOptimizationWeekly,
+std::shared_ptr<optPeriodAsString> createOptimizationPeriod(bool isOptimizationWeekly,
                                                     unsigned int day,
                                                     unsigned int week,
                                                     unsigned int year)
 {
     if (isOptimizationWeekly)
-        return std::make_shared<optWeekly>(week, year);
+        return std::make_shared<optWeeklyAsString>(week, year);
     else
-        return std::make_shared<optDaily>(day, week, year);
+        return std::make_shared<optDailyAsString>(day, week, year);
 
 }
 
 
 std::string createOptimizationFilename(const std::string& title,
-                                       std::shared_ptr<optPeriod> opt_period,
+                                       std::shared_ptr<optPeriodAsString> opt_period_as_string,
                                        unsigned int optNumber,
                                        const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";
-    outputFile << opt_period->to_string();
+    outputFile << opt_period_as_string->to_string();
     outputFile << "--optim-nb-" << std::to_string(optNumber);
     outputFile << "." << extension.c_str();
 
@@ -67,12 +67,12 @@ std::string createOptimizationFilename(const std::string& title,
     return outputFile.str();
 }
 
-std::string createCriterionFilename(std::shared_ptr<optPeriod> opt_period, const unsigned int optNumber)
+std::string createCriterionFilename(std::shared_ptr<optPeriodAsString> opt_period_as_string, const unsigned int optNumber)
 {
-    return createOptimizationFilename("criterion", opt_period, optNumber, "txt");
+    return createOptimizationFilename("criterion", opt_period_as_string, optNumber, "txt");
 }
 
-std::string createMPSfilename(std::shared_ptr<optPeriod> opt_period, const unsigned int optNumber)
+std::string createMPSfilename(std::shared_ptr<optPeriodAsString> opt_period_as_string, const unsigned int optNumber)
 {
-    return createOptimizationFilename("problem", opt_period, optNumber, "mps");
+    return createOptimizationFilename("problem", opt_period_as_string, optNumber, "mps");
 }

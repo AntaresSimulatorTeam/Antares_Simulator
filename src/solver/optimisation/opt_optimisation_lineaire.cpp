@@ -100,19 +100,22 @@ OptimisationHebdo:
         OPT_InitialiserLesCoutsLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
-        std::shared_ptr<optPeriod> opt_period = 
+        // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
+        // depending whether the optimization is daily or weekly.
+        // These sequences are used when building the names of MPS or criterion files. 
+        std::shared_ptr<optPeriodAsString> opt_period_as_string = 
             createOptimizationPeriod(ProblemeHebdo->OptimisationAuPasHebdomadaire,
                                      NumeroDeLIntervalle,
                                      ProblemeHebdo->weekInTheYear,
                                      ProblemeHebdo->year);
 
-        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation, opt_period))
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation, opt_period_as_string))
             return false;
 
         if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
         {
             double CoutOptimalSolution = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, numeroOptimisation);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(CoutOptimalSolution, opt_period, numeroOptimisation);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(CoutOptimalSolution, opt_period_as_string, numeroOptimisation);
         }
     }
 

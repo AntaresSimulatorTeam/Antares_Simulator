@@ -98,7 +98,7 @@ private:
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
                          int NumIntervalle,
                          const int numeroOptimisation,
-                         std::shared_ptr<optPeriod> opt_period)
+                         std::shared_ptr<optPeriodAsString> opt_period_as_string)
 {
     int Var;
     int Cnt;
@@ -244,7 +244,7 @@ RESOLUTION:
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
-    std::string filename = createMPSfilename(opt_period, numeroOptimisation);
+    const std::string filename = createMPSfilename(opt_period_as_string, numeroOptimisation);
     mpsWriterFactory mps_writer_factory(ProblemeHebdo, 
                                         numeroOptimisation, 
                                         &Probleme, 
@@ -384,14 +384,14 @@ RESOLUTION:
 }
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double CoutOptimalDeLaSolution,
-                                                    std::shared_ptr<optPeriod> opt_period,
+                                                    std::shared_ptr<optPeriodAsString> opt_period_as_string,
                                                     int numeroOptimisation)
 {
     Yuni::Clob buffer;
     buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
 
     auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(opt_period, numeroOptimisation);
+    auto filename = createCriterionFilename(opt_period_as_string, numeroOptimisation);
     auto writer = study->resultWriter;
     writer->addEntryFromBuffer(filename, buffer);
 }
