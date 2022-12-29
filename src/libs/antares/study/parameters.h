@@ -40,9 +40,7 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
 
-using namespace std;
 
 namespace Antares
 {
@@ -160,15 +158,6 @@ public:
     void fixGenRefreshForNTC();
 
     /*!
-    ** \brief Check if some general data seem valid
-    **
-    ** \return The error if any (stErrNone otherwise)
-    */
-    StudyError checkIntegrity() const;
-
-    void removeExtraSettings();
-
-    /*!
     ** \brief Get the amount of memory used by the general data
     */
     Yuni::uint64 memoryUsage() const;
@@ -203,6 +192,9 @@ public:
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
+
+    //! Save the internal settings into an INI file
+    void saveToINI(IniFile& ini) const;
 
 public:
     //! \name Mode
@@ -420,9 +412,6 @@ public:
         //! Flag to export mps files
         mpsExportStatus exportMPS;
 
-        //! if MPS files are exported, a flag to split them
-        bool splitExportedMPS;
-
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
 
@@ -493,14 +482,8 @@ public:
     //     (obvious if the parallel mode is not required : answer is yes).
     bool allSetsHaveSameSize;
 
-    struct
-    {
-        //! Day ahead reserve allocation mode
-        DayAheadReserveManagement daMode;
-    } reserveManagement;
-
     //! Transmission capacities
-    TransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
     LinkType linkType;
     //! Simplex optimization range (day/week)
@@ -553,14 +536,14 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
+    // Format of results. Currently, only single files or zip archive are supported
+    ResultFormat resultFormat = legacyFilesDirectories;
 
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
-    //! Save the internal settings into an INI file
-    void saveToINI(IniFile& ini) const;
 
     void resetPlayedYears(uint nbOfYears);
 

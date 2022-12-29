@@ -199,8 +199,8 @@ Application::Application() : wxApp()
 {
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
-    // Antares SWAP
-    memory.initialize();
+
+    memory.initializeTemporaryFolder();
 }
 
 bool Application::OnInit()
@@ -320,8 +320,6 @@ bool Application::OnInit()
 
     // Creating the main frame
     mainFrame = new Forms::ApplWnd();
-    // Checking for orphan swap files
-    mainFrame->timerCleanSwapFiles(700 /*ms*/);
 
     // Show time !
     mainFrame->Show(true);
@@ -333,11 +331,6 @@ bool Application::OnInit()
 
 Application::~Application()
 {
-    // Removing all unused swap files
-    memory.removeAllUnusedSwapFiles();
-    // Checking for orphan swap files
-    memory.cleanupCacheFolder();
-
     logs.info() << "Exiting now.";
 }
 

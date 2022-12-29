@@ -34,7 +34,7 @@
 #include <antares/emergency.h>
 #include <antares/logs.h>
 #include <antares/study.h>
-#include <antares/memory/memory.h>
+#include <i_writer.h>
 #include "../misc/cholesky.h"
 #include "../misc/matrix-dp-make.h"
 
@@ -59,8 +59,6 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
         hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
         hydroseries.count = tsCount;
-
-        hydroseries.flush();
     });
 }
 
@@ -79,12 +77,10 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
             hydroseries.ror.averageTimeseries();
             hydroseries.storage.averageTimeseries();
         }
-
-        hydroseries.flush();
     });
 }
 
-bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
+bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter::Ptr writer)
 {
     logs.info() << "Generating the hydro time-series";
 
@@ -118,8 +114,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
         AntaresSolverEmergencyShutdown();
     }
 
-    CHSKY.flush();
-    B.flush();
     Matrix<double> CORRE;
     CORRE.reset(DIM, DIM);
 
@@ -285,12 +279,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
             assert(not Math::NaN(monthlyStorage)
                    && "TS generator Hydro: NaN value detected in timeseries");
 
-            if (Antares::Memory::swapSupport)
-            {
-                prepro.data.flush();
-                series.flush();
-            }
-
             cumul += daysPerMonth;
         }
 
@@ -311,28 +299,26 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear)
             logs.info() << "Archiving the hydro time-series";
             String output;
             study.areas.each([&](const Data::Area& area) {
-                study.buffer.clear() << study.folderOutput << SEP << "ts-generator" << SEP
-                                     << "hydro" << SEP << "mc-" << currentYear << SEP << area.id;
-                if (IO::Directory::Create(study.buffer))
+                study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
+                                     << currentYear << SEP << area.id;
+
                 {
+                    std::string ror_buffer;
                     output.clear() << study.buffer << SEP << "ror.txt";
-                    area.hydro.series->ror.saveToCSVFile(output);
-
-                    output.clear() << study.buffer << SEP << "storage.txt";
-                    area.hydro.series->storage.saveToCSVFile(output);
-
-                    area.hydro.series->flush();
+                    writer->addEntryFromBuffer(output.c_str(), ror_buffer);
                 }
 
+                {
+                    std::string storage_buffer;
+                    output.clear() << study.buffer << SEP << "storage.txt";
+                    writer->addEntryFromBuffer(output.c_str(), storage_buffer);
+                }
                 ++progression;
             });
         }
     }
 
     delete[] NORM;
-
-    if (Antares::Memory::swapSupport)
-        study.preproHydroCorrelation.annual->flush();
 
     return true;
 }

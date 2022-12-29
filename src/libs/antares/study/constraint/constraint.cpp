@@ -270,7 +270,6 @@ void BindingConstraint::resetToDefaultValues()
     pComments.clear();
     pValues.zero();
     pValues.markAsModified();
-    pValues.flush();
 }
 
 void BindingConstraint::copyWeights(const Study& study,
@@ -810,7 +809,6 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
             (void)memcpy(pValues.entry[columnInferior], m.entry[0], sizeof(double) * h);
             logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
                         << OperatorToShortCString(pOperator) << ')';
-            pValues.flush();
             return true;
         }
     }
@@ -1431,18 +1429,18 @@ void BindingConstraint::initLinkArrays(double* w,
     }
 }
 
-bool BindingConstraint::invalidate(bool reload) const
+bool BindingConstraint::forceReload(bool reload) const
 {
-    return pValues.invalidate(reload);
+    return pValues.forceReload(reload);
 }
 
-bool BindConstList::invalidate(bool reload) const
+bool BindConstList::forceReload(bool reload) const
 {
     if (not pList.empty())
     {
         bool ret = true;
         for (uint i = 0; i != pList.size(); ++i)
-            ret = pList[i]->invalidate(reload) and ret;
+            ret = pList[i]->forceReload(reload) and ret;
         return ret;
     }
     return true;
@@ -1515,7 +1513,6 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     }
     }
     pValues.markAsModified();
-    pValues.flush();
 }
 
 bool BindConstList::saveToFolder(const AnyString& folder) const

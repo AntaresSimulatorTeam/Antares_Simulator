@@ -42,11 +42,9 @@ static void AllocateResultsForEconomicMode(void)
     const size_t sizeOfDoubleHours = study.runtime->nbHoursPerYear * sizeof(double);
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
-    uint i;
-
     ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION**)MemAlloc(
       (1 + study.runtime->interconnectionsCount) * sizeof(void*));
-    for (i = 0; i != study.runtime->interconnectionsCount; i++)
+    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
@@ -62,25 +60,14 @@ static void AllocateResultsForEconomicMode(void)
         rpNtc->VariablesDualesMoyennes = (double*)MemAlloc(sizeOfDoubleHours);
         rpNtc->RenteHoraire = (double*)MemAlloc(sizeOfDoubleHours);
     }
-
-    ResultatsParContrainteCouplante = (RESULTATS_PAR_CONTRAINTE_COUPLANTE**)MemAlloc(
-      study.runtime->bindingConstraintCount * sizeof(void*));
-    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
-    {
-        ResultatsParContrainteCouplante[i] = (RESULTATS_PAR_CONTRAINTE_COUPLANTE*)MemAlloc(
-          sizeof(RESULTATS_PAR_CONTRAINTE_COUPLANTE));
-        ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes
-          = (double*)MemAlloc(sizeOfDoubleHours);
-    }
 }
 
 static void DeallocateResultsForEconomicMode(void)
 {
     auto& study = *Data::Study::Current::Get();
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
-    uint i;
 
-    for (i = 0; i != study.runtime->interconnectionsCount; i++)
+    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
     {
         rpNtc = ResultatsParInterconnexion[i];
 
@@ -99,23 +86,14 @@ static void DeallocateResultsForEconomicMode(void)
     }
     MemFree(ResultatsParInterconnexion);
     ResultatsParInterconnexion = NULL;
-
-    for (i = 0; i != study.runtime->bindingConstraintCount; ++i)
-    {
-        MemFree(ResultatsParContrainteCouplante[i]->VariablesDualesMoyennes);
-        MemFree(ResultatsParContrainteCouplante[i]);
-    }
-    MemFree(ResultatsParContrainteCouplante);
-    ResultatsParContrainteCouplante = NULL;
 }
 
 void SIM_AllocationTableaux()
 {
-    uint i;
     auto& study = *Data::Study::Current::Get();
 
     DonneesParPays = (DONNEES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(DONNEES_PAR_PAYS*));
-    for (i = 0; i < study.areas.size(); ++i)
+    for (uint i = 0; i < study.areas.size(); ++i)
         DonneesParPays[i] = (DONNEES_PAR_PAYS*)MemAlloc(sizeof(DONNEES_PAR_PAYS));
 
     ValeursGenereesParPays
@@ -129,7 +107,7 @@ void SIM_AllocationTableaux()
           = (VALEURS_GENEREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
         NumeroChroniquesTireesParPays[numSpace]
           = (NUMERO_CHRONIQUES_TIREES_PAR_PAYS**)MemAlloc(study.areas.size() * sizeof(void*));
-        for (i = 0; i < study.areas.size(); ++i)
+        for (uint i = 0; i < study.areas.size(); ++i)
         {
             auto& area = *study.areas.byIndex[i];
 

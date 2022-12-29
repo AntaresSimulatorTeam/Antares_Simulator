@@ -62,31 +62,18 @@ inline void Links::broadcastNonApplicability(bool applyNonApplicable)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].broadcastNonApplicability(applyNonApplicable);
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 }
 
 inline void Links::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].getPrintStatusFromStudy(study);
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 }
 
 inline void Links::yearBegin(uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].yearBegin(year, numSpace);
-
-    // Flush all memory into the swap files
-    // (only if the support is available)
-    if (Antares::Memory::swapSupport)
-        Antares::memory.flushAll();
 }
 
 inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
@@ -96,11 +83,6 @@ inline void Links::yearEndBuildPrepareDataForEachThermalCluster(State& state,
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -109,11 +91,6 @@ inline void Links::yearEndBuildForEachThermalCluster(State& state, uint year, un
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].yearEndBuildForEachThermalCluster(state, year, numSpace);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -122,11 +99,6 @@ inline void Links::yearEndBuild(State& state, uint year)
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].yearEndBuild(state, year);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 
@@ -135,11 +107,6 @@ inline void Links::yearEnd(uint year, uint numSpace)
     for (uint i = 0; i != pLinkCount; ++i)
     {
         pLinks[i].yearEnd(year, numSpace);
-
-        // Flush all memory into the swap files
-        // (only if the support is available)
-        if (Antares::Memory::swapSupport)
-            Antares::memory.flushAll();
     }
 }
 

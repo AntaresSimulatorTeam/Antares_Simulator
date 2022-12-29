@@ -63,7 +63,7 @@ void StudyHeader::reset()
     author = STUDYHEADER_DEFAULT_AUTHOR;
 }
 
-void StudyHeader::internalCopySettingsToIni(IniFile& ini, bool upgradeVersion)
+void StudyHeader::CopySettingsToIni(IniFile& ini, bool upgradeVersion)
 {
     // New section
     IniFile::Section* sect = ini.addSection("antares");
@@ -197,7 +197,7 @@ bool StudyHeader::loadFromFile(const AnyString& filename, bool warnings)
 bool StudyHeader::saveToFile(const AnyString& filename, bool upgradeVersion)
 {
     IniFile ini;
-    internalCopySettingsToIni(ini, upgradeVersion);
+    CopySettingsToIni(ini, upgradeVersion);
     return ini.save(filename);
 }
 

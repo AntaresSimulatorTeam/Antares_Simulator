@@ -140,9 +140,6 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
     auto& mainFrm = *Forms::ApplWnd::Instance();
     Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
 
-    // Checking for orphan swap files
-    // mainFrm.timerCleanSwapFiles(100 /*ms*/);
-
     // Getting when the process was launched
     const wxDateTime startTime = wxDateTime::Now();
 
@@ -216,10 +213,6 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
 
         mainFrm.forceRefresh();
     }
-
-    // Checking for orphan swap files
-    // We may have to clean the cache folder
-    mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
     // Remove the temporary file
     IO::File::Delete(filename);

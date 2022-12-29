@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include "opt_time_writer.h"
 #include "sim_structure_probleme_economique.h"
 
 using namespace Yuni;
@@ -90,6 +91,7 @@ void Adequacy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = pProblemesHebdo[numSpace];
     state.resSpilled.reset(study.areas.size(), (uint)nbHoursInAWeek);
+    state.numSpace = numSpace;
 }
 
 bool Adequacy::simulationBegin()
@@ -170,6 +172,8 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
+    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
+
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
@@ -222,8 +226,6 @@ bool Adequacy::year(Progression::Task& progression,
                             state.resSpilled[ar][hw] = 0.;
                     }
                 }
-
-                area.reserves.flush();
             }
 
             try
@@ -358,15 +360,18 @@ bool Adequacy::year(Progression::Task& progression,
 
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = false;
 
+        optWriter.addTime(w,
+                          pProblemesHebdo[numSpace]->tempsResolution1[0],
+                          pProblemesHebdo[numSpace]->tempsResolution2[0]);
+
         ++progression;
     }
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
-    auto& optStat = pProblemesHebdo[numSpace]->optimizationStatistics_object;
-    state.averageOptimizationTime = optStat.getAverageSolveTime();
-    optStat.reset();
+    optWriter.finalize();
+    finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
+
     return true;
 }
 

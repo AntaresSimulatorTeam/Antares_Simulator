@@ -24,17 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_FILES_FILES_H__
-#define __ANTARES_LIBS_FILES_FILES_H__
 
-#include <yuni/yuni.h>
-#include <stdio.h>
+#include "constants.h"
 
-/*!
-** ** \brief Opens a file
-** **
-** ** \see man 3 fopen
-** */
-FILE* FileOpen(const char* filename, const char* mode);
+namespace Antares::Constants {
 
-#endif /* __ANTARES_LIBS_FILES_FILES_H__ */
+const std::array<unsigned int, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+} // namespace constants

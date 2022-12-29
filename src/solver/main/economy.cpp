@@ -40,6 +40,7 @@ void Application::runSimulationInEconomicMode()
     // Type of the simulation
     typedef Solver::Simulation::ISimulation<Solver::Simulation::Economy> SimulationType;
     SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
+    simulation.checkWriter();
     simulation.run();
 
     if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))

@@ -294,12 +294,6 @@ public:
         NextType::hourForEachLink(state, numSpace);
     }
 
-    void hourEnd(State& state, uint hourInTheYear)
-    {
-        // Next
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     void beforeYearByYearExport(uint /*year*/, uint numSpace)
     {
         for (uint i = 0; i != VCardType::columnCount; ++i)

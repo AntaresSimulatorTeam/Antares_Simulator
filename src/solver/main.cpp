@@ -49,6 +49,8 @@
 #include <antares/locale.h>
 #include "misc/system-memory.h"
 
+#include "signal-handling/public.h"
+
 #ifdef YUNI_OS_WINDOWS
 #include <conio.h>
 #else
@@ -129,12 +131,14 @@ int main(int argc, char** argv)
     // Dealing with the lack of memory
     std::set_new_handler(&NotEnoughMemory);
 
-    // Antares SWAP
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     // locale
     InitializeDefaultLocale();
+
+    // Initialize signal handler
+    Antares::Solver::initializeSignalHandlers();
 
     // Getting real UTF8 arguments
     argv = AntaresGetUTF8Arguments(argc, argv);

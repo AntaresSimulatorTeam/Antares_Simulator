@@ -409,7 +409,7 @@ public:
     /*!
     ** \brief Invalidate all matrices
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified
@@ -504,9 +504,11 @@ private:
     //! Operator
     Operator pOperator;
     //! Print binding constraint's marginal prices of any year for which time step granularity ?
-    uint pFilterYearByYear = filterAll;
+    // By default, print nothing
+    uint pFilterYearByYear = filterNone;
     //! Print binding constraint's marginal prices synthesis for which time step granularity ?
-    uint pFilterSynthesis = filterAll;
+    // By default, print nothing
+    uint pFilterSynthesis = filterNone;
     //! Enabled / Disabled
     bool pEnabled;
     //! Comments
@@ -659,7 +661,7 @@ public:
     /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified

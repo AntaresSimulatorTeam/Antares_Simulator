@@ -60,7 +60,6 @@ inline void Results<FirstDecoratorT, DecoratorForSpatialAggregateT>::merge(
   const IntermediateValues& data)
 {
     DecoratorType::merge(year, data);
-    data.flush();
 }
 
 template<class FirstDecoratorT, template<class, int> class DecoratorForSpatialAggregateT>

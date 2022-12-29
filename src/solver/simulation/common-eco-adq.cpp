@@ -95,8 +95,6 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
             auto& mtxParamaters = link->parameters;
             ntcValues.ResistanceApparente[j] = mtxParamaters[Data::fhlImpedances][decalPasDeTemps];
-
-            link->flush();
         }
     }
 
@@ -166,8 +164,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                     for (uint h = 0; h != series.height; ++h)
                         mrs[h] += column[h];
                 }
-
-                series.flush();
             }
         }
 
@@ -188,8 +184,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 auto& column = series[tsIndex];
                 for (uint h = 0; h != series.height; ++h)
                     adq[h] += column[h];
-
-                series.flush();
             }
         }
 
@@ -205,7 +199,8 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
-    const bool flowQuadEnabled = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+    const bool flowQuadEnabled
+      = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 
@@ -219,12 +214,9 @@ bool ShouldUseQuadraticOptimisation(const Data::Study& study)
         {
             if (Math::Abs(impedances[hour]) >= 1e-100)
             {
-                lnk.parameters.flush();
                 return true;
             }
         }
-
-        lnk.parameters.flush();
     }
     return false;
 }
@@ -410,6 +402,18 @@ int retrieveAverageNTC(const Data::Study& study,
         avg[h] /= yearsWeightSum;
     }
     return 0;
+}
+
+void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
+                                    Antares::Solver::Variable::State& state)
+{
+    auto& firstOptStat = problem.optimizationStatistics[0];
+    state.averageOptimizationTime1 = firstOptStat.getAverageSolveTime();
+    firstOptStat.reset();
+
+    auto& secondOptStat = problem.optimizationStatistics[1];
+    state.averageOptimizationTime2 = secondOptStat.getAverageSolveTime();
+    secondOptStat.reset();
 }
 
 } // namespace Simulation

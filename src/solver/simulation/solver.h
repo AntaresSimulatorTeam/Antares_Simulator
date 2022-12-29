@@ -34,13 +34,14 @@
 #include <antares/benchmarking.h>
 
 #include <yuni/core/string.h>
+#include <yuni/job/queue/service.h>
 #include "../variable/state.h"
 #include "../misc/options.h"
 #include "solver.data.h"
 #include "solver.utils.h"
 #include "../hydro/management/management.h"
 
-
+#include <writer_factory.h>
 
 namespace Antares
 {
@@ -66,12 +67,15 @@ public:
     /*!
     ** \brief Constructor (with a given study)
     */
-    ISimulation(Data::Study& study, 
+    ISimulation(Data::Study& study,
                 const ::Settings& settings,
                 Benchmarking::IDurationCollector* duration_collector);
     //! Destructor
     ~ISimulation();
     //@}
+
+    // Check that the writer is valid
+    void checkWriter() const;
 
     /*!
     ** \brief Run the simulation
@@ -174,12 +178,16 @@ private:
 
     //! Statistics about annual (system and solution) costs
     annualCostsStatistics pAnnualCostsStatistics;
-    
+
     // Collecting durations inside the simulation
     Benchmarking::IDurationCollector* pDurationCollector;
 
+public:
+    //! The queue service that runs every set of parallel years
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService = nullptr;
+    //! Result writer
+    Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 }; // class ISimulation
-
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

@@ -96,7 +96,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
         {
             // if at least one area has been invalidated, all constraints
             // must be invalidated as well
-            bindingConstraints.invalidate(true);
+            bindingConstraints.forceReload(true);
             bindingConstraints.markAsModified();
         }
     }
@@ -140,7 +140,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     {
         logs.info() << "  performing a format upgrade";
         // Invalidate all matrices
-        invalidate(true);
+        forceReload(true);
         markAsModified();
         // Invalidate the scenario builder data
         if (not scenarioRules)
@@ -209,7 +209,7 @@ bool Study::saveToFolder(const AnyString& newfolder)
     buffer.clear() << folder << SEP << "settings" << SEP << "simulations";
     ret = IO::Directory::Create(buffer) and ret;
     buffer.clear() << folder << SEP << "settings";
-    ret = simulation.saveToFolder(buffer) and ret;
+    ret = simulationComments.saveToFolder(buffer) and ret;
     buffer.clear() << folder << SEP << "settings" << SEP << "generaldata.ini";
     ret = parameters.saveToFile(buffer) and ret;
 

@@ -133,8 +133,7 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 {
 }
 
-InvalidParametersORTools_SplitMPS::InvalidParametersORTools_SplitMPS() :
- LoadingError("MPS files cannot be split when using OR-Tools")
+IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
 {
 }
 

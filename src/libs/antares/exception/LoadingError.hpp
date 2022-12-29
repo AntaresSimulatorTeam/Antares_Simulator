@@ -179,10 +179,10 @@ public:
     NoAreaInsideAdqPatchMode();
 };
 
-class InvalidParametersORTools_SplitMPS : public LoadingError
+class IncompatibleOutputOptions : public LoadingError
 {
 public:
-    InvalidParametersORTools_SplitMPS();
+    explicit IncompatibleOutputOptions(const std::string& text);
 };
 } // namespace Error
 } // namespace Antares

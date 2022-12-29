@@ -128,18 +128,42 @@ enum SimplexOptimization
 }; // enum SimplexOptimization
 
 /*!
-** \brief Transmission capacities mode
+** \brief Transmission capacities mode (applies to all links)
 */
-enum TransmissionCapacities
+enum class GlobalTransmissionCapacities
 {
     //! Transmission capacities are enabled
-    tncEnabled = 0,
+    localValuesForAllLinks = 0,
     //! Transmission capacities are ignored (set to null)
-    tncIgnore,
+    nullForAllLinks,
     //! Transmission capacities are infinite (aka Copper Plate)
-    tncInfinite,
-
+    infiniteForAllLinks,
+    //! Transmission capacities are ignored only for physical links
+    //! Global property only, cannot be used for individual links
+    nullForPhysicalLinks,
+    //! Transmission capacities are infinite only for physical links (not virtual)
+    //! Global property only, cannot be used for individual links
+    infiniteForPhysicalLinks
 }; // enum TransmissionCapacities
+
+std::string GlobalTransmissionCapacitiesToString(
+  GlobalTransmissionCapacities transmissionCapacities);
+std::string GlobalTransmissionCapacitiesToString_Display(
+  GlobalTransmissionCapacities transmissionCapacities);
+bool stringToGlobalTransmissionCapacities(const AnyString& value,
+                                          GlobalTransmissionCapacities& out);
+
+/*!
+** \brief Transmission capacities mode (applies to individual links)
+*/
+enum class LocalTransmissionCapacities
+{
+    enabled,
+    null,
+    infinite
+};
+
+std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc);
 
 /*!
 ** \brief Asset Type mode
@@ -159,6 +183,8 @@ enum AssetType
 
 }; // enum AssetType
 
+std::string assetTypeToString(const AssetType& assetType);
+
 /*!
 ** \brief Style Type mode
 */
@@ -174,6 +200,8 @@ enum StyleType
     stDotDash,
 
 }; // enum StyleType
+
+std::string styleToString(const StyleType& style);
 
 /*!
 ** \brief Link Type mode
@@ -506,23 +534,14 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-enum DayAheadReserveManagement
+// Format of results
+enum ResultFormat
 {
-    daGlobal = 0,
-    daLocal,
-    daReserveUnknown,
+    // Store outputs as files inside directories
+    legacyFilesDirectories = 0,
+    // Store outputs inside a single zip archive
+    zipArchive
 };
-
-/*!
-** \brief Convert a day ahead reserve allocation mode into a text
-*/
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode);
-
-/*!
-** \brief Convert a text into day ahead reserve allocation mode
-*/
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
-
 
 // ------------------------
 // MPS export status
@@ -541,8 +560,6 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 
 } // namespace Data
 } // namespace Antares
-
-
 
 namespace Antares
 {
@@ -592,9 +609,13 @@ enum LinkCapacityForAdequacyPatchFirstStep
     setExtremityOrigineToZero
 
 }; // enum NTC
-
 } // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
+
+namespace Benchmarking
+{
+class IDurationCollector;
+}
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

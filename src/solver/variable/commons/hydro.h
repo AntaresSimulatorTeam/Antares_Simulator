@@ -202,7 +202,7 @@ public:
         const unsigned int nbchro
           = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
         pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);
-        ror.flush();
+
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -248,11 +248,6 @@ public:
           = (*pFatalValues[numSpace])[state.hourInTheYear];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

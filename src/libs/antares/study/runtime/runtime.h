@@ -179,21 +179,6 @@ public:
     //! The maximum number of renewable clusters for each area
     size_t maxRenewableClustersForSingleArea = 0;
 
-#ifdef ANTARES_USE_GLOBAL_MAXIMUM_COST
-    /*!
-    ** \brief Flag to know if the hydro cost should be infinite
-    **
-    ** This value is only valid for an area (the index) and for a
-    ** given week.
-    */
-    bool* hydroCostByAreaShouldBeInfinite;
-
-    /*!
-    ** \brief A global cost value, greater than any other cost within the study
-    */
-    double globalMaximumCost;
-#endif
-
     /*!
     ** \brief The number of simulation days per month
     */

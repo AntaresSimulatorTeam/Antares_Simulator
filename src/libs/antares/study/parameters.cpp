@@ -105,6 +105,41 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     return false;
 }
 
+static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "txt-files")
+    {
+        out = legacyFilesDirectories;
+        return true;
+    }
+    if (s == "zip") // Using renewable clusters
+    {
+        out = zipArchive;
+        return true;
+    }
+
+    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    out = legacyFilesDirectories;
+
+    return false;
+}
+
+static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
+{
+    const String name = "result-format";
+    switch (fmt)
+    {
+    case zipArchive:
+        section->add(name, "zip");
+        break;
+    default:
+        section->add(name, "txt-files");
+    }
+}
+
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
 {
     if (!text)
@@ -290,7 +325,6 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -299,7 +333,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = tncEnabled;
+    transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -310,7 +344,6 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
-    include.splitExportedMPS = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -319,8 +352,12 @@ void Parameters::reset()
 
     activeRulesScenario.clear();
 
+    hydroDebug = false;
+
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsSolver = "sirius";
+
+    resultFormat = legacyFilesDirectories;
 
     // Adequacy patch
     resetAdqPatchParameters();
@@ -532,7 +569,8 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.synthesis);
     if (key == "hydro-debug")
         return value.to<bool>(d.hydroDebug);
-
+    if (key == "result-format")
+        return ConvertCStrToResultFormat(value, d.resultFormat);
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -566,14 +604,12 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
         {
             logs.warning() << "Reading parameters : invalid MPS export status : " << value
-                << ". Reset to no MPS export.";
+                           << ". Reset to no MPS export.";
             return false;
         }
         return true;
     }
 
-    if (key == "include-split-exported-mps")
-        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -622,14 +658,7 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "transmission-capacities")
     {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
-        else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
-        return true;
+        return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
     return false;
 }
@@ -655,19 +684,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -893,9 +909,9 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
         return true;
     }
     if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
     if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
@@ -991,12 +1007,16 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "shedding-strategy") // Was never used
         return true;
 
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
     if (key == "thresholdmax")
         return true; // value.to<int>(d.thresholdMaximum);
-
+    if (key == "include-split-exported-mps")
+        return true;
     return false;
 }
 
@@ -1128,7 +1148,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1548,8 +1568,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
-    if (!include.splitExportedMPS)
-        logs.info() << "  :: ignoring split exported mps";
     if (!adqPatch.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
@@ -1560,7 +1578,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
+        logs.info() << "  :: ortools solver " << ortoolsSolver
                     << " used for problem resolution";
     }
 }
@@ -1569,11 +1587,6 @@ void Parameters::resetPlaylist(uint nbOfYears)
 {
     this->resetPlayedYears(nbOfYears);
     resetYearsWeigth();
-}
-
-StudyError Parameters::checkIntegrity() const
-{
-    return stErrNone;
 }
 
 void Parameters::saveToINI(IniFile& ini) const
@@ -1647,6 +1660,7 @@ void Parameters::saveToINI(IniFile& ini) const
         if (hydroDebug)
             section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
+        ParametersSaveResultFormat(section, resultFormat);
     }
 
     // Optimization
@@ -1664,19 +1678,8 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         }
         // Optimization preferences
-        switch (transmissionCapacities)
-        {
-        case tncEnabled:
-            section->add("transmission-capacities", "true");
-            break;
-        case tncIgnore:
-            section->add("transmission-capacities", "false");
-            break;
-        case tncInfinite:
-            section->add("transmission-capacities", "infinite");
-            break;
-        }
-
+        section->add("transmission-capacities",
+                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
         switch (linkType)
         {
         case ltLocal:
@@ -1696,7 +1699,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
-        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1727,8 +1729,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters

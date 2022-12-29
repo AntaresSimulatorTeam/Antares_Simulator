@@ -23,7 +23,7 @@ The amount of RAM required for a simulation depends on:
 - The size of the power system modeled (number of Areas, Links, Thermal clusters, etc.)
 - The number of ready-made Time-Series and that of Time-Series to be generated at runtime
 - The simulation mode (draft, adequacy, economy with "fast" or "accurate" unit commitment)
-- The execution mode (swap, default, parallel)
+- The execution mode (default or parallel)
 
 At any moment, the amount of RAM resources required for a simulation is accessible through the Tools/resources monitor menu.
 
@@ -77,7 +77,7 @@ Examples of reduction from an initial allowance of 12 cores are given hereafter.
 The Table indicates either the refresh status (No) or the refresh span (the associated refresh status "yes" is implicit).
 
 
-[^21]: Options « default » and « swap » do not perform multi-threaded optimizations
+[^21]: Options « default » do not perform multi-threaded optimizations
 
 [^22]: The « draft » mode is not multi-threaded
 

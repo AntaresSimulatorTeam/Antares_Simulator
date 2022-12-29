@@ -32,7 +32,6 @@
 
 #include <antares/study.h>
 #include <antares/study/memory-usage.h>
-#include <antares/memory/memory.h>
 #include "../../application/study.h"
 #include "../../toolbox/create.h"
 #include "../../toolbox/resources.h"
@@ -64,14 +63,10 @@ public:
      stTxtDiskFree(nullptr),
      stTxtSimu(nullptr),
      stTxtSimuDisk(nullptr),
-     stTxtSimuSwap(nullptr),
-     stTxtSimuSwapDisk(nullptr),
      stTxtSimuPar(nullptr),
      stTxtSimuParDisk(nullptr),
      stTxtDataDisplay(nullptr),
      stTxtMemoryCache(nullptr),
-     stTxtMemoryCacheUsage(nullptr),
-     stTxtMemoryCacheCapacity(nullptr),
      timer(nullptr)
     {
     }
@@ -83,14 +78,10 @@ public:
     wxStaticText* stTxtDiskFree;
     wxStaticText* stTxtSimu;
     wxStaticText* stTxtSimuDisk;
-    wxStaticText* stTxtSimuSwap;
-    wxStaticText* stTxtSimuSwapDisk;
     wxStaticText* stTxtSimuPar;
     wxStaticText* stTxtSimuParDisk;
     wxStaticText* stTxtDataDisplay;
     wxStaticText* stTxtMemoryCache;
-    wxStaticText* stTxtMemoryCacheUsage;
-    wxStaticText* stTxtMemoryCacheCapacity;
     wxTimer* timer;
     Yuni::Thread::IThread::Ptr thread;
 
@@ -217,25 +208,6 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
       = new wxStaticText(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
     gridSizer->Add(pData->stTxtMemoryCache, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
-    // Memory cache - capacity
-    auto* stTxtMemoryCacheCapaTtl = new wxStaticText(this,
-                                                     wxID_ANY,
-                                                     wxT("Used by swap files : "),
-                                                     wxDefaultPosition,
-                                                     wxDefaultSize,
-                                                     wxALIGN_RIGHT);
-    gridSizer->Add(stTxtMemoryCacheCapaTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtMemoryCacheUsage = new wxStaticText(
-      this, wxID_ANY, wxT("N/A"), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(
-      pData->stTxtMemoryCacheUsage, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtMemoryCacheCapacity
-      = new wxStaticText(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(
-      pData->stTxtMemoryCacheCapacity, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
     // Space
     {
         auto* st = new wxStaticText(
@@ -293,19 +265,6 @@ MemoryStatistics::MemoryStatistics(wxWindow* parent) :
     pData->stTxtSimuDisk = new wxStaticText(
       this, wxID_ANY, wxT("    Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
     gridSizer->Add(pData->stTxtSimuDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    // Required for a simulation (with swap support)
-    wxStaticText* stTxtSimuSwapTtl = new wxStaticText(
-      this, wxID_ANY, wxT("Swap : "), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(stTxtSimuSwapTtl, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuSwap = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuSwap, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-
-    pData->stTxtSimuSwapDisk = new wxStaticText(
-      this, wxID_ANY, wxT("   Updating..."), wxDefaultPosition, wxDefaultSize, wxALIGN_RIGHT);
-    gridSizer->Add(pData->stTxtSimuSwapDisk, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
 
     // Parallel mode
     auto* stTxtSimuParTtl = new wxStaticText(
@@ -445,29 +404,6 @@ void MemoryStatistics::refreshInformation()
 #endif
     }
 
-    auto& allocator = Antares::memory;
-
-    // Memory cache
-    {
-        uint64 memCache = allocator.memoryUsageInSwap() / (1024 * 1024);
-        s.clear();
-        s << memCache << wxT(" Mo");
-        pData->stTxtMemoryCache->SetLabel(s);
-    }
-
-    // Memory cache
-    {
-        uint64 memCache = allocator.memoryUsage() / (1024 * 1024);
-        s.clear();
-        s << NormalizeAmountOfMemory(memCache) << wxT(" Mo");
-        pData->stTxtMemoryCacheUsage->SetLabel(s);
-    }
-
-    // Memory cache
-    s.clear();
-    s << (allocator.memoryCapacity() / (1024 * 1024)) << wxT(" Mo");
-    pData->stTxtMemoryCacheCapacity->SetLabel(s);
-
     if (!(!study))
     {
         const bool updating = (not pData->timer or pData->thread->started());
@@ -502,31 +438,6 @@ void MemoryStatistics::refreshInformation()
             }
 
             {
-                Data::StudyMemoryUsage m(*study);
-                m.swappingSupport = true;
-                m.estimate();
-                s.clear();
-
-                if (!pDisplayLogsOnce)
-                {
-                    logs.info() << "Memory usage: estimate: input: "
-                                << (m.requiredMemoryForInput / (1024 * 1024))
-                                << "Mo, output: " << (m.requiredMemoryForOutput / (1024 * 1024))
-                                << "Mo,   disk: " << (m.requiredDiskSpace / (1024 * 1024))
-                                << "Mo (with swap support)";
-                }
-
-                s << wxT("~ ") << NormalizeAmountOfMemory(m.requiredMemory) << wxT(" Mo");
-                pData->stTxtSimuSwap->SetLabel(s);
-                s.clear();
-                if (m.requiredDiskSpace)
-                    s << wxT("~ ") << (m.requiredDiskSpace / (1024 * 1024)) << wxT(" Mo");
-                else
-                    s << wxT("0 Mo");
-                pData->stTxtSimuSwapDisk->SetLabel(s);
-            }
-
-            {
                 // Parallel mode
                 study->maxNbYearsInParallel = study->maxNbYearsInParallel_save;
 
@@ -558,8 +469,6 @@ void MemoryStatistics::refreshInformation()
         {
             pData->stTxtSimu->SetLabel(wxT("updating"));
             pData->stTxtSimuDisk->SetLabel(wxT("updating"));
-            pData->stTxtSimuSwap->SetLabel(wxT("updating"));
-            pData->stTxtSimuSwapDisk->SetLabel(wxT("updating"));
             pData->stTxtSimuPar->SetLabel(wxT("updating"));
             pData->stTxtSimuParDisk->SetLabel(wxT("updating"));
         }
@@ -577,8 +486,6 @@ void MemoryStatistics::refreshInformation()
 
         pData->stTxtSimu->SetLabel(wxT("N/A"));
         pData->stTxtSimuDisk->SetLabel(wxT("N/A"));
-        pData->stTxtSimuSwap->SetLabel(wxT("N/A"));
-        pData->stTxtSimuSwapDisk->SetLabel(wxT("N/A"));
         pData->stTxtSimuPar->SetLabel(wxT("N/A"));
         pData->stTxtSimuParDisk->SetLabel(wxT("N/A"));
     }

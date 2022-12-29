@@ -98,7 +98,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
-    if (not simulation.loadFromFolder(options))
+    if (not simulationComments.loadFromFolder(options))
     {
         if (options.loadOnlyNeeded)
             return false;
@@ -155,12 +155,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Areas need this number to be up-to-date at construction.
     getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
 
-#ifdef ANTARES_SWAP_SUPPORT
-    // In case of swap support, MC years parallel computing is forbidden.
-    // Numbers of parallel years is set to 1.
-    maxNbYearsInParallel = 1;
-#endif
-
     // In case the study is run in the draft mode, only 1 core is allowed
     if (parameters.mode == Data::stdmAdequacyDraft)
         maxNbYearsInParallel = 1;
@@ -192,34 +186,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         // Post-processing when loaded from the User-Interface
         uiinfo->reload();
         uiinfo->reloadBindingConstraints();
-    }
-
-    if (usedByTheSolver and options.prepareOutput)
-    {
-        // Write all available areas as a reminder
-        {
-            buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "areas.txt";
-            IO::File::Stream file;
-            if (file.openRW(buffer))
-            {
-                for (auto i = setsOfAreas.begin(); i != setsOfAreas.end(); ++i)
-                {
-                    if (setsOfAreas.hasOutput(i->first))
-                        file << "@ " << i->first << "\r\n";
-                }
-                areas.each([&](const Data::Area& area) { file << area.name << "\r\n"; });
-            }
-            else
-                logs.error() << "impossible to write " << buffer;
-        }
-
-        // Write all available links as a reminder
-        buffer.clear() << folderOutput << SEP << "about-the-study" << SEP << "links.txt";
-        if (not areas.saveLinkListToFile(buffer))
-        {
-            logs.error() << "impossible to write " << buffer;
-            return false;
-        }
     }
 
     // calendar update

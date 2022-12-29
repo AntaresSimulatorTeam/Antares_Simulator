@@ -6,7 +6,7 @@
 
 using namespace Antares::Data;
 
-namespace Benchmarking 
+namespace Benchmarking
 {
 	// Collecting data study
 	// ---------------------------
@@ -131,7 +131,7 @@ namespace Benchmarking
         std::string ortoolsSolver = "none";
         if (ortoolsUsed)
         {
-            ortoolsSolver = Enum::toString<OrtoolsSolver>(study_.parameters.ortoolsEnumUsed);
+            ortoolsSolver = study_.parameters.ortoolsSolver;
         }
         file_content.addItemToSection("study", "ortools solver", ortoolsSolver);
     }
@@ -149,7 +149,7 @@ namespace Benchmarking
 	// -------------------------------------
 	void DurationCollector::toFileContent(FileContent& file_content)
 	{		
-		for (pair<string, vector<int64_t>> element : duration_items_)
+        for (const auto& element : duration_items_)
 		{
 			const std::string& name = element.first;
 			const auto& durations = element.second;

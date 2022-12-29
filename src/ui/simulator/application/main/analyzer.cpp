@@ -57,9 +57,6 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
     auto& mainFrm = *Forms::ApplWnd::Instance();
     Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
 
-    // Checking for orphan swap files
-    mainFrm.timerCleanSwapFiles(100 /*ms*/);
-
     const wxString wfilename = evt.GetString();
     if (wfilename.empty())
         return;
@@ -168,10 +165,6 @@ void ApplWnd::evtLaunchAnalyzer(wxCommandEvent& evt)
 
         mainFrm.forceRefresh();
     }
-
-    // Checking for orphan swap files
-    // We may have to clean the cache folder
-    mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
     // Remove the temporary file
     IO::File::Delete(filename);

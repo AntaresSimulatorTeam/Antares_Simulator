@@ -52,8 +52,7 @@ using namespace Antares;
 
 int main(int argc, char* argv[])
 {
-    // Antares SWAP
-    if (not memory.initialize())
+    if (not memory.initializeTemporaryFolder())
         return EXIT_FAILURE;
 
     // We have one or several arguments
@@ -77,7 +76,7 @@ int main(int argc, char* argv[])
         options.addFlag(optVersion, 'v', "version", "Print the version and exit");
 
         // An error has occured
-        if (!options(argc, argv))
+        if (options(argc, argv) == GetOpt::ReturnCode::error)
         {
             FreeUTF8Arguments(argc, argv);
             return options.errors() ? 1 : 0;

@@ -233,20 +233,6 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
         button->enabled(false);
     }
 
-    // Day ahead reserve allocation
-    {
-        label = Component::CreateLabel(this, wxT("Day ahead reserve management"));
-        button = new Component::Button(this, wxT("local"), "images/16x16/tag.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        // onPopup.bind(this, &AdvancedParameters::onDAReserveManagementMode);
-        // button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnDARreserveManagement = button;
-        button->enabled(false);
-    }
-
     // Unit Commitment mode
     {
         label = Component::CreateLabel(this, wxT("Unit Commitment Mode"));
@@ -365,7 +351,6 @@ void AdvancedParameters::onResetToDefault(void*)
         parameters.hydroPricing.hpMode = Data::hpHeuristic;
         parameters.power.fluctuations = Data::lssFreeModulations;
         parameters.shedding.policy = Data::shpShavePeaks;
-        parameters.reserveManagement.daMode = Data::daGlobal;
         parameters.unitCommitment.ucMode = Data::ucHeuristic;
         parameters.nbCores.ncMode = Data::ncAvg;
 
@@ -437,11 +422,6 @@ void AdvancedParameters::refresh()
     text = wxStringFromUTF8(
       RenewableGenerationModellingToCString(study.parameters.renewableGeneration()));
     pBtnRenewableGenModelling->caption(text);
-
-    text = wxStringFromUTF8(
-      DayAheadReserveManagementModeToCString(study.parameters.reserveManagement.daMode));
-    // pBtnDAReserveAllocation->caption(text);
-    pBtnDARreserveManagement->caption(wxT("global"));
 }
 
 wxTextCtrl* AdvancedParameters::insertEdit(wxWindow* parent,
@@ -1012,58 +992,6 @@ void AdvancedParameters::onSelectRGMrenewableClusters(wxCommandEvent& /* evt */)
         study.parameters.renewableGeneration.rgModelling = Data::rgClusters;
         MarkTheStudyAsModified();
         OnRenewableGenerationModellingChanged(false);
-        refresh();
-    }
-}
-
-void AdvancedParameters::onDAReserveAllocationMode(Component::Button&, wxMenu& menu, void*)
-{
-    wxMenuItem* it;
-    wxString text;
-
-    text = wxStringFromUTF8(DayAheadReserveManagementModeToCString(Data::daGlobal));
-    text << wxT("   [default]");
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectDAGlobal),
-                 nullptr,
-                 this);
-
-    text.clear();
-    text = wxStringFromUTF8(DayAheadReserveManagementModeToCString(Data::daLocal));
-    it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectDALocal),
-                 nullptr,
-                 this);
-}
-
-void AdvancedParameters::onSelectDAGlobal(wxCommandEvent& /* evt */)
-{
-    auto& study = *Data::Study::Current::Get();
-    if (not Data::Study::Current::Valid())
-        return;
-
-    if (study.parameters.reserveManagement.daMode != Data::daGlobal)
-    {
-        study.parameters.reserveManagement.daMode = Data::daGlobal;
-        MarkTheStudyAsModified();
-        refresh();
-    }
-}
-
-void AdvancedParameters::onSelectDALocal(wxCommandEvent& /* evt */)
-{
-    if (not Data::Study::Current::Valid())
-        return;
-    auto& study = *Data::Study::Current::Get();
-
-    if (study.parameters.reserveManagement.daMode != Data::daLocal)
-    {
-        study.parameters.reserveManagement.daMode = Data::daLocal;
-        MarkTheStudyAsModified();
         refresh();
     }
 }
