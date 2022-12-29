@@ -1586,7 +1586,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
                 study.runtime->timeseriesNumberYear[numSpace] = y;
-                study.runtime->currentYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.

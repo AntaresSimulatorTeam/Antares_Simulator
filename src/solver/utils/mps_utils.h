@@ -19,6 +19,7 @@ using namespace operations_research;
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
                                                uint,
                                                uint,
+                                               uint,
                                                Solver::IResultWriter::Ptr writer);
 
 // ======================
@@ -28,39 +29,48 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
 class I_MPS_writer
 {
 public:
+    I_MPS_writer(uint year, uint week, uint currentOptimNumber) :
+        year_(year), week_(week), current_optim_number_(currentOptimNumber)
+    {}
     I_MPS_writer() = default;
     virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
+
+protected:
+    uint year_ = 0;
+    uint week_ = 0;
+    uint current_optim_number_ = 0;
 };
 
 class fullMPSwriter final : public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                  int currentOptimNumber,
-                  uint thread_number);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+                  uint year,
+                  uint week,
+                  uint currentOptimNumber);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
-    int current_optim_number_;
-    uint thread_number_;
 };
 
 class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
-    fullOrToolsMPSwriter(MPSolver* solver, int currentOptimNumber, uint thread_number);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer);
+    fullOrToolsMPSwriter(MPSolver* solver, 
+                         uint year, 
+                         uint week, 
+                         uint currentOptimNumber);
+    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
 
 private:
     MPSolver* solver_ = nullptr;
-    int current_optim_number_;
-    uint thread_number_;
 };
 
 class nullMPSwriter : public I_MPS_writer
 {
 public:
+    using I_MPS_writer::I_MPS_writer;
     void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/) override
     {
         // Does nothing
@@ -72,10 +82,10 @@ class mpsWriterFactory
 public:
     mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
                      int NumIntervalle,
+                     const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                      bool ortoolsUsed,
-                     MPSolver* solver,
-                     uint thread_number);
+                     MPSolver* solver);
 
     std::unique_ptr<I_MPS_writer> create();
     std::unique_ptr<I_MPS_writer> createOnOptimizationError();
@@ -91,9 +101,11 @@ private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;
-    uint thread_number_;
-    int current_optim_number_;
+    uint current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-    bool is_first_week_of_year_;
+
+    // About optimization period
+    uint week_ = 0;
+    uint year_ = 0;
 };

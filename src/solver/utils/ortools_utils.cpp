@@ -234,12 +234,13 @@ static void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   size_t numSpace,
-                                                   int const numOptim,
+                                                   uint year,
+                                                   uint week,
+                                                   uint const numOptim,
                                                    Antares::Solver::IResultWriter::Ptr writer)
 {
     // 1. Determine filename
-    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
+    const auto filename = getFilenameWithExtension("problem", "mps", year, week, numOptim);
     const auto tmpPath = generateTempPath(filename);
 
     // 2. Write MPS to temporary file

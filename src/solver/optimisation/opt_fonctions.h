@@ -41,9 +41,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*)
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*, const int, const int);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*, const int, const int, const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
-void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
@@ -60,11 +60,11 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, uint, int);
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, int, const int);
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
@@ -83,7 +83,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void*, uint, int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(const PROBLEME_HEBDO*, int, const int);
 
 /*------------------------------*/
 
