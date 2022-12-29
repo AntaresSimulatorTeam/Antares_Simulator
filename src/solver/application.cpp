@@ -465,11 +465,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    study.prepareOutput();
+
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
 
     // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveAboutTheStudy();
+    study.saveAboutTheStudy();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
