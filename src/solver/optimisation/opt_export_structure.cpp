@@ -101,9 +101,9 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
         buffer << Var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
         buffer << firstVal;
-        if (secondVal)
+        if (secondVal.has_value())
         {
-            buffer << " " << *secondVal;
+            buffer << " " << secondVal.value();
         }
         varname[Var] = buffer.str();
     }
