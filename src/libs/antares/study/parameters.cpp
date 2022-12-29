@@ -262,7 +262,7 @@ void Parameters::reset()
     variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
-    this->resetPlayedYears(1);
+    resetPlayedYears(1);
     resetYearsWeigth();
 
     yearByYear = false;
@@ -1224,7 +1224,7 @@ void Parameters::fixBadValues()
     if (derated)
     {
         // Force the number of years to 1
-        this->resetPlayedYears(1);
+        resetPlayedYears(1);
         resetYearsWeigth();
     }
     else
@@ -1585,7 +1585,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
 
 void Parameters::resetPlaylist(uint nbOfYears)
 {
-    this->resetPlayedYears(nbOfYears);
+    resetPlayedYears(nbOfYears);
     resetYearsWeigth();
 }
 
