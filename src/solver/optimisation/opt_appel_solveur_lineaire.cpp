@@ -388,10 +388,12 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double CoutOptimalDeLaSoluti
                                                     int numeroOptimisation)
 {
     Yuni::Clob buffer;
-    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
-
     auto study = Data::Study::Current::Get();
     auto filename = createCriterionFilename(opt_period_as_string, numeroOptimisation);
     auto writer = study->resultWriter;
+
+    logs.info() << "Solver Criterion File: `" << filename << "'";
+
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
     writer->addEntryFromBuffer(filename, buffer);
 }

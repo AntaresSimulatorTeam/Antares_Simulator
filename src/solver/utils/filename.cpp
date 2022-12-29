@@ -63,7 +63,6 @@ std::string createOptimizationFilename(const std::string& title,
     outputFile << "--optim-nb-" << std::to_string(optNumber);
     outputFile << "." << extension.c_str();
 
-    logs.info() << "Solver output File: `" << outputFile.str() << "'";
     return outputFile.str();
 }
 

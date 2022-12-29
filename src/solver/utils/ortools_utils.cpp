@@ -236,6 +236,9 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter::Ptr writer,
                                                    std::string filename)
 {
+    // 0. Logging file name
+    logs.info() << "Solver or-tools MPS File: `" << filename << "'";
+    
     // 1. Determine filename
     const auto tmpPath = generateTempPath(filename);
 

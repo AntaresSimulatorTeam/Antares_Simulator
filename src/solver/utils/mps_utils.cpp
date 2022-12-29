@@ -310,6 +310,7 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
 
     buffer.appendFormat("ENDATA\n");
 
+    logs.info() << "Solver Sirius MPS File: `" << filename << "'";
     writer->addEntryFromBuffer(filename, buffer);
 
     free(Cdeb);
