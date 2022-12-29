@@ -90,14 +90,14 @@ private:
 };
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-    PROBLEME_HEBDO* Prob,
+    PROBLEME_SIMPLEXE_NOMME* Prob,
     uint year,
     uint week,
     uint optNumber,
     Solver::IResultWriter::Ptr writer)
 {
-    const auto tmpPath = generateTempPath(filename);
     const auto filename = getFilenameWithExtension("problem", "mps", year, week, optNumber);
+    const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();
     {
