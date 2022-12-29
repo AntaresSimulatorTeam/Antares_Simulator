@@ -207,7 +207,7 @@ static void change_MPSolver_rhs(const MPSolver* solver,
     }
 }
 
-static std::string generateTempPath(const std::string& filename)
+std::string generateTempPath(const std::string& filename)
 {
     namespace fs = std::filesystem;
     std::ostringstream tmpPath;
@@ -215,7 +215,7 @@ static std::string generateTempPath(const std::string& filename)
     return tmpPath.str();
 }
 
-static void removeTemporaryFile(const std::string& tmpPath)
+void removeTemporaryFile(const std::string& tmpPath)
 {
     namespace fs = std::filesystem;
     bool ret = false;

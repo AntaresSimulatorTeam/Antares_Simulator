@@ -65,6 +65,12 @@ if(Python3_Interpreter_FOUND)
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
         )
 
+      add_test(
+        NAME mps
+        COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-solver> --archive-path 025_mps.txz
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/mps"
+        )
+
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
   else()
       message(FATAL_ERROR "Module pytest or numpy not installed : can't run python scripts for end to end tests")
