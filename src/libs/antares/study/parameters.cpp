@@ -51,10 +51,8 @@ namespace Antares
 {
 namespace Data
 {
-
 //! Hard coded maximum number of MC years
 const uint maximumMCYears = 100000;
-
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
@@ -175,15 +173,11 @@ const char* StudyModeToCString(StudyMode mode)
     return "Unknown";
 }
 
-Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
+Parameters::Parameters() : noOutput(false)
 {
 }
 
-Parameters::~Parameters()
-{
-    delete[] yearsFilter;
-    yearsFilter = nullptr;
-}
+Parameters::~Parameters() = default;
 
 void Parameters::resetSeeds()
 {
@@ -213,10 +207,8 @@ void Parameters::resetPlayedYears(uint nbOfYears)
     nbYears = std::min(nbOfYears, maximumMCYears);
 
     // Reset the filter
-    delete[] yearsFilter;
-    yearsFilter = new bool[nbYears];
-    for (uint i = 0; i != nbYears; ++i)
-        yearsFilter[i] = true;
+    yearsFilter.resize(nbYears);
+    std::fill(yearsFilter.begin(), yearsFilter.end(), true);
 }
 
 void Parameters::reset()
@@ -1087,21 +1079,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         if (options.nbYears > nbYears)
         {
-            if (yearsFilter)
-            {
-                // The variable `yearsFilter` must be enlarged
-                bool* newset = new bool[options.nbYears];
-                for (uint i = 0; i != nbYears; ++i)
-                    newset[i] = yearsFilter[i];
-                for (uint i = nbYears; i < options.nbYears; ++i)
-                    newset[i] = false;
-                delete[] yearsFilter;
-                yearsFilter = newset;
-            }
-            else
-            {
-                this->resetPlayedYears(options.nbYears);
-            }
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
         }
         nbYears = options.nbYears;
 
@@ -1359,11 +1338,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // If the user's playlist is disabled, the filter must be reset
-    assert(yearsFilter && "The array yearsFilter must be valid at this point");
+    assert(!yearsFilter.empty() && "The array yearsFilter must be not be empty at this point");
     if (!userPlaylist)
     {
-        for (uint i = 0; i < nbYears; ++i)
-            yearsFilter[i] = true;
+        std::fill(yearsFilter.begin(), yearsFilter.end(), true);
         effectiveNbYears = nbYears;
     }
     else
@@ -1765,7 +1743,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // User's playlist
     {
-        assert(yearsFilter);
+        assert(!yearsFilter.empty());
         uint effNbYears = 0;
         bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
@@ -1797,7 +1775,7 @@ void Parameters::saveToINI(IniFile& ini) const
             {
                 for (uint i = 0; i != nbYears; ++i)
                 {
-                    if (not yearsFilter[i])
+                    if (!yearsFilter[i])
                         section->add("playlist_year -", i);
                 }
             }
