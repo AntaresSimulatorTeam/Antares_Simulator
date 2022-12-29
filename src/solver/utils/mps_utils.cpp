@@ -160,10 +160,10 @@ mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
                                    MPSolver* solver) :
  pb_hebdo_(ProblemeHebdo),
  num_intervalle_(NumIntervalle),
- current_optim_number_(current_optim_number),
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),
- solver_(solver)
+ solver_(solver),
+ current_optim_number_(current_optim_number)
 {
     week_ = pb_hebdo_->weekInTheYear;
     year_ = pb_hebdo_->year;
