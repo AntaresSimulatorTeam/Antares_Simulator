@@ -69,9 +69,6 @@ typedef struct
 /* Le probleme a resoudre */
 typedef struct
 {
-    /* Pour la prise en compte des PMIN */
-    char NumeroDOptimisation; /* Vaut	PREMIERE_OPTIMISATION ou DEUXIEME_OPTIMISATION */
-
     /* La matrice des contraintes */
     int NombreDeVariables;
     int NombreDeContraintes; /* Il est egal a :

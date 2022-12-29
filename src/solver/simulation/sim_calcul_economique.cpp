@@ -320,7 +320,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
     for (int opt = 0; opt < 7; opt++)
     {
-        problem.numeroOptimisation[opt] = 0;
         problem.coutOptimalSolution1[opt] = 0.;
         problem.coutOptimalSolution2[opt] = 0.;
         problem.tempsResolution1[opt] = 0.;
