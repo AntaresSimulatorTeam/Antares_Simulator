@@ -10,13 +10,14 @@ class optPeriod
 {
 public:
     virtual std::string to_string() const = 0;
+    virtual ~optPeriod() = default;
 };
 
 
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-class optDaily : public optPeriod
+class optDaily final : public optPeriod
 {
 public:
     optDaily(unsigned int day, unsigned int week, unsigned int year);
@@ -32,7 +33,7 @@ private:
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-class optWeekly : public optPeriod
+class optWeekly final : public optPeriod
 {
 public:
     optWeekly(unsigned int week, unsigned int year);

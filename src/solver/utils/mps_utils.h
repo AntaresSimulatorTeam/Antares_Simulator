@@ -18,7 +18,7 @@ using namespace operations_research;
 
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
                                                Solver::IResultWriter::Ptr writer,
-                                               std::string filename);
+                                               const std::string & filename);
 
 // ======================
 // MPS files writing
@@ -27,10 +27,10 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
 class I_MPS_writer
 {
 public:
-    I_MPS_writer(uint currentOptimNumber) : current_optim_number_(currentOptimNumber)
+    explicit I_MPS_writer(uint currentOptimNumber) : current_optim_number_(currentOptimNumber)
     {}
     I_MPS_writer() = default;
-    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename) = 0;
+    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) = 0;
 
 protected:
     uint current_optim_number_ = 0;
@@ -41,7 +41,7 @@ class fullMPSwriter final : public I_MPS_writer
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                   uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename) override;
+    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) override;
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -52,7 +52,7 @@ class fullOrToolsMPSwriter : public I_MPS_writer
 public:
     fullOrToolsMPSwriter(MPSolver* solver, 
                          uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename) override;
+    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -62,7 +62,7 @@ class nullMPSwriter : public I_MPS_writer
 {
 public:
     using I_MPS_writer::I_MPS_writer;
-    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/, std::string /*filename*/) override
+    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/, const std::string& /*filename*/) override
     {
         // Does nothing
     }

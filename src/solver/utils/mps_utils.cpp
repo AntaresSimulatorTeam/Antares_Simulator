@@ -166,7 +166,7 @@ static void printRHS(Clob& buffer, int NombreDeContraintes, const double* Second
 void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
     void* Prob,
     Solver::IResultWriter::Ptr writer,
-    std::string filename)
+    const std::string & filename)
 {
     Clob buffer;
     int Cnt;
@@ -326,7 +326,7 @@ fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
     named_splx_problem_(named_splx_problem)
 {}
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)named_splx_problem_, writer, filename);
 }
@@ -340,7 +340,7 @@ fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver,
     solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, std::string filename)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename)
 {
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }

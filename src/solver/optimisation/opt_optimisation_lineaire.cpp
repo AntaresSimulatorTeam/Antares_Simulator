@@ -31,7 +31,6 @@
 
 #include <antares/logs.h>
 #include <antares/emergency.h>
-#include "../utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
