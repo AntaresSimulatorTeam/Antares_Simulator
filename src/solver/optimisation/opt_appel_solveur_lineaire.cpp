@@ -121,7 +121,6 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
     const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
-    logs.notice() << "OPT_AppelDuSimplexe" << opt;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
