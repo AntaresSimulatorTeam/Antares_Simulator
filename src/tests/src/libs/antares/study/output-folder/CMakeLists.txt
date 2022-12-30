@@ -23,6 +23,8 @@ endif()
 # Storing test-save-link-properties under the folder Unit-tests in the IDE
 set_target_properties(test-folder-output PROPERTIES FOLDER Unit-tests)
 
+import_std_libs(test-folder-output)
+
 add_test(NAME folder-output COMMAND test-folder-output)
 set_property(TEST folder-output PROPERTY LABELS unit)
 
