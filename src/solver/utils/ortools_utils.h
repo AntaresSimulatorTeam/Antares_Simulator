@@ -12,7 +12,7 @@ using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter::Ptr writer,
-                                                   std::string filename);
+                                                   const std::string& filename);
 
 /*!
  *  \brief Return list of available ortools solver name on our side

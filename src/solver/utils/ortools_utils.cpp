@@ -234,7 +234,7 @@ void removeTemporaryFile(const std::string& tmpPath)
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    Antares::Solver::IResultWriter::Ptr writer,
-                                                   std::string filename)
+                                                   const std::string& filename)
 {
     // 0. Logging file name
     logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
