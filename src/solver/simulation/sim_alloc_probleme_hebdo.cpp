@@ -216,9 +216,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
           = (int*)MemAlloc(nbPays * sizeof(int));
 
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve
-          = (int*)MemAlloc(nbPays * sizeof(int));
-
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
           = (int*)MemAlloc(nbPays * sizeof(int));
 
@@ -635,7 +632,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
         MemFree(

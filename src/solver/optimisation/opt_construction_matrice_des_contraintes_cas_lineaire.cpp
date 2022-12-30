@@ -69,7 +69,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     int Var2;
     int Var3;
     int Offset;
-    int Zone;
     char Simulation;
 
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;

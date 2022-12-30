@@ -54,8 +54,6 @@ typedef struct
 
     int* NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariableDefaillanceEnReserve;
-
     int* NumeroDeVariablesVariationHydALaBaisse;
 
     int* NumeroDeVariablesVariationHydALaHausse;

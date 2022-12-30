@@ -110,9 +110,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             NombreDeVariables++;
-
-            // TODO[FOM] Remove
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays] = -1;
         }
 
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
