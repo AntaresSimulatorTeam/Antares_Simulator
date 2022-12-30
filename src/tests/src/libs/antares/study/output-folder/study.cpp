@@ -29,8 +29,11 @@ struct Fixture
         // We need to set a 0 offset in the timezone. Otherwise, function
         // DateTime::TimestampToString (a wrapper around ::strftime) will add 1 or 2 hours. We don't
         // want this. See https://users.pja.edu.pl/~jms/qnx/help/watcom/clibref/global_data.html
+#ifdef YUNI_OS_MSVC
+        _putenv_s("TZ", "GMT");
+#else
         setenv("TZ", "GMT", 1);
-
+#endif
         // Create outputRoot / output
         fs::create_directory(outputRoot);
     }
