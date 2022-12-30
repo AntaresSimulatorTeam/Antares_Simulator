@@ -288,12 +288,6 @@ public:
         NextType::hourForEachLink(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        // Next
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Next

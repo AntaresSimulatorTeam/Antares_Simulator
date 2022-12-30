@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <iostream>
 
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int numeroOptimisation)
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizationNumber)
 {
     int Pays;
     int Interco;
@@ -106,7 +106,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int numeroOpti
         }
     }
 
-    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES && numeroOptimisation == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES && optimizationNumber == PREMIERE_OPTIMISATION)
     {
         for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
         {

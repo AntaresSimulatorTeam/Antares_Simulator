@@ -206,7 +206,7 @@ static void change_MPSolver_rhs(const MPSolver* solver,
     }
 }
 
-static std::string generateTempPath(const std::string& filename)
+std::string generateTempPath(const std::string& filename)
 {
     namespace fs = std::filesystem;
     std::ostringstream tmpPath;
@@ -214,7 +214,7 @@ static std::string generateTempPath(const std::string& filename)
     return tmpPath.str();
 }
 
-static void removeTemporaryFile(const std::string& tmpPath)
+void removeTemporaryFile(const std::string& tmpPath)
 {
     namespace fs = std::filesystem;
     bool ret = false;
@@ -237,7 +237,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
                                                    std::string filename)
 {
     // 0. Logging file name
-    logs.info() << "Solver or-tools MPS File: `" << filename << "'";
+    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
     
     // 1. Determine filename
     const auto tmpPath = generateTempPath(filename);

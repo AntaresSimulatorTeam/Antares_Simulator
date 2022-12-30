@@ -1,6 +1,11 @@
 Antares Changelog
 =================
 
+v8.4.1 (12/2022)
+--------------------
+### Bugfix
+* Fix formula for profit calculation #1022
+
 v8.4.0 (12/2022)
 --------------------
 
@@ -51,8 +56,10 @@ v8.4.0 (12/2022)
 
 **Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
 
-
-### Documentation
+v8.3.3 (12/2022)
+--------------------
+### Bugfix
+- Round renewable production (#985)
 
 v8.3.2 (09/2022)
 --------------------
@@ -136,6 +143,11 @@ v8.3.0 (07/2022)
 ### Misc. improvements
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
+
+v8.2.3 (11/2022)
+--------------------
+### Bug fixes
+- Round renewable production (#985)
 
 v8.2.2 (04/2022)
 --------------------

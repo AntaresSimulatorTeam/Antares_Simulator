@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 # Version
 set(ANTARES_VERSION_HI	      8)
 set(ANTARES_VERSION_LO	      4)
-set(ANTARES_VERSION_REVISION  0)
+set(ANTARES_VERSION_REVISION  1)
 set(ANTARES_VERSION_YEAR      2022)
 
 project(antares
@@ -194,7 +194,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -202,7 +202,7 @@ if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
 
 	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
 	
-elseif(${CMAKE_BUILD_TYPE} STREQUAL  "debug")
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL  "debug")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
 			DEPS_INSTALL_DIR_XPANSION

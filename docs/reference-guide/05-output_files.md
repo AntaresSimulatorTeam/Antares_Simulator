@@ -126,7 +126,7 @@ The area files that belong to the « values » class display **122** fields corr
 | DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^DENS] |
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units [^13] |
-| Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * production of the cluster)  |
+| Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]  |
 
 Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2.
 
@@ -252,3 +252,5 @@ Alike Input data, output results can be filtered so as to include only items tha
 [^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
 
 [^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation
+
+[^15]: dispatchable production = power generation above min gen = (power generation) - (min gen modulation)*units*capacity

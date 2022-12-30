@@ -16,10 +16,6 @@ using namespace Antares::Data;
 using namespace Antares::Optimization;
 using namespace operations_research;
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(void*,
-                                               Solver::IResultWriter::Ptr writer,
-                                               const std::string & filename);
-
 // ======================
 // MPS files writing
 // ======================
@@ -93,8 +89,4 @@ private:
     uint current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-
-    // About optimization period
-    uint week_ = 0;
-    uint year_ = 0;
 };

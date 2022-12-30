@@ -28,6 +28,7 @@
 #define __EXPORT_STRUCTURE__
 
 #include <vector>
+#include <optional>
 #include <string>
 
 #include <yuni/yuni.h>
@@ -67,12 +68,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int firstVal,
-                             int secondVal);
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal);
-
+                             std::optional<int> secondVal = std::nullopt);
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                        PROBLEME_HEBDO* ProblemeHebdo);
 void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,

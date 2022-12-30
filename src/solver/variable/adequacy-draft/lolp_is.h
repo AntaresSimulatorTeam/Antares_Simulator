@@ -210,12 +210,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        // Next
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     void localBuildAnnualSurveyReport(SurveyResults&, int, int, unsigned int) const
     {
         // do nothing

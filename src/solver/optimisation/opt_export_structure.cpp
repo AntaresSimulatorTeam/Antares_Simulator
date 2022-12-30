@@ -67,9 +67,9 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
     for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
     {
         Flot.appendFormat("%d %d %d\n",
-                            i,
-                            ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                            ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+                          i,
+                          ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
+                          ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
     std::string filename = "interco.txt";
     writer->addEntryFromBuffer(filename, Flot);
@@ -91,23 +91,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int firstVal,
-                             int secondVal)
-{
-    if ((int)varname.size() > Var && varname[Var].empty())
-    {
-        std::stringstream buffer;
-        buffer << Var << " ";
-        buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal << " ";
-        buffer << secondVal;
-        varname[Var] = buffer.str();
-    }
-}
-
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal)
+                             std::optional<int> secondVal)
 {
     if ((int)varname.size() > Var && varname[Var].empty())
     {
@@ -115,6 +99,10 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
         buffer << Var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
         buffer << firstVal;
+        if (secondVal.has_value())
+        {
+            buffer << " " << secondVal.value();
+        }
         varname[Var] = buffer.str();
     }
 }
