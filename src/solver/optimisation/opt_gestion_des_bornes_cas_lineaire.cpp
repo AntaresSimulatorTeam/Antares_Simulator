@@ -100,32 +100,34 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
     return (SommeDesPminThermiques);
 }
 
-void setBoundsForSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
-                               const int PremierPdtDeLIntervalle,
-                               const int DernierPdtDeLIntervalle)
+void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
+                                  const int PremierPdtDeLIntervalle,
+                                  const int DernierPdtDeLIntervalle)
 {
+    // OUTPUT
+    double* Xmin = ProblemeHebdo->ProblemeAResoudre->Xmin;
+    double* Xmax = ProblemeHebdo->ProblemeAResoudre->Xmax;
+    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = ProblemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+
+    const bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
+    const bool opt1
+      = (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+
     for (int PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
          PdtHebdo++, PdtJour++)
     {
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+          = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
+        const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
+          = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
+        const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
+          = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
+
         for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
         {
-            const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-              = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
-            const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
-              = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
-            const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
-              = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
             double C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
 
-            // OUTPUT
-            double* Xmin = ProblemeHebdo->ProblemeAResoudre->Xmin;
-            double* Xmax = ProblemeHebdo->ProblemeAResoudre->Xmax;
-            double** AdresseOuPlacerLaValeurDesVariablesOptimisees
-              = ProblemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-
-            bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
-            bool opt1
-              = (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
             if (reserveJm1 && opt1)
             {
                 C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
@@ -445,7 +447,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
         }
     }
 
-    setBoundsForSpilledEnergy(ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+    setBoundsForUnsuppliedEnergy(ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
