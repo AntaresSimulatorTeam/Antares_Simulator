@@ -155,6 +155,13 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R mps
 
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: MPS-diff
+        path: ${{ github.workspace }}/src/tests/mps
+
     # simtest
     - name: Read simtest version
       id: simtest-version
