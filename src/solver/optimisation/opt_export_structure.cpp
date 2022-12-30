@@ -73,14 +73,16 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                           ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
                           ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
-    std::string filename = "interco.txt";
+    // TODO[FOM] "interco.txt"
+    std::string filename = "interco-1-1.txt";
     writer->addEntryFromBuffer(filename, Flot);
 }
 
 void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
                         const Antares::Data::AreaList& areas)
 {
-    std::string filename = "area.txt";
+    // TODO[FOM] "area.txt"
+    std::string filename = "area-1-1.txt";
     Yuni::Clob Flot;
     for (uint i = 0; i < areas.size(); ++i)
     {
