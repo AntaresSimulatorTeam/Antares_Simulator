@@ -37,7 +37,14 @@ class StudyReference(object):
         for pair in zipped_list:
             assert filecmp.cmp(pair[0], pair[1]), f"Difference between files {pair[0]} and {pair[1]}"
 
-def test_mps_025(solver_path, reference_archive_path, use_ortools, ortools_solver):
+def test_mps_025_day(solver_path, use_ortools, ortools_solver):
+    reference_archive_path = "025_mps-day.txz"
+    reference = StudyReference(solver_path, reference_archive_path, use_ortools, ortools_solver)
+    reference.prepare()
+    reference.run_and_compare()
+
+def test_mps_025_week(solver_path, use_ortools, ortools_solver):
+    reference_archive_path = "025_mps-week.txz"
     reference = StudyReference(solver_path, reference_archive_path, use_ortools, ortools_solver)
     reference.prepare()
     reference.run_and_compare()
