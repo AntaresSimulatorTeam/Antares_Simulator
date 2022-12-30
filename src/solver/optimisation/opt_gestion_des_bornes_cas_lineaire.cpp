@@ -100,53 +100,67 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
     return (SommeDesPminThermiques);
 }
 
-void setBoundsForSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int PdtHebdo, int PdtJour)
+void setBoundsForSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
+                               const int PremierPdtDeLIntervalle,
+                               const int DernierPdtDeLIntervalle)
 {
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-      = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
-    const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
-      = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
-    const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
-      = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
-    double C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
-
-    // OUTPUT
-    double* Xmin = ProblemeHebdo->ProblemeAResoudre->Xmin;
-    double* Xmax = ProblemeHebdo->ProblemeAResoudre->Xmax;
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = ProblemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-
-    bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
-    bool opt1 = (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
-    if (reserveJm1 && opt1)
+    for (int PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
+         PdtHebdo++, PdtJour++)
     {
-        C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
+        for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        {
+            const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+              = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
+            const ALL_MUST_RUN_GENERATION* AllMustRunGeneration
+              = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
+            const CONSOMMATIONS_ABATTUES* ConsommationsAbattues
+              = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
+            double C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
+
+            // OUTPUT
+            double* Xmin = ProblemeHebdo->ProblemeAResoudre->Xmin;
+            double* Xmax = ProblemeHebdo->ProblemeAResoudre->Xmax;
+            double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+              = ProblemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+
+            bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
+            bool opt1
+              = (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+            if (reserveJm1 && opt1)
+            {
+                C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
+            }
+
+            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Pays];
+            Xmin[Var] = 0.0;
+
+            double MaxAllMustRunGenerationOfArea = 0.;
+            if (AllMustRunGeneration->AllMustRunGenerationOfArea[Pays] > 0.)
+                MaxAllMustRunGenerationOfArea
+                  = AllMustRunGeneration->AllMustRunGenerationOfArea[Pays];
+
+            C = C + MaxAllMustRunGenerationOfArea;
+            if (C >= 0.)
+                Xmax[Var] = C + 1e-5;
+            else
+                Xmax[Var] = 0.;
+
+            // adq patch: update ENS <= DENS in 2nd run
+            if (ProblemeHebdo->adqPatchParams
+                && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
+                && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
+                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                Xmax[Var] = std::min(
+                  Xmax[Var], ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+
+            ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillancePositive[PdtHebdo]
+              = 0.0;
+
+            AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+              = &(ProblemeHebdo->ResultatsHoraires[Pays]
+                    ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
+        }
     }
-
-    int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Pays];
-    Xmin[Var] = 0.0;
-
-    double MaxAllMustRunGenerationOfArea = 0.;
-    if (AllMustRunGeneration->AllMustRunGenerationOfArea[Pays] > 0.)
-        MaxAllMustRunGenerationOfArea = AllMustRunGeneration->AllMustRunGenerationOfArea[Pays];
-
-    C = C + MaxAllMustRunGenerationOfArea;
-    if (C >= 0.)
-        Xmax[Var] = C + 1e-5;
-    else
-        Xmax[Var] = 0.;
-
-    // adq patch: update ENS <= DENS in 2nd run
-    if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
-        && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
-             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-        Xmax[Var] = std::min(Xmax[Var],
-                             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
-
-    ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillancePositive[PdtHebdo] = 0.0;
-
-    AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-      = &(ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
@@ -399,8 +413,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
             }
 
-            setBoundsForSpilledEnergy(ProblemeHebdo, Pays, PdtHebdo, PdtJour);
-
             {
                 Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays];
 
@@ -432,6 +444,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             }
         }
     }
+
+    setBoundsForSpilledEnergy(ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
