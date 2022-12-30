@@ -731,9 +731,9 @@ static std::string getOutputSuffix(ResultFormat fmt)
     }
 }
 
-YString StudyCreateOutputName(StudyMode mode,
+YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
-                              const YString& folder,
+                              const YString& outputRoot,
                               const YString& label,
                               Yuni::sint64 startTime)
 {
@@ -743,7 +743,7 @@ YString StudyCreateOutputName(StudyMode mode,
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << folder << SEP << "output" << SEP;
+    folderOutput.clear() << outputRoot << SEP;
     DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
 
     switch (mode)
@@ -799,8 +799,10 @@ void Study::prepareOutput()
     if (parameters.noOutput || !usedByTheSolver)
         return;
 
-    folderOutput = StudyCreateOutputName(
-      parameters.mode, parameters.resultFormat, folder, simulationComments.name, pStartTime);
+    buffer.clear() << folder << SEP << "output";
+
+    folderOutput = StudyCreateOutputPath(
+      parameters.mode, parameters.resultFormat, buffer, simulationComments.name, pStartTime);
 
     logs.info() << "  Output folder : " << folderOutput;
 }

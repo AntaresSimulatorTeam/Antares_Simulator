@@ -893,7 +893,7 @@ void StudyEnsureDataThermalPrepro(Study* s);
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);
 
-YString StudyCreateOutputName(StudyMode mode,
+YString StudyCreateOutputPath(StudyMode mode,
                               ResultFormat fmt,
                               const YString& folder,
                               const YString& label,
