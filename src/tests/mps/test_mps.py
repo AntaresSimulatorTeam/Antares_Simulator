@@ -2,7 +2,6 @@ import pytest
 import tarfile as tf
 from pathlib import Path
 import subprocess
-import filecmp
 
 class StudyReference(object):
 
@@ -35,7 +34,9 @@ class StudyReference(object):
 
         zipped_list = [(ref, output) for ref in ref_files for output in output_files if ref.name == output.name]
         for pair in zipped_list:
-            assert filecmp.cmp(pair[0], pair[1]), f"Difference between files {pair[0]} and {pair[1]}"
+            ref_content = open(pair[0]).read()
+            output_content = open(pair[1]).read()
+            assert ref_content == output_content, f"Difference between files {pair[0]} and {pair[1]}"
 
 def test_mps_025(solver_path, reference_archive_path, use_ortools, ortools_solver):
     reference = StudyReference(solver_path, reference_archive_path, use_ortools, ortools_solver)
