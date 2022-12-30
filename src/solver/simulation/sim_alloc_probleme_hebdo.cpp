@@ -128,8 +128,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
     }
 
-    problem.NumeroDeZoneDeReserveJMoins1 = (int*)MemAlloc(nbPays * sizeof(int));
-
     problem.CoutsMarginauxDesContraintesDeReserveParZone
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
 
@@ -870,7 +868,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     if (problem.previousYearFinalLevels)
         MemFree(problem.previousYearFinalLevels);
 
-    MemFree(problem.NumeroDeZoneDeReserveJMoins1);
     MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone);
     MemFree(problem.ReserveJMoins1);
     MemFree(problem.ResultatsHoraires);

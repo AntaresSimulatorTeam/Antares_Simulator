@@ -45,7 +45,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     int Index;
     char Simulation;
     int NombreDePasDeTempsPourUneOptimisation;
-    char ContrainteDeReserveJMoins1ParZone;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     COUTS_DE_TRANSPORT* CoutDeTransport;
@@ -54,7 +53,6 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
 
     NombreDeVariables = 0;
 
@@ -113,16 +111,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             NombreDeVariables++;
 
-            if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-            {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
-                NombreDeVariables++;
-            }
-            else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays] = -1;
+            // TODO[FOM] Remove
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays] = -1;
         }
 
         for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
