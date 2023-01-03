@@ -606,7 +606,7 @@ enum LinkCapacityForAdequacyPatchFirstStep
     //! set only origine->extremity NTC to zero
     setOrigineExtremityToZero,
     //! set only extremity->origine NTC to zero
-    setExtremityOrigineToZero
+    setExtremityOriginToZero
 
 }; // enum NTC
 } // namespace AdequacyPatch

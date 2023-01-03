@@ -76,7 +76,7 @@ static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeOutside(
     switch (extremityType)
     {
     case physicalAreaInsideAdqPatch:
-        return SetToZero12Links ? setToZero : setExtremityOrigineToZero;
+        return SetToZero12Links ? setToZero : setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
         return SetToZero11Links ? setToZero : leaveLocalValues;
     default:
@@ -146,7 +146,7 @@ void setBoundsAdqPatch(double& Xmax,
         Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
         break;
     }
-    case setExtremityOrigineToZero:
+    case setExtremityOriginToZero:
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
         Xmin = 0.;
