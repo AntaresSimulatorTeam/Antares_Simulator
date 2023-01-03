@@ -304,7 +304,6 @@ add_library(yuni-static-core STATIC
 		core/system/console.h
 		core/system/cpu.cpp
 		core/system/cpu.h
-		core/system/endian.h
 		core/system/environment.h
 		core/system/environment.cpp
 		core/system/gettimeofday.h
