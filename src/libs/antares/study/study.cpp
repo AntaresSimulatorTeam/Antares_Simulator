@@ -162,8 +162,7 @@ void Study::createAsNew()
     // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
 
-    parameters.yearsFilter = new bool[1];
-    parameters.yearsFilter[0] = true;
+    parameters.yearsFilter = std::vector<bool>(1, true);
 
     // Sets
     setsOfAreas.defaultForAreas();

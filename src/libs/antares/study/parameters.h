@@ -80,9 +80,9 @@ public:
     //@}
 
     /*!
-    ** \brief Assign a new number of MC years
+    ** \brief Reset the playlist (played years and associated years)
     */
-    void years(uint y);
+    void resetPlaylist(uint nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -241,7 +241,7 @@ public:
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
-    bool* yearsFilter;
+    std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
     bool thematicTrimming;
@@ -544,6 +544,8 @@ public:
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
+
+    void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
