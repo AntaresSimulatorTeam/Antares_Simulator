@@ -194,13 +194,11 @@ jobs:
     - name: Installer upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
 
     - name: Archive upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-windows-archive
         path: _build/*.zip
 
     - name: Upload build on failure
