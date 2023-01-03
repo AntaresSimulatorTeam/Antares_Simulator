@@ -41,7 +41,7 @@ jobs:
     - name: Pre-requisites
       shell: cmd
       run: |
-          choco install wget unzip --no-progress
+          choco install wget unzip zip --no-progress
 
     - name : Init VCPKG submodule
       run: |
