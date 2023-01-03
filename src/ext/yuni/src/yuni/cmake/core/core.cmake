@@ -219,7 +219,6 @@ add_library(yuni-static-core STATIC
 		core/point2D.h
 		core/point3D.h
 		core/preprocessor/capabilities.h
-		core/preprocessor/enum.h
 		core/preprocessor/math.h
 		core/preprocessor/std.h
 		core/preprocessor/unixes.h
