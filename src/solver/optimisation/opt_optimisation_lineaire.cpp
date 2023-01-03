@@ -113,8 +113,8 @@ OptimisationHebdo:
 
         if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
         {
-            double CoutOptimalSolution = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(CoutOptimalSolution, opt_period_as_string, optimizationNumber);
+            double optimalSolutionCost = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(optimalSolutionCost, opt_period_as_string, optimizationNumber);
         }
     }
 
