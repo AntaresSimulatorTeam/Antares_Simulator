@@ -43,17 +43,4 @@ private:
     Bind<void()> pCallback;
 };
 
-Thread::IThread::Ptr spawn(const Bind<void()>& callback, bool autostart)
-{
-#ifdef YUNI_HAS_CPP_MOVE
-    Thread::IThread* thread = new SpawnThread(std::move(callback));
-#else
-    Thread::IThread* thread = new SpawnThread(callback);
-#endif
-
-    if (autostart)
-        thread->start();
-    return thread;
-}
-
 } // namespace Yuni

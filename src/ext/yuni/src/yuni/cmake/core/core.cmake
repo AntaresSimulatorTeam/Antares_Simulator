@@ -273,7 +273,6 @@ add_library(yuni-static-core STATIC
 		core/static/remove.h
 		core/static/typedef.h
 		core/static/types.h
-		core/stl/algorithm.h
 		core/stl/hash-combine.h
 		core/string/escape.h
 		core/string/escape.hxx
@@ -322,7 +321,6 @@ add_library(yuni-static-core STATIC
 		core/system/username.h
 		core/system/username.hxx
 		core/system/vs-banned.h
-		core/system/x11.hdr.h
 		core/traits/cstring.h
 		core/traits/extension/into-cstring.h
 		core/traits/extension/length.h
@@ -462,7 +460,6 @@ add_library(yuni-static-core STATIC
 
 		thread/array.h
 		thread/array.hxx
-		thread/async-sync.cpp
 		thread/every.cpp
 		thread/fwd.h
 		thread/id.cpp
