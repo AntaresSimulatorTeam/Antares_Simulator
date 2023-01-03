@@ -199,7 +199,7 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           tar czf solver.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           tar czf solver_centos7.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3

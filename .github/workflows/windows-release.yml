@@ -189,7 +189,7 @@ jobs:
       shell: bash
       run: |
            cd _build
-           zip -r solver.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
+           zip -r solver_win.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash
