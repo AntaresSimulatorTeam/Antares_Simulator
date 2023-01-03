@@ -415,18 +415,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillanceEnReserve[PdtHebdo]
               = 0.0;
-
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
-            if (Var >= 0)
-            {
-                Xmin[Var] = 0.0;
-
-                Xmax[Var] = LINFINI_ANTARES;
-
-                AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
-                                        ->ValeursHorairesDeDefaillanceEnReserve[PdtHebdo]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
-            }
         }
     }
 
