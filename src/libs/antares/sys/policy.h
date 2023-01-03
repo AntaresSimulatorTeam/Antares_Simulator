@@ -29,7 +29,6 @@
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
-#include <yuni/core/singleton.h>
 
 /*!
 ** \brief Local policy settings
