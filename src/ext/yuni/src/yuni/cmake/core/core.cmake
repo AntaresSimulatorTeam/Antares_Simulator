@@ -218,9 +218,6 @@ add_library(yuni-static-core STATIC
 		core/nullable.h
 		core/point2D.h
 		core/point3D.h
-		core/predicate/result/and.h
-		core/predicate/result/or.h
-		core/predicate/result/sum.h
 		core/preprocessor/capabilities.h
 		core/preprocessor/enum.h
 		core/preprocessor/math.h
