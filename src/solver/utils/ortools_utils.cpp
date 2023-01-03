@@ -127,7 +127,7 @@ MPSolver* convert_to_MPSolver(
     auto study = Data::Study::Current::Get();
 
     // Create the MPSolver
-    MPSolver* solver = MPSolverFactory(problemeSimplexe, study.parameters.ortoolsSolver);
+    MPSolver* solver = MPSolverFactory(problemeSimplexe, study->parameters.ortoolsSolver);
 
     tuneSolverSpecificOptions(solver);
 
