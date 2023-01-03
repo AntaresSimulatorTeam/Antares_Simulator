@@ -100,10 +100,6 @@ add_library(yuni-static-core STATIC
 		core/bit/bit.hxx
 		core/bit.h
 		core/boundingbox.h
-		#core/charset/charset.cpp
-		#core/charset/charset.h
-		#core/charset/charset.hxx
-		#core/charset.h
 		core/color/fwd.h
 		core/color/rgb.h
 		core/color/rgb.hxx
@@ -273,8 +269,6 @@ add_library(yuni-static-core STATIC
 		core/static/remove.h
 		core/static/typedef.h
 		core/static/types.h
-		core/stl/algorithm.h
-		core/stl/hash-combine.h
 		core/string/escape.h
 		core/string/escape.hxx
 		core/string/iterator.hxx
@@ -305,7 +299,6 @@ add_library(yuni-static-core STATIC
 		core/system/console.h
 		core/system/cpu.cpp
 		core/system/cpu.h
-		core/system/endian.h
 		core/system/environment.h
 		core/system/environment.cpp
 		core/system/gettimeofday.h
@@ -322,7 +315,6 @@ add_library(yuni-static-core STATIC
 		core/system/username.h
 		core/system/username.hxx
 		core/system/vs-banned.h
-		core/system/x11.hdr.h
 		core/traits/cstring.h
 		core/traits/extension/into-cstring.h
 		core/traits/extension/length.h
@@ -355,12 +347,6 @@ add_library(yuni-static-core STATIC
 		core/unit/unit.h
 		core/unit/unit.hxx
 		core/unit.h
-		core/uri/uri.cpp
-		core/uri/uri.h
-		core/uri/uri.hxx
-		core/uri/uri.private.cpp
-		core/uri/uri.private.h
-		core/uri.h
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
@@ -462,7 +448,6 @@ add_library(yuni-static-core STATIC
 
 		thread/array.h
 		thread/array.hxx
-		thread/async-sync.cpp
 		thread/every.cpp
 		thread/fwd.h
 		thread/id.cpp
