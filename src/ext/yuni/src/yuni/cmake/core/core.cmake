@@ -236,10 +236,6 @@ add_library(yuni-static-core STATIC
 		core/process.h
 		core/quaternion.h
 		core/rect2D.h
-		core/singleton/policies/creation.h
-		core/singleton/policies/lifetime.h
-		core/singleton/singleton.h
-		core/singleton/singleton.hxx
 		core/singleton.h
 		core/slist/slist.h
 		core/slist/slist.hxx

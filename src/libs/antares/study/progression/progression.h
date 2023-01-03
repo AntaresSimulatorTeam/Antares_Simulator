@@ -28,7 +28,6 @@
 #define __ANTARES_LIBS_SOLVER_SIMULATION_PROGRESSION_H__
 
 #include <yuni/yuni.h>
-#include <yuni/core/singleton.h>
 #include <yuni/thread/timer.h>
 #include <map>
 #include <list>
