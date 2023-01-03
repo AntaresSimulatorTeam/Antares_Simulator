@@ -67,7 +67,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(ProblemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(ProblemeHebdo, numSpace);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(ProblemeHebdo);
 
 OptimisationHebdo:
 
@@ -78,7 +78,7 @@ OptimisationHebdo:
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-            ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(ProblemeHebdo,
                                                         PremierPdtDeLIntervalle,
@@ -92,10 +92,10 @@ OptimisationHebdo:
         if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber))
             return false;
 
-        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(ProblemeHebdo,
-                                                           NumeroDeLIntervalle, 
-                                                           optimizationNumber);
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
+            || ProblemeHebdo->Expansion == OUI_ANTARES)
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+              ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
     }
 
     if (optimizationNumber == PREMIERE_OPTIMISATION)

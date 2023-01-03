@@ -31,15 +31,14 @@
 #include "opt_export_structure.h"
 
 #include "../simulation/simulation.h"
-
+#include "../utils/filename.h"
 #include "opt_fonctions.h"
 
 #include <antares/study.h>
 
 using namespace Antares::Data;
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
-                                                             uint numSpace)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo)
 {
     int Interco;
     int Index;
@@ -87,7 +86,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     Study::Ptr study = Study::Current::Get();
     const bool exportStructure = ProblemeHebdo->ExportStructure;
     const bool firstWeekOfSimulation = ProblemeHebdo->firstWeekOfSimulation;
-    const bool doWeExport = exportStructure && firstWeekOfSimulation;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
@@ -130,12 +128,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
+                          timeStepInYear, // TODO[FOM] remove
                           Pays,
                           Interco);
                     }
@@ -152,12 +151,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
+                          timeStepInYear, // TODO[FOM] remove
                           Pays,
                           Interco);
                     }
@@ -177,11 +177,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::PalierThermique,
+                                                timeStepInYear, // TODO[FOM] remove
                                                 Pays,
                                                 Palier);
                     }
@@ -195,10 +196,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (doWeExport)
+                if (exportStructure)
                 {
                     OPT_Export_add_variable(
-                      varname, Var, Enum::ExportStructDict::ProdHyd, Pays);
+                      varname, Var, Enum::ExportStructDict::ProdHyd, timeStepInYear, Pays);
                 }
             }
 
@@ -217,11 +218,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (doWeExport)
+                if (exportStructure)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillancePositive,
+                                            timeStepInYear, // TODO[FOM] remove
                                             Pays);
                 }
             }
@@ -232,11 +234,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (doWeExport)
+                if (exportStructure)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillanceNegative,
+                                            timeStepInYear, // TODO[FOM] remove
                                             Pays);
                 }
             }
@@ -261,11 +264,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::PalierThermique,
+                                                timeStepInYear, // TODO[FOM] remove
                                                 Pays,
                                                 Palier);
                     }
@@ -279,10 +283,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (doWeExport)
+                if (exportStructure)
                 {
                     OPT_Export_add_variable(
-                      varname, Var, Enum::ExportStructDict::ProdHyd, Pays);
+                      varname, Var, Enum::ExportStructDict::ProdHyd, timeStepInYear, Pays);
                 }
             }
 
@@ -293,11 +297,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                 Colonne[NombreDeTermes] = Var;
                 NombreDeTermes++;
 
-                if (doWeExport)
+                if (exportStructure)
                 {
                     OPT_Export_add_variable(varname,
                                             Var,
                                             Enum::ExportStructDict::DefaillanceNegative,
+                                            timeStepInYear, // TODO[FOM] remove
                                             Pays);
                 }
             }
@@ -325,11 +330,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(varname,
                                                 Var,
                                                 Enum::ExportStructDict::DefaillanceNegative,
+                                                timeStepInYear, // TODO[FOM] remove
                                                 Pays);
                     }
                 }
@@ -341,12 +347,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
+                          timeStepInYear, // TODO[FOM] remove
                           Interco);
                     }
                 }
@@ -358,12 +365,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                     Colonne[NombreDeTermes] = Var;
                     NombreDeTermes++;
 
-                    if (doWeExport)
+                    if (exportStructure)
                     {
                         OPT_Export_add_variable(
                           varname,
                           Var,
                           Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
+                          timeStepInYear, // TODO[FOM] remove
                           Interco);
                     }
                 }
@@ -446,12 +454,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                         Colonne[NombreDeTermes] = Var;
                         NombreDeTermes++;
 
-                        if (doWeExport)
+                        if (exportStructure)
                         {
                             OPT_Export_add_variable(
                               varname,
                               Var,
                               Enum::ExportStructDict::CorrespondanceVarNativesVarOptim,
+                              Pdt1, // TODO[FOM] remove
                               Palier);
                         }
                     }
@@ -1216,11 +1225,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     }
 
     // Export structure
-    if (doWeExport)
+    if (exportStructure)
     {
-        OPT_ExportInterco(study->resultWriter, ProblemeHebdo);
-        OPT_ExportAreaName(study->resultWriter, study->areas);
-        OPT_ExportVariables(study->resultWriter, varname);
+        if (firstWeekOfSimulation)
+        {
+            OPT_ExportInterco(study->resultWriter, ProblemeHebdo);
+            OPT_ExportAreaName(study->resultWriter, study->areas);
+        }
+
+        const auto filename = getFilenameWithExtension(
+          "variables", "txt", ProblemeHebdo->year, ProblemeHebdo->weekInTheYear, 0);
+        OPT_ExportVariables(study->resultWriter, varname, filename);
     }
 
     return;
