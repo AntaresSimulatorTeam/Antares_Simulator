@@ -236,7 +236,6 @@ add_library(yuni-static-core STATIC
 		core/process.h
 		core/quaternion.h
 		core/rect2D.h
-		core/singleton.h
 		core/slist/slist.h
 		core/slist/slist.hxx
 		core/slist.h
