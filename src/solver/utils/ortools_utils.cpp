@@ -137,14 +137,14 @@ MPSolver* convert_to_MPSolver(
                       problemeSimplexe->Xmax,
                       problemeSimplexe->CoutLineaire,
                       problemeSimplexe->NombreDeVariables,
-                      *problemeSimplexe->NomDesVariables);
+                      problemeSimplexe->NomDesVariables);
 
     // Create constraints and set coefs
     transferRows(solver,
                  problemeSimplexe->SecondMembre,
                  problemeSimplexe->Sens,
                  problemeSimplexe->NombreDeContraintes,
-                 *problemeSimplexe->NomDesContraintes);
+                 problemeSimplexe->NomDesContraintes);
     transferMatrix(solver,
                    problemeSimplexe->IndicesDebutDeLigne,
                    problemeSimplexe->NombreDeTermesDesLignes,

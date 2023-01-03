@@ -47,12 +47,12 @@ using namespace Antares;
 
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
 {
-    PROBLEME_SPX** ProbSpx;
-    MPSolver** solver;
+    PROBLEME_SPX* ProbSpx;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     int NbIntervalles;
     int NumIntervalle;
     int NombreDePasDeTempsPourUneOptimisation;
+    MPSolver* solver;
 
     if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
     {
@@ -68,24 +68,30 @@ void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
-        const bool ortoolsUsed = ProblemeAResoudre->ortoolsUsed;
+        auto& study = *Data::Study::Current::Get();
+        bool ortoolsUsed = study.parameters.ortoolsUsed;
 
-        for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+        if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
         {
-            ProbSpx
-              = (PROBLEME_SPX**)(&ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
-            solver = (MPSolver**)(&ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+            for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+            {
+                ProbSpx
+                  = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+                solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
 
-            if (ortoolsUsed && *solver != nullptr)
-            {
-                ORTOOLS_LibererProbleme(*solver);
-                *solver = nullptr;
-            }
-            else if (*ProbSpx != nullptr)
-            {
-                SPX_LibererProbleme(*ProbSpx);
-                *ProbSpx = nullptr;
+                if (ortoolsUsed && solver != NULL)
+                {
+                    ORTOOLS_LibererProbleme(solver);
+                    solver = NULL;
+                }
+                else if (ProbSpx != NULL)
+                {
+                    SPX_LibererProbleme(ProbSpx);
+                    ProbSpx = NULL;
+                }
             }
         }
     }
+
+    return;
 }

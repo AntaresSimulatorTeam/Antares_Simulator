@@ -256,7 +256,6 @@ RESOLUTION:
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
-            ProblemeAResoudre->ortoolsUsed = true;
         }
     }
     else
@@ -265,7 +264,6 @@ RESOLUTION:
         if (ProbSpx != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
-            ProblemeAResoudre->ortoolsUsed = false;
         }
     }
     measure.tick();
