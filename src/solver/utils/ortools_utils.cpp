@@ -124,10 +124,10 @@ namespace Optimization
 MPSolver* convert_to_MPSolver(
   const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* problemeSimplexe)
 {
-    auto& study = *Data::Study::Current::Get();
+    auto study = Data::Study::Current::Get();
 
     // Create the MPSolver
-    MPSolver* solver = MPSolverFactory(problemeSimplexe, study.parameters.ortoolsSolver);
+    MPSolver* solver = MPSolverFactory(problemeSimplexe, study->parameters.ortoolsSolver);
 
     tuneSolverSpecificOptions(solver);
 
