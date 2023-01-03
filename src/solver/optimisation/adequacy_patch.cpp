@@ -59,10 +59,10 @@ static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeInside(
  *
  * @param extremityType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
  * (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
@@ -91,10 +91,10 @@ static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeOutside(
  *
  * @param extremityType uint: The adq type of the node at the end of the link.
  *
- * @param SetToZero12LinksForAdequacyPatch bool: Switch to cut links from nodes outside adq patch
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
  * (type 1) towards nodes inside adq patch (type 2).
  *
- * @param SetToZero11LinksForAdequacyPatch bool: Switch to cut links between nodes outside adq patch
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
  * (type 1).
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
