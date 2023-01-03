@@ -126,11 +126,12 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
 
         for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
         {
-            double C = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
+            double ResidualLoadInArea = ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
 
             if (reserveJm1 && opt1)
             {
-                C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
+                ResidualLoadInArea
+                  += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
             }
 
             int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Pays];
@@ -141,9 +142,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
                 MaxAllMustRunGenerationOfArea
                   = AllMustRunGeneration->AllMustRunGenerationOfArea[Pays];
 
-            C = C + MaxAllMustRunGenerationOfArea;
-            if (C >= 0.)
-                Xmax[Var] = C + 1e-5;
+            ResidualLoadInArea += MaxAllMustRunGenerationOfArea;
+            if (ResidualLoadInArea >= 0.)
+                Xmax[Var] = ResidualLoadInArea + 1e-5;
             else
                 Xmax[Var] = 0.;
 
