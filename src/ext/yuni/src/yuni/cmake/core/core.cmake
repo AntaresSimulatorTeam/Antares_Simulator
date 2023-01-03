@@ -100,10 +100,6 @@ add_library(yuni-static-core STATIC
 		core/bit/bit.hxx
 		core/bit.h
 		core/boundingbox.h
-		#core/charset/charset.cpp
-		#core/charset/charset.h
-		#core/charset/charset.hxx
-		#core/charset.h
 		core/color/fwd.h
 		core/color/rgb.h
 		core/color/rgb.hxx
@@ -351,12 +347,6 @@ add_library(yuni-static-core STATIC
 		core/unit/unit.h
 		core/unit/unit.hxx
 		core/unit.h
-		core/uri/uri.cpp
-		core/uri/uri.h
-		core/uri/uri.hxx
-		core/uri/uri.private.cpp
-		core/uri/uri.private.h
-		core/uri.h
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
