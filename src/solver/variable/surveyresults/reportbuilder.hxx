@@ -215,59 +215,64 @@ public:
         // Standard - Not related to anything
         if (CDataLevel & Category::standard)
             RunStandard(list, results, numSpace);
+
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
             RunForEachArea(list, results, numSpace);
+
         // Set of Areas
         if (CDataLevel & Category::setOfAreas)
             RunForEachSetOfAreas(list, results, numSpace);
+
+        // Binding constraints level
+        if (CDataLevel & Category::bindingConstraint)
+            RunForEachBindingConstraint(list, results, numSpace);
 
         // Go to the next data level
         SurveyReportBuilder<GlobalT, NextT, nextDataLevel>::Run(list, results, numSpace);
     }
 
-    static void RunDigest(const ListType& list, SurveyResults& results)
+    static void RunDigest(const ListType& list, SurveyResults& results, IResultWriter::Ptr writer)
     {
         logs.info() << "Exporting digest...";
         logs.debug() << " . Digest, truncating file";
-        if (results.createDigestFile())
+        // Digest: Summary for All years
+        logs.debug() << " . Digest, annual";
+
+        // Digest file : areas part
+        std::string digestBuffer;
+        list.buildDigest(results, Category::digestAllYears, Category::area);
+        results.exportDigestAllYears(digestBuffer);
+
+        // Degest file : districts part
+        list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
+        results.exportDigestAllYears(digestBuffer);
+
+        if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
         {
-            // Digest: Summary for All years
-            logs.debug() << " . Digest, annual";
-
-            // Digest file : areas part
-            list.buildDigest(results, Category::digestAllYears, Category::area);
-            results.exportDigestAllYears();
-
-            // Degest file : districts part
-            list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
-            results.exportDigestAllYears();
-
-            if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
+            // Digest: Flow linear (only if selected by user)
+            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
             {
-                // Digest: Flow linear (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
-                {
-                    logs.debug() << " . Digest, flow linear";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowLinear, Category::area);
-                    results.exportDigestMatrix("Links (FLOW LIN.)");
-                }
-
-                // Digest: Flow Quad (only if selected by user)
-                if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
-                {
-                    logs.debug() << " . Digest, flow quad";
-                    results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                    list.buildDigest(results, Category::digestFlowQuad, Category::area);
-                    results.exportDigestMatrix("Links (FLOW QUAD.)");
-                }
+                logs.debug() << " . Digest, flow linear";
+                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+                list.buildDigest(results, Category::digestFlowLinear, Category::area);
+                results.exportDigestMatrix("Links (FLOW LIN.)", digestBuffer);
             }
 
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
+            // Digest: Flow Quad (only if selected by user)
+            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
+            {
+                logs.debug() << " . Digest, flow quad";
+                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+                list.buildDigest(results, Category::digestFlowQuad, Category::area);
+                results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
+            }
         }
+        // THIS FILE IS DEPRECATED !!!
+        YString digestFileName;
+        digestFileName << results.data.originalOutput << SEP << "grid" << SEP << "digest.txt";
+        writer->addEntryFromBuffer(digestFileName.c_str(), digestBuffer);
     }
 
 private:
@@ -282,11 +287,7 @@ private:
             results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                 << "whole system";
             // Creating the directory
-            if (IO::Directory::Create(results.data.output))
-                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-            else
-                logs.error() << "I/O Error: '" << results.data.output
-                             << "': impossible to create the folder";
+            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
 
@@ -336,16 +337,7 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id;
-                // Creating the directory
-                if (IO::Directory::Create(results.data.output))
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
-                else
-                    logs.error() << "I/O Error: '" << results.data.output
-                                 << "': impossible to create the folder";
-
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
 
             // Thermal clusters for the current area
@@ -377,19 +369,8 @@ private:
                 results.data.output.clear();
                 results.data.output << results.data.originalOutput << SEP << "areas" << SEP
                                     << area.id << SEP << "thermal" << SEP << cluster.id();
-                // Creating the directory
-                if (Yuni::IO::Directory::Create(results.data.output))
-                {
-                    // Generating the report for each thermal cluster
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                      list, results, numSpace);
-                }
-                else
-                    logs.error() << "I/O Error: '" << results.data.output
-                                 << "': impossible to create the folder";
 
-                if (Antares::Memory::swapSupport)
-                    Antares::memory.flushAll();
+                SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
             }
         }
     }
@@ -437,19 +418,8 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    // Creating the directory
-                    if (IO::Directory::Create(results.data.output))
-                    {
-                        // Generating the report for each thermal cluster
-                        SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
-                          list, results, numSpace);
-                    }
-                    else
-                        logs.error() << "I/O Error: '" << results.data.output
-                                     << "': impossible to create the folder";
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
 
-                    if (Antares::Memory::swapSupport)
-                        Antares::memory.flushAll();
                 }
             }
         }
@@ -488,19 +458,25 @@ private:
             results.data.output << results.data.originalOutput << SEP << "areas" << SEP << "@ "
                                 << sets.nameByIndex(i);
 
-            // Creating the directory
-            if (!IO::Directory::Create(results.data.output))
-            {
-                logs.error() << "I/O Error: '" << results.data.output
-                             << "': impossible to create the folder";
-                ++indx;
-                continue;
-            }
             results.data.setOfAreasIndex = indx++;
             SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
+        }
+    }
 
-            if (Antares::Memory::swapSupport)
-                Antares::memory.flushAll();
+    static void RunForEachBindingConstraint(const ListType& list,
+                                            SurveyResults& results,
+                                            unsigned int numSpace)
+    {
+        using namespace Yuni;
+
+        // Generating the report for each binding constraint
+        if (CDataLevel & Category::bindingConstraint)
+        {
+            logs.info() << "Exporting results : binding constraints";
+            // The new output
+            results.data.output.clear();
+            results.data.output << results.data.originalOutput << SEP << "binding_constraints";
+            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
         }
     }
 

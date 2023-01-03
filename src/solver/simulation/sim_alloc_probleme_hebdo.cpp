@@ -59,7 +59,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.BruitSurCoutHydraulique[p] = (double*)MemAlloc(8784 * sizeof(double));
 
     problem.NomsDesPays = (const char**)MemAlloc(nbPays * sizeof(char*));
-
     problem.PaysExtremiteDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.PaysOrigineDeLInterconnexion = (int*)MemAlloc(linkCount * sizeof(int));
     problem.CoutDeTransport = (COUTS_DE_TRANSPORT**)MemAlloc(linkCount * sizeof(void*));
@@ -128,8 +127,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
             }
         }
     }
-
-    problem.NumeroDeZoneDeReserveJMoins1 = (int*)MemAlloc(nbPays * sizeof(int));
 
     problem.CoutsMarginauxDesContraintesDeReserveParZone
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
@@ -206,15 +203,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueUp
-          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueDown
-          = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydDown
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage
           = (int*)MemAlloc(nbPays * sizeof(int));
@@ -224,42 +213,13 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
           = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveAny
-          = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillancePositive
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceNegative
-          = (int*)MemAlloc(nbPays * sizeof(int));
-
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceEnReserve
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
           = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseDown
-          = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseUp
-          = (int*)MemAlloc(nbPays * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseDown
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]
@@ -345,7 +305,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraintCount * sizeof(int));
     }
 
-    for (k = 0; k < (int)study.runtime->bindingConstraintCount; k++)
+    const auto& bindingConstraintCount = study.runtime->bindingConstraintCount;
+    problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
+      bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
+
+    for (k = 0; k < (int)bindingConstraintCount; k++)
     {
         problem.MatriceDesContraintesCouplantes[k]
           = (CONTRAINTES_COUPLANTES*)MemAlloc(sizeof(CONTRAINTES_COUPLANTES));
@@ -374,6 +338,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
         problem.MatriceDesContraintesCouplantes[k]->PaysDuPalierDispatch
           = (int*)MemAlloc(study.runtime->bindingConstraint[k].clusterCount * sizeof(int));
+
+        // TODO : create a numberOfTimeSteps method in class of runtime->bindingConstraint
+        unsigned int nbTimeSteps;
+        switch (study.runtime->bindingConstraint[k].type)
+        {
+            using namespace Antares::Data;
+        case BindingConstraint::typeHourly:
+            nbTimeSteps = 168;
+            break;
+        case BindingConstraint::typeDaily:
+            nbTimeSteps = 7;
+            break;
+        case BindingConstraint::typeWeekly:
+            nbTimeSteps = 1;
+            break;
+        default:
+            nbTimeSteps = 0;
+            break;
+        }
+        if (nbTimeSteps > 0)
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales
+              = (double*)MemAlloc(nbTimeSteps * sizeof(double));
+        }
+        else
+        {
+            problem.ResultatsContraintesCouplantes[k].variablesDuales = nullptr;
+        }
     }
 
     for (k = 0; k < (int)nbPays; k++)
@@ -396,8 +388,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
-          = (double*)MemAlloc(nbPaliers * sizeof(double));
-        problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine
           = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour
           = (double*)MemAlloc(nbPaliers * sizeof(double));
@@ -460,6 +450,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
+        problem.ResultatsHoraires[k]->ValeursHorairesDENS
+          = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown
@@ -579,6 +571,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.numeroOptimisation = (int*)MemAlloc(7 * sizeof(int));
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
     problem.coutOptimalSolution2 = (double*)MemAlloc(7 * sizeof(double));
+
+    problem.tempsResolution1 = (double*)MemAlloc(7 * sizeof(double));
+    problem.tempsResolution2 = (double*)MemAlloc(7 * sizeof(double));
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
@@ -588,7 +583,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     uint nbPays = study.areas.size();
 
     MemFree(problem.NomsDesPays);
-
     MemFree(problem.PaysExtremiteDeLInterconnexion);
     MemFree(problem.PaysOrigineDeLInterconnexion);
     MemFree(problem.IndexDebutIntercoOrigine);
@@ -632,45 +626,16 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermique);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueUp);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDuPalierThermiqueDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHyd);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydUp);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeLaProdHydDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDePompage);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeNiveau);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveDown);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositiveAny);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeDown);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegativeAny);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillancePositive);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceNegative);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeGrosseVariableDefaillanceEnReserve);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
         MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisseDown);
-        MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausse);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseUp);
-        MemFree(
-          problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaHausseDown);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
@@ -756,15 +721,18 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.MatriceDesContraintesCouplantes[k]->OffsetTemporelSurLePalierDispatch);
 
         MemFree(problem.MatriceDesContraintesCouplantes[k]);
+
+        if (problem.ResultatsContraintesCouplantes[k].variablesDuales != nullptr)
+            MemFree(problem.ResultatsContraintesCouplantes[k].variablesDuales);
     }
     MemFree(problem.MatriceDesContraintesCouplantes);
+    MemFree(problem.ResultatsContraintesCouplantes);
 
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure);
-        MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneSemaine);
         MemFree(problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUnJour);
         MemFree(problem.PaliersThermiquesDuPays[k]->minUpDownTime);
         MemFree(problem.PaliersThermiquesDuPays[k]->TailleUnitaireDUnGroupeDuPalierThermique);
@@ -848,6 +816,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny);
@@ -898,7 +867,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     if (problem.previousYearFinalLevels)
         MemFree(problem.previousYearFinalLevels);
 
-    MemFree(problem.NumeroDeZoneDeReserveJMoins1);
     MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone);
     MemFree(problem.ReserveJMoins1);
     MemFree(problem.ResultatsHoraires);
@@ -931,4 +899,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.numeroOptimisation);
     MemFree(problem.coutOptimalSolution1);
     MemFree(problem.coutOptimalSolution2);
+    MemFree(problem.tempsResolution1);
+    MemFree(problem.tempsResolution2);
 }

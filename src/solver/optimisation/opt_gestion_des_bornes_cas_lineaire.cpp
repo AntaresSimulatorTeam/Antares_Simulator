@@ -34,6 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
+#include "adequacy_patch.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
@@ -155,9 +156,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-
-            Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+            if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
+                AdequacyPatch::setBoundsAdqPatch(
+                  Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
+            else
+                AdequacyPatch::setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
@@ -357,9 +360,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
             bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
             bool opt1 = (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
-            bool exp = (ProblemeHebdo->Expansion == OUI_ANTARES);
-            bool opt2 = (ProblemeAResoudre->NumeroDOptimisation == DEUXIEME_OPTIMISATION);
-            if ((reserveJm1 && opt1) || (reserveJm1 && exp && opt2))
+            if (reserveJm1 && opt1)
             {
                 C += ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
             }
@@ -379,9 +380,19 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
                 else
                     Xmax[Var] = 0.;
 
+                // adq patch: update ENS <= DENS in 2nd run
+                if (ProblemeHebdo->adqPatchParams
+                    && ProblemeHebdo->adqPatchParams->AdequacyFirstStep == false
+                    && ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Pays]
+                         == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                    Xmax[Var]
+                      = std::min(Xmax[Var],
+                            ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+
                 ProblemeHebdo->ResultatsHoraires[Pays]
                   ->ValeursHorairesDeDefaillancePositive[PdtHebdo]
                   = 0.0;
+
                 AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
                                         ->ValeursHorairesDeDefaillancePositive[PdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
@@ -404,18 +415,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
 
             ProblemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillanceEnReserve[PdtHebdo]
               = 0.0;
-
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
-            if (Var >= 0)
-            {
-                Xmin[Var] = 0.0;
-
-                Xmax[Var] = LINFINI_ANTARES;
-
-                AdresseDuResultat = &(ProblemeHebdo->ResultatsHoraires[Pays]
-                                        ->ValeursHorairesDeDefaillanceEnReserve[PdtHebdo]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
-            }
         }
     }
 

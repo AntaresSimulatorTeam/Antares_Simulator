@@ -50,9 +50,9 @@ VariablePrintInfo::VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataL
     varname = vname;
 }
 
-string VariablePrintInfo::name()
+std::string VariablePrintInfo::name()
 {
-    return varname.to<string>();
+    return varname.to<std::string>();
 }
 void VariablePrintInfo::enablePrint(bool b)
 {
@@ -108,8 +108,7 @@ void AllVariablesPrintInfo::clear()
     // Destroying objects in lists
     // ---------------------------
     // Deleting variable' print info objects pointed in the list
-    vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
-    for (it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); ++it)
+    for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); ++it)
         delete *it;
 
     // After destroying objects in list, clearing lists
@@ -139,19 +138,19 @@ void AllVariablesPrintInfo::resetInfoIterator() const
     it_info = allVarsPrintInfo.begin();
 }
 
-bool AllVariablesPrintInfo::setPrintStatus(string varname, bool printStatus)
+bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
     /*
-            From the position of the iterator on the print info collection, shifting right until
-            reaching the print info associated to 'varname' argument. Then setting the good print
-       info object with 'printStatus' argument. If searched variable print info not found, returning
-       'false' meaing we have an error.
+        From the position of the iterator on the print info collection, shifting right until
+        reaching the print info associated to 'varname' argument. Then setting the good print
+        info object with 'printStatus' argument. If searched variable print info not found, returning
+        'false' meaing we have an error.
     */
     std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
 
     for (it_info = allVarsPrintInfo.begin(); it_info != allVarsPrintInfo.end(); it_info++)
     {
-        string current_var_name = (*it_info)->name();
+        std::string current_var_name = (*it_info)->name();
         std::transform(
           current_var_name.begin(), current_var_name.end(), current_var_name.begin(), ::toupper);
         if (varname == current_var_name)
@@ -187,7 +186,7 @@ void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
     countSelectedLinkVars();
 }
 
-bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(string var_name) const
+bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(std::string var_name) const
 {
     // Finds out if an output variable is selected for print or not.
     // The search for the variable in the print info list is incremental :
@@ -211,7 +210,7 @@ bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(string var_name) 
     return true;
 }
 
-bool AllVariablesPrintInfo::isPrinted(string var_name) const
+bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 {
     // Finds out if an output variable selected for print or not.
     // The search for a variable starts from the beginning of the variable print info list.
@@ -238,11 +237,11 @@ void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 {
     /*
-            Among all reports a study can create, which is the one that contains the largest
-            number of columns and especially what is this number ?
-            If there are some unselected variables, the previous number is reduced.
-            This number is a rough over-estimation, not the exact maximum number a report can
-       contain.
+        Among all reports a study can create, which is the one that contains the largest
+        number of columns and especially what is this number ?
+        If there are some unselected variables, the previous number is reduced.
+        This number is a rough over-estimation, not the exact maximum number a report can
+        contain.
     */
 
     uint CFileLevel = 1;
@@ -257,8 +256,7 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
     {
         uint currentColumnsCount = 0;
 
-        vector<VariablePrintInfo*>::iterator it = allVarsPrintInfo.begin();
-        for (; it != allVarsPrintInfo.end(); it++)
+        for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
         {
             if ((*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel
                 && (*it)->getDataLevel() & CDataLevel)

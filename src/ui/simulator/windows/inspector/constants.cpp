@@ -271,6 +271,11 @@ const wxChar* const studyMode[] = {wxT("Economy"),
                                    wxT("Expansion"),
 #endif
                                    nullptr};
+
+const wxChar* const adequacyPatchMode[] = {wxT("virtual area"),
+                                           wxT("physical area outside patch"),
+                                           wxT("physical area inside patch"),
+                                           nullptr};
 } // namespace Inspector
 } // namespace Window
 } // namespace Antares

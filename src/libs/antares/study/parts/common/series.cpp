@@ -40,9 +40,9 @@ namespace Antares
 {
 namespace Data
 {
-bool DataSeriesCommon::invalidate(bool reload) const
+bool DataSeriesCommon::forceReload(bool reload) const
 {
-    return series.invalidate(reload);
+    return series.forceReload(reload);
 }
 
 void DataSeriesCommon::markAsModified() const

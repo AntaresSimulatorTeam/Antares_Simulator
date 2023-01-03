@@ -42,7 +42,7 @@ namespace Data
 {
 static void XCastNormalizeMuStrictlyLessThan24(Matrix<float>& data)
 {
-    data.invalidate(true); // load data if needed
+    data.forceReload(true); // load data if needed
     bool modified = false;
     for (uint i = 0; i != data.height; ++i)
     {
@@ -353,9 +353,6 @@ bool XCast::loadFromFolder(Study& study, const AnyString& folder)
         }
     }
 
-    // Flush memory to swap files (if support enabled)
-    flush();
-
     return ret;
 }
 
@@ -434,13 +431,13 @@ void XCast::estimateMemoryUsage(StudyMemoryUsage& u) const
     }
 }
 
-bool XCast::invalidate(bool reload) const
+bool XCast::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = data.invalidate(reload) && ret;
-    ret = K.invalidate(reload) && ret;
-    ret = translation.invalidate(reload) && ret;
-    ret = conversion.invalidate(reload) && ret;
+    ret = data.forceReload(reload) && ret;
+    ret = K.forceReload(reload) && ret;
+    ret = translation.forceReload(reload) && ret;
+    ret = conversion.forceReload(reload) && ret;
     return ret;
 }
 

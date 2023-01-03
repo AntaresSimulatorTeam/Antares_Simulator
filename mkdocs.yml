@@ -41,6 +41,8 @@ nav:
     - 'Miscellaneous': 'reference-guide/08-miscellaneous.md'
     - 'System requirements': 'reference-guide/09-system_requirements.md'
     - 'Command line': 'reference-guide/10-command_line.md'
+    - 'Adequacy patch (v8.3.0+)': 'reference-guide/14-adequacy-patch.md'
+    - 'File format changes': 'reference-guide/13-file-format.md'
     - 'Attribution notices': 'reference-guide/12-attribution_notices.md'
   - 'Optimisation problem' : 'reference-guide/11-modeling.md'
   - 'Build':
@@ -48,7 +50,8 @@ nav:
     - 'Development requirements': 'build/1-Development-requirements.md'
     - 'Dependencies install': 'build/2-Dependencies-install.md'
     - 'Build': 'build/3-Build.md'
-    - 'Tests': 'build/4-Tests.md'
+    - 'Tests (user)': 'build/4-Tests-user.md'
+    - 'Tests (developer)' : 'build/4-Tests-dev.md'
     - 'Installer creation': 'build/5-Installer-creation.md'
     - 'Continuous Integration' : 'build/continuous-integration.md'
     - 'OR-tools integration' : 'build/ortools-integration.md'

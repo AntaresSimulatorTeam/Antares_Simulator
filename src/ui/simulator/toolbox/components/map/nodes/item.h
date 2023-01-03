@@ -125,7 +125,7 @@ public:
     void caption(const wxString& v)
     {
         pCaption = v;
-        invalidate();
+        forceReload();
         captionHasChanged();
     }
     //@}
@@ -139,7 +139,7 @@ public:
     void x(const int v)
     {
         pX = v;
-        invalidate();
+        forceReload();
         positionHasChanged();
     }
     //@}
@@ -153,7 +153,7 @@ public:
     void y(const int v)
     {
         pY = v;
-        invalidate();
+        forceReload();
         positionHasChanged();
     }
     //@}
@@ -199,7 +199,7 @@ public:
     /*!
     ** \brief Mark the node as invalidated (to force its refresh for the next canvas update)
     */
-    void invalidate();
+    void forceReload();
 
     /*!
     ** \brief Get the node is invalidated

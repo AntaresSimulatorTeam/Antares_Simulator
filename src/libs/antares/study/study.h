@@ -31,6 +31,9 @@
 #include <yuni/core/string.h>
 #include <yuni/thread/thread.h>
 #include <yuni/core/noncopyable.h>
+#include <yuni/job/queue/service.h>
+
+#include <i_writer.h>
 
 #include "../antares.h"
 #include "../object/object.h"
@@ -47,6 +50,7 @@
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
+#include "layerdata.h"
 
 #include <memory>
 
@@ -61,7 +65,8 @@ namespace Data
 /*!
 ** \brief Antares Study
 */
-class Study final : public Yuni::NonCopyable<Study>, public IObject
+
+class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:
     using Ptr = std::shared_ptr<Study>;
@@ -164,7 +169,7 @@ public:
     ** \param forTheSolver True to indicate that the study will be used for a simulation
     **   Consequently some preparations / shortcuts should be done
     */
-    explicit Study(bool forTheSolver = false);
+    Study(bool forTheSolver = false);
     //! Destructor
     virtual ~Study();
     //@}
@@ -231,7 +236,7 @@ public:
     ** Mark all JIT structures as invalidated. This will force the loading of missing
     ** data in memory and it will force the rewritten of any matrix.
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the whole study as modified
@@ -349,7 +354,7 @@ public:
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
     template<int TimeSeriesT>
-    bool storeTimeSeriesNumbers();
+    void storeTimeSeriesNumbers() const;
     //@}
 
     //! \name Simulation
@@ -371,6 +376,8 @@ public:
     ** \brief Prepare the output where the results of the simulation will be written
     */
     bool prepareOutput();
+
+    void saveAboutTheStudy();
 
     /*!
     ** \brief Initialize the progress meter
@@ -435,23 +442,6 @@ public:
 
     //! \name Internal Data TS-Generators / Series
     //@{
-    /*!
-    ** \brief Ensure data for time series/prepro are initalized if they should be
-    **
-    ** It initializes data for each area so it would be better to call this
-    ** routine when areas are already loaded.
-    */
-    void ensureDataAreInitializedAccordingParameters();
-
-    /*!
-    ** \brief Ensure data for time series/prepro are initalized
-    **
-    ** It initializes data (without any exceptions) for each area so it would be
-    ** better to call this routine when areas are already loaded.
-    **
-    ** This routine should only be used by the interface.
-    */
-    void ensureDataAreAllInitialized();
 
     /*!
     ** \brief Computes a raw number of cores table.
@@ -491,18 +481,6 @@ public:
     */
     void removeTimeseriesIfTSGeneratorEnabled();
     //@}
-
-    //! \name Simulation output Files creation
-    //@{
-    /*!
-    ** \brief Create and open (`w+`) a file into the output for dumping the current linear problem
-    **
-    **
-    ** \return a FILE structure (which may be null if any error occured)
-    */
-    FILE* createFileIntoOutputWithExtension(const YString& prefix,
-                                            const YString& extension,
-                                            uint numSpace) const;
 
     //! \name
     //@{
@@ -581,6 +559,8 @@ public:
     */
     void computePThetaInfForThermalClusters() const;
 
+    void prepareWriter(Benchmarking::IDurationCollector* duration_collector);
+
     //! Header (general information about the study)
     StudyHeader header;
 
@@ -599,8 +579,9 @@ public:
     //! \name Simulation
     //@{
     //! The current Simulation
-    Simulation simulation;
+    SimulationComments simulationComments;
 
+    Yuni::sint64 pStartTime;
     // Used in GUI and solver
     // ----------------------
     // Maximum number of years in a set of parallel years.
@@ -737,6 +718,12 @@ public:
     mutable YString bufferLoadingTS;
     //@}
 
+    //! The queue service that runs every set of parallel years
+    std::shared_ptr<Yuni::Job::QueueService> pQueueService;
+
+    //! Result writer, required to write residual files (comments, about-the-study, etc.)
+    Solver::IResultWriter::Ptr resultWriter = nullptr;
+
 public:
     //! \name TS Generators
     //@{
@@ -747,13 +734,6 @@ public:
     void* cacheTSGenerator[timeSeriesCount];
     //@}
 
-    //! \name Layers
-    //@{
-    //! All available layers
-    std::map<size_t, std::string> layers;
-    //@}
-    size_t activeLayerID;
-    bool showAllLayer;
     /*!
     ** \brief
     */
@@ -790,122 +770,12 @@ protected:
     void reduceMemoryUsage();
     //@}
 
-private:
-    //! Load all layers
-    bool saveLayers(const AnyString& filename);
-    void loadLayers(const AnyString& filename);
-    //! \name Disabled items
-    //@{
-    //! List of all disabled areas
-    // DisabledAreaList         pDisabledAreaList;
-    //! List of all disabled area links
-    // DisabledAreaLinkList     pDisabledAreaLinkList;
-    //! List of all disabled thermal clusters
-    // DisabledThermalClusterList pDisabledThermalClusterList;
-    //@}
-
 }; // class Study
 
 /*!
 ** \brief Icon to use for studies
 */
 extern YString StudyIconFile;
-
-/*!
-** \brief Ensure data for load time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataLoadTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for load prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-**
-** \warning Actually do nothing as long as the prepro is not implemented
-**   for the load
-*/
-void StudyEnsureDataLoadPrepro(Study* s);
-
-/*!
-** \brief Ensure data for solar time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataSolarTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for solar prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-**
-** \warning Actually do nothing as long as the prepro is not implemented
-**   for the load
-*/
-void StudyEnsureDataSolarPrepro(Study* s);
-
-/*!
-** \brief Ensure data for wind time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataWindTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for wind prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataWindPrepro(Study* s);
-
-/*!
-** \brief Ensure data for hydro time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataHydroTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for hydro prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataHydroPrepro(Study* s);
-
-/*!
-** \brief Ensure data for thermal time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataThermalTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for thermal prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataThermalPrepro(Study* s);
 
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);

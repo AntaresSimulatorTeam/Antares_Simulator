@@ -208,7 +208,6 @@ public:
 
             for (unsigned int y = 0; y != matrix.height; ++y)
                 pValuesForTheCurrentYear[numSpace].hour[y] += column[y];
-            matrix.flush();
         }
     }
 
@@ -263,11 +262,6 @@ public:
     {
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

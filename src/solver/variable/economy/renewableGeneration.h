@@ -275,30 +275,11 @@ public:
         NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int column,
       unsigned int numSpace) const
     {
         return pValuesForTheCurrentYear[numSpace][column].hour;
-    }
-
-    void yearEndBuildPrepareDataForEachRenewableCluster(State& state,
-                                                        uint year,
-                                                        unsigned int numSpace)
-    {
-        for (unsigned int i = 0; i <= state.study.runtime->rangeLimits.hour[Data::rangeEnd]; ++i)
-        {
-            state.renewableClusterProductionForYear[i]
-              += pValuesForTheCurrentYear[numSpace][state.renewableCluster->areaWideIndex].hour[i];
-        }
-
-        // Next variable
-        NextType::yearEndBuildPrepareDataForEachRenewableCluster(state, year, numSpace);
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,

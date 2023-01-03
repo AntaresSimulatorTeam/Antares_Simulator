@@ -1,14 +1,16 @@
-project(antares)
 cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      2)
+set(ANTARES_VERSION_LO	      4)
 set(ANTARES_VERSION_REVISION  1)
 set(ANTARES_VERSION_YEAR      2022)
 
+project(antares
+        VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
+
 set(ANTARES_PUBLISHER "RTE France")
-set(ANTARES_WEBSITE "https://antares.rte-france.com")
+set(ANTARES_WEBSITE "https://antares-simulator.org/")
 set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
@@ -31,6 +33,8 @@ include(CheckCXXCompilerFlag)
 include(CMakeDependentOption)
 include(FetchContent)
 
+set(CMAKE_CXX_STANDARD 17)
+
 if (DEFINED VCPKG_ROOT)
     include(${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
 endif()
@@ -42,16 +46,14 @@ include("cmake/utils.cmake")
 #CMake Macro to display message
 include("cmake/messages.cmake")
 
+set(ANTARES_VERSION_TAG "")
+
 if(${ANTARES_BETA})
 	set(ANTARES_VERSION_TAG "-beta${ANTARES_BETA}")
-else()
-	set(ANTARES_VERSION_TAG "")
 endif()
 
 if(${ANTARES_RC})
-	set (ANTARES_VERSION_TAG "${ANTARES_VERSION_TAG}-rc${ANTARES_RC}")
-else()
-	set (ANTARES_RC 0)
+	set (ANTARES_VERSION_TAG "-rc${ANTARES_RC}")
 endif()
 
 # git SHA-1
@@ -62,16 +64,10 @@ execute_process(COMMAND
   OUTPUT_VARIABLE GIT_SHA1_SHORT
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-# Build Configuration
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
-else()
-	#Define CMAKE_BUILD_TYPE as Debug for external library use
-	set(CMAKE_BUILD_TYPE "Debug")
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
-	#TODO : Antares Target is debug instead of Debug YUNI and Antares CMakeLists.txt to be reviewed to change debug to Debug
-	set(ANTARES_TARGET  "debug")
-endif()
+# Build Configuration
+set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 
 OMESSAGE("")
 OMESSAGE_TITLE("Antares " "v${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-${ANTARES_TARGET}")
@@ -180,11 +176,11 @@ endif ()
 option(BUILD_UI "Build antares ui simulator" ON)
 message(STATUS "Build antares ui simulator: ${BUILD_UI}")
 
-option(BUILD_SWAP "Build antares solver with swap support (developpement option)" ${BUILD_UI})
-message(STATUS "Build antares solver with swap support: ${BUILD_SWAP}")
-
 option(BUILD_ORTOOLS "Build OR-Tools" OFF)
 message(STATUS "Build OR-Tools ${BUILD_ORTOOLS}")
+
+option(BUILD_MINIZIP "Build minizip" OFF)
+message(STATUS "Build minizip ${BUILD_MINIZIP}")
 
 #Define install directory
 if (NOT DEPS_INSTALL_DIR)
@@ -198,7 +194,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -206,7 +202,7 @@ if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
 
 	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
 	
-elseif(${CMAKE_BUILD_TYPE} STREQUAL  "debug")
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL  "debug")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
 			DEPS_INSTALL_DIR_XPANSION
@@ -257,6 +253,7 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   FetchContent_Declare(ortools
     GIT_REPOSITORY "https://github.com/rte-france/or-tools"
     GIT_TAG ${ORTOOLS_TAG}
+    GIT_SHALLOW TRUE
     )
 
   # Pass options to OR-Tools's CMake
@@ -268,8 +265,33 @@ message(STATUS "OR-Tools tag ${ORTOOLS_TAG}")
   # We build OR-Tools as a static lib. Cyclic dependencies are detected
   # without this flag.
   set(BUILD_SHARED_LIBS "OFF" CACHE INTERNAL "")
+  # In mode optimization error analysis, we call Sirius through or-tools
+  # So we need to activate Sirius in or-tools configuration (OFF by default)
+  set(USE_SIRIUS "ON" CACHE INTERNAL "")
 
   FetchContent_MakeAvailable(ortools)
+endif()
+
+find_package(minizip)
+
+if(NOT minizip_FOUND OR BUILD_MINIZIP)
+    # Repository + tag
+    set(MZ_REPOSITORY "https://github.com/zlib-ng/minizip-ng.git")
+    set(MZ_TAG "3.0.7")
+    # CMake flags
+    set(MZ_LZMA "OFF" CACHE INTERNAL "")
+    set(MZ_ZSTD "OFF" CACHE INTERNAL "")
+    set(MZ_BZIP2 "OFF" CACHE INTERNAL "")
+    set(MZ_PKCRYPT "OFF" CACHE INTERNAL "")
+    set(MZ_WZAES "OFF" CACHE INTERNAL "")
+    set(MZ_OPENSSL "OFF" CACHE INTERNAL "")
+    set(MZ_ICONV "OFF" CACHE INTERNAL "")
+
+    FetchContent_Declare(minizip
+    GIT_REPOSITORY ${MZ_REPOSITORY}
+    GIT_TAG ${MZ_TAG})
+
+    FetchContent_MakeAvailable(minizip)
 endif()
 
 #wxWidget not needed for all library find is done in ui CMakeLists.txt

@@ -43,7 +43,6 @@ typedef struct
     /* Ajout */
     int* DureeDeLaPminDuPalierThermiquePendantUnJour;
     /*   */
-    double* PminDuPalierThermiquePendantUneSemaine;
     int* NumeroDuPalierDansLEnsembleDesPaliersThermiques;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout; /* Indice par les paliers */
 } PALIERS_THERMIQUES;

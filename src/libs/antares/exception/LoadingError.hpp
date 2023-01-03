@@ -167,10 +167,22 @@ public:
     explicit CommandLineArguments(uint errors);
 };
 
-class CreatingTimeMeasurementFile : public LoadingError
+class IncompatibleStudyModeForAdqPatch : public LoadingError
 {
 public:
-    explicit CreatingTimeMeasurementFile(const Yuni::String& filename);
+    IncompatibleStudyModeForAdqPatch();
+};
+
+class NoAreaInsideAdqPatchMode : public LoadingError
+{
+public:
+    NoAreaInsideAdqPatchMode();
+};
+
+class IncompatibleOutputOptions : public LoadingError
+{
+public:
+    explicit IncompatibleOutputOptions(const std::string& text);
 };
 } // namespace Error
 } // namespace Antares

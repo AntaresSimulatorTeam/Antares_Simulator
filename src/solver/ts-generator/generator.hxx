@@ -38,17 +38,19 @@ namespace TSGenerator
 {
 // forward declaration
 // Hydro - see hydro.cpp
-bool GenerateHydroTimeSeries(Data::Study& study, uint year);
+bool GenerateHydroTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer);
 
 template<>
-inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study, uint year)
+inline bool GenerateTimeSeries<Data::timeSeriesHydro>(Data::Study& study,
+                                                      uint year,
+                                                      IResultWriter::Ptr writer)
 {
-    return GenerateHydroTimeSeries(study, year);
+    return GenerateHydroTimeSeries(study, year, writer);
 }
 
 // --- TS Generators using XCast ---
 template<enum Data::TimeSeries T>
-bool GenerateTimeSeries(Data::Study& study, uint year)
+bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer)
 {
     auto* xcast = reinterpret_cast<XCast::XCast*>(
       study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value]);
@@ -56,7 +58,7 @@ bool GenerateTimeSeries(Data::Study& study, uint year)
     if (not xcast)
     {
         logs.debug() << "Preparing the " << Data::TimeSeriesToCStr<T>::Value() << " TS Generator";
-        xcast = new XCast::XCast(study, T);
+        xcast = new XCast::XCast(study, T, writer);
         study.cacheTSGenerator[Data::TimeSeriesBitPatternIntoIndex<T>::value] = xcast;
     }
 

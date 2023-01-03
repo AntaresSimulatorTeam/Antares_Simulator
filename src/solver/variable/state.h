@@ -87,12 +87,45 @@ public:
 
     /*!
     ** \brief End the year by smoothing the thermal units run
+    ** and computing costs.
     ** We assume here that the variables related to an area
     ** are properly initialized.
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
+    ** \brief Smooth the thermal units run after resolutions
+    ** using heuristics
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
+
+    /*!
+    ** \brief Computes the minimal number of units on in the cluster
+    **
+    **
+    **
+    */
+    uint computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace);
+
+    /*!
+    ** \brief Computes the maximal number of units on in the cluster
+    **
+    **
+    **
+    */
+    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster);
+
+    /*!
+    ** \brief Computes the production, fixed and start-up costs, assuming
+    ** that thermalClusterDispatchedUnitsCountForYear has been built
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void yearEndComputeThermalClusterCosts(const unsigned int areaWideIndex);
 
     /*!
     ** \brief Reset internal data
@@ -103,11 +136,6 @@ public:
     ** \brief Reset thermal internal data for end of year calculations
     */
     void yearEndResetThermal();
-
-    /*!
-    ** \brief Reset renewable internal data for end of year calculations
-    */
-    void yearEndResetRenewable();
 
 public:
     //! Current year
@@ -187,7 +215,6 @@ public:
     double thermalClusterPMinOfTheClusterForYear[Variable::maxHoursInAYear];
 
     double renewableClusterProduction;
-    double renewableClusterProductionForYear[Variable::maxHoursInAYear];
 
     //! Dispatchable margin for the current area (valid only from weekForEachArea)
     const double* dispatchableMargin;
@@ -204,7 +231,8 @@ public:
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
-
+    //! Index of the state in the state vector
+    unsigned int numSpace;
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
     **
@@ -227,8 +255,10 @@ public:
     double optimalSolutionCost1;
     // Sum of the weekly optimal costs over the year (second optimisation step)
     double optimalSolutionCost2;
-    // Average time spent in optimization over the year (ms)
-    double averageOptimizationTime;
+    // Average time spent in first optimization over the year (ms)
+    double averageOptimizationTime1;
+    // Average time spent in second optimization over the year (ms)
+    double averageOptimizationTime2;
     // -----------------------------------------------------------------
 }; // class State
 

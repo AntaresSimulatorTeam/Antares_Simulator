@@ -40,9 +40,7 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
 
-using namespace std;
 
 namespace Antares
 {
@@ -82,9 +80,9 @@ public:
     //@}
 
     /*!
-    ** \brief Assign a new number of MC years
+    ** \brief Reset the playlist (played years and associated years)
     */
-    void years(uint y);
+    void resetPlaylist(uint nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -138,6 +136,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all adequacy patch values
+    */
+    void resetAdqPatchParameters();
 
     /*!
     ** \brief Try to detect then fix any bad value
@@ -154,15 +156,6 @@ public:
     *         for NTC
     */
     void fixGenRefreshForNTC();
-
-    /*!
-    ** \brief Check if some general data seem valid
-    **
-    ** \return The error if any (stErrNone otherwise)
-    */
-    StudyError checkIntegrity() const;
-
-    void removeExtraSettings();
 
     /*!
     ** \brief Get the amount of memory used by the general data
@@ -199,6 +192,9 @@ public:
 
     // Do we create files in the input folder ?
     bool haveToImport(int tsKind) const;
+
+    //! Save the internal settings into an INI file
+    void saveToINI(IniFile& ini) const;
 
 public:
     //! \name Mode
@@ -245,7 +241,7 @@ public:
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
-    bool* yearsFilter;
+    std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
     bool thematicTrimming;
@@ -413,8 +409,8 @@ public:
             bool minUPTime;
         } thermal;
 
-        //! a flag to export all mps files
-        bool exportMPS;
+        //! Flag to export mps files
+        mpsExportStatus exportMPS;
 
         //! a flag to export structure needed for Antares XPansion
         bool exportStructure;
@@ -427,8 +423,6 @@ public:
     // Shedding
     struct
     {
-        //! Shedding strategy
-        SheddingStrategy strategy;
         //! Shedding policy
         SheddingPolicy policy;
     } shedding;
@@ -455,7 +449,7 @@ public:
     {
         //! Renewable generation mode
         RenewableGenerationModelling rgModelling;
-        std::vector<std::string> excludedVariables() const;
+        void addExcludedVariables(std::vector<std::string>&) const;
         RenewableGenerationModelling operator()() const;
         void toAggregated();
         void toClusters();
@@ -488,19 +482,33 @@ public:
     //     (obvious if the parallel mode is not required : answer is yes).
     bool allSetsHaveSameSize;
 
-    struct
-    {
-        //! Day ahead reserve allocation mode
-        DayAheadReserveManagement daMode;
-    } reserveManagement;
-
     //! Transmission capacities
-    TransmissionCapacities transmissionCapacities;
+    GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
     LinkType linkType;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
+
+    struct AdequacyPatch
+    {
+        struct LocalMatching
+        {
+            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
+            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
+            //! only in the first step of adequacy patch local matching rule.
+            bool setToZeroOutsideInsideLinks = true;
+            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
+            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
+            //! rule.
+            bool setToZeroOutsideOutsideLinks = true;
+        };
+        bool enabled;
+        LocalMatching localMatching;
+        void addExcludedVariables(std::vector<std::string>&) const;
+    };
+
+    AdequacyPatch adqPatch;
 
     //! \name Scenariio Builder - Rules
     //@{
@@ -528,14 +536,16 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
+    // Format of results. Currently, only single files or zip archive are supported
+    ResultFormat resultFormat = legacyFilesDirectories;
 
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
-    //! Save the internal settings into an INI file
-    void saveToINI(IniFile& ini) const;
+
+    void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;

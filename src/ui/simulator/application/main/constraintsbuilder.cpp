@@ -84,7 +84,7 @@ protected:
         logs.info() << "Location of ini file: " << pFilename;
 
         // making sure that all internal data are allocated
-        study->ensureDataAreAllInitialized();
+        study->areas.ensureDataIsInitialized(study->parameters, false);
 
         // The swap memory MUST not be flushed. This can happen since we are not
         // in the main thread
@@ -139,9 +139,6 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
 
     auto& mainFrm = *Forms::ApplWnd::Instance();
     Forms::Disabler<Forms::ApplWnd> disabler(mainFrm);
-
-    // Checking for orphan swap files
-    // mainFrm.timerCleanSwapFiles(100 /*ms*/);
 
     // Getting when the process was launched
     const wxDateTime startTime = wxDateTime::Now();
@@ -216,10 +213,6 @@ void ApplWnd::evtLaunchConstraintsBuilder(wxCommandEvent& evt)
 
         mainFrm.forceRefresh();
     }
-
-    // Checking for orphan swap files
-    // We may have to clean the cache folder
-    mainFrm.timerCleanSwapFiles(5000 /*ms*/);
 
     // Remove the temporary file
     IO::File::Delete(filename);

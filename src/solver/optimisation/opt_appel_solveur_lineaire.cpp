@@ -50,8 +50,9 @@ extern "C"
 #include <antares/emergency.h>
 
 #include "../utils/mps_utils.h"
-
 #include "../utils/ortools_utils.h"
+#include "../utils/filename.h"
+
 #include "../infeasible-problem-analysis/problem.h"
 #include "../infeasible-problem-analysis/exceptions.h"
 
@@ -101,12 +102,15 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     double* pt;
     char PremierPassage;
     double CoutOpt;
+    long long solveTime;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     PROBLEME_SPX* ProbSpx;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
-                                                   ProblemeAResoudre->NomDesContraintes);
+                                                   ProblemeAResoudre->NomDesContraintes,
+                                                   ProblemeAResoudre->StatutDesVariables,
+                                                   ProblemeAResoudre->StatutDesContraintes);
     PremierPassage = OUI_ANTARES;
     MPSolver* solver;
 
@@ -115,6 +119,10 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
+
+    const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
+    assert(opt >= 0 && opt < 2);
+    OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
 RESOLUTION:
 
@@ -172,7 +180,7 @@ RESOLUTION:
                                                   ProblemeAResoudre->NombreDeContraintes);
             }
             measure.tick();
-            ProblemeHebdo->optimizationStatistics_object.addUpdateTime(measure.duration_ms());
+            optimizationStatistics->addUpdateTime(measure.duration_ms());
         }
     }
 
@@ -227,29 +235,24 @@ RESOLUTION:
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
 
-    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
-    //		- Only for first optimization
-    //		- If mode Xpansion is asked
-    //		- For time beeing, only for simplex, without use of ortools
-
     Probleme.NombreDeContraintesCoupes = 0;
 
-    // Xpansion : dumping fixed and changing part of the optimization problem, into the MPS format.
-    // - Only for first optimization week
-    // - If mode Xpansion is asked
-    // - For time beeing, only for simplex, without use of ortools
-    if (ProblemeHebdo->Expansion)
+    if (ortoolsUsed)
     {
-        if (ProblemeHebdo->firstWeekOfSimulation)
-            OPT_dump_spx_fixed_part(&Probleme, numSpace);
-
-        OPT_dump_spx_variable_part(&Probleme, numSpace);
+        solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
+
+    mpsWriterFactory mps_writer_factory(
+      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+    auto mps_writer = mps_writer_factory.create();
+    mps_writer->runIfNeeded(study->resultWriter);
 
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        solver = ORTOOLS_Simplexe(&Probleme, solver);
+        const bool keepBasis
+          = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
+        solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
@@ -266,23 +269,10 @@ RESOLUTION:
         }
     }
     measure.tick();
-    ProblemeHebdo->optimizationStatistics_object.addSolveTime(measure.duration_ms());
-
-    if (ProblemeHebdo->ExportMPS == OUI_ANTARES)
-    {
-        if (ortoolsUsed)
-        {
-            int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-            ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
-        }
-        else
-        {
-            OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
-        }
-    }
+    solveTime = measure.duration_ms();
+    optimizationStatistics->addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
@@ -334,16 +324,22 @@ RESOLUTION:
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->X[Var];
+
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
             if (pt != nullptr)
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
         if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+        {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+            ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+        }
         else
+        {
             ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-
+            ProblemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+        }
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
@@ -375,20 +371,8 @@ RESOLUTION:
             logs.error() << ex.what();
         }
 
-        // Write MPS only if exportMPSOnError is activated and MPS weren't exported before with
-        // ExportMPS option
-        if (ProblemeHebdo->ExportMPS == NON_ANTARES && ProblemeHebdo->exportMPSOnError)
-        {
-            if (ortoolsUsed)
-            {
-                int const n = ProblemeHebdo->numeroOptimisation[NumIntervalle];
-                ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver, numSpace, n);
-            }
-            else
-            {
-                OPT_EcrireJeuDeDonneesLineaireAuFormatMPS((void*)&Probleme, numSpace);
-            }
-        }
+        auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
+        mps_writer_on_error->runIfNeeded(study->resultWriter);
 
         return false;
     }
@@ -400,7 +384,7 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
                                                     uint numSpace,
                                                     int NumeroDeLIntervalle)
 {
-    FILE* Flot;
+    Yuni::Clob buffer;
     double CoutOptimalDeLaSolution;
     PROBLEME_HEBDO* Probleme;
 
@@ -412,14 +396,11 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
     else
         CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
+
     auto study = Data::Study::Current::Get();
-    Flot = study->createFileIntoOutputWithExtension("criterion", "txt", numSpace);
-    if (!Flot)
-        AntaresSolverEmergencyShutdown(2);
-
-    fprintf(Flot, "* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
-
-    fclose(Flot);
-
-    return;
+    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
+    auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
+    auto writer = study->resultWriter;
+    writer->addEntryFromBuffer(filename, buffer);
 }

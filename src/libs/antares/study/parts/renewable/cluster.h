@@ -112,7 +112,7 @@ public:
     /*!
     ** \brief Invalidate all data associated to the renewable cluster
     */
-    bool invalidate(bool reload) const override;
+    bool forceReload(bool reload) const override;
 
     /*!
     ** \brief Mark the renewable cluster as modified
@@ -143,13 +143,6 @@ public:
     ** The name and the id will remain untouched.
     */
     void copyFrom(const RenewableCluster& cluster);
-
-    //! \name Memory management
-    //@{
-    /*!
-    ** \brief Flush the memory to swap files (if swap support enabled)
-    */
-    void flush() override;
 
     /*!
     ** \brief Group ID as an uint

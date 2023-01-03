@@ -24,17 +24,15 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <algorithm>
+
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
-#include <algorithm>
-#include <iostream>
+#include <tuple>   // std::tuple
+#include <list>    // std::list
+#include <sstream> // std::stringstream
 
-#include <sstream>
-
-#ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#endif
 #include "../constants.h"
 #include "parameters.h"
 #include "../inifile.h"
@@ -53,11 +51,8 @@ namespace Antares
 {
 namespace Data
 {
-enum
-{
-    //! Hard coded maximum number of MC years
-    maximumMCYears = 100000,
-};
+//! Hard coded maximum number of MC years
+const uint maximumMCYears = 100000;
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
@@ -108,6 +103,41 @@ static bool ConvertStringToRenewableGenerationModelling(const AnyString& text,
     out = rgUnknown;
 
     return false;
+}
+
+static bool ConvertCStrToResultFormat(const AnyString& text, ResultFormat& out)
+{
+    CString<24, false> s = text;
+    s.trim();
+    s.toLower();
+    if (s == "txt-files")
+    {
+        out = legacyFilesDirectories;
+        return true;
+    }
+    if (s == "zip") // Using renewable clusters
+    {
+        out = zipArchive;
+        return true;
+    }
+
+    logs.warning() << "parameters:  invalid result format. Got '" << text << "'";
+    out = legacyFilesDirectories;
+
+    return false;
+}
+
+static void ParametersSaveResultFormat(IniFile::Section* section, ResultFormat fmt)
+{
+    const String name = "result-format";
+    switch (fmt)
+    {
+    case zipArchive:
+        section->add(name, "zip");
+        break;
+    default:
+        section->add(name, "txt-files");
+    }
 }
 
 bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
@@ -178,14 +208,11 @@ const char* StudyModeToCString(StudyMode mode)
     return "Unknown";
 }
 
-Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
+Parameters::Parameters() : noOutput(false)
 {
 }
 
-Parameters::~Parameters()
-{
-    delete[] yearsFilter;
-}
+Parameters::~Parameters() = default;
 
 void Parameters::resetSeeds()
 {
@@ -200,6 +227,23 @@ void Parameters::resetSeeds()
     // The same way for all others
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
+}
+
+void Parameters::resetAdqPatchParameters()
+{
+    adqPatch.enabled = false;
+    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
+    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+}
+
+void Parameters::resetPlayedYears(uint nbOfYears)
+{
+    // Set the number of years
+    nbYears = std::min(nbOfYears, maximumMCYears);
+
+    // Reset the filter
+    yearsFilter.resize(nbYears);
+    std::fill(yearsFilter.begin(), yearsFilter.end(), true);
 }
 
 void Parameters::reset()
@@ -218,10 +262,7 @@ void Parameters::reset()
     variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
-    nbYears = 1;
-    delete[] yearsFilter;
-    yearsFilter = nullptr;
-
+    resetPlayedYears(1);
     resetYearsWeigth();
 
     yearByYear = false;
@@ -279,13 +320,11 @@ void Parameters::reset()
 
     // Shedding strategies
     power.fluctuations = lssFreeModulations;
-    shedding.strategy = shsShareMargins;
     shedding.policy = shpShavePeaks;
 
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -294,7 +333,7 @@ void Parameters::reset()
 
     include.constraints = true;
     include.hurdleCosts = true;
-    transmissionCapacities = tncEnabled;
+    transmissionCapacities = GlobalTransmissionCapacities::localValuesForAllLinks;
     include.thermal.minStablePower = true;
     include.thermal.minUPTime = true;
 
@@ -304,7 +343,7 @@ void Parameters::reset()
     include.reserve.primary = true;
     simplexOptimizationRange = sorWeek;
 
-    include.exportMPS = false;
+    include.exportMPS = mpsExportStatus::NO_EXPORT;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -313,8 +352,15 @@ void Parameters::reset()
 
     activeRulesScenario.clear();
 
+    hydroDebug = false;
+
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsSolver = "sirius";
+
+    resultFormat = legacyFilesDirectories;
+
+    // Adequacy patch
+    resetAdqPatchParameters();
 
     // Initialize all seeds
     resetSeeds();
@@ -424,10 +470,10 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         uint y;
         if (value.to<uint>(y))
         {
-            d.years(y);
+            d.resetPlaylist(y);
             return true;
         }
-        d.years(1);
+        d.resetPlaylist(1);
         return false;
     }
     if (key == "nbtimeseriesload")
@@ -523,7 +569,8 @@ static bool SGDIntLoadFamily_Output(Parameters& d,
         return value.to<bool>(d.synthesis);
     if (key == "hydro-debug")
         return value.to<bool>(d.hydroDebug);
-
+    if (key == "result-format")
+        return ConvertCStrToResultFormat(value, d.resultFormat);
     return false;
 }
 static bool SGDIntLoadFamily_Optimization(Parameters& d,
@@ -550,8 +597,19 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return value.to<bool>(d.include.reserve.spinning);
     if (key == "include-primaryreserve")
         return value.to<bool>(d.include.reserve.primary);
+
     if (key == "include-exportmps")
-        return value.to<bool>(d.include.exportMPS);
+    {
+        d.include.exportMPS = stringToMPSexportStatus(value);
+        if (d.include.exportMPS == mpsExportStatus::UNKNOWN_EXPORT)
+        {
+            logs.warning() << "Reading parameters : invalid MPS export status : " << value
+                           << ". Reset to no MPS export.";
+            return false;
+        }
+        return true;
+    }
+
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -600,36 +658,32 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
 
     if (key == "transmission-capacities")
     {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (v == "infinite")
-            d.transmissionCapacities = tncInfinite;
-        else
-            d.transmissionCapacities = v.to<bool>() ? tncEnabled : tncIgnore;
-        return true;
+        return stringToGlobalTransmissionCapacities(value, d.transmissionCapacities);
     }
     return false;
 }
+static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
+                                      const String& key,
+                                      const String& value,
+                                      const String&,
+                                      uint)
+{
+    if (key == "include-adq-patch")
+        return value.to<bool>(d.adqPatch.enabled);
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+        return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+
+    return false;
+}
+
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String& key,
                                               const String& value,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -698,17 +752,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
         return false;
     }
 
-    if (key == "shedding-strategy")
-    {
-        auto strategy = StringToSheddingStrategy(value);
-        if (strategy != shsUnknown)
-        {
-            d.shedding.strategy = strategy;
-            return true;
-        }
-        logs.error() << "parameters: invalid shedding strategy. Got '" << value << "'";
-        return false;
-    }
     if (key == "shedding-policy")
     {
         auto policy = StringToSheddingPolicy(value);
@@ -866,9 +909,9 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
         return true;
     }
     if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
     if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
@@ -960,12 +1003,20 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
 
     if (key == "shedding-strategy-global") // ignored since 4.0
         return true;
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
+
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
     if (key == "thresholdmax")
         return true; // value.to<int>(d.thresholdMaximum);
-
+    if (key == "include-split-exported-mps")
+        return true;
     return false;
 }
 
@@ -994,6 +1045,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
          {"input", &SGDIntLoadFamily_Input},
          {"output", &SGDIntLoadFamily_Output},
          {"optimization", &SGDIntLoadFamily_Optimization},
+         {"adequacy patch", &SGDIntLoadFamily_AdqPatch},
          {"other preferences", &SGDIntLoadFamily_OtherPreferences},
          {"advanced parameters", &SGDIntLoadFamily_AdvancedParameters},
          {"playlist", &SGDIntLoadFamily_Playlist},
@@ -1047,23 +1099,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         if (options.nbYears > nbYears)
         {
-            if (yearsFilter)
-            {
-                // The variable `yearsFilter` must be enlarged
-                bool* newset = new bool[options.nbYears];
-                for (uint i = 0; i != nbYears; ++i)
-                    newset[i] = yearsFilter[i];
-                for (uint i = nbYears; i < options.nbYears; ++i)
-                    newset[i] = false;
-                delete[] yearsFilter;
-                yearsFilter = newset;
-            }
-            else
-            {
-                yearsFilter = new bool[options.nbYears];
-                for (uint i = 0; i < options.nbYears; ++i)
-                    yearsFilter[i] = true;
-            }
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
         }
         nbYears = options.nbYears;
 
@@ -1078,7 +1115,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         // resetting shedding strategies
         power.fluctuations = lssFreeModulations;
-        shedding.strategy = shsShareSheddings;
         shedding.policy = shpShavePeaks;
     }
 
@@ -1112,7 +1148,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1132,35 +1168,23 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
 void Parameters::fixRefreshIntervals()
 {
-    if (timeSeriesLoad & timeSeriesToRefresh && 0 == refreshIntervalLoad)
+    using T = std::
+      tuple<uint& /* refreshInterval */, enum TimeSeries /* ts */, const std::string /* label */>;
+    const std::list<T> timeSeriesToCheck = {{refreshIntervalLoad, timeSeriesLoad, "load"},
+                                            {refreshIntervalSolar, timeSeriesSolar, "solar"},
+                                            {refreshIntervalHydro, timeSeriesHydro, "hydro"},
+                                            {refreshIntervalWind, timeSeriesWind, "wind"},
+                                            {refreshIntervalThermal, timeSeriesThermal, "thermal"}};
+
+    for (const auto& [refreshInterval, ts, label] : timeSeriesToCheck)
     {
-        refreshIntervalLoad = 1;
-        logs.error() << "The load time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesSolar & timeSeriesToRefresh && 0 == refreshIntervalSolar)
-    {
-        refreshIntervalSolar = 1;
-        logs.error() << "The solar time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesHydro & timeSeriesToRefresh && 0 == refreshIntervalHydro)
-    {
-        refreshIntervalHydro = 1;
-        logs.error() << "The hydro time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesWind & timeSeriesToRefresh && 0 == refreshIntervalWind)
-    {
-        refreshIntervalWind = 1;
-        logs.error() << "The wind time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
-    }
-    if (timeSeriesThermal & timeSeriesToRefresh && 0 == refreshIntervalThermal)
-    {
-        refreshIntervalThermal = 1;
-        logs.error() << "The thermal time-series must be refreshed but the interval is equal to 0. "
-                        "Auto-Reset to a safe value (1).";
+        if (ts & timeSeriesToRefresh && 0 == refreshInterval)
+        {
+            refreshInterval = 1;
+            logs.error() << "The " << label
+                         << " time-series must be refreshed but the interval is equal to 0. "
+                            "Auto-Reset to a safe value (1).";
+        }
     }
 }
 
@@ -1199,14 +1223,8 @@ void Parameters::fixBadValues()
 
     if (derated)
     {
-        // Force the number of years
-        nbYears = 1;
-        if (!yearsFilter)
-        {
-            yearsFilter = new bool[1];
-            yearsFilter[0] = true;
-        }
-
+        // Force the number of years to 1
+        resetPlayedYears(1);
         resetYearsWeigth();
     }
     else
@@ -1340,11 +1358,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // If the user's playlist is disabled, the filter must be reset
-    assert(yearsFilter && "The array yearsFilter must be valid at this point");
+    assert(!yearsFilter.empty() && "The array yearsFilter must be not be empty at this point");
     if (!userPlaylist)
     {
-        for (uint i = 0; i < nbYears; ++i)
-            yearsFilter[i] = true;
+        std::fill(yearsFilter.begin(), yearsFilter.end(), true);
         effectiveNbYears = nbYears;
     }
     else
@@ -1420,7 +1437,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     case rgUnknown:
         logs.error() << "Generation should be either `clusters` or `aggregated`";
     }
-    const std::vector<std::string> excluded_vars = renewableGeneration.excludedVariables();
+    std::vector<std::string> excluded_vars;
+    renewableGeneration.addExcludedVariables(excluded_vars);
+    adqPatch.addExcludedVariables(excluded_vars);
+
     variablesPrintInfo.prepareForSimulation(thematicTrimming, excluded_vars);
 
     switch (mode)
@@ -1546,8 +1566,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min stable power for thermal clusters";
     if (!include.thermal.minUPTime)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
-    if (!include.exportMPS)
+    if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
+    if (!adqPatch.enabled)
+        logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
         logs.info() << "  :: ignoring export structure";
     if (!include.hurdleCosts)
@@ -1556,37 +1578,15 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
+        logs.info() << "  :: ortools solver " << ortoolsSolver
                     << " used for problem resolution";
     }
 }
 
-void Parameters::years(uint y)
+void Parameters::resetPlaylist(uint nbOfYears)
 {
-    // Resetting the filter on the years
-    delete[] yearsFilter;
-
-    if (y < 2)
-    {
-        nbYears = 1;
-        yearsFilter = new bool[1];
-        yearsFilter[0] = true;
-    }
-    else
-    {
-        nbYears = (y > (uint)maximumMCYears) ? (uint)maximumMCYears : y;
-        // Reset the filter
-        yearsFilter = new bool[nbYears];
-        for (uint i = 0; i != nbYears; ++i)
-            yearsFilter[i] = true;
-    }
-
+    resetPlayedYears(nbOfYears);
     resetYearsWeigth();
-}
-
-StudyError Parameters::checkIntegrity() const
-{
-    return stErrNone;
 }
 
 void Parameters::saveToINI(IniFile& ini) const
@@ -1660,6 +1660,7 @@ void Parameters::saveToINI(IniFile& ini) const
         if (hydroDebug)
             section->add("hydro-debug", hydroDebug);
         ParametersSaveTimeSeries(section, "archives", timeSeriesToArchive);
+        ParametersSaveResultFormat(section, resultFormat);
     }
 
     // Optimization
@@ -1677,19 +1678,8 @@ void Parameters::saveToINI(IniFile& ini) const
             break;
         }
         // Optimization preferences
-        switch (transmissionCapacities)
-        {
-        case tncEnabled:
-            section->add("transmission-capacities", "true");
-            break;
-        case tncIgnore:
-            section->add("transmission-capacities", "false");
-            break;
-        case tncInfinite:
-            section->add("transmission-capacities", "infinite");
-            break;
-        }
-
+        section->add("transmission-capacities",
+                     GlobalTransmissionCapacitiesToString(transmissionCapacities));
         switch (linkType)
         {
         case ltLocal:
@@ -1708,7 +1698,7 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-spinningreserve", include.reserve.spinning);
         section->add("include-primaryreserve", include.reserve.primary);
 
-        section->add("include-exportmps", include.exportMPS);
+        section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1716,6 +1706,15 @@ void Parameters::saveToINI(IniFile& ini) const
                      Enum::toString(include.unfeasibleProblemBehavior));
     }
 
+    // Adequacy patch
+    {
+        auto* section = ini.addSection("adequacy patch");
+        section->add("include-adq-patch", adqPatch.enabled);
+        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideInsideLinks);
+        section->add("set-to-null-ntc-between-physical-out-for-first-step",
+                     adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    }
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1725,14 +1724,11 @@ void Parameters::saveToINI(IniFile& ini) const
                      HydroHeuristicPolicyToCString(hydroHeuristicPolicy.hhPolicy));
         section->add("hydro-pricing-mode", HydroPricingModeToCString(hydroPricing.hpMode));
         section->add("power-fluctuations", PowerFluctuationsToCString(power.fluctuations));
-        section->add("shedding-strategy", SheddingStrategyToCString(shedding.strategy));
         section->add("shedding-policy", SheddingPolicyToCString(shedding.policy));
         section->add("unit-commitment-mode", UnitCommitmentModeToCString(unitCommitment.ucMode));
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters
@@ -1747,7 +1743,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // User's playlist
     {
-        assert(yearsFilter);
+        assert(!yearsFilter.empty());
         uint effNbYears = 0;
         bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
@@ -1779,7 +1775,7 @@ void Parameters::saveToINI(IniFile& ini) const
             {
                 for (uint i = 0; i != nbYears; ++i)
                 {
-                    if (not yearsFilter[i])
+                    if (!yearsFilter[i])
                         section->add("playlist_year -", i);
                 }
             }
@@ -1863,33 +1859,39 @@ bool Parameters::saveToFile(const AnyString& filename) const
     return ini.save(filename);
 }
 
-std::vector<std::string> Parameters::RenewableGeneration::excludedVariables() const
+void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
+    const static std::vector<std::string> ren = {"wind offshore",
+                                                 "wind onshore",
+                                                 "solar concrt.",
+                                                 "solar pv",
+                                                 "solar rooft",
+                                                 "renw. 1",
+                                                 "renw. 2",
+                                                 "renw. 3",
+                                                 "renw. 4"};
+
+    const static std::vector<std::string> agg = {"wind", "solar"};
+
     switch (rgModelling)
     {
-    /*
-       Order is important because AllVariablesPrintInfo::setPrintStatus
-       does not reset the search pointer.
-
-       Inverting some variable names below may result in some of them not being
-       taken into account.
-    */
+    // Using `aggregated` renewable generation, exclude `renewable` variables
     case rgAggregated:
-        return {"wind offshore",
-                "wind onshore",
-                "solar concrt.",
-                "solar pv",
-                "solar rooft",
-                "renw. 1",
-                "renw. 2",
-                "renw. 3",
-                "renw. 4"};
+        out.insert(out.end(), ren.begin(), ren.end());
+        break;
+    // Using `renewable clusters` renewable generation, exclude `aggregated` variables
     case rgClusters:
-        return {"wind", "solar"};
-    case rgUnknown:
-        return {};
+        out.insert(out.end(), agg.begin(), agg.end());
+        break;
+    default:
+        break;
     }
-    return {};
+}
+
+void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
+{
+    if (!enabled)
+        out.emplace_back("dens");
 }
 
 bool Parameters::haveToImport(int tsKind) const

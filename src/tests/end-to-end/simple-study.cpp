@@ -51,22 +51,22 @@ void checkVariable(SimulationEcoPtr& simulation, Area* pArea, double expectedHou
 
 void prepareStudy(Study::Ptr pStudy, int nbYears)
 {
-    // Define study parameters
-    pStudy->parameters.reset();
-    pStudy->parameters.years(nbYears);
+	//Define study parameters
+	pStudy->parameters.reset();
+	pStudy->parameters.resetPlaylist(nbYears);
 
-    // Prepare parameters for simulation
-    Data::StudyLoadOptions options;
-    pStudy->parameters.prepareForSimulation(options);
+	//Prepare parameters for simulation
+	Data::StudyLoadOptions options;
+	pStudy->parameters.prepareForSimulation(options);
 
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    pStudy->getNumberOfCores(false, 0);
+	// Logical cores
+	// -------------------------
+	// Getting the number of logical cores to use before loading and creating the areas :
+	// Areas need this number to be up-to-date at construction.
+	pStudy->getNumberOfCores(false, 0);
 
-    // Define as current study
-    Data::Study::Current::Set(pStudy);
+	// Define as current study
+	Data::Study::Current::Set(pStudy);
 }
 
 Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
@@ -161,7 +161,15 @@ ScenarioBuilder::Rules::Ptr createScenarioRules(Study::Ptr pStudy)
 
 float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight)
 {
-    pStudy->parameters.userPlaylist = true;
+	pStudy->parameters.userPlaylist = true;
+
+	for (uint i = 0; i < yearsWeight.size(); i++)
+	{
+		pStudy->parameters.setYearWeight(i, yearsWeight[i]);
+	}
+    
+	return pStudy->parameters.getYearsWeightSum();
+}
 
     for (unsigned int i = 0; i < yearsWeight.size(); i++)
     {
@@ -171,10 +179,9 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
     return pStudy->parameters.getYearsWeightSum();
 }
 
-void cleanSimulation(Study& study)
-{
-    // simulation
-    SIM_DesallocationTableaux();
+	//Launch simulation
+	Benchmarking::NullDurationCollector nullDurationCollector;
+	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = new Solver::Simulation::ISimulation< Solver::Simulation::Economy >(*pStudy, pSettings, &nullDurationCollector);
 
     // release all reference to the current study held by this class
     study.clear();

@@ -128,18 +128,42 @@ enum SimplexOptimization
 }; // enum SimplexOptimization
 
 /*!
-** \brief Transmission capacities mode
+** \brief Transmission capacities mode (applies to all links)
 */
-enum TransmissionCapacities
+enum class GlobalTransmissionCapacities
 {
     //! Transmission capacities are enabled
-    tncEnabled = 0,
+    localValuesForAllLinks = 0,
     //! Transmission capacities are ignored (set to null)
-    tncIgnore,
+    nullForAllLinks,
     //! Transmission capacities are infinite (aka Copper Plate)
-    tncInfinite,
-
+    infiniteForAllLinks,
+    //! Transmission capacities are ignored only for physical links
+    //! Global property only, cannot be used for individual links
+    nullForPhysicalLinks,
+    //! Transmission capacities are infinite only for physical links (not virtual)
+    //! Global property only, cannot be used for individual links
+    infiniteForPhysicalLinks
 }; // enum TransmissionCapacities
+
+std::string GlobalTransmissionCapacitiesToString(
+  GlobalTransmissionCapacities transmissionCapacities);
+std::string GlobalTransmissionCapacitiesToString_Display(
+  GlobalTransmissionCapacities transmissionCapacities);
+bool stringToGlobalTransmissionCapacities(const AnyString& value,
+                                          GlobalTransmissionCapacities& out);
+
+/*!
+** \brief Transmission capacities mode (applies to individual links)
+*/
+enum class LocalTransmissionCapacities
+{
+    enabled,
+    null,
+    infinite
+};
+
+std::string transmissionCapacitiesToString(const LocalTransmissionCapacities& tc);
 
 /*!
 ** \brief Asset Type mode
@@ -159,6 +183,8 @@ enum AssetType
 
 }; // enum AssetType
 
+std::string assetTypeToString(const AssetType& assetType);
+
 /*!
 ** \brief Style Type mode
 */
@@ -174,6 +200,8 @@ enum StyleType
     stDotDash,
 
 }; // enum StyleType
+
+std::string styleToString(const StyleType& style);
 
 /*!
 ** \brief Link Type mode
@@ -432,23 +460,6 @@ const char* PowerFluctuationsToCString(PowerFluctuations fluctuations);
 */
 PowerFluctuations StringToPowerFluctuations(const AnyString& text);
 
-enum SheddingStrategy
-{
-    shsShareMargins = 0,
-    shsShareSheddings,
-    shsUnknown,
-};
-
-/*!
-** \brief Convert a global shedding strategy into a text
-*/
-const char* SheddingStrategyToCString(SheddingStrategy strategy);
-
-/*!
-** \brief Convert a text into a global shedding strategy
-*/
-SheddingStrategy StringToSheddingStrategy(const AnyString& text);
-
 enum SheddingPolicy
 {
     shpShavePeaks = 0,
@@ -523,22 +534,29 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-enum DayAheadReserveManagement
+// Format of results
+enum ResultFormat
 {
-    daGlobal = 0,
-    daLocal,
-    daReserveUnknown,
+    // Store outputs as files inside directories
+    legacyFilesDirectories = 0,
+    // Store outputs inside a single zip archive
+    zipArchive
 };
 
-/*!
-** \brief Convert a day ahead reserve allocation mode into a text
-*/
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode);
+// ------------------------
+// MPS export status
+// ------------------------
+enum class mpsExportStatus : int
+{
+    NO_EXPORT = 0,
+    EXPORT_FIRST_OPIM = 1,
+    EXPORT_SECOND_OPIM = 2,
+    EXPORT_BOTH_OPTIMS = 3,
+    UNKNOWN_EXPORT = 4
+};
 
-/*!
-** \brief Convert a text into day ahead reserve allocation mode
-*/
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
+std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status);
+mpsExportStatus stringToMPSexportStatus(const AnyString& value);
 
 } // namespace Data
 } // namespace Antares
@@ -556,5 +574,48 @@ class Sets;
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
+
+namespace Antares
+{
+namespace Data
+{
+namespace AdequacyPatch
+{
+/*!
+** \brief Types of Adequacy patch mode
+*/
+enum AdequacyPatchMode
+{
+    //! Virtual area in adq patch
+    virtualArea = 0,
+    //! Physical Area outside the adq-patch
+    physicalAreaOutsideAdqPatch = 1,
+    //! Physical Area inside the adq-patch
+    physicalAreaInsideAdqPatch = 2
+}; // enum AdequacyPatchMode
+
+/*!
+** \brief Setting Link Capacity (NTC) for Adequacy patch first step
+*/
+enum LinkCapacityForAdequacyPatchFirstStep
+{
+    //! Leave NTC local values
+    leaveLocalValues = 0,
+    //! Set NTC to zero
+    setToZero,
+    //! set only origine->extremity NTC to zero
+    setOrigineExtremityToZero,
+    //! set only extremity->origine NTC to zero
+    setExtremityOrigineToZero
+
+}; // enum NTC
+} // namespace AdequacyPatch
+} // namespace Data
+} // namespace Antares
+
+namespace Benchmarking
+{
+class IDurationCollector;
+}
 
 #endif // __ANTARES_LIBS_STUDY_FWD_H__

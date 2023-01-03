@@ -31,6 +31,7 @@
 #include <antares/study/fwd.h>
 #include <antares/study/parameters.h>
 #include <antares/study/parts/thermal/cluster.h>
+#include <i_writer.h>
 #include "xcast/xcast.h"
 
 namespace Antares
@@ -43,12 +44,13 @@ namespace TSGenerator
 ** \brief Regenerate the time-series
 */
 template<enum Data::TimeSeries T>
-bool GenerateTimeSeries(Data::Study& study, uint year);
+bool GenerateTimeSeries(Data::Study& study, uint year, IResultWriter::Ptr writer);
 
 bool GenerateThermalTimeSeries(Data::Study& study,
                                uint year,
                                bool globalThermalTSgeneration,
-                               bool refresh);
+                               bool refresh,
+                               IResultWriter::Ptr writer);
 
 /*!
 ** \brief Destroy all TS Generators

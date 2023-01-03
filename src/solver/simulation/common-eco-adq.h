@@ -123,8 +123,7 @@ void computingHydroLevels(const Data::Study& study,
 void DispatchableMarginForAllAreas(const Data::Study& study,
                                    PROBLEME_HEBDO& problem,
                                    uint numSpace,
-                                   uint hourInYear,
-                                   uint nbHours);
+                                   uint hourInYear);
 
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
@@ -177,6 +176,8 @@ int retrieveAverageNTC(const Data::Study& study,
                        const Matrix<Yuni::uint32>& tsNumbers,
                        std::vector<double>& avg);
 
+void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
+                                    Antares::Solver::Variable::State& state);
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares

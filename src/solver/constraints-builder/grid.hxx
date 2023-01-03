@@ -211,7 +211,7 @@ bool Grid<NodeT>::buildMesh()
 
     for (uint i = 0; i < linksToBeAdded.size(); i++)
     {
-        logs.info() << "Searching basis (loop " << i << "/" << linksToBeAdded.size() << ")";
+        logs.info() << "Searching basis (loop " << i+1 << "/" << linksToBeAdded.size() << ")";
         // build the graph with two copies (+/-) for each node and edge
         Grid<NodeT> polarisedDuplicate;
         getDuplicatedGrid(polarisedDuplicate);

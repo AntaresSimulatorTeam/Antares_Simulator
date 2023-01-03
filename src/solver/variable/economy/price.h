@@ -204,7 +204,7 @@ public:
     void yearEnd(uint year, unsigned int numSpace)
     {
         // Compute all statistics for the current year (daily,weekly,monthly)
-        pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
+        pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -239,11 +239,6 @@ public:
           -= state.hourlyResults->CoutsMarginauxHoraires[state.hourInTheWeek];
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourEnd(State& state, uint hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

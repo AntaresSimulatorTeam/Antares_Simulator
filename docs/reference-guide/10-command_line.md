@@ -4,8 +4,7 @@ Several executable parts of Antares\_Simulator can be run in command line from a
 
 _In all cases, arguments " –h" or "–help" can be used to get help_
 
-**antares-8.2-solver** <br/>
-**antares-8.2-solver-swap** (simulation in low-RAM swap mode)
+**The solver executable : antares-8.3-solver**
 
 - Simulation
 
@@ -28,6 +27,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-c, --comment-file=VALUE | Specify the file to copy as comments of the simulation |
 |-f, --force | Ignore all warnings at loading |
 |--no-output | Do not write the results in the output folder |
+|-z, --zip-output | Force the write of results into a single zip archive |
 |-y, --year=VALUE | Override the number of MC years |
 |--year-by-year | Force the writing the result output for each year <br/> (economy only) |
 |--derated | Force the derated mode |
@@ -46,14 +46,14 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |command|meaning|
 |:---|:---|
 |--progress | Display the progress of each task |
-|--swap-folder=VALUE | Folder where the swap files will be written. This <br/> option has effect only in swap mode (swap files are only <br/> available for 'antares-solver-swap') |
 |-p, --pid=VALUE | Specify the file where to write the process ID |
 |-v, --version | Print the version of the solver and exit |
 |-h, --help | Display this help and exit |
-|--use-ortools --ortools-solver= Sirius | Use the standard Antares solver through the OR-Tools modelling library |
-|--use-ortools --ortools-solver= Coin | Use the Coin solver through the OR-Tools modelling library |
+|--list-solvers | Display a list of LP solvers available through OR-Tools and exit |
+|--use-ortools --ortools-solver=Sirius | Use the standard Antares solver through the OR-Tools modelling library |
+|--use-ortools --ortools-solver=Coin | Use the Coin solver through the OR-Tools modelling library |
 
-**antares-8.2-study-updater**
+**antares-8.3-study-updater**
 
 |command|meaning|
 |:---|:---|
@@ -65,7 +65,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-study-finder**
+**antares-8.3-study-finder**
 
 |command|meaning|
 |:---|:---|
@@ -75,7 +75,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-study-cleaner**
+**antares-8.3-study-cleaner**
 
 |command|meaning|
 |:---|:---|
@@ -85,7 +85,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-config**
+**antares-8.3-config**
 
 |command|meaning|
 |:---|:---|
@@ -93,7 +93,7 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |-v, --version | Print the version and exit |
 |-h, --help | Display this help and exit |
 
-**antares-8.2-batchrun**
+**antares-8.3-batchrun**
 
 - Studies
 
@@ -131,7 +131,6 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |command|meaning|
 |:---|:---|
 |--solver=VALUE | Specify the antares-solver location |
-|-s, --swap | Swap mode |
 |--parallel | Enable the parallel computation of MC years |
 |--force-parallel=VALUE | Override the max number of years computed simultaneously |
 |--verbose |Display detailed logs for each simulation to run |

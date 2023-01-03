@@ -31,8 +31,6 @@
 #include <yuni/core/string.h>
 #include "parameters.h"
 
-#include <antares/study/OrtoolsSolver.hpp>
-
 namespace Antares
 {
 namespace Data
@@ -88,9 +86,8 @@ public:
 
     //! Force ortools use
     bool ortoolsUsed;
-
-    //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed = OrtoolsSolver::sirius;
+    //! THe solver name, sirius is the default
+    std::string ortoolsSolver = "sirius";
 
     //! Temporary string for passing log message
     mutable Yuni::String logMessage;
@@ -102,6 +99,9 @@ public:
     //! Display version number and exit
     bool displayVersion = false;
 
+    //! True => display the list of OR-Tools solvers and exit
+    bool listSolvers = false;
+
     //! Simulation mode
     bool forceExpansion = false;
     bool forceEconomy = false;
@@ -110,7 +110,6 @@ public:
 
     YString studyFolder;
     YString simulationName;
-    std::string ortoolsSolver;
 }; // class StudyLoadOptions
 
 } // namespace Data

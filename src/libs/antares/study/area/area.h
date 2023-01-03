@@ -31,6 +31,7 @@
 #include <yuni/core/string.h>
 #include <yuni/core/noncopyable.h>
 #include <stdlib.h>
+#include <i_writer.h>
 #include "../../array/matrix.h"
 #include "../parts/parts.h"
 #include <vector>
@@ -154,7 +155,7 @@ public:
     void resizeAllTimeseriesNumbers(uint n);
 
     template<int TimeSeriesT>
-    bool storeTimeseriesNumbers(Study& study);
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Check if a link with another area is already established
@@ -178,7 +179,7 @@ public:
     ** \param reload True to force the reload of data
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all areas as modified
@@ -225,6 +226,8 @@ public:
     uint index;
     //! Enabled
     bool enabled;
+    //! Use adequacy patch for this area
+    AdequacyPatch::AdequacyPatchMode adequacyPatchMode = AdequacyPatch::physicalAreaOutsideAdqPatch;
     /*@}*/
 
     //! \name Associate data */
@@ -336,16 +339,18 @@ private:
     void internalInitialize();
 
     // Store time-series numbers
-    bool storeTimeseriesNumbersForLoad(Study& study);
-    bool storeTimeseriesNumbersForSolar(Study& study);
-    bool storeTimeseriesNumbersForWind(Study& study);
-    bool storeTimeseriesNumbersForHydro(Study& study);
-    bool storeTimeseriesNumbersForThermal(Study& study);
-    bool storeTimeseriesNumbersForRenewable(Study& study);
-    bool storeTimeseriesNumbersForTransmissionCapacities(Study& study) const;
+    void storeTimeseriesNumbersForLoad(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForSolar(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForWind(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForHydro(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForThermal(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForRenewable(Solver::IResultWriter::Ptr writer) const;
+    void storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter::Ptr writer) const;
 }; // class Area
 
 bool saveAreaOptimisationIniFile(const Area& area, const Yuni::Clob& buffer);
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Yuni::Clob& buffer);
 
 /*!
 ** \brief A list of areas
@@ -386,6 +391,8 @@ public:
     using reverse_iterator = Area::Map::reverse_iterator;
     //! A const iterator
     using const_reverse_iterator = Area::Map::const_reverse_iterator;
+    //! Key-value type
+    using value_type = Area::Map::value_type;
 
 public:
     //! \name Constructor & Destructor
@@ -424,6 +431,17 @@ public:
 
     reverse_iterator rend();
     const_reverse_iterator rend() const;
+
+    //! \name Internal Data TS-Generators / Series
+    //@{
+    /*!
+    ** \brief Ensure data for time series/prepro are initalized if they should be
+    **
+    ** It initializes data for each area so it would be better to call this
+    ** routine when areas are already loaded.
+    */
+
+    void ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded);
     //@}
 
     //! \name Import / Export
@@ -480,7 +498,7 @@ public:
     ** \param filename The file to read
     ** \return A non-zero value if the operation was successful, 0 otherwise
     */
-    bool saveLinkListToFile(const AnyString& filename) const;
+    void saveLinkListToBuffer(Yuni::Clob& buffer) const;
 
     /*!
     ** \brief Preload all areas which have been invalidated
@@ -534,7 +552,7 @@ public:
     bool empty() const;
 
     template<int TimeSeriesT>
-    bool storeTimeseriesNumbers(Study& study);
+    void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
     /*!
     ** \brief Invalidate all areas
@@ -542,7 +560,7 @@ public:
     ** \param reload True to reload data in the same time
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified

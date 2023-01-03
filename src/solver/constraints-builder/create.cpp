@@ -48,6 +48,12 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     std::vector<Cycle> cycleBase;
     int count = 1;
     auto i = mesh.begin();
+    logs.debug() << "calendarstart: " << calendarStart;
+    logs.debug() << "calendarEnd: " << calendarEnd;
+    logs.debug() << "infinite_value: " << infiniteSecondMember;
+    logs.debug() << "nodal_loopflow_check: " << checkNodalLoopFlow;
+    logs.debug() << "delete: " << pDelete;
+
     for (; i != mesh.end(); i++, count++)
     {
         logs.info() << "Writing constraints (" << count << "/" << mesh.size() << ")";
@@ -57,6 +63,10 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
         if (calendarEnd != 8760 || calendarStart != 1)
         {
             currentCycle.opType = Data::BindingConstraint::opBoth;
+
+            logs.error() << "Calendar start and end needs to be default values: 1 and 8760";
+            logs.error() << "Actual values: start " << calendarStart << " end " << calendarEnd;
+            return false;
         }
 
         for (uint hour = 0; hour < currentCycle.time; ++hour)
@@ -72,31 +82,36 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 /*PN-TODO: Check the formula (page 3)*/
                 if (currentCycle.opType == Data::BindingConstraint::opEquality)
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                             * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow
-                           + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                               * includePhaseShift)
-                          * currentCycle.sign[i];
+                            * (*line)->ptr->parameters[columnLoopFlow][hour]
+                            * includeLoopFlow
+                            + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                            * includePhaseShift)
+                        * currentCycle.sign[i];
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
+                                * (*line)->ptr->parameters[columnLoopFlow][hour]
+                                * includeLoopFlow)
                             * currentCycle.sign[i]
-                          + std::min(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i],
-                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i]);
+                            + std::min(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                * includePhaseShift)
+                                * currentCycle.sign[i],
+                                ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                * includePhaseShift)
+                                * currentCycle.sign[i]);
+
+
                     lb += ((*line)->ptr->parameters[columnImpedance][hour]
-                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
+                                * (*line)->ptr->parameters[columnLoopFlow][hour]
+                                * includeLoopFlow)
                             * currentCycle.sign[i]
-                          + std::max(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i],
-                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i]);
+                            + std::max(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                * includePhaseShift)
+                                * currentCycle.sign[i],
+                                ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                * includePhaseShift)
+                                * currentCycle.sign[i]);
                 }
                 else
                 {

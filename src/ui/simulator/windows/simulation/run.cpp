@@ -69,15 +69,15 @@ namespace Simulation
 {
 enum
 {
-    featuresCount = 3,
+    featuresCount = 2,
     timerInterval = 3500 // ms
 };
 
 static const wxString featuresNames[featuresCount]
-  = {wxT(" Default  "), wxT(" Swap  "), wxT(" Parallel ")};
+  = {wxT(" Default  "), wxT(" Parallel ")};
 
 static const Solver::Feature featuresAlias[featuresCount]
-  = {Solver::standard, Solver::withSwapFiles, Solver::parallel};
+  = {Solver::standard, Solver::parallel};
 
 static wxString TimeSeriesToWxString(uint m)
 {
@@ -335,7 +335,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
           = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-        std::list<std::string> ortoolsSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
+        std::list<std::string> ortoolsSolverList = getAvailableOrtoolsSolverName();
         for (const std::string& ortoolsSolver : ortoolsSolverList)
         {
             pOrtoolsSolverCombox->Append(ortoolsSolver);
@@ -489,16 +489,6 @@ void Run::estimateMemoryUsage()
         if (pPreproOnly->GetValue())
             m.years = 0;
 
-        switch (featuresAlias[pFeatureIndex])
-        {
-        case Solver::parallel:
-        case Solver::standard:
-            break;
-        case Solver::withSwapFiles:
-            m.swappingSupport = true;
-            break;
-        }
-
         m.estimate();
 
         uint64 amountNeeded = m.requiredMemory;
@@ -525,13 +515,8 @@ void Run::estimateMemoryUsage()
             BytesToStringW(s, m.requiredDiskSpace);
             break;
         }
-        case Solver::withSwapFiles:
-        {
-            s << wxT(" < ");
-            BytesToStringW(s, m.requiredDiskSpace) << wxT(" [temp: ");
-            BytesToStringW(s, m.requiredDiskSpaceForSwap) << wxT(" included]");
+        default:
             break;
-        }
         }
         UpdateLabel(guiUpdated, pLblDiskEstimation, s);
 
@@ -907,7 +892,7 @@ void Run::onSelectMode(wxCommandEvent& evt)
     if (pFeatureIndex >= featuresCount)
         pFeatureIndex = 0;
 
-    // In case of either default or swap support mode, MC years parallel computation is disabled (nb
+    // In case of either default mode, MC years parallel computation is disabled (nb
     // of cores is set to 1)
 
     // Needed For RAM estimation

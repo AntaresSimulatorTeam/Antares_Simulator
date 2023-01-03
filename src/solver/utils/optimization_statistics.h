@@ -3,15 +3,16 @@
 
 #include <string>
 #include <cmath>
+#include <atomic>
 
-class optimizationStatistics
+class OptimizationStatistics
 {
 private:
-    long long totalSolveTime;
-    unsigned int nbSolve;
+    std::atomic<long long> totalSolveTime;
+    std::atomic<unsigned int> nbSolve;
 
-    long long totalUpdateTime;
-    unsigned int nbUpdate;
+    std::atomic<long long> totalUpdateTime;
+    std::atomic<unsigned int> nbUpdate;
 
 public:
     void reset()
@@ -22,12 +23,12 @@ public:
         nbUpdate = 0;
     }
 
-    optimizationStatistics()
+    OptimizationStatistics()
     {
         this->reset();
     }
 
-    void add(const optimizationStatistics& other)
+    void add(const OptimizationStatistics& other)
     {
         totalSolveTime += other.totalSolveTime;
         totalUpdateTime += other.totalUpdateTime;
@@ -50,11 +51,6 @@ public:
     unsigned int getNbUpdate() const
     {
         return nbUpdate;
-    }
-
-    unsigned int getNbSolve() const
-    {
-        return nbSolve;
     }
 
     long long getTotalSolveTime() const

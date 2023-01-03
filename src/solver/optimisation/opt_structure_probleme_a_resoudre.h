@@ -58,10 +58,6 @@
 
 #define VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES OUI_ANTARES
 
-#define SUBSTITUTION_DE_LA_VARIABLE_MPLUS                                          \
-    NON_ANTARES /* Attention, dans le cas de OUI_ANTARES, la partie pour recuperer \
-                   la valeur de MPLUS n'est pas encore codee */
-
 /*--------------------------------------------------------------------------------------*/
 
 /* Les problemes Simplexe */
@@ -142,9 +138,13 @@ typedef struct
     int* Colonne;
 
     /* Nommage des variables & contraintes */
-    std::vector<std::string>* NomDesVariables;
-    std::vector<std::string>* NomDesContraintes;
-    bool ortoolsUsed = false;
+    std::vector<std::string> NomDesVariables;
+    std::vector<std::string> NomDesContraintes;
+
+public:
+    std::vector<int> StatutDesVariables;
+    std::vector<int> StatutDesContraintes;
+
 } PROBLEME_ANTARES_A_RESOUDRE;
 
 #endif /* __SOLVER_OPTIMISATION_STRUCTURE_PROBLEME_A_RESOUDRE_H__ */

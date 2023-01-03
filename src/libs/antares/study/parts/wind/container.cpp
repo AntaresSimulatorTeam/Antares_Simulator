@@ -47,13 +47,13 @@ Container::~Container()
     delete series;
 }
 
-bool Container::invalidate(bool reload) const
+bool Container::forceReload(bool reload) const
 {
     bool ret = true;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     if (prepro)
-        ret = prepro->invalidate(reload) and ret;
+        ret = prepro->forceReload(reload) and ret;
     return ret;
 }
 

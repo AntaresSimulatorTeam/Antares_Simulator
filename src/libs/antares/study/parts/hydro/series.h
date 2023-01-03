@@ -56,16 +56,11 @@ public:
     void reset();
 
     /*!
-    ** \brief Flush all matrix-related data
-    */
-    void flush();
-
-    /*!
     ** \brief Load all data not already loaded
     **
     ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
     //@}
@@ -131,6 +126,8 @@ public:
     ** indicate that the two values are not strictly equal)
     */
     uint count;
+
+    static void AdjustMonth(const Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12]);
 
     /*!
     ** \brief Monte-Carlo

@@ -223,6 +223,9 @@ void XCast<T>::onUpdateDistribution(wxCommandEvent& evt)
 template<enum Data::TimeSeries T>
 void XCast<T>::onUpdateConversion(wxCommandEvent& evt)
 {
+    if (!pArea)
+        return;
+
     Data::XCast* xcast = pArea->xcastData<T>();
     if (!xcast)
         return;

@@ -107,7 +107,7 @@ Control::Control(wxWindow* parent, Component& component, size_t uID) :
  pCurrentMousePositionGraph(INT_MAX, INT_MAX),
  pCurrentClientSize(0, 0),
  pLastMousePosition(INT_MAX, INT_MAX),
- uid(newUID++)
+ uid(uID)
 {
     while (newUID <= uID)
         newUID++;

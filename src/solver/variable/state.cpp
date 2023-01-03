@@ -47,7 +47,8 @@ State::State(Data::Study& s) :
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
  optimalSolutionCost2(0.),
- averageOptimizationTime(0.)
+ averageOptimizationTime1(0.),
+ averageOptimizationTime2(0.)
 {
     h2oValueWorkVars.levelUp = 0.;
     h2oValueWorkVars.levelDown = 0.;
@@ -161,9 +162,9 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         if (thermalClusterProduction > 0.)
         {
             // alias to the production of the current thermal cluster
-            register double p = thermalClusterProduction;
+            double p = thermalClusterProduction;
             // alias to the previous number of started units
-            register uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
+            uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
 
             // Looking for the new number of units which have been started
             uint newUnitCount;

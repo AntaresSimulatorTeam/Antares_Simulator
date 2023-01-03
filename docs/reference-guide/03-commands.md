@@ -209,8 +209,11 @@ given back their regular capacities (infinite for those being set on "set to inf
     - _Strategic reserve (include / ignore)_
     - _Spinning reserve (include / ignore)_
     - _Export mps (false/true)_
-    - _Simplex optimization range [^4] _(day / week)_
+    - _Simplex optimization range [^4] (day / week)_
     - _Unfeasible problems behavior (Error Dry/ Error Verbose/ Warning Dry/ Warning Verbose_
+    - _Enable Adequacy patch (false / true)_
+    - _NTC from physical areas outside to physical areas inside adequacy patch (set to null / local values)_
+    - _NTC between physical areas outside adequacy patch (set to null / local values)_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
 that are more numerical than physical. The set of parameters is study-specific and can be updated at any time.
@@ -254,9 +257,9 @@ Note that the "disk requirement" amount does not include the footprint of the sp
 to be written aside from the regular output (see previous § "optimization preferences").
 Besides, the resources monitor shows the number of CPU cores available on the machine Antares is running on.
 
-- **Configure the swap folder** Defines the location that will be used by Antares to store the temporary files of
-the MC simulators when the swap mode is activated (this location may also be used by Antares
-GUI when handling large studies). The default setting is the system temporary folder
+- **Configure the temporary folder** Defines the location that will be used by Antares to store the temporary files of
+the MC simulators. This location is used behind the scene by some Antares Simulator components (for instance scenario
+builder or time-series analyzer). The default setting is the system temporary folder.
 
 ## Window
 

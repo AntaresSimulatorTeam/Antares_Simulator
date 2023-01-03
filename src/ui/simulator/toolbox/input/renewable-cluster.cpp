@@ -158,7 +158,7 @@ void RenewableCluster::internalBuildSubControls()
 
 void RenewableCluster::update()
 {
-    pRnListbox->invalidate();
+    pRnListbox->forceReload();
     onClusterChanged(nullptr);
     updateInnerValues();
 }
@@ -338,7 +338,7 @@ void RenewableCluster::internalDeleteAll(void*)
         ScenarioBuilderUpdater updaterSB(*Data::Study::Current::Get());
 
         // invalidating the parent area
-        pArea->invalidate();
+        pArea->forceReload();
 
         // Update the list
         Window::Inspector::SelectArea(pArea);
@@ -398,7 +398,7 @@ void RenewableCluster::internalAddPlant(void*)
         MarkTheStudyAsModified();
         updateInnerValues();
 
-        pArea->invalidate();
+        pArea->forceReload();
 
         study->uiinfo->reload();
     }
@@ -477,7 +477,7 @@ void RenewableCluster::internalClonePlant(void*)
         MarkTheStudyAsModified();
         updateInnerValues();
 
-        pArea->invalidate();
+        pArea->forceReload();
 
         study->uiinfo->reload();
     }
@@ -508,7 +508,7 @@ void RenewableCluster::onRnSelected(Component::HTMLListbox::Item::IItem::Ptr ite
 
 void RenewableCluster::delayedSelection(Component::HTMLListbox::Item::IItem::Ptr item)
 {
-    auto a = dynamic_pointer_cast<Component::HTMLListbox::Item::RenewableClusterItem>(item);
+    auto a = std::dynamic_pointer_cast<Component::HTMLListbox::Item::RenewableClusterItem>(item);
     if (a)
     {
         // Lock the window to prevent flickering

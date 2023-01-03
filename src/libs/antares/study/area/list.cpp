@@ -203,6 +203,11 @@ static bool AreaListSaveToFolderSingleArea(const Area& area, Clob& buffer, const
                    << "optimization.ini";
     ret = saveAreaOptimisationIniFile(area, buffer) and ret;
 
+    // Adequacy ini
+    buffer.clear() << folder << SEP << "input" << SEP << "areas" << SEP << area.id << SEP
+                   << "adequacy_patch.ini";
+    ret = saveAreaAdequacyPatchIniFile(area, buffer) and ret;
+
     // Reserves: primary, strategic, dsm, d-1...
     buffer.clear() << folder << SEP << "input" << SEP << "reserves" << SEP << area.id << ".txt";
     ret = area.reserves.saveToCSVFile(buffer) and ret;
@@ -323,6 +328,30 @@ bool saveAreaOptimisationIniFile(const Area& area, const Clob& buffer)
     section->add("filter-synthesis", datePrecisionIntoString(area.filterSynthesis));
     section->add("filter-year-by-year", datePrecisionIntoString(area.filterYearByYear));
 
+    return ini.save(buffer);
+}
+
+bool saveAreaAdequacyPatchIniFile(const Area& area, const Clob& buffer)
+{
+    IniFile ini;
+    IniFile::Section* section = ini.addSection("adequacy-patch");
+    std::string value;
+    switch (area.adequacyPatchMode)
+    {
+    case Data::AdequacyPatch::virtualArea:
+        value = "virtual";
+        break;
+    case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
+        value = "outside";
+        break;
+    case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
+        value = "inside";
+        break;
+    default:
+        value = "outside"; // default physicalAreaOutsideAdqPatch
+        break;
+    }
+    section->add("adequacy-patch-mode", value);
     return ini.save(buffer);
 }
 
@@ -551,19 +580,14 @@ bool AreaList::loadListFromFile(const AnyString& filename)
     return true;
 }
 
-bool AreaList::saveLinkListToFile(const AnyString& filename) const
+void AreaList::saveLinkListToBuffer(Yuni::Clob& buffer) const
 {
-    IO::File::Stream file;
-    if (not file.openRW(filename))
-        return false;
-
     each([&](const Data::Area& area) {
-        file << area.id << '\n';
+        buffer << area.id << '\n';
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)
-            file << '\t' << (i->second)->with->id << '\n';
+            buffer << '\t' << (i->second)->with->id << '\n';
     });
-    return true;
 }
 
 bool AreaList::saveListToFile(const AnyString& filename) const
@@ -609,7 +633,7 @@ bool AreaList::preloadAndMarkAsModifiedAllInvalidatedAreas(uint* invalidateCount
         {
             logs.info() << "Preparing the area " << area.name;
             // invalidating all data belonging to the area
-            ret = area.invalidate(true) and ret;
+            ret = area.forceReload(true) and ret;
             // marking the area as modified to force the incremental save
             area.markAsModified();
             ++count;
@@ -722,6 +746,37 @@ bool AreaList::saveToFolder(const AnyString& folder) const
 }
 
 template<class StringT>
+static void readAdqPatchMode(Study& study, Area& area, StringT& buffer)
+{
+    if (study.header.version >= 830)
+    {
+        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
+                       << "adequacy_patch.ini";
+        IniFile ini;
+        if (ini.open(buffer))
+        {
+            auto* section = ini.find("adequacy-patch");
+            for (auto* p = section->firstProperty; p; p = p->next)
+            {
+                CString<30, false> tmp;
+                tmp = p->key;
+                tmp.toLower();
+                if (tmp == "adequacy-patch-mode")
+                {
+                    auto value = (p->value).toLower();
+
+                    if (value == "virtual")
+                        area.adequacyPatchMode = Data::AdequacyPatch::virtualArea;
+                    else if (value == "inside")
+                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaInsideAdqPatch;
+                    else
+                        area.adequacyPatchMode = Data::AdequacyPatch::physicalAreaOutsideAdqPatch;
+                }
+            }
+        }
+    }
+}
+template<class StringT>
 static bool AreaListLoadFromFolderSingleArea(Study& study,
                                              AreaList* list,
                                              Area& area,
@@ -778,8 +833,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
         // Release
         delete[] tmp;
-        // flush
-        area.reserves.flush();
     }
     else
     {
@@ -797,7 +850,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.reserves.columnToZero(fhrStrategicReserve);
         if (not study.parameters.include.reserve.primary)
             area.reserves.columnToZero(fhrPrimaryReserve);
-        area.reserves.flush();
     }
 
     // Fatal hors hydro - Misc Gen.
@@ -819,7 +871,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
                 // Copy
                 (void)memcpy(area.miscGen[fhhBioMass], m[0], (size_t)(8760 * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhCHP], m[2], (size_t)(8760 * sizeof(double)));
@@ -843,7 +895,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             if (r)
             {
                 // Make the data available, if not already done
-                m.invalidate(true);
+                m.forceReload(true);
 
                 (void)memcpy(area.miscGen[fhhCHP], m[0], (size_t)(m.height * sizeof(double)));
                 (void)memcpy(area.miscGen[fhhBioMass], m[2], (size_t)(m.height * sizeof(double)));
@@ -880,7 +932,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << "Misc Gen: `" << area.id << '`';
         MatrixTestForPositiveValues_LimitWidth(buffer.c_str(), &area.miscGen, fhhPSP);
     }
-    area.miscGen.flush();
 
     ++options.progressTicks;
     options.pushProgressLogs();
@@ -1012,7 +1063,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             {
                 // We may have some strange name/id in older studies
                 // force full reloading
-                cluster->invalidate(true);
+                cluster->forceReload(true);
                 // marking the thermal plant as modified
                 cluster->markAsModified();
 
@@ -1026,9 +1077,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
-
-        // flush
-        area.thermal.list.flush();
     }
 
     // Renewable cluster list
@@ -1036,9 +1084,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
-        // flush
-        area.renewable.list.flush();
     }
+
+    // Adequacy patch
+    readAdqPatchMode(study, area, buffer);
 
     // Nodal Optimization
     if (study.header.version >= 330)
@@ -1149,6 +1198,42 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     return ret;
 }
 
+void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
+{
+    AreaListEnsureDataLoadTimeSeries(this);
+    AreaListEnsureDataSolarTimeSeries(this);
+    AreaListEnsureDataWindTimeSeries(this);
+    AreaListEnsureDataHydroTimeSeries(this);
+    AreaListEnsureDataThermalTimeSeries(this);
+    AreaListEnsureDataRenewableTimeSeries(this);
+
+    if(loadOnlyNeeded)
+    {
+        // Load
+        if (params.isTSGeneratedByPrepro(timeSeriesLoad))
+            AreaListEnsureDataLoadPrepro(this);
+        // Solar
+        if (params.isTSGeneratedByPrepro(timeSeriesSolar))
+            AreaListEnsureDataSolarPrepro(this);
+        // Hydro
+        if (params.isTSGeneratedByPrepro(timeSeriesHydro))
+            AreaListEnsureDataHydroPrepro(this);
+        // Wind
+        if (params.isTSGeneratedByPrepro(timeSeriesWind))
+            AreaListEnsureDataWindPrepro(this);
+    }
+    else
+    {
+        AreaListEnsureDataLoadPrepro(this);
+        AreaListEnsureDataSolarPrepro(this);
+        AreaListEnsureDataHydroPrepro(this);
+        AreaListEnsureDataWindPrepro(this);
+    }
+
+    // Thermal
+    AreaListEnsureDataThermalPrepro(this);
+}
+
 bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 {
     bool ret = true;
@@ -1176,7 +1261,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         ret = AreaListLoadThermalDataFromFile(*this, buffer) and ret;
 
         // The cluster list must be loaded before the method
-        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // ensureDataIsInitialized is called
         // in order to allocate data with all thermal clusters.
         CString<30, false> thermalPlant;
         if (pStudy.header.version < 350)
@@ -1198,7 +1283,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     if (pStudy.header.version >= 810)
     {
         // The cluster list must be loaded before the method
-        // Study::ensureDataAreInitializedAccordingParameters() is called
+        // ensureDataIsInitialized is called
         // in order to allocate data with all renewable clusters.
         CString<30, false> renewablePlant;
         renewablePlant << SEP << "renewables" << SEP << "clusters" << SEP;
@@ -1214,12 +1299,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Prepare
-    if (options.loadOnlyNeeded)
-        // Only data we need
-        pStudy.ensureDataAreInitializedAccordingParameters();
-    else
-        // We want all data, without exception
-        pStudy.ensureDataAreAllInitialized();
+    ensureDataIsInitialized(pStudy.parameters, options.loadOnlyNeeded);
 
     // Load all nodes
     uint indx = 0;
@@ -1510,7 +1590,7 @@ bool AreaList::renameArea(const AreaName& oldid, const AreaName& newid, const Ar
 #endif
         // Renaming the entry
 
-        link->invalidate(true);
+        link->forceReload(true);
         link->markAsModified();
 
         link->detach();
@@ -1558,10 +1638,10 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
     });
 }
 
-bool AreaList::invalidate(bool reload) const
+bool AreaList::forceReload(bool reload) const
 {
     bool ret = true;
-    each([&](Data::Area& area) { ret = area.invalidate(reload) and ret; });
+    each([&](Data::Area& area) { ret = area.forceReload(reload) and ret; });
     return ret;
 }
 

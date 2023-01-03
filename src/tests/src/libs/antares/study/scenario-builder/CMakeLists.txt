@@ -1,5 +1,4 @@
 # Useful variables definitions
-set(CMAKE_CXX_STANDARD 17)
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 # ====================================
