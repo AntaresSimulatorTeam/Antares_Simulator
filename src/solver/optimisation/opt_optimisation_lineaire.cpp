@@ -37,9 +37,9 @@ using namespace Yuni;
 
 double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
                                    const int NumeroDeLIntervalle,
-                                   const int numeroOptimisation)
+                                   const int optimizationNumber)
 {
-    if (numeroOptimisation == PREMIERE_OPTIMISATION)
+    if (optimizationNumber == PREMIERE_OPTIMISATION)
         return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
     else
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
@@ -103,11 +103,10 @@ OptimisationHebdo:
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.
         // These sequences are used when building the names of MPS or criterion files. 
-        std::shared_ptr<optPeriodAsString> opt_period_as_string = 
-            createOptimizationPeriod(ProblemeHebdo->OptimisationAuPasHebdomadaire,
-                                     NumeroDeLIntervalle,
-                                     ProblemeHebdo->weekInTheYear,
-                                     ProblemeHebdo->year);
+        auto opt_period_as_string = createOptimizationPeriod(ProblemeHebdo->OptimisationAuPasHebdomadaire,
+                                                             NumeroDeLIntervalle,
+                                                             ProblemeHebdo->weekInTheYear,
+                                                             ProblemeHebdo->year);
 
         if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber, opt_period_as_string))
             return false;

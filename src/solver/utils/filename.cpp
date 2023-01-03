@@ -1,5 +1,5 @@
 #include <sstream>
-#include <antares/logs/logs.h>
+#include <antares/logs.h>
 #include "filename.h"
 
 using namespace Antares;
