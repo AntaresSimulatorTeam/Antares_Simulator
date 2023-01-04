@@ -11,7 +11,6 @@
 #include "timestamp.h"
 
 #include <time.h>
-#include <bits/types/struct_tm.h>
 #include <stdlib.h>
 #include <cassert>
 

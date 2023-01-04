@@ -10,7 +10,6 @@
 */
 #include "semaphore.h"
 
-#include <bits/local_lim.h>
 #include <stdlib.h>
 #include <cassert>
 #include <iostream>
