@@ -103,7 +103,7 @@ jobs:
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+             cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -201,6 +201,11 @@ jobs:
       run: |
            cd _build
            cpack -G TGZ
+
+    - name: Solver archive creation
+      run: |
+           cd _build
+           tar czf solver_centos7.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3

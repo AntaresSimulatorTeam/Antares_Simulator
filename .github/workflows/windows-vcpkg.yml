@@ -42,7 +42,7 @@ jobs:
     - name: Pre-requisites
       shell: cmd
       run: |
-          choco install wget unzip --no-progress
+          choco install wget unzip zip --no-progress
 
     - name : Init VCPKG submodule
       run: |
@@ -184,7 +184,11 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-
+    - name: Solver archive creation
+      shell: bash
+      run: |
+           cd _build
+           zip -r solver_win.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash
@@ -204,13 +208,11 @@ jobs:
     - name: Installer upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
 
     - name: Archive upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-windows-archive
         path: _build/*.zip
 
     - name: Upload build on failure
