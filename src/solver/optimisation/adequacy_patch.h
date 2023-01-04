@@ -30,6 +30,7 @@
 
 #include <antares/study/fwd.h>
 #include "../simulation/sim_structure_probleme_economique.h"
+#include "hourly_csr_problem.h"
 
 namespace Antares
 {

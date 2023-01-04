@@ -30,6 +30,7 @@
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
+#include "hourly_csr_problem.h"
 
 void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
