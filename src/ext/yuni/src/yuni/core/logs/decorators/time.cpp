@@ -8,11 +8,11 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include <time.h>
+#include <ctime>
 #ifdef YUNI_OS_WINDOWS
 #include <wchar.h>
 #endif
-#include <ctime>
+#include "time.h"
 namespace Yuni
 {
 namespace Private
