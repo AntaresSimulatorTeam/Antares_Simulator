@@ -143,11 +143,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         }
     }
 
-    // This settings can only be enabled from the solver
-    // Prepare the output for the study
-    if (not prepareOutput()) // will abort early if not usedByTheSolver
-        return false;
-
     // -------------------------
     // Logical cores
     // -------------------------

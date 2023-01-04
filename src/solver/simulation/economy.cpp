@@ -147,6 +147,7 @@ void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 void Economy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = pProblemesHebdo[numSpace];
+    state.numSpace = numSpace;
 }
 
 bool Economy::simulationBegin()

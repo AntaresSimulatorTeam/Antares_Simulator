@@ -102,7 +102,7 @@ IRenderer::CellStyle ScBuilderRendererBase::cellStyle(int x, int y) const
     if (valid)
     {
         auto& parameters = study->parameters;
-        if (parameters.userPlaylist && parameters.yearsFilter)
+        if (parameters.userPlaylist)
             valid = parameters.yearsFilter[x];
     }
     return alternateEnabledDisabled(y, valid);

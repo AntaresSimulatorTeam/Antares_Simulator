@@ -46,12 +46,9 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
     int NombreDePasDeTempsPourUneOptimisation;
     int CntCouplante;
     int NombreDeJoursDansUnIntervalleOptimise;
-    char ContrainteDeReserveJMoins1ParZone;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
-
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     MxPaliers = 0;
@@ -85,11 +82,6 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
         }
 
         ProblemeAResoudre->NombreDeVariables += 2;
-
-        if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-        {
-            ProblemeAResoudre->NombreDeVariables += 1;
-        }
     }
     ProblemeAResoudre->NombreDeVariables *= NombreDePasDeTempsPourUneOptimisation;
 
@@ -107,11 +99,6 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
     ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDePays;
 
     ProblemeAResoudre->NombreDeContraintes += ProblemeHebdo->NombreDInterconnexions;
-
-    if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-    {
-        ProblemeAResoudre->NombreDeContraintes += 2 * ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
-    }
 
     for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)

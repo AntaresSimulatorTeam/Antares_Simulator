@@ -40,9 +40,7 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
 
-using namespace std;
 
 namespace Antares
 {
@@ -82,9 +80,9 @@ public:
     //@}
 
     /*!
-    ** \brief Assign a new number of MC years
+    ** \brief Reset the playlist (played years and associated years)
     */
-    void years(uint y);
+    void resetPlaylist(uint nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -243,7 +241,7 @@ public:
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
-    bool* yearsFilter;
+    std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
     bool thematicTrimming;
@@ -484,12 +482,6 @@ public:
     //     (obvious if the parallel mode is not required : answer is yes).
     bool allSetsHaveSameSize;
 
-    struct
-    {
-        //! Day ahead reserve allocation mode
-        DayAheadReserveManagement daMode;
-    } reserveManagement;
-
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
@@ -544,7 +536,7 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
@@ -552,6 +544,8 @@ public:
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
+
+    void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;

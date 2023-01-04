@@ -54,8 +54,6 @@ typedef struct
 
     int* NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariableDefaillanceEnReserve;
-
     int* NumeroDeVariablesVariationHydALaBaisse;
 
     int* NumeroDeVariablesVariationHydALaHausse;
@@ -585,9 +583,6 @@ struct PROBLEME_HEBDO
     int* numeroOptimisation;
 
     char YaDeLaReserveJmoins1;
-    char ContrainteDeReserveJMoins1ParZone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
 
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;

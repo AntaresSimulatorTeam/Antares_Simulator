@@ -43,8 +43,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
-    OrtoolsUtils utils;
-    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    for (const auto& solver : getAvailableOrtoolsSolverName())
     {
         std::cout << solver << std::endl;
     }
@@ -466,11 +465,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    study.prepareOutput();
+
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
 
     // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveAboutTheStudy();
+    study.saveAboutTheStudy();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())
