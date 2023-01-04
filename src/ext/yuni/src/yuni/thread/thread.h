@@ -9,7 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include <pthread.h>
 #include <vector>
 
 #include "../yuni.h"
