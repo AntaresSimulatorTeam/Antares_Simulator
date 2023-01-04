@@ -10,6 +10,7 @@
 */
 #pragma once
 #include <iosfwd> // STL
+#include <sys/types.h>
 
 #ifdef None
 #undef None // From X11/X.h

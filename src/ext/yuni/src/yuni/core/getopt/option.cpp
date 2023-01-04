@@ -9,7 +9,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "option.h"
+
 #include <iostream>
+
+#include "yuni/core/string/operators.hxx"
 
 #define YUNI_GETOPT_HELPUSAGE_30CHAR "                             "
 

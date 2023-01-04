@@ -9,6 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "signal.h"
+
 #include <cassert>
 
 #ifndef YUNI_NO_THREAD_SAFE
@@ -16,8 +17,8 @@
 #include "../core/system/windows.hdr.h"
 #else
 #include <time.h>
-#include <sys/time.h>
 #include <errno.h>
+
 #include "../core/system/gettimeofday.h"
 #endif
 #endif

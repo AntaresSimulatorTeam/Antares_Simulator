@@ -10,6 +10,7 @@
 */
 #pragma once
 #include "../../../yuni.h"
+#include "yuni/core/preprocessor/capabilities.h"
 
 namespace Yuni
 {

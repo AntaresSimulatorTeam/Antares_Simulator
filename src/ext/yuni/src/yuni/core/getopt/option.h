@@ -10,8 +10,15 @@
 */
 #pragma once
 #include <string>
-#include "../string.h"
 #include <cassert>
+#include <iosfwd>
+
+#include "../string.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

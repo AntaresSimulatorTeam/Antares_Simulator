@@ -20,14 +20,18 @@
 #endif
 
 #include <string.h>
+#include <fcntl.h>
+
 #include "stream.h"
-#include "../../core/string.h"
-#include "../../core/string/wstring.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/io/file/openmode.h"
+#include "yuni/io/file/stream.hxx"
 
 #ifdef YUNI_OS_WINDOWS
-#include "../../core/system/windows.hdr.h"
 #include <io.h>
 #include <stdio.h> // _fileno
+
+#include "../../core/system/windows.hdr.h"
 #else
 #include <sys/file.h> // lock
 #endif

@@ -10,6 +10,7 @@
 */
 #pragma once
 #include "../directory.h"
+#include "yuni/core/fwd.h"
 
 namespace Yuni
 {

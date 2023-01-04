@@ -10,6 +10,8 @@
 */
 #pragma once
 #include "io.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.hxx"
 
 namespace Yuni
 {

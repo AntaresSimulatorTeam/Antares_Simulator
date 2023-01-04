@@ -10,6 +10,8 @@
 */
 #pragma once
 #include "../yuni.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
 #ifndef YUNI_NO_THREAD_SAFE
 #if !defined(YUNI_OS_WINDOWS) && !defined(YUNI_OS_MAC)
 #include <semaphore.h> // unix / sem_t

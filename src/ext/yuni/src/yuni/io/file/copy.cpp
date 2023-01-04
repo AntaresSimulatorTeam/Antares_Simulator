@@ -8,13 +8,24 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../file.h"
 #if defined(YUNI_OS_LINUX) and defined(YUNI_HAS_SYS_SENDFILE_H)
 #include <sys/sendfile.h>
 #endif
 #include <sys/stat.h>
+#include <stdio.h>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/unixes.h"
+#include "yuni/io/error.h"
+#include "yuni/io/file/file.h"
+#include "yuni/io/file/stream.h"
+#include "yuni/io/file/stream.hxx"
+#include "yuni/io/io.hxx"
+#include "yuni/platform.h"
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
+#include <sys/sendfile.h>
+
 #endif
 
 namespace Yuni

@@ -9,14 +9,28 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <pthread.h>
+
 #include "../yuni.h"
 #include "../core/noncopyable.h"
 #include "../core/nonmovable.h"
+#include "yuni/core/preprocessor/capabilities.h"
 #ifndef YUNI_NO_THREAD_SAFE
 #include "pthread.h"
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"
 #endif
+#endif
+
+// Determine if we must use a mutex or not
+#if defined(YUNI_OS_WINDOWS) || YUNI_OS_GCC_VERSION >= 40102 || defined(YUNI_OS_CLANG)
+#if !defined(YUNI_OS_WINDOWS) && !defined(YUNI_HAS_SYNC_ADD_AND_FETCH)
+#define YUNI_ATOMIC_MUST_USE_MUTEX 1
+#else
+#define YUNI_ATOMIC_MUST_USE_MUTEX 0
+#endif
+#else
+#define YUNI_ATOMIC_MUST_USE_MUTEX 1
 #endif
 
 namespace Yuni

@@ -11,8 +11,20 @@
 #pragma once
 #include "uuid.h"
 
+#include <iosfwd>
+
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
+class UUID;
+namespace Extension {
+namespace CString {
+template <class CStringT, class C> class Append;
+template <class T> class Into;
+}  // namespace CString
+}  // namespace Extension
+
 template<class StringT>
 inline UUID::UUID(const StringT& string)
 {

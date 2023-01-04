@@ -10,12 +10,22 @@
 */
 #pragma once
 #include "service.h"
+
 #include "../../thread/timer.h"
+#include "yuni/core/dictionary.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/job/job.h"
+#include "yuni/job/queue/waitingroom.h"
+#include "yuni/job/queue/waitingroom.hxx"
+#include "yuni/thread/policy.h"
 
 namespace Yuni
 {
 namespace Job
 {
+class QueueService;
+
 inline uint QueueService::waitingJobsCount() const
 {
     return pWaitingRoom.size();

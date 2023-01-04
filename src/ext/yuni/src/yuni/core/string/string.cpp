@@ -9,7 +9,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "string.h"
+
 #include <iostream>
+#include <iosfwd>
+
+#include "yuni/core/string/operators.hxx"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.h"
+#include "yuni/core/string/utf8char.hxx"
 
 namespace Yuni
 {

@@ -8,8 +8,11 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include <algorithm>
+#include <stddef.h>
+#include <utility>
+
 #include "any.h"
+#include "yuni/core/any/any.private.h"
 
 namespace Yuni
 {

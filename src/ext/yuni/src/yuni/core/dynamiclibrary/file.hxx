@@ -11,6 +11,9 @@
 #pragma once
 #include "file.h"
 
+#include "yuni/core/dynamiclibrary/symbol.h"
+#include "yuni/core/fwd.h"
+
 namespace Yuni
 {
 namespace DynamicLibrary

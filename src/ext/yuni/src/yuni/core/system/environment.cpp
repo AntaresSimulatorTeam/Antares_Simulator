@@ -9,12 +9,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "environment.h"
-#include "windows.hdr.h"
-#include "../../string.h"
+
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/platform.h"
 #ifdef YUNI_HAS_STDLIB_H
 #include <stdlib.h>
 #endif
-#include "../string/wstring.h"
 
 namespace Yuni
 {

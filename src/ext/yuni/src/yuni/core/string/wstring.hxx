@@ -11,8 +11,16 @@
 #pragma once
 #include "wstring.h"
 
+#include <stdlib.h>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
+
 namespace Yuni
 {
+class WString;
+
 inline WString::WString() : pWString(), pSize()
 {
 }

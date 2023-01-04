@@ -11,6 +11,12 @@
 #pragma once
 #include "md5.h"
 
+#include "yuni/core/fwd.h"
+#include "yuni/core/hash/checksum/checksum.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
 namespace Hash

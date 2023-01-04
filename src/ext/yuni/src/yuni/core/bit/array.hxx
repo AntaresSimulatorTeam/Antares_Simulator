@@ -11,11 +11,21 @@
 #pragma once
 #include <string.h> // memset
 #include <cassert>
+#include <ostream>
+
+#include "yuni/core/bit/bit.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {
 namespace Bit
 {
+class Array;
+
 inline Array::Array() : pCount(0)
 {
 }

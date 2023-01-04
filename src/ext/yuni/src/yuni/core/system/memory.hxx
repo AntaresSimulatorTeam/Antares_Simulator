@@ -17,6 +17,8 @@ namespace System
 {
 namespace Memory
 {
+class Usage;
+
 inline Usage::Usage()
 {
     update();

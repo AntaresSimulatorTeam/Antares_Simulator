@@ -11,6 +11,9 @@
 #pragma once
 #include "mutex.h"
 #include "semaphore.h"
+#include "yuni/core/nonmovable.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

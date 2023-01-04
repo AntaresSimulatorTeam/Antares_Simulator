@@ -10,6 +10,11 @@
 */
 #include "rwmutex.h"
 
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/mutex.hxx"
+#include "yuni/thread/semaphore.h"
+#include "yuni/thread/semaphore.hxx"
+
 namespace Yuni
 {
 void RWMutex::writeLock()

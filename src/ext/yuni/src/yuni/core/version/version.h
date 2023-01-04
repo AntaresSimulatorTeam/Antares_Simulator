@@ -11,6 +11,9 @@
 #pragma once
 #include "../../yuni.h"
 #include "../string.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

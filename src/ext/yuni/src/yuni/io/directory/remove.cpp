@@ -8,32 +8,30 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../io.h"
-#include "../filename-manipulation.h"
-#include "../directory.h"
 
 #ifndef _BSD_SOURCE
 #define _BSD_SOURCE
-#endif
-#include <errno.h>
-#ifdef YUNI_HAS_STDLIB_H
-#include <stdlib.h>
 #endif
 #ifndef YUNI_OS_MSVC
 #include <dirent.h>
 #include <unistd.h>
 #endif
 #ifdef YUNI_OS_WINDOWS
-#include "../../core/system/windows.hdr.h"
 #include <shellapi.h>
+
+#include "../../core/system/windows.hdr.h"
 #endif
-#include <sys/stat.h>
-#include <fcntl.h>
-#include "../../core/string.h"
-#include "../../core/string/wstring.h"
 #include <stdio.h>
 
-#include <fstream>
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/io/constants.h"
+#include "yuni/io/directory/directory.h"
+#include "yuni/platform.h"
+
 #define SEP Yuni::IO::Separator
 
 namespace Yuni

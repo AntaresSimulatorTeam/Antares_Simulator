@@ -9,10 +9,18 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <iostream>
+
 #include "../../yuni.h"
 #include "../string.h"
 #include "bit.h"
-#include <iostream>
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/string/iterator.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

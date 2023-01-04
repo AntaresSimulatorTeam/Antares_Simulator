@@ -16,6 +16,14 @@
 #include "../traits/cstring.h"
 #include "../traits/length.h"
 #include "../smartptr.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/static/if.h"
+#include "yuni/core/system/nullptr.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
 
 #ifdef YUNI_OS_MSVC
 #pragma warning(push)
@@ -23,6 +31,7 @@
 #pragma warning(push, 0)
 #endif
 
+#include <sys/types.h>
 #include <cstdio>
 #ifdef YUNI_HAS_STDARG_H
 #include <stdarg.h>

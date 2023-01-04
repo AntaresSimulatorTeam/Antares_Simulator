@@ -9,7 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "array.h"
-#include <iostream>
 
 namespace Yuni
 {

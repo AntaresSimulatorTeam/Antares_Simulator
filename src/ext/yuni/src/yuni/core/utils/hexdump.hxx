@@ -11,12 +11,22 @@
 #pragma once
 #include "hexdump.h"
 
+#include <iosfwd>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/operators.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
 namespace Core
 {
 namespace Utils
 {
+class Hexdump;
+
 inline Hexdump::Hexdump(const char* buffer, uint size) : pBuffer(buffer), pSize(size)
 {
 }

@@ -11,6 +11,20 @@
 #pragma once
 #include "job.h"
 
+#include <assert.h>
+#include <stddef.h>
+
+#include "yuni/core/atomic/bool.h"
+#include "yuni/core/atomic/int.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/job/enum.h"
+#include "yuni/thread/thread.h"
+#include "yuni/thread/thread.hxx"
+
 namespace Yuni
 {
 namespace Job

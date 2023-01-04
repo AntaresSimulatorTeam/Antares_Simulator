@@ -14,9 +14,13 @@
 #else
 #include <objbase.h>
 #endif
-#include "../core/string.h"
 #include <cassert>
 #include <iostream>
+#include <cstring>
+
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/uuid/uuid.hxx"
 
 namespace Yuni
 {

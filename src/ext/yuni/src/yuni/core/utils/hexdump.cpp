@@ -10,6 +10,9 @@
 */
 #include "hexdump.h"
 
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+
 namespace Yuni
 {
 namespace Core

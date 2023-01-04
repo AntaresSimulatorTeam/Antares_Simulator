@@ -11,6 +11,17 @@
 #pragma once
 #include "program.h"
 
+#include <utility>
+
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/process/program/stream.h"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
 namespace Process

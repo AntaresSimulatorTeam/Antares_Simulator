@@ -18,6 +18,7 @@ namespace System
 {
 namespace Console
 {
+template <int C> struct TextColor;
 #ifdef YUNI_OS_WINDOWS
 
 template<class U>

@@ -10,6 +10,13 @@
 */
 #include "filename-manipulation.h"
 
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/constants.h"
+#include "yuni/io/filename-manipulation.hxx"
+
 namespace Yuni
 {
 namespace IO

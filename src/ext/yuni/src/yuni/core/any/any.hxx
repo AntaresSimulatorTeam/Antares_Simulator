@@ -11,8 +11,20 @@
 #pragma once
 #include "any.h"
 
+#include <new>
+#include <typeinfo>
+
+#include "yuni/core/any/any.private.h"
+#include "yuni/core/exceptions/badcast.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+
 namespace Yuni
 {
+class Any;
+
 template<typename T>
 Any::Any(const T& source)
 {

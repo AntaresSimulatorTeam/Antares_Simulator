@@ -15,6 +15,13 @@
 #include "../../io.h"
 #include "../../directory.h"
 #include "detachedthread.h"
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/constants.h"
+#include "yuni/thread/fwd.h"
+#include "yuni/thread/policy.h"
 
 namespace Yuni
 {

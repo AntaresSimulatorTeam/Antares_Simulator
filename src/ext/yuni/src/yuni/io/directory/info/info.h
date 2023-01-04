@@ -15,6 +15,11 @@
 #include "../../directory.h"
 #include "../../../core/iterator/iterator.h"
 #include "platform.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

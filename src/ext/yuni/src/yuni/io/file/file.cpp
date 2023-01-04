@@ -9,19 +9,21 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include <sys/stat.h>
-#include "../file.h"
-#include "../directory.h"
-#include <cctype>
-#include <cstring>
-#include "../../core/string/wstring.h"
+#include <string>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/error.h"
+#include "yuni/io/file/file.h"
+#include "yuni/io/file/openmode.h"
+#include "yuni/io/file/stream.h"
+#include "yuni/io/file/stream.hxx"
+#include "yuni/io/io.h"
 
 #ifndef YUNI_OS_WINDOWS
-#include <unistd.h>
-#endif
-
-#ifndef YUNI_OS_WINDOWS
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <unistd.h>
 #endif
 
@@ -142,30 +144,6 @@ Yuni::IO::Error Delete(const AnyString& filename)
     return (DeleteFileW(wstr.c_str())) ? Yuni::IO::errNone : Yuni::IO::errUnknown;
 #endif
 }
-
-#ifdef YUNI_OS_WINDOWS
-
-/*
-bool GetLastWriteTime(HANDLE hFile)
-{
-        FILETIME ftCreate, ftAccess, ftWrite;
-        SYSTEMTIME stUTC, stLocal;
-
-        // Retrieve the file times for the file.
-        if (!GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
-                return false;
-
-        // Convert the last-write time to local time.
-        if (!FileTimeToSystemTime(&ftWrite, &stUTC))
-                return false;
-        if (!SystemTimeToTzSpecificLocalTime(NULL, &stUTC, &stLocal))
-                return false;
-
-        return true;
-}
-*/
-
-#endif
 
 sint64 LastModificationTime(const AnyString& filename)
 {

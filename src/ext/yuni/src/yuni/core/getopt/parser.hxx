@@ -10,6 +10,10 @@
 */
 #pragma once
 
+#include "yuni/core/fwd.h"
+#include "yuni/core/getopt/option.h"
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
 namespace GetOpt

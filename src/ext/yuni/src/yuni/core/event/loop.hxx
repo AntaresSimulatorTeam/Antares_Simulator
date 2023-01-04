@@ -11,8 +11,24 @@
 #pragma once
 #include "loop.h"
 
+#include <assert.h>
+#include <stddef.h>
+
+#include "yuni/core/atomic/bool.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/slist/slist.h"
+#include "yuni/core/slist/slist.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/core/system/suspend.h"
+#include "yuni/thread/thread.h"
+
 namespace Yuni
 {
+
 namespace Private
 {
 namespace Core

@@ -9,25 +9,28 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "platform.h"
-#include "../../../core/slist.h"
+
 #include <cassert>
-#include "../../io.h"
-#include "../../directory.h"
-#include "../info.h"
+
 #include "../../../core/noncopyable.h"
+#include "yuni/core/slist/slist.h"
+#include "yuni/core/slist/slist.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/io/constants.h"
+#include "yuni/io/directory/info/info.h"
+#include "yuni/io/filename-manipulation.h"
 
 #ifdef YUNI_OS_WINDOWS
-#include "../../../core/system/windows.hdr.h"
 #include <wchar.h>
 #include <io.h>
+
+#include "../../../core/system/windows.hdr.h"
 #else
-#include <errno.h>
 #include <dirent.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #endif
 
 namespace Yuni

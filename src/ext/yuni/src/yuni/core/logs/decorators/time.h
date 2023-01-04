@@ -10,6 +10,8 @@
 */
 #pragma once
 #include "../null.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
 
 namespace Yuni
 {

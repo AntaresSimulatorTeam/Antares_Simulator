@@ -10,18 +10,21 @@
 */
 #include "iterator.h"
 
+#include <vector>
+
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.hxx"
+#include "yuni/io/directory/iterator/detachedthread.h"
+
 #ifdef YUNI_OS_WINDOWS
-#include "../../../core/system/windows.hdr.h"
 #include <wchar.h>
 #include <io.h>
+
+#include "../../../core/system/windows.hdr.h"
 #else
-#include <errno.h>
 #include <dirent.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
 #include <sys/stat.h>
-#include <unistd.h>
 #endif
 
 namespace Yuni

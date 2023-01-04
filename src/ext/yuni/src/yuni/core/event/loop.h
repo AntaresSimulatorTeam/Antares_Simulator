@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <cassert>
+
 #include "../../yuni.h"
 #include "event.h"
 #include "../atomic/bool.h"
@@ -19,9 +21,17 @@
 #include "../system/suspend.h"
 #include "../static/assert.h"
 #include "../static/inherit.h"
-#include <cassert>
 #include "../../thread/thread.h"
 #include "loop.fwd.h"
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/noncopyable.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/slist/slist.hxx"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/policy.h"
 
 namespace Yuni
 {

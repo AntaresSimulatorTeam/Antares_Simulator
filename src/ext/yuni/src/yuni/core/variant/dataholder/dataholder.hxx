@@ -11,12 +11,18 @@
 #pragma once
 #include "dataholder.h"
 
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+
 namespace Yuni
 {
 namespace Private
 {
 namespace Variant
 {
+template <class From, class To> struct Converter;
+
 /*!
 ** \brief Specialisation for Bool to String.
 */

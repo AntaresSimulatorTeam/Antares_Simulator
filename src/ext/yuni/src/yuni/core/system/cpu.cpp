@@ -9,11 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "cpu.h"
+
+#include "yuni/core/preprocessor/unixes.h"
 #if defined(YUNI_OS_LINUX) || defined(YUNI_OS_DARWIN) || defined(YUNI_OS_FREEBSD) \
   || defined(YUNI_OS_NETBSD) || defined(YUNI_OS_OPENBSD)
 #include <unistd.h>
 #endif
-#include "windows.hdr.h"
 
 namespace Yuni
 {

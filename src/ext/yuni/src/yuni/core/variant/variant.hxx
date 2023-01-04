@@ -11,6 +11,29 @@
 #pragma once
 #include "variant.h"
 
+#include <assert.h>
+#include <iosfwd>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/static/remove.h"
+#include "yuni/core/string/operators.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/system/nullptr.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/core/variant/dataholder/array.h"
+#include "yuni/core/variant/dataholder/dataholder.h"
+#include "yuni/core/variant/dataholder/dataholder.hxx"
+
+namespace Yuni {
+class Variant;
+}  // namespace Yuni
+
 #define YUNI_VARIANT_DEFINE_SUPPORTED_TYPE(TYPE) \
     template<>                                   \
     struct Variant::SupportedType<TYPE>          \

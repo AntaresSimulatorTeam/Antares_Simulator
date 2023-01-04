@@ -9,9 +9,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <stddef.h>
+
 #include "../../yuni.h"
 #include "string.h"
 #include "../noncopyable.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
 
 namespace Yuni
 {

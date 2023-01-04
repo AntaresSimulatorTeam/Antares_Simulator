@@ -9,15 +9,30 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <vector>
+
 #include "../yuni.h"
 #include "../core/string.h"
 #include "../core/event/event.h"
 #include "../core/noncopyable.h"
 #include "../core/smartptr/intrusive.h"
 #include "../thread/signal.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/event/event.hxx"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/slist/slist.hxx"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
+#include "yuni/thread/mutex.hxx"
 
 namespace Yuni
 {
+
 namespace Job
 {
 //! Forward declaration
