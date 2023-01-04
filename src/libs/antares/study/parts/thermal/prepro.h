@@ -67,7 +67,7 @@ public:
     /*!
     ** \brief Default constructor
     */
-    explicit PreproThermal(std::shared_ptr<const ThermalCluster> cluster);
+    explicit PreproThermal(std::weak_ptr<const ThermalCluster> cluster);
     //@}
 
     bool forceReload(bool reload) const;
@@ -116,13 +116,12 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<> data;
     // Parent thermal cluster
-    std::shared_ptr<const ThermalCluster> itsThermalCluster = nullptr;
+    std::weak_ptr<const ThermalCluster> itsThermalCluster;
 }; // class PreproThermal
 
 } // namespace Data
 } // namespace Antares
 
 #include "prepro.hxx"
-
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

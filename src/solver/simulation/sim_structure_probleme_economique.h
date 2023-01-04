@@ -56,8 +56,6 @@ typedef struct
 
     int* NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariableDefaillanceEnReserve;
-
     int* NumeroDeVariablesVariationHydALaBaisse;
 
     int* NumeroDeVariablesVariationHydALaHausse;
@@ -596,18 +594,16 @@ struct PROBLEME_HEBDO
     int* numeroOptimisation;
 
     char YaDeLaReserveJmoins1;
-    char ContrainteDeReserveJMoins1ParZone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
 
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
+
+    OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
 
-    optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -620,6 +616,9 @@ struct PROBLEME_HEBDO
 
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
+
+    double* tempsResolution1;
+    double* tempsResolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */
@@ -707,6 +706,9 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
+
+    /* Debug */
+    char debugFolder[1024];
 };
 
 namespace Antares::Solver::Variable { class State; } // foward declaration

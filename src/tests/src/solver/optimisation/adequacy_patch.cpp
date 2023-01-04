@@ -44,7 +44,7 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
     double Xmin;
     double Xmax;
 
-    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
+    setBoundsAdqPatch(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
 
     return std::make_pair(Xmin, Xmax);
 }

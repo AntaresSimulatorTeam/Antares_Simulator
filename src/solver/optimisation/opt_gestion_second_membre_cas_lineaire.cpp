@@ -56,20 +56,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     int CntCouplante;
     int Interco;
     int Jour;
-    int Zone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
-    char ContrainteActivable;
-    double TotalReserve;
-    int il;
-    int ilMax;
-    double X;
-    int Var;
     int Semaine;
-    char YaDeLaReserveJmoins1;
-    double a;
-    char ContrainteDeReserveJMoins1ParZone;
-    char NumeroDOptimisation;
     int NombreDePasDeTempsDUneJournee;
     char* DefaillanceNegativeUtiliserConsoAbattue;
     char* DefaillanceNegativeUtiliserPMinThermique;
@@ -79,15 +66,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
 
     CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
-
-    int* IndicesDebutDeLigne;
-    int* NombreDeTermesDesLignes;
-    double* CoefficientsDeLaMatriceDesContraintes;
-    int* IndicesColonnes;
-    int* TypeDeVariable;
-    double* Xmax;
-    double* Xmin;
-    int type;
 
     COUTS_DE_TRANSPORT* CoutDeTransport;
 
@@ -103,24 +81,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES* CorrespondanceCntNativesCntOptimHebdomadaires;
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
 
     SecondMembre = ProblemeAResoudre->SecondMembre;
-    IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
-    CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
 
-    TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
-    Xmin = ProblemeAResoudre->Xmin;
-    Xmax = ProblemeAResoudre->Xmax;
-
-    NumeroDOptimisation = ProblemeAResoudre->NumeroDOptimisation;
     AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
-    YaDeLaReserveJmoins1 = ProblemeHebdo->YaDeLaReserveJmoins1;
     NumeroDeJourDuPasDeTemps = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
     NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
     NumeroDeContrainteEnergieHydraulique = ProblemeHebdo->NumeroDeContrainteEnergieHydraulique;
@@ -130,8 +96,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
       = ProblemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
     NumeroDeContrainteMaxPompage = ProblemeHebdo->NumeroDeContrainteMaxPompage;
     NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-    NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
-    NumeroDeZoneDeReserveJMoins1 = ProblemeHebdo->NumeroDeZoneDeReserveJMoins1;
 
     DefaillanceNegativeUtiliserConsoAbattue
       = ProblemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
@@ -226,131 +190,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                     SecondMembre[Cnt] = MatriceDesContraintesCouplantes
                                           ->SecondMembreDeLaContrainteCouplante[PdtHebdo];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales + PdtHebdo;
-                }
-            }
-        }
-
-        if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-        {
-            for (Zone = 0; Zone < NombreDeZonesDeReserveJMoins1; Zone++)
-            {
-                Cnt = CorrespondanceCntNativesCntOptim
-                        ->NumeroPremiereContrainteDeReserveParZone[Zone];
-                if (Cnt >= 0)
-                {
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
-                    SecondMembre[Cnt] = -100.0;
-
-                    if (NumeroDOptimisation == PREMIERE_OPTIMISATION)
-                    {
-                        ContrainteActivable = NON_ANTARES;
-                        if (YaDeLaReserveJmoins1 == OUI_ANTARES)
-                            ContrainteActivable = OUI_ANTARES;
-                        if (ContrainteActivable == OUI_ANTARES)
-                        {
-                            TotalReserve = 0.0;
-                            for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-                            {
-                                if (NumeroDeZoneDeReserveJMoins1[Pays] == Zone)
-                                {
-                                    TotalReserve += ProblemeHebdo->ReserveJMoins1[Pays]
-                                                      ->ReserveHoraireJMoins1[PdtHebdo];
-                                }
-                            }
-                            SecondMembre[Cnt] = TotalReserve;
-                        }
-                    }
-                }
-
-                Cnt = CorrespondanceCntNativesCntOptim
-                        ->NumeroDeuxiemeContrainteDeReserveParZone[Zone];
-                if (Cnt >= 0)
-                {
-                    AdresseDuResultat
-                      = &(ProblemeHebdo->CoutsMarginauxDesContraintesDeReserveParZone[Zone]
-                            ->CoutsMarginauxHorairesDeLaReserveParZone[PdtHebdo]);
-                    *AdresseDuResultat = 0.0;
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
-
-                    ContrainteActivable = NON_ANTARES;
-                    if (NumeroDOptimisation != PREMIERE_OPTIMISATION)
-                    {
-                        if (YaDeLaReserveJmoins1 == OUI_ANTARES)
-                            ContrainteActivable = OUI_ANTARES;
-                    }
-                    if (ContrainteActivable == NON_ANTARES)
-                    {
-                        il = IndicesDebutDeLigne[Cnt];
-                        ilMax = il + NombreDeTermesDesLignes[Cnt];
-                        X = 0.0;
-                        while (il < ilMax)
-                        {
-                            Var = IndicesColonnes[il];
-                            a = CoefficientsDeLaMatriceDesContraintes[il];
-                            type = TypeDeVariable[Var];
-                            if (a < 0)
-                            {
-                                if (type == VARIABLE_BORNEE_DES_DEUX_COTES
-                                    || type == VARIABLE_BORNEE_SUPERIEUREMENT)
-                                    X += a * Xmax[Var];
-                                else
-                                {
-                                    logs.info();
-                                    logs.error()
-                                      << "Fatal error when computing second member of the reserve "
-                                         "constraints :\n"
-                                      << "  somme variables are unbounded on one or both sides\n"
-                                      << "  results will be useless, please call for maintenance";
-                                    logs.info();
-                                }
-                            }
-                            else
-                            {
-                                if (type == VARIABLE_BORNEE_DES_DEUX_COTES
-                                    || type == VARIABLE_BORNEE_INFERIEUREMENT)
-                                    X += a * Xmin[Var];
-                                else
-                                {
-                                    logs.info();
-                                    logs.error()
-                                      << "Fatal error when computing second member of the reserve "
-                                         "constraints :\n"
-                                      << "  somme variables are unbounded on one or both sides\n"
-                                      << "  results will be useless, please call for maintenance";
-                                    logs.info();
-                                }
-                            }
-                            il++;
-                        }
-                        SecondMembre[Cnt] = X - 100.0;
-                    }
-                    else
-                    {
-                        TotalReserve = 0.0;
-                        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-                        {
-                            if (NumeroDeZoneDeReserveJMoins1[Pays] == Zone)
-                            {
-                                TotalReserve += ProblemeHebdo->ReserveJMoins1[Pays]
-                                                  ->ReserveHoraireJMoins1[PdtHebdo];
-                            }
-                        }
-                        SecondMembre[Cnt]
-                          = ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
-
-                        il = IndicesDebutDeLigne[Cnt];
-                        ilMax = il + NombreDeTermesDesLignes[Cnt];
-                        X = 0.0;
-                        while (il < ilMax)
-                        {
-                            Var = IndicesColonnes[il];
-
-                            if (TypeDeVariable[Var] == VARIABLE_BORNEE_DES_DEUX_COTES)
-                                X += Xmax[Var];
-                            il++;
-                        }
-                        SecondMembre[Cnt] -= X;
-                    }
                 }
             }
         }

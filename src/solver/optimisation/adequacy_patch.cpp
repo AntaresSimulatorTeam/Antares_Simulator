@@ -28,18 +28,25 @@
 #include "../simulation/simulation.h"
 #include "opt_fonctions.h"
 #include "adequacy_patch.h"
-#include <math.h>
-#include "../simulation/sim_structure_probleme_economique.h"
-#include "../study/area/scratchpad.h"
+#include <cassert>
 
-using namespace Yuni;
+namespace Antares::Data::AdequacyPatch
+{
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is inside adq path (type 2).
+ *
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeInside(
+  AdequacyPatchMode extremityType)
+{
+  // TODO
+}
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
-{
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
@@ -54,23 +61,6 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebd
     switch (OriginNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType);
-
-    case physicalAreaOutsideAdqPatch:
-        return getNTCtoZeroStatusOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                      setToZeroNTCfromOutToIn_AdqPatch,
-                                                      setToZeroNTCfromOutToOut_AdqPatch);
-    default:
-        return leaveLocalValues;
-    }
-}
-
-ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
-{
-    switch (ExtremityNodeAdequacyPatchType)
-    {
-    case physicalAreaInsideAdqPatch:
     case physicalAreaOutsideAdqPatch:
         return setToZero;
     default:
@@ -78,60 +68,75 @@ ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
     }
 }
 
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch)
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is outside adq path (type 1).
+ *
+ * @param extremityType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeOutside(
+  AdequacyPatchMode extremityType,
+  bool SetToZero12Links,
+  bool SetToZero11Links)
 {
-    switch (ExtremityNodeAdequacyPatchType)
+    switch (extremityType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOrigineToZero;
+        return SetToZero12Links ? setToZero : setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
-        return setToZeroNTCfromOutToOut_AdqPatch ? setToZero : leaveLocalValues;
+        return SetToZero11Links ? setToZero : leaveLocalValues;
     default:
         return leaveLocalValues;
     }
 }
 
-void setNTCbounds(double& Xmax,
-                  double& Xmin,
-                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                  const int Interco,
-                  PROBLEME_HEBDO* ProblemeHebdo)
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch.
+ *
+ * @param originType uint: The adq type of the node at the start of the link.
+ *
+ * @param extremityType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTCStatus(const PROBLEME_HEBDO* ProblemeHebdo,
+                                                          const int Interco)
 {
-    ntcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
+    assert(ProblemeHebdo);
+    assert(ProblemeHebdo);
 
-    // set as default values
-    Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-    Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+    const AdequacyPatchMode originType
+      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco];
+    const AdequacyPatchMode extremityType
+      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco];
+    const bool SetToZero12Links = ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
+    const bool SetToZero11Links = ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
 
-    // set for adq patch first step
-    if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
+    switch (originType)
     {
-        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
+    case physicalAreaInsideAdqPatch:
+        return getNTC_OriginNodeInside(extremityType);
 
-        switch (ntcToZeroStatusForAdqPatch)
-        {
-        case setToZero:
-        {
-            Xmax = 0.;
-            Xmin = 0.;
-            break;
-        }
-        case setOrigineExtremityToZero:
-        {
-            Xmax = 0.;
-            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            break;
-        }
-        case setExtremityOrigineToZero:
-        {
-            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin = 0.;
-            break;
-        }
-        }
+    case physicalAreaOutsideAdqPatch:
+        return getNTC_OriginNodeOutside(extremityType, SetToZero12Links, SetToZero11Links);
+    default:
+        return leaveLocalValues;
     }
 }
 
@@ -294,10 +299,6 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
     }
 }
 
-} // end namespace Antares
-} // end namespace Data
-} // end namespace AdequacyPatch
-
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
     double netPositionInit;
@@ -374,4 +375,5 @@ void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& 
     buildProblemConstraintsRHS();
     setProblemCost();
     solveProblem(week, state.year);
+}
 }

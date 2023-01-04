@@ -69,10 +69,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     int Var2;
     int Var3;
     int Offset;
-    int Zone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
-    char ContrainteDeReserveJMoins1ParZone;
     char Simulation;
 
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -100,9 +96,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
     }
 
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDeZonesDeReserveJMoins1;
-    NumeroDeZoneDeReserveJMoins1 = ProblemeHebdo->NumeroDeZoneDeReserveJMoins1;
-    ContrainteDeReserveJMoins1ParZone = ProblemeHebdo->ContrainteDeReserveJMoins1ParZone;
 
     NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
@@ -493,104 +486,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* Pro
                   NombreDeTermes,
                   MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
                   NomDeLaContrainte);
-            }
-        }
-
-        if (ContrainteDeReserveJMoins1ParZone == OUI_ANTARES)
-        {
-            for (Zone = 0; Zone < NombreDeZonesDeReserveJMoins1; Zone++)
-            {
-                NombreDeTermes = 0;
-                for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-                {
-                    if (NumeroDeZoneDeReserveJMoins1[Pays] != Zone)
-                        continue;
-
-                    PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-                    for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques;
-                         Index++)
-                    {
-                        Palier = PaliersThermiquesDuPays
-                                   ->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-                        Var = CorrespondanceVarNativesVarOptim
-                                ->NumeroDeVariableDuPalierThermique[Palier];
-                        if (Var >= 0)
-                        {
-                            Pi[NombreDeTermes] = 1.0;
-                            Colonne[NombreDeTermes] = Var;
-                            NombreDeTermes++;
-                        }
-                    }
-
-                    Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[Pays];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-                    }
-
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDefaillanceEnReserve[Pays];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-                    }
-                }
-
-                CorrespondanceCntNativesCntOptim->NumeroPremiereContrainteDeReserveParZone[Zone]
-                  = ProblemeAResoudre->NombreDeContraintes;
-
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
-
-                NombreDeTermes = 0;
-                for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
-                {
-                    if (NumeroDeZoneDeReserveJMoins1[Pays] != Zone)
-                        continue;
-
-                    PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-                    for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques;
-                         Index++)
-                    {
-                        Palier = PaliersThermiquesDuPays
-                                   ->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-                        Var = CorrespondanceVarNativesVarOptim
-                                ->NumeroDeVariableDuPalierThermique[Palier];
-                        if (Var >= 0)
-                        {
-                            Pi[NombreDeTermes] = -1.0;
-                            Colonne[NombreDeTermes] = Var;
-                            NombreDeTermes++;
-                        }
-                    }
-
-                    Var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[Pays];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = -1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-                    }
-
-                    Var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDefaillanceEnReserve[Pays];
-                    if (Var >= 0)
-                    {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = Var;
-                        NombreDeTermes++;
-                    }
-                }
-
-                CorrespondanceCntNativesCntOptim->NumeroDeuxiemeContrainteDeReserveParZone[Zone]
-                  = ProblemeAResoudre->NombreDeContraintes;
-
-                OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
             }
         }
     }

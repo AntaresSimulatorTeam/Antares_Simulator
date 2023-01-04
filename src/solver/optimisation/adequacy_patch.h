@@ -55,46 +55,6 @@ const int defaultValueThresholdVarBoundsRelaxation = 3;
  */
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco);
 
-/*!
- * Determines restriction type for transmission links for first step of adequacy patch, when start
- * node is inside adq path (type 2).
- *
- * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
- *
- * @return uint from an enumeration that describes the type of restrictions to put on this link for
- * adq purposes.
- */
-ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(AdequacyPatchMode ExtremityNodeAdequacyPatchType);
-
-/*!
- * Determines restriction type for transmission links for first step of adequacy patch, when start
- * node is outside adq path (type 1).
- *
- * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
- *
- * @param setToZeroNTCfromOutToIn_AdqPatch bool: Switch to cut links from nodes outside adq patch
- * (type 1) towards nodes inside adq patch (type 2).
- *
- * @param setToZeroNTCfromOutToOut_AdqPatch bool: Switch to cut links between nodes outside adq
- * patch (type 1).
- *
- * @return uint from an enumeration that describes the type of restrictions to put on this link for
- * adq purposes.
- */
-ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool setToZeroNTCfromOutToIn_AdqPatch,
-  bool setToZeroNTCfromOutToOut_AdqPatch);
-
-/*!
- * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
- * not used.
- */
-void setNTCbounds(double& Xmax,
-                  double& Xmin,
-                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                  const int Interco,
-                  PROBLEME_HEBDO* ProblemeHebdo);
 
 /*!
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
@@ -142,7 +102,22 @@ void addArray(std::vector<double>& A, const double* B);
 ** */
 void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
 
-} // end namespace Antares
+/*!
+ * Sets link bounds for first step of adequacy patch.
+ */
+void setBoundsAdqPatch(double& Xmax,
+                       double& Xmin,
+                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                       const int Interco,
+                       PROBLEME_HEBDO* ProblemeHebdo);
+/*!
+ * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
+ */
+void setBoundsNoAdqPatch(double& Xmax,
+                         double& Xmin,
+                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                         const int Interco);
+} // namespace AdequacyPatch
 } // end namespace Data
-} // end namespace AdequacyPatch
+} // namespace Antares
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

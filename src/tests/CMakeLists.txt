@@ -49,13 +49,13 @@ if(Python3_Interpreter_FOUND)
       # TODO : add more study batches
       add_test(
         NAME unfeasible
-        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        COMMAND Python3::Interpreter -m pytest -m unfeasible --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       add_test(
         NAME json
-        COMMAND Python3::Interpreter -m pytest -n 2 -m json --solver-path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-solver>
+        COMMAND Python3::Interpreter -m pytest -n 2 -m json --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
@@ -63,6 +63,12 @@ if(Python3_Interpreter_FOUND)
         NAME kirchhoff
         COMMAND Python3::Interpreter -m pytest -m kirchhoff --exe_kirchhoff_path=$<TARGET_FILE:antares-${ANTARES_PRG_VERSION}-kirchhoff-constraints-builder> kirchhoff_pytest.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/kirchhoff-cbuilder"
+        )
+
+      add_test(
+        NAME mps
+        COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-solver> --archive-path 025_mps.txz
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/mps"
         )
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)
