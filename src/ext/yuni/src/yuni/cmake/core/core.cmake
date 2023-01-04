@@ -436,8 +436,6 @@ add_library(yuni-static-core STATIC
 		thread/array.hxx
 		thread/every.cpp
 		thread/fwd.h
-		thread/id.cpp
-		thread/id.h
 		thread/mutex.cpp
 		thread/mutex.h
 		thread/mutex.hxx
