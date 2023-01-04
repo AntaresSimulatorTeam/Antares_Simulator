@@ -13,10 +13,9 @@
 
 #include "../yuni.h"
 #include "../core/smartptr.h"
-#include "pthread.h"
 #include "yuni/core/preprocessor/capabilities.h"
 #include "yuni/core/smartptr/smartptr.h"
-#include "yuni/core/system/stdint.h"
+#include <cstdint>
 #include "yuni/platform.h"
 
 namespace Yuni

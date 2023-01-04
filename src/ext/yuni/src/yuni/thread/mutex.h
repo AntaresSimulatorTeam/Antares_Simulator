@@ -9,8 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include <pthread.h>
-
 #include "../yuni.h"
 #include "../core/noncopyable.h"
 #include "../core/nonmovable.h"
