@@ -9,12 +9,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include <time.h>
-#include <bits/types/struct_tm.h>
 #ifdef YUNI_OS_WINDOWS
 #include <wchar.h>
 #endif
-#include "time.h"
-
+#include <ctime>
 namespace Yuni
 {
 namespace Private
