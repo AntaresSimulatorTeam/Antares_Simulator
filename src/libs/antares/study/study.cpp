@@ -621,16 +621,34 @@ void Study::performTransformationsBeforeLaunchingSimulation()
     });
 }
 
-bool Study::prepareOutput()
+// This function is a helper. It should be completed when adding new formats
+static std::string getOutputSuffix(ResultFormat fmt)
 {
-    pStartTime = DateTime::Now();
+    switch (fmt)
+    {
+    case zipArchive:
+        return ".zip";
+    default:
+        return "";
+    }
+}
+
+YString StudyCreateOutputPath(StudyMode mode,
+                              ResultFormat fmt,
+                              const YString& outputRoot,
+                              const YString& label,
+                              Yuni::sint64 startTime)
+{
+    auto suffix = getOutputSuffix(fmt);
+
+    YString folderOutput;
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << folder << SEP << "output" << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", pStartTime, false);
+    folderOutput.clear() << outputRoot << SEP;
+    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
 
-    switch (parameters.mode)
+    switch (mode)
     {
     case stdmEconomy:
         folderOutput += "eco";
@@ -652,33 +670,43 @@ bool Study::prepareOutput()
     buffer.reserve(1024);
 
     // Folder output
-    if (not simulationComments.name.empty())
+    if (not label.empty())
     {
         buffer.clear();
-        TransformNameIntoID(simulationComments.name, buffer);
+        TransformNameIntoID(label, buffer);
         folderOutput << '-' << buffer;
     }
 
-    if (parameters.noOutput or not usedByTheSolver)
-        return true;
-
-    // TODO : use writer
+    buffer.clear() << folderOutput << suffix;
     // avoid creating the same output twice
-    if (IO::Exists(folderOutput))
+    if (IO::Exists(buffer))
     {
         String newpath;
         uint index = 1; // will start from 2
         do
         {
             ++index;
-            newpath.clear() << folderOutput << '-' << index;
+            newpath.clear() << folderOutput << '-' << index << suffix;
         } while (IO::Exists(newpath) and index < 2000);
 
-        folderOutput = newpath;
+        folderOutput << '-' << index;
     }
+    return folderOutput;
+}
+
+void Study::prepareOutput()
+{
+    pStartTime = DateTime::Now();
+
+    if (parameters.noOutput || !usedByTheSolver)
+        return;
+
+    buffer.clear() << folder << SEP << "output";
+
+    folderOutput = StudyCreateOutputPath(
+      parameters.mode, parameters.resultFormat, buffer, simulationComments.name, pStartTime);
 
     logs.info() << "  Output folder : " << folderOutput;
-    return true;
 }
 
 void Study::saveAboutTheStudy()

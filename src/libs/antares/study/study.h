@@ -375,7 +375,7 @@ public:
     /*!
     ** \brief Prepare the output where the results of the simulation will be written
     */
-    bool prepareOutput();
+    void prepareOutput();
 
     void saveAboutTheStudy();
 
@@ -780,6 +780,11 @@ extern YString StudyIconFile;
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);
 
+YString StudyCreateOutputPath(StudyMode mode,
+                              ResultFormat fmt,
+                              const YString& folder,
+                              const YString& label,
+                              Yuni::sint64 startTime);
 } // namespace Data
 } // namespace Antares
 
