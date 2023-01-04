@@ -8,16 +8,15 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include <ctype.h>
-#include <bits/types/mbstate_t.h>
+#include <cctype>
 
 #include "traits.h"
 #ifndef YUNI_OS_WINDOWS
-#include <wchar.h>
+#include <cwchar>
 #else
 #include "../../../core/system/windows.hdr.h"
 #endif
-#include <limits.h>
+#include <climits>
 
 namespace Yuni
 {

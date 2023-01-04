@@ -10,9 +10,8 @@
 */
 #include "wstring.h"
 
-#include <bits/types/mbstate_t.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdlib>
+#include <cstring>
 #ifdef YUNI_OS_WINDOWS
 #include "../system/windows.hdr.h"
 #else
