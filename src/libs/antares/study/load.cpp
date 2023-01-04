@@ -65,37 +65,13 @@ bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& option
     return internalLoadFromFolder(normPath, options);
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
-    gotFatalError = false;
-
-    // Check if the path is correct
-    if (!IO::Directory::Exists(path))
-    {
-        logs.error()
-          << path << ": The directory does not exist (or not enough privileges to read the folder)";
-        return false;
-    }
-
     if (not internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
-
-    // Initialize all internal paths
-    relocate(path);
-
-    // Compatibility - The extension according the study version
-    inputExtensionCompatibility();
-
-    // Reserving enough space in buffer to avoid several calls to realloc
-    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
     if (not simulationComments.loadFromFolder(options))
@@ -114,6 +90,11 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Load the layer data
     buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
     loadLayers(buffer);
+
+    return true;
+}
+
+void Study::parameterFiller(const StudyLoadOptions& options){
 
     if (usedByTheSolver and not options.prepareOutput)
     {
@@ -137,11 +118,72 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         {
             logs.error() << "Stochastic TS stored in input : study must be upgraded to "
                          << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            gotFatalError = true;
             // it is useless to continue at this point
-            return false;
         }
     }
+
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    if (not prepareOutput()) // will abort early if not usedByTheSolver
+        logs.error() << "Not usedByTheSolver, aborting";
+
+    // Scenario Rules sets, only available since v3.6
+    // After two consecutive load, some scenario builder data
+    // may still exist.
+    scenarioRulesDestroy();
+
+    if (JIT::usedFromGUI and uiinfo)
+    {
+        // Post-processing when loaded from the User-Interface
+        uiinfo->reload();
+        uiinfo->reloadBindingConstraints();
+    }
+
+    // calendar update
+    if (usedByTheSolver)
+        calendar.reset(parameters, /*force leapyear:*/ false);
+    else
+        calendar.reset(parameters);
+
+    calendarOutput.reset(parameters);
+
+    // In case hydro hot start is enabled, check all conditions are met.
+    // (has to be called after areas load and calendar building)
+    if (usedByTheSolver && !checkHydroHotStart())
+        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
+
+    // Reducing memory footprint
+    reduceMemoryUsage();
+
+
+}
+
+bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+{
+
+    // Check if the path is correct
+    if (!IO::Directory::Exists(path))
+    {
+        logs.error()
+          << path << ": The directory does not exist (or not enough privileges to read the folder)";
+        return false;
+    }
+
+    // Initialize all internal paths
+    relocate(path);
+
+    // Compatibility - The extension according the study version
+    inputExtensionCompatibility();
+
+    // Reserving enough space in buffer to avoid several calls to realloc
+    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
+    this->bufferLoadingTS.reserve(2096);
+    assert(this->bufferLoadingTS.capacity() > 0);
+
+    if(not internalLoadIni(path, options)){
+        return false;
+    }
+
 
     // -------------------------
     // Logical cores
@@ -171,34 +213,7 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Sets of areas & links
     ret = internalLoadSets() and ret;
 
-    // Scenario Rules sets, only available since v3.6
-    // After two consecutive load, some scenario builder data
-    // may still exist.
-    scenarioRulesDestroy();
-
-    if (JIT::usedFromGUI and uiinfo)
-    {
-        // Post-processing when loaded from the User-Interface
-        uiinfo->reload();
-        uiinfo->reloadBindingConstraints();
-    }
-
-    // calendar update
-    if (usedByTheSolver)
-        calendar.reset(parameters, /*force leapyear:*/ false);
-    else
-        calendar.reset(parameters);
-
-    calendarOutput.reset(parameters);
-
-    // In case hydro hot start is enabled, check all conditions are met.
-    // (has to be called after areas load and calendar building)
-    if (usedByTheSolver && !checkHydroHotStart())
-        return false;
-
-    // Reducing memory footprint
-    reduceMemoryUsage();
-
+    parameterFiller(options);
     return ret;
 }
 
