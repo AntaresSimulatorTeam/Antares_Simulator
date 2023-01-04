@@ -16,7 +16,6 @@
 #include <cassert>
 #include <string>
 
-#include "yuni/core/fwd.h"
 #include "yuni/core/iterator/iterator.h"
 #include "yuni/core/preprocessor/capabilities.h"
 #include "yuni/core/static/assert.h"

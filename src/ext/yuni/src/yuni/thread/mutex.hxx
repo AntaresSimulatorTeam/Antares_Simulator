@@ -10,8 +10,7 @@
 */
 #pragma once
 #include "mutex.h"
-
-#include <pthread.h>
+#include <yuni/core/preprocessor/capabilities.h>
 
 namespace Yuni
 {

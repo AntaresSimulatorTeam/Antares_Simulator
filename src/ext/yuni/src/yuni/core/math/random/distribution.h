@@ -10,11 +10,7 @@
 */
 #pragma once
 
-namespace Yuni
-{
-namespace Math
-{
-namespace Random
+namespace Yuni::Math::Random
 {
 /*!
 ** \brief Random Number Distribution (Abstract)
@@ -85,8 +81,6 @@ public:
 
 }; // class ADistribution
 
-} // namespace Random
-} // namespace Math
 } // namespace Yuni
 
 #include "distribution.hxx"

@@ -14,8 +14,9 @@
 #include "yuni/core/string/string.hxx"
 #include "yuni/core/string/traits/traits.hxx"
 #include "yuni/platform.h"
+#include "yuni/core/string/wstring.h"
 #ifdef YUNI_HAS_STDLIB_H
-#include <stdlib.h>
+#include <cstdlib>
 #endif
 
 namespace Yuni

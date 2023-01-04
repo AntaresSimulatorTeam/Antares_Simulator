@@ -12,6 +12,7 @@
 #ifndef _BSD_SOURCE
 #define _BSD_SOURCE
 #endif
+#include "yuni/core/preprocessor/capabilities.h"
 #ifndef YUNI_OS_MSVC
 #include <dirent.h>
 #include <unistd.h>
@@ -25,6 +26,7 @@
 
 #include "yuni/core/fwd.h"
 #include "yuni/core/string/string.h"
+#include "yuni/core/string/wstring.h"
 #include "yuni/core/string/string.hxx"
 #include "yuni/core/string/traits/traits.hxx"
 #include "yuni/core/string/utf8char.hxx"

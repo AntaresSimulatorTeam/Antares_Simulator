@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_NO_THREAD_SAFE
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"

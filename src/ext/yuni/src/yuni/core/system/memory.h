@@ -9,15 +9,10 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
 #include "yuni/core/preprocessor/capabilities.h"
 #include "yuni/core/system/stdint.h"
 
-namespace Yuni
-{
-namespace System
-{
-namespace Memory
+namespace Yuni::System::Memory
 {
 /*!
 ** \brief Get the amount of total physical memory
@@ -81,8 +76,6 @@ public:
 
 }; // class Usage
 
-} // namespace Memory
-} // namespace System
 } // namespace Yuni
 
 #include "memory.hxx"

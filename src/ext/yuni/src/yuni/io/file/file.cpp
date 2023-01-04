@@ -13,6 +13,7 @@
 
 #include "yuni/core/fwd.h"
 #include "yuni/core/string/string.h"
+#include "yuni/core/string/wstring.h"
 #include "yuni/core/string/string.hxx"
 #include "yuni/core/string/traits/traits.hxx"
 #include "yuni/core/system/stdint.h"

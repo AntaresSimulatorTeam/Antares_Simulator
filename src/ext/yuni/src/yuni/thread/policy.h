@@ -16,6 +16,8 @@
 */
 
 #include "../yuni.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"
 #endif

@@ -50,6 +50,8 @@
 #include "misc/system-memory.h"
 
 #include "signal-handling/public.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 
 #ifdef YUNI_OS_WINDOWS
 #include <conio.h>

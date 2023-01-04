@@ -31,6 +31,7 @@
 #include <yuni/core/system/environment.h>
 #include <yuni/io/directory/info.h>
 #include <yuni/core/system/windows.hdr.h>
+#include <yuni/core/preprocessor/capabilities.h>
 #include "../logs.h"
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>

@@ -384,7 +384,7 @@ set(SRC
 	solver.cpp
 
 	# Memory wrapper
-	sys/mem-wrapper.h  sys/mem-wrapper.c
+	sys/mem-wrapper.h sys/mem-wrapper.cpp
 
     # new check allocation
     memory/new_check.hxx

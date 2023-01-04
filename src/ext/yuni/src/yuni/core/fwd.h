@@ -11,6 +11,7 @@
 #pragma once
 #include <iosfwd> // STL
 #include <sys/types.h>
+#include "yuni/core/system/stdint.h"
 
 #ifdef None
 #undef None // From X11/X.h
@@ -36,7 +37,7 @@ class /*YUNI_DECL*/ CString;
 typedef /*YUNI_DECL*/ CString<> String;
 
 //! Character Large Object
-typedef /*YUNI_DECL*/ CString<4096> Clob;
+typedef /*YUNI_DECL*/ CString<4096, true> Clob;
 
 //! Convenient alias for short string 16 bytes
 typedef /*YUNI_DECL*/ CString<16, false> ShortString16;

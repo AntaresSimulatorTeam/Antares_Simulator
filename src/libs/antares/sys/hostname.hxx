@@ -26,6 +26,8 @@
 */
 
 #include <yuni/yuni.h>
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_MSVC
 #include <unistd.h>
 #endif

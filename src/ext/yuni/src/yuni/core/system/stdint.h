@@ -15,9 +15,11 @@
 /*!
 ** \brief Standard types used by the Yuni Library
 */
+#include "yuni/platform.h"
+#include "yuni/core/preprocessor/capabilities.h"
 
 #ifdef YUNI_HAS_STDINT_H
-#include <stdint.h>
+#include <cstdint>
 #else
 #ifdef YUNI_OS_MSVC
 #include "windows/msinttypes/stdint.h"

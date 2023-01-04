@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "uuid.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_WINDOWS
 #include <uuid/uuid.h>
 #else

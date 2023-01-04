@@ -11,6 +11,7 @@
 #pragma once
 
 /* Microsoft Windows */
+#include <windows.h>
 #ifndef YUNI_OS_WINDOWS
 #define YUNI_OS_WINDOWS
 #endif // YUNI_OS_WINDOWS

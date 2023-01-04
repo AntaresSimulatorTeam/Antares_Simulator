@@ -9,7 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
 #include "remove.h"
 
 /*!
@@ -39,12 +38,10 @@
         };                                                          \
     } /* class */
 
-namespace Yuni
+
+namespace Yuni::Static::HasTypedef
 {
-namespace Static
-{
-namespace HasTypedef
-{
+
 /*!
 ** \brief Determine whether a class has the typedef `Ptr` or not
 **
@@ -69,5 +66,5 @@ YUNI_IMPL_STATIC_HAS_TYPEDEF(IntrusiveSmartPtrType);
 YUNI_IMPL_STATIC_HAS_TYPEDEF(CStringType);
 
 } // namespace HasTypedef
-} // namespace Static
-} // namespace Yuni
+ // namespace Static
+ // namespace Yuni

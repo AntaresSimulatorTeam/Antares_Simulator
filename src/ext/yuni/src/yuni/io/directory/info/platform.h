@@ -9,17 +9,11 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../../core/string.h"
+#include "yuni/core/string.h"
 #include "yuni/core/fwd.h"
 #include "yuni/core/system/stdint.h"
 
-namespace Yuni
-{
-namespace Private
-{
-namespace IO
-{
-namespace Directory
+namespace Yuni::Private::IO::Directory
 {
 //! Platform-dependant data implementation
 class IteratorData;
@@ -48,7 +42,4 @@ bool IteratorDataIsFolder(const IteratorData*);
 
 bool IteratorDataIsFile(const IteratorData*);
 
-} // namespace Directory
-} // namespace IO
-} // namespace Private
 } // namespace Yuni

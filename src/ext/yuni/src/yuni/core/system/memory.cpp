@@ -11,11 +11,11 @@
 // memory.h: The relative path is to avoid conflict with <memory.h>, which
 // can sometimes occur...
 #include "../system/memory.h"
+#include "yuni/core/preprocessor/capabilities.h"
 
 // The define SYSTEM_MEMORY_IS_IMPLEMENTED will be used to know if
 // a valid implementation is available.
 // Otherwise we will use some fallbacks and generate a compiler warning
-
 #ifdef YUNI_OS_WINDOWS
 #include "windows.hdr.h"
 #endif
@@ -32,11 +32,8 @@
 #include <mach/mach.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <linux/sysinfo.h>
-
-#include "yuni/core/preprocessor/unixes.h"
+#include <cstdio>
+#include <cstdlib>
 #include "yuni/core/system/memory.hxx"
 
 namespace Yuni

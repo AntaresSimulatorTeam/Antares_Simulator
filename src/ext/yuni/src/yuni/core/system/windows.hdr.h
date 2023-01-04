@@ -9,9 +9,9 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
-
+#include "capabilities.h"
 /* This header must remain compatible with C compilers */
+#include "yuni/core/system/stdint.h"
 
 #ifdef YUNI_OS_WINDOWS
 #ifdef YUNI_OS_MSVC
@@ -27,9 +27,9 @@
 #endif
 #include <winsock2.h>
 #include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
+#include <cstdio>
+#include <cstdlib>
+#include <ctime>
 #define __PRETTY_FUNCTION__ __FUNCDNAME__
 #ifdef YUNI_OS_MSVC
 #pragma warning(pop)
@@ -45,9 +45,7 @@
 #endif
 
 #ifdef YUNI_OS_WINDOWS
-namespace Yuni
-{
-namespace Windows
+namespace Yuni::Windows
 {
 inline yint64 FILETIMEToTimestamp(const FILETIME& filetime)
 {
@@ -65,6 +63,5 @@ inline yint64 FILETIMEToTimestamp(const FILETIME& filetime)
     return date.QuadPart / 10000000;
 }
 
-} // namespace Windows
 } // namespace Yuni
 #endif

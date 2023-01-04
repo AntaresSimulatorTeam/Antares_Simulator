@@ -9,14 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../../yuni.h"
 #include "../static/remove.h"
 #include "../static/assert.h"
 #include "../static/typedef.h"
 #include "../traits/cstring.h"
 #include "../traits/length.h"
 #include "../smartptr.h"
-#include "yuni/core/fwd.h"
 #include "yuni/core/iterator/iterator.h"
 #include "yuni/core/preprocessor/capabilities.h"
 #include "yuni/core/smartptr/smartptr.h"

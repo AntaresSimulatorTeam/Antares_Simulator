@@ -11,7 +11,7 @@
 #include "rename.h"
 
 #include "../../thread/mutex.h"
-#include "yuni/core/preprocessor/unixes.h"
+#include "yuni/core/preprocessor/capabilities.h"
 #include "yuni/core/string/string.h"
 #include "yuni/core/string/string.hxx"
 #include "yuni/core/system/stdint.h"

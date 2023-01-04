@@ -24,6 +24,7 @@
 
 #include "stream.h"
 #include "yuni/core/string/string.hxx"
+#include "yuni/core/string/wstring.h"
 #include "yuni/io/file/openmode.h"
 #include "yuni/io/file/stream.hxx"
 

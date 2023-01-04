@@ -19,6 +19,7 @@
 #include "yuni/core/system/stdint.h"
 #include "yuni/io/constants.h"
 #include "yuni/platform.h"
+#include "yuni/core/string/wstring.h"
 
 namespace Yuni
 {

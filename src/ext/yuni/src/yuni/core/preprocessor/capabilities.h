@@ -101,7 +101,7 @@
 ** All those informations can be found at http://predef.sourceforge.net/
 */
 
-#include <assert.h>
+#include <cassert>
 
 #define YUNI_OS_FLAG_WINDOWS 0
 #define YUNI_OS_FLAG_UNIX 0
@@ -110,6 +110,9 @@
 
 #if defined(__TOS_WIN__) || defined(__WIN32__) || defined(_WIN64) || defined(_WIN32) \
   || defined(YUNI_OS_WINDOWS)
+#include <winsock2.h> //IMPORTANT keep it before windows.h
+// https://stackoverflow.com/questions/21399650/cannot-include-both-files-winsock2-windows-h
+// Prevent double definition due to windows.h including winsock.h (not winsock2)
 #include "windows.h"
 #else
 #include "unixes.h"

@@ -48,6 +48,7 @@
 #include "studydata.h"
 #include "job.h"
 #include "progress.h"
+#include <yuni/core/preprocessor/capabilities.h>
 
 using namespace Yuni;
 using namespace Antares;

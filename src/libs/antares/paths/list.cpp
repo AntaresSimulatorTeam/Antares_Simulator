@@ -28,6 +28,8 @@
 #include <yuni/yuni.h>
 #include <yuni/io/directory.h>
 #include <yuni/io/directory/iterator.h>
+#include <yuni/core/preprocessor/capabilities.h>
+
 #include "list.h"
 #include "../sys/mem-wrapper.h"
 #include <time.h>

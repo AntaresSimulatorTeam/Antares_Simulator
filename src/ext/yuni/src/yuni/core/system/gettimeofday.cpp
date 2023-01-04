@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "gettimeofday.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <stdio.h>
 #include <sys/timeb.h>
