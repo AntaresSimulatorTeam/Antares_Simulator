@@ -10,7 +10,7 @@
 */
 #include "semaphore.h"
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <cassert>
 #include <iostream>
 
@@ -25,7 +25,9 @@
 #include <semaphore.h>
 #endif
 #ifdef YUNI_HAS_ERRNO_H
-#include <errno.h>
+#include <cerrno>
+#include <climits>
+
 #endif
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"
