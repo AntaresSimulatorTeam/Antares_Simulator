@@ -8,10 +8,14 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../thread/utility.h"
-#ifdef YUNI_HAS_CPP_MOVE
-#include <utility>
-#endif
+
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/platform.h"
+#include "yuni/thread/thread.h"
+#include "yuni/thread/thread.hxx"
 
 namespace Yuni
 {

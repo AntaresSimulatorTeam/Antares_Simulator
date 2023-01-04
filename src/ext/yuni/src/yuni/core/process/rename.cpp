@@ -9,16 +9,19 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "rename.h"
+
 #include "../../thread/mutex.h"
+#include "yuni/core/preprocessor/unixes.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/mutex.hxx"
 
 #ifdef YUNI_OS_LINUX
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <limits.h>
-#include <sys/user.h>
-#include <sys/prctl.h>
 #endif
 
 namespace Yuni

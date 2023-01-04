@@ -9,10 +9,17 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <deque>
+
 #include "../job.h"
 #include "../../core/slist/slist.h"
 #include "../../core/atomic/bool.h"
-#include <deque>
+#include "yuni/core/atomic/int.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/job/enum.h"
+#include "yuni/thread/mutex.h"
 
 namespace Yuni
 {

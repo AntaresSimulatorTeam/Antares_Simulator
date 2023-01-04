@@ -10,8 +10,32 @@
 */
 #pragma once
 #include "string.h"
+
 #include <ctype.h>
+#include <string.h>
 #include <cassert>
+#include <string>
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/static/assert.h"
+#include "yuni/core/static/if.h"
+#include "yuni/core/static/remove.h"
+#include "yuni/core/static/typedef.h"
+#include "yuni/core/string/traits/append.h"
+#include "yuni/core/string/traits/assign.h"
+#include "yuni/core/string/traits/fill.h"
+#include "yuni/core/string/traits/into.h"
+#include "yuni/core/string/traits/traits.h"
+#include "yuni/core/string/traits/vnsprintf.h"
+#include "yuni/core/string/utf8char.h"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/nullptr.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/core/traits/cstring.h"
+#include "yuni/core/traits/length.h"
+#include "yuni/platform.h"
 #ifdef YUNI_HAS_VA_COPY
 #include <stdarg.h>
 #endif // YUNI_HAS_VA_COPY

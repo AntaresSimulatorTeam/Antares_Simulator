@@ -9,7 +9,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "timer.h"
+
 #include <cassert>
+
+#include "yuni/core/atomic/bool.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/thread/mutex.hxx"
+#include "yuni/thread/thread.h"
+#include "yuni/thread/thread.hxx"
 
 namespace Yuni
 {

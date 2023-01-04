@@ -8,22 +8,17 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
+#include <sys/stat.h>
+#include <assert.h>
+
 #include "io.h"
-#include "../core/system/windows.hdr.h"
-#include "../core/string.h"
-#include "../core/string/wstring.h"
-#include <sys/stat.h>
-
-#ifndef YUNI_OS_WINDOWS
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#endif
-
-#ifdef YUNI_HAS_STRING_H
-#include <string.h>
-#endif
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/constants.h"
+#include "yuni/platform.h"
 
 namespace Yuni
 {

@@ -15,6 +15,9 @@ namespace Yuni
 {
 namespace Job
 {
+class IJob;
+class Taskgroup;
+
 inline void Taskgroup::add(const Bind<bool(IJob&)>& callback)
 {
     add(pDefaultQueueservice, callback);

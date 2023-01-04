@@ -9,7 +9,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "taskgroup.h"
+
+#include <assert.h>
+
 #include "queue/service.h"
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/event/event.h"
+#include "yuni/core/event/traits.h"
+#include "yuni/job/job.h"
+#include "yuni/job/job.hxx"
+#include "yuni/thread/signal.h"
 
 namespace Yuni
 {

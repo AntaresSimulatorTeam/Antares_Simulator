@@ -8,8 +8,8 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../system/windows.hdr.h"
 #include <time.h>
+#include <bits/types/struct_tm.h>
 #ifdef YUNI_OS_WINDOWS
 #include <wchar.h>
 #endif

@@ -34,6 +34,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <linux/sysinfo.h>
+
+#include "yuni/core/preprocessor/unixes.h"
+#include "yuni/core/system/memory.hxx"
 
 namespace Yuni
 {

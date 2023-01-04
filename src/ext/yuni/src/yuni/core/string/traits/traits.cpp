@@ -8,9 +8,10 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../../yuni.h"
-#include "traits.h"
 #include <ctype.h>
+#include <bits/types/mbstate_t.h>
+
+#include "traits.h"
 #ifndef YUNI_OS_WINDOWS
 #include <wchar.h>
 #else

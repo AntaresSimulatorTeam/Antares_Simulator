@@ -8,7 +8,8 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "io.h"
+
+#include "yuni/io/constants.h"
 
 namespace Yuni
 {

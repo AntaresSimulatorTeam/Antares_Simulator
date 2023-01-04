@@ -10,6 +10,14 @@
 */
 #include "variant.h"
 
+#include "yuni/core/smartptr/policies/constness.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/variant/dataholder/dataholder.h"
+#include "yuni/core/variant/dataholder/string.h"
+#include "yuni/core/variant/types.h"
+#include "yuni/core/variant/variant.hxx"
+
 namespace Yuni
 {
 Variant::Variant(const Private::Variant::IDataHolder* rhs, bool ref) :

@@ -11,6 +11,12 @@
 #pragma once
 #include "timer.h"
 
+#include "yuni/core/atomic/bool.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/mutex.hxx"
+
 namespace Yuni
 {
 namespace Thread

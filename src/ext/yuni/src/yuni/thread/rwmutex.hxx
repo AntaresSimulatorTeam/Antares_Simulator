@@ -11,8 +11,14 @@
 #pragma once
 #include "rwmutex.h"
 
+#include "yuni/core/nonmovable.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/semaphore.h"
+
 namespace Yuni
 {
+class RWMutex;
+
 inline RWMutex::RWMutex(uint maxReaders)
 #ifndef YUNI_NO_THREAD_SAFE
  :

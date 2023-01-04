@@ -9,15 +9,28 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <list>
+
 #include "../yuni.h"
 #include "fwd.h"
 #include "../thread/thread.h"
 #include "../core/string.h"
 #include "../core/atomic/bool.h"
 #include "../core/smartptr/intrusive.h"
+#include "yuni/core/atomic/int.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/job/enum.h"
 
 namespace Yuni
 {
+namespace Thread {
+class IThread;
+}  // namespace Thread
+
 /*!
 ** \brief Jobs (Multithreading programming)
 ** \ingroup Jobs

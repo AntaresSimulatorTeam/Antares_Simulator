@@ -11,6 +11,10 @@
 #pragma once
 #include "waitingroom.h"
 
+#include "yuni/core/atomic/int.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
 namespace Private

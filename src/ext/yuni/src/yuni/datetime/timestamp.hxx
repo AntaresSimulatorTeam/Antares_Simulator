@@ -10,7 +10,12 @@
 */
 #pragma once
 #include <cstdlib>
+
 #include "timestamp.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {

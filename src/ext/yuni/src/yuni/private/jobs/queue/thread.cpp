@@ -10,6 +10,14 @@
 */
 #include "thread.h"
 
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/job/fwd.h"
+#include "yuni/job/queue/service.h"
+#include "yuni/job/queue/waitingroom.h"
+#include "yuni/thread/thread.hxx"
+
 namespace Yuni
 {
 namespace Private

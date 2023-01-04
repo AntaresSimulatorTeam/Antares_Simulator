@@ -8,16 +8,22 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../system/windows.hdr.h"
+#include <stdlib.h>
+
 #include "file.h"
+#include "yuni/core/dynamiclibrary/file.hxx"
+#include "yuni/core/dynamiclibrary/symbol.h"
+#include "yuni/core/dynamiclibrary/symbol.hxx"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/io/file/file.hxx"
+#include "yuni/io/filename-manipulation.h"
 #ifndef YUNI_OS_WINDOWS
 #include <dlfcn.h>
 #else
 #include "../../core/string/wstring.h"
 #endif
-#include <stdio.h>
-#include "../../io/file.h"
-#include "../../io/directory.h"
 
 #ifdef YUNI_OS_WINDOWS
 #define YUNI_DYNLIB_DLOPEN(X) ::LoadLibraryW(X)

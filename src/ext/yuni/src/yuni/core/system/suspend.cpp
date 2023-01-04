@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "suspend.h"
+
+#include "yuni/platform.h"
 #ifdef YUNI_OS_WINDOWS
 #include "windows.hdr.h"
 #else

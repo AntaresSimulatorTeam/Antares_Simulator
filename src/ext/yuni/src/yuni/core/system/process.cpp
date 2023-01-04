@@ -10,9 +10,6 @@
 */
 #include "process.h"
 #ifndef YUNI_OS_WINDOWS
-#ifndef YUNI_OS_HAIKU
-#include <sys/errno.h>
-#endif
 #include <unistd.h>
 #else
 #include "windows.hdr.h"

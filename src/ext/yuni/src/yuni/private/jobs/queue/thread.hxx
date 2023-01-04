@@ -11,8 +11,17 @@
 #pragma once
 #include "thread.h"
 
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/job/enum.h"
+#include "yuni/job/job.h"
+#include "yuni/job/queue/waitingroom.h"
+
 namespace Yuni
 {
+namespace Job {
+class QueueService;
+}  // namespace Job
+
 namespace Private
 {
 namespace QueueService

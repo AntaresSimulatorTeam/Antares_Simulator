@@ -10,8 +10,12 @@
 */
 #pragma once
 
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
+class Semaphore;
+
 inline uint Semaphore::maxReaders() const
 {
     return pMaxReaders;

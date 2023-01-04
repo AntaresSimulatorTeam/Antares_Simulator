@@ -9,7 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "job.h"
-#include "../core/math.h"
+
+#include <assert.h>
+#include <stddef.h>
+
+#include "yuni/core/atomic/bool.h"
+#include "yuni/thread/thread.h"
 
 namespace Yuni
 {

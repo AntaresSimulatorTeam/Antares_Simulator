@@ -10,10 +10,14 @@
 */
 #pragma once
 #include "../../../yuni.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
 #ifdef YUNI_HAS_STDLIB_H
 #include <stdlib.h>
 #endif
 #include <string.h>
+
 #include "../../math/math.h"
 
 namespace Yuni

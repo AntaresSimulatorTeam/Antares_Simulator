@@ -9,6 +9,9 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <utility>
+#include <vector>
+
 #include "../../yuni.h"
 #include "../job.h"
 #include "waitingroom.h"
@@ -17,9 +20,31 @@
 #include "q-event.h"
 #include "../../core/dictionary.h"
 #include "../../core/smartptr/intrusive.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/noncopyable.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/smartptr/policies/conversions.h"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/job/enum.h"
+#include "yuni/thread/fwd.h"
+#include "yuni/thread/mutex.hxx"
+#include "yuni/thread/thread.h"
 
 namespace Yuni
 {
+namespace Private {
+namespace QueueService {
+class QueueThread;
+}  // namespace QueueService
+}  // namespace Private
+
 namespace Job
 {
 /*!

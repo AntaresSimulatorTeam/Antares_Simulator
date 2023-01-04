@@ -12,6 +12,9 @@
 #include "../yuni.h"
 #include "../core/atomic/bool.h"
 #include "thread.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/mutex.h"
 
 namespace Yuni
 {

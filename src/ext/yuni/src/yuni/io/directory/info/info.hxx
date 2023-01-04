@@ -11,12 +11,24 @@
 #pragma once
 #include "info.h"
 
+#include "yuni/core/fwd.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/directory/directory.h"
+#include "yuni/io/directory/directory.hxx"
+#include "yuni/io/filename-manipulation.h"
+
 namespace Yuni
 {
 namespace IO
 {
 namespace Directory
 {
+class Info;
+
 inline Info::Info(const AnyString& directory) : pDirectory(directory)
 {
 }

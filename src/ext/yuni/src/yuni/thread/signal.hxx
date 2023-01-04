@@ -15,6 +15,8 @@ namespace Yuni
 {
 namespace Thread
 {
+class Signal;
+
 inline bool Signal::valid() const
 {
 #ifndef YUNI_NO_THREAD_SAFE

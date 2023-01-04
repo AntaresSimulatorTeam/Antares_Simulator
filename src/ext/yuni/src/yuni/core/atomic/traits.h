@@ -14,22 +14,14 @@
 #include "../system/windows.hdr.h"
 #endif
 
-// Determine if we must use a mutex or not
-#if defined(YUNI_OS_WINDOWS) || YUNI_OS_GCC_VERSION >= 40102 || defined(YUNI_OS_CLANG)
-#if !defined(YUNI_OS_WINDOWS) && !defined(YUNI_HAS_SYNC_ADD_AND_FETCH)
-#define YUNI_ATOMIC_MUST_USE_MUTEX 1
-#else
-#define YUNI_ATOMIC_MUST_USE_MUTEX 0
-#endif
-#else
-#define YUNI_ATOMIC_MUST_USE_MUTEX 1
-#endif
-
 #if YUNI_ATOMIC_MUST_USE_MUTEX == 1
 #define YUNI_ATOMIC_INHERITS  : public TP<Int<Size,TP> >
 #else
 #define YUNI_ATOMIC_INHERITS
 #endif
+
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/policy.h"
 
 namespace Yuni
 {

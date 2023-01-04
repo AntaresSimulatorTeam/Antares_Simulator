@@ -11,6 +11,9 @@
 #pragma once
 #include "thread.h"
 
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/mutex.hxx"
+
 namespace Yuni
 {
 namespace Thread

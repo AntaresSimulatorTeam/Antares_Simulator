@@ -9,7 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "version.h"
+
 #include <iostream>
+
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/version/version.hxx"
 
 namespace Yuni
 {

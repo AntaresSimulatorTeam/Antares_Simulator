@@ -9,13 +9,17 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <stdlib.h>
+
 /*!
 ** \brief Header for Yuni::DynamicLibrary::File, a class for manipulating Executable Object Files
 */
 #include "../../yuni.h"
-#include <stdlib.h>
 #include "../string.h"
 #include "symbol.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/string/string.h"
 
 // Determining the handle type for the current Operating system
 #ifdef YUNI_OS_WINDOWS

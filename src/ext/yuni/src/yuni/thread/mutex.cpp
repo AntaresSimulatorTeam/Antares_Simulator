@@ -9,11 +9,13 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "mutex.h"
+
 #include <cassert>
 #include <iostream>
 #include <cerrno>
 
-#include "../core/atomic/int.h"
+#include "yuni/core/atomic/traits.h"
+#include "yuni/core/nonmovable.h"
 #if YUNI_ATOMIC_MUST_USE_MUTEX != 0
 #warning Atomic types must ue mutex. the implementation should be checked YUNI_OS_GCC_VERSION
 #endif

@@ -10,7 +10,19 @@
 */
 #pragma once
 #include "stream.h"
+
+#include <assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+
 #include "../../core/string.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/file/openmode.h"
 
 namespace Yuni
 {
@@ -18,6 +30,8 @@ namespace IO
 {
 namespace File
 {
+class Stream;
+
 inline Stream::Stream() : pFd(nullptr)
 {
     // Do nothing

@@ -9,24 +9,38 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "program.h"
+
+#include <assert.h>
+
 #include "../../../thread/thread.h"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/process/program/process-info.hxx"
+#include "yuni/core/process/program/program.hxx"
+#include "yuni/core/process/program/stream.h"
+#include "yuni/core/string/iterator.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/string/utf8char.h"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/mutex.hxx"
+#include "yuni/thread/policy.h"
+#include "yuni/thread/signal.h"
+#include "yuni/thread/signal.hxx"
 #ifndef YUNI_OS_MSVC
-#include <unistd.h>
-#include <stdio.h>
 #include <signal.h>
-#include <fcntl.h>
-#include <errno.h>
 #ifndef YUNI_OS_WINDOWS
-#include <sys/wait.h>
 #else
 #define SIGKILL SIGTERM // SIGKILL is not defined on Windows
 #endif
 #else
 #endif
-#include "../../../datetime/timestamp.h"
-#include "../../../io/directory.h"
-#include "process-info.h"
 #include <iostream>
+
+#include "../../../datetime/timestamp.h"
+#include "process-info.h"
 
 namespace Yuni
 {
@@ -201,8 +215,6 @@ void Program::ThreadMonitor::theProcessHasStopped(bool killed, int exitstatus)
 } // namespace Process
 } // namespace Yuni
 
-#include "unix.inc.hpp"
-#include "windows.inc.hpp"
 
 namespace Yuni
 {

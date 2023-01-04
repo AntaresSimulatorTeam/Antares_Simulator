@@ -9,8 +9,14 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "md5.h"
-#include "../../../core/system/windows.hdr.h"
+
+#include <string.h>
+
 #include "../../../io/file/stream.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/io/file/stream.hxx"
 
 //! Constants for the Private::MD5::transform routine
 //@{

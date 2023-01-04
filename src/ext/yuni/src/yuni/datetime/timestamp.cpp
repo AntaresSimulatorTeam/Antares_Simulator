@@ -9,9 +9,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "timestamp.h"
+
 #include <time.h>
+#include <bits/types/struct_tm.h>
+#include <stdlib.h>
 #include <cassert>
+
 #include "../core/system/gettimeofday.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/datetime/timestamp.hxx"
 
 namespace Yuni
 {

@@ -8,26 +8,20 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../yuni.h"
 #include <time.h>
-#include <sys/timeb.h>
-#include <sys/types.h>
 #include <cassert>
 #ifndef YUNI_OS_WINDOWS
-#ifndef YUNI_OS_HAIKU
-#include <sys/errno.h>
-#endif
-#include <unistd.h>
-#include <sys/time.h>
 #else
-#include "../core/system/windows.hdr.h"
 #include <process.h>
+
+#include "../core/system/windows.hdr.h"
 #include "../core/system/gettimeofday.h"
 #endif
 
 #include "thread.h"
-#include <limits.h> // for PTHREAD_STACK_MIN
-#include <iostream>
+#include "yuni/thread/fwd.h"
+#include "yuni/thread/mutex.h"
+#include "yuni/thread/signal.h"
 
 //! Invalid timeout
 #define INVALID_TIMEOUT 2147483648u

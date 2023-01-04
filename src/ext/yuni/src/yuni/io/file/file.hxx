@@ -10,9 +10,19 @@
 */
 #pragma once
 #include "file.h"
+
 #include "../../core/traits/cstring.h"
 #include "../../core/traits/length.h"
 #include "../../core/static/remove.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/constants.h"
+#include "yuni/io/file/openmode.h"
+#include "yuni/io/file/stream.h"
+#include "yuni/io/file/stream.hxx"
+#include "yuni/io/io.h"
 
 namespace Yuni
 {

@@ -8,7 +8,9 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../variant.h"
+
+#include "yuni/core/fwd.h"
+#include "yuni/core/variant/dataholder/dataholder.h"
 
 namespace Yuni
 {

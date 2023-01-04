@@ -9,7 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "io.h"
 
 namespace Yuni
 {
@@ -68,6 +67,7 @@ extern const char* SeparatorAsString; // "/"
 */
 template<typename C /* = char*/>
 struct Constant;
+
 template<>
 struct Constant<char>
 {

@@ -10,10 +10,23 @@
 */
 #pragma once
 #include "iterator.h"
+
+#include <stddef.h>
+
 #include "../../../core/traits/cstring.h"
 #include "../../../core/traits/length.h"
 #include "../../../core/static/remove.h"
 #include "../../io.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/constants.h"
+#include "yuni/io/directory/iterator/detachedthread.h"
+#include "yuni/io/filename-manipulation.h"
+#include "yuni/thread/fwd.h"
+#include "yuni/thread/thread.hxx"
 
 namespace Yuni
 {

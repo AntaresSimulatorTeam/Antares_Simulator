@@ -9,17 +9,20 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "semaphore.h"
+
+#include <bits/local_lim.h>
+#include <stdlib.h>
 #include <cassert>
 #include <iostream>
-#include "../core/string.h"
+
+#include "yuni/core/preprocessor/unixes.h"
+#include "yuni/platform.h"
+#include "yuni/thread/semaphore.hxx"
 #ifdef YUNI_OS_MAC
 #include <unistd.h>
 #include <semaphore.h>
 #endif
 #ifdef YUNI_OS_LINUX
-#include <fcntl.h> // for contants
-#include <sys/stat.h>
-#include <limits.h>
 #include <semaphore.h>
 #endif
 #ifdef YUNI_HAS_ERRNO_H

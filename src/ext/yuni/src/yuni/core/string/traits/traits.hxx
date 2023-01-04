@@ -11,12 +11,21 @@
 #pragma once
 #include "traits.h"
 
+#include <stdlib.h>
+#include <string.h>
+
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/platform.h"
+
 namespace Yuni
 {
 namespace Private
 {
 namespace CStringImpl
 {
+template <uint ChunkSizeT, bool ExpandableT> class Data;
+
 template<uint ChunkSizeT, bool ExpandableT>
 inline Data<ChunkSizeT, ExpandableT>::Data() : size(), capacity(), data(NULL)
 {

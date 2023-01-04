@@ -9,13 +9,24 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <string.h>
+#include <map>
+#include <vector>
+
 #include "option.h"
 #include "../../yuni.h"
-#include <map>
-#include <string.h>
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/system/stdint.h"
 
 namespace Yuni
 {
+namespace Private {
+namespace GetOptImpl {
+class Context;
+}  // namespace GetOptImpl
+}  // namespace Private
+
 namespace GetOpt
 {
 /*!

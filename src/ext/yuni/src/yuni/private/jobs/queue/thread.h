@@ -10,11 +10,18 @@
 */
 #pragma once
 #include "../../../thread/thread.h"
+
 #include "../../../job/queue/service.h"
 #include "../../../thread/signal.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/job/job.h"
 
 namespace Yuni
 {
+namespace Job {
+class QueueService;
+}  // namespace Job
+
 namespace Private
 {
 namespace QueueService

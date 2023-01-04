@@ -9,9 +9,23 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "searchpath.h"
+
+#include <utility>
+#include <vector>
+
 #include "../../core/static/types.h"
-#include "../io.h"
 #include "../directory/info/info.h"
+#include "yuni/core/bind/bind.h"
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/io/constants.h"
+#include "yuni/io/directory/info/info.hxx"
+#include "yuni/io/filename-manipulation.hxx"
+#include "yuni/io/io.hxx"
 
 namespace Yuni
 {

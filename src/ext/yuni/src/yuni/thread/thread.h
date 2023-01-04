@@ -9,17 +9,28 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <pthread.h>
+#include <vector>
+
 #include "../yuni.h"
 #include "mutex.h"
 #include "signal.h"
 #include "../core/string.h"
-#include <vector>
 #include "fwd.h"
 #include "../core/noncopyable.h"
 #include "../core/smartptr/intrusive.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/thread/mutex.hxx"
 
 namespace Yuni
 {
+namespace Job {
+class IJob;
+}  // namespace Job
+
 namespace Thread
 {
 /*!

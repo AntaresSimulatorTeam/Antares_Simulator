@@ -9,10 +9,16 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <map>
+
 #include "../../yuni.h"
 #include "../../core/string.h"
 #include "../../core/bind.h"
-#include <map>
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/utf8char.hxx"
 #ifdef SearchPath
 #undef SearchPath // On Windows, SearchPath is a macro...
 #endif

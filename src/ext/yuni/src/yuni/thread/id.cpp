@@ -8,19 +8,18 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../yuni.h"
 #ifdef YUNI_OS_LINUX
 #ifndef _GNU_SOURCE
 #define _GNU_SOURCE /* ou _BSD_SOURCE or _SVID_SOURCE */
 #endif
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/syscall.h>
 #endif
+#include <syscall.h>
+#include <execution>
+
 #include "id.h"
-#include "../core/system/windows.hdr.h"
+#include "yuni/core/preprocessor/unixes.h"
 #ifndef YUNI_NO_THREAD_SAFE
-#include "pthread.h"
 #ifdef YUNI_OS_WINDOWS
 #include "../core/system/windows.hdr.h"
 #endif

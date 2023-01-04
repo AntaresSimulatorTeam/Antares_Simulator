@@ -9,8 +9,15 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "parser.h"
+
 #include <iostream>
 #include <cassert>
+#include <utility>
+
+#include "yuni/core/getopt/option.h"
+#include "yuni/core/getopt/parser.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
 
 // The standard error output is not displayed on Windows
 #ifndef YUNI_OS_WINDOWS

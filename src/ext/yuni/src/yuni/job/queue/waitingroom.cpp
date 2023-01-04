@@ -8,8 +8,16 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../../yuni.h"
+#include <algorithm>
+#include <utility>
+
 #include "waitingroom.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/smartptr/policies/storage.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/job/fwd.h"
+#include "yuni/job/job.h"
+#include "yuni/thread/mutex.hxx"
 
 namespace Yuni
 {

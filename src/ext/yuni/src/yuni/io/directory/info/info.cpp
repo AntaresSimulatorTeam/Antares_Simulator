@@ -9,7 +9,12 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "info.h"
-#include "../../file.h"
+
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/io/directory/directory.h"
+#include "yuni/io/error.h"
+#include "yuni/io/file/file.h"
+#include "yuni/io/filename-manipulation.h"
 
 namespace Yuni
 {

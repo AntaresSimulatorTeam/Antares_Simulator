@@ -8,10 +8,28 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include "../io.h"
-#include "../directory.h"
-#include "info.h"
-#include "../file.h"
+
+#include <new>
+#include <vector>
+
+#include "yuni/core/bind/bind.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/iterator/iterator.h"
+#include "yuni/core/iterator/iterator.hxx"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/string/utf8char.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/io/directory/directory.h"
+#include "yuni/io/directory/info/info.h"
+#include "yuni/io/directory/info/info.hxx"
+#include "yuni/io/file/openmode.h"
+#include "yuni/io/file/stream.h"
+#include "yuni/io/file/stream.hxx"
+#include "yuni/io/filename-manipulation.h"
+#include "yuni/io/io.hxx"
 
 namespace Yuni
 {

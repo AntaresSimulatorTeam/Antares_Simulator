@@ -10,9 +10,23 @@
 */
 #pragma once
 #include <sstream>
+#include <utility>
+#include <vector>
+
 #include "../../static/types.h"
 #include "../../math/math.h"
 #include "../../smartptr/intrusive.h"
+#include "yuni/core/atomic/int.hxx"
+#include "yuni/core/fwd.h"
+#include "yuni/core/smartptr/intrusive.hxx"
+#include "yuni/core/smartptr/policies/constness.h"
+#include "yuni/core/smartptr/smartptr.hxx"
+#include "yuni/core/string/string.h"
+#include "yuni/core/string/string.hxx"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/core/system/stdint.h"
+#include "yuni/core/variant/types.h"
+#include "yuni/thread/policy.h"
 
 namespace Yuni
 {
@@ -20,6 +34,8 @@ namespace Private
 {
 namespace Variant
 {
+class IDataConverter;
+
 template<class T>
 struct InternalType final
 {

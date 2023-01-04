@@ -9,12 +9,25 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "service.h"
+
+#include <assert.h>
+#include <stddef.h>
+#include <unordered_set>
+
 #include "../../core/system/cpu.h"
 #include "../../thread/array.h"
 #include "../../private/jobs/queue/thread.h"
-#ifndef YUNI_OS_WINDOWS
-#include <unistd.h>
-#endif
+#include "yuni/core/dictionary.h"
+#include "yuni/core/string/traits/traits.hxx"
+#include "yuni/job/job.h"
+#include "yuni/job/job.hxx"
+#include "yuni/job/queue/q-event.h"
+#include "yuni/job/queue/waitingroom.h"
+#include "yuni/job/queue/waitingroom.hxx"
+#include "yuni/private/jobs/queue/thread.hxx"
+#include "yuni/thread/array.hxx"
+#include "yuni/thread/policy.h"
+#include "yuni/thread/signal.h"
 
 namespace Yuni
 {

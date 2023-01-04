@@ -11,8 +11,14 @@
 #pragma once
 #include "version.h"
 
+#include <iosfwd>
+
+#include "yuni/core/system/stdint.h"
+
 namespace Yuni
 {
+class Version;
+
 inline Version::Version() : hi(), lo(), revision()
 {
 }

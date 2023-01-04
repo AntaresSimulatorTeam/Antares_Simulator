@@ -18,6 +18,13 @@
 #include "dataholder/dataholder.h"
 #include "dataholder/string.h"
 #include "dataholder/array.h"
+#include "yuni/core/fwd.h"
+#include "yuni/core/preprocessor/capabilities.h"
+#include "yuni/core/smartptr/smartptr.h"
+#include "yuni/core/string/string.h"
+#include "yuni/core/system/nullptr.h"
+#include "yuni/core/system/stdint.h"
+#include "yuni/core/variant/dataholder/dataholder.hxx"
 
 namespace Yuni
 {
