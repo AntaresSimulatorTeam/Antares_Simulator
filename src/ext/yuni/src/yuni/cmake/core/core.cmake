@@ -343,11 +343,6 @@ add_library(yuni-static-core STATIC
 		core/utils/hexdump.hxx
 		core/utils/utils.h
 		core/utils.h
-		core/validator/text/default.h
-		core/validator/text/default.hxx
-		core/validator/text/default.private.h
-		core/validator/text/validator.h
-		core/validator/validator.h
 		core/variant/dataholder/array.h
 		core/variant/dataholder/dataholder.cpp
 		core/variant/dataholder/dataholder.h
