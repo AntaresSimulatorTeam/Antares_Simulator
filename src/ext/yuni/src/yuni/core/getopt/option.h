@@ -51,7 +51,7 @@ public:
     static bool Add(std::basic_string<C>& out, const char* c_str, const String::size_type len)
     {
         if (len)
-            out += c_str;
+            out = c_str;
         else
             out.clear();
         return true;

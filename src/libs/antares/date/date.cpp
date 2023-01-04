@@ -425,7 +425,7 @@ void Calendar::reset(const Data::Parameters& parameters, bool leapyear)
     // It goes the same for the GUI : since it is _merely_ printing,
     // it should be taken into consideration.
     // Consequently, we will let the calling code specifying this value
-    settings.leapYear = leapyear; // parameters.leapYear;
+    settings.leapYear = leapyear;
 
     // re-initialize the calendar with the new settings
     reset();

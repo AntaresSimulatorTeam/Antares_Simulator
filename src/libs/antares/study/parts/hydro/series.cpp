@@ -260,11 +260,11 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     return ret;
 }
 
-bool DataSeriesHydro::invalidate(bool reload) const
+bool DataSeriesHydro::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = ror.invalidate(reload) && ret;
-    ret = storage.invalidate(reload) && ret;
+    ret = ror.forceReload(reload) && ret;
+    ret = storage.forceReload(reload) && ret;
     return ret;
 }
 

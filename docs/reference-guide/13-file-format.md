@@ -14,6 +14,9 @@ In file **settings/generaldata.ini**, in section `optimization`, change admissib
 
 Previous values (`true`, `false` and `infinite`) are still admissible for compatibility.
 
+### Remove "Split MPS"
+In existing section `optimization`, remove property `include-split-exported-mps` [bool]. This property will be ignored (no error) for compatibility.
+
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 

@@ -35,6 +35,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "common-eco-adq.h"
+#include "opt_time_writer.h"
 
 using namespace Yuni;
 
@@ -50,25 +51,27 @@ enum
     nbHoursInAWeek = 168,
 };
 
-// Interface class + factory
-void EconomyWeeklyOptimization::initializeProblemeHebdo(PROBLEME_HEBDO** problemesHebdo)
+EconomyWeeklyOptimization::EconomyWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ pProblemesHebdo(problemesHebdo)
 {
-    pProblemesHebdo = problemesHebdo;
 }
 
-EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled)
+EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled,
+                                                                 PROBLEME_HEBDO** problemesHebdo)
 {
-    using EcoWeeklyPtr = EconomyWeeklyOptimization::Ptr;
     if (adqPatchEnabled)
-        return EcoWeeklyPtr(new AdequacyPatchOptimization());
+        return std::make_unique<AdequacyPatchOptimization>(problemesHebdo);
     else
-        return EcoWeeklyPtr(new NoAdequacyPatchOptimization());
+        return std::make_unique<NoAdequacyPatchOptimization>(problemesHebdo);
 
     return nullptr;
 }
 
 // Adequacy patch
-AdequacyPatchOptimization::AdequacyPatchOptimization() = default;
+AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ EconomyWeeklyOptimization(problemesHebdo)
+{
+}
 void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
@@ -96,7 +99,10 @@ void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear,
 }
 
 // No adequacy patch
-NoAdequacyPatchOptimization::NoAdequacyPatchOptimization() = default;
+NoAdequacyPatchOptimization::NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
+ EconomyWeeklyOptimization(problemesHebdo)
+{
+}
 void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
@@ -141,6 +147,7 @@ void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 void Economy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = pProblemesHebdo[numSpace];
+    state.numSpace = numSpace;
 }
 
 bool Economy::simulationBegin()
@@ -154,8 +161,6 @@ bool Economy::simulationBegin()
             memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
-            assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
-                   && "inconsistency");
             if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
             {
                 logs.fatal() << "internal error";
@@ -163,7 +168,8 @@ bool Economy::simulationBegin()
             }
         }
 
-        weeklyOptProblem = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled);
+        weeklyOptProblem
+          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled, pProblemesHebdo);
 
         SIM_InitialisationResultats();
     }
@@ -172,11 +178,6 @@ bool Economy::simulationBegin()
     {
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
             pProblemesHebdo[numSpace]->TypeDOptimisation = OPTIMISATION_LINEAIRE;
-
-        if (weeklyOptProblem)
-        {
-            weeklyOptProblem->initializeProblemeHebdo(pProblemesHebdo);
-        }
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
@@ -202,6 +203,8 @@ bool Economy::year(Progression::Task& progression,
     if (isFirstPerformedYearOfSimulation)
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
+
+    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -261,6 +264,9 @@ bool Economy::year(Progression::Task& progression,
                 state.optimalSolutionCost1 += pProblemesHebdo[numSpace]->coutOptimalSolution1[opt];
                 state.optimalSolutionCost2 += pProblemesHebdo[numSpace]->coutOptimalSolution2[opt];
             }
+            optWriter.addTime(w,
+                              pProblemesHebdo[numSpace]->tempsResolution1[0],
+                              pProblemesHebdo[numSpace]->tempsResolution2[0]);
         }
         catch (Data::AssertionError& ex)
         {
@@ -298,10 +304,9 @@ bool Economy::year(Progression::Task& progression,
 
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
-    logs.info() << pProblemesHebdo[numSpace]->optimizationStatistics_object.toString();
-    auto& optStat = pProblemesHebdo[numSpace]->optimizationStatistics_object;
-    state.averageOptimizationTime = optStat.getAverageSolveTime();
-    optStat.reset();
+    optWriter.finalize();
+    finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
+
     return true;
 }
 

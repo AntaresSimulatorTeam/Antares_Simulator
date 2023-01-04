@@ -162,8 +162,7 @@ void Study::createAsNew()
     // Source)
     parameters.renewableGeneration.rgModelling = Antares::Data::rgClusters;
 
-    parameters.yearsFilter = new bool[1];
-    parameters.yearsFilter[0] = true;
+    parameters.yearsFilter = std::vector<bool>(1, true);
 
     // Sets
     setsOfAreas.defaultForAreas();
@@ -204,61 +203,6 @@ void Study::reduceMemoryUsage()
     ClearAndShrink(bufferLoadingTS);
 }
 
-void StudyEnsureDataLoadPrepro(Study* s)
-{
-    AreaListEnsureDataLoadPrepro(&s->areas);
-}
-
-void StudyEnsureDataLoadTimeSeries(Study* s)
-{
-    AreaListEnsureDataLoadTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataSolarPrepro(Study* s)
-{
-    AreaListEnsureDataSolarPrepro(&s->areas);
-}
-
-void StudyEnsureDataSolarTimeSeries(Study* s)
-{
-    AreaListEnsureDataSolarTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataWindTimeSeries(Study* s)
-{
-    AreaListEnsureDataWindTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataWindPrepro(Study* s)
-{
-    AreaListEnsureDataWindPrepro(&s->areas);
-}
-
-void StudyEnsureDataHydroTimeSeries(Study* s)
-{
-    AreaListEnsureDataHydroTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataHydroPrepro(Study* s)
-{
-    AreaListEnsureDataHydroPrepro(&s->areas);
-}
-
-void StudyEnsureDataThermalTimeSeries(Study* s)
-{
-    AreaListEnsureDataThermalTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataRenewableTimeSeries(Study* s)
-{
-    AreaListEnsureDataRenewableTimeSeries(&s->areas);
-}
-
-void StudyEnsureDataThermalPrepro(Study* s)
-{
-    AreaListEnsureDataThermalPrepro(&s->areas);
-}
-
 uint64 Study::memoryUsage() const
 {
     return folder.capacity()
@@ -280,48 +224,6 @@ uint64 Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-void Study::ensureDataAreInitializedAccordingParameters()
-{
-    StudyEnsureDataLoadTimeSeries(this);
-    StudyEnsureDataSolarTimeSeries(this);
-    StudyEnsureDataWindTimeSeries(this);
-    StudyEnsureDataHydroTimeSeries(this);
-    StudyEnsureDataThermalTimeSeries(this);
-    StudyEnsureDataRenewableTimeSeries(this);
-
-    // Load
-    if (parameters.isTSGeneratedByPrepro(timeSeriesLoad))
-        StudyEnsureDataLoadPrepro(this);
-    // Solar
-    if (parameters.isTSGeneratedByPrepro(timeSeriesSolar))
-        StudyEnsureDataSolarPrepro(this);
-    // Hydro
-    if (parameters.isTSGeneratedByPrepro(timeSeriesHydro))
-        StudyEnsureDataHydroPrepro(this);
-    // Wind
-    if (parameters.isTSGeneratedByPrepro(timeSeriesWind))
-        StudyEnsureDataWindPrepro(this);
-    // Thermal
-    StudyEnsureDataThermalPrepro(this);
-}
-
-void Study::ensureDataAreAllInitialized()
-{
-    // Timeseries
-    StudyEnsureDataLoadTimeSeries(this);
-    StudyEnsureDataSolarTimeSeries(this);
-    StudyEnsureDataWindTimeSeries(this);
-    StudyEnsureDataHydroTimeSeries(this);
-    StudyEnsureDataThermalTimeSeries(this);
-    StudyEnsureDataRenewableTimeSeries(this);
-
-    // TS-Generators
-    StudyEnsureDataLoadPrepro(this);
-    StudyEnsureDataSolarPrepro(this);
-    StudyEnsureDataHydroPrepro(this);
-    StudyEnsureDataWindPrepro(this);
-    StudyEnsureDataThermalPrepro(this);
-}
 
 std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
 {
@@ -1213,7 +1115,7 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
     foreach (auto* constraint, bindingConstraints)
     {
         if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().invalidate(true);
+            constraint->matrix().forceReload(true);
     }
 }
 
@@ -1348,24 +1250,24 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
     progression.setNumberOfParallelYears(maxNbYearsInParallel);
 }
 
-bool Study::invalidate(bool reload) const
+bool Study::forceReload(bool reload) const
 {
     bool ret = true;
 
     // Invalidate all areas
-    ret = areas.invalidate(reload) and ret;
+    ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.invalidate(reload) and ret;
+    ret = bindingConstraints.forceReload(reload) and ret;
 
-    ret = preproLoadCorrelation.invalidate(reload) and ret;
-    ret = preproSolarCorrelation.invalidate(reload) and ret;
-    ret = preproWindCorrelation.invalidate(reload) and ret;
-    ret = preproHydroCorrelation.invalidate(reload) and ret;
+    ret = preproLoadCorrelation.forceReload(reload) and ret;
+    ret = preproSolarCorrelation.forceReload(reload) and ret;
+    ret = preproWindCorrelation.forceReload(reload) and ret;
+    ret = preproHydroCorrelation.forceReload(reload) and ret;
 
-    ret = bindingConstraints.invalidate(reload) and ret;
+    ret = bindingConstraints.forceReload(reload) and ret;
 
-    ret = setsOfAreas.invalidate(reload) and ret;
-    ret = setsOfLinks.invalidate(reload) and ret;
+    ret = setsOfAreas.forceReload(reload) and ret;
+    ret = setsOfLinks.forceReload(reload) and ret;
     return ret;
 }
 

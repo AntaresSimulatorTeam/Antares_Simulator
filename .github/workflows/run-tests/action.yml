@@ -28,7 +28,7 @@ runs:
     run: |
            cd _build
            ctest -C Release --output-on-failure -R json
-           echo "RET_CODE=$?" >> GITTHUB_ENV
+           echo "RET_CODE=$?" >> $GITHUB_ENV
 
   - name: Clean batches
     shell: bash

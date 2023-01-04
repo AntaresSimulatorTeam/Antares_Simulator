@@ -60,7 +60,7 @@ public:
     **
     ** If the load-on-demand is enabled, some data might not be loaded (see `Matrix`)
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     void markAsModified() const;
     //@}

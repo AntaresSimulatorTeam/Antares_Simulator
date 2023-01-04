@@ -179,7 +179,7 @@ public:
     ** \param reload True to force the reload of data
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all areas as modified
@@ -431,6 +431,17 @@ public:
 
     reverse_iterator rend();
     const_reverse_iterator rend() const;
+
+    //! \name Internal Data TS-Generators / Series
+    //@{
+    /*!
+    ** \brief Ensure data for time series/prepro are initalized if they should be
+    **
+    ** It initializes data for each area so it would be better to call this
+    ** routine when areas are already loaded.
+    */
+
+    void ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded);
     //@}
 
     //! \name Import / Export
@@ -549,7 +560,7 @@ public:
     ** \param reload True to reload data in the same time
     ** \return True if the operation succeeded
     */
-    bool invalidate(bool reload = false) const;
+    bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark all data as modified

@@ -361,8 +361,8 @@ void AreaLink::reverse()
     with->buildLinksIndexes();
 
     // Making sure that we have the data
-    directCapacities.invalidate(true);
-    indirectCapacities.invalidate(true);
+    directCapacities.forceReload(true);
+    indirectCapacities.forceReload(true);
 
     // invert NTC values
     directCapacities.swap(indirectCapacities);
@@ -529,9 +529,10 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
 
 } // anonymous namespace
 
-void logLinkDataCheckError(Study& study, const AreaLink& link)
+void logLinkDataCheckError(Study& study, const AreaLink& link, const String& msg, int hour)
 {
-    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values";
+    logs.error() << "Link (" << link.from->name << "/" << link.with->name << "): Invalid values ("
+                 << msg << ") for hour " << hour;
     study.gotFatalError = true;
 }
 
@@ -620,9 +621,14 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 // Checks on direct capacities
                 for (int h = 0; h < HOURS_PER_YEAR; h++)
                 {
-                    if (directCapacities[h] < 0. || directCapacities[h] < loopFlow[h])
+                    if (directCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study, link);
+                        logLinkDataCheckError(study, link, "direct capacity < 0", h);
+                        return false;
+                    }
+                    if (directCapacities[h] < loopFlow[h])
+                    {
+                        logLinkDataCheckError(study, link, "direct capacity < loop flow", h);
                         return false;
                     }
                 }
@@ -630,9 +636,14 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
                 // Checks on indirect capacities
                 for (int h = 0; h < HOURS_PER_YEAR; h++)
                 {
-                    if (indirectCapacities[h] < 0. || indirectCapacities[h] + loopFlow[h] < 0)
+                    if (indirectCapacities[h] < 0.)
                     {
-                        logLinkDataCheckError(study, link);
+                        logLinkDataCheckError(study, link, "indirect capacitity < 0", h);
+                        return false;
+                    }
+                    if (indirectCapacities[h] + loopFlow[h] < 0)
+                    {
+                        logLinkDataCheckError(study, link, "indirect capacity + loop flow < 0", h);
                         return false;
                     }
                 }
@@ -642,7 +653,8 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 if (directHurdlesCost[h] + indirectHurdlesCost[h] < 0)
                 {
-                    logLinkDataCheckError(study, link);
+                    logLinkDataCheckError(
+                      study, link, "hurdle costs direct + hurdle cost indirect < 0", h);
                     return false;
                 }
             }
@@ -652,7 +664,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             {
                 if (PShiftPlus[h] < PShiftMinus[h])
                 {
-                    logLinkDataCheckError(study, link);
+                    logLinkDataCheckError(study, link, "phase shift plus < phase shift minus", h);
                     return false;
                 }
             }
@@ -676,7 +688,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             // Starting from 3.9, the UI does not longer allow values below
             // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL but we have to normalize the hurdle costs for
             // older studies. We can not directly use 0 it will bring too much damage to the results
-            link.parameters.invalidate(true);
+            link.parameters.forceReload(true);
             auto& hurdleCostsD = link.parameters[Data::fhlHurdlesCostDirect];
             auto& hurdleCostsI = link.parameters[Data::fhlHurdlesCostIndirect];
             bool rounding = false;
@@ -892,10 +904,10 @@ Yuni::uint64 AreaLink::memoryUsage() const
     return to_return;
 }
 
-bool AreaLink::invalidate(bool reload) const
+bool AreaLink::forceReload(bool reload) const
 {
-    return parameters.invalidate(reload) && directCapacities.invalidate(reload)
-           && indirectCapacities.invalidate(reload);
+    return parameters.forceReload(reload) && directCapacities.forceReload(reload)
+           && indirectCapacities.forceReload(reload);
 }
 
 void AreaLink::markAsModified() const

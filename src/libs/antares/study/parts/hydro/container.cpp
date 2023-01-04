@@ -901,19 +901,19 @@ bool PartHydro::SaveToFolder(const AreaList& areas, const AnyString& folder)
     return ini.save(buffer) && ret;
 }
 
-bool PartHydro::invalidate(bool reload) const
+bool PartHydro::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = maxPower.invalidate(reload) && ret;
-    ret = creditModulation.invalidate(reload) && ret;
-    ret = inflowPattern.invalidate(reload) && ret;
-    ret = reservoirLevel.invalidate(reload) && ret;
-    ret = waterValues.invalidate(reload) && ret;
+    ret = maxPower.forceReload(reload) && ret;
+    ret = creditModulation.forceReload(reload) && ret;
+    ret = inflowPattern.forceReload(reload) && ret;
+    ret = reservoirLevel.forceReload(reload) && ret;
+    ret = waterValues.forceReload(reload) && ret;
 
     if (series)
-        ret = series->invalidate(reload) && ret;
+        ret = series->forceReload(reload) && ret;
     if (prepro)
-        ret = prepro->invalidate(reload) && ret;
+        ret = prepro->forceReload(reload) && ret;
 
     return ret;
 }

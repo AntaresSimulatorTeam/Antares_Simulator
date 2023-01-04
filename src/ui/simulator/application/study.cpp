@@ -223,8 +223,7 @@ protected:
 
         // Postflight
         logs.info();
-        study->ensureDataAreAllInitialized();
-
+        study->areas.ensureDataIsInitialized(study->parameters, options.loadOnlyNeeded);
         logs.info() << "The study is loaded.";
 
         gLastOpenedStudyFolder = pFolder;
@@ -316,7 +315,7 @@ protected:
         logs.info() << "  Destination: " << pFolder;
 
         // making sure that all internal data are allocated
-        study->ensureDataAreAllInitialized();
+        study->areas.ensureDataIsInitialized(study->parameters, false);
 
         // Updating the number of logical cores to use when saving the study
         // so that the run window is up to date.
@@ -329,9 +328,9 @@ protected:
             // all data (and load all missing files)
             study->areas.each([&](Data::Area& area) {
                 logs.info() << "Preparing the area " << area.name;
-                area.invalidate(true);
+                area.forceReload(true);
             });
-            study->invalidate(true);
+            study->forceReload(true);
             // We have to mark the whole study as modified
             study->markAsModified();
 

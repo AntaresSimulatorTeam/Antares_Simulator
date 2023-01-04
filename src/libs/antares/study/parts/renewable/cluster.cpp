@@ -29,6 +29,7 @@
 #include <yuni/io/file.h>
 #include <yuni/core/math.h>
 #include <cassert>
+#include <cmath>
 #include "../../study.h"
 #include "../../memory-usage.h"
 #include "cluster.h"
@@ -93,7 +94,7 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
@@ -156,11 +157,11 @@ void Data::RenewableCluster::setGroup(Data::ClusterName newgrp)
     groupID = renewableOther1;
 }
 
-bool Data::RenewableCluster::invalidate(bool reload) const
+bool Data::RenewableCluster::forceReload(bool reload) const
 {
     bool ret = true;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     return ret;
 }
 
@@ -261,9 +262,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     switch (tsMode)
     {
     case powerGeneration:
-        return tsValue;
+        return std::round(tsValue);
     case productionFactor:
-        return unitCount * nominalCapacity * tsValue;
+        return std::round(unitCount * nominalCapacity * tsValue);
     }
     return 0.;
 }

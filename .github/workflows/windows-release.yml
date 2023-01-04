@@ -29,14 +29,14 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.3/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@v1.2.0
+      uses: bruceadams/get-release@v1.3.2
 
 
     - name: Pre-requisites
@@ -61,11 +61,11 @@ jobs:
         key: |
           ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
 
-    - name: Setup Python 3.10
+    - name: Setup Python 3.11
       uses: actions/setup-python@v4
       with:
         architecture: 'x64'
-        python-version: '3.10.6'
+        python-version: '3.11'
 
     - name : Install deps with VCPKG
       run: |
@@ -151,7 +151,6 @@ jobs:
 
     - name: Run medium-tests
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: medium-tests
@@ -159,7 +158,6 @@ jobs:
 
     - name: Run long-tests-1
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-1
@@ -167,14 +165,12 @@ jobs:
 
     - name: Run long-tests-2
       uses: ./.github/workflows/run-tests
-      continue-on-error: true
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: long-tests-2
         os: ${{ matrix.test-platform }}
 
     - name: Run long-tests-3
-      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
@@ -190,12 +186,9 @@ jobs:
            echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
     - name: Upload .zip installer
-      uses: actions/upload-release-asset@v1.0.2
+      uses: softprops/action-gh-release@v0.1.15
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.ZIP_NAME}}
-        asset_name: ${{env.ZIP_NAME}}
-        asset_content_type: application/octet-stream
+        files: _build/${{env.ZIP_NAME}}
 
     - name: Remove zip to free some disk space
       shell: bash
@@ -219,9 +212,7 @@ jobs:
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
     - name: Upload NSIS installer
-      uses: actions/upload-release-asset@v1.0.2
+      uses: softprops/action-gh-release@v0.1.15
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.NSIS_NAME}}
-        asset_name: ${{env.NSIS_NAME}}
-        asset_content_type: application/octet-stream
+        files: _build/${{env.NSIS_NAME}}

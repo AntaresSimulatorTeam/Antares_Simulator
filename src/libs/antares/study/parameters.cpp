@@ -24,6 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <algorithm>
+
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -49,11 +51,8 @@ namespace Antares
 {
 namespace Data
 {
-enum
-{
-    //! Hard coded maximum number of MC years
-    maximumMCYears = 100000,
-};
+//! Hard coded maximum number of MC years
+const uint maximumMCYears = 100000;
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
@@ -209,14 +208,11 @@ const char* StudyModeToCString(StudyMode mode)
     return "Unknown";
 }
 
-Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
+Parameters::Parameters() : noOutput(false)
 {
 }
 
-Parameters::~Parameters()
-{
-    delete[] yearsFilter;
-}
+Parameters::~Parameters() = default;
 
 void Parameters::resetSeeds()
 {
@@ -240,6 +236,16 @@ void Parameters::resetAdqPatchParameters()
     adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
 }
 
+void Parameters::resetPlayedYears(uint nbOfYears)
+{
+    // Set the number of years
+    nbYears = std::min(nbOfYears, maximumMCYears);
+
+    // Reset the filter
+    yearsFilter.resize(nbYears);
+    std::fill(yearsFilter.begin(), yearsFilter.end(), true);
+}
+
 void Parameters::reset()
 {
     // Mode
@@ -256,10 +262,7 @@ void Parameters::reset()
     variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
-    nbYears = 1;
-    delete[] yearsFilter;
-    yearsFilter = nullptr;
-
+    resetPlayedYears(1);
     resetYearsWeigth();
 
     yearByYear = false;
@@ -322,7 +325,6 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -342,7 +344,6 @@ void Parameters::reset()
     simplexOptimizationRange = sorWeek;
 
     include.exportMPS = mpsExportStatus::NO_EXPORT;
-    include.splitExportedMPS = false;
     include.exportStructure = false;
 
     include.unfeasibleProblemBehavior = UnfeasibleProblemBehavior::ERROR_MPS;
@@ -354,7 +355,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsSolver = "sirius";
 
     resultFormat = legacyFilesDirectories;
 
@@ -469,10 +470,10 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         uint y;
         if (value.to<uint>(y))
         {
-            d.years(y);
+            d.resetPlaylist(y);
             return true;
         }
-        d.years(1);
+        d.resetPlaylist(1);
         return false;
     }
     if (key == "nbtimeseriesload")
@@ -609,8 +610,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return true;
     }
 
-    if (key == "include-split-exported-mps")
-        return value.to<bool>(d.include.splitExportedMPS);
     if (key == "include-exportstructure")
         return value.to<bool>(d.include.exportStructure);
     if (key == "include-unfeasible-problem-behavior")
@@ -685,19 +684,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -923,9 +909,9 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
         return true;
     }
     if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), true);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
     if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<string>(), false);
+        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
@@ -1021,12 +1007,16 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "shedding-strategy") // Was never used
         return true;
 
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
     if (key == "thresholdmax")
         return true; // value.to<int>(d.thresholdMaximum);
-
+    if (key == "include-split-exported-mps")
+        return true;
     return false;
 }
 
@@ -1109,23 +1099,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         if (options.nbYears > nbYears)
         {
-            if (yearsFilter)
-            {
-                // The variable `yearsFilter` must be enlarged
-                bool* newset = new bool[options.nbYears];
-                for (uint i = 0; i != nbYears; ++i)
-                    newset[i] = yearsFilter[i];
-                for (uint i = nbYears; i < options.nbYears; ++i)
-                    newset[i] = false;
-                delete[] yearsFilter;
-                yearsFilter = newset;
-            }
-            else
-            {
-                yearsFilter = new bool[options.nbYears];
-                for (uint i = 0; i < options.nbYears; ++i)
-                    yearsFilter[i] = true;
-            }
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
         }
         nbYears = options.nbYears;
 
@@ -1173,7 +1148,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1248,14 +1223,8 @@ void Parameters::fixBadValues()
 
     if (derated)
     {
-        // Force the number of years
-        nbYears = 1;
-        if (!yearsFilter)
-        {
-            yearsFilter = new bool[1];
-            yearsFilter[0] = true;
-        }
-
+        // Force the number of years to 1
+        resetPlayedYears(1);
         resetYearsWeigth();
     }
     else
@@ -1389,11 +1358,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // If the user's playlist is disabled, the filter must be reset
-    assert(yearsFilter && "The array yearsFilter must be valid at this point");
+    assert(!yearsFilter.empty() && "The array yearsFilter must be not be empty at this point");
     if (!userPlaylist)
     {
-        for (uint i = 0; i < nbYears; ++i)
-            yearsFilter[i] = true;
+        std::fill(yearsFilter.begin(), yearsFilter.end(), true);
         effectiveNbYears = nbYears;
     }
     else
@@ -1600,8 +1568,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         logs.info() << "  :: ignoring min up/down time for thermal clusters";
     if (include.exportMPS == mpsExportStatus::NO_EXPORT)
         logs.info() << "  :: ignoring export mps";
-    if (!include.splitExportedMPS)
-        logs.info() << "  :: ignoring split exported mps";
     if (!adqPatch.enabled)
         logs.info() << "  :: ignoring adequacy patch";
     if (!include.exportStructure)
@@ -1612,31 +1578,14 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
+        logs.info() << "  :: ortools solver " << ortoolsSolver
                     << " used for problem resolution";
     }
 }
 
-void Parameters::years(uint y)
+void Parameters::resetPlaylist(uint nbOfYears)
 {
-    // Resetting the filter on the years
-    delete[] yearsFilter;
-
-    if (y < 2)
-    {
-        nbYears = 1;
-        yearsFilter = new bool[1];
-        yearsFilter[0] = true;
-    }
-    else
-    {
-        nbYears = (y > (uint)maximumMCYears) ? (uint)maximumMCYears : y;
-        // Reset the filter
-        yearsFilter = new bool[nbYears];
-        for (uint i = 0; i != nbYears; ++i)
-            yearsFilter[i] = true;
-    }
-
+    resetPlayedYears(nbOfYears);
     resetYearsWeigth();
 }
 
@@ -1750,7 +1699,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("include-primaryreserve", include.reserve.primary);
 
         section->add("include-exportmps", mpsExportStatusToString(include.exportMPS));
-        section->add("include-split-exported-mps", include.splitExportedMPS);
         section->add("include-exportstructure", include.exportStructure);
 
         // Unfeasible problem behavior
@@ -1781,8 +1729,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters
@@ -1797,7 +1743,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // User's playlist
     {
-        assert(yearsFilter);
+        assert(!yearsFilter.empty());
         uint effNbYears = 0;
         bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
@@ -1829,7 +1775,7 @@ void Parameters::saveToINI(IniFile& ini) const
             {
                 for (uint i = 0; i != nbYears; ++i)
                 {
-                    if (not yearsFilter[i])
+                    if (!yearsFilter[i])
                         section->add("playlist_year -", i);
                 }
             }

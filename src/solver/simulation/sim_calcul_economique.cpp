@@ -95,7 +95,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
     problem.ExportMPS = study.parameters.include.exportMPS;
-    problem.SplitExportedMPS = study.parameters.include.splitExportedMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
@@ -334,6 +333,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         problem.numeroOptimisation[opt] = 0;
         problem.coutOptimalSolution1[opt] = 0.;
         problem.coutOptimalSolution2[opt] = 0.;
+        problem.tempsResolution1[opt] = 0.;
+        problem.tempsResolution2[opt] = 0.;
     }
 
     for (uint k = 0; k < studyruntime.interconnectionsCount; ++k)

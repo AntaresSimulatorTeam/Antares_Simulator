@@ -267,7 +267,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // Making sure that the data related to the prepro and timeseries are present
     // prepro
     if (not prepro)
-        prepro = new PreproThermal(this->shared_from_this());
+        prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
 
@@ -281,7 +281,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // The parent must be invalidated to make sure that the clusters are really
     // re-written at the next 'Save' from the user interface.
     if (parentArea)
-        parentArea->invalidate();
+        parentArea->forceReload();
 }
 
 void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
@@ -376,14 +376,14 @@ void Data::ThermalCluster::setGroup(Data::ClusterName newgrp)
     groupID = thermalDispatchGrpOther1;
 }
 
-bool Data::ThermalCluster::invalidate(bool reload) const
+bool Data::ThermalCluster::forceReload(bool reload) const
 {
     bool ret = true;
-    ret = modulation.invalidate(reload) and ret;
+    ret = modulation.forceReload(reload) and ret;
     if (series)
-        ret = series->invalidate(reload) and ret;
+        ret = series->forceReload(reload) and ret;
     if (prepro)
-        ret = prepro->invalidate(reload) and ret;
+        ret = prepro->forceReload(reload) and ret;
     return ret;
 }
 
@@ -499,7 +499,7 @@ void Data::ThermalCluster::reset()
     //   since the interface may still have a pointer to them.
     //   we must simply reset their content.
     if (not prepro)
-        prepro = new PreproThermal(this->shared_from_this());
+        prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
 
     // Links

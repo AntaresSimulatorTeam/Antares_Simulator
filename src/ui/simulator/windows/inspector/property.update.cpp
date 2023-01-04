@@ -404,7 +404,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
             (*i)->displayComments = v;
             OnStudyLinkChanged(*i);
         }
-        mainFrm.map()->invalidate();
+        mainFrm.map()->forceReload();
         mainFrm.map()->refresh();
         return true;
     }
@@ -418,7 +418,7 @@ bool InspectorGrid::onPropertyChanging_L(wxPGProperty*,
             (*i)->comments = s;
             OnStudyLinkChanged(*i);
         }
-        mainFrm.map()->invalidate();
+        mainFrm.map()->forceReload();
         mainFrm.map()->refresh();
         return true;
     }
@@ -1061,10 +1061,10 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             if ((*i)->parameters.derated && years != 1)
             {
                 error = true;
-                (*i)->parameters.years(1);
+                (*i)->parameters.resetPlaylist(1);
             }
             else
-                (*i)->parameters.years(years);
+                (*i)->parameters.resetPlaylist(years);
         }
         if (error)
         {

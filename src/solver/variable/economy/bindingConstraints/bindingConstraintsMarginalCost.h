@@ -175,9 +175,6 @@ public:
         // Reset the values for the current year
         pValuesForTheCurrentYear[numSpace].reset();
 
-        // Store the year memory space for further use
-        yearMemorySpace_ = numSpace;
-
         // Next variable
         NextType::yearBegin(year, numSpace);
     }
@@ -193,13 +190,13 @@ public:
         switch (associatedBC_->type)
         {
         case BindingConstraint::typeHourly:
-            pValuesForTheCurrentYear[numSpace].computeAVGstatisticsForCurrentYear();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromHourlyResults();
             break;
         case BindingConstraint::typeDaily:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromDailyValues();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromDailyResults();
             break;
         case BindingConstraint::typeWeekly:
-            pValuesForTheCurrentYear[numSpace].computeAnnualAveragesFromWeeklyValues();
+            pValuesForTheCurrentYear[numSpace].computeAveragesForCurrentYearFromWeeklyResults();
             break;
         case BindingConstraint::typeUnknown:
         case BindingConstraint::typeMax:
@@ -229,6 +226,7 @@ public:
         if (!isInitialized())
             return;
 
+        auto numSpace = state.numSpace;
         // For daily binding constraints, getting daily marginal price
         using namespace Data;
         switch (associatedBC_->type)
@@ -243,7 +241,7 @@ public:
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear]
+                pValuesForTheCurrentYear[numSpace].day[dayInTheYear]
                   -= state.problemeHebdo
                        ->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                        .variablesDuales[dayInTheWeek];
@@ -261,12 +259,12 @@ public:
               = -state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                    .variablesDuales[0];
 
-            pValuesForTheCurrentYear[yearMemorySpace_].week[weekInTheYear] = weeklyValue;
+            pValuesForTheCurrentYear[numSpace].week[weekInTheYear] = weeklyValue;
 
             int dayInTheYear = state.weekInTheYear * 7;
             for (int dayInTheWeek = 0; dayInTheWeek < 7; dayInTheWeek++)
             {
-                pValuesForTheCurrentYear[yearMemorySpace_].day[dayInTheYear] = weeklyValue;
+                pValuesForTheCurrentYear[numSpace].day[dayInTheYear] = weeklyValue;
                 dayInTheYear++;
             }
             break;
@@ -285,9 +283,10 @@ public:
         if (!isInitialized())
             return;
 
+        auto numSpace = state.numSpace;
         if (associatedBC_->type == Data::BindingConstraint::typeHourly)
         {
-            pValuesForTheCurrentYear[yearMemorySpace_][hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][hourInTheYear]
               -= state.problemeHebdo->ResultatsContraintesCouplantes[bindConstraintGlobalNumber_]
                    .variablesDuales[state.hourInTheWeek];
         }
@@ -383,7 +382,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear = nullptr;
     unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
-    uint yearMemorySpace_ = 0;
     int bindConstraintGlobalNumber_ = -1;
 
 }; // class BindingConstMarginCost
