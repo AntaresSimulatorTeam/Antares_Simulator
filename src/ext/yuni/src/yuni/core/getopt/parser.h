@@ -9,7 +9,6 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
-#include "../validator/text/default.h"
 #include "option.h"
 #include "../../yuni.h"
 #include <map>
