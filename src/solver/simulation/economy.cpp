@@ -193,7 +193,7 @@ bool Economy::simulationBegin()
     return true;
 }
 
-vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
+std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(uint numSpace) const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < pProblemesHebdo[numSpace]->NombreDePays; ++area)
@@ -208,7 +208,7 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour(ui
     return sumENS;
 }
 
-std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS,
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std::vector<double> sumENS,
                                                                             uint numSpace) const
 {
     double threshold
@@ -227,7 +227,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
 
 std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uint numSpace) const
 {
-    vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
+    std::vector<double> sumENS = calculateENSoverAllAreasForEachHour(numSpace);
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 

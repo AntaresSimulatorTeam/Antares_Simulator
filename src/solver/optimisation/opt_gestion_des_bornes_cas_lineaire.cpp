@@ -219,7 +219,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
+            if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
+                AdequacyPatch::setBoundsAdqPatch(
+                  Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
+            else
+                AdequacyPatch::setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
