@@ -10,9 +10,6 @@
 */
 #pragma once
 #include "mutex.h"
-
-#include <pthread.h>
-
 namespace Yuni
 {
 class Mutex;
