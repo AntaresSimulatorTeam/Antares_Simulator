@@ -5,8 +5,8 @@ LIBYUNI_CONFIG_INCLUDE_PATH("intree" "core" "${CMAKE_CURRENT_SOURCE_DIR}/..")
 LIBYUNI_CONFIG_LIB_PATH("intree" "core" "${LIBRARY_OUTPUT_PATH}")
 
 # Paths for yuni-config, installed version.
-LIBYUNI_CONFIG_INCLUDE_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/include/${YUNI_VERSIONED_INST_PATH}/")
-LIBYUNI_CONFIG_LIB_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/lib/${YUNI_VERSIONED_INST_PATH}/")
+LIBYUNI_CONFIG_INCLUDE_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/include/")
+LIBYUNI_CONFIG_LIB_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/lib/")
 
 LIBYUNI_CONFIG_LIB("both" "core"       "yuni-static-core")
 
@@ -474,13 +474,13 @@ set_target_properties(yuni-static-core PROPERTIES
 
 # Installation
 install(TARGETS yuni-static-core COMPONENT ${YUNICOMPONENT_CORE}
-	ARCHIVE DESTINATION lib/${YUNI_VERSIONED_INST_PATH})
+	ARCHIVE DESTINATION lib)
 
 # Install Core-related headers
 install(
 	DIRECTORY core job thread io
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni
+	DESTINATION include/yuni
 	FILES_MATCHING
 		PATTERN "*.h"
 		PATTERN "*.hxx"
@@ -495,25 +495,25 @@ install(FILES
 	platform.h
 	yuni.h
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni
+	DESTINATION include/yuni
 )
 
 install(FILES yuni.version
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/ RENAME "yuni.version")
+	DESTINATION include/yuni RENAME "yuni.version")
 
 install(FILES core/string/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/core/string)
+	DESTINATION include/yuni/core/string)
 
 install(FILES core/slist/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/core/slist)
+	DESTINATION include/yuni/core/slist)
 
 install(FILES io/directory/info/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/io/directory/info)
+	DESTINATION include/yuni/io/directory/info)
 
 install(FILES "${YUNI_LIBYUNI_CONFIG_TARGET_INIFILE}"
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/ RENAME "yuni.config.${YUNI_LIBYUNI_CONFIG_COMPILER}")
+	DESTINATION include/yuni RENAME "yuni.config.${YUNI_LIBYUNI_CONFIG_COMPILER}")
