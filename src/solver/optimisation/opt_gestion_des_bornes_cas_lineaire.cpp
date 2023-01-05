@@ -168,7 +168,8 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle)
+                                                            const int DernierPdtDeLIntervalle, 
+                                                            const int optimizationNumber)
 {
     int PdtHebdo;
     int PdtJour;

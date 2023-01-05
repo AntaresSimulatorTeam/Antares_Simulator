@@ -1,5 +1,4 @@
 #include "ortools_utils.h"
-#include "filename.h" // getFilenameWithExtension
 
 #include <antares/logs.h>
 #include <antares/study.h>
@@ -234,12 +233,13 @@ void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   size_t numSpace,
-                                                   int const numOptim,
-                                                   Antares::Solver::IResultWriter::Ptr writer)
+                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   const std::string& filename)
 {
+    // 0. Logging file name
+    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
+    
     // 1. Determine filename
-    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
     const auto tmpPath = generateTempPath(filename);
 
     // 2. Write MPS to temporary file

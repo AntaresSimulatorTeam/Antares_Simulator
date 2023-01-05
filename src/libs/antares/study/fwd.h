@@ -549,8 +549,8 @@ enum ResultFormat
 enum class mpsExportStatus : int
 {
     NO_EXPORT = 0,
-    EXPORT_FIRST_OPIM = 1,
-    EXPORT_SECOND_OPIM = 2,
+    EXPORT_FIRST_OPTIM = 1,
+    EXPORT_SECOND_OPTIM = 2,
     EXPORT_BOTH_OPTIMS = 3,
     UNKNOWN_EXPORT = 4
 };

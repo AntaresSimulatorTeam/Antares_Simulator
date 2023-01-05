@@ -46,7 +46,8 @@ using namespace Yuni;
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                      int PremierPdtDeLIntervalle,
                                                      int DernierPdtDeLIntervalle,
-                                                     int NumeroDeLIntervalle)
+                                                     int NumeroDeLIntervalle,
+                                                     const int optimizationNumber)
 {
     int Cnt;
     int PdtJour;
@@ -122,7 +123,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
             SecondMembre[Cnt] = -ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
 
             bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
-            bool opt1 = (ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+            bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
             if (reserveJm1 && opt1)
             {
                 SecondMembre[Cnt]

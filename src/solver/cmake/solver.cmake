@@ -53,18 +53,18 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.cpp
 		optimisation/adequacy_patch.h
 		optimisation/adequacy_patch.cpp
+		optimisation/opt_period_string_generator_base.h
 
-        utils/ortools_utils.h
+		utils/ortools_utils.h
 		utils/ortools_utils.cpp
-        
-        utils/filename.h
-        utils/filename.cpp
-
-        utils/named_problem.h
-        utils/named_problem.cpp
-
-        utils/mps_utils.h
-        utils/mps_utils.cpp
+		utils/filename.h
+		utils/filename.cpp
+		utils/named_problem.h
+		utils/named_problem.cpp
+		utils/mps_utils.h
+		utils/mps_utils.cpp
+		utils/opt_period_string_generator.h
+		utils/opt_period_string_generator.cpp
 	)
 
 

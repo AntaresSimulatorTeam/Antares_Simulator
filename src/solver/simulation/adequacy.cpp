@@ -25,18 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
 #include "adequacy.h"
-#include <antares/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include <yuni/core/math.h>
-#include "simulation.h"
-#include "../optimisation/opt_fonctions.h"
-#include "common-eco-adq.h"
 #include "opt_time_writer.h"
-#include "sim_structure_probleme_economique.h"
 
 using namespace Yuni;
 
@@ -162,6 +154,7 @@ bool Adequacy::year(Progression::Task& progression,
 {
     // No failed week at year start
     failedWeekList.clear();
+    pProblemesHebdo[numSpace]->year = state.year;
 
     PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
 
@@ -177,7 +170,7 @@ bool Adequacy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        state.study.runtime->weekInTheYear[numSpace] = state.weekInTheYear = w;
+        pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
