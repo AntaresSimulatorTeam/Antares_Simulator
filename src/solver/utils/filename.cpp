@@ -19,27 +19,27 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
 
 
 std::string createOptimizationFilename(const std::string& title,
-                                       std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string,
+                                       std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
                                        unsigned int optNumber,
                                        const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";
-    outputFile << opt_period_as_string->to_string();
+    outputFile << optPeriodStringGenerator->to_string();
     outputFile << "--optim-nb-" << std::to_string(optNumber);
     outputFile << "." << extension.c_str();
 
     return outputFile.str();
 }
 
-std::string createCriterionFilename(std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber)
+std::string createCriterionFilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator, const unsigned int optNumber)
 {
-    return createOptimizationFilename("criterion", opt_period_as_string, optNumber, "txt");
+    return createOptimizationFilename("criterion", optPeriodStringGenerator, optNumber, "txt");
 }
 
-std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber)
+std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator, const unsigned int optNumber)
 {
-    return createOptimizationFilename("problem", opt_period_as_string, optNumber, "mps");
+    return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
 }
 // TODO[FOM] Remove this function
 std::string getFilenameWithExtension(const YString& prefix,

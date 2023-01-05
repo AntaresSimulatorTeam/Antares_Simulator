@@ -98,7 +98,7 @@ private:
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string)
+                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
     int Var;
     int Cnt;
@@ -244,7 +244,7 @@ RESOLUTION:
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
-    const std::string filename = createMPSfilename(opt_period_as_string, optimizationNumber);
+    const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
     mpsWriterFactory mps_writer_factory(
       ProblemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
@@ -381,12 +381,12 @@ RESOLUTION:
 }
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double optimalSolutionCost,
-                                                    std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string,
+                                                    std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
                                                     int optimizationNumber)
 {
     Yuni::Clob buffer;
     auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(opt_period_as_string, optimizationNumber);
+    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
     auto writer = study->resultWriter;
 
     logs.info() << "Solver Criterion File: `" << filename << "'";
