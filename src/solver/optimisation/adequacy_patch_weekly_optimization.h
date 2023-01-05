@@ -17,8 +17,8 @@ public:
     void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
 
 private:
-    vector<double> calculateENSoverAllAreasForEachHour() const;
-    std::set<int> identifyHoursForCurtailmentSharing(vector<double> sumENS) const;
+    std::vector<double> calculateENSoverAllAreasForEachHour() const;
+    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 };
 } // namespace Simulation

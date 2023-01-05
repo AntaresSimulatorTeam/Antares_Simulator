@@ -84,15 +84,6 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                                             uint numSpace);
 
 /*!
-** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
-** **
-** ** \param A A vector
-** ** \param B An array
-** ** \return
-** */
-void addArray(std::vector<double>& A, const double* B);
-
-/*!
 ** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** **
@@ -118,45 +109,6 @@ void setBoundsNoAdqPatch(double& Xmax,
                          VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                          const int Interco);
 } // namespace AdequacyPatch
-
-// hourly CSR problem structure
-class HOURLY_CSR_PROBLEM
-{
-private:
-    void calculateCsrParameters();
-    void resetProblem();
-    void buildProblemVariables();
-    void setVariableBounds();
-    void buildProblemConstraintsLHS();
-    void buildProblemConstraintsRHS();
-    void setProblemCost();
-    void solveProblem(uint week, int year);
-public:
-    void run(uint week, uint year);
-
-    int hourInWeekTriggeredCsr;
-    double belowThisThresholdSetToZero;
-    PROBLEME_HEBDO* problemeHebdo;
-    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
-    {
-        hourInWeekTriggeredCsr = hourInWeek;
-        problemeHebdo = pProblemeHebdo;
-        belowThisThresholdSetToZero
-          = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    };
-    std::map<int, int> numberOfConstraintCsrEns;
-    std::map<int, int> numberOfConstraintCsrAreaBalance;
-    std::map<int, int> numberOfConstraintCsrFlowDissociation;
-    std::map<int, int> numberOfConstraintCsrHourlyBinding; // length is number of binding constraint
-                                                           // contains interco 2-2
-
-    std::map<int, double> rhsAreaBalanceValues;
-    std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    std::set<int> ensSet; // place inside only ENS inside adq-patch
-    std::set<int> linkSet; // place inside only links between to zones inside adq-patch
-};
-
-
 } // end namespace Antares
 } // end namespace Data
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

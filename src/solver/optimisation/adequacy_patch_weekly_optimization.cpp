@@ -1,6 +1,8 @@
+#include "adequacy_patch.h"
 #include "adequacy_patch_weekly_optimization.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
+
 
 const int nbHoursInAWeek = 168;
 
@@ -41,6 +43,12 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
+static void addArray(std::vector<double>& A, const double* B)
+{
+    for (uint i = 0; i < A.size(); ++i)
+        A[i] += B[i];
+}
+
 std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
@@ -72,7 +80,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std:
 std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() const
 {
     std::vector<double> sumENS = calculateENSoverAllAreasForEachHour();
-    return identifyHoursForCurtailmentSharing(sumENS, numSpace);
+    return identifyHoursForCurtailmentSharing(sumENS);
 }
 
 void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,

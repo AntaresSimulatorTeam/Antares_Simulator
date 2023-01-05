@@ -27,6 +27,12 @@ std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create
 
     return nullptr;
 }
+
+void interfaceWeeklyOptimization::solveCSR(Antares::Data::AreaList&, uint, uint, uint)
+{
+   // By default, do nothing
+}
+
 } // namespace Simulation
 } // namespace Solver
 } // namespace Antares
