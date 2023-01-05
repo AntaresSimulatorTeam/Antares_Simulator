@@ -23,15 +23,12 @@ using namespace operations_research;
 class I_MPS_writer
 {
 public:
-    I_MPS_writer(uint year, uint week, uint currentOptimNumber) :
-        year_(year), week_(week), current_optim_number_(currentOptimNumber)
+    explicit I_MPS_writer(uint currentOptimNumber) : current_optim_number_(currentOptimNumber)
     {}
     I_MPS_writer() = default;
-    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer) = 0;
+    virtual void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) = 0;
 
 protected:
-    uint year_ = 0;
-    uint week_ = 0;
     uint current_optim_number_ = 0;
 };
 
@@ -39,10 +36,8 @@ class fullMPSwriter final : public I_MPS_writer
 {
 public:
     fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                  uint year,
-                  uint week,
                   uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
+    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) override;
 
 private:
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
@@ -52,10 +47,8 @@ class fullOrToolsMPSwriter : public I_MPS_writer
 {
 public:
     fullOrToolsMPSwriter(MPSolver* solver, 
-                         uint year, 
-                         uint week, 
                          uint currentOptimNumber);
-    void runIfNeeded(Solver::IResultWriter::Ptr writer) override;
+    void runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename) override;
 
 private:
     MPSolver* solver_ = nullptr;
@@ -65,7 +58,7 @@ class nullMPSwriter : public I_MPS_writer
 {
 public:
     using I_MPS_writer::I_MPS_writer;
-    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/) override
+    void runIfNeeded(Solver::IResultWriter::Ptr /*writer*/, const std::string& /*filename*/) override
     {
         // Does nothing
     }
@@ -75,7 +68,6 @@ class mpsWriterFactory
 {
 public:
     mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
-                     int NumIntervalle,
                      const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                      bool ortoolsUsed,
@@ -91,15 +83,10 @@ private:
 
     // Member data...
     PROBLEME_HEBDO* pb_hebdo_ = nullptr;
-    int num_intervalle_;
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;
     uint current_optim_number_;
     Data::mpsExportStatus export_mps_;
     bool export_mps_on_error_;
-
-    // About optimization period
-    uint week_ = 0;
-    uint year_ = 0;
 };

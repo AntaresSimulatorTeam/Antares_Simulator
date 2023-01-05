@@ -11,10 +11,8 @@
 using namespace operations_research;
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   uint year,
-                                                   uint week,
-                                                   uint const numOptim,
-                                                   Antares::Solver::IResultWriter::Ptr writer);
+                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   const std::string& filename);
 
 /*!
  *  \brief Return list of available ortools solver name on our side

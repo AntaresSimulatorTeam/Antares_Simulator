@@ -31,9 +31,21 @@
 
 #include <antares/logs.h>
 #include <antares/emergency.h>
+#include "../utils/filename.h"
 
 using namespace Antares;
 using namespace Yuni;
+
+double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
+                                   const int NumeroDeLIntervalle,
+                                   const int optimizationNumber)
+{
+    if (optimizationNumber == PREMIERE_OPTIMISATION)
+        return Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
+    else
+        return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
+}
+
 
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
@@ -89,13 +101,22 @@ OptimisationHebdo:
         OPT_InitialiserLesCoutsLineaire(
           ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
-        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber))
+        // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
+        // depending whether the optimization is daily or weekly.
+        // These sequences are used when building the names of MPS or criterion files. 
+        auto optPeriodStringGenerator = createOptPeriodAsString(ProblemeHebdo->OptimisationAuPasHebdomadaire,
+                                                             NumeroDeLIntervalle,
+                                                             ProblemeHebdo->weekInTheYear,
+                                                             ProblemeHebdo->year);
+
+        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
             return false;
 
-        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
-            || ProblemeHebdo->Expansion == OUI_ANTARES)
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
+        {
+            double optimalSolutionCost = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
+        }
     }
 
     if (optimizationNumber == PREMIERE_OPTIMISATION)

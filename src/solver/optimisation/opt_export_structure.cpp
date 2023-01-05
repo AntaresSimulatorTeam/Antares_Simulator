@@ -30,8 +30,6 @@
 
 #include "opt_export_structure.h"
 
-#include "../utils/mps_utils.h"
-#include "../utils/filename.h"
 
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs

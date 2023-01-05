@@ -67,7 +67,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME mps
-        COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-solver> --archive-path 025_mps.txz
+        COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/mps"
         )
 

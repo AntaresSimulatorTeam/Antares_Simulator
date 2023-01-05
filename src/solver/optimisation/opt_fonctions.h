@@ -30,6 +30,7 @@
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
+#include "opt_period_string_generator_base.h"
 
 void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
@@ -63,7 +64,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, int, const int);
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, int, const int, std::shared_ptr<OptPeriodStringGenerator>);
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
@@ -86,7 +87,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(const PROBLEME_HEBDO*, int, const int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double, std::shared_ptr<OptPeriodStringGenerator>, int);
 
 /*------------------------------*/
 
