@@ -184,7 +184,7 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                                         + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
                 auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-                densNew = Math::Max(0.0, densNew - dtgMrg);
+                densNew = std::max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
                 // copy spilled Energy values into spilled Energy values after CSR
@@ -197,6 +197,7 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
             }
         }
     }
+    return totalLmrViolation;
 }
 
 void setBoundsNoAdqPatch(double& Xmax,
