@@ -9,6 +9,8 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #include "process.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #else

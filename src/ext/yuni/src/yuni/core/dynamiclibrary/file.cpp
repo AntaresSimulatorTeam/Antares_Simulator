@@ -19,6 +19,7 @@
 #include "yuni/core/string/utf8char.hxx"
 #include "yuni/io/file/file.hxx"
 #include "yuni/io/filename-manipulation.h"
+#include <yuni/core/preprocessor/capabilities.h>
 #ifndef YUNI_OS_WINDOWS
 #include <dlfcn.h>
 #else

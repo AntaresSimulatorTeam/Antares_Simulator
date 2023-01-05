@@ -26,6 +26,8 @@
 */
 
 #include "../application.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <yuni/core/system/windows.hdr.h>
 #include <yuni/core/system/cpu.h>

@@ -1,5 +1,6 @@
 #pragma once
 // file included by program.cpp
+#include <yuni/core/preprocessor/capabilities.h>
 
 #ifndef YUNI_OS_WINDOWS
 #include <sys/poll.h>

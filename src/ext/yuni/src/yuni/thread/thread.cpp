@@ -8,8 +8,10 @@
 ** github: https://github.com/libyuni/libyuni/
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
-#include <time.h>
+#include <ctime>
 #include <cassert>
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_WINDOWS
 #else
 #include <process.h>

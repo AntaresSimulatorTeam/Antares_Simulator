@@ -15,6 +15,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
 #include <yuni/core/version/version.h>
+#include <yuni/core/preprocessor/capabilities.h>
 #include <map>
 
 #ifdef YUNI_OS_WINDOWS

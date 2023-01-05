@@ -10,6 +10,8 @@
 */
 #pragma once
 #include "mutex.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 namespace Yuni
 {
 class Mutex;

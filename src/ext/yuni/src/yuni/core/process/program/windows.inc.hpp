@@ -1,5 +1,6 @@
 #pragma once
 // file included by program.cpp
+#include <yuni/core/preprocessor/capabilities.h>
 
 #ifdef YUNI_OS_WINDOWS
 

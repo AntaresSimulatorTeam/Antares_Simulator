@@ -1,3 +1,4 @@
+#include <yuni/core/preprocessor/capabilities.h>
 #ifndef YUNI_OS_WINDOWS
 #include <csignal>
 #include "common.h"

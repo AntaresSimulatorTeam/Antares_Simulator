@@ -30,6 +30,7 @@
 #include "resources.h"
 #include "../logs.h"
 #include "../config.h"
+#include <yuni/core/preprocessor/capabilities.h>
 
 using namespace Yuni;
 

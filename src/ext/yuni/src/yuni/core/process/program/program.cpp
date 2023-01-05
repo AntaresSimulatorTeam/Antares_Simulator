@@ -29,6 +29,8 @@
 #include "yuni/thread/policy.h"
 #include "yuni/thread/signal.h"
 #include "yuni/thread/signal.hxx"
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_MSVC
 #include <signal.h>
 #ifndef YUNI_OS_WINDOWS

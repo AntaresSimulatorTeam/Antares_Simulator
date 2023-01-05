@@ -38,6 +38,8 @@
 #include "../../ui/common/winmain.hxx"
 #include <antares/version.h>
 #include <antares/locale.h>
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifdef YUNI_OS_WINDOWS
 #include <process.h>
 #endif

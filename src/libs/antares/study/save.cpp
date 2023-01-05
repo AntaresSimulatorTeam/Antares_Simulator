@@ -31,6 +31,8 @@
 #include "scenario-builder/sets.h"
 #include <yuni/core/string/wstring.h>
 #include <fstream>
+#include <yuni/core/preprocessor/capabilities.h>
+
 
 using namespace Yuni;
 

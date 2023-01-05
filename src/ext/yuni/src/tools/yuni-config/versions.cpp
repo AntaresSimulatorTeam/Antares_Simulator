@@ -12,6 +12,8 @@
 #include <yuni/io/directory.h>
 #include <yuni/io/file.h>
 #include <iostream>
+#include <yuni/core/preprocessor/capabilities.h>
+
 
 #define SEP IO::Separator
 

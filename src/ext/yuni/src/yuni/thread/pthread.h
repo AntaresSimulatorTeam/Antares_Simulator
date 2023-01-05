@@ -9,6 +9,7 @@
 ** gitlab: https://gitlab.com/libyuni/libyuni/ (mirror)
 */
 #pragma once
+#include <yuni/core/preprocessor/capabilities.h>
 
 #ifndef YUNI_NO_THREAD_SAFE
 #ifndef YUNI_OS_WINDOWS

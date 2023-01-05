@@ -11,6 +11,7 @@
 #pragma once
 #include "../windows.hdr.h"
 #include "console.h"
+#include <yuni/core/preprocessor/capabilities.h>
 
 namespace Yuni
 {

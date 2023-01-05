@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
+#include <yuni/core/preprocessor/capabilities.h>
 
 #include "yuni/core/preprocessor/unixes.h"
 #include "yuni/platform.h"

@@ -29,6 +29,8 @@
 
 #include <yuni/yuni.h>
 #include <yuni/io/file.h>
+#include <yuni/core/preprocessor/capabilities.h>
+
 #ifndef YUNI_OS_WINDOWS
 #include <unistd.h>
 #else

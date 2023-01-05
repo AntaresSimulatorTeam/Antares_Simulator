@@ -32,6 +32,8 @@
 #include <yuni/core/bind.h>
 #include <stdio.h>
 #include <map>
+#include <yuni/core/preprocessor/capabilities.h>
+
 
 enum PathListOption
 {

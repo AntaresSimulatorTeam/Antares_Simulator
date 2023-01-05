@@ -10,6 +10,7 @@
 */
 #include "program.h"
 #include <yuni/io/directory.h>
+#include <yuni/core/preprocessor/capabilities.h>
 #include <iostream>
 
 #define YUNI_LIBYUNI_CONFIG_SEPARATORS ", ;:\t\n"

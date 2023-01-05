@@ -7,6 +7,7 @@
 #include "../logs.h"
 #include "index-db.hxx"
 #include "program.h"
+#include <yuni/core/preprocessor/capabilities.h>
 #ifndef YUNI_OS_WINDOWS
 #include "stdlib.h" // man 3 system
 #endif

@@ -11,6 +11,7 @@
 #include "signal.h"
 
 #include <cassert>
+#include <yuni/core/preprocessor/capabilities.h>
 
 #ifndef YUNI_NO_THREAD_SAFE
 #ifdef YUNI_OS_WINDOWS

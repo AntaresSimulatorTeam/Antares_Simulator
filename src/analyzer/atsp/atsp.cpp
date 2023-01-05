@@ -26,6 +26,8 @@
 */
 
 #include "atsp.h"
+#include <yuni/core/preprocessor/capabilities.h>
+
 
 using namespace Yuni;
 
