@@ -100,9 +100,10 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
 
 bool ClusterUpdater::changeUnit(const wxVariant& value)
 {
-    uint d = static_cast<uint>(value.GetLong());
+    using unitT = decltype(Antares::Data::ThermalCluster::unitCount);
+    const auto nbUnits = static_cast<unitT>(value.GetLong());
     for (auto cluster : clusters)
-        cluster->unitCount = d;
+        cluster->unitCount = nbUnits;
 
     // refresh the installed capacity
     Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
