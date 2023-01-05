@@ -41,3 +41,21 @@ std::string createMPSfilename(std::shared_ptr<optPeriodAsString> opt_period_as_s
 {
     return createOptimizationFilename("problem", opt_period_as_string, optNumber, "mps");
 }
+// TODO[FOM] Remove this function
+std::string getFilenameWithExtension(const YString& prefix,
+                                     const YString& extension,
+                                     uint year,
+                                     uint week,
+                                     uint optNumber)
+{
+    std::ostringstream outputFile;
+    outputFile << prefix.c_str() << "-"
+               << std::to_string(year + 1) << "-"
+               << std::to_string(week + 1);
+
+    if (optNumber)
+        outputFile << "--optim-nb-" << std::to_string(optNumber);
+
+    outputFile << "." << extension.c_str();
+    return outputFile.str();
+}
