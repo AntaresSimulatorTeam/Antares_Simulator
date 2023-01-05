@@ -72,15 +72,12 @@ double AdequacyPatchAreaGrid::cellNumericValue(int, int row) const
         {
         case Data::AdequacyPatch::virtualArea:
             return 0.;
-            break;
         case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return 1.;
-            break;
         case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return 2.;
-            break;
         default:
-            break;
+           return 0.;
         }
     }
     return 0.;
@@ -94,15 +91,12 @@ wxString AdequacyPatchAreaGrid::cellValue(int, int row) const
         {
         case Data::AdequacyPatch::virtualArea:
             return wxT("virtual");
-            break;
         case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return wxT("outside");
-            break;
         case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return wxT("inside");
-            break;
         default:
-            break;
+            return wxEmptyString;
         }
     }
     return wxEmptyString;
@@ -121,15 +115,12 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
         {
         case Data::AdequacyPatch::virtualArea:
             return IRenderer::cellStyleAdqPatchVirtual;
-            break;
         case Data::AdequacyPatch::physicalAreaOutsideAdqPatch:
             return IRenderer::cellStyleAdqPatchOutside;
-            break;
         case Data::AdequacyPatch::physicalAreaInsideAdqPatch:
             return IRenderer::cellStyleAdqPatchInside;
-            break;
         default:
-            break;
+            return IRenderer::cellStyleConstraintNoWeight;
         }
     }
     return IRenderer::cellStyleConstraintNoWeight;
