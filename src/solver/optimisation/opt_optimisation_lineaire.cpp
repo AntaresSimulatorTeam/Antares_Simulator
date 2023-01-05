@@ -104,7 +104,7 @@ OptimisationHebdo:
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.
         // These sequences are used when building the names of MPS or criterion files. 
-        auto opt_period_as_string = createOptimizationPeriod(ProblemeHebdo->OptimisationAuPasHebdomadaire,
+        auto opt_period_as_string = createOptPeriodAsString(ProblemeHebdo->OptimisationAuPasHebdomadaire,
                                                              NumeroDeLIntervalle,
                                                              ProblemeHebdo->weekInTheYear,
                                                              ProblemeHebdo->year);
