@@ -79,7 +79,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(ProblemeHebdo);
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(ProblemeHebdo, numSpace);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(ProblemeHebdo);
 
 OptimisationHebdo:
 
@@ -90,7 +90,7 @@ OptimisationHebdo:
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-            ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(ProblemeHebdo,
                                                         PremierPdtDeLIntervalle,

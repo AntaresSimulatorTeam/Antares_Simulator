@@ -71,14 +71,16 @@ void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
                           ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
                           ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
-    std::string filename = "interco.txt";
+    // TODO[FOM] "interco.txt"
+    std::string filename = "interco-1-1.txt";
     writer->addEntryFromBuffer(filename, Flot);
 }
 
 void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
                         const Antares::Data::AreaList& areas)
 {
-    std::string filename = "area.txt";
+    // TODO[FOM] "area.txt"
+    std::string filename = "area-1-1.txt";
     Yuni::Clob Flot;
     for (uint i = 0; i < areas.size(); ++i)
     {
@@ -90,6 +92,7 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
 void OPT_Export_add_variable(std::vector<std::string>& varname,
                              int Var,
                              Antares::Data::Enum::ExportStructDict structDict,
+                             int ts, // TODO remove
                              int firstVal,
                              std::optional<int> secondVal)
 {
@@ -98,20 +101,21 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
         std::stringstream buffer;
         buffer << Var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal;
+        buffer << firstVal << " ";
         if (secondVal.has_value())
         {
-            buffer << " " << secondVal.value();
+            buffer << secondVal.value() << " ";
         }
+        buffer << ts << " ";
         varname[Var] = buffer.str();
     }
 }
 
 void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
-                         const std::vector<std::string>& varname)
+                         const std::vector<std::string>& varname,
+                         const std::string& filename)
 {
     Yuni::Clob Flot;
-    std::string filename = "variables.txt";
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());
