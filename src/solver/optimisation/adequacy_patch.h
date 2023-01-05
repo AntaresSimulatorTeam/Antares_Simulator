@@ -56,7 +56,6 @@ const int defaultValueThresholdVarBoundsRelaxation = 3;
  */
 ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo, int Interco);
 
-
 /*!
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
  * given area and hour.

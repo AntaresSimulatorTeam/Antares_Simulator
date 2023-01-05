@@ -1,8 +1,9 @@
 #pragma once
 
 // forward declaration
-namespace Antares::Solver::Variable {
-    class State;
+namespace Antares::Solver::Variable
+{
+class State;
 }
 
 class HOURLY_CSR_PROBLEM
@@ -16,9 +17,10 @@ private:
     void buildProblemConstraintsRHS();
     void setProblemCost();
     void solveProblem(uint week, int year);
+
 public:
     void run(uint week, const Antares::Solver::Variable::State& state);
-    
+
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* pWeeklyProblemBelongedTo;
@@ -37,6 +39,6 @@ public:
 
     std::map<int, double> rhsAreaBalanceValues;
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    std::set<int> ensSet; // place inside only ENS inside adq-patch
+    std::set<int> ensSet;                           // place inside only ENS inside adq-patch
     std::set<int> linkSet; // place inside only links between to zones inside adq-patch
 };

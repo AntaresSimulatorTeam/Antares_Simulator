@@ -43,8 +43,7 @@ namespace Antares::Data::AdequacyPatch
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeInside(
-  AdequacyPatchMode extremityType)
+static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeInside(AdequacyPatchMode extremityType)
 {
     switch (extremityType)
     {
@@ -71,10 +70,9 @@ static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeInside(
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeOutside(
-  AdequacyPatchMode extremityType,
-  bool SetToZero12Links,
-  bool SetToZero11Links)
+static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeOutside(AdequacyPatchMode extremityType,
+                                                                 bool SetToZero12Links,
+                                                                 bool SetToZero11Links)
 {
     switch (extremityType)
     {
@@ -104,7 +102,7 @@ static ntcSetToZeroStatus_AdqPatchStep1 getNTC_OriginNodeOutside(
  * adq purposes.
  */
 static ntcSetToZeroStatus_AdqPatchStep1 getNTCStatus(const PROBLEME_HEBDO* ProblemeHebdo,
-                                                          const int Interco)
+                                                     const int Interco)
 {
     assert(ProblemeHebdo);
     assert(ProblemeHebdo);
@@ -330,7 +328,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
         }
     }
 }
-}
+} // namespace Antares::Data::AdequacyPatch
 
 // TODO[FOM] Place inside namespace Antares::Data::AdequacyPatch
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
@@ -410,4 +408,3 @@ void HOURLY_CSR_PROBLEM::run(uint week, const Antares::Solver::Variable::State& 
     setProblemCost();
     solveProblem(week, state.year);
 }
-
