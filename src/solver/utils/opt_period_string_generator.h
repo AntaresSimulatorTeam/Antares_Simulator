@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../optimisation/opt-period-as-string-base.h"
+#include "../optimisation/opt_period_string_generator_base.h"
 
 
 /*
@@ -22,10 +22,10 @@
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-class optDailyAsString final : public optPeriodAsString
+class optDailyStringGenerator final : public optPeriodStringGenerator
 {
 public:
-    optDailyAsString(unsigned int day, unsigned int week, unsigned int year);
+    optDailyStringGenerator(unsigned int day, unsigned int week, unsigned int year);
     std::string to_string() const override;
 
 private:
@@ -37,10 +37,10 @@ private:
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-class optWeeklyAsString final : public optPeriodAsString
+class optWeeklyStringGenerator final : public optPeriodStringGenerator
 {
 public:
-    optWeeklyAsString(unsigned int week, unsigned int year);
+    optWeeklyStringGenerator(unsigned int week, unsigned int year);
     std::string to_string() const override;
 
 private:

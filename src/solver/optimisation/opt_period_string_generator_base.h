@@ -5,9 +5,9 @@
 // ---------------------------------------------
 // Optimization period as string : base class
 // --------------------------------------------
-class optPeriodAsString
+class optPeriodStringGenerator
 {
 public:
     virtual std::string to_string() const = 0;
-    virtual ~optPeriodAsString() = default;
+    virtual ~optPeriodStringGenerator() = default;
 };

@@ -53,7 +53,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.cpp
 		optimisation/adequacy_patch.h
 		optimisation/adequacy_patch.cpp
-		optimisation/opt-period-as-string-base.h
+		optimisation/opt_period_string_generator_base.h
 
 		utils/ortools_utils.h
 		utils/ortools_utils.cpp
@@ -63,8 +63,8 @@ set(RTESOLVER_OPT
 		utils/named_problem.cpp
 		utils/mps_utils.h
 		utils/mps_utils.cpp
-		utils/opt-period-as-string.h
-		utils/opt-period-as-string.cpp
+		utils/opt_period_string_generator.h
+		utils/opt_period_string_generator.cpp
 	)
 
 

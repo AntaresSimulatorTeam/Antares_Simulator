@@ -98,7 +98,7 @@ private:
 bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
-                         std::shared_ptr<optPeriodAsString> opt_period_as_string)
+                         std::shared_ptr<optPeriodStringGenerator> opt_period_as_string)
 {
     int Var;
     int Cnt;
@@ -381,7 +381,7 @@ RESOLUTION:
 }
 
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double optimalSolutionCost,
-                                                    std::shared_ptr<optPeriodAsString> opt_period_as_string,
+                                                    std::shared_ptr<optPeriodStringGenerator> opt_period_as_string,
                                                     int optimizationNumber)
 {
     Yuni::Clob buffer;

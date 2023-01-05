@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include "../optimisation/opt-period-as-string-base.h"
+#include "../optimisation/opt_period_string_generator_base.h"
 #include <yuni/core/string.h> // TODO[FOM] Remove this include
 
 // TODO[FOM] Remove this function
@@ -12,10 +12,10 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      uint week,
                                      uint optNumber);
 
-std::shared_ptr<optPeriodAsString> createOptPeriodAsString(bool isOptimizationWeekly,
+std::shared_ptr<optPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
                                                     unsigned int day,
                                                     unsigned int week,
                                                     unsigned int year);
 
-std::string createCriterionFilename(std::shared_ptr<optPeriodAsString> opt_period_as_string, const unsigned int optNumber);
-std::string createMPSfilename(std::shared_ptr<optPeriodAsString> opt_period_as_string, const unsigned int optNumber);
+std::string createCriterionFilename(std::shared_ptr<optPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
+std::string createMPSfilename(std::shared_ptr<optPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
