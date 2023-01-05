@@ -696,8 +696,8 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-
 #endif
+
 public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
@@ -706,5 +706,5 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
-
+};
 #endif

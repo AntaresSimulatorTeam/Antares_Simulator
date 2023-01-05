@@ -159,5 +159,4 @@ public:
 
 } // end namespace Antares
 } // end namespace Data
-} // namespace Antares
 #endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */

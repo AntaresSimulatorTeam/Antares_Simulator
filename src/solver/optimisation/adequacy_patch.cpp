@@ -348,7 +348,7 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
               = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
-              = calculateAreaFlowBalance(pWeeklyProblemBelongedTo, Area, hour);
+              = calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
             ensInit = problemeHebdo->ResultatsHoraires[Area]
                         ->ValeursHorairesDeDefaillancePositive[hour];
