@@ -58,6 +58,10 @@ interfaceWeeklyOptimization::interfaceWeeklyOptimization(PROBLEME_HEBDO* problem
 {
 }
 
+interfaceWeeklyOptimization::solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace)
+{
+}
+
 std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create(
         bool adqPatchEnabled,
         PROBLEME_HEBDO* problemeHebdo,
