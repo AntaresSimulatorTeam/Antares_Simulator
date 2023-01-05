@@ -89,10 +89,9 @@ private:
     std::vector<int> mVariableType;
 };
 
-void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-    PROBLEME_SIMPLEXE_NOMME* Prob,
-    Solver::IResultWriter::Ptr writer,
-    const std::string& filename)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
+                                               Solver::IResultWriter::Ptr writer,
+                                               const std::string& filename)
 {
     logs.info() << "Solver MPS File: `" << filename << "'";
 
@@ -114,13 +113,12 @@ void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
 // --------------------
 // Full mps writing
 // --------------------
-fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                             uint optNumber) :
-    I_MPS_writer(optNumber),
-    named_splx_problem_(named_splx_problem)
-{}
+fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint optNumber) :
+ I_MPS_writer(optNumber), named_splx_problem_(named_splx_problem)
+{
+}
 
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename)
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename)
 {
     OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
 }
@@ -128,17 +126,14 @@ void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::st
 // ---------------------------------
 // Full mps writing by or-tools
 // ---------------------------------
-fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver,
-                                           uint optNumber) :
-    I_MPS_writer(optNumber),
-    solver_(solver)
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
+ I_MPS_writer(optNumber), solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string & filename)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
+                                       const std::string& filename)
 {
-  ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_,
-                                                writer,
-                                                filename);
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
@@ -195,12 +190,10 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
 {
     if (ortools_used_)
     {
-        return std::make_unique<fullOrToolsMPSwriter>(solver_,
-                                                      current_optim_number_);
+        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_);
     }
     else
     {
-        return std::make_unique<fullMPSwriter>(named_splx_problem_,
-                                               current_optim_number_);
+        return std::make_unique<fullMPSwriter>(named_splx_problem_, current_optim_number_);
     }
 }

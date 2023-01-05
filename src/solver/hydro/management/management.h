@@ -109,7 +109,6 @@ private:
         dayYearCount = 366
     };
 
-
 public:
     //! Reference to the study
     Data::Study& study;

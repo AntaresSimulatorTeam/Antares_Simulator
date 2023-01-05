@@ -139,7 +139,7 @@ namespace Antares::Constants
 {
 constexpr double noiseAmplitude = 1e-3;
 constexpr unsigned int seed = 0x79683264; // "hyd2" in hexa
-} // namespace Constants
+} // namespace Antares::Constants
 
 class Hydro_problem_costs
 {

@@ -93,11 +93,10 @@ void linkNTCgrid::add(wxBoxSizer* sizer,
     gridIndirect->setOtherGrid(gridDirect);
 }
 
-
 Interconnection::Interconnection(wxWindow* parent,
                                  Toolbox::InputSelector::Connections* notifier,
-                                 linkGrid* link_grid)
-        : wxScrolledWindow(parent)
+                                 linkGrid* link_grid) :
+ wxScrolledWindow(parent)
 {
     auto* mainsizer = new_check_allocation<wxBoxSizer>(wxVERTICAL);
     SetSizer(mainsizer);
@@ -126,19 +125,21 @@ Interconnection::Interconnection(wxWindow* parent,
     captionButton_ = new_check_allocation<captionButton>(pLinkData, sizer_flex_grid);
 
     // Hurdle costs button
-    hurdleCostsUsageButton_ = new_check_allocation<hurdleCostsUsageButton>(pLinkData, sizer_flex_grid);
+    hurdleCostsUsageButton_
+      = new_check_allocation<hurdleCostsUsageButton>(pLinkData, sizer_flex_grid);
 
     // Link transmission capacities usage button
     ntcUsageButton_ = new_check_allocation<ntcUsageButton>(pLinkData, sizer_flex_grid);
 
     // Asset Type button
     assetTypeButton_ = new_check_allocation<assetTypeButton>(pLinkData, sizer_flex_grid);
-    
+
     // Loop flow usage button
     loopFlowUsageButton_ = new_check_allocation<loopFlowUsageButton>(pLinkData, sizer_flex_grid);
 
     // Phase Shifter usage button
-    phaseShifterUsageButton_ = new_check_allocation<phaseShifterUsageButton>(pLinkData, sizer_flex_grid);
+    phaseShifterUsageButton_
+      = new_check_allocation<phaseShifterUsageButton>(pLinkData, sizer_flex_grid);
 
     sizer_vertical->AddSpacer(4);
 
@@ -180,7 +181,8 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     if (not sizer)
         return false;
 
-    if (captionButton_->hasNoButton() || hurdleCostsUsageButton_->hasNoButton() || ntcUsageButton_->hasNoButton())
+    if (captionButton_->hasNoButton() || hurdleCostsUsageButton_->hasNoButton()
+        || ntcUsageButton_->hasNoButton())
     {
         pLink = nullptr;
         sizer->Hide(pLinkData);
@@ -203,7 +205,6 @@ bool Interconnection::checkLinkView(Data::AreaLink* link)
     return true;
 }
 
-
 void Interconnection::updateLinkView(Data::AreaLink* link)
 {
     assert(link->from);
@@ -217,9 +218,10 @@ void Interconnection::updateLinkView(Data::AreaLink* link)
     sizer->Show(pLinkData);
     sizer->Hide(pNoLink);
 
-    wxString linkCaption = wxStringFromUTF8(link->from->name) << wxT("  /  ") << wxStringFromUTF8(link->with->name);
+    wxString linkCaption = wxStringFromUTF8(link->from->name)
+                           << wxT("  /  ") << wxStringFromUTF8(link->with->name);
     captionButton_->setCaption(linkCaption);
-    
+
     captionButton_->update(link);
     hurdleCostsUsageButton_->update(link);
     loopFlowUsageButton_->update(link);

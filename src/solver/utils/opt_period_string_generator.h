@@ -1,8 +1,6 @@
 #pragma once
 
-
 #include "../optimisation/opt_period_string_generator_base.h"
-
 
 /*
     MPS and criterion generated files wear the same time interval sequence in their names.

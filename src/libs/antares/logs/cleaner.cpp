@@ -35,7 +35,6 @@ using namespace Yuni;
 
 namespace Antares
 {
-
 static inline bool IsLeapYear(uint year)
 {
     if (0 == year % 4)

@@ -157,7 +157,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
 
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo
                       ->BruitSurCoutHydraulique[Pays][ProblemeHebdo->HeureDansLAnnee + PdtHebdo];

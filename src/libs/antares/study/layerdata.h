@@ -40,9 +40,9 @@ class LayerData
 {
 public:
     LayerData(size_t activeLayer, bool showLayer) :
-        activeLayerID(activeLayer),
-        showAllLayer(showLayer)
-        {}
+     activeLayerID(activeLayer), showAllLayer(showLayer)
+    {
+    }
 
     //! \name Layers
     //@{

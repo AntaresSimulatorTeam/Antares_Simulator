@@ -152,7 +152,6 @@ bool ResultMatrix::saveToCSVFile(const String& filename) const
                               dataBuffer[offset][x], columns[x].rows[offset + y], maxSizePerCell);
                         }
                     }
-
                 }
             }
 

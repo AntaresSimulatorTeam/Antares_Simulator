@@ -380,9 +380,10 @@ RESOLUTION:
     return true;
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double optimalSolutionCost,
-                                                    std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-                                                    int optimizationNumber)
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+  double optimalSolutionCost,
+  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  int optimizationNumber)
 {
     Yuni::Clob buffer;
     auto study = Data::Study::Current::Get();

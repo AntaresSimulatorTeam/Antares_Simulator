@@ -1578,8 +1578,7 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << ortoolsSolver
-                    << " used for problem resolution";
+        logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
     }
 }
 

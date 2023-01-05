@@ -904,11 +904,12 @@ void AdvancedParameters::onNumberOfCores(Component::Button&, wxMenu& menu, void*
     text.clear();
     text = wxStringFromUTF8(NumberOfCoresModeToCString(Data::ncHigh)); // High
     it = Menu::CreateItem(&menu, wxID_ANY, text, "images/16x16/tag.png");
-    menu.Connect(it->GetId(),
-                 wxEVT_COMMAND_MENU_SELECTED,
-                 wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
-                 nullptr,
-                 this);
+    menu.Connect(
+      it->GetId(),
+      wxEVT_COMMAND_MENU_SELECTED,
+      wxCommandEventHandler(AdvancedParameters::onSelectNumberOfCoresLevel<Data::ncHigh>),
+      nullptr,
+      this);
 
     text.clear();
     text = wxStringFromUTF8(NumberOfCoresModeToCString(Data::ncMax)); // Max

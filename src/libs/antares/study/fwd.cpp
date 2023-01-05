@@ -368,9 +368,10 @@ mpsExportStatus stringToMPSexportStatus(const AnyString& value)
     CString<24, false> v = value;
     v.trim();
     v.toLower();
-    if (v == "both-optims" || v == "true")   // Case "true" : for compatibily with older study versions
+    if (v == "both-optims"
+        || v == "true") // Case "true" : for compatibily with older study versions
         return mpsExportStatus::EXPORT_BOTH_OPTIMS;
-    if (v == "none" || v == "false")   // Case "false" : for compatibily with older study versions
+    if (v == "none" || v == "false") // Case "false" : for compatibily with older study versions
         return mpsExportStatus::NO_EXPORT;
     if (v == "optim-1")
         return mpsExportStatus::EXPORT_FIRST_OPTIM;
