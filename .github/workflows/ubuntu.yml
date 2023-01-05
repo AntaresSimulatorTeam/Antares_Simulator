@@ -54,10 +54,9 @@ jobs:
       run: |
            sudo apt-get update
            sudo apt-get install uuid-dev libwxgtk3.0-gtk3-dev
+           sudo apt-get install libboost-test-dev
            if [ "${{ matrix.compiler }}" == "clang" ]; then
                sudo apt-get install clang
-           else
-               sudo apt-get install libboost-test-dev
            fi
 
     - name: Read antares-deps version
