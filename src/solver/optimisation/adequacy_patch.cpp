@@ -141,6 +141,12 @@ void setBoundsAdqPatch(double& Xmax,
         Xmin = 0.;
         break;
     }
+    case setOrigineExtremityToZero:
+    {
+        Xmax = 0.;
+        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        break;
+    }
     case setExtremityOriginToZero:
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
