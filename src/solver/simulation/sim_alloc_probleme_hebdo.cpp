@@ -128,8 +128,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
     }
 
-    problem.NumeroDeZoneDeReserveJMoins1 = (int*)MemAlloc(nbPays * sizeof(int));
-
     problem.CoutsMarginauxDesContraintesDeReserveParZone
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
 
@@ -216,9 +214,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative
-          = (int*)MemAlloc(nbPays * sizeof(int));
-
-        problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse
@@ -636,7 +631,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesDeDebordement);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillancePositive);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceNegative);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariableDefaillanceEnReserve);
         MemFree(
           problem.CorrespondanceVarNativesVarOptim[k]->NumeroDeVariablesVariationHydALaBaisse);
         MemFree(
@@ -697,6 +691,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     for (int k = 0; k < 7; k++)
     {
+        MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]
+                ->NumeroDeContrainteDesContraintesCouplantes);
         MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]);
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres);
@@ -705,6 +701,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     {
         MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
                   ->NumeroDeContrainteDesContraintesCouplantes);
+        MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]);
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimHebdomadaires);
 
@@ -869,7 +866,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     if (problem.previousYearFinalLevels)
         MemFree(problem.previousYearFinalLevels);
 
-    MemFree(problem.NumeroDeZoneDeReserveJMoins1);
     MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone);
     MemFree(problem.ReserveJMoins1);
     MemFree(problem.ResultatsHoraires);

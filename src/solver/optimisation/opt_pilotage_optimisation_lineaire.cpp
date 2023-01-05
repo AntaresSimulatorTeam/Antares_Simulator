@@ -42,14 +42,11 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpa
     {
         if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            ProblemeHebdo->NombreDeZonesDeReserveJMoins1 = ProblemeHebdo->NombreDePays;
             for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
             {
-                ProblemeHebdo->NumeroDeZoneDeReserveJMoins1[Pays] = Pays;
                 ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
             }
 
-            ProblemeHebdo->ContrainteDeReserveJMoins1ParZone = NON_ANTARES;
             ProblemeHebdo->NombreDePasDeTempsRef = ProblemeHebdo->NombreDePasDeTemps;
             ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef
               = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
