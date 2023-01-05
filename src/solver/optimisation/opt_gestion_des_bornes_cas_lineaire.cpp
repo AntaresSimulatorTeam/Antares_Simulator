@@ -437,7 +437,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+    setBoundsForUnsuppliedEnergy(
+      ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {
