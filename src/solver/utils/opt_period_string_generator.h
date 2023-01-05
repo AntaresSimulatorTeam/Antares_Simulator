@@ -22,10 +22,10 @@
 // ------------------------------------
 // Daily optimization
 // ------------------------------------
-class optDailyStringGenerator final : public optPeriodStringGenerator
+class OptDailyStringGenerator final : public OptPeriodStringGenerator
 {
 public:
-    optDailyStringGenerator(unsigned int day, unsigned int week, unsigned int year);
+    OptDailyStringGenerator(unsigned int day, unsigned int week, unsigned int year);
     std::string to_string() const override;
 
 private:
@@ -37,10 +37,10 @@ private:
 // ------------------------------------
 // Weekly optimization
 // ------------------------------------
-class optWeeklyStringGenerator final : public optPeriodStringGenerator
+class OptWeeklyStringGenerator final : public OptPeriodStringGenerator
 {
 public:
-    optWeeklyStringGenerator(unsigned int week, unsigned int year);
+    OptWeeklyStringGenerator(unsigned int week, unsigned int year);
     std::string to_string() const override;
 
 private:

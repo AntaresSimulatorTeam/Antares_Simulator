@@ -12,10 +12,10 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      uint week,
                                      uint optNumber);
 
-std::shared_ptr<optPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
+std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
                                                     unsigned int day,
                                                     unsigned int week,
                                                     unsigned int year);
 
-std::string createCriterionFilename(std::shared_ptr<optPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
-std::string createMPSfilename(std::shared_ptr<optPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
+std::string createCriterionFilename(std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
+std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> opt_period_as_string, const unsigned int optNumber);
