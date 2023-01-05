@@ -141,7 +141,24 @@ void setBoundsAdqPatch(double& Xmax,
         Xmin = 0.;
         break;
     }
-    return 0.0;
+    case setOrigineExtremityToZero:
+    {
+        Xmax = 0.;
+        Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        break;
+    }
+    case setExtremityOriginToZero:
+    {
+        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+        Xmin = 0.;
+        break;
+    }
+    default:
+    {
+        setBoundsNoAdqPatch(Xmax, Xmin, ValeursDeNTC, Interco);
+        break;
+    }
+    }
 }
 
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
@@ -179,18 +196,6 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                   += LmrViolationAreaHour(ProblemeHebdo, totalNodeBalance, Area, hour);
             }
         }
-    }
-    case setExtremityOriginToZero:
-    {
-        Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        Xmin = 0.;
-        break;
-    }
-    default:
-    {
-        setBoundsNoAdqPatch(Xmax, Xmin, ValeursDeNTC, Interco);
-        break;
-    }
     }
 }
 
