@@ -23,6 +23,7 @@ namespace System
 namespace CPU
 {
 #if defined(YUNI_OS_WINDOWS) || defined(YUNI_OS_CYGWIN)
+#include "sysinfoapi.h"
 #define YUNI_CPU_COUNT_HAS_IMPLEMENTATION
 uint Count()
 {
