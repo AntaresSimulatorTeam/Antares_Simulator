@@ -106,7 +106,8 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
         }
     }
 
-    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES && optimizationNumber == PREMIERE_OPTIMISATION)
+    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES
+        && optimizationNumber == PREMIERE_OPTIMISATION)
     {
         for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
         {

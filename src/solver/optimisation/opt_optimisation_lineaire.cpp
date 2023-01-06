@@ -46,7 +46,6 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
 {
     int PdtHebdo;
@@ -103,19 +102,24 @@ OptimisationHebdo:
 
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.
-        // These sequences are used when building the names of MPS or criterion files. 
-        auto optPeriodStringGenerator = createOptPeriodAsString(ProblemeHebdo->OptimisationAuPasHebdomadaire,
-                                                             NumeroDeLIntervalle,
-                                                             ProblemeHebdo->weekInTheYear,
-                                                             ProblemeHebdo->year);
+        // These sequences are used when building the names of MPS or criterion files.
+        auto optPeriodStringGenerator
+          = createOptPeriodAsString(ProblemeHebdo->OptimisationAuPasHebdomadaire,
+                                    NumeroDeLIntervalle,
+                                    ProblemeHebdo->weekInTheYear,
+                                    ProblemeHebdo->year);
 
-        if (!OPT_AppelDuSimplexe(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
+        if (!OPT_AppelDuSimplexe(
+              ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
             return false;
 
-        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT || ProblemeHebdo->Expansion == OUI_ANTARES)
+        if (ProblemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
+            || ProblemeHebdo->Expansion == OUI_ANTARES)
         {
-            double optimalSolutionCost = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
+            double optimalSolutionCost
+              = OPT_ObjectiveFunctionResult(ProblemeHebdo, NumeroDeLIntervalle, optimizationNumber);
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
         }
     }
 

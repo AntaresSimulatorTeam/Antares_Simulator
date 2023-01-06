@@ -45,7 +45,8 @@ void H2O_M_AjouterBruitAuCout(DONNEES_ANNUELLES* DonneesAnnuelles)
         for (Pdt = 0; Pdt < NbPdt; Pdt++)
         {
             Var = variable[Pdt];
-            CoutLineaireBruite[Var] = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
+            CoutLineaireBruite[Var]
+              = CoutLineaire[Var] + noiseGenerator() * Constants::noiseAmplitude;
         }
     }
     Var = CorrespondanceDesVariables->NumeroDeLaVariableViolMaxVolumeMin;

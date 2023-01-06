@@ -180,13 +180,15 @@ RESOLUTION:
         ProblemeHydraulique->CoutDeLaSolution = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
-            ProblemeHydraulique->CoutDeLaSolution += ProblemeLineairePartieFixe->CoutLineaire[Var] * Probleme->X[Var];
+            ProblemeHydraulique->CoutDeLaSolution
+              += ProblemeLineairePartieFixe->CoutLineaire[Var] * Probleme->X[Var];
         }
 
         ProblemeHydraulique->CoutDeLaSolutionBruite = 0.0;
         for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
         {
-            ProblemeHydraulique->CoutDeLaSolutionBruite += ProblemeLineairePartieFixe->CoutLineaireBruite[Var] * Probleme->X[Var];
+            ProblemeHydraulique->CoutDeLaSolutionBruite
+              += ProblemeLineairePartieFixe->CoutLineaireBruite[Var] * Probleme->X[Var];
         }
 
         DonneesAnnuelles->ResultatsValides = OUI;

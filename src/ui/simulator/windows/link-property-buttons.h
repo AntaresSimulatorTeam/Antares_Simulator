@@ -10,7 +10,6 @@ namespace Antares
 {
 namespace Window
 {
-
 // =========================
 // Abstract link button
 // =========================
@@ -20,13 +19,18 @@ public:
     virtual void update(Data::AreaLink* link) = 0;
 
 protected:
-    Component::Button* getButton() const { return button_; }
-    void setButton(Component::Button* button) { button_ = button; }
+    Component::Button* getButton() const
+    {
+        return button_;
+    }
+    void setButton(Component::Button* button)
+    {
+        button_ = button;
+    }
 
 private:
     Component::Button* button_ = nullptr;
 };
-
 
 // ==================================
 // Abstract menu link button
@@ -39,11 +43,20 @@ public:
     menuLinkButton();
     ~menuLinkButton() override;
 
-    bool hasNoButton() const { return !getButton(); }
+    bool hasNoButton() const
+    {
+        return !getButton();
+    }
 
 protected:
-    Data::AreaLink* getCurrentLink() const { return currentLink_; }
-    void setCurrentLink(Data::AreaLink* link) { currentLink_ = link; }
+    Data::AreaLink* getCurrentLink() const
+    {
+        return currentLink_;
+    }
+    void setCurrentLink(Data::AreaLink* link)
+    {
+        currentLink_ = link;
+    }
 
     virtual void onPopupMenu(Component::Button&, wxMenu& menu, void*) = 0;
     void bindButtonToPopupMenu() const;
@@ -56,15 +69,13 @@ private:
     Yuni::Bind<void(Antares::Component::Button&, wxMenu&, void*)> onPopup_;
 };
 
-
 // =========================
 // NTC usage button
 // =========================
 class ntcUsageButton : public menuLinkButton
 {
 public:
-    ntcUsageButton(wxWindow* parent,
-                   wxFlexGridSizer* sizer_flex_grid);
+    ntcUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
 
@@ -74,9 +85,7 @@ private:
     void onSelectUseNTC(wxCommandEvent&);
     void onSelectSetToNull(wxCommandEvent&);
     void onSelectSetToInfinite(wxCommandEvent&);
-
 };
-
 
 // ============================
 // Hurdle costs usage button
@@ -84,8 +93,7 @@ private:
 class hurdleCostsUsageButton : public menuLinkButton
 {
 public:
-    hurdleCostsUsageButton(wxWindow* parent,
-                           wxFlexGridSizer* sizer_flex_grid);
+    hurdleCostsUsageButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
 
@@ -94,9 +102,7 @@ private:
 
     void onSelectUse(wxCommandEvent&);
     void onSelectIgnore(wxCommandEvent&);
-
 };
-
 
 // =========================
 // Asset type button
@@ -104,8 +110,7 @@ private:
 class assetTypeButton : public menuLinkButton
 {
 public:
-    assetTypeButton(wxWindow* parent,
-                    wxFlexGridSizer* sizer_flex_grid);
+    assetTypeButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
 
@@ -117,7 +122,6 @@ private:
     void onSelectGas(wxCommandEvent&);
     void onSelectVirt(wxCommandEvent&);
     void onSelectOther(wxCommandEvent&);
-
 };
 
 // =========================
@@ -126,11 +130,13 @@ private:
 class captionButton : public menuLinkButton
 {
 public:
-    captionButton(wxWindow* parent,
-                  wxFlexGridSizer* sizer_flex_grid);
+    captionButton(wxWindow* parent, wxFlexGridSizer* sizer_flex_grid);
 
     void update(Data::AreaLink* link) override;
-    void setCaption(const wxString& caption) const { getButton()->caption(caption); }
+    void setCaption(const wxString& caption) const
+    {
+        getButton()->caption(caption);
+    }
 
 private:
     void onPopupMenu(Component::Button&, wxMenu& menu, void*) override;
@@ -145,7 +151,6 @@ private:
     wxWindow* caption_text_ = nullptr;
     wxFlexGridSizer* sizer_flex_grid_;
 };
-
 
 // =========================
 // Loop flow usage button
@@ -169,5 +174,5 @@ public:
     void update(Data::AreaLink* link) override;
 };
 
-}
-}
+} // namespace Window
+} // namespace Antares

@@ -238,7 +238,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
 {
     // 0. Logging file name
     logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
-    
+
     // 1. Determine filename
     const auto tmpPath = generateTempPath(filename);
 
@@ -298,7 +298,8 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
         // Save the final simplex basis for next resolutions
         if (keepBasis && !Probleme->isMIP() && Probleme->solverSupportsWarmStart)
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
+                                       Probleme->StatutDesContraintes);
         }
     }
 
@@ -345,14 +346,11 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-
-const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap =
-{
-    {"xpress", {"xpress_lp", "xpress"}},
-    {"sirius", {"sirius_lp", "sirius"}},
-    {"coin", {"clp", "cbc"}},
-    {"glpk", {"glpk_lp", "glpk"}}
-};
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap
+  = {{"xpress", {"xpress_lp", "xpress"}},
+     {"sirius", {"sirius_lp", "sirius"}},
+     {"coin", {"clp", "cbc"}},
+     {"glpk", {"glpk_lp", "glpk"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
@@ -370,9 +368,10 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName)
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
+                          const std::string& solverName)
 {
-    MPSolver *solver;
+    MPSolver* solver;
     try
     {
         if (probleme->isMIP())

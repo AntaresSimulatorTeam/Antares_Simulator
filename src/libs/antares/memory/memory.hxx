@@ -35,17 +35,20 @@ inline Yuni::uint64 Memory::processID() const
 }
 
 template<class T>
-Memory::Array<T>::Array(const Yuni::NullPtr&) 
-{}
+Memory::Array<T>::Array(const Yuni::NullPtr&)
+{
+}
 
 template<class T>
 Memory::Array<T>::Array(const Memory::Array<T>&)
-{}
+{
+}
 
 template<class T>
 template<class U>
 Memory::Array<T>::Array(const Memory::Array<U>&)
-{}
+{
+}
 
 template<class T>
 inline Memory::Array<T>::Array(size_t size)
@@ -104,7 +107,6 @@ inline bool Memory::StrictNull(const T* out)
 {
     return !out;
 }
-
 
 template<class U>
 inline U* Memory::RawPointer(U* array)

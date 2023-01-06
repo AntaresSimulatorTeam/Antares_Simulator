@@ -21,17 +21,16 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
  */
 std::list<std::string> getAvailableOrtoolsSolverName();
 
-
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName);
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
+                          const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
-
 
 class OrtoolsUtils
 {
@@ -41,7 +40,6 @@ public:
         std::string LPSolverName, MIPSolverName;
     };
     static const std::map<std::string, struct SolverNames> solverMap;
-
 };
 
 namespace Antares

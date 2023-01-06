@@ -490,7 +490,7 @@ struct PROBLEME_HEBDO
 {
     uint weekInTheYear = 0;
     uint year = 0;
-    
+
     /* Business problem */
     char OptimisationAuPasHebdomadaire;
     char TypeDeLissageHydraulique;

@@ -224,7 +224,6 @@ uint64 Study::memoryUsage() const
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
 
-
 std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
 {
     std::map<std::string, uint> table;

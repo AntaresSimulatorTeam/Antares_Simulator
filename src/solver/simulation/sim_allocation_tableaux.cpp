@@ -173,7 +173,6 @@ void SIM_DesallocationTableaux()
                 MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
                 MemFree(ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier);
 
-
                 if (area.hydro.reservoirManagement)
                 {
                     MemFree(ValeursGenereesParPays[numSpace][i]->NiveauxReservoirsDebutJours);
