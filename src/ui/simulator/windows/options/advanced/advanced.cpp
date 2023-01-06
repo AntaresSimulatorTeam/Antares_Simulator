@@ -220,19 +220,6 @@ AdvancedParameters::AdvancedParameters(wxWindow* parent) :
         s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
         pBtnSheddingPolicy = button;
     }
-    // District marginal prices
-    {
-        label = Component::CreateLabel(this, wxT("District marginal prices"));
-        button = new Component::Button(this, wxT("include"), "images/16x16/tag.png");
-        button->SetBackgroundColour(bgColor);
-        button->menu(true);
-        // button->onPopupMenu(onPopup);
-        s->Add(label, 0, wxRIGHT | wxALIGN_RIGHT | wxALIGN_CENTER_VERTICAL);
-        s->Add(button, 0, wxLEFT | wxALIGN_LEFT | wxALIGN_CENTER_VERTICAL);
-        pBtnMultiNodalMarginalPrices = button;
-        button->enabled(false);
-    }
-
     // Unit Commitment mode
     {
         label = Component::CreateLabel(this, wxT("Unit Commitment Mode"));
@@ -410,8 +397,6 @@ void AdvancedParameters::refresh()
 
     text = wxStringFromUTF8(SheddingPolicyToCString(study.parameters.shedding.policy));
     pBtnSheddingPolicy->caption(text);
-
-    pBtnMultiNodalMarginalPrices->caption(wxT("average"));
 
     text = wxStringFromUTF8(UnitCommitmentModeToCString(study.parameters.unitCommitment.ucMode));
     pBtnUnitCommitment->caption(text);

@@ -123,7 +123,6 @@ private:
     Component::Button* pBtnHydroHeuristicPolicy;
     Component::Button* pBtnHydroPricing;
     Component::Button* pBtnSheddingPolicy;
-    Component::Button* pBtnMultiNodalMarginalPrices;
     Component::Button* pBtnUnitCommitment;
     Component::Button* pBtnRenewableGenModelling;
     Component::Button* pBtnNumberOfCores;
