@@ -125,6 +125,7 @@ set(public_headers
 #set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
 install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS}
 		result_writer infeasible_problem_analysis libantares-solver-variable-info
+		minizip
 		EXPORT "solver-libTargets"
 #		# these get default values from GNUInstallDirs, no need to set them
 #		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
