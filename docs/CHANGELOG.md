@@ -11,6 +11,7 @@ v8.4.2 (01/2022)
 ## GUI
 * Allow more than 100 thermal clusters #1011
 * Remove status bar count. The sum was sometimes wrong #1029
+* Remove unused "District marginal prices" button from Advanced Parameters (#1067)
 
 ## Bugfix
 * Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
