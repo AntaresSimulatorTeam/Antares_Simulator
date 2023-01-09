@@ -74,8 +74,6 @@ public:
     bool economy() const;
     //! Get if the simulation is in adequacy mode
     bool adequacy() const;
-    //! Get if the simulation is in adequacy-draft mode
-    bool adequacyDraft() const;
     //@}
 
     /*!

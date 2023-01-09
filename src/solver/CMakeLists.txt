@@ -84,7 +84,6 @@ set(ANTARES_SOLVER_LIBS
 
 set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libantares-solver-main-economy
-	libantares-solver-main-adequacy-draft
 	libantares-solver-main-adequacy
 	libantares-solver-hydro
 	libantares-solver-aleatoire

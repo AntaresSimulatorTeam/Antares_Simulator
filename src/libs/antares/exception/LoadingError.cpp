@@ -38,7 +38,7 @@ InvalidOptimizationRange::InvalidOptimizationRange() :
 
 InvalidSimulationMode::InvalidSimulationMode() :
  LoadingError(
-   "Only one simulation mode is allowed: --expansion, --economy, --adequacy or --adequacy-draft")
+   "Only one simulation mode is allowed: --expansion, --economy, --adequacy")
 {
 }
 

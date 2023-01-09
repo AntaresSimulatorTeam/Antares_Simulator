@@ -30,7 +30,6 @@
 #include "memory-usage.h"
 #include "runtime.h"
 #include "../../../solver/simulation/simulation.h"
-#include "../../../solver/variable/adequacy-draft/all.h"
 #include "../../../solver/variable/economy/all.h"
 #include "../logs.h"
 #include "../../../solver/simulation/economy.h"

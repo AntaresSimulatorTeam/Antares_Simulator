@@ -176,11 +176,6 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
         mode = stdmAdequacy;
         return true;
     }
-    if (text == "draft" || text == "adequacy-draft")
-    {
-        mode = stdmAdequacyDraft;
-        return true;
-    }
     // Expansion
     if (text == "expansion")
     {
@@ -198,8 +193,6 @@ const char* StudyModeToCString(StudyMode mode)
         return "Economy";
     case stdmAdequacy:
         return "Adequacy";
-    case stdmAdequacyDraft:
-        return "draft";
     case stdmMax:
     case stdmExpansion:
     case stdmUnknown:
@@ -1240,12 +1233,6 @@ void Parameters::fixBadValues()
         }
     }
 
-    if (mode == stdmAdequacyDraft)
-    {
-        simulationDays.first = 0;
-        simulationDays.end = 365;
-    }
-
     if (!nbTimeSeriesLoad)
         nbTimeSeriesLoad = 1;
     if (!nbTimeSeriesThermal)
@@ -1332,13 +1319,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         break;
     case sorUnknown:
         break;
-    }
-
-    if (mode == stdmAdequacyDraft)
-    {
-        yearByYear = false;
-        userPlaylist = false;
-        thematicTrimming = false;
     }
 
     if (derated && userPlaylist)
@@ -1457,12 +1437,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
             yearByYear = true;
-        break;
-    }
-    case stdmAdequacyDraft:
-    {
-        // The mode year-by-year can not be enabled in adequacy
-        yearByYear = false;
         break;
     }
     case stdmUnknown:
