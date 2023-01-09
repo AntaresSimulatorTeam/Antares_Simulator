@@ -41,7 +41,7 @@ class output_compare(check_interface):
 
 def find_simulation_folder(output_dir):
     for root, dirs, files in walk(output_dir):
-        if basename(root) in ["adequacy", "economy", "adequacy-draft"]:
+        if basename(root) in ["adequacy", "economy"]:
             return Path(root)
 
 def find_simulation_files(reference_folder, other_folder):

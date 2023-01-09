@@ -78,8 +78,6 @@ void SIM_InitialisationProblemeHoraireAdequation(void);
 
 void SIM_AllocationProblemeHoraireAdequation(void);
 
-void SIM_AlgorithmeDeFlot(void);
-
 void SIM_InitialisationChainagePourAdequation(void);
 
 void SIM_DesallocationProblemeHoraireAdequation(void);

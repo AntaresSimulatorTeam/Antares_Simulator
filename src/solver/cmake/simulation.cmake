@@ -5,14 +5,11 @@
 # Simulation
 #
 set(SRC_SIMULATION
-		simulation/sim_algorithme_de_flot.cpp
 		simulation/sim_alloc_probleme_hebdo.cpp
 		simulation/sim_allocation_tableaux.cpp
-		simulation/sim_calcul_adequation.cpp
 		simulation/sim_calcul_economique.cpp
 		simulation/sim_extern_variables_globales.h
 		simulation/sim_structure_donnees.h
-		simulation/sim_structure_probleme_adequation.h
 		simulation/sim_structure_probleme_economique.h
 		simulation/sim_variables_globales.cpp
 		simulation/simulation.h
