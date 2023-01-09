@@ -220,7 +220,6 @@ void RemixHydroForAllAreas(const Data::Study& study,
 {
     assert(nbHour == 168 && "endHour seems invalid");
     (void)nbHour;
-    assert(study.parameters.mode != Data::stdmAdequacyDraft);
 
     if (study.parameters.shedding.policy == Data::shpShavePeaks)
     {

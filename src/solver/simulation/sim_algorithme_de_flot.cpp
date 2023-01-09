@@ -41,7 +41,6 @@ void SIM_AlgorithmeDeFlot()
     long i;
     long j;
     long k;
-    double TailleDeBloc;
     long Relaxation;
     PROBLEME_HORAIRE_ADEQUATION* pt;
     auto& study = *Antares::Data::Study::Current::Get();
@@ -55,8 +54,6 @@ void SIM_AlgorithmeDeFlot()
     memset(pt->S, 0, (areaCount + 2) * sizeof(double));
     memset(pt->A, 0, (areaCount + 2) * sizeof(long));
     memset(pt->B, 0, (areaCount + 2) * sizeof(long));
-
-    TailleDeBloc = study.parameters.adequacyBlockSize;
 
     for (i = pt->PointeurSurIndices[0]; i < pt->PointeurSurIndices[1]; i++)
     {
@@ -101,9 +98,9 @@ LOOP0:;
     for (i = pt->PointeurSurIndices[0]; i < pt->PointeurSurIndices[1]; i++)
     {
         pt->ValeursEffectivesNTC[i]
-          = (pt->NTCDeReference[i] < pt->ValeursEffectivesNTC[i] + TailleDeBloc
+          = (pt->NTCDeReference[i] < pt->ValeursEffectivesNTC[i]
                ? pt->NTCDeReference[i]
-               : pt->ValeursEffectivesNTC[i] + TailleDeBloc);
+               : pt->ValeursEffectivesNTC[i]);
         if (pt->ValeursEffectivesNTC[i] != pt->NTCDeReference[i])
         {
             Relaxation = 0;
@@ -112,9 +109,9 @@ LOOP0:;
     for (i = pt->PointeurSurIndices[areaCount + 1]; i < pt->PointeurSurIndices[areaCount + 2]; i++)
     {
         pt->ValeursEffectivesNTC[i]
-          = (pt->NTCDeReference[i] < pt->ValeursEffectivesNTC[i] + TailleDeBloc
+          = (pt->NTCDeReference[i] < pt->ValeursEffectivesNTC[i]
                ? pt->NTCDeReference[i]
-               : pt->ValeursEffectivesNTC[i] + TailleDeBloc);
+               : pt->ValeursEffectivesNTC[i]);
         if (pt->ValeursEffectivesNTC[i] != pt->NTCDeReference[i])
         {
             Relaxation = 0;

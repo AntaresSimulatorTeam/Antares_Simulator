@@ -674,7 +674,6 @@ void Panel::loadDataFromFile()
     case Data::stdmAdequacy:
         filename << output.path << SEP << "adequacy" << SEP;
         break;
-    case Data::stdmAdequacyDraft:
     case Data::stdmExpansion:
     case Data::stdmUnknown:
     case Data::stdmMax:

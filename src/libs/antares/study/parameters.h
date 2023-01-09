@@ -367,8 +367,6 @@ public:
 
     //! Improve units startup
     bool improveUnitsStartup;
-    //! Block size used by the adequacy algorithm
-    uint adequacyBlockSize;
 
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;

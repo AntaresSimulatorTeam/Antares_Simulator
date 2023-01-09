@@ -363,9 +363,6 @@ void Application::execute()
         case Data::stdmAdequacy:
             runSimulationInAdequacyMode();
             break;
-        case Data::stdmAdequacyDraft:
-            runSimulationInAdequacyDraftMode();
-            break;
         default:
             break;
         }

@@ -147,13 +147,11 @@ private:
             yearRandomNumbers& randomForCurrentYear = randomForParallelYears.pYears[indexYear];
             double** thermalNoisesByArea = randomForCurrentYear.pThermalNoisesByArea;
             double* randomReservoirLevel = nullptr;
-            if (not study.parameters.adequacyDraft())
-            {
-                if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
-                    randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
-                else
-                    randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
-            }
+
+            if (hydroHotStart && firstSetParallelWithAPerformedYearWasRun)
+                randomReservoirLevel = state[numSpace].problemeHebdo->previousYearFinalLevels;
+            else
+                randomReservoirLevel = randomForCurrentYear.pReservoirLevels;
 
             // 2 - Preparing the Time-series numbers
             // We want to draw lots of numbers for time-series
@@ -163,13 +161,10 @@ private:
             simulationObj->prepareClustersInMustRunMode(numSpace);
 
             // 4 - Hydraulic ventilation
-            if (not study.parameters.adequacyDraft())
-            {
-                Benchmarking::Timer timer;
-                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
-                timer.stop();
-                pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
-            }
+            Benchmarking::Timer timer;
+            simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+            timer.stop();
+            pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
 
             // Updating the state
             state[numSpace].year = y;
@@ -723,10 +718,6 @@ void ISimulation<Impl>::estimateMemoryForOptimizationPb(Antares::Data::StudyMemo
     auto& bindingConstraints = study.bindingConstraints;
     uint nbLinks = study.areas.areaLinkCount();
     uint nbAreas = study.areas.size();
-
-    // If draft mode, optimization problem RAM estimation is insignificant
-    if (u.mode == Data::stdmAdequacyDraft)
-        return;
 
     // ========================================================================================
     // Some preliminary variables computation before optimization problem RAM estimation
@@ -1454,8 +1445,6 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
   std::vector<Variable::State>& state,
   std::vector<setOfParallelYears>::iterator& set_it)
 {
-    assert(not study.parameters.adequacyDraft());
-
     // Loop over years contained in the set
     std::vector<unsigned int>::iterator year_it;
     for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end(); ++year_it)
@@ -1616,8 +1605,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 
         // Computes statistics on annual (system and solution) costs, to be printed in output into
         // separate files
-        if (not study.parameters.adequacyDraft())
-            computeAnnualCostsStatistics(state, set_it);
+        computeAnnualCostsStatistics(state, set_it);
 
         // Set to zero the random numbers of all parallel years
         randomForParallelYears.reset();
@@ -1625,7 +1613,7 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     } // End loop over sets of parallel years
 
     // Writing annual costs statistics
-    if (not study.parameters.adequacyDraft() && pResultWriter)
+    if (pResultWriter)
     {
         pAnnualCostsStatistics.endStandardDeviations();
         pAnnualCostsStatistics.writeToOutput(pResultWriter);

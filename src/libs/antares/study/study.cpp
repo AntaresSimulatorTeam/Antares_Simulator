@@ -655,9 +655,6 @@ YString StudyCreateOutputPath(StudyMode mode,
     case stdmAdequacy:
         folderOutput += "adq";
         break;
-    case stdmAdequacyDraft:
-        folderOutput += "dft";
-        break;
     case stdmUnknown:
     case stdmExpansion:
     case stdmMax:
@@ -1192,16 +1189,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         ticksPerOutput += (int)runtime->interconnectionsCount;
         // Output - digest
         ticksPerOutput += 1;
-
-        if (parameters.mode != stdmAdequacyDraft)
-        {
-            ticksPerYear =
-              // nb weeks
-              ((int)((double)(parameters.simulationDays.end - parameters.simulationDays.first)
-                     / 7));
-        }
-        else
-            ticksPerYear = 1;
+        ticksPerYear = 1;
     }
 
     int n;
@@ -1378,7 +1366,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
 
-        if (parameters.adequacyDraft() or linkname.empty())
+        if (linkname.empty())
         {
             if (areaname.empty())
                 filename.clear();
@@ -1390,11 +1378,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
                 filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
                 filename << "mc-all" << SEP << "areas";
                 filename << SEP << areaname << SEP;
-
-                if (parameters.adequacyDraft())
-                    filename << "without-network-hourly.txt";
-                else
-                    filename << "values-hourly.txt";
+                filename << "values-hourly.txt";
             }
         }
         else

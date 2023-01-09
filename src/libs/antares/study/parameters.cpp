@@ -321,8 +321,6 @@ void Parameters::reset()
 
     // Misc
     improveUnitsStartup = false;
-    // Adequacy block size (adequacy-draft)
-    adequacyBlockSize = 100;
 
     include.constraints = true;
     include.hurdleCosts = true;
@@ -782,8 +780,6 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
                                                 const String&,
                                                 uint)
 {
-    if (key == "adequacy-block-size" || key == "adequacy_blocksize")
-        return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
     return false;
@@ -1003,6 +999,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
 
+    if (key == "adequacy-block-size") // ignored since 8.5
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1205,15 +1204,6 @@ void Parameters::fixGenRefreshForNTC()
 
 void Parameters::fixBadValues()
 {
-    // Adequacy block size
-    if (adequacyBlockSize < 100 || adequacyBlockSize > 100000)
-    {
-        adequacyBlockSize = 100;
-        logs.warning() << "The block size for the adequacy algorithm is invalid (100 <= blocksize "
-                          "<= 100000). Reset to "
-                       << adequacyBlockSize << '.';
-    }
-
     if (derated)
     {
         // Force the number of years to 1
@@ -1710,8 +1700,6 @@ void Parameters::saveToINI(IniFile& ini) const
         // Accuracy on correlation
         ParametersSaveTimeSeries(
           section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
-        // Adequacy Block size (adequacy draft)
-        section->add("adequacy-block-size", adequacyBlockSize);
     }
 
     // User's playlist

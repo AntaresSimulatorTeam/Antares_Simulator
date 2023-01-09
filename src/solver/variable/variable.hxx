@@ -55,7 +55,7 @@ inline void IVariable<ChildT, NextT, VCardT>::EstimateMemoryUsage(Data::StudyMem
         // Year-by-year
         if (!u.gatheringInformationsForInput)
         {
-            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            if (u.study.parameters.yearByYear)
             {
                 for (uint i = 0; i != u.years; ++i)
                     u.takeIntoConsiderationANewTimeserieForDiskOutput(false);

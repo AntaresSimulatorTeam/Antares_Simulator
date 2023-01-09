@@ -106,7 +106,6 @@ public:
     bool forceExpansion = false;
     bool forceEconomy = false;
     bool forceAdequacy = false;
-    bool forceAdequacyDraft = false;
 
     YString studyFolder;
     YString simulationName;

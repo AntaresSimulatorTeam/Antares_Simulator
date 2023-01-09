@@ -146,10 +146,7 @@ void SIM_AllocationTableaux()
             intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
     }
 
-    if (not study.parameters.adequacyDraft())
-    {
-        AllocateResultsForEconomicMode();
-    }
+    AllocateResultsForEconomicMode();
 }
 
 void SIM_DesallocationTableaux()
@@ -199,8 +196,5 @@ void SIM_DesallocationTableaux()
     MemFree(DonneesParPays);
     DonneesParPays = NULL;
 
-    if (not studyptr->parameters.adequacyDraft())
-    {
-        DeallocateResultsForEconomicMode();
-    }
+    DeallocateResultsForEconomicMode();
 }

@@ -212,11 +212,6 @@ void SurveyResultsData::initialize(uint maxVariables)
         //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
         break;
     }
-    case Data::stdmAdequacyDraft:
-    {
-        matrix.resize(maxVariables, study.runtime->rangeLimits.year[Data::rangeCount]);
-        break;
-    }
     case Data::stdmUnknown:
     case Data::stdmExpansion:
     case Data::stdmMax:
@@ -824,7 +819,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
 {
     if (u.study.parameters.synthesis
-        || (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft))
+        || (u.study.parameters.yearByYear))
     {
         // TODO : We may have more thermal cluster for an area than the max total of vars
         //   So we should take into consideration the maximum total of thermal clusters for

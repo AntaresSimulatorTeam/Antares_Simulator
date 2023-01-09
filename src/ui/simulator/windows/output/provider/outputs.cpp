@@ -180,9 +180,6 @@ void Outputs::search(Spotlight::IItem::Vector& out,
             case Data::stdmAdequacy:
                 item->addTag("ADQ", 220, 192, 245);
                 break;
-            case Data::stdmAdequacyDraft:
-                item->addTag("Draft", 230, 230, 245);
-                break;
             case Data::stdmUnknown:
             case Data::stdmExpansion:
             case Data::stdmMax:

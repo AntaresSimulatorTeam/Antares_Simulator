@@ -1254,8 +1254,6 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
 
 void BindConstList::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
-    if (u.mode == stdmAdequacyDraft)
-        return;
     // Disabled by the optimization preferences
     if (!u.study.parameters.include.constraints)
         return;

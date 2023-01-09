@@ -145,7 +145,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                     // ptvalgen.AleaCoutDeProductionParPalier[index] =
                     //	(rnd - 0.5) * (cluster->spreadCost + 1e-4);
                     // MBO
-                    // 15/04/2014 : bornage du coût thermique
+                    // 15/04/2014 : bornage du cout thermique
                     // 01/12/2014 : prise en compte du spreadCost non nul
 
                     if (cluster->spreadCost == 0) // 5e-4 < |AleaCoutDeProductionParPalier| < 6e-4
@@ -194,9 +194,8 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 void ALEA_TirageAuSortChroniques(double** thermalNoisesByArea, uint numSpace)
 {
     // Time-series numbers
-    bool ecoMode = Data::Study::Current::Get()->runtime->mode != stdmAdequacyDraft;
     // Retrieve all time-series numbers
     // Initialize in the same time the production costs of all thermal clusters.
     InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
-      thermalNoisesByArea, numSpace, ecoMode);
+      thermalNoisesByArea, numSpace, true);
 }

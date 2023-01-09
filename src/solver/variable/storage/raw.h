@@ -147,7 +147,7 @@ protected:
         if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
             && digestLevel & Category::digestAllYears)
         {
-            if (report.data.study.parameters.mode != Antares::Data::stdmAdequacyDraft)
+            if (report.data.study.parameters.mode)
             {
                 assert(report.data.columnIndex < report.maxVariables
                        && "Column index out of bounds");

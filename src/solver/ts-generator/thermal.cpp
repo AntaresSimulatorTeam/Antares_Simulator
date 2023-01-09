@@ -154,7 +154,7 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
 
     nbThermalTimeseries = parameters.nbTimeSeriesThermal;
 
-    economyMode = (parameters.mode != Data::stdmAdequacyDraft);
+    economyMode = true;
 
     derated = parameters.derated;
 }

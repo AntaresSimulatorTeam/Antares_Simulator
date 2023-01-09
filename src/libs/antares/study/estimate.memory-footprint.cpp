@@ -159,20 +159,17 @@ void Study::estimateMemoryUsageForInput(StudyMemoryUsage& u) const
     StudyRuntimeInfosEstimateMemoryUsage(u);
 
     // Tables allocation for simulation. See : sim_allocation_tableaux.cpp.
-    if (not parameters.adequacyDraft())
+    const size_t sizeOfLongHours = HOURS_PER_YEAR * sizeof(int);
+    const size_t sizeOfDoubleHours = HOURS_PER_YEAR * sizeof(double);
+    uint nbLinks = areas.areaLinkCount();
+    for (uint i = 0; i != nbLinks; i++)
     {
-        const size_t sizeOfLongHours = HOURS_PER_YEAR * sizeof(int);
-        const size_t sizeOfDoubleHours = HOURS_PER_YEAR * sizeof(double);
-        uint nbLinks = areas.areaLinkCount();
-        for (uint i = 0; i != nbLinks; i++)
-        {
-            u.requiredMemoryForInput += 7 * sizeOfDoubleHours;
-            u.requiredMemoryForInput += 2 * sizeOfLongHours;
-            u.requiredMemoryForInput += parameters.nbYears * sizeof(double);
-        }
-        for (uint i = 0; i != bindingConstraints.size(); ++i)
-            u.requiredMemoryForInput += sizeOfDoubleHours;
+        u.requiredMemoryForInput += 7 * sizeOfDoubleHours;
+        u.requiredMemoryForInput += 2 * sizeOfLongHours;
+        u.requiredMemoryForInput += parameters.nbYears * sizeof(double);
     }
+    for (uint i = 0; i != bindingConstraints.size(); ++i)
+        u.requiredMemoryForInput += sizeOfDoubleHours;
 
     dataBuffer.clear();
     dataBuffer.shrink();
@@ -211,19 +208,6 @@ void Study::estimateMemoryUsageForOutput(StudyMemoryUsage& u) const
 
         Solver::Variable::SurveyResults::EstimateMemoryUsage(maxColumnsForExportation, u);
         Solver::Variable::Economy::AllVariables::EstimateMemoryUsage(u);
-        return;
-    }
-    case stdmAdequacyDraft:
-    {
-        // Survey results
-        enum
-        {
-            maxColumnsForExportation = Solver::Variable::Container::BrowseAllVariables<
-              Solver::Variable::AdequacyDraft::AllVariables>::maxValue,
-        };
-
-        Solver::Variable::SurveyResults::EstimateMemoryUsage(maxColumnsForExportation, u);
-        Solver::Variable::AdequacyDraft::AllVariables::EstimateMemoryUsage(u);
         return;
     }
     case stdmUnknown:

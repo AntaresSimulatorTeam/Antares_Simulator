@@ -97,7 +97,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        if (mode != stdmAdequacyDraft && !(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
+        if (!(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
         {
             // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
@@ -198,22 +198,19 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        if (stdmAdequacyDraft != study.parameters.mode)
+        // In Economy mode, we must deal with an integral number of weeks
+        // A week : 168 hours
+        if ((b - a + 1) % 168)
         {
-            // In Economy mode, we must deal with an integral number of weeks
-            // A week : 168 hours
-            if ((b - a + 1) % 168)
-            {
-                // We have here too much hours, the interval will be reduced
-                // Log Entry
-                logs.info() << "    Partial week detected. Not allowed in "
-                            << StudyModeToCString(study.parameters.mode);
-                logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                            << (1 + b);
-                // Reducing
-                while (b > a and 0 != ((b - a + 1) % 168))
-                    --b;
-            }
+            // We have here too much hours, the interval will be reduced
+            // Log Entry
+            logs.info() << "    Partial week detected. Not allowed in "
+                << StudyModeToCString(study.parameters.mode);
+            logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
+                << (1 + b);
+            // Reducing
+            while (b > a and 0 != ((b - a + 1) % 168))
+                --b;
         }
     }
 
@@ -305,7 +302,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // (Example: 1 week: from 0 to 0 and it is valid)
     // As the number of hours has already been normalized to stick to a integral number of
     // weeks, this value must be greater than or equal to 168
-    if (not study.parameters.adequacyDraft() and limits.hour[rangeCount] < 168)
+    if (limits.hour[rangeCount] < 168)
     {
         logs.info();
         logs.fatal() << "At least one week is required to run a simulation.";
@@ -624,8 +621,7 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) con
     {
         Area& area = *(study.areas.byIndex[a]);
         area.thermal.prepareAreaWideIndexes();
-        if (mode != stdmAdequacyDraft)
-            count += area.thermal.prepareClustersInMustRunMode();
+        count += area.thermal.prepareClustersInMustRunMode();
     }
 
     switch (count)
