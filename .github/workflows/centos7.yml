@@ -98,7 +98,7 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           tar czf solver_ubuntu20.04.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           tar czf antares-solver_centos7.tar.gz solver/antares-*-solver solver/libsirius_solver.so
 
     - name: .tar.gz creation
       run: |
