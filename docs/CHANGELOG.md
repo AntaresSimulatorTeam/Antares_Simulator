@@ -5,7 +5,7 @@ v8.4.2 (01/2022)
 --------------------
 
 ## Improvements
-* Generate a solver-only asset for every release #976
+* Generate a solver-only asset for every release #976, #1080
 * Use MPS writer from solvers, instead of copy-pasted functions #1023
 
 ## GUI
@@ -14,9 +14,11 @@ v8.4.2 (01/2022)
 * Remove unused "District marginal prices" button from Advanced Parameters (#1067)
 
 ## Bugfix
+* Fix overwritten MPS files when optimization/simplex-range=day #1041
+* Restore warm start for OR-Tools+XPRESS #1079
 * Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
-* Fix crash when generaldata.ini is empty #892
-* Fix overwritten MPS files when optimization/simplex-range=day #1030
+* Fix crash when generaldata.ini is empty, using default values #892
+
 
 ## Testing
 * Introduce missing MPS comparison tests #1035
@@ -33,6 +35,10 @@ v8.4.2 (01/2022)
 * Remove unused `ContrainteDeReserveJMoins1ParZone`, `NumeroDeVariableDefaillanceEnReserve` #1047
 * Extract code related to spilled energy bounds #1049
 * Simplify code for adq patch (Local matching) #1054
+* Refactor naming for {MPS, criterion, etc.} files and exported structures (see parameter optimization/include-exportstructure) #1030
+* Refactor: move current year and week from study to weekly optimization problem #1032
+* Pass optimization number as an argument #1040
+
 
 ## New Contributors
 * @JasonMarechal25 made their first contribution in #1055
