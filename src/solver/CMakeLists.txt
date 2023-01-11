@@ -125,7 +125,6 @@ set(public_headers
 #set_target_properties(solver-lib PROPERTIES PUBLIC_HEADER "${public_headers}")
 install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS}
 		result_writer infeasible_problem_analysis libantares-solver-variable-info
-		minizip
 		EXPORT "solver-libTargets"
 #		# these get default values from GNUInstallDirs, no need to set them
 #		#RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} # bin
@@ -139,7 +138,8 @@ install(TARGETS solver-lib ${ANTARES_SOLVER_LIBS}
 foreach(header ${public_headers})
 	message(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 	message(CMAKE_CURRENT_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-	FILE(RELATIVE_PATH header_file_path ${CMAKE_CURRENT_SOURCE_DIR}/solver ${CMAKE_CURRENT_SOURCE_DIR}/${header})
+	message(file ${CMAKE_CURRENT_SOURCE_DIR}/${header})
+	FILE(RELATIVE_PATH header_file_path ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${header})
 	message(header_file_path ${header_file_path})
 	get_filename_component(header_directory_path "${header_file_path}" DIRECTORY)
 	message("header_directory_path: " ${header_directory_path})
