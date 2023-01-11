@@ -1,6 +1,5 @@
 #include "opt_period_string_generator.h"
 
-
 // ------------------------------------
 // Daily optimization
 // ------------------------------------

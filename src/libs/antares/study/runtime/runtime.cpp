@@ -436,11 +436,13 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     const auto& gd = study.parameters;
     bool globalThermalTSgeneration = gd.timeSeriesToGenerate & timeSeriesThermal;
     thermalTSRefresh = globalThermalTSgeneration;
-    
+
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        area.thermal.list.each([this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
-            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
-        });
+        area.thermal.list.each(
+          [this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
+              thermalTSRefresh
+                = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
+          });
     });
 }
 

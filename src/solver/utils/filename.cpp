@@ -6,22 +6,21 @@
 // Optimization period factory
 // ------------------------------------
 std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimizationWeekly,
-                                                    unsigned int day,
-                                                    unsigned int week,
-                                                    unsigned int year)
+                                                                  unsigned int day,
+                                                                  unsigned int week,
+                                                                  unsigned int year)
 {
     if (isOptimizationWeekly)
         return std::make_shared<OptWeeklyStringGenerator>(week, year);
     else
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
-
 }
 
-
-std::string createOptimizationFilename(const std::string& title,
-                                       std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-                                       unsigned int optNumber,
-                                       const std::string& extension)
+std::string createOptimizationFilename(
+  const std::string& title,
+  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  unsigned int optNumber,
+  const std::string& extension)
 {
     std::ostringstream outputFile;
     outputFile << title.c_str() << "-";
@@ -32,12 +31,15 @@ std::string createOptimizationFilename(const std::string& title,
     return outputFile.str();
 }
 
-std::string createCriterionFilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator, const unsigned int optNumber)
+std::string createCriterionFilename(
+  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  const unsigned int optNumber)
 {
     return createOptimizationFilename("criterion", optPeriodStringGenerator, optNumber, "txt");
 }
 
-std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator, const unsigned int optNumber)
+std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+                              const unsigned int optNumber)
 {
     return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
 }
@@ -49,8 +51,7 @@ std::string getFilenameWithExtension(const YString& prefix,
                                      uint optNumber)
 {
     std::ostringstream outputFile;
-    outputFile << prefix.c_str() << "-"
-               << std::to_string(year + 1) << "-"
+    outputFile << prefix.c_str() << "-" << std::to_string(year + 1) << "-"
                << std::to_string(week + 1);
 
     if (optNumber)

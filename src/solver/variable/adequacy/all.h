@@ -145,13 +145,13 @@ typedef                             // Prices
                          <Variable::Adequacy::SpilledEnergy // Spilled Energy
                           <Variable::Economy::LOLD          // LOLD
                            <Variable::Economy::LOLP         // LOLP
-                            <Variable::Economy::AvailableDispatchGen
-                             <Variable::Economy::DispatchableGenMargin
-                              <Variable::Economy::Marge // OP. MRG
-                               <Variable::Economy::ProfitByPlant
-                                // Links
-                                <Variable::Adequacy::Links // All links
-                                 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                            <Variable::Economy::AvailableDispatchGen<
+                              Variable::Economy::DispatchableGenMargin<
+                                Variable::Economy::Marge // OP. MRG
+                                <Variable::Economy::ProfitByPlant
+                                 // Links
+                                 <Variable::Adequacy::Links // All links
+                                  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -224,14 +224,11 @@ typedef // Prices
                                                             Marge>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
-
-typedef 
-    Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
-        Container::EndOfList    // End of variable list
-    >
+typedef Variable::Economy::BindingConstMarginCost< // Marginal cost for a binding constraint
+  Container::EndOfList                             // End of variable list
+  >
 
   VariablesPerBindingConstraints;
-
 
 typedef Variable::Join<
   // Variables for each area / links attached to the areas

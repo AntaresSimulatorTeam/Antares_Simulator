@@ -8,10 +8,10 @@ PROBLEME_SIMPLEXE_NOMME::PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>&
                                                  const std::vector<std::string>& NomDesContraintes,
                                                  std::vector<int>& StatutDesVariables,
                                                  std::vector<int>& StatutDesContraintes) :
-  NomDesVariables(NomDesVariables),
-  NomDesContraintes(NomDesContraintes),
-  StatutDesVariables(StatutDesVariables),
-  StatutDesContraintes(StatutDesContraintes)
+ NomDesVariables(NomDesVariables),
+ NomDesContraintes(NomDesContraintes),
+ StatutDesVariables(StatutDesVariables),
+ StatutDesContraintes(StatutDesContraintes)
 {
 }
 

@@ -152,7 +152,8 @@ bool Rules::readThermalCluster(const AreaName::Vector& splitKey, String value, b
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId = (area->id).to<std::string>() + "." + clustername.to<std::string>();
+            std::string clusterId
+              = (area->id).to<std::string>() + "." + clustername.to<std::string>();
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -188,7 +189,8 @@ bool Rules::readRenewableCluster(const AreaName::Vector& splitKey, String value,
         bool isTheActiveRule = (pName.toLower() == study_.parameters.activeRulesScenario.toLower());
         if (!updaterMode and isTheActiveRule)
         {
-            std::string clusterId = (area->id).to<std::string>() + "." + clustername.to<std::string>();
+            std::string clusterId
+              = (area->id).to<std::string>() + "." + clustername.to<std::string>();
             disabledClustersOnRuleActive[clusterId].push_back(year + 1);
             return false;
         }
@@ -356,20 +358,20 @@ bool Rules::apply()
 
 void Rules::sendWarningsForDisabledClusters()
 {
-    for (auto it = disabledClustersOnRuleActive.begin();
-         it != disabledClustersOnRuleActive.end();
+    for (auto it = disabledClustersOnRuleActive.begin(); it != disabledClustersOnRuleActive.end();
          it++)
     {
         std::vector<uint>& scenariiForCurrentCluster = it->second;
         int nbScenariiForCluster = (int)scenariiForCurrentCluster.size();
         std::vector<uint>::iterator itv = scenariiForCurrentCluster.begin();
 
-        // Listing the 10 first years for which the current cluster was given a specific TS number 
+        // Listing the 10 first years for which the current cluster was given a specific TS number
         // in the scenario builder.
         // Note that this list of years size could be less then 10, but are at least 1.
         std::string listYears = std::to_string(*itv);
         itv++;
-        for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10; itv++, year_count++)
+        for (int year_count = 1; itv != scenariiForCurrentCluster.end() && year_count < 10;
+             itv++, year_count++)
             listYears += ", " + std::to_string(*itv);
 
         // Adding last scenario to the list

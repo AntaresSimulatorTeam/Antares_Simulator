@@ -278,9 +278,9 @@ wxMenuItem* Menu::CreateItem(wxMenu* parent,
 #endif
 
 #ifdef YUNI_OS_WINDOWS
-        m->SetMarginWidth(bitmap.GetWidth());
+    m->SetMarginWidth(bitmap.GetWidth());
 #endif
-        m->SetBitmap(bitmap);
+    m->SetBitmap(bitmap);
 
     parent->Append(m);
 

@@ -31,8 +31,7 @@ namespace Antares
 {
 namespace Data
 {
-
-	// gp : whole file to be removed
+// gp : whole file to be removed
 
 } // namespace Data
 } // namespace Antares

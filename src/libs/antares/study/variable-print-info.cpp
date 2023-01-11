@@ -143,8 +143,8 @@ bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus
     /*
         From the position of the iterator on the print info collection, shifting right until
         reaching the print info associated to 'varname' argument. Then setting the good print
-        info object with 'printStatus' argument. If searched variable print info not found, returning
-        'false' meaing we have an error.
+        info object with 'printStatus' argument. If searched variable print info not found,
+       returning 'false' meaing we have an error.
     */
     std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
 

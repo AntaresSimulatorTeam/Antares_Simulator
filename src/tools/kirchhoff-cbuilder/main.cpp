@@ -41,7 +41,6 @@
 using namespace Yuni;
 using namespace Antares;
 
-
 int main(int argc, char* argv[])
 {
     logs.applicationName("k-cbuild");
@@ -78,7 +77,8 @@ int main(int argc, char* argv[])
 }
 
 bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
-    const std::string& studyPath, const std::string& kirchhoffOptionPath)
+                             const std::string& studyPath,
+                             const std::string& kirchhoffOptionPath)
 {
     study->areas.ensureDataIsInitialized(study->parameters, false);
 
@@ -108,7 +108,8 @@ bool runKirchhoffConstraints(std::shared_ptr<Data::Study> study,
         return false;
     }
 
-    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
+    auto bindingPath
+      = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
     if (!study->bindingConstraints.saveToFolder(bindingPath))
     {
@@ -140,7 +141,8 @@ bool initResources(int argc, char* argv[])
 
 bool initComponents(std::shared_ptr<Data::Study> study, const std::string& studyPath)
 {
-    study->header.version = Data::StudyHeader::ReadVersionFromFile(studyPath + Yuni::IO::Separator + "study.antares");
+    study->header.version
+      = Data::StudyHeader::ReadVersionFromFile(studyPath + Yuni::IO::Separator + "study.antares");
     study->folder = studyPath;
     study->folderInput = studyPath + Yuni::IO::Separator + "input";
     study->inputExtension = "txt";
@@ -150,14 +152,15 @@ bool initComponents(std::shared_ptr<Data::Study> study, const std::string& study
     Data::StudyLoadOptions options;
     options.loadOnlyNeeded = false;
 
-    if(!study->areas.loadFromFolder(options))
+    if (!study->areas.loadFromFolder(options))
     {
         logs.error() << "Areas loading failed";
         return false;
     }
     logs.info() << "Areas loaded.";
 
-    auto bindingPath = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
+    auto bindingPath
+      = studyPath + Yuni::IO::Separator + "input" + Yuni::IO::Separator + "bindingconstraints";
 
     if (!study->bindingConstraints.loadFromFolder(*study, options, bindingPath))
     {
