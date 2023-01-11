@@ -28,6 +28,8 @@ class reference_folder_finder:
         return basename(folder) in self.skipped_folders_when_searching
 
 def find_reference_folder(study_path):
+    # From the root folder of a study, search recursively the 'reference' folder
+    # and return its full path
     ref_folder_finder = reference_folder_finder(study_path)
-    check(ref_folder_finder.find(), ref_folder_finder.find())
+    check(ref_folder_finder.find(), "Could not find study reference folder")
     return ref_folder_finder.get()

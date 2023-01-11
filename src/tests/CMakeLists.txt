@@ -67,8 +67,8 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME mps
-        COMMAND Python3::Interpreter -m pytest --solver-path=$<TARGET_FILE:antares-solver>
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/mps"
+        COMMAND Python3::Interpreter -m pytest -m mps --solver-path=$<TARGET_FILE:antares-solver>
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
       set_property(TEST unfeasible PROPERTY LABELS study sirius)

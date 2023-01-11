@@ -35,17 +35,17 @@ def study_path(request):
     return request.param
 
 @pytest.fixture
-def resutsRemover(study_path):
-    return resuts_remover(study_path)
+def resultsRemover(study_path):
+    return results_remover(study_path)
 
 @pytest.fixture
 def simulation(study_path, solver_path, use_ortools, ortools_solver):
     return study_run(study_path, solver_path, use_ortools, ortools_solver)
 
 @pytest.fixture(autouse=True)
-def check_runner(simulation, resutsRemover):
+def check_runner(simulation, resultsRemover):
     # Actions done before the current test
-    my_check_handler = check_handler(simulation, resutsRemover)
+    my_check_handler = check_handler(simulation, resultsRemover)
 
     # Running the current test here
     yield my_check_handler
