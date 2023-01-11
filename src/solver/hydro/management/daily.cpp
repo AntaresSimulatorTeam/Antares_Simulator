@@ -385,18 +385,18 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 for (uint h = 0; h < 24; ++h)
                 {
                     dailyMingen += srcmingen[day * 24 + h];
+
+                    if (srcmingen[day * 24 + h] > maxP[day])
+                    {
+                        logs.error()
+                          << "Year : " << y + 1 << " - hydro: " << area.name
+                          << " [hourly] minimum generation of " << srcmingen[day * 24 + h]
+                          << " MW in timestep " << day * 24 + h + 1 << " of TS-" << tsIndex + 1
+                          << " is incompatible with the maximum generation of " << maxP[day]
+                          << " MW.";
+                    }
                 }
                 problem.TurbineMin[dayMonth] = dailyMingen;
-
-                if (problem.TurbineMin[dayMonth] > problem.TurbineMax[dayMonth])
-                {
-                    logs.error() << "Year : " << y + 1 << " - hydro: " << area.name
-                                 << " [daily] minimum generation of "
-                                 << problem.TurbineMin[dayMonth] << " MW in month " << month + 1
-                                 << " day " << dayMonth + 1
-                                 << " is incompatible with the maximum generation of "
-                                 << problem.TurbineMax[dayMonth] << " MW.";
-                }
                 problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
