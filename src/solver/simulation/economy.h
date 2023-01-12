@@ -35,6 +35,8 @@
 #include "../variable/state.h"
 #include "common-eco-adq.h"
 
+#include "../optimisation/base_weekly_optimization.h"
+
 #include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares
@@ -43,38 +45,6 @@ namespace Solver
 {
 namespace Simulation
 {
-class interfaceWeeklyOptimization
-{
-public:
-    virtual void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) = 0;
-    virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) {};
-    static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
-
-protected:
-    explicit interfaceWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
-    PROBLEME_HEBDO** pProblemesHebdo;
-};
-
-class AdequacyPatchOptimization : public interfaceWeeklyOptimization
-{
-public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(uint weekInTheYear, int hourInTheYear, uint numSpace) override;
-    void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace) override;
-
-private:
-    std::vector<double> calculateENSoverAllAreasForEachHour(uint numSpace) const;
-    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS, uint numSpace) const;
-    std::set<int> getHoursRequiringCurtailmentSharing(uint numSpace) const;
-};
-
-class weeklyOptimization : public interfaceWeeklyOptimization
-{
-public:
-    explicit weeklyOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(uint, int, uint numSpace) override;
-};
-
 class Economy
 {
 public:
@@ -136,7 +106,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    std::unique_ptr<interfaceWeeklyOptimization> weeklyOptProblem;
+    std::vector<std::unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
 }; // class Economy
 
 } // namespace Simulation

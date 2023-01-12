@@ -84,15 +84,6 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                                             uint numSpace);
 
 /*!
-** ** \brief add values of a array B to vector A, A[i]=A[i]+B[i]
-** **
-** ** \param A A vector
-** ** \param B An array
-** ** \return
-** */
-void addArray(std::vector<double>& A, const double* B);
-
-/*!
 ** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** **
