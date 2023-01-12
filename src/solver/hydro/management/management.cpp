@@ -205,7 +205,8 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
                 double totalWeekInflows = 0.0;
                 for(uint hour = calendar.weeks[week].hours.first; hour < calendar.weeks[week].hours.end; ++hour)
                 {
-                    totalWeekMingen += srcmingen[hour];
+                    if (hour < HOURS_PER_YEAR)
+                        totalWeekMingen += srcmingen[hour];
                 }
                 
                 for(uint day = calendar.weeks[week].daysYear.first; day < calendar.weeks[week].daysYear.end; ++day)
