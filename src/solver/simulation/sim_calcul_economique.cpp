@@ -324,7 +324,7 @@ void SIM_InitialisationResultats()
 }
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
-                                    Antares::Solver::Variable::State& state,
+                                    uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut)
 {
@@ -452,14 +452,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << state.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
                              << " : initial level < 0";
                 AntaresSolverEmergencyShutdown();
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << state.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
                              << " : initial level over capacity";
                 AntaresSolverEmergencyShutdown();
             }
@@ -485,7 +485,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                   problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
                   area.hydro.waterValues,
                   weekFirstDay,
-                  state.h2oValueWorkVars,
                   problem.CaracteristiquesHydrauliques[k]->WeeklyWaterValueStateRegular);
             }
 

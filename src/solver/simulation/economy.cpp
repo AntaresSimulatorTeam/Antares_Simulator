@@ -73,10 +73,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesH
  interfaceWeeklyOptimization(problemesHebdo)
 {
 }
-void AdequacyPatchOptimization::solve(Variable::State& state,
+void AdequacyPatchOptimization::solve(uint weekInTheYear,
                                       int hourInTheYear,
-                                      uint numSpace,
-                                      uint w)
+                                      uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
@@ -98,7 +97,7 @@ void AdequacyPatchOptimization::solve(Variable::State& state,
 
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
+    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, weekInTheYear, numSpace, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
 
@@ -107,15 +106,12 @@ weeklyOptimization::weeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
  interfaceWeeklyOptimization(problemesHebdo)
 {
 }
-void weeklyOptimization::solve(Variable::State&, int, uint numSpace, uint)
+void weeklyOptimization::solve(uint, int, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
 }
-void weeklyOptimization::solveCSR(const Variable::State& state, uint numSpace, uint week)
-{
-    return;
-}
+
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
@@ -231,21 +227,21 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing(uin
     return identifyHoursForCurtailmentSharing(sumENS, numSpace);
 }
 
-void AdequacyPatchOptimization::solveCSR(const Variable::State& state, uint numSpace, uint w)
+void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace)
 {
     auto problemeHebdo = pProblemesHebdo[numSpace];
     double totalLmrViolation
-      = calculateDensNewAndTotalLmrViolation(problemeHebdo, state.study, numSpace);
-    logs.info() << "[adq-patch] Year:" << state.year + 1 << " Week:" << w + 1
+      = calculateDensNewAndTotalLmrViolation(problemeHebdo, areas, numSpace);
+    logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing
       = getHoursRequiringCurtailmentSharing(numSpace);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
-        logs.info() << "[adq-patch] CSR triggered for Year:" << state.year + 1
-                    << " Hour:" << w * nbHoursInAWeek + hourInWeek + 1;
+        logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
+                    << " Hour:" << week * nbHoursInAWeek + hourInWeek + 1;
         HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo);
-        hourlyCsrProblem.run(w, state);
+        hourlyCsrProblem.run(week, year);
     }
 }
 
@@ -277,7 +273,7 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -285,12 +281,12 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblem->solve(state, hourInTheYear, numSpace, w);
+            weeklyOptProblem->solve(w, hourInTheYear, numSpace);
 
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
-            weeklyOptProblem->solveCSR(state, numSpace, w);
+            weeklyOptProblem->solveCSR(study.areas, state.year, w, numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 
