@@ -14,6 +14,7 @@ namespace Simulation
     public:
         virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
         virtual void solveCSR(Antares::Data::AreaList& areas, uint year, uint week, uint numSpace);
+        virtual ~interfaceWeeklyOptimization() = default;
         static std::unique_ptr<interfaceWeeklyOptimization> create(bool adqPatchEnabled,
             PROBLEME_HEBDO* problemesHebdo,
             uint numSpace);
