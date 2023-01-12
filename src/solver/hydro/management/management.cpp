@@ -169,7 +169,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
                 if(totalMonthMingen > totalMonthInflows)
                 {
                     logs.error() << "In Area "<< area.name << " the minimum generation of "
-                    << totalMonthMingen << " MW in month " << month + 1 << " of TS-" << numSpace << " is incompatible with the inflows of "
+                    << totalMonthMingen << " MW in month " << month + 1 << " of TS-" << tsIndex + 1<< " is incompatible with the inflows of "
                     << totalMonthInflows << " MW.";
                 }
             }
@@ -191,7 +191,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
             if(totalYearMingen > totalYearInflows)
             {
                 logs.error() << "In Area "<< area.name << " the minimum generation of "
-                << totalYearMingen << " MW of TS-" << numSpace << " is incompatible with the inflows of "
+                << totalYearMingen << " MW of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
                 << totalYearInflows << " MW.";
             }
         }
@@ -216,7 +216,7 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
                 if(totalWeekMingen > totalWeekInflows)
                 {
                     logs.error() << "In Area "<< area.name << " the minimum generation of "
-                    << totalWeekMingen << " MW in week " << week + 1 << " of TS-" << numSpace << " is incompatible with the inflows of "
+                    << totalWeekMingen << " MW in week " << week + 1 << " of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
                     << totalWeekInflows << " MW.";
                 }                
             }
