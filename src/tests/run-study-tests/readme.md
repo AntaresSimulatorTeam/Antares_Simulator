@@ -35,7 +35,7 @@ Let's look at the **test_from_json.py** script.
 **Line 1** : Following tests are marked as a collection, belonging to the same category
 
 ## Tests parametrization
-**Line 2** : 
+**Line 2** : _to be finished_
 
 ## Fixtures
 
