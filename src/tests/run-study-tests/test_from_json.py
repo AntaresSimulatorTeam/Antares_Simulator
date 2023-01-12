@@ -7,8 +7,12 @@ from check_on_results.create_checks import create_checks
 ROOT_FOLDER = Path('../resources/batches').resolve()
 
 
-
+# Search for studies inside directory ROOT_FOLDER and collects all their paths.
+# Each study is supposed to hold a check-config.json file, containing
+# all data to make particular checks on the associated study.
 study_paths = look_for_studies(ROOT_FOLDER)
+
+# Collects json files in each study and retrieves the checks data from each of them.
 json_collector = jsonCollector(study_paths)
 json_collector.collect()
 
