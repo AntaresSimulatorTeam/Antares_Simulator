@@ -24,8 +24,6 @@ std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create
         return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);
     else
         return std::make_unique<weeklyOptimization>(problemeHebdo, thread_number);
-
-    return nullptr;
 }
 
 void interfaceWeeklyOptimization::solveCSR(Antares::Data::AreaList&, uint, uint, uint)
