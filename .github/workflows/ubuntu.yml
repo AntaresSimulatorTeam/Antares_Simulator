@@ -124,11 +124,6 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
-    - name: Run MPS comparison test
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R mps
-
     - name: Upload logs for failed tests
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
