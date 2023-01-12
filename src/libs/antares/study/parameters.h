@@ -141,6 +141,14 @@ public:
     */
     void resetThresholdsAdqPatch();
     /*!
+    ** \brief Reset to default values related to local matching
+    */
+    void resetAdqPatch_LocalMatching();
+    /*!
+    ** \brief Reset to default values related to curtailment sharing
+    */
+    void resetAdqPatch_CurtailmentSharing();
+    /*!
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
@@ -515,7 +523,7 @@ public:
             //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
             Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
             //! Threshold to initiate curtailment sharing rule
-            double thresholdInitiate;
+            double thresholdRun;
             //! Threshold to display Local Matching Rule violations
             double thresholdDisplayViolations;
             //! CSR Variables relaxation threshold

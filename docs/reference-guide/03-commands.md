@@ -6,7 +6,7 @@ The Antares GUI gives access to a general menu of commands whose name and meanin
 
 - **New** Create a new empty study to be defined entirely from scratch (network topology, interconnections
 ratings, thermal power plants list, fuel costs, hydro inflows stats, wind speed stats, load profiles ,etc.)
-  
+
 - **Open** Load in memory data located in a specified Antares study folder. Once loaded, these data may be reviewed,
 updated, deleted, and simulations may be performed. If "open" is performed while a study was already opened, the former study will be automatically closed.
 
@@ -63,13 +63,13 @@ those not selected beforehand.
 
 ## Input
 
-- **Name of the study** Give a reference name to the study. The default name is identical to that of 
+- **Name of the study** Give a reference name to the study. The default name is identical to that of
 the study's folder but the user may modify it. The default name of a new study is "no title"
 
 - **Author(s)** Set the study's author(s) name. Default value is "memory"
 
 The other "input" subcommands here below are used to move from one active window to another.
-Note that the availability of the __Wind__, __Solar__, and __Renewable__ subcommands depend on the advanced 
+Note that the availability of the __Wind__, __Solar__, and __Renewable__ subcommands depend on the advanced
 parameter *"Renewable Generation modeling"* described in [miscellaneous](08-miscellaneous.md).
 
 - **System Maps**
@@ -129,7 +129,7 @@ extraction query on any given specific variable (e.g. "monthly amounts of CO2 to
 all available years of simulation.
 
 The results of such queries are automatically stored within the output file structures, so as to
-be available at very short notice if they have to be examined later in another session (extractions may require 
+be available at very short notice if they have to be examined later in another session (extractions may require
 a significant computer time when there are many Monte-Carlo years to process).
 
 - **Open in Windows Explorer** This command displays the list of available simulation results and allows
@@ -144,7 +144,7 @@ If hardware resources and simulation settings allow it, simulations benefit from
 (see [System requirements](09-system_requirements.md))
 
 - **Time-series Generators** Runs any or all of the Antares stochastic time-series generators,
-depending on the values of the parameters set in the "simulation" active window (see [Simulation window](04-active_windows.md#simulation)), and 
+depending on the values of the parameters set in the "simulation" active window (see [Simulation window](04-active_windows.md#simulation)), and
 each cluster's "Generate TS" parameter (see [Thermal window](04-active_windows.md#thermal))
 
 - **Time-series Analyzer** Runs the Antares historical time-series analyzer.
@@ -164,13 +164,13 @@ the Output data to produce at the end of the simulation, or trimmed from it. In 
 - **Geographic Trimming** Opens an auxiliary window that allows multiple selection of the results to store at
 the end of a simulation: Choice of areas, interconnections, temporal aggregations (hourly, daily, etc.).
 Note that in addition to this feature, alternative access to the function is available
-(see [Active windows](04-active_windows.md), "output profile"). Geographic Trimming does not reduce actual computation 
-time but can bring some benefits on total runtime (fewer files to write). Geographic Trimming can save large 
+(see [Active windows](04-active_windows.md), "output profile"). Geographic Trimming does not reduce actual computation
+time but can bring some benefits on total runtime (fewer files to write). Geographic Trimming can save large
 amounts of storage space in simulations where only a few Areas and Links are of interest.
 
-- **Regional Districts** Allows selecting a set of areas to bundle them together in a "district". 
-These are used in the course of simulations to aggregate results over several areas. 
-They can be given almost any name (a "@" prefix is automatically added by Antares). 
+- **Regional Districts** Allows selecting a set of areas to bundle them together in a "district".
+These are used in the course of simulations to aggregate results over several areas.
+They can be given almost any name (a "@" prefix is automatically added by Antares).
 Bypassing the GUI is possible (see [Miscellaneous](08-miscellaneous.md)).
 
 - **MC Scenario builder** For each Monte-Carlo year of the simulation defined in the "Simulation" window,
@@ -180,7 +180,7 @@ the available set (be it ready-made or Antares-generated) _**OR**_ should take a
 
   Regarding Hydro time-series, the scenario builder gives, in addition to the assignment of a specific number to use for the inflows time-series, the ability to define the initial reservoir level to use for each MC year.
 
-- **MC Scenario playlist** For each Monte-Carlo year of the simulation defined in the "Simulation" active window, 
+- **MC Scenario playlist** For each Monte-Carlo year of the simulation defined in the "Simulation" active window,
 this command allows to state whether a MC year prepared for the simulation should be actually simulated or not.
 This feature allows, for instance, to refine a previous simulation by excluding a small number of "raw" MC years
 whose detailed analysis may have shown that they were not physically realistic. A different typical use consists
@@ -193,11 +193,11 @@ values of a given variable were encountered in a previous simulation).
 
 - **Optimization preferences** Defines a set of options related to the optimization core used in the simulations.
 The set of preferences is study-specific; it can be changed at any time and saved along with study data.
-Options refer to objects (binding constraints, etc.) that are presented in subsequent sections of this document.  
+Options refer to objects (binding constraints, etc.) that are presented in subsequent sections of this document.
 The values set in this menu overlay the local parameters but do not change their value: for instance, if the LOCAL
-parameter "set to infinite" is activated for some interconnections, and if the GLOBAL preference regarding transmission 
+parameter "set to infinite" is activated for some interconnections, and if the GLOBAL preference regarding transmission
 capacities is "set to null", the simulation will be carried out as if there were no longer any grid BUT the local
-values will remain untouched. If the preference is afterwards set to "local values", the interconnections will be 
+values will remain untouched. If the preference is afterwards set to "local values", the interconnections will be
 given back their regular capacities (infinite for those being set on "set to infinite").
 
     - _Binding constraints (include / ignore)_
@@ -221,11 +221,11 @@ Auxiliary window [Areas] Opens a window in which a choice can be made regarding 
 - _NTC between physical areas outside adequacy patch (set to null / local values)_
 - _Price taking order (DENS / Load)_
 - _Include hurdle cost in CSR optimization (false / true)_
-- _Check SCR cost function value prior and after CSR (false / true)_
+- _Check CSR cost function value prior and after CSR (false / true)_
 - _Thresholds:_
-- _Initiate curtailment sharing rule_
-- _Display local maching rule violations_
-- _Relax CSR variable boundaries_
+    - _Initiate curtailment sharing rule_
+    - _Display local maching rule violations_
+    - _Relax CSR variable boundaries_
 
 - **Advanced parameters** Advanced Parameters allow to adjust the simulation behavior regarding issues
 that are more numerical than physical. The set of parameters is study-specific and can be updated at any time.
