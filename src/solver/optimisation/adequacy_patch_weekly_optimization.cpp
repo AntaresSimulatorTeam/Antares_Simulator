@@ -3,16 +3,10 @@
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
 
-
 const int nbHoursInAWeek = 168;
 
-namespace Antares
+namespace Antares::Solver::Simulation
 {
-namespace Solver
-{
-namespace Simulation
-{
-
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
  interfaceWeeklyOptimization(problemeHebdo, thread_number)
@@ -62,7 +56,8 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
     return sumENS;
 }
 
-std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(
+  std::vector<double> sumENS) const
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
@@ -92,8 +87,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
       = calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
-    const std::set<int> hoursRequiringCurtailmentSharing
-      = getHoursRequiringCurtailmentSharing();
+    const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
@@ -102,8 +96,4 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
         hourlyCsrProblem.run(week, year);
     }
 }
-
-
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

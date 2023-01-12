@@ -3,11 +3,7 @@
 #include "base_weekly_optimization.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
@@ -22,6 +18,4 @@ private:
     std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 };
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

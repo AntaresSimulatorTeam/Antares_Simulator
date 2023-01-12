@@ -3,11 +3,7 @@
 #include "base_weekly_optimization.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 class weeklyOptimization : public interfaceWeeklyOptimization
 {
@@ -16,6 +12,4 @@ public:
     virtual ~weeklyOptimization() = default;
     void solve(uint, int) override;
 };
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
