@@ -684,7 +684,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
                 auto& mingenmatrix = area.hydro.series->mingen; //CR22
-                auto const& srcmingen = mingenmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                 for(uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                 {
                   problem.CaracteristiquesHydrauliques[k]->MingenHoraire[j] = srcmingen[PasDeTempsDebut + j]; //CR22

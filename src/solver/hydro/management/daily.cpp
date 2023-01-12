@@ -218,7 +218,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto tsIndex = (uint)ptchro.Hydraulique;
     auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-    auto const& srcmingen = mingenmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
     auto& data = pAreas[numSpace][z];
 
