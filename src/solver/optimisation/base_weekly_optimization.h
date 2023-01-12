@@ -17,7 +17,7 @@ public:
 
 protected:
     explicit interfaceWeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
-    PROBLEME_HEBDO* problemeHebdo_ = nullptr;
-    uint thread_number_ = 0;
+    PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
+    const uint thread_number_ = 0;
 };
 } // namespace Antares::Solver::Simulation
