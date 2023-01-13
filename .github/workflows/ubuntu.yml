@@ -21,7 +21,7 @@ env:
 jobs:
 
   doc_generation:
-    if: ${{ env.IS_RELEASE == 'true' || "$GITHUB_REF_NAME" == ^doc/*}}
+    if: ${{ github.event_name == 'release' || GITHUB_REF_NAME == ^doc/*}}
     uses: ./.github/workflows/build-userguide.yml
     with:
       artifact_name: pdf-doc
