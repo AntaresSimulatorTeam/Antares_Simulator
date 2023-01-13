@@ -39,11 +39,7 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 class Economy
 {
@@ -109,8 +105,6 @@ private:
     std::vector<std::unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
 }; // class Economy
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ECONOMY_H__

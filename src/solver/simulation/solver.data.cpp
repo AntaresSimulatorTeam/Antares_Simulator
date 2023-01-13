@@ -28,13 +28,7 @@
 #include "solver.data.h"
 #include <antares/study/parameters.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Private
-{
-namespace Simulation
+namespace Antares::Solver::Private::Simulation
 {
 namespace
 {
@@ -63,7 +57,4 @@ void CacheData::initialize(const Antares::Data::Parameters& parameters)
     refreshIntervalThermal = parameters.refreshIntervalThermal;
 }
 
-} // namespace Simulation
-} // namespace Private
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Private::Simulation

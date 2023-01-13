@@ -33,11 +33,7 @@
 
 #include "solver.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 class AdequacyDraft
 {
@@ -98,8 +94,6 @@ private:
 
 }; // class AdequacyDraft
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ADEQUACY_DRAFT_H__
