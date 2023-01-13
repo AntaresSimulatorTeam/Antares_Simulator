@@ -21,6 +21,7 @@ env:
 jobs:
 
   doc_generation:
+    if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/') }}
     uses: ./.github/workflows/build-userguide.yml
     with:
       artifact_name: pdf-doc
@@ -31,8 +32,6 @@ jobs:
       ORTOOLSDIR: ${{ github.workspace }}/or-tools
 
     runs-on: ubuntu-latest
-    needs:
-      - doc_generation
     container: 'antaresrte/rte-antares:centos7-simulator-no-deps'
 
     steps:

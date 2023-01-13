@@ -12,15 +12,9 @@ on:
       - doc/*
 
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
