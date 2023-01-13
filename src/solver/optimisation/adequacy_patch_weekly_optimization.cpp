@@ -1,14 +1,11 @@
 #include "adequacy_patch_weekly_optimization.h"
+#include "adq_patch_curtailment_sharing.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
 
 const int nbHoursInAWeek = 168;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
@@ -40,7 +37,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
+std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
@@ -56,15 +53,16 @@ vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() 
     return sumENS;
 }
 
-std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vector<double> sumENS) const
+std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(
+  std::vector<double> sumENS) const
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
-    for (int h = 0; h < nbHoursInAWeek; ++h)
+    for (int i = 0; i < nbHoursInAWeek; ++i)
     {
-        if (sumENS[h] > threshold)
+        if (sumENS[i] > threshold)
         {
-            triggerCsrSet.insert(h);
+            triggerCsrSet.insert(i);
         }
     }
     logs.debug() << "number of triggered hours: " << triggerCsrSet.size();
@@ -73,7 +71,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(vect
 
 std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() const
 {
-    vector<double> sumENS = calculateENSoverAllAreasForEachHour();
+    const auto sumENS = calculateENSoverAllAreasForEachHour();
     return identifyHoursForCurtailmentSharing(sumENS);
 }
 
@@ -95,7 +93,4 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
         hourlyCsrProblem.run(week, year);
     }
 }
-
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

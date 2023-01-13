@@ -15,8 +15,8 @@
 using namespace Antares::Data;
 namespace fs = std::filesystem;
 
-const string generatedIniFileName = "optimization.ini";
-const string referenceIniFileName = "optimization-reference.ini";
+const std::string generatedIniFileName = "optimization.ini";
+const std::string referenceIniFileName = "optimization-reference.ini";
 
 struct Fixture
 {
@@ -31,11 +31,11 @@ struct Fixture
 
 	~Fixture()
 	{
-		vector<string> filesToRemove = { generatedIniFileName, referenceIniFileName };
+		std::vector<std::string> filesToRemove = { generatedIniFileName, referenceIniFileName };
 		remove_files(filesToRemove);
 	}
 
-    Study::Ptr study = std::make_shared<Study>();
+	Study::Ptr study = std::make_shared<Study>();
 	Area* area;
 	Yuni::Clob path_to_generated_file;
 };
@@ -45,19 +45,19 @@ class referenceIniFile
 public:
 	referenceIniFile();
 	~referenceIniFile() = default;
-	string name() const { return name_; }
+	std::string name() const { return name_; }
 	void save();
 
-	void set_property(const string& key, const string& value) { properties_[key] = value; }
+	void set_property(const std::string& key, const std::string& value) { properties_[key] = value; }
 private:
-	void save_section(string_view sectionTitle, vector<string>& section_properties, ofstream& file);
+	void save_section(std::string_view sectionTitle, std::vector<std::string>& section_properties, std::ofstream& file);
 
-	string name_ = referenceIniFileName;
-	vector<string> nodal_property_names_ = {
-		"non-dispatchable-power", "dispatchable-hydro-power", "other-dispatchable-power", 
+	std::string name_ = referenceIniFileName;
+	std::vector<std::string> nodal_property_names_ = {
+		"non-dispatchable-power", "dispatchable-hydro-power", "other-dispatchable-power",
 		"spread-unsupplied-energy-cost", "spread-spilled-energy-cost" };
-	vector<string> filtering_property_names_ = { "filter-synthesis", "filter-year-by-year" };
-	map<string, string, less<>> properties_;
+	std::vector<std::string> filtering_property_names_ = { "filter-synthesis", "filter-year-by-year" };
+	std::map<std::string, std::string, std::less<>> properties_;
 };
 
 referenceIniFile::referenceIniFile()
@@ -73,19 +73,19 @@ referenceIniFile::referenceIniFile()
 
 void referenceIniFile::save()
 {
-	ofstream file;
+	std::ofstream file;
 	file.open(name_);
 	save_section("[nodal optimization]", nodal_property_names_, file);
 	save_section("[filtering]", filtering_property_names_, file);
 	file.close();
 }
 
-void referenceIniFile::save_section(string_view sectionTitle, vector<string>& sectionProperties, ofstream & file)
+void referenceIniFile::save_section(std::string_view sectionTitle, std::vector<std::string>& sectionProperties, std::ofstream & file)
 {
-	file << sectionTitle << endl;
+	file << sectionTitle << std::endl;
 	for (std::size_t i = 0; i < sectionProperties.size(); ++i)
-		file << sectionProperties[i] << " = " << properties_[sectionProperties[i]] << endl;
-	file << endl;
+		file << sectionProperties[i] << " = " << properties_[sectionProperties[i]] << std::endl;
+	file << std::endl;
 }
 
 BOOST_FIXTURE_TEST_SUITE(s, Fixture)

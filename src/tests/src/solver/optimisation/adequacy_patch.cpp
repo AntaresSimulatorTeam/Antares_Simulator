@@ -106,7 +106,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     // get results
     double netPositionInit;
     double densNew;
-    std::tie(netPositionInit, densNew, ignore) = calculateAreaFlowBalance(&problem, Area, hour);
+    std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
     free(problem.IndexDebutIntercoExtremite);
@@ -131,8 +131,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_virtual_no_change_expect
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       virtualArea, virtualArea, true /*SetNTCOutsideToOutsideToZero*/, false);
-    BOOST_TEST(Xmax == origineExtremite);
-    BOOST_TEST(Xmin == -extremiteOrigine);
+    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
+    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
 }
 
 // Virtual -> physical area inside adq-patch (0 -> 2)
@@ -142,8 +142,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_inside_no_change_expecte
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       virtualArea, physicalAreaInsideAdqPatch, true /*SetNTCOutsideToOutsideToZero*/, false);
-    BOOST_TEST(Xmax == origineExtremite);
-    BOOST_TEST(Xmin == -extremiteOrigine);
+    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
+    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
 }
 
 // Virtual -> physical area outside adq-patch (0 -> 1)
@@ -153,8 +153,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_virtual_outside_no_change_expect
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       virtualArea, physicalAreaOutsideAdqPatch, true /*SetNTCOutsideToOutsideToZero*/, false);
-    BOOST_TEST(Xmax == origineExtremite);
-    BOOST_TEST(Xmin == -extremiteOrigine);
+    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
+    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
 }
 
 // physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
@@ -166,8 +166,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_zero_expected_bo
                                                       physicalAreaOutsideAdqPatch,
                                                       true /*SetNTCOutsideToOutsideToZero*/,
                                                       false);
-    BOOST_TEST(Xmax == 0);
-    BOOST_TEST(Xmin == 0);
+    BOOST_CHECK_EQUAL(Xmax, 0);
+    BOOST_CHECK_EQUAL(Xmin, 0);
 }
 
 // physical area outside adq-patch -> physical area outside adq-patch (1 -> 1)
@@ -179,8 +179,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_outside_no_change_expect
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       physicalAreaOutsideAdqPatch, physicalAreaOutsideAdqPatch, false, false);
 
-    BOOST_TEST(Xmax == origineExtremite);
-    BOOST_TEST(Xmin == -extremiteOrigine);
+    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
+    BOOST_CHECK_EQUAL(Xmin, -extremiteOrigine);
 }
 
 // physical area inside adq-patch -> physical area outside adq-patch (2 -> 1)
@@ -190,8 +190,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_inside_outside_zero_expected_bot
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       physicalAreaInsideAdqPatch, physicalAreaOutsideAdqPatch, false, false);
-    BOOST_TEST(Xmax == 0);
-    BOOST_TEST(Xmin == 0);
+    BOOST_CHECK_EQUAL(Xmax, 0);
+    BOOST_CHECK_EQUAL(Xmin, 0);
 }
 
 // physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
@@ -203,8 +203,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_zero_expected_bot
                                                       physicalAreaInsideAdqPatch,
                                                       false,
                                                       true /*SetNTCOutsideToInsideToZero*/);
-    BOOST_TEST(Xmax == 0);
-    BOOST_TEST(Xmin == 0);
+    BOOST_CHECK_EQUAL(Xmax, 0);
+    BOOST_CHECK_EQUAL(Xmin, 0);
 }
 
 // physical area outside adq-patch -> physical area inside adq-patch (1 -> 2)
@@ -215,8 +215,8 @@ BOOST_AUTO_TEST_CASE(setNTCboundsForOneTimeStep_outside_inside_change_expected_o
     double Xmin, Xmax;
     std::tie(Xmin, Xmax) = setNTCboundsForOneTimeStep(
       physicalAreaOutsideAdqPatch, physicalAreaInsideAdqPatch, false, false);
-    BOOST_TEST(Xmax == origineExtremite);
-    BOOST_TEST(Xmin == 0);
+    BOOST_CHECK_EQUAL(Xmax, origineExtremite);
+    BOOST_CHECK_EQUAL(Xmin, 0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -231,8 +231,8 @@ BOOST_AUTO_TEST_CASE(
     double densNew;
     std::tie(netPositionInit, densNew) = calculateAreaFlowBalanceForOneTimeStep(
       0.0, false, virtualArea, virtualArea, flowArea0toArea1_positive, flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == 0.0);
-    BOOST_TEST(densNew == 0.0);
+    BOOST_CHECK_EQUAL(netPositionInit, 0.0);
+    BOOST_CHECK_EQUAL(densNew, 0.0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -252,8 +252,8 @@ BOOST_AUTO_TEST_CASE(
                                                virtualArea,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive);
-    BOOST_TEST(densNew == 0.0);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(densNew, 0.0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -274,8 +274,8 @@ BOOST_AUTO_TEST_CASE(
                                                virtualArea,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive);
-    BOOST_TEST(densNew == positiveEnsInit-flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(densNew, positiveEnsInit-flowArea0toArea1_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -295,8 +295,8 @@ BOOST_AUTO_TEST_CASE(
                                                physicalAreaOutsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive);
-    BOOST_TEST(densNew == 0.0);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(densNew, 0.0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -316,8 +316,8 @@ BOOST_AUTO_TEST_CASE(
                                                physicalAreaInsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive + flowArea2toArea0_positive);
-    BOOST_TEST(densNew == -flowArea0toArea1_positive + flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(densNew, -flowArea0toArea1_positive + flowArea2toArea0_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -336,8 +336,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_Inclu
                                                physicalAreaOutsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive);
-    BOOST_TEST(densNew == -flowArea0toArea1_positive + flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(densNew, -flowArea0toArea1_positive + flowArea2toArea0_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -356,8 +356,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_Incl
                                                physicalAreaOutsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == 0.0);
-    BOOST_TEST(densNew == flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(netPositionInit, 0.0);
+    BOOST_CHECK_EQUAL(densNew, flowArea2toArea0_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -376,8 +376,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                physicalAreaInsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
-    BOOST_TEST(netPositionInit == +flowArea2toArea0_positive);
-    BOOST_TEST(densNew == +flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(netPositionInit, +flowArea2toArea0_positive);
+    BOOST_CHECK_EQUAL(densNew, +flowArea2toArea0_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -396,8 +396,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_inside_outside_Inclu
                                                physicalAreaOutsideAdqPatch,
                                                flowArea0toArea1_negative,
                                                flowArea2toArea0_negative);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_negative);
-    BOOST_TEST(densNew == -flowArea0toArea1_negative);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_negative);
+    BOOST_CHECK_EQUAL(densNew, -flowArea0toArea1_negative);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -416,8 +416,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_outside_Incl
                                                physicalAreaOutsideAdqPatch,
                                                flowArea0toArea1_negative,
                                                flowArea2toArea0_negative);
-    BOOST_TEST(netPositionInit == 0.0);
-    BOOST_TEST(densNew == -flowArea0toArea1_negative);
+    BOOST_CHECK_EQUAL(netPositionInit, 0.0);
+    BOOST_CHECK_EQUAL(densNew, -flowArea0toArea1_negative);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -436,8 +436,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                physicalAreaInsideAdqPatch,
                                                flowArea0toArea1_negative,
                                                flowArea2toArea0_negative);
-    BOOST_TEST(netPositionInit == flowArea2toArea0_negative);
-    BOOST_TEST(densNew == 0.0);
+    BOOST_CHECK_EQUAL(netPositionInit, flowArea2toArea0_negative);
+    BOOST_CHECK_EQUAL(densNew, 0.0);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -457,8 +457,8 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                physicalAreaInsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_negative);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive+flowArea2toArea0_negative);
-    BOOST_TEST(densNew == positiveEnsInit+netPositionInit);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
+    BOOST_CHECK_EQUAL(densNew, positiveEnsInit+netPositionInit);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -478,6 +478,6 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                physicalAreaInsideAdqPatch,
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_negative);
-    BOOST_TEST(netPositionInit == -flowArea0toArea1_positive+flowArea2toArea0_negative);
-    BOOST_TEST(densNew == 0.0);
+    BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
+    BOOST_CHECK_EQUAL(densNew, 0.0);
 }

@@ -36,6 +36,8 @@
 
 #include "../optimisation/base_weekly_optimization.h"
 
+#include "../optimisation/base_weekly_optimization.h"
+
 #include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares
@@ -44,8 +46,6 @@ namespace Solver
 {
 namespace Simulation
 {
-
-
 class Economy
 {
 public:
@@ -107,7 +107,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    std::vector<unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
+    std::vector<std::unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
 }; // class Economy
 
 } // namespace Simulation

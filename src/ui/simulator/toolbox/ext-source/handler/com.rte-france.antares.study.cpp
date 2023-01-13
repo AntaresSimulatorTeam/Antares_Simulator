@@ -461,7 +461,7 @@ protected:
             // Postflight
             logs.info();
             logs.info() << "PreAllocating all structures...";
-            study->ensureDataAreAllInitialized();
+            study->areas.ensureDataIsInitialized(study->parameters, false);
             logs.info() << "The study is loaded.";
             pStudy = study;
         }

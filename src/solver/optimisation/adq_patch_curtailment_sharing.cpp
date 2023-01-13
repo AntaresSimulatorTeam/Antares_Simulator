@@ -2,7 +2,7 @@
 #include "adq_patch_curtailment_sharing.h"
 
 #include "opt_fonctions.h"
-#include <math.h>
+#include <cmath>
 #include "../study/area/scratchpad.h"
 
 using namespace Yuni;
@@ -26,10 +26,10 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
     ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations
     if ((ensInit > 0.0) && (totalNodeBalance < 0.0)
-        && (Math::Abs(totalNodeBalance) > ensInit + Math::Abs(threshold)))
+        && (std::fabs(totalNodeBalance) > ensInit + std::fabs(threshold)))
     {
         ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
-        return Math::Abs(totalNodeBalance);
+        return std::fabs(totalNodeBalance);
     }
     return 0.0;
 }
@@ -57,7 +57,7 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                                         + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
                 auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-                densNew = Math::Max(0.0, densNew - dtgMrg);
+                densNew = std::max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
                 ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
                 // copy spilled Energy values into spilled Energy values after CSR
@@ -97,7 +97,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
-              -= Math::Min(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+              -= std::min(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
         }
         Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
     }
@@ -113,7 +113,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
-              += Math::Max(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
+              += std::max(0.0, ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco]);
         }
         Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
@@ -121,12 +121,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
     {
-        densNew = Math::Max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
+        densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
         return std::make_tuple(netPositionInit, densNew, netPositionInit + flowsNode1toNodeA);
     }
     else
     {
-        densNew = Math::Max(0.0, ensInit + netPositionInit);
+        densNew = std::max(0.0, ensInit + netPositionInit);
         return std::make_tuple(netPositionInit, densNew, netPositionInit);
     }
 }
@@ -154,8 +154,8 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
                 // calculate DTG MRG CSR and adjust ENS if neccessary
                 if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
                 {
-                    dtgMrgCsr = Math::Max(0.0, dtgMrg - ens);
-                    ens = Math::Max(0.0, ens - dtgMrg);
+                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                    ens = std::max(0.0, ens - dtgMrg);
                     // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
                     if (ens > 0.5)
                         mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
@@ -185,7 +185,7 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
             problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
-            std::tie(netPositionInit, ignore, ignore)
+            std::tie(netPositionInit, std::ignore, std::ignore)
               = calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
             ensInit

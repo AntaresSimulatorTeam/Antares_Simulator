@@ -246,12 +246,6 @@ public:
 #undef DOWNSTREAM_PRICE
     }
 
-    void hourEnd(State& state, uint hourInTheYear)
-    {
-        // Next
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Next

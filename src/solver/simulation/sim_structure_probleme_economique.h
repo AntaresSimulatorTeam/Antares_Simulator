@@ -56,8 +56,6 @@ typedef struct
 
     int* NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariableDefaillanceEnReserve;
-
     int* NumeroDeVariablesVariationHydALaBaisse;
 
     int* NumeroDeVariablesVariationHydALaHausse;
@@ -436,10 +434,10 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
-    int* ValeursHorairesLmrViolations; // adq patch lmr violations
+    double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
+    int* ValeursHorairesLmrViolations;            // adq patch lmr violations
     double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
-    double* ValeursHorairesDtgMrgCsr; // adq patch DTG MRG after CSR
+    double* ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -596,18 +594,16 @@ struct PROBLEME_HEBDO
     int* numeroOptimisation;
 
     char YaDeLaReserveJmoins1;
-    char ContrainteDeReserveJMoins1ParZone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
 
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
+
+    OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
     std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
 
-    optimizationStatistics optimizationStatistics_object;
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;
     bool hydroHotStart;
@@ -620,6 +616,9 @@ struct PROBLEME_HEBDO
 
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
+
+    double* tempsResolution1;
+    double* tempsResolution2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */
@@ -697,8 +696,8 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-
 #endif
+
 public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
@@ -708,7 +707,4 @@ public:
 
     double maxPminThermiqueByDay[366];
 };
-
-namespace Antares::Solver::Variable { class State; } // foward declaration
-
 #endif

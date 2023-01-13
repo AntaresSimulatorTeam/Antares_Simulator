@@ -53,7 +53,7 @@ ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOrigineToZero;
+        return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
         return setToZeroNTCfromOutToOut_AdqPatch ? setToZero : leaveLocalValues;
     default:
@@ -86,13 +86,13 @@ void setNTCbounds(double& Xmax,
             Xmin = 0.;
             break;
         }
-        case setOrigineExtremityToZero:
+        case setOriginExtremityToZero:
         {
             Xmax = 0.;
             Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
             break;
         }
-        case setExtremityOrigineToZero:
+        case setExtremityOriginToZero:
         {
             Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
             Xmin = 0.;

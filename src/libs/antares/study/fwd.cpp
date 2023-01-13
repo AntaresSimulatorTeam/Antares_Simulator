@@ -341,36 +341,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
     return "";
 }
 
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text)
-{
-    if (!text)
-        return daReserveUnknown;
-
-    CString<24, false> s = text;
-    s.trim();
-    s.toLower();
-    if (s == "global")
-        return daGlobal;
-    if (s == "local")
-        return daLocal;
-
-    return daReserveUnknown;
-}
-
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode)
-{
-    switch (daReserveMode)
-    {
-    case daGlobal:
-        return "global";
-    case daLocal:
-        return "local";
-    case daReserveUnknown:
-        return "";
-    }
-    return "";
-}
-
 std::string mpsExportStatusToString(const mpsExportStatus& mps_export_status)
 {
     switch (mps_export_status)

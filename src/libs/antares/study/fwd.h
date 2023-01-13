@@ -534,23 +534,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-enum DayAheadReserveManagement
-{
-    daGlobal = 0,
-    daLocal,
-    daReserveUnknown,
-};
-
-/*!
-** \brief Convert a day ahead reserve allocation mode into a text
-*/
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode);
-
-/*!
-** \brief Convert a text into day ahead reserve allocation mode
-*/
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
-
 // Format of results
 enum ResultFormat
 {
@@ -621,9 +604,9 @@ enum ntcSetToZeroStatus_AdqPatchStep1
     //! Set NTC to zero
     setToZero,
     //! set only origine->extremity NTC to zero
-    setOrigineExtremityToZero,
+    setOriginExtremityToZero,
     //! set only extremity->origine NTC to zero
-    setExtremityOrigineToZero
+    setExtremityOriginToZero
 
 }; // enum NTC
 
