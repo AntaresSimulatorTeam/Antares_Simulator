@@ -31,10 +31,11 @@
 #include "../solver/simulation/sim_structure_donnees.h"
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
+#include "../solver/optimisation/csr_quadratic_problem.h"
 
 using namespace Antares::Data;
 
-void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
+void CsrQuadraticProblem::setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
                            HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                            double* Pi,
                            int* Colonne)
@@ -96,7 +97,7 @@ void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
+void CsrQuadraticProblem::setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
                                HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                                double* Pi,
                                int* Colonne)
@@ -197,7 +198,7 @@ void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
 
             NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
                                 + ProblemeHebdo->NomsDesPays[Area];
-            
+
             logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
                          << NomDeLaContrainte;
 
@@ -207,7 +208,7 @@ void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
+void CsrQuadraticProblem::setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
                            HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                            double* Pi,
                            int* Colonne)
@@ -280,9 +281,7 @@ void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void CsrQuadraticProblem::OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR()
 {
     logs.debug() << "[CSR] constraint list:";
     double* Pi;
@@ -296,9 +295,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
-    setNodeBalanceConstraints(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
-    setBindingConstraints(ProblemeHebdo, hourlyCsrProblem, Pi, Colonne);
+    setConstraintsOnFlows(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
+    setNodeBalanceConstraints(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
+    setBindingConstraints(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
 
     MemFree(Pi);
     MemFree(Colonne);

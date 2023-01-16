@@ -27,6 +27,7 @@
 
 #include "../simulation/simulation.h"
 #include "../optimisation/opt_fonctions.h"
+#include "../optimisation/csr_quadratic_problem.h"
 #include "adequacy_patch.h"
 #include <antares/study/area/scratchpad.h>
 #include <cmath>
@@ -368,7 +369,8 @@ void HOURLY_CSR_PROBLEM::buildProblemVariables()
 
 void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
 {
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(problemeHebdo, *this);
+    CsrQuadraticProblem csrProb(problemeHebdo, this);
+    csrProb.OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
 }
 
 void HOURLY_CSR_PROBLEM::setVariableBounds()
