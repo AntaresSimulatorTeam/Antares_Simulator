@@ -43,7 +43,7 @@ jobs:
           git submodule update --init vcpkg
 
     - name: Download userguide
-      if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/'}}
+      if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/') }}
       uses: actions/download-artifact@v3
       with:
         name: pdf-doc
