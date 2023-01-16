@@ -35,10 +35,7 @@
 
 using namespace Antares::Data;
 
-void CsrQuadraticProblem::setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
-                           HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-                           double* Pi,
-                           int* Colonne)
+void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Var;
@@ -97,10 +94,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void CsrQuadraticProblem::setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
-                               HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-                               double* Pi,
-                               int* Colonne)
+void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Var;
@@ -208,10 +202,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebd
     }
 }
 
-void CsrQuadraticProblem::setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
-                           HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-                           double* Pi,
-                           int* Colonne)
+void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int Var;
@@ -295,9 +286,9 @@ void CsrQuadraticProblem::OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadrat
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
-    setNodeBalanceConstraints(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
-    setBindingConstraints(ProblemeHebdo, *hourlyCsrProblem, Pi, Colonne);
+    setConstraintsOnFlows(Pi, Colonne);
+    setNodeBalanceConstraints(Pi, Colonne);
+    setBindingConstraints(Pi, Colonne);
 
     MemFree(Pi);
     MemFree(Colonne);

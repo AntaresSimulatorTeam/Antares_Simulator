@@ -29,7 +29,7 @@
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM *hourly) :
+    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM hourly) :
         ProblemeHebdo (prob),
         hourlyCsrProblem (hourly)
         {}
@@ -38,20 +38,9 @@ public:
 
 private:
     PROBLEME_HEBDO *ProblemeHebdo;
-    HOURLY_CSR_PROBLEM *hourlyCsrProblem;
+    HOURLY_CSR_PROBLEM hourlyCsrProblem;
 
-    void setConstraintsOnFlows(PROBLEME_HEBDO* ProblemeHebdo,
-            HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-            double* Pi,
-            int* Colonne);
-
-    void setNodeBalanceConstraints(PROBLEME_HEBDO* ProblemeHebdo,
-            HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-            double* Pi,
-            int* Colonne);
-
-    void setBindingConstraints(PROBLEME_HEBDO* ProblemeHebdo,
-            HOURLY_CSR_PROBLEM& hourlyCsrProblem,
-            double* Pi,
-            int* Colonne);
+    void setConstraintsOnFlows(double* Pi, int* Colonne);
+    void setNodeBalanceConstraints(double* Pi, int* Colonne);
+    void setBindingConstraints(double* Pi, int* Colonne);
 };
