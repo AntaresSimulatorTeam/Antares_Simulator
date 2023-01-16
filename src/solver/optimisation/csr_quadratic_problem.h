@@ -29,7 +29,7 @@
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM hourly) :
+    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM& hourly) :
         ProblemeHebdo (prob),
         hourlyCsrProblem (hourly)
         {}
