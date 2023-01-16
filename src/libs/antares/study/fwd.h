@@ -604,7 +604,7 @@ enum ntcSetToZeroStatus_AdqPatchStep1
     //! Set NTC to zero
     setToZero,
     //! set only origine->extremity NTC to zero
-    setOrigineExtremityToZero,
+    setOriginExtremityToZero,
     //! set only extremity->origine NTC to zero
     setExtremityOriginToZero
 

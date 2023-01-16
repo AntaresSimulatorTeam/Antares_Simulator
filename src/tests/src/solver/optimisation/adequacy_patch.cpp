@@ -4,7 +4,8 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "adequacy_patch.h"
+#include "adq_patch_local_matching.h"
+#include "adq_patch_curtailment_sharing.h"
 
 #include <vector>
 #include <tuple>
@@ -44,7 +45,7 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
     double Xmin;
     double Xmax;
 
-    setBoundsAdqPatch(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
+    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
 
     return std::make_pair(Xmin, Xmax);
 }

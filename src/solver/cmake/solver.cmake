@@ -57,8 +57,10 @@ set(RTESOLVER_OPT
 		optimisation/adequacy_patch_weekly_optimization.cpp
 		optimisation/weekly_optimization.h
 		optimisation/weekly_optimization.cpp
-		optimisation/adequacy_patch.h
-		optimisation/adequacy_patch.cpp
+		optimisation/adq_patch_local_matching.h
+		optimisation/adq_patch_local_matching.cpp
+		optimisation/adq_patch_curtailment_sharing.h
+		optimisation/adq_patch_curtailment_sharing.cpp
 		optimisation/adequacy_patch_csr/solve_problem.cpp
 		optimisation/adequacy_patch_csr/set_variable_boundaries.cpp
 		optimisation/adequacy_patch_csr/set_problem_cost_function.cpp

@@ -34,7 +34,7 @@
 #include "../simulation/sim_extern_variables_globales.h"
 
 #include "opt_fonctions.h"
-#include "adequacy_patch.h"
+#include "adq_patch_local_matching.h"
 #include <math.h>
 #include <yuni/core/math.h>
 #include <limits.h>
@@ -219,11 +219,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
             Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
 
-            if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
-                AdequacyPatch::setBoundsAdqPatch(
-                  Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
-            else
-                AdequacyPatch::setBoundsNoAdqPatch(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco);
+            AdequacyPatch::setNTCbounds(Xmax[Var], Xmin[Var], ValeursDeNTC, Interco, ProblemeHebdo);
 
             if (Math::Infinite(Xmax[Var]) == 1)
             {
