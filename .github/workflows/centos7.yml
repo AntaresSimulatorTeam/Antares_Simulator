@@ -65,6 +65,7 @@ jobs:
             rm ortools.zip
 
     - name: Download userguide
+      if: ${{ env.IS_RELEASE == 'true' }}
       uses: actions/download-artifact@v3
       with:
         name: pdf-doc
