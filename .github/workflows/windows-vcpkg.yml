@@ -180,11 +180,13 @@ jobs:
            cd _build
            zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
+    #"touch docs" to avoid fail if doc not generated
     - name: NSIS Installer creation
       shell: bash
       run: |
            rm -rf src/tests/resources/Antares_Simulator_Tests
            rm -rf src/tests/resources/NonRegTests
+           touch docs
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
