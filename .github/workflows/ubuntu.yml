@@ -154,6 +154,14 @@ jobs:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
+    
+    - name: Run mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
       if: ${{ env.IS_RELEASE == 'true' }}

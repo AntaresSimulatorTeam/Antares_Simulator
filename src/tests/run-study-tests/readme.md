@@ -198,5 +198,12 @@ The schema can be found at : **src/tests/run-study-tests/parse_studies/json_sche
 - When defining the class for your check, do not supply the constructor with treatments that require a simulation run : in the testing script system, the check instances are created before the simulation is run.
 - In the **json schema**, defining your check's grammar in the **"items" > "properties" > "checks" > "properties"** part of is not enough : you must as well declare it in the list of possible checks in the **"items" > "properties" > "checks"**
 
+# Running the script
+
+```bash
+> cd src/tests/run-study-tests
+> python -m pytest -m mps --solver-path=/path/to/the/Antares/solver/antares-x.y-solver.exe
+```
+
 # TO DO
 
