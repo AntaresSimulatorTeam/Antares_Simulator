@@ -141,14 +141,6 @@ public:
     */
     void resetThresholdsAdqPatch();
     /*!
-    ** \brief Reset to default values related to local matching
-    */
-    void resetAdqPatch_LocalMatching();
-    /*!
-    ** \brief Reset to default values related to curtailment sharing
-    */
-    void resetAdqPatch_CurtailmentSharing();
-    /*!
     ** \brief Reset to default all adequacy patch values
     */
     void resetAdqPatchParameters();
@@ -514,6 +506,10 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
+            /*!
+             ** \brief Reset to default values related to local matching
+             */
+            void reset();
         };
         bool enabled;
         LocalMatching localMatching;
@@ -532,10 +528,15 @@ public:
             bool includeHurdleCost;
             //! Check CSR cost function prior & after CSR optimization
             bool checkCsrCostFunction;
+            /*!
+             ** \brief Reset to default values related to curtailment sharing
+             */
+            void reset();
         };
         CurtailmentSharing curtailmentSharing;
 
         void addExcludedVariables(std::vector<std::string>&) const;
+
     };
 
     AdequacyPatch adqPatch;
