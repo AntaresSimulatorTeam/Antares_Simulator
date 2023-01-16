@@ -125,5 +125,4 @@ IRenderer::CellStyle AdequacyPatchAreaGrid::cellStyle(int, int row) const
     }
     return IRenderer::cellStyleConstraintNoWeight;
 }
-
 }

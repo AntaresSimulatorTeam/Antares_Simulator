@@ -1,5 +1,5 @@
-#include "adequacy_patch.h"
 #include "adequacy_patch_weekly_optimization.h"
+#include "adq_patch_curtailment_sharing.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
 
@@ -37,12 +37,6 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-static void addArray(std::vector<double>& A, const double* B)
-{
-    for (uint i = 0; i < A.size(); ++i)
-        A[i] += B[i];
-}
-
 std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
 {
     std::vector<double> sumENS(nbHoursInAWeek, 0.0);
@@ -50,8 +44,11 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
     {
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            addArray(sumENS,
-                     problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive);
+        {
+            double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            for (uint h = 0; h < nbHoursInAWeek; ++h)
+                sumENS[h] += ENS[h];
+        }
     }
     return sumENS;
 }
@@ -74,7 +71,7 @@ std::set<int> AdequacyPatchOptimization::identifyHoursForCurtailmentSharing(
 
 std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() const
 {
-    std::vector<double> sumENS = calculateENSoverAllAreasForEachHour();
+    const auto sumENS = calculateENSoverAllAreasForEachHour();
     return identifyHoursForCurtailmentSharing(sumENS);
 }
 

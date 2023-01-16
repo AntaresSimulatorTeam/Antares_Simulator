@@ -12,9 +12,9 @@ interfaceWeeklyOptimization::interfaceWeeklyOptimization(PROBLEME_HEBDO* problem
 }
 
 std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create(
-  bool adqPatchEnabled,
-  PROBLEME_HEBDO* problemeHebdo,
-  uint thread_number)
+    bool adqPatchEnabled,
+    PROBLEME_HEBDO* problemeHebdo,
+    uint thread_number)
 {
     if (adqPatchEnabled)
         return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);

@@ -34,10 +34,10 @@
 #include <yuni/core/math.h>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
+#include "../optimisation/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
-#include <set>
-#include "../optimisation/adequacy_patch.h"
 #include "opt_time_writer.h"
+#include <set>
 
 using namespace Yuni;
 
@@ -127,6 +127,7 @@ bool Economy::simulationBegin()
     pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
     return true;
 }
+
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
