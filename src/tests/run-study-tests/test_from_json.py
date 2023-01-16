@@ -22,5 +22,3 @@ def test(study_path, test_check_data, check_runner):
     checks = create_checks(study_path, test_check_data, simulation=check_runner.get_simulation())
     check_runner.run(checks)
 
-
-

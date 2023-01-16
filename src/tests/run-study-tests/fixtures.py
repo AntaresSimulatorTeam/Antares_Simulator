@@ -14,16 +14,17 @@ class check_handler:
         return self.simulation
 
     def run(self, checks):
+        # Runs the simulation on the current study
         self.simulation.run()
-
-        # Store check list for teardown
+        # Stores check list for teardown
         self.checks = checks
+        # Runs the checks to be performed on the current study.
         checks.run()
 
     def teardown(self):
         study_modifiers = self.checks.study_modifiers()
         for modifier in study_modifiers:
-            modifier.rewind()
+            modifier.back_to_initial_state()
 
         self.results_remover.run()
 
@@ -47,7 +48,7 @@ def check_runner(simulation, resultsRemover):
     # Actions done before the current test
     my_check_handler = check_handler(simulation, resultsRemover)
 
-    # Running the current test here
+    # A check handler is supplied to the current test now
     yield my_check_handler
 
     # Teardown : actions done after the current test
