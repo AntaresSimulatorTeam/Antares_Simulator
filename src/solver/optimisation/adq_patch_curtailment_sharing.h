@@ -2,11 +2,7 @@
 
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 //! A default threshold value for initiate curtailment sharing rule
 const double defaultThresholdToRunCurtailmentSharing = 0.0;
@@ -52,6 +48,4 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
 ** ** \return
 ** */
 void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch
