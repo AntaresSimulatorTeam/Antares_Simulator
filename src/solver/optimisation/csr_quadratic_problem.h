@@ -1,4 +1,3 @@
-#pragma once
 /*
 ** Copyright 2007-2023 RTE
 ** Authors: RTE-international / Redstork / Antares_Simulator Team
@@ -25,6 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+
+#pragma once
 
 class HOURLY_CSR_PROBLEM;
 
