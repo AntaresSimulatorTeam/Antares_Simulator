@@ -93,7 +93,6 @@ void computingHydroLevels(const Data::Study& study,
 
 void interpolateWaterValue(const Data::Study& study,
                            PROBLEME_HEBDO& problem,
-                           Antares::Solver::Variable::State& state,
                            int firstHourOfTheWeek,
                            uint nbHoursInAWeek)
 {

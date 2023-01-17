@@ -324,7 +324,7 @@ bool Adequacy::year(Progression::Task& progression,
         }
 
         interpolateWaterValue(
-          study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+          study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
 
         updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
 

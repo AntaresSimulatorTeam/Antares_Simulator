@@ -178,7 +178,7 @@ bool Economy::year(Progression::Task& progression,
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
 
             interpolateWaterValue(
-              study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+              study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
 
             updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
 

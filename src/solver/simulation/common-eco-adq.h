@@ -130,7 +130,6 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
 **
 ** \param study The Antares study
 ** \param problem The weekly problem, from the solver
-** \param state The simulation's current state (variable values to be stored and read at different
 *point of weekly simulation)
 ** \param hourInYear The hour in the year of the first hour in the current week
 ** \param nbHoursInAWeek Number of hours in a week
@@ -139,7 +138,6 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
 */
 void interpolateWaterValue(const Data::Study& study,
                            PROBLEME_HEBDO& problem,
-                           Antares::Solver::Variable::State& state,
                            int hourInTheYear,
                            uint nbHoursInAWeek);
 
