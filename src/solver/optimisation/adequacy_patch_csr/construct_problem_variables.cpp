@@ -57,7 +57,7 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
-            hourlyCsrProblem.ensSet.insert(NumberOfVariables);
+            hourlyCsrProblem.ensVariablesInsideAdqPatch.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
                          << ProblemeHebdo->NomsDesPays[area] << "].";
 
@@ -144,7 +144,7 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            hourlyCsrProblem.linkSet[algebraicFluxVar]
+            hourlyCsrProblem.linkInsideAdqPatch[algebraicFluxVar]
               = HOURLY_CSR_PROBLEM::LinkVariable(directVar, indirectVar);
         }
     }
