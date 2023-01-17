@@ -40,5 +40,17 @@ public:
     std::map<int, double> rhsAreaBalanceValues;
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
     std::set<int> ensSet;                           // place inside only ENS inside adq-patch
-    std::set<int> linkSet; // place inside only links between to zones inside adq-patch
+    struct LinkVariable
+    {
+        LinkVariable() : directVar(-1), indirectVar(-1)
+        {
+        }
+        LinkVariable(int direct, int indirect) : directVar(direct), indirectVar(indirect)
+        {
+        }
+        int directVar;
+        int indirectVar;
+    };
+    std::map<int, LinkVariable>
+      linkSet; // place inside only links between to zones inside adq-patch
 };
