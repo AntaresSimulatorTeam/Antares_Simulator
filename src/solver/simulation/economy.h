@@ -27,9 +27,6 @@
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
-#include <yuni/yuni.h>
-#include <memory>
-#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"

@@ -89,16 +89,15 @@ private:
     std::vector<int> mVariableType;
 };
 
-static void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
-                                                      int optNumber,
-                                                      uint numSpace,
-                                                      Solver::IResultWriter::Ptr writer)
+void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* Prob,
+                                               Solver::IResultWriter::Ptr writer,
+                                               const std::string& filename)
 {
-    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, optNumber);
+    logs.info() << "Solver MPS File: `" << filename << "'";
+
     const auto tmpPath = generateTempPath(filename);
 
     auto mps = std::make_shared<PROBLEME_MPS>();
-
     {
         ProblemConverter
           converter; // This object must not be destroyed until SRSwritempsprob has been run
@@ -114,51 +113,42 @@ static void OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(PROBLEME_SIMPLEXE_NOMME* P
 // --------------------
 // Full mps writing
 // --------------------
-fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
-                             int optNumber,
-                             uint thread_number) :
- named_splx_problem_(named_splx_problem),
- current_optim_number_(optNumber),
- thread_number_(thread_number)
+fullMPSwriter::fullMPSwriter(PROBLEME_SIMPLEXE_NOMME* named_splx_problem, uint optNumber) :
+ I_MPS_writer(optNumber), named_splx_problem_(named_splx_problem)
 {
 }
-void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
+
+void fullMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer, const std::string& filename)
 {
-    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(
-      named_splx_problem_, current_optim_number_, thread_number_, writer);
+    OPT_EcrireJeuDeDonneesLineaireAuFormatMPS(named_splx_problem_, writer, filename);
 }
 
 // ---------------------------------
 // Full mps writing by or-tools
 // ---------------------------------
-fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, int optNumber, uint thread_number) :
- solver_(solver), current_optim_number_(optNumber), thread_number_(thread_number)
+fullOrToolsMPSwriter::fullOrToolsMPSwriter(MPSolver* solver, uint optNumber) :
+ I_MPS_writer(optNumber), solver_(solver)
 {
 }
-void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer)
+void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
+                                       const std::string& filename)
 {
-    // Make or-tools print the MPS files leads to a crash !
-    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(
-      solver_, thread_number_, current_optim_number_, writer);
+    ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
 mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
-                                   int NumIntervalle,
+                                   const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    bool ortoolsUsed,
-                                   MPSolver* solver,
-                                   uint thread_number) :
+                                   MPSolver* solver) :
  pb_hebdo_(ProblemeHebdo),
- num_intervalle_(NumIntervalle),
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),
  solver_(solver),
- thread_number_(thread_number)
+ current_optim_number_(current_optim_number)
 {
-    current_optim_number_ = pb_hebdo_->numeroOptimisation[num_intervalle_];
     export_mps_ = pb_hebdo_->ExportMPS;
     export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
-    is_first_week_of_year_ = pb_hebdo_->firstWeekOfSimulation;
 }
 
 bool mpsWriterFactory::doWeExportMPS()
@@ -167,9 +157,9 @@ bool mpsWriterFactory::doWeExportMPS()
     {
     case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return true;
-    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+    case Data::mpsExportStatus::EXPORT_FIRST_OPTIM:
         return current_optim_number_ == PREMIERE_OPTIMISATION;
-    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+    case Data::mpsExportStatus::EXPORT_SECOND_OPTIM:
         return current_optim_number_ == DEUXIEME_OPTIMISATION;
     default:
         return false;
@@ -200,12 +190,10 @@ std::unique_ptr<I_MPS_writer> mpsWriterFactory::createFullmpsWriter()
 {
     if (ortools_used_)
     {
-        return std::make_unique<fullOrToolsMPSwriter>(
-          solver_, current_optim_number_, thread_number_);
+        return std::make_unique<fullOrToolsMPSwriter>(solver_, current_optim_number_);
     }
     else
     {
-        return std::make_unique<fullMPSwriter>(
-          named_splx_problem_, current_optim_number_, thread_number_);
+        return std::make_unique<fullMPSwriter>(named_splx_problem_, current_optim_number_);
     }
 }

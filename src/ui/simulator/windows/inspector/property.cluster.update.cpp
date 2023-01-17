@@ -100,27 +100,17 @@ bool ClusterUpdater::changeGroup(const wxVariant& value)
 
 bool ClusterUpdater::changeUnit(const wxVariant& value)
 {
-    uint d = static_cast<uint>(value.GetLong());
-    if (d > 100)
-    {
-        logs.error() << "A cluster can not have more than 100 units";
-        for (auto cluster : clusters)
-            cluster->unitCount = 100;
-        Accumulator<PClusterUnitCount>::Apply(unitCount, clusters);
-    }
-    else
-    {
-        for (auto cluster : clusters)
-            cluster->unitCount = d;
-    }
+    using unitT = decltype(Antares::Data::ThermalCluster::unitCount);
+    const auto nbUnits = static_cast<unitT>(value.GetLong());
+    for (auto cluster : clusters)
+        cluster->unitCount = nbUnits;
+
     // refresh the installed capacity
     Accumulator<PClusterInstalled, Add>::Apply(installedCapacity, clusters);
 
     // Notify
     OnCommonSettingsChanged();
 
-    if (d > 100)
-        pFrame.delayApply();
     return true;
 }
 

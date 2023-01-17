@@ -418,8 +418,8 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
+                      list, results, numSpace);
                 }
             }
         }

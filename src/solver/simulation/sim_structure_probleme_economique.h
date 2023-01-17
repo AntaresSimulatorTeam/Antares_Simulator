@@ -499,6 +499,9 @@ struct AdequacyPatchParameters
 
 struct PROBLEME_HEBDO
 {
+    uint weekInTheYear = 0;
+    uint year = 0;
+
     /* Business problem */
     char OptimisationAuPasHebdomadaire;
     char TypeDeLissageHydraulique;
@@ -590,8 +593,6 @@ struct PROBLEME_HEBDO
 
     int* NumeroDeVariableStockFinal;
     int** NumeroDeVariableDeTrancheDeStock;
-
-    int* numeroOptimisation;
 
     char YaDeLaReserveJmoins1;
 

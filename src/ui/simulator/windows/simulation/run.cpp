@@ -73,11 +73,9 @@ enum
     timerInterval = 3500 // ms
 };
 
-static const wxString featuresNames[featuresCount]
-  = {wxT(" Default  "), wxT(" Parallel ")};
+static const wxString featuresNames[featuresCount] = {wxT(" Default  "), wxT(" Parallel ")};
 
-static const Solver::Feature featuresAlias[featuresCount]
-  = {Solver::standard, Solver::parallel};
+static const Solver::Feature featuresAlias[featuresCount] = {Solver::standard, Solver::parallel};
 
 static wxString TimeSeriesToWxString(uint m)
 {

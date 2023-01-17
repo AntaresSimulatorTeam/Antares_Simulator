@@ -522,8 +522,8 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
     */
     const uint nbVariablesPerDetailRenewableCluster = 1; // Production
 
-    // Max number of columns taken by an inequality binding constraint in a report 
-    // (= output file). Here, this max is 4, and occurs in binding 
+    // Max number of columns taken by an inequality binding constraint in a report
+    // (= output file). Here, this max is 4, and occurs in binding
     // constraint synythesis reports.
     const uint maxNbVariablesPerInequalityBindingConstraint = 4;
 

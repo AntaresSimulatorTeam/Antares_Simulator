@@ -31,7 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-
 inline Yuni::uint64 DataSeriesMemoryUsage(DataSeriesCommon* t)
 {
     return (t) ? t->series.memoryUsage() : 0;

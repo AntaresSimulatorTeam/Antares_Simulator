@@ -574,7 +574,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
     }
 
-    problem.numeroOptimisation = (int*)MemAlloc(7 * sizeof(int));
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
     problem.coutOptimalSolution2 = (double*)MemAlloc(7 * sizeof(double));
 
@@ -699,7 +698,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     for (int k = 0; k < 7; k++)
     {
         MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]
-                ->NumeroDeContrainteDesContraintesCouplantes);
+                  ->NumeroDeContrainteDesContraintesCouplantes);
         MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres[k]);
     }
     MemFree(problem.CorrespondanceCntNativesCntOptimJournalieres);
@@ -905,7 +904,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     MemFree(problem.BruitSurCoutHydraulique);
 
-    MemFree(problem.numeroOptimisation);
     MemFree(problem.coutOptimalSolution1);
     MemFree(problem.coutOptimalSolution2);
     MemFree(problem.tempsResolution1);

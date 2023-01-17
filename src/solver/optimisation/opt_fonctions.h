@@ -31,6 +31,7 @@
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
 #include "hourly_csr_problem.h"
+#include "opt_period_string_generator_base.h"
 
 void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
@@ -39,16 +40,19 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*,
                                                                           HOURLY_CSR_PROBLEM&);
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*, uint);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*, const int, const int);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
+                                                            const int,
+                                                            const int,
+                                                            const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*,
                                                                    HOURLY_CSR_PROBLEM&);
-void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int);
+void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
@@ -68,11 +72,14 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, uint, int);
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
+                         int,
+                         const int,
+                         std::shared_ptr<OptPeriodStringGenerator>);
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*);
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
@@ -91,7 +98,9 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void*, uint, int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double,
+                                                    std::shared_ptr<OptPeriodStringGenerator>,
+                                                    int);
 
 /*------------------------------*/
 

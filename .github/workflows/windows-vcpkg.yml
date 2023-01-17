@@ -183,7 +183,7 @@ jobs:
       shell: bash
       run: |
            cd _build
-           zip -r solver_win.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
+           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash

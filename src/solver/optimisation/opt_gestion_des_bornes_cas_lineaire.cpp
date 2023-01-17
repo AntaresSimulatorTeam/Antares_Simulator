@@ -102,7 +102,8 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* ProblemeHebdo, int Pays, int P
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
                                   const int PremierPdtDeLIntervalle,
-                                  const int DernierPdtDeLIntervalle)
+                                  const int DernierPdtDeLIntervalle,
+                                  const int optimizationNumber)
 {
     // OUTPUT
     double* Xmin = ProblemeHebdo->ProblemeAResoudre->Xmin;
@@ -111,8 +112,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
       = ProblemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     const bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
-    const bool opt1
-      = (ProblemeHebdo->ProblemeAResoudre->NumeroDOptimisation == PREMIERE_OPTIMISATION);
+    const bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
 
     for (int PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
          PdtHebdo++, PdtJour++)
@@ -168,7 +168,8 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* ProblemeHebdo,
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
-                                                            const int DernierPdtDeLIntervalle)
+                                                            const int DernierPdtDeLIntervalle,
+                                                            const int optimizationNumber)
 {
     int PdtHebdo;
     int PdtJour;
@@ -432,7 +433,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* Prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+    setBoundsForUnsuppliedEnergy(
+      ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
 
     for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
     {

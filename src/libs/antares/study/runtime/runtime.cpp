@@ -421,18 +421,12 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
- quadraticOptimizationHasFailed(false),
- weekInTheYear(nullptr),
- currentYear(nullptr)
+ quadraticOptimizationHasFailed(false)
 {
-    currentYear = new uint[nbYearsParallel];
-    weekInTheYear = new uint[nbYearsParallel];
     // Evite les confusions de numeros de TS entre AMC
     timeseriesNumberYear = new uint[nbYearsParallel];
     for (uint numSpace = 0; numSpace < nbYearsParallel; numSpace++)
     {
-        currentYear[numSpace] = 999999;
-        weekInTheYear[numSpace] = 999999;
         timeseriesNumberYear[numSpace] = 999999;
     }
 }
@@ -442,11 +436,13 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     const auto& gd = study.parameters;
     bool globalThermalTSgeneration = gd.timeSeriesToGenerate & timeSeriesThermal;
     thermalTSRefresh = globalThermalTSgeneration;
-    
+
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        area.thermal.list.each([this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
-            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
-        });
+        area.thermal.list.each(
+          [this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
+              thermalTSRefresh
+                = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
+          });
     });
 }
 
@@ -711,8 +707,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
 {
     logs.debug() << "Releasing runtime data";
 
-    delete[] weekInTheYear;
-    delete[] currentYear;
     delete[] timeseriesNumberYear;
     delete[] areaLink;
     delete[] bindingConstraint;

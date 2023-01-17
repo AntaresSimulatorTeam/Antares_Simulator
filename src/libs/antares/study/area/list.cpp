@@ -1207,7 +1207,7 @@ void AreaList::ensureDataIsInitialized(Parameters& params, bool loadOnlyNeeded)
     AreaListEnsureDataThermalTimeSeries(this);
     AreaListEnsureDataRenewableTimeSeries(this);
 
-    if(loadOnlyNeeded)
+    if (loadOnlyNeeded)
     {
         // Load
         if (params.isTSGeneratedByPrepro(timeSeriesLoad))

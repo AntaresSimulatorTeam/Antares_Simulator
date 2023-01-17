@@ -104,9 +104,9 @@ const char* mpsExportIcon(const Data::mpsExportStatus& mps_export_status)
     {
     case Data::mpsExportStatus::NO_EXPORT:
         return "images/16x16/light_orange.png";
-    case Data::mpsExportStatus::EXPORT_FIRST_OPIM:
+    case Data::mpsExportStatus::EXPORT_FIRST_OPTIM:
         return "images/16x16/light_green.png";
-    case Data::mpsExportStatus::EXPORT_SECOND_OPIM:
+    case Data::mpsExportStatus::EXPORT_SECOND_OPTIM:
         return "images/16x16/light_green.png";
     case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return "images/16x16/light_green.png";
@@ -593,8 +593,8 @@ void Optimization::onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, 
 {
     using MPS = Data::mpsExportStatus;
     createMPSexportItemIntoMenu<MPS::NO_EXPORT>(menu);
-    createMPSexportItemIntoMenu<MPS::EXPORT_FIRST_OPIM>(menu);
-    createMPSexportItemIntoMenu<MPS::EXPORT_SECOND_OPIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_FIRST_OPTIM>(menu);
+    createMPSexportItemIntoMenu<MPS::EXPORT_SECOND_OPTIM>(menu);
     createMPSexportItemIntoMenu<MPS::EXPORT_BOTH_OPTIMS>(menu);
 }
 

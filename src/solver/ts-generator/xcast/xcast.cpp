@@ -591,9 +591,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
 
     if (study.parameters.derated)
     {
-        study.areas.each([&](Data::Area& area) {
-            predicate.matrix(area).averageTimeseries();
-        });
+        study.areas.each([&](Data::Area& area) { predicate.matrix(area).averageTimeseries(); });
     }
 
     if (study.parameters.timeSeriesToArchive & timeSeriesType)

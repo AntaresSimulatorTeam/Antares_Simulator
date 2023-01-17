@@ -1,5 +1,4 @@
 #include "ortools_utils.h"
-#include "filename.h" // getFilenameWithExtension
 
 #include <antares/logs.h>
 #include <antares/study.h>
@@ -114,6 +113,20 @@ static void tuneSolverSpecificOptions(MPSolver* solver)
     // Add solver-specific options here
     default:
         break;
+    }
+}
+
+static bool solverSupportsWarmStart(const MPSolver* solver)
+{
+    if (!solver)
+        return false;
+
+    switch (solver->ProblemType())
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+        return true;
+    default:
+        return false;
     }
 }
 
@@ -234,12 +247,13 @@ void removeTemporaryFile(const std::string& tmpPath)
 }
 
 void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
-                                                   size_t numSpace,
-                                                   int const numOptim,
-                                                   Antares::Solver::IResultWriter::Ptr writer)
+                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   const std::string& filename)
 {
+    // 0. Logging file name
+    logs.info() << "Solver OR-Tools MPS File: `" << filename << "'";
+
     // 1. Determine filename
-    const auto filename = getFilenameWithExtension("problem", "mps", numSpace, numOptim);
     const auto tmpPath = generateTempPath(filename);
 
     // 2. Write MPS to temporary file
@@ -286,8 +300,9 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            bool keepBasis)
 {
     MPSolverParameters params;
+    bool warmStart = solverSupportsWarmStart(solver);
     // Provide an initial simplex basis, if any
-    if (Probleme->basisExists() && !Probleme->isMIP() && Probleme->solverSupportsWarmStart)
+    if (warmStart && Probleme->basisExists() && !Probleme->isMIP())
     {
         solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
@@ -296,9 +311,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
-        if (keepBasis && !Probleme->isMIP() && Probleme->solverSupportsWarmStart)
+        if (warmStart && keepBasis && !Probleme->isMIP())
         {
-            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
+            solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
+                                       Probleme->StatutDesContraintes);
         }
     }
 
@@ -345,14 +361,11 @@ void ORTOOLS_LibererProbleme(MPSolver* solver)
     delete solver;
 }
 
-
-const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap =
-{
-    {"xpress", {"xpress_lp", "xpress"}},
-    {"sirius", {"sirius_lp", "sirius"}},
-    {"coin", {"clp", "cbc"}},
-    {"glpk", {"glpk_lp", "glpk"}}
-};
+const std::map<std::string, struct OrtoolsUtils::SolverNames> OrtoolsUtils::solverMap
+  = {{"xpress", {"xpress_lp", "xpress"}},
+     {"sirius", {"sirius_lp", "sirius"}},
+     {"coin", {"clp", "cbc"}},
+     {"glpk", {"glpk_lp", "glpk"}}};
 
 std::list<std::string> getAvailableOrtoolsSolverName()
 {
@@ -370,9 +383,10 @@ std::list<std::string> getAvailableOrtoolsSolverName()
     return result;
 }
 
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName)
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
+                          const std::string& solverName)
 {
-    MPSolver *solver;
+    MPSolver* solver;
     try
     {
         if (probleme->isMIP())
@@ -388,9 +402,6 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *
         logs.error() << "Solver creation failed";
         AntaresSolverEmergencyShutdown();
     }
-
-    if (solverName == "xpress")
-        probleme->solverSupportsWarmStart = true;
 
     return solver;
 }

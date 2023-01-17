@@ -31,7 +31,6 @@ class Taskgroup;
 
 namespace Yuni
 {
-
 /*!
 ** \brief Convenient wrapper for executing some code every X milliseconds
 **

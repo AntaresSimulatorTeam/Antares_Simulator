@@ -268,14 +268,11 @@ typedef // Prices
                                                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
-    
+typedef BindingConstMarginCost< // Marginal cost for a binding constraint
+  Container::EndOfList          // End of variable list
+  >
 
-typedef          
-    BindingConstMarginCost<   // Marginal cost for a binding constraint
-        Container::EndOfList    // End of variable list
-    >
-  
-    VariablesPerBindingConstraints;
+  VariablesPerBindingConstraints;
 
 typedef Variable::Join<
   // Variables for each area / links attached to the areas

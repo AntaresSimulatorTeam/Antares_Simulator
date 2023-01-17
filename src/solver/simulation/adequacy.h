@@ -27,8 +27,6 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
-#include <yuni/yuni.h>
-#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/adequacy/all.h"
 #include "../variable/economy/all.h"
