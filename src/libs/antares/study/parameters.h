@@ -42,9 +42,7 @@
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief General data for a study
@@ -597,8 +595,7 @@ const char* StudyModeToCString(StudyMode mode);
 */
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "parameters.hxx"
 

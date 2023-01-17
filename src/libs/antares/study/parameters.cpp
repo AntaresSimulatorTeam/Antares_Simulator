@@ -48,9 +48,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 //! Hard coded maximum number of MC years
 const uint maximumMCYears = 100000;
@@ -2021,5 +2019,4 @@ bool Parameters::RenewableGeneration::isClusters() const
     return rgModelling == Antares::Data::rgClusters;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

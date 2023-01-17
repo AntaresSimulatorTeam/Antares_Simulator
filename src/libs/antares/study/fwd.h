@@ -575,11 +575,7 @@ class Sets;
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
 ** \brief Types of Adequacy patch mode
@@ -622,9 +618,7 @@ enum class AdqPatchPTO
 
 }; // enum AdqPatchPTO
 
-} // namespace AdequacyPatch
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch
 
 namespace Benchmarking
 {
