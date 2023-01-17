@@ -25,12 +25,6 @@ namespace Yuni
 class YUNI_DECL Version final
 {
 public:
-    /*!
-    ** \brief Get the version of the Yuni Library
-    */
-    static void InternalLib(Version& v);
-
-public:
     //! \name Constructor
     //@{
     //! Default constructor

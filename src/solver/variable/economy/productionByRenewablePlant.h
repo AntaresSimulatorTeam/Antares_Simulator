@@ -315,11 +315,6 @@ public:
         NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
     {
         // Ask to build the digest to the next variable

@@ -150,18 +150,17 @@ void Optimization::onSelectExportMPS(wxCommandEvent&)
 template<Data::mpsExportStatus MPS_EXPORT_STATUS>
 void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
 {
-    const wxMenuItem* it = Menu::CreateItem(
-        &menu,
-        wxID_ANY,
-        mpsExportStatusToString(MPS_EXPORT_STATUS),
-        mpsExportIcon(MPS_EXPORT_STATUS),
-        wxEmptyString);
+    const wxMenuItem* it = Menu::CreateItem(&menu,
+                                            wxID_ANY,
+                                            mpsExportStatusToString(MPS_EXPORT_STATUS),
+                                            mpsExportIcon(MPS_EXPORT_STATUS),
+                                            wxEmptyString);
 
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
+                 nullptr,
+                 this);
 }
 
 const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity);
@@ -169,18 +168,17 @@ const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity
 template<Data::GlobalTransmissionCapacities CAPACITY>
 void Optimization::createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu)
 {
-    const wxMenuItem* it = Menu::CreateItem(
-        &menu,
-        wxID_ANY,
-        GlobalTransmissionCapacitiesToString_Display(CAPACITY),
-        transmissionCapacityIcon(CAPACITY),
-        wxEmptyString);
+    const wxMenuItem* it = Menu::CreateItem(&menu,
+                                            wxID_ANY,
+                                            GlobalTransmissionCapacitiesToString_Display(CAPACITY),
+                                            transmissionCapacityIcon(CAPACITY),
+                                            wxEmptyString);
 
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
+                 nullptr,
+                 this);
 }
 
 } // namespace Options

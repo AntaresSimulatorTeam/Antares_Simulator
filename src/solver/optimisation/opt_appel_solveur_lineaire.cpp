@@ -95,7 +95,10 @@ private:
     clock::time_point end_;
 };
 
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIntervalle)
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
+                         int NumIntervalle,
+                         const int optimizationNumber,
+                         std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
     int Var;
     int Cnt;
@@ -120,7 +123,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace, int NumIn
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
-    const int opt = ProblemeHebdo->numeroOptimisation[NumIntervalle] - 1;
+    const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
     OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
 
@@ -241,17 +244,16 @@ RESOLUTION:
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
-
+    const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
     mpsWriterFactory mps_writer_factory(
-      ProblemeHebdo, NumIntervalle, &Probleme, ortoolsUsed, solver, numSpace);
+      ProblemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
-    mps_writer->runIfNeeded(study->resultWriter);
+    mps_writer->runIfNeeded(study->resultWriter, filename);
 
     TimeMeasurement measure;
     if (ortoolsUsed)
     {
-        const bool keepBasis
-          = ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION;
+        const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
         if (solver != nullptr)
         {
@@ -328,7 +330,7 @@ RESOLUTION:
                 *pt = ProblemeAResoudre->CoutsReduits[Var];
         }
 
-        if (ProblemeHebdo->numeroOptimisation[NumIntervalle] == PREMIERE_OPTIMISATION)
+        if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
@@ -370,7 +372,7 @@ RESOLUTION:
         }
 
         auto mps_writer_on_error = mps_writer_factory.createOnOptimizationError();
-        mps_writer_on_error->runIfNeeded(study->resultWriter);
+        mps_writer_on_error->runIfNeeded(study->resultWriter, filename);
 
         return false;
     }
@@ -378,27 +380,18 @@ RESOLUTION:
     return true;
 }
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(void* Prob,
-                                                    uint numSpace,
-                                                    int NumeroDeLIntervalle)
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
+  double optimalSolutionCost,
+  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  int optimizationNumber)
 {
     Yuni::Clob buffer;
-    double CoutOptimalDeLaSolution;
-    PROBLEME_HEBDO* Probleme;
-
-    Probleme = (PROBLEME_HEBDO*)Prob;
-
-    CoutOptimalDeLaSolution = 0.;
-    if (Probleme->numeroOptimisation[NumeroDeLIntervalle] == PREMIERE_OPTIMISATION)
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution1[NumeroDeLIntervalle];
-    else
-        CoutOptimalDeLaSolution = Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
-
-    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", CoutOptimalDeLaSolution);
-
     auto study = Data::Study::Current::Get();
-    auto optNumber = Probleme->numeroOptimisation[NumeroDeLIntervalle];
-    auto filename = getFilenameWithExtension("criterion", "txt", numSpace, optNumber);
+    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
     auto writer = study->resultWriter;
+
+    logs.info() << "Solver Criterion File: `" << filename << "'";
+
+    buffer.appendFormat("* Optimal criterion value :   %11.10e\n", optimalSolutionCost);
     writer->addEntryFromBuffer(filename, buffer);
 }

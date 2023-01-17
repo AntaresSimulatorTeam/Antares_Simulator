@@ -268,9 +268,6 @@ set(SRC_STUDY_PARAMETERS
 	study/UnfeasibleProblemBehavior.cpp
     # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
     study/UnfeasibleProblemBehavior.hpp
-	study/OrtoolsSolver.cpp
-    # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
-    study/OrtoolsSolver.hpp
 	)
 source_group("study\\general data" FILES ${SRC_STUDY_PARAMETERS})
 
@@ -568,5 +565,4 @@ target_link_libraries(libantares-core
 		libantares-solver-variable-info
         result_writer
 	)
-
 

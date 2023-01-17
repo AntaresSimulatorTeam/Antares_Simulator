@@ -27,37 +27,23 @@
 
 #include "../simulation/simulation.h"
 #include "adequacy_patch.h"
+#include <cassert>
 
-namespace Antares
+namespace Antares::Data::AdequacyPatch
 {
-namespace Data
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is inside adq path (type 2).
+ *
+ * @param ExtremityNodeAdequacyPatchType uint: The adq type of the node at the end of the link.
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeInside(
+  AdequacyPatchMode extremityType)
 {
-namespace AdequacyPatch
-{
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStep(
-  AdequacyPatchMode OriginNodeAdequacyPatchType,
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
-{
-    switch (OriginNodeAdequacyPatchType)
-    {
-    case physicalAreaInsideAdqPatch:
-        return SetNTCForAdequacyFirstStepOriginNodeInsideAdq(ExtremityNodeAdequacyPatchType);
-
-    case physicalAreaOutsideAdqPatch:
-        return SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(ExtremityNodeAdequacyPatchType,
-                                                              SetToZero12LinksForAdequacyPatch,
-                                                              SetToZero11LinksForAdequacyPatch);
-    default:
-        return leaveLocalValues;
-    }
-}
-
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType)
-{
-    switch (ExtremityNodeAdequacyPatchType)
+    switch (extremityType)
     {
     case physicalAreaInsideAdqPatch:
     case physicalAreaOutsideAdqPatch:
@@ -67,17 +53,73 @@ LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeInside
     }
 }
 
-LinkCapacityForAdequacyPatchFirstStep SetNTCForAdequacyFirstStepOriginNodeOutsideAdq(
-  AdequacyPatchMode ExtremityNodeAdequacyPatchType,
-  bool SetToZero12LinksForAdequacyPatch,
-  bool SetToZero11LinksForAdequacyPatch)
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch, when start
+ * node is outside adq path (type 1).
+ *
+ * @param extremityType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTC_OriginNodeOutside(
+  AdequacyPatchMode extremityType,
+  bool SetToZero12Links,
+  bool SetToZero11Links)
 {
-    switch (ExtremityNodeAdequacyPatchType)
+    switch (extremityType)
     {
     case physicalAreaInsideAdqPatch:
-        return SetToZero12LinksForAdequacyPatch ? setToZero : setExtremityOrigineToZero;
+        return SetToZero12Links ? setToZero : setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
-        return SetToZero11LinksForAdequacyPatch ? setToZero : leaveLocalValues;
+        return SetToZero11Links ? setToZero : leaveLocalValues;
+    default:
+        return leaveLocalValues;
+    }
+}
+
+/*!
+ * Determines restriction type for transmission links for first step of adequacy patch.
+ *
+ * @param originType uint: The adq type of the node at the start of the link.
+ *
+ * @param extremityType uint: The adq type of the node at the end of the link.
+ *
+ * @param SetToZero12Links bool: Switch to cut links from nodes outside adq patch
+ * (type 1) towards nodes inside adq patch (type 2).
+ *
+ * @param SetToZero11Links bool: Switch to cut links between nodes outside adq patch
+ * (type 1).
+ *
+ * @return uint from an enumeration that describes the type of restrictions to put on this link for
+ * adq purposes.
+ */
+static LinkCapacityForAdequacyPatchFirstStep getNTCStatus(const PROBLEME_HEBDO* ProblemeHebdo,
+                                                          const int Interco)
+{
+    assert(ProblemeHebdo);
+    assert(ProblemeHebdo);
+
+    const AdequacyPatchMode originType
+      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco];
+    const AdequacyPatchMode extremityType
+      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco];
+    const bool SetToZero12Links = ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
+    const bool SetToZero11Links = ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
+
+    switch (originType)
+    {
+    case physicalAreaInsideAdqPatch:
+        return getNTC_OriginNodeInside(extremityType);
+
+    case physicalAreaOutsideAdqPatch:
+        return getNTC_OriginNodeOutside(extremityType, SetToZero12Links, SetToZero11Links);
     default:
         return leaveLocalValues;
     }
@@ -89,15 +131,8 @@ void setBoundsAdqPatch(double& Xmax,
                        const int Interco,
                        PROBLEME_HEBDO* ProblemeHebdo)
 {
-    LinkCapacityForAdequacyPatchFirstStep SetToZeroLinkNTCForAdequacyPatchFirstStep;
-
-    SetToZeroLinkNTCForAdequacyPatchFirstStep = SetNTCForAdequacyFirstStep(
-      ProblemeHebdo->adequacyPatchRuntimeData.originAreaType[Interco],
-      ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaType[Interco],
-      ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero,
-      ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero);
-
-    switch (SetToZeroLinkNTCForAdequacyPatchFirstStep)
+    const auto ntcToZeroStatus = getNTCStatus(ProblemeHebdo, Interco);
+    switch (ntcToZeroStatus)
     {
     case setToZero:
     {
@@ -111,7 +146,7 @@ void setBoundsAdqPatch(double& Xmax,
         Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
         break;
     }
-    case setExtremityOrigineToZero:
+    case setExtremityOriginToZero:
     {
         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
         Xmin = 0.;
@@ -133,6 +168,4 @@ void setBoundsNoAdqPatch(double& Xmax,
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 }
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch

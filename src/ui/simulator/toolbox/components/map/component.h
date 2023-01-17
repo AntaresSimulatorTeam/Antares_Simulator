@@ -279,9 +279,9 @@ private:
     template<unsigned int N>
     inline void evtNewArea(wxCommandEvent&)
     {
-       if (pMapActiveLayer)
-           pMapActiveLayer->addNewNode(N);
-       setFocus();
+        if (pMapActiveLayer)
+            pMapActiveLayer->addNewNode(N);
+        setFocus();
     }
 
     void onToggleMouseSelectionArea(void*);

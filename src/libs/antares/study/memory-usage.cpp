@@ -52,9 +52,9 @@ StudyMemoryUsage::StudyMemoryUsage(const Study& s) :
 {
     // alias to parameters
     auto& parameters = study.parameters;
-
+    assert(parameters.yearsFilter.size() == years && "Invalid size for yearsFilter");
     // playlist
-    if (parameters.userPlaylist and parameters.yearsFilter)
+    if (parameters.userPlaylist && !parameters.yearsFilter.empty())
     {
         uint y = 0;
         for (uint i = 0; i != years; ++i)
@@ -152,11 +152,11 @@ Yuni::uint64 computeOverheadDiskSpaceForAnyDataLevelComponent()
     // Reminder : a data level can be an area, a link or a binding constraint
     Yuni::uint64 diskSpace = 0;
 
-    diskSpace += 160 * 1024;    // hourly
-    diskSpace += 6 * 1024;      // daily
-    diskSpace += 6 * 1024;      // weekly
-    diskSpace += 2 * 1024;      // monthly
-    diskSpace += 1024;          // annual
+    diskSpace += 160 * 1024; // hourly
+    diskSpace += 6 * 1024;   // daily
+    diskSpace += 6 * 1024;   // weekly
+    diskSpace += 2 * 1024;   // monthly
+    diskSpace += 1024;       // annual
 
     return diskSpace;
 }

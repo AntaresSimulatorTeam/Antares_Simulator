@@ -25,7 +25,6 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-
 #include <yuni/core/string.h>
 #include <yuni/yuni.h>
 #include <fstream>
@@ -38,11 +37,10 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-
 void LayerData::loadLayers(const AnyString& filename)
 {
     IniFile ini;
-    if (std::ifstream(filename.c_str()).good() && ini.open(filename) ) // check if file exists
+    if (std::ifstream(filename.c_str()).good() && ini.open(filename)) // check if file exists
     {
         // The section
         if (auto* section = ini.find("layers"); section)

@@ -25,21 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study.h>
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
-#include <antares/study/parts/hydro/container.h>
 
 #include "simulation.h"
-
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "sim_structure_probleme_adequation.h"
-#include "sim_extern_variables_globales.h"
-#include "../optimisation/opt_fonctions.h"
-#include "../optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include <antares/emergency.h>
 
@@ -335,7 +325,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
     for (int opt = 0; opt < 7; opt++)
     {
-        problem.numeroOptimisation[opt] = 0;
         problem.coutOptimalSolution1[opt] = 0.;
         problem.coutOptimalSolution2[opt] = 0.;
         problem.tempsResolution1[opt] = 0.;
@@ -420,7 +409,8 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 logs.error() << "internal error. Please submit a full bug report";
                 break;
             }
-            }        }
+            }
+        }
     }
 
     int weekDayIndex[8];
@@ -446,14 +436,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << state.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << problem.weekInTheYear + 1
                              << " : initial level < 0";
                 AntaresSolverEmergencyShutdown();
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << state.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << problem.weekInTheYear + 1
                              << " : initial level over capacity";
                 AntaresSolverEmergencyShutdown();
             }

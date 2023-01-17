@@ -157,7 +157,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
 
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
-
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo
                       ->BruitSurCoutHydraulique[Pays][ProblemeHebdo->HeureDansLAnnee + PdtHebdo];
@@ -314,14 +313,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* ProblemeHebdo,
             {
                 ProblemeAResoudre->CoutLineaire[Var]
                   = ProblemeHebdo->CoutDeDefaillanceNegative[Pays];
-            }
-
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceEnReserve[Pays];
-
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                ProblemeAResoudre->CoutLineaire[Var]
-                  = ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays];
             }
         }
 

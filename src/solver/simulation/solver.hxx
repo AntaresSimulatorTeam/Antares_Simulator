@@ -40,14 +40,10 @@
 #include <antares/emergency.h>
 #include "../ts-generator/generator.h"
 
-
 #include "../hydro/management.h" // Added for use of randomReservoirLevel(...)
 
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
-
-#define SEP Yuni::IO::Separator
-#define HYDRO_HOT_START 0
 
 namespace Antares
 {
@@ -1073,7 +1069,7 @@ uint ISimulation<Impl>::buildSetsOfParallelYears(
   std::vector<setOfParallelYears>& setsOfParallelYears)
 {
     // Filter on the years
-    const bool* yearsFilter = study.parameters.yearsFilter;
+    const auto& yearsFilter = study.parameters.yearsFilter;
 
     // number max of years (to be executed or not) in a set of parallel years
     uint maxNbYearsPerformed = 0;
@@ -1544,34 +1540,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
 
         std::vector<unsigned int>::iterator year_it;
 
-#if HYDRO_HOT_START != 0
-        // Printing on columns the years chained by final levels
-        if (study.parameters.initialReservoirLevels.iniLevels == Data::irlHotStart)
-        {
-            Yuni::String folder;
-            folder << study.folderOutput << SEP << "debug" << SEP << "solver";
-            if (Yuni::IO::Directory::Create(folder))
-            {
-                Yuni::String filename = folder;
-                filename << SEP << "hydroHotstart.txt";
-                Yuni::IO::File::Stream file;
-                if (file.open(filename, Yuni::IO::OpenMode::append))
-                {
-                    for (year_it = set_it->yearsIndices.begin();
-                         year_it != set_it->yearsIndices.end();
-                         ++year_it)
-                    {
-                        // Get the index of the year
-                        uint y = *year_it;
-
-                        if (set_it->isYearPerformed[y])
-                            file << y + 1 << '\t';
-                    }
-                    file << '\n';
-                }
-            }
-        }
-#endif
         bool yearPerformed = false;
         for (year_it = set_it->yearsIndices.begin(); year_it != set_it->yearsIndices.end();
              ++year_it)
@@ -1586,7 +1554,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
                 yearPerformed = true;
                 numSpace = set_it->performedYearToSpace[y];
                 study.runtime->timeseriesNumberYear[numSpace] = y;
-                study.runtime->currentYear[numSpace] = y;
             }
 
             // If the year has not to be rerun, we skip the computation of the year.

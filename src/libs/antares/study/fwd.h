@@ -534,23 +534,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-enum DayAheadReserveManagement
-{
-    daGlobal = 0,
-    daLocal,
-    daReserveUnknown,
-};
-
-/*!
-** \brief Convert a day ahead reserve allocation mode into a text
-*/
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode);
-
-/*!
-** \brief Convert a text into day ahead reserve allocation mode
-*/
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
-
 // Format of results
 enum ResultFormat
 {
@@ -566,8 +549,8 @@ enum ResultFormat
 enum class mpsExportStatus : int
 {
     NO_EXPORT = 0,
-    EXPORT_FIRST_OPIM = 1,
-    EXPORT_SECOND_OPIM = 2,
+    EXPORT_FIRST_OPTIM = 1,
+    EXPORT_SECOND_OPTIM = 2,
     EXPORT_BOTH_OPTIMS = 3,
     UNKNOWN_EXPORT = 4
 };
@@ -623,7 +606,7 @@ enum LinkCapacityForAdequacyPatchFirstStep
     //! set only origine->extremity NTC to zero
     setOrigineExtremityToZero,
     //! set only extremity->origine NTC to zero
-    setExtremityOrigineToZero
+    setExtremityOriginToZero
 
 }; // enum NTC
 } // namespace AdequacyPatch

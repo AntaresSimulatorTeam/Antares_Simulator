@@ -294,12 +294,6 @@ public:
         NextType::hourForEachThermalCluster(state);
     }
 
-    void hourEnd(State& state, uint hourInTheYear)
-    {
-        // Next variable
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set, uint numSpace)
     {

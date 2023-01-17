@@ -2,11 +2,8 @@
 #ifndef __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 # define __TESTS_ANTARES_LIBS_LOGS_FAKE_H__
 
-#include<string>
-#include<yuni/core/string/string.h>
-
-
-using namespace std;
+#include <string>
+#include <yuni/core/string/string.h>
 
 namespace Antares
 {
@@ -29,8 +26,8 @@ namespace Antares
 			}
 
 			void clear() { buffer_.clear(); }
-			string content() { return buffer_.to<string>(); }
-			bool contains(string sub_string) { return buffer_.contains(sub_string); }
+			std::string content() const { return buffer_.to<std::string>(); }
+			bool contains(const std::string sub_string) const { return buffer_.contains(sub_string); }
 			bool empty() { return buffer_.empty(); }
 		private:
 			Yuni::CString<1024> buffer_;

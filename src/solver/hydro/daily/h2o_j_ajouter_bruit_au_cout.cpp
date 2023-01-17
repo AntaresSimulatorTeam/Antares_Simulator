@@ -22,7 +22,8 @@ void H2O_J_AjouterBruitAuCout(DONNEES_MENSUELLES* donnesMensuelles)
     {
         for (int j = 0; j < ProblemeLineairePartieFixe[i]->NombreDeVariables; j++)
         {
-            ProblemeLineairePartieFixe[i]->CoutLineaire[j] += noiseGenerator() * Constants::noiseAmplitude;
+            ProblemeLineairePartieFixe[i]->CoutLineaire[j]
+              += noiseGenerator() * Constants::noiseAmplitude;
         }
 
         ProblemeLineairePartieFixe[i]

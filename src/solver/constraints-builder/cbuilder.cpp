@@ -94,7 +94,7 @@ bool CBuilder::update(bool applyCheckBox)
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-       // Try to open link data files (GUI only)
+        // Try to open link data files (GUI only)
         if (link->parameters.jit)
         {
             YString dataFilename = link->parameters.jit->sourceFilename;

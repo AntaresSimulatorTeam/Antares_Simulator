@@ -7,6 +7,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - issue-*
       - release/*
       - doc/*
 
@@ -33,7 +34,7 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.7/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
@@ -41,7 +42,7 @@ jobs:
     - name: Pre-requisites
       shell: cmd
       run: |
-          choco install wget unzip --no-progress
+          choco install wget unzip zip --no-progress
 
     - name : Init VCPKG submodule
       run: |
@@ -131,11 +132,6 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
-    - name: Run adq-patch related tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R test-adq-patch
-
     - name: Run unit and end-to-end tests
       run: |
            cd _build
@@ -147,6 +143,19 @@ jobs:
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
+
+    - name: Run MPS comparison test
+      shell: bash
+      run: |
+           cd _build
+           ctest -C Release --output-on-failure -R mps
+
+    - name: Upload build on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: MPS-diff
+        path: ${{ github.workspace }}/src/tests/mps
 
     # simtest
     - name: Read simtest version
@@ -170,6 +179,12 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
+    - name: Solver archive creation
+      shell: bash
+      run: |
+           cd _build
+           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
+
     - name: NSIS Installer creation
       shell: bash
       run: |
@@ -188,13 +203,11 @@ jobs:
     - name: Installer upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
 
     - name: Archive upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-windows-archive
         path: _build/*.zip
 
     - name: Run short-tests
