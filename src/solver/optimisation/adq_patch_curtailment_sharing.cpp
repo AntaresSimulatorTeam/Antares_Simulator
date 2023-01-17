@@ -8,11 +8,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 
 double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
@@ -168,9 +164,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
     }
 }
 
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch
 
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
