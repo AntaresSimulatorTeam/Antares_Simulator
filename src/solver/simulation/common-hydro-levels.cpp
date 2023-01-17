@@ -36,11 +36,7 @@
 #include <antares/study/area/scratchpad.h>
 #include <antares/study/parts/hydro/container.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 void computingHydroLevels(const Data::Study& study,
                           PROBLEME_HEBDO& problem,
@@ -183,6 +179,4 @@ void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& pro
     });
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

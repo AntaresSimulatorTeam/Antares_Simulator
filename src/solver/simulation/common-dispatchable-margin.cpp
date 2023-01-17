@@ -33,11 +33,7 @@
 #include "sim_structure_donnees.h"
 #include "sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 void DispatchableMarginForAllAreas(const Data::Study& study,
                                    PROBLEME_HEBDO& problem,
@@ -78,6 +74,4 @@ void DispatchableMarginForAllAreas(const Data::Study& study,
     });
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

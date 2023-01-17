@@ -2,11 +2,7 @@
 
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
  * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
@@ -18,6 +14,4 @@ void setNTCbounds(double& Xmax,
                   const int Interco,
                   PROBLEME_HEBDO* ProblemeHebdo);
 
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch

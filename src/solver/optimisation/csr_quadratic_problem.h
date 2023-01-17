@@ -1,6 +1,7 @@
+#pragma once
 /*
-** Copyright 2007-2018 RTE
-** Authors: Antares_Simulator Team
+** Copyright 2007-2023 RTE
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -24,14 +25,24 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_SIMULATION_APPLY_SCENARIO_H__
-#define __SOLVER_SIMULATION_APPLY_SCENARIO_H__
 
-#include <antares/study.h>
+class HOURLY_CSR_PROBLEM;
 
-namespace Antares::Solver
+class CsrQuadraticProblem
 {
-void ApplyCustomScenario(Data::Study& study);
-} // namespace Antares::Solver
+public:
+    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM& hourly) :
+        ProblemeHebdo (prob),
+        hourlyCsrProblem (hourly)
+        {}
 
-#endif // __SOLVER_SIMULATION_APPLY_SCENARIO_H__
+    void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
+
+private:
+    PROBLEME_HEBDO *ProblemeHebdo;
+    HOURLY_CSR_PROBLEM& hourlyCsrProblem;
+
+    void setConstraintsOnFlows(double* Pi, int* Colonne);
+    void setNodeBalanceConstraints(double* Pi, int* Colonne);
+    void setBindingConstraints(double* Pi, int* Colonne);
+};

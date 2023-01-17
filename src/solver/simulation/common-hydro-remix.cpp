@@ -40,11 +40,7 @@ using namespace Yuni;
 
 #define EPSILON 1e-6
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 template<uint step>
 static bool Remix(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear)
@@ -246,6 +242,4 @@ void RemixHydroForAllAreas(const Data::Study& study,
         }
     }
 }
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

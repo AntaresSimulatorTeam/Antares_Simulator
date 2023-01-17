@@ -41,11 +41,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 enum
 {
@@ -298,6 +294,4 @@ void Economy::prepareClustersInMustRunMode(uint numSpace)
     PrepareDataFromClustersInMustrunMode(study, numSpace);
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

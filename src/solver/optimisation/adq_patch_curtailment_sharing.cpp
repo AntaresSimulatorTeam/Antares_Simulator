@@ -1,7 +1,8 @@
 ﻿
 #include "adq_patch_curtailment_sharing.h"
-
+#include "csr_quadratic_problem.h"
 #include "opt_fonctions.h"
+
 #include <cmath>
 #include "../study/area/scratchpad.h"
 
@@ -211,7 +212,8 @@ void HOURLY_CSR_PROBLEM::buildProblemVariables()
 
 void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
 {
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR(problemeHebdo, *this);
+    CsrQuadraticProblem csrProb(problemeHebdo, *this);
+    csrProb.OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
 }
 
 void HOURLY_CSR_PROBLEM::setVariableBounds()

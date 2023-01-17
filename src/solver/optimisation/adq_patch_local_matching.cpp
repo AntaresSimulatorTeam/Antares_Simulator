@@ -1,10 +1,6 @@
 #include "adq_patch_local_matching.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch, when start
@@ -136,6 +132,4 @@ void setNTCbounds(double& Xmax,
     }
 }
 
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch

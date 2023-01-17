@@ -32,9 +32,7 @@
 #include "../../fwd.h"
 #include "allocation.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Hydro for a single area
@@ -191,8 +189,7 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            Matrix<double, double>& creditMod,
                            int modType);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "../../area.h"
 

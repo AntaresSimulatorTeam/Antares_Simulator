@@ -48,9 +48,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 //! Hard coded maximum number of MC years
 const uint maximumMCYears = 100000;
@@ -273,24 +271,24 @@ void Parameters::resetThresholdsAdqPatch()
       = defaultValueThresholdVarBoundsRelaxation;
 }
 
-void Parameters::resetAdqPatch_LocalMatching()
+void Parameters::AdequacyPatch::LocalMatching::reset()
 {
-    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
-    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+    setToZeroOutsideInsideLinks = true;
+    setToZeroOutsideOutsideLinks = true;
 }
 
-void Parameters::resetAdqPatch_CurtailmentSharing()
+void Parameters::AdequacyPatch::CurtailmentSharing::reset()
 {
-    adqPatch.curtailmentSharing.priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
-    adqPatch.curtailmentSharing.includeHurdleCost = false;
-    adqPatch.curtailmentSharing.checkCsrCostFunction = false;
+    priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+    includeHurdleCost = false;
+    checkCsrCostFunction = false;
 }
 
 void Parameters::resetAdqPatchParameters()
 {
     adqPatch.enabled = false;
-    resetAdqPatch_LocalMatching();
-    resetAdqPatch_CurtailmentSharing();
+    adqPatch.localMatching.reset();
+    adqPatch.curtailmentSharing.reset();
     resetThresholdsAdqPatch();
 }
 
@@ -2021,5 +2019,4 @@ bool Parameters::RenewableGeneration::isClusters() const
     return rgModelling == Antares::Data::rgClusters;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

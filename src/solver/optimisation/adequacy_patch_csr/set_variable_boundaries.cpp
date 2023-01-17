@@ -40,12 +40,10 @@
 
 using namespace Yuni;
 
-void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     int Var;
     double* AdresseDuResultat;
-    int hour;
-    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -81,12 +79,10 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsr
 }
 
 void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
-                              const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                              int hour)
 {
     int Var;
     double* AdresseDuResultat;
-    int hour;
-    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -119,12 +115,10 @@ void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     int Var;
     double* AdresseDuResultat;
-    int hour;
-    hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double csrSolverRelaxation = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -223,8 +217,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
 
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
-
-    setBoundsOnENS(ProblemeHebdo, hourlyCsrProblem);
-    setBoundsOnSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);
-    setBoundsOnFlows(ProblemeHebdo, hourlyCsrProblem);
+    const auto hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    setBoundsOnENS(ProblemeHebdo, hour);
+    setBoundsOnSpilledEnergy(ProblemeHebdo, hour);
+    setBoundsOnFlows(ProblemeHebdo, hour);
 }

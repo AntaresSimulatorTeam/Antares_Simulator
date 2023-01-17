@@ -42,9 +42,7 @@
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief General data for a study
@@ -140,14 +138,6 @@ public:
     ** \brief Reset to default all threshold values in adequacy patch
     */
     void resetThresholdsAdqPatch();
-    /*!
-    ** \brief Reset to default values related to local matching
-    */
-    void resetAdqPatch_LocalMatching();
-    /*!
-    ** \brief Reset to default values related to curtailment sharing
-    */
-    void resetAdqPatch_CurtailmentSharing();
     /*!
     ** \brief Reset to default all adequacy patch values
     */
@@ -514,6 +504,10 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
+            /*!
+             ** \brief Reset to default values related to local matching
+             */
+            void reset();
         };
         bool enabled;
         LocalMatching localMatching;
@@ -532,10 +526,15 @@ public:
             bool includeHurdleCost;
             //! Check CSR cost function prior & after CSR optimization
             bool checkCsrCostFunction;
+            /*!
+             ** \brief Reset to default values related to curtailment sharing
+             */
+            void reset();
         };
         CurtailmentSharing curtailmentSharing;
 
         void addExcludedVariables(std::vector<std::string>&) const;
+
     };
 
     AdequacyPatch adqPatch;
@@ -596,8 +595,7 @@ const char* StudyModeToCString(StudyMode mode);
 */
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "parameters.hxx"
 
