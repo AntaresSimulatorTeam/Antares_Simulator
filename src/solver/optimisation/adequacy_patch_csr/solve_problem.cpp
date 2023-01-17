@@ -128,7 +128,7 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
         {
             *pt = ProblemeAResoudre->X[Var];
         }
-        logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
+        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
     }
 }
 
