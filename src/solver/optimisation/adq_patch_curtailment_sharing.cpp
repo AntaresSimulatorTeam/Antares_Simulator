@@ -35,45 +35,6 @@ double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
     return 0.0;
 }
 
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
-                                            AreaList& areas,
-                                            uint numSpace)
-{
-    double netPositionInit;
-    double densNew;
-    double totalNodeBalance;
-    double totalLmrViolation = 0.0;
-    const int numOfHoursInWeek = 168;
-
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; Area++)
-    {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
-        {
-            for (int hour = 0; hour < numOfHoursInWeek; hour++)
-            {
-                std::tie(netPositionInit, densNew, totalNodeBalance)
-                  = calculateAreaFlowBalance(ProblemeHebdo, Area, hour);
-                // adjust densNew according to the new specification/request by ELIA
-                /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
-                                        + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
-                auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
-                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-                densNew = std::max(0.0, densNew - dtgMrg);
-                // write down densNew values for all the hours
-                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
-                // copy spilled Energy values into spilled Energy values after CSR
-                ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
-                  = ProblemeHebdo->ResultatsHoraires[Area]
-                      ->ValeursHorairesDeDefaillanceNegative[hour];
-                // check LMR violations
-                totalLmrViolation
-                  += LmrViolationAreaHour(ProblemeHebdo, totalNodeBalance, Area, hour);
-            }
-        }
-    }
-    return totalLmrViolation;
-}
-
 std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
                                                             int Area,
                                                             int hour)
