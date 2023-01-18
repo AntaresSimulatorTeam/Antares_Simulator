@@ -522,9 +522,9 @@ private:
     //! Advanced parameters
     void evtOnOptionsAdvanced(wxCommandEvent& evt);
     //! Adequacy Patch Configure
-    void evtOnOptionsAdequacyPatchOptions(const wxCommandEvent& evt);
+    void evtOnOptionsAdequacyPatchOptions(wxCommandEvent& evt);
     //! Adequacy Patch Areas
-    void evtOnOptionsAdequacyPatchAreas(const wxCommandEvent& evt);
+    void evtOnOptionsAdequacyPatchAreas(wxCommandEvent& evt);
     //@}
 
     //! \name Event: Menu: Window
