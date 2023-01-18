@@ -27,12 +27,6 @@
 
 #pragma once
 
-// forward declaration
-namespace Antares::Solver::Variable
-{
-class State;
-}
-
 class HourlyCSRProblem
 {
 private:
