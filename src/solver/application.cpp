@@ -115,6 +115,18 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
     }
 }
 
+void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
+                                    const bool includeHurdleCost,
+                                    const bool includeHurdleCostCsr)
+{
+    // No need to check if adq-patch is disabled
+    if (!adqPatchOn)
+        return;
+
+    if (includeHurdleCostCsr && !includeHurdleCost)
+        throw Error::IncompatibleHurdleCostCSR();
+}
+
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
@@ -282,7 +294,11 @@ void Application::prepare(int argc, char* argv[])
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+
     checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
+    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
+                                   pParameters->include.hurdleCosts,
+                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
