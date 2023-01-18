@@ -232,7 +232,7 @@ void HourlyCSRProblem::buildProblemVariables()
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
     CsrQuadraticProblem csrProb(problemeHebdo, *this);
-    csrProb.OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
+    csrProb.buildConstraintMatrix();
 }
 
 void HourlyCSRProblem::setVariableBounds()

@@ -37,7 +37,7 @@ public:
     {
     }
 
-    void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
+    void buildConstraintMatrix();
 
 private:
     PROBLEME_HEBDO* ProblemeHebdo;

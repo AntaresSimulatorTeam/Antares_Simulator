@@ -272,7 +272,7 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
     }
 }
 
-void CsrQuadraticProblem::OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR()
+void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
     double* Pi;
