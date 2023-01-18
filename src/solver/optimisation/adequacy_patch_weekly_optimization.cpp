@@ -72,7 +72,7 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            const double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInAWeek; ++h)
                 sumENS[h] += ENS[h];
         }

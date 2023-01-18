@@ -142,7 +142,7 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
             || !(ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch))
         {
-            return;
+            continue;
         }
 
         // flow
@@ -210,7 +210,7 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+  const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] bounds";
 

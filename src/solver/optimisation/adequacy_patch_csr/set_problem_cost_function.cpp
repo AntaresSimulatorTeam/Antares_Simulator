@@ -109,8 +109,9 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hour
             || !(ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch))
         {
-            return;
+            continue;
         }
+
         TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
         // flow
         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
