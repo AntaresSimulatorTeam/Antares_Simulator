@@ -78,8 +78,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     }
 }
 
-void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
-                              int hour)
+void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     int Var;
     double* AdresseDuResultat;

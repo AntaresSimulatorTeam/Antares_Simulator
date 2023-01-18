@@ -31,15 +31,15 @@ class HourlyCSRProblem;
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HourlyCSRProblem& hourly) :
-        ProblemeHebdo (prob),
-        hourlyCsrProblem (hourly)
-        {}
+    CsrQuadraticProblem(PROBLEME_HEBDO* prob, HourlyCSRProblem& hourly) :
+     ProblemeHebdo(prob), hourlyCsrProblem(hourly)
+    {
+    }
 
     void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
 
 private:
-    PROBLEME_HEBDO *ProblemeHebdo;
+    PROBLEME_HEBDO* ProblemeHebdo;
     HourlyCSRProblem& hourlyCsrProblem;
 
     void setConstraintsOnFlows(double* Pi, int* Colonne);

@@ -1,4 +1,4 @@
-﻿
+
 #include "adq_patch_curtailment_sharing.h"
 #include "csr_quadratic_problem.h"
 #include "opt_fonctions.h"
@@ -14,7 +14,6 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-
 double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
                             int Area,
