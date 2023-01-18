@@ -36,8 +36,6 @@
 #include <memory>
 #include <yuni/core/math.h>
 
-/* using namespace Antares::Data::AdequacyPatch; */
-
 typedef struct
 {
     int* NumeroDeVariableDeLInterconnexion;

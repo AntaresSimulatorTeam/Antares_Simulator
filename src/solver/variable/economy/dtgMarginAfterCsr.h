@@ -131,7 +131,6 @@ public:
         };
     };
 
-public:
     ~DtgMarginCsr()
     {
         delete[] pValuesForTheCurrentYear;

@@ -36,7 +36,7 @@ class weeklyOptimization : public interfaceWeeklyOptimization
 {
 public:
     explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    ~weeklyOptimization() = default;
+    ~weeklyOptimization() override = default;
     void solve(uint, int) override;
 };
 } // namespace Antares::Solver::Simulation

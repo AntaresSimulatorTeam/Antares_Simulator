@@ -126,14 +126,14 @@ void ApplWnd::evtOnOptionsAdvanced(wxCommandEvent&)
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdvancedParameters>(this);
 }
 
-void ApplWnd::evtOnOptionsAdequacyPatchOptions(wxCommandEvent&)
+void ApplWnd::evtOnOptionsAdequacyPatchOptions(const wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())
         Dispatcher::GUI::CreateAndShowModal<Window::Options::AdequacyPatchOptions>(this);
 }
 
-void ApplWnd::evtOnOptionsAdequacyPatchAreas(wxCommandEvent&)
+void ApplWnd::evtOnOptionsAdequacyPatchAreas(const wxCommandEvent&)
 {
     Forms::Disabler<ApplWnd> disabler(*this);
     if (Data::Study::Current::Valid())

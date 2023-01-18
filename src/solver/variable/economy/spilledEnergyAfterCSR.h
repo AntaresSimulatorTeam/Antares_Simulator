@@ -132,7 +132,6 @@ public:
         };
     };
 
-public:
     ~SpilledEnergyAfterCSR()
     {
         delete[] pValuesForTheCurrentYear;
