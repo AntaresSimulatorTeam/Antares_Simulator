@@ -113,11 +113,12 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
+    HourlyCSRProblem hourlyCsrProblem(problemeHebdo_);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
                     << " Hour:" << week * nbHoursInAWeek + hourInWeek + 1;
-        HourlyCSRProblem hourlyCsrProblem(hourInWeek, problemeHebdo_);
+        hourlyCsrProblem.setHour(hourInWeek);
         hourlyCsrProblem.run(week, year);
     }
 }

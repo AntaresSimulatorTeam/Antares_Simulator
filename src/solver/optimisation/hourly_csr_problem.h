@@ -45,13 +45,17 @@ public:
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo;
-    HourlyCSRProblem(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    HourlyCSRProblem(PROBLEME_HEBDO* pProblemeHebdo) : problemeHebdo(pProblemeHebdo)
     {
-        hourInWeekTriggeredCsr = hourInWeek;
-        problemeHebdo = pProblemeHebdo;
         belowThisThresholdSetToZero
           = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     };
+
+    inline void setHour(int hour)
+    {
+        hourInWeekTriggeredCsr = hour;
+    }
+
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
