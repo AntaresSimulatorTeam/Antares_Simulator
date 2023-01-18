@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <vector>
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../solver/simulation/simulation.h"
@@ -275,21 +276,16 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
-    double* Pi;
-    int* Colonne;
+
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    std::vector<double> Pi(ProblemeAResoudre->NombreDeVariables);
+    std::vector<int> Colonne(ProblemeAResoudre->NombreDeVariables);
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
 
-    setConstraintsOnFlows(Pi, Colonne);
-    setNodeBalanceConstraints(Pi, Colonne);
-    setBindingConstraints(Pi, Colonne);
-
-    MemFree(Pi);
-    MemFree(Colonne);
+    setConstraintsOnFlows(Pi.data(), Colonne.data());
+    setNodeBalanceConstraints(Pi.data(), Colonne.data());
+    setBindingConstraints(Pi.data(), Colonne.data());
 }
