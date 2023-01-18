@@ -167,36 +167,34 @@ double calculateCsrCostFunctionValue(const std::unique_ptr<PROBLEME_POINT_INTERI
         bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
         if (inEnsSet)
         {
-            cost += Probleme->X[Var] * Probleme->X[Var]
-                    * Probleme->CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << Probleme->X[Var]*1e3;
-            logs.debug() << "CoutQ: " << Probleme->CoutQuadratique[Var]*1e3;
-            logs.debug() << "TotalCost: " << cost*1e3;
+            cost += Probleme->X[Var] * Probleme->X[Var] * Probleme->CoutQuadratique[Var];
+            logs.debug() << "X-Q: " << Probleme->X[Var] * 1e3;
+            logs.debug() << "CoutQ: " << Probleme->CoutQuadratique[Var] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
         }
         bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
-        if (inLinkSet
-            && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
+        if (inLinkSet && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (Probleme->X[Var] >= 0)
             {
                 cost += Probleme->X[Var] * Probleme->CoutLineaire[Var + 1];
-                logs.debug() << "X+: " << Probleme->X[Var]*1e3;
-                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 1]*1e3;
-                logs.debug() << "TotalCost: " << cost*1e3;
+                logs.debug() << "X+: " << Probleme->X[Var] * 1e3;
+                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 1] * 1e3;
+                logs.debug() << "TotalCost: " << cost * 1e3;
             }
             else
             {
                 cost -= Probleme->X[Var] * Probleme->CoutLineaire[Var + 2];
-                logs.debug() << "X-: " << Probleme->X[Var]*1e3;
-                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 2]*1e3;
-                logs.debug() << "TotalCost: " << cost*1e3;
+                logs.debug() << "X-: " << Probleme->X[Var] * 1e3;
+                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 2] * 1e3;
+                logs.debug() << "TotalCost: " << cost * 1e3;
             }
         }
     }
     return cost;
 }
 
-void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void CSR_DEBUG_HANDLE(const std::unique_ptr<PROBLEME_POINT_INTERIEUR>& Probleme)
 {
     int Var;
 
@@ -204,36 +202,34 @@ void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (Var = 0; Var < Probleme->NombreDeVariables; Var++)
     {
         logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
                                  Var,
-                                 ProblemeAResoudre->CoutLineaire[Var],
-                                 ProblemeAResoudre->CoutQuadratique[Var]);
+                                 Probleme->CoutLineaire[Var],
+                                 Probleme->CoutQuadratique[Var]);
     }
-    for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+    for (int Cnt = 0; Cnt < Probleme->NombreDeContraintes; Cnt++)
     {
-        logs.info().appendFormat("Constraint %ld sens %c B %e",
-                                 Cnt,
-                                 ProblemeAResoudre->Sens[Cnt],
-                                 ProblemeAResoudre->SecondMembre[Cnt]);
+        logs.info().appendFormat(
+          "Constraint %ld sens %c B %e", Cnt, Probleme->Sens[Cnt], Probleme->SecondMembre[Cnt]);
 
-        int il = ProblemeAResoudre->IndicesDebutDeLigne[Cnt];
-        int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
+        int il = Probleme->IndicesDebutDeLigne[Cnt];
+        int ilMax = il + Probleme->NombreDeTermesDesLignes[Cnt];
         for (; il < ilMax; ++il)
         {
-            Var = ProblemeAResoudre->IndicesColonnes[il];
+            Var = Probleme->IndicesColonnes[il];
             logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
-                                     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
+                                     Probleme->CoefficientsDeLaMatriceDesContraintes[il],
                                      Var,
-                                     ProblemeAResoudre->Xmin[Var],
-                                     ProblemeAResoudre->Xmax[Var],
-                                     ProblemeAResoudre->TypeDeVariable[Var]);
+                                     Probleme->Xmin[Var],
+                                     Probleme->Xmax[Var],
+                                     Probleme->TypeDeVariable[Var]);
         }
     }
 }
 
-void handleInteriorPointError(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+void handleInteriorPointError(const std::unique_ptr<PROBLEME_POINT_INTERIEUR>& Probleme,
                               int hour,
                               uint weekNb,
                               int yearNb)
@@ -241,11 +237,10 @@ void handleInteriorPointError(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoud
     const int hoursInWeek = 168;
     logs.warning()
       << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
-      << yearNb + 1
-      << ". hour: " << weekNb * hoursInWeek + hour + 1;
+      << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hour + 1;
 
 #ifndef NDEBUG
-    CSR_DEBUG_HANDLE(ProblemeAResoudre);
+    CSR_DEBUG_HANDLE(Probleme);
 #endif
 }
 
@@ -267,7 +262,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem.hourInWeekTriggeredCsr, weekNb, yearNb);
+        handleInteriorPointError(Probleme, hourlyCsrProblem.hourInWeekTriggeredCsr, weekNb, yearNb);
         return false;
     }
 }
