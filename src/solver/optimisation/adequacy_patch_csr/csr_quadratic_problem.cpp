@@ -31,7 +31,7 @@
 #include "../solver/simulation/sim_structure_donnees.h"
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
-#include "../solver/optimisation/csr_quadratic_problem.h"
+#include "csr_quadratic_problem.h"
 
 using namespace Antares::Data;
 

@@ -66,8 +66,8 @@ set(RTESOLVER_OPT
 		optimisation/adequacy_patch_csr/set_problem_cost_function.cpp
 		optimisation/adequacy_patch_csr/construct_problem_variables.cpp
 		optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp
-		optimisation/csr_quadratic_problem.h
-		optimisation/csr_quadratic_problem.cpp
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.h
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.cpp
 
 		optimisation/opt_period_string_generator_base.h        
 
