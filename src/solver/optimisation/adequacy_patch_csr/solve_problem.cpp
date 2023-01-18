@@ -95,7 +95,7 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
 }
 
 void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                               HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                               HourlyCSRProblem& hourlyCsrProblem)
 {
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
@@ -122,7 +122,7 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
 }
 
 void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                          HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                                          HourlyCSRProblem& hourlyCsrProblem,
                                           uint weekNb,
                                           int yearNb,
                                           double costPriorToCsr,
@@ -151,7 +151,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
-                                     const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                     const HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "calculateCsrCostFunctionValue! ";
     double cost = 0.0;
@@ -245,7 +245,7 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 }
 
 bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                   HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                   HourlyCSRProblem& hourlyCsrProblem,
                    uint weekNb,
                    int yearNb)
 {

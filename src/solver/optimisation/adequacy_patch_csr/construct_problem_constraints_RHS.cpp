@@ -30,7 +30,7 @@
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
 
-void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
 {
     int Cnt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -58,7 +58,7 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourl
     }
 }
 
-void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
 {
     int Cnt;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -91,7 +91,7 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
 }
 
 void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
-                                   const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                   const HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double csrSolverRelaxationRHS = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
@@ -179,7 +179,7 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
 }
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                                            HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                                            HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] RHS: ";
 

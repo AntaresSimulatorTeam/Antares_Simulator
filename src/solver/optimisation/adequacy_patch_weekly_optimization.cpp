@@ -89,7 +89,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
                     << " Hour:" << week * nbHoursInAWeek + hourInWeek + 1;
-        HOURLY_CSR_PROBLEM hourlyCsrProblem(hourInWeek, problemeHebdo_);
+        HourlyCSRProblem hourlyCsrProblem(hourInWeek, problemeHebdo_);
         hourlyCsrProblem.run(week, year);
     }
 }

@@ -6,7 +6,7 @@ namespace Antares::Solver::Variable
 class State;
 }
 
-class HOURLY_CSR_PROBLEM
+class HourlyCSRProblem
 {
 private:
     void calculateCsrParameters();
@@ -24,7 +24,7 @@ public:
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo;
-    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    HourlyCSRProblem(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
     {
         hourInWeekTriggeredCsr = hourInWeek;
         problemeHebdo = pProblemeHebdo;

@@ -54,7 +54,7 @@ double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
         return (1. / priceTakingOrders);
 }
 
-void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HourlyCSRProblem& hourlyCsrProblem)
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
@@ -85,7 +85,7 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& h
     }
 }
 
-void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HourlyCSRProblem& hourlyCsrProblem)
 {
     int Var;
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
@@ -146,7 +146,7 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hour
 }
 
 void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                             HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] cost";
 

@@ -208,7 +208,7 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+  HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] bounds";
 

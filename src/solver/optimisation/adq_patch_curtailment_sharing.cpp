@@ -172,7 +172,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
 } // end namespace Data
 } // namespace Antares
 
-void HOURLY_CSR_PROBLEM::calculateCsrParameters()
+void HourlyCSRProblem::calculateCsrParameters()
 {
     double netPositionInit;
     double ensInit;
@@ -200,43 +200,43 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
     return;
 }
 
-void HOURLY_CSR_PROBLEM::resetProblem()
+void HourlyCSRProblem::resetProblem()
 {
     OPT_LiberationProblemesSimplexe(problemeHebdo);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemVariables()
+void HourlyCSRProblem::buildProblemVariables()
 {
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
+void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
     CsrQuadraticProblem csrProb(problemeHebdo, *this);
     csrProb.OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
 }
 
-void HOURLY_CSR_PROBLEM::setVariableBounds()
+void HourlyCSRProblem::setVariableBounds()
 {
     OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
+void HourlyCSRProblem::buildProblemConstraintsRHS()
 {
     OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(problemeHebdo, *this);
 }
 
-void HOURLY_CSR_PROBLEM::setProblemCost()
+void HourlyCSRProblem::setProblemCost()
 {
     OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, *this);
 }
 
-void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
+void HourlyCSRProblem::solveProblem(uint week, int year)
 {
     ADQ_PATCH_CSR(problemeHebdo->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, uint year)
+void HourlyCSRProblem::run(uint week, uint year)
 {
     resetProblem();
     calculateCsrParameters();

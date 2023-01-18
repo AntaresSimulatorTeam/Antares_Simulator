@@ -26,12 +26,12 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-class HOURLY_CSR_PROBLEM;
+class HourlyCSRProblem;
 
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM& hourly) :
+    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HourlyCSRProblem& hourly) :
         ProblemeHebdo (prob),
         hourlyCsrProblem (hourly)
         {}
@@ -40,7 +40,7 @@ public:
 
 private:
     PROBLEME_HEBDO *ProblemeHebdo;
-    HOURLY_CSR_PROBLEM& hourlyCsrProblem;
+    HourlyCSRProblem& hourlyCsrProblem;
 
     void setConstraintsOnFlows(double* Pi, int* Colonne);
     void setNodeBalanceConstraints(double* Pi, int* Colonne);
