@@ -234,7 +234,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 }
 
 void handleInteriorPointError(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                              const HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                              int hour,
                               uint weekNb,
                               int yearNb)
 {
@@ -242,7 +242,7 @@ void handleInteriorPointError(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoud
     logs.warning()
       << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
       << yearNb + 1
-      << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+      << ". hour: " << weekNb * hoursInWeek + hour + 1;
 
 #ifndef NDEBUG
     CSR_DEBUG_HANDLE(ProblemeAResoudre);
@@ -267,7 +267,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb);
+        handleInteriorPointError(ProblemeAResoudre, hourlyCsrProblem.hourInWeekTriggeredCsr, weekNb, yearNb);
         return false;
     }
 }
