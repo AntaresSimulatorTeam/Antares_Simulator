@@ -108,7 +108,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
                                          uint numSpace)
 {
     double totalLmrViolation
-      = calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
+      = Antares::Data::AdequacyPatch::calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();

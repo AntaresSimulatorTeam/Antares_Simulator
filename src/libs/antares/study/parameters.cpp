@@ -264,11 +264,11 @@ void Parameters::resetThresholdsAdqPatch()
 {
     // Initialize all thresholds values for adequacy patch
     adqPatch.curtailmentSharing.thresholdRun
-      = defaultThresholdToRunCurtailmentSharing;
+      = Antares::Data::AdequacyPatch::defaultThresholdToRunCurtailmentSharing;
     adqPatch.curtailmentSharing.thresholdDisplayViolations
-      = defaultThresholdDisplayLocalMatchingRuleViolations;
+      = Antares::Data::AdequacyPatch::defaultThresholdDisplayLocalMatchingRuleViolations;
     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
-      = defaultValueThresholdVarBoundsRelaxation;
+      = Antares::Data::AdequacyPatch::defaultValueThresholdVarBoundsRelaxation;
 }
 
 void Parameters::AdequacyPatch::LocalMatching::reset()

@@ -36,7 +36,7 @@
 #include <memory>
 #include <yuni/core/math.h>
 
-using namespace Antares::Data::AdequacyPatch;
+/* using namespace Antares::Data::AdequacyPatch; */
 
 typedef struct
 {
@@ -491,7 +491,7 @@ struct AdequacyPatchParameters
     bool SetNTCOutsideToOutsideToZero;
     bool IncludeHurdleCostCsr;
     bool CheckCsrCostFunctionValue;
-    AdqPatchPTO PriceTakingOrder;
+    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
     double ThresholdRunCurtailmentSharingRule;
     double ThresholdDisplayLocalMatchingRuleViolations;
     double ThresholdCSRVarBoundsRelaxation;

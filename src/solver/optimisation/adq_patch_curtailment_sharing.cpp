@@ -201,13 +201,14 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
             problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
-              = calculateAreaFlowBalance(problemeHebdo, Area, hour);
+              = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
             ensInit
               = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
