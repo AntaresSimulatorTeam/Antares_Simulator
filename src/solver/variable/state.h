@@ -34,11 +34,7 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 class State
 {
@@ -259,9 +255,7 @@ public:
     // -----------------------------------------------------------------
 }; // class State
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "state.hxx"
 
