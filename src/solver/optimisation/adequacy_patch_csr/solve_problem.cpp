@@ -150,7 +150,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
           << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
 }
 
-double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+double calculateCsrCostFunctionValue(const std::unique_ptr<PROBLEME_POINT_INTERIEUR>& Probleme,
                                      const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     logs.debug() << "calculateCsrCostFunctionValue! ";
@@ -161,34 +161,34 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
         return cost;
     }
 
-    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (int Var = 0; Var < Probleme->NombreDeVariables; Var++)
     {
         logs.debug() << "Var: " << Var;
         bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
         if (inEnsSet)
         {
-            cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
-                    * ProblemeAResoudre->CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var]*1e3;
-            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var]*1e3;
+            cost += Probleme->X[Var] * Probleme->X[Var]
+                    * Probleme->CoutQuadratique[Var];
+            logs.debug() << "X-Q: " << Probleme->X[Var]*1e3;
+            logs.debug() << "CoutQ: " << Probleme->CoutQuadratique[Var]*1e3;
             logs.debug() << "TotalCost: " << cost*1e3;
         }
         bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
         if (inLinkSet
             && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
-            if (ProblemeAResoudre->X[Var] >= 0)
+            if (Probleme->X[Var] >= 0)
             {
-                cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 1];
-                logs.debug() << "X+: " << ProblemeAResoudre->X[Var]*1e3;
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 1]*1e3;
+                cost += Probleme->X[Var] * Probleme->CoutLineaire[Var + 1];
+                logs.debug() << "X+: " << Probleme->X[Var]*1e3;
+                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 1]*1e3;
                 logs.debug() << "TotalCost: " << cost*1e3;
             }
             else
             {
-                cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 2];
-                logs.debug() << "X-: " << ProblemeAResoudre->X[Var]*1e3;
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 2]*1e3;
+                cost -= Probleme->X[Var] * Probleme->CoutLineaire[Var + 2];
+                logs.debug() << "X-: " << Probleme->X[Var]*1e3;
+                logs.debug() << "CoutL: " << Probleme->CoutLineaire[Var + 2]*1e3;
                 logs.debug() << "TotalCost: " << cost*1e3;
             }
         }
@@ -254,13 +254,13 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                    uint weekNb,
                    int yearNb)
 {
-    double costPriorToCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
     auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
+    double costPriorToCsr = calculateCsrCostFunctionValue(Probleme, hourlyCsrProblem);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCsrCostFunctionValue(ProblemeAResoudre, hourlyCsrProblem);
+        double costAfterCsr = calculateCsrCostFunctionValue(Probleme, hourlyCsrProblem);
         storeOrDisregardInteriorPointResults(
           ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
         return true;
