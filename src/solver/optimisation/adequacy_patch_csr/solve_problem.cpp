@@ -59,13 +59,6 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
-    int ChoixToleranceParDefautSurLAdmissibilite;
-    int ChoixToleranceParDefautSurLaStationnarite;
-    int ChoixToleranceParDefautSurLaComplementarite;
-
-    ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
-    ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
-    ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme->NombreMaxDIterations = -1;
     Probleme->CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
@@ -89,13 +82,9 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
 
     Probleme->AffichageDesTraces = NON_PI;
 
-    Probleme->UtiliserLaToleranceDAdmissibiliteParDefaut = ChoixToleranceParDefautSurLAdmissibilite;
-
-    Probleme->UtiliserLaToleranceDeStationnariteParDefaut
-      = ChoixToleranceParDefautSurLaStationnarite;
-
-    Probleme->UtiliserLaToleranceDeComplementariteParDefaut
-      = ChoixToleranceParDefautSurLaComplementarite;
+    Probleme->UtiliserLaToleranceDAdmissibiliteParDefaut = OUI_PI;
+    Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
+    Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
 
     Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
 
