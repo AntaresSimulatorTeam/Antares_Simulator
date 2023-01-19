@@ -36,7 +36,6 @@ using namespace Yuni;
 
 namespace Antares::Data::AdequacyPatch
 {
-
 double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
                             int Area,
@@ -249,7 +248,7 @@ void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
 
 void HOURLY_CSR_PROBLEM::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, *this);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, hourInWeekTriggeredCsr);
 }
 
 void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)

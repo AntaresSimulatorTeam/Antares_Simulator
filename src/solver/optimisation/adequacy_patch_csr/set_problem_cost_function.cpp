@@ -54,10 +54,9 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int
         return (1. / priceTakingOrders);
 }
 
-void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     int Var;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
@@ -85,10 +84,9 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& h
     }
 }
 
-void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     int Var;
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     const COUTS_DE_TRANSPORT* TransportCost;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -147,8 +145,7 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hour
     }
 }
 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                             const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     logs.debug() << "[CSR] cost";
 
@@ -156,8 +153,7 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-
-    setQuadraticCost(ProblemeHebdo, hourlyCsrProblem);
+    setQuadraticCost(ProblemeHebdo, hour);
     if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
-        setLinearCost(ProblemeHebdo, hourlyCsrProblem);
+        setLinearCost(ProblemeHebdo, hour);
 }
