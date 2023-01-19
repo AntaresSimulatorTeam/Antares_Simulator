@@ -256,20 +256,20 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 #endif
 }
 
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                   HourlyCSRProblem& hourlyCsrProblem,
+bool ADQ_PATCH_CSR(HourlyCSRProblem& hourlyCsrProblem,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
+    auto problemeAResoudre = &hourlyCsrProblem.problemeAResoudre_;
+    auto Probleme = buildInteriorPointProblem(problemeAResoudre);
     double costPriorToCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
-        setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
+        setToZeroIfBelowThreshold(problemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
         storeOrDisregardInteriorPointResults(
-          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
+          problemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
         return true;
     }
     else

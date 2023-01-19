@@ -50,18 +50,21 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const int,
                                                             const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
-void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*,
-                                                                   const HourlyCSRProblem&);
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(const PROBLEME_HEBDO*,
+                                                                   PROBLEME_ANTARES_A_RESOUDRE*,
+                                                                   int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HourlyCSRProblem&);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO*, int);
+void OPT_InitialiserLesCoutsQuadratiques_CSR(const PROBLEME_HEBDO*,
+                                             PROBLEME_ANTARES_A_RESOUDRE*,
+                                             int);
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE*, HourlyCSRProblem&, uint week, int year);
+bool ADQ_PATCH_CSR(HourlyCSRProblem&, uint week, int year);
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);

@@ -33,6 +33,8 @@
 
 #include "../solver/optimisation/opt_fonctions.h"
 
+namespace
+{
 double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
 {
     double priceTakingOrders = 0.0; // PTO
@@ -54,10 +56,11 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int
         return (1. / priceTakingOrders);
 }
 
-void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
+void setQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo,
+                      PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                      int hour)
 {
     int Var;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
@@ -84,11 +87,12 @@ void setQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     }
 }
 
-void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
+void setLinearCost(const PROBLEME_HEBDO* ProblemeHebdo,
+                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                   int hour)
 {
     int Var;
     const COUTS_DE_TRANSPORT* TransportCost;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
@@ -144,16 +148,19 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
         }
     }
 }
+}
 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo, int hour)
+ 
+void OPT_InitialiserLesCoutsQuadratiques_CSR(const PROBLEME_HEBDO* ProblemeHebdo,
+                                             PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                             int hour)
 {
     logs.debug() << "[CSR] cost";
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    setQuadraticCost(ProblemeHebdo, hour);
+    setQuadraticCost(ProblemeHebdo, ProblemeAResoudre, hour);
     if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
-        setLinearCost(ProblemeHebdo, hour);
+        setLinearCost(ProblemeHebdo, ProblemeAResoudre, hour);
 }

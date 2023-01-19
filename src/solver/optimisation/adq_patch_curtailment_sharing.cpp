@@ -199,7 +199,9 @@ void HourlyCSRProblem::buildProblemConstraintsLHS()
 
 void HourlyCSRProblem::setVariableBounds()
 {
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo_, *this);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo_,
+                                                                  &problemeAResoudre_,
+                                                                  hourInWeekTriggeredCsr);
 }
 
 void HourlyCSRProblem::buildProblemConstraintsRHS()
@@ -209,12 +211,12 @@ void HourlyCSRProblem::buildProblemConstraintsRHS()
 
 void HourlyCSRProblem::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo_, hourInWeekTriggeredCsr);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo_, &problemeAResoudre_, hourInWeekTriggeredCsr);
 }
 
 void HourlyCSRProblem::solveProblem(uint week, int year)
 {
-    ADQ_PATCH_CSR(problemeHebdo_->ProblemeAResoudre, *this, week, year);
+    ADQ_PATCH_CSR(*this, week, year);
 }
 
 void HourlyCSRProblem::run(uint week, uint year)
