@@ -29,13 +29,7 @@
 
 #include "../variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardDtgMarginCsr
 {
@@ -137,7 +131,6 @@ public:
         };
     };
 
-public:
     ~DtgMarginCsr()
     {
         delete[] pValuesForTheCurrentYear;
@@ -280,9 +273,6 @@ private:
 
 }; // class DtgMarginCsr
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_DtgMarginCsr_H__

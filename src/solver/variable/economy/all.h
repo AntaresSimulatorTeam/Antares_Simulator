@@ -96,13 +96,7 @@
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 /*!
 ** \brief All variables for a single link (economy)
@@ -288,10 +282,7 @@ typedef Variable::Join<
 */
 typedef Container::List<ItemList> AllVariables;
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 // post include
 #include "links.h"

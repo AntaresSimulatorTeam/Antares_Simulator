@@ -158,7 +158,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
 
     const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != NULL);
+    assert(ProblemeAResoudre != nullptr);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
     constructVariableSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);

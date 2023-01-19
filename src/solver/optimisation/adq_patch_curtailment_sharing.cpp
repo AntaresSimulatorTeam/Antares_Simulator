@@ -1,4 +1,30 @@
-﻿
+﻿/*
+** Copyright 2007-2023 RTE
+** Authors: Antares_Simulator Team
+**
+** This file is part of Antares_Simulator.
+**
+** Antares_Simulator is free software: you can redistribute it and/or modify
+** it under the terms of the GNU General Public License as published by
+** the Free Software Foundation, either version 3 of the License, or
+** (at your option) any later version.
+**
+** There are special exceptions to the terms and conditions of the
+** license as they are applied to this software. View the full text of
+** the exceptions in file COPYING.txt in the directory of this software
+** distribution
+**
+** Antares_Simulator is distributed in the hope that it will be useful,
+** but WITHOUT ANY WARRANTY; without even the implied warranty of
+** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+** GNU General Public License for more details.
+**
+** You should have received a copy of the GNU General Public License
+** along with Antares_Simulator. If not, see <http://www.gnu.org/licenses/>.
+**
+** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
+*/
+
 #include "adq_patch_curtailment_sharing.h"
 #include "csr_quadratic_problem.h"
 #include "opt_fonctions.h"
@@ -8,14 +34,10 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 
-double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
                             int Area,
                             int hour)
@@ -56,7 +78,7 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ∑ flows (node 1 -> node A) - DTG.MRG(node A)] */
-                auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
+                const auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 densNew = std::max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
@@ -140,37 +162,35 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
     const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problem.NombreDePays; Area++)
     {
-        if (problem.adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
-        {
-            for (int hour = 0; hour < numOfHoursInWeek; hour++)
-            {
-                // define access to the required variables
-                auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
-                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+        if (problem.adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
+            continue;
 
-                auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
-                double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-                double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-                double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
-                // calculate DTG MRG CSR and adjust ENS if neccessary
-                if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
-                {
-                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                    ens = std::max(0.0, ens - dtgMrg);
-                    // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                    if (ens > 0.5)
-                        mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
-                }
-                else
-                    dtgMrgCsr = dtgMrg;
+        for (int hour = 0; hour < numOfHoursInWeek; hour++)
+        {
+            // define access to the required variables
+            const auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+
+            auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
+            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
+            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+            // calculate DTG MRG CSR and adjust ENS if neccessary
+            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            {
+                dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                ens = std::max(0.0, ens - dtgMrg);
+                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
+                if (ens > 0.5)
+                    mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
             }
+            else
+                dtgMrgCsr = dtgMrg;
         }
     }
 }
 
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
+} // namespace Antares::Data::AdequacyPatch
 
 void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 {
@@ -181,13 +201,14 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
             problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
-              = calculateAreaFlowBalance(problemeHebdo, Area, hour);
+              = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
             ensInit
               = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
