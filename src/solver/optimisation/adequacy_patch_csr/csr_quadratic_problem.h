@@ -32,16 +32,16 @@ class HourlyCSRProblem;
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO* prob, HourlyCSRProblem& hourly) :
-     ProblemeHebdo(prob), hourlyCsrProblem(hourly)
+    CsrQuadraticProblem(PROBLEME_HEBDO* p, HourlyCSRProblem& hourly) :
+     problemeHebdo_(p), hourlyCsrProblem_(hourly)
     {
     }
 
     void buildConstraintMatrix();
 
 private:
-    PROBLEME_HEBDO* ProblemeHebdo;
-    HourlyCSRProblem& hourlyCsrProblem;
+    PROBLEME_HEBDO* problemeHebdo_;
+    HourlyCSRProblem& hourlyCsrProblem_;
 
     void setConstraintsOnFlows(double* Pi, int* Colonne);
     void setNodeBalanceConstraints(double* Pi, int* Colonne);

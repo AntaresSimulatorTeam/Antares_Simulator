@@ -38,23 +38,23 @@ using namespace Antares::Data;
 
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
     int Var;
     int NombreDeTermes;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     std::string NomDeLaContrainte;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    CorrespondanceVarNativesVarOptim = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             NombreDeTermes = 0;
@@ -82,7 +82,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
                 NombreDeTermes++;
             }
 
-            hourlyCsrProblem.numberOfConstraintCsrFlowDissociation[Interco]
+            hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation[Interco]
               = ProblemeAResoudre->NombreDeContraintes;
 
             NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
@@ -97,7 +97,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 
 void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
     int Var;
     int NombreDeTermes;
     int Interco;
@@ -105,8 +105,8 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     std::string NomDeLaContrainte;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    CorrespondanceVarNativesVarOptim = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +
@@ -115,9 +115,9 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
 
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    for (int Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             continue;
 
@@ -132,10 +132,10 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         }
 
         // - export flows
-        Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+        Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
         while (Interco >= 0)
         {
-            if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                     != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 continue;
 
@@ -148,19 +148,19 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
                 NombreDeTermes++;
                 logs.debug()
                     << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
-                    << ProblemeHebdo->NomsDesPays[Area] << "]-["
-                    << ProblemeHebdo
-                    ->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
+                    << problemeHebdo_->NomsDesPays[Area] << "]-["
+                    << problemeHebdo_
+                    ->NomsDesPays[problemeHebdo_->PaysExtremiteDeLInterconnexion[Interco]]
                     << "]";
             }
-            Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
         }
 
         // or + import flows
-        Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Area];
+        Interco = problemeHebdo_->IndexDebutIntercoExtremite[Area];
         while (Interco >= 0)
         {
-            if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
                     != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 Var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
@@ -171,12 +171,12 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
                 NombreDeTermes++;
                 logs.debug()
                     << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                    << ProblemeHebdo->NomsDesPays[Area] << "]-["
-                    << ProblemeHebdo
-                    ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                    << problemeHebdo_->NomsDesPays[Area] << "]-["
+                    << problemeHebdo_
+                    ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
                     << "]";
             }
-            Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
         }
 
         // - Spilled Energy
@@ -188,11 +188,11 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
             NombreDeTermes++;
         }
 
-        hourlyCsrProblem.numberOfConstraintCsrAreaBalance[Area]
+        hourlyCsrProblem_.numberOfConstraintCsrAreaBalance[Area]
             = ProblemeAResoudre->NombreDeContraintes;
 
         NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
-            + ProblemeHebdo->NomsDesPays[Area];
+            + problemeHebdo_->NomsDesPays[Area];
 
         logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
             << NomDeLaContrainte;
@@ -204,7 +204,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 
 void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
     int Var;
     int NombreDeTermes;
     int Interco;
@@ -214,14 +214,14 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
     const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     std::string NomDeLaContrainte;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
 
     // Special case of the binding constraints
-    for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+    for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         MatriceDesContraintesCouplantes
-            = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+            = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
 
         if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
             continue;
@@ -234,12 +234,12 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
             Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
             Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
-            if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch
-                    && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                    && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                Var = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour]
+                Var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
                     ->NumeroDeVariableDeLInterconnexion[Interco];
 
                 if (Var >= 0)
@@ -253,7 +253,7 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 
         if (NombreDeTermes > 0) // current binding constraint contains an interco type 2<->2
         {
-            hourlyCsrProblem.numberOfConstraintCsrHourlyBinding[CntCouplante]
+            hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding[CntCouplante]
                 = ProblemeAResoudre->NombreDeContraintes;
 
             NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
@@ -277,7 +277,7 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     logs.debug() << "[CSR] constraint list:";
 
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
     std::vector<double> Pi(ProblemeAResoudre->NombreDeVariables);
     std::vector<int> Colonne(ProblemeAResoudre->NombreDeVariables);
 

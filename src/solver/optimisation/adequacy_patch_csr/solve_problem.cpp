@@ -130,7 +130,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
 {
     const int hoursInWeek = 168;
     const bool checkCost
-      = hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue;
+      = hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue;
     double deltaCost = costAfterCsr - costPriorToCsr;
 
     if (checkCost)
@@ -155,7 +155,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
 {
     logs.debug() << "calculateCsrCostFunctionValue! ";
     double cost = 0.0;
-    if (!hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue)
+    if (!hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue)
     {
         logs.debug() << "CheckCsrCostFunctionValue = FALSE";
         return cost;
@@ -173,7 +173,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
-        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
+        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (Probleme.X[Var] >= 0)
             {
