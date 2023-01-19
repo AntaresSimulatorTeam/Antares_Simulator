@@ -33,7 +33,7 @@
 
 #include "../solver/optimisation/opt_fonctions.h"
 
-double calculateQuadraticCost(PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
+double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
 {
     double priceTakingOrders = 0.0; // PTO
     if (ProblemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
@@ -103,42 +103,44 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+              != Data::AdequacyPatch::physicalAreaInsideAdqPatch
+            || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
-            // flow
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                ProblemeAResoudre->CoutLineaire[Var] = 0.0;
-                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
-            }
-            // direct / indirect flow
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
-                    ProblemeAResoudre->CoutLineaire[Var] = 0;
-                else
-                    ProblemeAResoudre->CoutLineaire[Var]
-                      = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
-                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
-            }
+            continue;
+        }
 
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            {
-                if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
-                    ProblemeAResoudre->CoutLineaire[Var] = 0;
-                else
-                    ProblemeAResoudre->CoutLineaire[Var]
-                      = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
-                logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
-            }
+        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+        // flow
+        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+        {
+            ProblemeAResoudre->CoutLineaire[Var] = 0.0;
+            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+        }
+        // direct / indirect flow
+        Var = CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+        {
+            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                ProblemeAResoudre->CoutLineaire[Var] = 0;
+            else
+                ProblemeAResoudre->CoutLineaire[Var]
+                    = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
+            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
+        }
+
+        Var = CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+        {
+            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+                ProblemeAResoudre->CoutLineaire[Var] = 0;
+            else
+                ProblemeAResoudre->CoutLineaire[Var]
+                    = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
+            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre->CoutLineaire[Var];
         }
     }
 }

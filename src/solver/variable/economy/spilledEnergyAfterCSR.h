@@ -29,13 +29,7 @@
 
 #include "../variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardSpilledEnergyAfterCSR
 {
@@ -138,7 +132,6 @@ public:
         };
     };
 
-public:
     ~SpilledEnergyAfterCSR()
     {
         delete[] pValuesForTheCurrentYear;
@@ -281,9 +274,6 @@ private:
 
 }; // class SpilledEnergyAfterCSR
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_SpilledEnergyAfterCSR_H__

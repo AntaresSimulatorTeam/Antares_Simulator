@@ -51,7 +51,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
                                                             const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*,
-                                                                   HOURLY_CSR_PROBLEM&);
+                                                                   const HOURLY_CSR_PROBLEM&);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HOURLY_CSR_PROBLEM&);
