@@ -124,8 +124,11 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         while (Interco >= 0)
         {
             if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                    != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            {
+                Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
                 continue;
+            }
 
             Var = CorrespondanceVarNativesVarOptim
                 ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
@@ -149,20 +152,22 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         while (Interco >= 0)
         {
             if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-                    != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-                Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
-            if (Var >= 0)
+                != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
-                NombreDeTermes++;
-                logs.debug()
-                    << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                    << ProblemeHebdo->NomsDesPays[Area] << "]-["
-                    << ProblemeHebdo
-                    ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
-                    << "]";
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                    logs.debug()
+                      << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+                      << ProblemeHebdo->NomsDesPays[Area] << "]-["
+                      << ProblemeHebdo
+                           ->NomsDesPays[ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco]]
+                      << "]";
+                }
             }
             Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
         }
