@@ -143,8 +143,7 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     }
 }
 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                             HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     logs.debug() << "[CSR] cost";
 
@@ -152,7 +151,6 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(PROBLEME_HEBDO* ProblemeHebdo,
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    const auto hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     setQuadraticCost(ProblemeHebdo, hour);
     if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         setLinearCost(ProblemeHebdo, hour);

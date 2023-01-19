@@ -1,4 +1,4 @@
-﻿
+
 #include "adq_patch_curtailment_sharing.h"
 #include "csr_quadratic_problem.h"
 #include "opt_fonctions.h"
@@ -14,7 +14,6 @@ namespace Data
 {
 namespace AdequacyPatch
 {
-
 double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
                             int Area,
@@ -228,7 +227,7 @@ void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
 
 void HOURLY_CSR_PROBLEM::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, *this);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, hourInWeekTriggeredCsr);
 }
 
 void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
