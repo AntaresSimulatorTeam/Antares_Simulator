@@ -133,7 +133,7 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
 }
 
 void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                          HOURLY_CSR_PROBLEM& hourlyCsrProblem,
+                                          const HOURLY_CSR_PROBLEM& hourlyCsrProblem,
                                           uint weekNb,
                                           int yearNb,
                                           double costPriorToCsr,
@@ -175,8 +175,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         logs.debug() << "Var: " << Var;
-        bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
-        if (inEnsSet)
+        if (hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end())
         {
             cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
                     * ProblemeAResoudre->CoutQuadratique[Var];
@@ -184,8 +183,8 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
             logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var]*1e3;
             logs.debug() << "TotalCost: " << cost*1e3;
         }
-        bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
-        if (inLinkSet
+
+        if (hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end()
             && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (ProblemeAResoudre->X[Var] >= 0)

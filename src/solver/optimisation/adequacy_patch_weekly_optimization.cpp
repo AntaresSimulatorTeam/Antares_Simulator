@@ -72,7 +72,7 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            const double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInAWeek; ++h)
                 sumENS[h] += ENS[h];
         }
@@ -108,7 +108,7 @@ void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
                                          uint numSpace)
 {
     double totalLmrViolation
-      = calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
+      = Antares::Data::AdequacyPatch::calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();

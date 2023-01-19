@@ -120,7 +120,7 @@ static ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* Probl
 
 void setNTCbounds(double& Xmax,
                   double& Xmin,
-                  VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                   const int Interco,
                   PROBLEME_HEBDO* ProblemeHebdo)
 {
@@ -155,6 +155,8 @@ void setNTCbounds(double& Xmax,
             Xmin = 0.;
             break;
         }
+        default:
+            return;
         }
     }
 }

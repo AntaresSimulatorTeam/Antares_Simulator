@@ -51,10 +51,10 @@ public:
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo;
-    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo) :
+        hourInWeekTriggeredCsr(hourInWeek),
+        problemeHebdo(pProblemeHebdo)
     {
-        hourInWeekTriggeredCsr = hourInWeek;
-        problemeHebdo = pProblemeHebdo;
         belowThisThresholdSetToZero
           = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     };
