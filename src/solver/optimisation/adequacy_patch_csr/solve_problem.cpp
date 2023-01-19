@@ -128,7 +128,7 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
         {
             *pt = ProblemeAResoudre->X[Var];
         }
-        logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
+        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
     }
 }
 
@@ -175,31 +175,42 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         logs.debug() << "Var: " << Var;
-        if (hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end())
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var) != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
             cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->X[Var]
                     * ProblemeAResoudre->CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var]*1e3;
-            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var]*1e3;
-            logs.debug() << "TotalCost: " << cost*1e3;
+            logs.debug() << "X-Q: " << ProblemeAResoudre->X[Var] * 1e3;
+            logs.debug() << "CoutQ: " << ProblemeAResoudre->CoutQuadratique[Var] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
         }
-
-        if (hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end()
-            && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
+        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
+        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (ProblemeAResoudre->X[Var] >= 0)
             {
-                cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 1];
-                logs.debug() << "X+: " << ProblemeAResoudre->X[Var]*1e3;
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 1]*1e3;
-                logs.debug() << "TotalCost: " << cost*1e3;
+                const int VarDirect = itLink->second.directVar;
+                if (VarDirect < 0)
+                {
+                    logs.warning() << "VarDirect < 0 detected, this should not happen";
+                    continue;
+                }
+                cost += ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[VarDirect];
+                logs.debug() << "X+: " << ProblemeAResoudre->X[Var] * 1e3;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[VarDirect] * 1e3;
+                logs.debug() << "TotalCost: " << cost * 1e3;
             }
             else
             {
-                cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[Var + 2];
-                logs.debug() << "X-: " << ProblemeAResoudre->X[Var]*1e3;
-                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[Var + 2]*1e3;
-                logs.debug() << "TotalCost: " << cost*1e3;
+                const int VarIndirect = itLink->second.indirectVar;
+                if (VarIndirect < 0)
+                {
+                    logs.warning() << "VarIndirect < 0 detected, this should not happen";
+                    continue;
+                }
+                cost -= ProblemeAResoudre->X[Var] * ProblemeAResoudre->CoutLineaire[VarIndirect];
+                logs.debug() << "X-: " << ProblemeAResoudre->X[Var] * 1e3;
+                logs.debug() << "CoutL: " << ProblemeAResoudre->CoutLineaire[VarIndirect] * 1e3;
+                logs.debug() << "TotalCost: " << cost * 1e3;
             }
         }
     }
