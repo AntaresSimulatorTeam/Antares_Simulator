@@ -49,9 +49,4 @@ std::unique_ptr<interfaceWeeklyOptimization> interfaceWeeklyOptimization::create
         return std::make_unique<weeklyOptimization>(problemeHebdo, thread_number);
 }
 
-void interfaceWeeklyOptimization::solveCSR(Antares::Data::AreaList&, uint, uint, uint)
-{
-    // By default, do nothing
-}
-
 } // namespace Antares::Solver::Simulation
