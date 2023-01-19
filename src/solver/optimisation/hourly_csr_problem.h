@@ -51,10 +51,10 @@ public:
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo;
-    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo)
+    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo) :
+        hourInWeekTriggeredCsr(hourInWeek),
+        problemeHebdo(pProblemeHebdo)
     {
-        hourInWeekTriggeredCsr = hourInWeek;
-        problemeHebdo = pProblemeHebdo;
         belowThisThresholdSetToZero
           = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     };
@@ -66,6 +66,18 @@ public:
 
     std::map<int, double> rhsAreaBalanceValues;
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
-    std::set<int> ensSet;                           // place inside only ENS inside adq-patch
-    std::set<int> linkSet; // place inside only links between to zones inside adq-patch
+    std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
+    struct LinkVariable
+    {
+        LinkVariable() : directVar(-1), indirectVar(-1)
+        {
+        }
+        LinkVariable(int direct, int indirect) : directVar(direct), indirectVar(indirect)
+        {
+        }
+        int directVar;
+        int indirectVar;
+    };
+    std::map<int, LinkVariable>
+      linkInsideAdqPatch; // links between two areas inside the adq-patch domain
 };

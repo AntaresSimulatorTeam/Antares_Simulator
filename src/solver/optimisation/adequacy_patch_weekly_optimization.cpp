@@ -30,8 +30,11 @@
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
 #include "antares/study/area/scratchpad.h"
+#include "antares/study/fwd.h"
 
 const int nbHoursInAWeek = 168;
+
+using namespace Antares::Data::AdequacyPatch;
 
 namespace Antares::Solver::Simulation
 {
@@ -110,7 +113,7 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            const double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInAWeek; ++h)
                 sumENS[h] += ENS[h];
         }

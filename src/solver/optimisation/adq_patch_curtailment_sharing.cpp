@@ -36,8 +36,7 @@ using namespace Yuni;
 
 namespace Antares::Data::AdequacyPatch
 {
-
-double LmrViolationAreaHour(PROBLEME_HEBDO* ProblemeHebdo,
+double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
                             double totalNodeBalance,
                             int Area,
                             int hour)
@@ -123,30 +122,30 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
     const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problem.NombreDePays; Area++)
     {
-        if (problem.adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
-        {
-            for (int hour = 0; hour < numOfHoursInWeek; hour++)
-            {
-                // define access to the required variables
-                auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
-                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+        if (problem.adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
+            continue;
 
-                auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
-                double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-                double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-                double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
-                // calculate DTG MRG CSR and adjust ENS if neccessary
-                if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
-                {
-                    dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                    ens = std::max(0.0, ens - dtgMrg);
-                    // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                    if (ens > 0.5)
-                        mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
-                }
-                else
-                    dtgMrgCsr = dtgMrg;
+        for (int hour = 0; hour < numOfHoursInWeek; hour++)
+        {
+            // define access to the required variables
+            const auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+
+            auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
+            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
+            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+            // calculate DTG MRG CSR and adjust ENS if neccessary
+            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            {
+                dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                ens = std::max(0.0, ens - dtgMrg);
+                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
+                if (ens > 0.5)
+                    mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
             }
+            else
+                dtgMrgCsr = dtgMrg;
         }
     }
 }
@@ -162,13 +161,14 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+            == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
             problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
-              = calculateAreaFlowBalance(problemeHebdo, Area, hour);
+              = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo, Area, hour);
 
             ensInit
               = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
@@ -209,7 +209,7 @@ void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
 
 void HOURLY_CSR_PROBLEM::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, *this);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, hourInWeekTriggeredCsr);
 }
 
 void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)

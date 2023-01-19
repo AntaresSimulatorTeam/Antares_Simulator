@@ -39,7 +39,7 @@ class AdequacyPatchOptimization : public interfaceWeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    virtual ~AdequacyPatchOptimization() = default;
+    ~AdequacyPatchOptimization() override = default;
     void solve(uint weekInTheYear, int hourInTheYear) override;
     void postProcess(Antares::Data::AreaList& areas, uint year, uint week) override;
 

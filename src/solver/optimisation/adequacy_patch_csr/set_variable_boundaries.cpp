@@ -138,77 +138,79 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     {
         // only consider link between 2 and 2
         if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+              != Data::AdequacyPatch::physicalAreaInsideAdqPatch
+            || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            // flow
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            Xmax[Var]
-              = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
-            Xmin[Var]
-              = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]) - csrSolverRelaxation;
-            ProblemeAResoudre->X[Var] = ValeursDeNTC->ValeurDuFlux[Interco];
-
-            if (Math::Infinite(Xmax[Var]) == 1)
-            {
-                if (Math::Infinite(Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
-                else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            }
-            else
-            {
-                if (Math::Infinite(Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
-                else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            }
-
-            AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-            ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
-              = AdresseDuResultat;
-
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
-                         << ProblemeAResoudre->Xmax[Var];
-
-            // direct / indirect flow
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-
-            Xmin[Var] = -csrSolverRelaxation;
-            Xmax[Var]
-              = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            if (Math::Infinite(Xmax[Var]) == 1)
-            {
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            }
-
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
-                         << ProblemeAResoudre->Xmax[Var];
-
-            Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-
-            Xmin[Var] = -csrSolverRelaxation;
-            Xmax[Var]
-              = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + csrSolverRelaxation;
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            if (Math::Infinite(Xmax[Var]) == 1)
-            {
-                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
-            }
-
-            logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
-                         << ProblemeAResoudre->Xmax[Var];
+            continue;
         }
+
+        // flow
+        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        Xmax[Var]
+            = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
+        Xmin[Var]
+            = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]) - csrSolverRelaxation;
+        ProblemeAResoudre->X[Var] = ValeursDeNTC->ValeurDuFlux[Interco];
+
+        if (Math::Infinite(Xmax[Var]) == 1)
+        {
+            if (Math::Infinite(Xmin[Var]) == -1)
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+            else
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        }
+        else
+        {
+            if (Math::Infinite(Xmin[Var]) == -1)
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+            else
+                ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        }
+
+        AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
+            = AdresseDuResultat;
+
+        logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+            << ProblemeAResoudre->Xmax[Var];
+
+        // direct / indirect flow
+        Var = CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+
+        Xmin[Var] = -csrSolverRelaxation;
+        Xmax[Var]
+            = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
+        ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        if (Math::Infinite(Xmax[Var]) == 1)
+        {
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        }
+
+        logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+            << ProblemeAResoudre->Xmax[Var];
+
+        Var = CorrespondanceVarNativesVarOptim
+            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+
+        Xmin[Var] = -csrSolverRelaxation;
+        Xmax[Var]
+            = ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco] + csrSolverRelaxation;
+        ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        if (Math::Infinite(Xmax[Var]) == 1)
+        {
+            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+        }
+
+        logs.debug() << Var << ": " << ProblemeAResoudre->Xmin[Var] << ", "
+            << ProblemeAResoudre->Xmax[Var];
     }
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+  const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] bounds";
 

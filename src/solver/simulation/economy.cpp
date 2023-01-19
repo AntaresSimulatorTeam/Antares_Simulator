@@ -173,7 +173,7 @@ bool Economy::year(Progression::Task& progression,
             RemixHydroForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
 
-            adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
+            Antares::Data::AdequacyPatch::adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
             
