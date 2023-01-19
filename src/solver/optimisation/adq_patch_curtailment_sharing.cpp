@@ -1,4 +1,4 @@
-﻿/*
+/*
 ** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
@@ -188,7 +188,8 @@ void HourlyCSRProblem::resetProblem()
 
 void HourlyCSRProblem::buildProblemVariables()
 {
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo_, *this);
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
+      problemeHebdo_, &problemeAResoudre_, *this);
 }
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
@@ -199,19 +200,20 @@ void HourlyCSRProblem::buildProblemConstraintsLHS()
 
 void HourlyCSRProblem::setVariableBounds()
 {
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo_,
-                                                                  &problemeAResoudre_,
-                                                                  hourInWeekTriggeredCsr);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
+      problemeHebdo_, &problemeAResoudre_, hourInWeekTriggeredCsr);
 }
 
 void HourlyCSRProblem::buildProblemConstraintsRHS()
 {
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(problemeHebdo_, *this);
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(
+      problemeHebdo_, &problemeAResoudre_, *this);
 }
 
 void HourlyCSRProblem::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo_, &problemeAResoudre_, hourInWeekTriggeredCsr);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(
+      problemeHebdo_, &problemeAResoudre_, hourInWeekTriggeredCsr);
 }
 
 void HourlyCSRProblem::solveProblem(uint week, int year)

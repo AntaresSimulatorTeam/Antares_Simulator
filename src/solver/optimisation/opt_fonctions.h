@@ -38,8 +38,10 @@ void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO*);
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(PROBLEME_HEBDO*,
-                                                                          HourlyCSRProblem&);
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
+  const PROBLEME_HEBDO*,
+  PROBLEME_ANTARES_A_RESOUDRE*,
+  HourlyCSRProblem&);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO*);
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO*);
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
@@ -55,7 +57,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(const PROBLEM
                                                                    int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO*, HourlyCSRProblem&);
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(const PROBLEME_HEBDO*,
+                                                            PROBLEME_ANTARES_A_RESOUDRE*,
+                                                            HourlyCSRProblem&);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsQuadratiques_CSR(const PROBLEME_HEBDO*,

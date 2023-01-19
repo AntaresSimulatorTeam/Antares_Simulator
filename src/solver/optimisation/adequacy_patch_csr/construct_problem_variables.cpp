@@ -34,12 +34,13 @@
 #include "../solver/optimisation/opt_fonctions.h"
 
 #include "pi_constantes_externes.h"
-
-void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+namespace
+{
+void constructVariableENS(const PROBLEME_HEBDO* ProblemeHebdo,
+                          PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                          HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
     NumberOfVariables = 0;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -66,12 +67,11 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourl
     }
 }
 
-void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
+void constructVariableSpilledEnergy(const PROBLEME_HEBDO* ProblemeHebdo,
+                                    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                     HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
@@ -96,11 +96,12 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+void constructVariableFlows(const PROBLEME_HEBDO* ProblemeHebdo,
+                            PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                            HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
@@ -149,20 +150,17 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hou
         }
     }
 }
-
+} // namespace
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
-  PROBLEME_HEBDO* ProblemeHebdo,
+  const PROBLEME_HEBDO* ProblemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
   HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] variable list:";
 
-    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != nullptr);
-
-    constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
-    constructVariableSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);
-    constructVariableFlows(ProblemeHebdo, hourlyCsrProblem);
+    constructVariableENS(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    constructVariableSpilledEnergy(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    constructVariableFlows(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
 
     return;
 }

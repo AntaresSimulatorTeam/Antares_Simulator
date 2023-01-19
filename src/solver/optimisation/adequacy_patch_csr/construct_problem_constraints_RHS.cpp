@@ -30,11 +30,13 @@
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
 
-void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+namespace
+{
+void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
+                        PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                        HourlyCSRProblem& hourlyCsrProblem)
 {
     int Cnt;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
@@ -58,11 +60,11 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyC
     }
 }
 
-void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
+                            PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                            HourlyCSRProblem& hourlyCsrProblem)
 {
     int Cnt;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     // constraint:
     // ENS(node A) +
@@ -90,7 +92,8 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hou
     }
 }
 
-void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
+void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
+                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                    const HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
@@ -101,8 +104,6 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
     double Poids;
     double ValueOfFlow;
     int Index;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     double* SecondMembre = ProblemeAResoudre->SecondMembre;
     const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     std::map<int, int> bingdingConstraintNumber
@@ -177,13 +178,15 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
         }
     }
 }
+} // namespace
 
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                                            HourlyCSRProblem& hourlyCsrProblem)
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(
+  const PROBLEME_HEBDO* ProblemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+  HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] RHS: ";
-
-    setRHSvalueOnFlows(ProblemeHebdo, hourlyCsrProblem);
-    setRHSnodeBalanceValue(ProblemeHebdo, hourlyCsrProblem);
-    setRHSbindingConstraintsValue(ProblemeHebdo, hourlyCsrProblem);
+    setRHSvalueOnFlows(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    setRHSnodeBalanceValue(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    setRHSbindingConstraintsValue(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
 }
