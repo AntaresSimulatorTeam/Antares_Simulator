@@ -104,10 +104,10 @@ void setLinearCost(PROBLEME_HEBDO* ProblemeHebdo, const HOURLY_CSR_PROBLEM& hour
 
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (!(ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
-              == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            || !(ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
-                 == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch))
+        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+              != Data::AdequacyPatch::physicalAreaInsideAdqPatch
+            || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             continue;
         }
