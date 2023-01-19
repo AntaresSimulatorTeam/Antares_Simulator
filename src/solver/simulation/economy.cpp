@@ -90,6 +90,7 @@ bool Economy::simulationBegin()
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {

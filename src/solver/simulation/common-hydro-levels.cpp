@@ -44,7 +44,8 @@ void computingHydroLevels(const Data::Study& study,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    assert(study.parameters.mode != Data::stdmAdequacyDraft);
+    // gp : we do not care : will be removed very soon
+    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
 
     study.areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)

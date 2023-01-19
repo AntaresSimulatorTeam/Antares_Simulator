@@ -116,6 +116,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
 
 void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
 {
+    // gp : is just about to be removed
     if (!study.parameters.adqPatch.enabled)
         return;
 
