@@ -29,8 +29,12 @@
 #include "adq_patch_curtailment_sharing.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
+#include "antares/study/area/scratchpad.h"
+#include "antares/study/fwd.h"
 
 const int nbHoursInAWeek = 168;
+
+using namespace Antares::Data::AdequacyPatch;
 
 namespace Antares::Solver::Simulation
 {
@@ -62,6 +66,43 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     // part that we need
     ::SIM_RenseignementProblemeHebdo(*problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
+}
+
+double AdequacyPatchOptimization::calculateDensNewAndTotalLmrViolation(AreaList& areas)
+{
+    double netPositionInit;
+    double densNew;
+    double totalNodeBalance;
+    double totalLmrViolation = 0.0;
+    const int numOfHoursInWeek = 168;
+
+    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        {
+            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            {
+                std::tie(netPositionInit, densNew, totalNodeBalance) = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
+
+                // adjust densNew according to the new specification/request by ELIA
+                /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
+                                        + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
+                auto& scratchpad = *(areas[Area]->scratchpad[thread_number_]);
+                double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+                densNew = std::max(0.0, densNew - dtgMrg);
+                // write down densNew values for all the hours
+                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+                // copy spilled Energy values into spilled Energy values after CSR
+                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
+                  = problemeHebdo_->ResultatsHoraires[Area]
+                      ->ValeursHorairesDeDefaillanceNegative[hour];
+                // check LMR violations
+                totalLmrViolation
+                  += LmrViolationAreaHour(problemeHebdo_, totalNodeBalance, Area, hour);
+            }
+        }
+    }
+    return totalLmrViolation;
 }
 
 std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHour() const
@@ -102,13 +143,11 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() c
     return identifyHoursForCurtailmentSharing(sumENS);
 }
 
-void AdequacyPatchOptimization::solveCSR(Antares::Data::AreaList& areas,
+void AdequacyPatchOptimization::postProcess(Antares::Data::AreaList& areas,
                                          uint year,
-                                         uint week,
-                                         uint numSpace)
+                                         uint week)
 {
-    double totalLmrViolation
-      = Antares::Data::AdequacyPatch::calculateDensNewAndTotalLmrViolation(problemeHebdo_, areas, numSpace);
+    double totalLmrViolation = calculateDensNewAndTotalLmrViolation(areas);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();

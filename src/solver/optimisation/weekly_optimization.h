@@ -38,5 +38,6 @@ public:
     explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
     ~weeklyOptimization() override = default;
     void solve(uint, int) override;
+    void postProcess(Antares::Data::AreaList&, uint, uint) override;
 };
 } // namespace Antares::Solver::Simulation

@@ -166,7 +166,7 @@ bool Economy::year(Progression::Task& progression,
             DispatchableMarginForAllAreas(
               study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
-            weeklyOptProblems_[numSpace]->solveCSR(study.areas, state.year, w, numSpace);
+            weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 
@@ -176,7 +176,7 @@ bool Economy::year(Progression::Task& progression,
             Antares::Data::AdequacyPatch::adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
-
+            
             interpolateWaterValue(
               study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
 
