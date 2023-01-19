@@ -38,15 +38,10 @@ using namespace Antares::Data;
 
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
     int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
-    int Var;
-    int NombreDeTermes;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    std::string NomDeLaContrainte;
-
-    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
-    CorrespondanceVarNativesVarOptim = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
@@ -57,8 +52,8 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
             && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            NombreDeTermes = 0;
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            int NombreDeTermes = 0;
+            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             if (Var >= 0)
             {
                 Pi[NombreDeTermes] = 1.0;
@@ -85,7 +80,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
             hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation[Interco]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
+            std::string NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
             logs.debug() << "C Interco: " << ProblemeAResoudre->NombreDeContraintes << ": "
                          << NomDeLaContrainte;
 
@@ -98,15 +93,9 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
-    int Var;
-    int NombreDeTermes;
-    int Interco;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    std::string NomDeLaContrainte;
-
-    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
-    CorrespondanceVarNativesVarOptim = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
     // constraint:
     // ENS(node A) +
@@ -122,8 +111,8 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
             continue;
 
         // + ENS
-        NombreDeTermes = 0;
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+        int NombreDeTermes = 0;
+        int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
         if (Var >= 0)
         {
             Pi[NombreDeTermes] = 1.0;
@@ -132,7 +121,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         }
 
         // - export flows
-        Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
+        int Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
         while (Interco >= 0)
         {
             if (problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
@@ -191,7 +180,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         hourlyCsrProblem_.numberOfConstraintCsrAreaBalance[Area]
             = ProblemeAResoudre->NombreDeContraintes;
 
-        NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
+        std::string NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
             + problemeHebdo_->NomsDesPays[Area];
 
         logs.debug() << "C: " << ProblemeAResoudre->NombreDeContraintes << ": "
@@ -205,41 +194,32 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
-    int Var;
-    int NombreDeTermes;
-    int Interco;
-    int NbInterco;
-    double Poids;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
-    std::string NomDeLaContrainte;
-
-    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
 
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
-        MatriceDesContraintesCouplantes
+         const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
             = problemeHebdo_->MatriceDesContraintesCouplantes[CntCouplante];
 
         if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
             continue;
 
-        NbInterco
+        int NbInterco
             = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
-        NombreDeTermes = 0;
+        int NombreDeTermes = 0;
         for (int Index = 0; Index < NbInterco; Index++)
         {
-            Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
-            Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+            int Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
+            double Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
             if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch
                     && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                Var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
+                int Var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
                     ->NumeroDeVariableDeLInterconnexion[Interco];
 
                 if (Var >= 0)
@@ -256,7 +236,7 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
             hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding[CntCouplante]
                 = ProblemeAResoudre->NombreDeContraintes;
 
-            NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
+            std::string NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
                 + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
             logs.debug() << "C (bc): " << ProblemeAResoudre->NombreDeContraintes << ": "
@@ -275,9 +255,8 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre = problemeHebdo_->ProblemeAResoudre;
     std::vector<double> Pi(ProblemeAResoudre->NombreDeVariables);
     std::vector<int> Colonne(ProblemeAResoudre->NombreDeVariables);
 

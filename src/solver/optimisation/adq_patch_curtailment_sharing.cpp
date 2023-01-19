@@ -60,15 +60,13 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
                                                             int Area,
                                                             int hour)
 {
-    int Interco;
     double netPositionInit = 0;
     double flowsNode1toNodeA = 0;
-    double ensInit;
     double densNew;
     bool includeFlowsOutsideAdqPatchToDensNew
       = !ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
 
-    Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
+    int Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
         if (ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
@@ -101,7 +99,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
         Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
 
-    ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+    double ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
@@ -155,8 +153,6 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
 void HourlyCSRProblem::calculateCsrParameters()
 {
     double netPositionInit;
-    double ensInit;
-    double spillageInit;
     int hour = hourInWeekTriggeredCsr;
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
@@ -170,9 +166,9 @@ void HourlyCSRProblem::calculateCsrParameters()
             std::tie(netPositionInit, std::ignore, std::ignore)
               = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo_, Area, hour);
 
-            ensInit
+            double ensInit
               = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-            spillageInit
+            double spillageInit
               = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;

@@ -109,15 +109,14 @@ void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    double* pt;
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
-        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+        double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
         if (pt)
-        {
             *pt = ProblemeAResoudre->X[Var];
-        }
+
         logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
+
     }
 }
 
@@ -208,13 +207,11 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
 
 void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
 {
-    int Var;
-
     logs.info();
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
-    for (Var = 0; Var < Probleme.NombreDeVariables; Var++)
+    for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
     {
         logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
                                  Var,
@@ -230,7 +227,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
         int ilMax = il + Probleme.NombreDeTermesDesLignes[Cnt];
         for (; il < ilMax; ++il)
         {
-            Var = Probleme.IndicesColonnes[il];
+            int Var = Probleme.IndicesColonnes[il];
             logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
                                      Probleme.CoefficientsDeLaMatriceDesContraintes[il],
                                      Var,
