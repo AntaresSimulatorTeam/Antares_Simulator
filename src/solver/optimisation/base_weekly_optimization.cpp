@@ -24,7 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
- 
+
 #include <memory>
 #include "base_weekly_optimization.h"
 #include "weekly_optimization.h"

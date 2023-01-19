@@ -64,9 +64,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     int Adder;
     int Sparsity;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 

@@ -193,7 +193,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    PROBLEME_ANTARES_A_RESOUDRE* = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
