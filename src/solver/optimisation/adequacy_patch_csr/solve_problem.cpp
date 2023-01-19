@@ -59,13 +59,9 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
     auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
-    int ChoixToleranceParDefautSurLAdmissibilite;
-    int ChoixToleranceParDefautSurLaStationnarite;
-    int ChoixToleranceParDefautSurLaComplementarite;
-
-    ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
-    ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
-    ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
+    int ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
+    int ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
+    int ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme->NombreMaxDIterations = -1;
     Probleme->CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
@@ -120,15 +116,14 @@ void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    double* pt;
     for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
-        pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+        double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
         if (pt)
-        {
             *pt = ProblemeAResoudre->X[Var];
-        }
+
         logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
+
     }
 }
 
@@ -141,7 +136,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* Pro
 {
     const int hoursInWeek = 168;
     const bool checkCost
-      = hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue;
+        = hourlyCsrProblem.problemeHebdo->adqPatchParams->CheckCsrCostFunctionValue;
     double deltaCost = costAfterCsr - costPriorToCsr;
 
     if (checkCost)
@@ -219,13 +214,11 @@ double calculateCsrCostFunctionValue(const PROBLEME_ANTARES_A_RESOUDRE* Probleme
 
 void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    int Var;
-
     logs.info();
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
     {
         logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
                                  Var,
@@ -243,7 +236,7 @@ void CSR_DEBUG_HANDLE(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
         int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
         for (; il < ilMax; ++il)
         {
-            Var = ProblemeAResoudre->IndicesColonnes[il];
+            int Var = ProblemeAResoudre->IndicesColonnes[il];
             logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
                                      ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
                                      Var,
