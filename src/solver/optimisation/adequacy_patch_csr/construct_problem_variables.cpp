@@ -57,7 +57,7 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourl
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.insert(NumberOfVariables);
-            hourlyCsrProblem.ensSet.insert(NumberOfVariables);
+            hourlyCsrProblem.ensVariablesInsideAdqPatch.insert(NumberOfVariables);
             logs.debug() << NumberOfVariables << " ENS[" << area << "].-["
                          << ProblemeHebdo->NomsDesPays[area] << "].";
 
@@ -117,10 +117,11 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hou
             && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
+            int algebraicFluxVar, directVar, indirectVar;
+            algebraicFluxVar
+              = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-            hourlyCsrProblem.linkSet.insert(NumberOfVariables);
             logs.debug()
               << NumberOfVariables << " flow[" << Interco << "]. ["
               << ProblemeHebdo->NomsDesPays[ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco]]
@@ -129,19 +130,22 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hou
               << "].";
             NumberOfVariables++;
 
-            CorrespondanceVarNativesVarOptim
-              ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+            directVar = CorrespondanceVarNativesVarOptim
+                          ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " direct flow[" << Interco << "]. ";
             NumberOfVariables++;
 
-            CorrespondanceVarNativesVarOptim
-              ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+            indirectVar = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
               = NumberOfVariables;
             ProblemeAResoudre->TypeDeVariable[NumberOfVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             logs.debug() << NumberOfVariables << " indirect flow[" << Interco << "]. ";
             NumberOfVariables++;
+
+            hourlyCsrProblem.linkInsideAdqPatch[algebraicFluxVar]
+              = HourlyCSRProblem::LinkVariable(directVar, indirectVar);
         }
     }
 }
@@ -154,7 +158,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
 
     const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    assert(ProblemeAResoudre != NULL);
+    assert(ProblemeAResoudre != nullptr);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
     constructVariableSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);

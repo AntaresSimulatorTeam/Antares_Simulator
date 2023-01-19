@@ -117,12 +117,12 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResou
         {
             *pt = ProblemeAResoudre->X[Var];
         }
-        logs.debug() << "[CSR]" << Var << " = " << ProblemeAResoudre->X[Var];
+        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
     }
 }
 
 void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
-                                          HourlyCSRProblem& hourlyCsrProblem,
+                                          const HourlyCSRProblem& hourlyCsrProblem,
                                           uint weekNb,
                                           int yearNb,
                                           double costPriorToCsr,
@@ -164,29 +164,41 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
     for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
     {
         logs.debug() << "Var: " << Var;
-        bool inEnsSet = hourlyCsrProblem.ensSet.find(Var) != hourlyCsrProblem.ensSet.end();
-        if (inEnsSet)
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var) != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
-            cost += Probleme.X[Var] * Probleme.X[Var] * Probleme.CoutQuadratique[Var];
+            cost += Probleme.X[Var] * Probleme.X[Var]
+                    * Probleme.CoutQuadratique[Var];
             logs.debug() << "X-Q: " << Probleme.X[Var] * 1e3;
             logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[Var] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
-        bool inLinkSet = hourlyCsrProblem.linkSet.find(Var) != hourlyCsrProblem.linkSet.end();
-        if (inLinkSet && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
+        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
+        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (Probleme.X[Var] >= 0)
             {
-                cost += Probleme.X[Var] * Probleme.CoutLineaire[Var + 1];
+                const int VarDirect = itLink->second.directVar;
+                if (VarDirect < 0)
+                {
+                    logs.warning() << "VarDirect < 0 detected, this should not happen";
+                    continue;
+                }
+                cost += Probleme.X[Var] * Probleme.CoutLineaire[VarDirect];
                 logs.debug() << "X+: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[Var + 1] * 1e3;
+                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
                 logs.debug() << "TotalCost: " << cost * 1e3;
             }
             else
             {
-                cost -= Probleme.X[Var] * Probleme.CoutLineaire[Var + 2];
+                const int VarIndirect = itLink->second.indirectVar;
+                if (VarIndirect < 0)
+                {
+                    logs.warning() << "VarIndirect < 0 detected, this should not happen";
+                    continue;
+                }
+                cost -= Probleme.X[Var] * Probleme.CoutLineaire[VarIndirect];
                 logs.debug() << "X-: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[Var + 2] * 1e3;
+                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;
                 logs.debug() << "TotalCost: " << cost * 1e3;
             }
         }
