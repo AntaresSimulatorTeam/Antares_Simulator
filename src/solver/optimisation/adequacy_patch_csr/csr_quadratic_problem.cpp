@@ -77,14 +77,14 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
             }
 
             hourlyCsrProblem_.numberOfConstraintCsrFlowDissociation[Interco]
-              = problemeAResoudre_->NombreDeContraintes;
+              = problemeAResoudre_.NombreDeContraintes;
 
             std::string NomDeLaContrainte = "flow=d-i, Interco:" + std::to_string(Interco);
-            logs.debug() << "C Interco: " << problemeAResoudre_->NombreDeContraintes << ": "
+            logs.debug() << "C Interco: " << problemeAResoudre_.NombreDeContraintes << ": "
                          << NomDeLaContrainte;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
+              &problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
         }
     }
 }
@@ -181,16 +181,16 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         }
 
         hourlyCsrProblem_.numberOfConstraintCsrAreaBalance[Area]
-            = problemeAResoudre_->NombreDeContraintes;
+            = problemeAResoudre_.NombreDeContraintes;
 
         std::string NomDeLaContrainte = "Area Balance, Area:" + std::to_string(Area) + "; "
             + problemeHebdo_->NomsDesPays[Area];
 
-        logs.debug() << "C: " << problemeAResoudre_->NombreDeContraintes << ": "
+        logs.debug() << "C: " << problemeAResoudre_.NombreDeContraintes << ": "
             << NomDeLaContrainte;
 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
+                &problemeAResoudre_, Pi, Colonne, NombreDeTermes, '=');
     }
 }
 
@@ -236,16 +236,16 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
         if (NombreDeTermes > 0) // current binding constraint contains an interco type 2<->2
         {
             hourlyCsrProblem_.numberOfConstraintCsrHourlyBinding[CntCouplante]
-                = problemeAResoudre_->NombreDeContraintes;
+                = problemeAResoudre_.NombreDeContraintes;
 
             std::string NomDeLaContrainte = "bc::hourly::" + std::to_string(hour) + "::"
                 + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
-            logs.debug() << "C (bc): " << problemeAResoudre_->NombreDeContraintes << ": "
+            logs.debug() << "C (bc): " << problemeAResoudre_.NombreDeContraintes << ": "
                 << NomDeLaContrainte;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                    problemeAResoudre_,
+                    &problemeAResoudre_,
                     Pi,
                     Colonne,
                     NombreDeTermes,
@@ -258,11 +258,11 @@ void CsrQuadraticProblem::buildConstraintMatrix()
 {
     logs.debug() << "[CSR] constraint list:";
 
-    std::vector<double> Pi(problemeAResoudre_->NombreDeVariables);
-    std::vector<int> Colonne(problemeAResoudre_->NombreDeVariables);
+    std::vector<double> Pi(problemeAResoudre_.NombreDeVariables);
+    std::vector<int> Colonne(problemeAResoudre_.NombreDeVariables);
 
-    problemeAResoudre_->NombreDeContraintes = 0;
-    problemeAResoudre_->NombreDeTermesDansLaMatriceDesContraintes = 0;
+    problemeAResoudre_.NombreDeContraintes = 0;
+    problemeAResoudre_.NombreDeTermesDansLaMatriceDesContraintes = 0;
 
     setConstraintsOnFlows(Pi.data(), Colonne.data());
     setNodeBalanceConstraints(Pi.data(), Colonne.data());

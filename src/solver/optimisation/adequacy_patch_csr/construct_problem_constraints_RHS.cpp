@@ -33,7 +33,7 @@
 namespace
 {
 void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
-                        PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                        PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                         HourlyCSRProblem& hourlyCsrProblem)
 {
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
@@ -50,16 +50,16 @@ void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
             if (it != hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.end())
             {
                 int Cnt = it->second;
-                ProblemeAResoudre->SecondMembre[Cnt] = 0.;
+                ProblemeAResoudre.SecondMembre[Cnt] = 0.;
                 logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
-                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+                             << "] = " << ProblemeAResoudre.SecondMembre[Cnt];
             }
         }
     }
 }
 
 void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
-                            PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                            PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                             HourlyCSRProblem& hourlyCsrProblem)
 {
     // constraint:
@@ -79,9 +79,9 @@ void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
             {
                 int Cnt = it->second;
-                ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
+                ProblemeAResoudre.SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
                 logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
-                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt]
+                             << "] = " << ProblemeAResoudre.SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
             }
         }
@@ -89,12 +89,12 @@ void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
 }
 
 void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
-                                   PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                    const HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double csrSolverRelaxationRHS = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    double* SecondMembre = ProblemeAResoudre.SecondMembre;
     std::map<int, int> bingdingConstraintNumber
         = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
 
@@ -168,7 +168,7 @@ void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(
   const PROBLEME_HEBDO* ProblemeHebdo,
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
   HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] RHS: ";

@@ -32,7 +32,7 @@ class HourlyCSRProblem;
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE* pa, HourlyCSRProblem& hourly) :
+    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
       problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
     {
     }
@@ -41,7 +41,7 @@ public:
 
 private:
     const PROBLEME_HEBDO* problemeHebdo_;
-    PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre_;
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
     HourlyCSRProblem& hourlyCsrProblem_;
 
     void setConstraintsOnFlows(double* Pi, int* Colonne);

@@ -56,29 +56,29 @@ extern "C"
 using namespace Antares;
 
 std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
-  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
     auto Probleme = std::make_unique<PROBLEME_POINT_INTERIEUR>();
 
     Probleme->NombreMaxDIterations = -1;
-    Probleme->CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
-    Probleme->CoutLineaire = ProblemeAResoudre->CoutLineaire;
-    Probleme->X = ProblemeAResoudre->X;
-    Probleme->Xmin = ProblemeAResoudre->Xmin;
-    Probleme->Xmax = ProblemeAResoudre->Xmax;
-    Probleme->NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-    Probleme->TypeDeVariable = ProblemeAResoudre->TypeDeVariable;
+    Probleme->CoutQuadratique = ProblemeAResoudre.CoutQuadratique;
+    Probleme->CoutLineaire = ProblemeAResoudre.CoutLineaire;
+    Probleme->X = ProblemeAResoudre.X;
+    Probleme->Xmin = ProblemeAResoudre.Xmin;
+    Probleme->Xmax = ProblemeAResoudre.Xmax;
+    Probleme->NombreDeVariables = ProblemeAResoudre.NombreDeVariables;
+    Probleme->TypeDeVariable = ProblemeAResoudre.TypeDeVariable;
 
-    Probleme->VariableBinaire = (char*)ProblemeAResoudre->CoutsReduits;
+    Probleme->VariableBinaire = (char*)ProblemeAResoudre.CoutsReduits;
 
-    Probleme->NombreDeContraintes = ProblemeAResoudre->NombreDeContraintes;
-    Probleme->IndicesDebutDeLigne = ProblemeAResoudre->IndicesDebutDeLigne;
-    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre->NombreDeTermesDesLignes;
-    Probleme->IndicesColonnes = ProblemeAResoudre->IndicesColonnes;
+    Probleme->NombreDeContraintes = ProblemeAResoudre.NombreDeContraintes;
+    Probleme->IndicesDebutDeLigne = ProblemeAResoudre.IndicesDebutDeLigne;
+    Probleme->NombreDeTermesDesLignes = ProblemeAResoudre.NombreDeTermesDesLignes;
+    Probleme->IndicesColonnes = ProblemeAResoudre.IndicesColonnes;
     Probleme->CoefficientsDeLaMatriceDesContraintes
-      = ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes;
-    Probleme->Sens = ProblemeAResoudre->Sens;
-    Probleme->SecondMembre = ProblemeAResoudre->SecondMembre;
+      = ProblemeAResoudre.CoefficientsDeLaMatriceDesContraintes;
+    Probleme->Sens = ProblemeAResoudre.Sens;
+    Probleme->SecondMembre = ProblemeAResoudre.SecondMembre;
 
     Probleme->AffichageDesTraces = NON_PI;
 
@@ -86,41 +86,41 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
     Probleme->UtiliserLaToleranceDeStationnariteParDefaut = OUI_PI;
     Probleme->UtiliserLaToleranceDeComplementariteParDefaut = OUI_PI;
 
-    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre->CoutsMarginauxDesContraintes;
+    Probleme->CoutsMarginauxDesContraintes = ProblemeAResoudre.CoutsMarginauxDesContraintes;
 
-    Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre->CoutsReduits;
-    Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre->CoutsReduits;
+    Probleme->CoutsMarginauxDesContraintesDeBorneInf = ProblemeAResoudre.CoutsReduits;
+    Probleme->CoutsMarginauxDesContraintesDeBorneSup = ProblemeAResoudre.CoutsReduits;
 
     return Probleme;
 }
 
-void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                HourlyCSRProblem& hourlyCsrProblem)
 {
-    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
     {
         bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
                      != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
-        bool belowLimit = ProblemeAResoudre->X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
+        bool belowLimit = ProblemeAResoudre.X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
         if (inSet && belowLimit)
-            ProblemeAResoudre->X[Var] = 0.0;
+            ProblemeAResoudre.X[Var] = 0.0;
     }
 }
 
-void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    for (int Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
     {
-        double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+        double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
         if (pt)
-            *pt = ProblemeAResoudre->X[Var];
+            *pt = ProblemeAResoudre.X[Var];
 
-        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre->X[Var];
+        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
 
     }
 }
 
-void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                           const HourlyCSRProblem& hourlyCsrProblem,
                                           uint weekNb,
                                           int yearNb,
@@ -253,20 +253,20 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 #endif
 }
 
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE* problemeAResoudre,
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme = buildInteriorPointProblem(problemeAResoudre);
+    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
     double costPriorToCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
     PI_Quamin(Probleme.get()); // resolution
     if (Probleme->ExistenceDUneSolution == OUI_PI)
     {
-        setToZeroIfBelowThreshold(problemeAResoudre, hourlyCsrProblem);
+        setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
         double costAfterCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
         storeOrDisregardInteriorPointResults(
-          problemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
+          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
         return true;
     }
     else
