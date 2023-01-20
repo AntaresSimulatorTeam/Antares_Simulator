@@ -126,7 +126,9 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         {
             if (problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                     != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+                Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
                 continue;
+            }
 
             Var = CorrespondanceVarNativesVarOptim
                 ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
@@ -150,20 +152,22 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         while (Interco >= 0)
         {
             if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
-                    != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-                Var = CorrespondanceVarNativesVarOptim
-                    ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
-            if (Var >= 0)
+                != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
-                NombreDeTermes++;
-                logs.debug()
-                    << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                    << problemeHebdo_->NomsDesPays[Area] << "]-["
-                    << problemeHebdo_
-                    ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
-                    << "]";
+                Var = CorrespondanceVarNativesVarOptim
+                        ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
+                if (Var >= 0)
+                {
+                    Pi[NombreDeTermes] = 1.0;
+                    Colonne[NombreDeTermes] = Var;
+                    NombreDeTermes++;
+                    logs.debug()
+                      << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+                      << problemeHebdo_->NomsDesPays[Area] << "]-["
+                      << problemeHebdo_
+                           ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
+                      << "]";
+                }
             }
             Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
         }
