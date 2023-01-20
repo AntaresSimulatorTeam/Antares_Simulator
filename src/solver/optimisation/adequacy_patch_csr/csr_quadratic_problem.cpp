@@ -126,6 +126,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         {
             if (problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                     != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            {
                 Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
                 continue;
             }
