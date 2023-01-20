@@ -158,6 +158,4 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
     constructVariableENS(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
     constructVariableSpilledEnergy(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
     constructVariableFlows(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
-
-    return;
 }

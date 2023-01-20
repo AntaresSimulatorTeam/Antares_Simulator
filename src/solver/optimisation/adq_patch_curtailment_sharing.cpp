@@ -27,6 +27,7 @@
 
 #include "adq_patch_curtailment_sharing.h"
 #include "adequacy_patch_csr/csr_quadratic_problem.h"
+#include "adequacy_patch_csr/count_constraints_variables.h"
 #include "opt_fonctions.h"
 
 #include <cmath>
@@ -99,7 +100,8 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
         Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
     }
 
-    double ensInit = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+    double ensInit
+      = ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
     if (includeFlowsOutsideAdqPatchToDensNew)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
@@ -174,12 +176,23 @@ void HourlyCSRProblem::calculateCsrParameters()
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
     }
-    return;
 }
 
 void HourlyCSRProblem::resetProblem()
 {
-    OPT_LiberationProblemesSimplexe(problemeHebdo_);
+    OPT_FreeOptimizationData(&problemeAResoudre_);
+}
+
+void HourlyCSRProblem::allocateProblem()
+{
+    using namespace Antares::Data::AdequacyPatch;
+    int nbConst;
+
+    problemeAResoudre_.NombreDeVariables = countVariables(problemeHebdo_);
+    nbConst = problemeAResoudre_.NombreDeContraintes = countConstraints(problemeHebdo_);
+    int nbTerms
+      = 3 * nbConst; // This is a rough estimate, reallocations may happen later if it's too low
+    OPT_AllocateFromNumberOfVariableConstraints(&problemeAResoudre_, nbTerms);
 }
 
 void HourlyCSRProblem::buildProblemVariables()
@@ -219,7 +232,6 @@ void HourlyCSRProblem::solveProblem(uint week, int year)
 
 void HourlyCSRProblem::run(uint week, uint year)
 {
-    resetProblem();
     calculateCsrParameters();
     buildProblemVariables();
     buildProblemConstraintsLHS();
