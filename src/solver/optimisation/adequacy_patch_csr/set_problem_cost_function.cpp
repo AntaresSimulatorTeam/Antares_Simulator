@@ -25,6 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <algorithm>
+
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 
 #include "../solver/simulation/simulation.h"
@@ -155,10 +157,10 @@ void OPT_InitialiserLesCoutsQuadratiques_CSR(const PROBLEME_HEBDO* ProblemeHebdo
                                              int hour)
 {
     logs.debug() << "[CSR] cost";
+    std::fill_n(ProblemeAResoudre.CoutLineaire,
+                ProblemeAResoudre.NombreDeVariables,
+                0.);
 
-    memset((char*)ProblemeAResoudre.CoutLineaire,
-           0,
-           ProblemeAResoudre.NombreDeVariables * sizeof(double));
     setQuadraticCost(ProblemeHebdo, ProblemeAResoudre, hour);
     if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
         setLinearCost(ProblemeHebdo, ProblemeAResoudre, hour);
