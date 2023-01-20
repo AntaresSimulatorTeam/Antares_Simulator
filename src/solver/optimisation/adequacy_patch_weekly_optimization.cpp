@@ -40,7 +40,7 @@ namespace Antares::Solver::Simulation
 {
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
- interfaceWeeklyOptimization(problemeHebdo, thread_number)
+ DefaultWeeklyOptimization(problemeHebdo, thread_number)
 {
 }
 void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)

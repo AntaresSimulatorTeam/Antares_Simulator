@@ -35,7 +35,7 @@ using Antares::Data::AreaList;
 
 namespace Antares::Solver::Simulation
 {
-class AdequacyPatchOptimization : public interfaceWeeklyOptimization
+class AdequacyPatchOptimization : public DefaultWeeklyOptimization
 {
 public:
     explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);

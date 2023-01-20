@@ -100,7 +100,7 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    std::vector<std::unique_ptr<interfaceWeeklyOptimization>> weeklyOptProblems_;
+    std::vector<std::unique_ptr<DefaultWeeklyOptimization>> weeklyOptProblems_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

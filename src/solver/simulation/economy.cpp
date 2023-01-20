@@ -104,7 +104,7 @@ bool Economy::simulationBegin()
             }
 
             weeklyOptProblems_[numSpace] = 
-                interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled, 
+                DefaultWeeklyOptimization::create(study.parameters.adqPatch.enabled, 
                                                     pProblemesHebdo[numSpace], 
                                                     numSpace);
         }
