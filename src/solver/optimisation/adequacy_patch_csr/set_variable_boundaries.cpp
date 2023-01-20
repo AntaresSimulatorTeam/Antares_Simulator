@@ -76,8 +76,7 @@ void setBoundsOnENS(PROBLEME_HEBDO* ProblemeHebdo, int hour)
     }
 }
 
-void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
-                              int hour)
+void setBoundsOnSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
@@ -199,7 +198,7 @@ void setBoundsOnFlows(PROBLEME_HEBDO* ProblemeHebdo, int hour)
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
-  const HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+  const HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] bounds";
 

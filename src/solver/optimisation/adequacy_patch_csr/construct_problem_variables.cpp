@@ -35,7 +35,7 @@
 
 #include "pi_constantes_externes.h"
 
-void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -66,7 +66,7 @@ void constructVariableENS(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hou
 }
 
 void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
-                                    HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+                                    HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -94,7 +94,7 @@ void constructVariableSpilledEnergy(PROBLEME_HEBDO* ProblemeHebdo,
     }
 }
 
-void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -142,18 +142,16 @@ void constructVariableFlows(PROBLEME_HEBDO* ProblemeHebdo, HOURLY_CSR_PROBLEM& h
             NumberOfVariables++;
 
             hourlyCsrProblem.linkInsideAdqPatch[algebraicFluxVar]
-              = HOURLY_CSR_PROBLEM::LinkVariable(directVar, indirectVar);
+              = HourlyCSRProblem::LinkVariable(directVar, indirectVar);
         }
     }
 }
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
   PROBLEME_HEBDO* ProblemeHebdo,
-  HOURLY_CSR_PROBLEM& hourlyCsrProblem)
+  HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] variable list:";
-
-    assert(ProblemeHebdo->ProblemeAResoudre != nullptr);
 
     constructVariableENS(ProblemeHebdo, hourlyCsrProblem);
     constructVariableSpilledEnergy(ProblemeHebdo, hourlyCsrProblem);

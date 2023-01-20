@@ -27,21 +27,21 @@
 
 #pragma once
 
-class HOURLY_CSR_PROBLEM;
+class HourlyCSRProblem;
 
 class CsrQuadraticProblem
 {
 public:
-    CsrQuadraticProblem(PROBLEME_HEBDO *prob, HOURLY_CSR_PROBLEM& hourly) :
-        ProblemeHebdo (prob),
-        hourlyCsrProblem (hourly)
-        {}
+    CsrQuadraticProblem(PROBLEME_HEBDO* p, HourlyCSRProblem& hourly) :
+     problemeHebdo_(p), hourlyCsrProblem_(hourly)
+    {
+    }
 
-    void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
+    void buildConstraintMatrix();
 
 private:
-    PROBLEME_HEBDO *ProblemeHebdo;
-    HOURLY_CSR_PROBLEM& hourlyCsrProblem;
+    PROBLEME_HEBDO* problemeHebdo_;
+    HourlyCSRProblem& hourlyCsrProblem_;
 
     void setConstraintsOnFlows(double* Pi, int* Colonne);
     void setNodeBalanceConstraints(double* Pi, int* Colonne);

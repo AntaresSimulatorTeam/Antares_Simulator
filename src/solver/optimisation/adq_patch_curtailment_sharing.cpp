@@ -26,7 +26,7 @@
 */
 
 #include "adq_patch_curtailment_sharing.h"
-#include "csr_quadratic_problem.h"
+#include "adequacy_patch_csr/csr_quadratic_problem.h"
 #include "opt_fonctions.h"
 
 #include <cmath>
@@ -150,26 +150,26 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
 
 } // namespace Antares::Data::AdequacyPatch
 
-void HOURLY_CSR_PROBLEM::calculateCsrParameters()
+void HourlyCSRProblem::calculateCsrParameters()
 {
     double netPositionInit;
     int hour = hourInWeekTriggeredCsr;
 
-    for (int Area = 0; Area < problemeHebdo->NombreDePays; Area++)
+    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
             == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
-            problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
+            problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
-              = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo, Area, hour);
+              = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo_, Area, hour);
 
             double ensInit
-              = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+              = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit
-              = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
+              = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }
@@ -177,43 +177,43 @@ void HOURLY_CSR_PROBLEM::calculateCsrParameters()
     return;
 }
 
-void HOURLY_CSR_PROBLEM::resetProblem()
+void HourlyCSRProblem::resetProblem()
 {
-    OPT_LiberationProblemesSimplexe(problemeHebdo);
+    OPT_LiberationProblemesSimplexe(problemeHebdo_);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemVariables()
+void HourlyCSRProblem::buildProblemVariables()
 {
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo, *this);
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(problemeHebdo_, *this);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemConstraintsLHS()
+void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    CsrQuadraticProblem csrProb(problemeHebdo, *this);
-    csrProb.OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique_CSR();
+    CsrQuadraticProblem csrProb(problemeHebdo_, *this);
+    csrProb.buildConstraintMatrix();
 }
 
-void HOURLY_CSR_PROBLEM::setVariableBounds()
+void HourlyCSRProblem::setVariableBounds()
 {
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo, *this);
+    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(problemeHebdo_, *this);
 }
 
-void HOURLY_CSR_PROBLEM::buildProblemConstraintsRHS()
+void HourlyCSRProblem::buildProblemConstraintsRHS()
 {
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(problemeHebdo, *this);
+    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(problemeHebdo_, *this);
 }
 
-void HOURLY_CSR_PROBLEM::setProblemCost()
+void HourlyCSRProblem::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo, hourInWeekTriggeredCsr);
+    OPT_InitialiserLesCoutsQuadratiques_CSR(problemeHebdo_, hourInWeekTriggeredCsr);
 }
 
-void HOURLY_CSR_PROBLEM::solveProblem(uint week, int year)
+void HourlyCSRProblem::solveProblem(uint week, int year)
 {
-    ADQ_PATCH_CSR(problemeHebdo->ProblemeAResoudre, *this, week, year);
+    ADQ_PATCH_CSR(problemeHebdo_->ProblemeAResoudre, *this, week, year);
 }
 
-void HOURLY_CSR_PROBLEM::run(uint week, uint year)
+void HourlyCSRProblem::run(uint week, uint year)
 {
     resetProblem();
     calculateCsrParameters();
