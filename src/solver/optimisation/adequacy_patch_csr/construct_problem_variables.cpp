@@ -43,8 +43,8 @@ void constructVariableENS(const PROBLEME_HEBDO* ProblemeHebdo,
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int& NumberOfVariables = ProblemeAResoudre->NombreDeVariables;
     NumberOfVariables = 0;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS of each area inside adq patch
     logs.debug() << " ENS of each area inside adq patch: ";

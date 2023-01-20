@@ -41,7 +41,7 @@ private:
 
 public:
     void run(uint week, uint year);
-
+    // TODO[FOM] Make these members private
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;

@@ -46,7 +46,6 @@ void setBoundsOnENS(const PROBLEME_HEBDO* ProblemeHebdo,
                     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                     int hour)
 {
-    int Var;
     double* AdresseDuResultat;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
@@ -58,7 +57,7 @@ void setBoundsOnENS(const PROBLEME_HEBDO* ProblemeHebdo,
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
             ProblemeAResoudre->Xmin[Var] = -csrSolverRelaxation;
             ProblemeAResoudre->Xmax[Var]
@@ -84,11 +83,7 @@ void setBoundsOnSpilledEnergy(const PROBLEME_HEBDO* ProblemeHebdo,
                               PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                               int hour)
 {
-    int Var;
-    double* AdresseDuResultat;
-
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    const auto * CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
     double csrSolverRelaxation = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
 
     // variables: Spilled Energy for each area inside adq patch
@@ -97,7 +92,7 @@ void setBoundsOnSpilledEnergy(const PROBLEME_HEBDO* ProblemeHebdo,
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
+            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
 
             ProblemeAResoudre->Xmin[Var] = -csrSolverRelaxation;
             ProblemeAResoudre->Xmax[Var] = LINFINI_ANTARES;
@@ -105,7 +100,7 @@ void setBoundsOnSpilledEnergy(const PROBLEME_HEBDO* ProblemeHebdo,
             ProblemeAResoudre->X[Var]
               = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDeDefaillanceNegative[hour];
 
-            AdresseDuResultat = &(
+            double* AdresseDuResultat = &(
               ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesSpilledEnergyAfterCSR[hour]);
 
             ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
@@ -121,17 +116,12 @@ void setBoundsOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
                       PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                       int hour)
 {
-    int Var;
-    double* AdresseDuResultat;
     double csrSolverRelaxation = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
-    double* Xmin;
-    double* Xmax;
-    Xmin = ProblemeAResoudre->Xmin;
-    Xmax = ProblemeAResoudre->Xmax;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    double* Xmin = ProblemeAResoudre->Xmin;
+    double* Xmax = ProblemeAResoudre->Xmax;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[hour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
@@ -148,7 +138,7 @@ void setBoundsOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
         }
 
         // flow
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
         Xmax[Var]
             = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco] + csrSolverRelaxation;
         Xmin[Var]
@@ -170,7 +160,7 @@ void setBoundsOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
                 ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
         }
 
-        AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
+        double* AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
             = AdresseDuResultat;
 

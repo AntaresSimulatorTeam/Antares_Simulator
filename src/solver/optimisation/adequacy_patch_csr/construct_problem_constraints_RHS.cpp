@@ -36,8 +36,6 @@ void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
                         PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                         HourlyCSRProblem& hourlyCsrProblem)
 {
-    int Cnt;
-
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
@@ -48,10 +46,10 @@ void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it
-              = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.find(Interco);
+                = hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.find(Interco);
             if (it != hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.end())
             {
-                Cnt = it->second;
+                int Cnt = it->second;
                 ProblemeAResoudre->SecondMembre[Cnt] = 0.;
                 logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
                              << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
@@ -64,8 +62,6 @@ void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
                             PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                             HourlyCSRProblem& hourlyCsrProblem)
 {
-    int Cnt;
-
     // constraint:
     // ENS(node A) +
     // [ Sum flow_direct(node 2 upstream -> node A) + Sum flow_indirect(node A <- node 2 downstream)
@@ -79,10 +75,10 @@ void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             std::map<int, int>::iterator it
-              = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
+                = hourlyCsrProblem.numberOfConstraintCsrAreaBalance.find(Area);
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
             {
-                Cnt = it->second;
+                int Cnt = it->second;
                 ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
                 logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
                              << "] = " << ProblemeAResoudre->SecondMembre[Cnt]
@@ -98,16 +94,9 @@ void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double csrSolverRelaxationRHS = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    int Cnt;
-    int Interco;
-    int NbInterco;
-    double Poids;
-    double ValueOfFlow;
-    int Index;
     double* SecondMembre = ProblemeAResoudre->SecondMembre;
-    const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes;
     std::map<int, int> bingdingConstraintNumber
-      = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
+        = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
 
     // constraint:
     // user defined Binding constraints between transmission flows
@@ -117,50 +106,47 @@ void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
     {
         if (bingdingConstraintNumber.find(CntCouplante) != bingdingConstraintNumber.end())
         {
-            MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+            const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
+                = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
 
-            Cnt = bingdingConstraintNumber[CntCouplante];
+            int Cnt = bingdingConstraintNumber[CntCouplante];
 
             // 1. The original RHS of bingding constraint
             SecondMembre[Cnt]
-              = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
+                = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[hour];
 
             // 2. RHS part 2: flow other than 2<->2
-            NbInterco
-              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
-            for (Index = 0; Index < NbInterco; Index++)
+            int NbInterco
+                = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
+            for (int Index = 0; Index < NbInterco; Index++)
             {
-                Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
-                Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
+                int Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
+                double Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
                 if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
                       != Data::AdequacyPatch::physicalAreaInsideAdqPatch
                     || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                          != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
-                    ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
+                    double ValueOfFlow = ProblemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
                     SecondMembre[Cnt] -= ValueOfFlow * Poids;
                 }
             }
 
             // 3. RHS part 3: - cluster
             int NbClusters
-              = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
-            int Area;
-            int IndexNumeroDuPalierDispatch;
-            double ValueOfVar;
+                = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
 
-            for (Index = 0; Index < NbClusters; Index++)
+            for (int Index = 0; Index < NbClusters; Index++)
             {
-                Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
+                int Area = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[Index];
 
-                IndexNumeroDuPalierDispatch
-                  = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
+                int IndexNumeroDuPalierDispatch
+                    = MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[Index];
 
-                Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
+                double Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
 
-                ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]
+                double ValueOfVar = ProblemeHebdo->ResultatsHoraires[Area]
                                ->ProductionThermique[hour]
                                ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 

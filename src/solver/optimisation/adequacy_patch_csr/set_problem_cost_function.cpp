@@ -60,7 +60,6 @@ void setQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo,
                       PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                       int hour)
 {
-    int Var;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
@@ -76,7 +75,7 @@ void setQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo,
         if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
+            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
             {
                 ProblemeAResoudre->CoutQuadratique[Var]
