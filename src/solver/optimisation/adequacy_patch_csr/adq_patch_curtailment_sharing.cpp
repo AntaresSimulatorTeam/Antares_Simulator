@@ -26,8 +26,8 @@
 */
 
 #include "adq_patch_curtailment_sharing.h"
-#include "csr_quadratic_problem.h"
-#include "opt_fonctions.h"
+#include "../csr_quadratic_problem.h"
+#include "../opt_fonctions.h"
 
 #include <cmath>
 #include "../study/area/scratchpad.h"
