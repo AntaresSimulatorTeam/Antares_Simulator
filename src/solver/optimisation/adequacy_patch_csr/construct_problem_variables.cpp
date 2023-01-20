@@ -43,8 +43,7 @@ void constructVariableENS(const PROBLEME_HEBDO* ProblemeHebdo,
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     int& NumberOfVariables = ProblemeAResoudre.NombreDeVariables;
     NumberOfVariables = 0;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-        = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    auto CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
     // variables: ENS of each area inside adq patch
     logs.debug() << " ENS of each area inside adq patch: ";
@@ -72,8 +71,7 @@ void constructVariableSpilledEnergy(const PROBLEME_HEBDO* ProblemeHebdo,
                                     HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    auto CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
     int& NumberOfVariables = ProblemeAResoudre.NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
@@ -102,8 +100,7 @@ void constructVariableFlows(const PROBLEME_HEBDO* ProblemeHebdo,
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
 
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    auto CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
     int& NumberOfVariables = ProblemeAResoudre.NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2
