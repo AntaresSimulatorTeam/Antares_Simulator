@@ -36,6 +36,9 @@
 
 using namespace Antares::Data;
 
+namespace Antares::Solver::Optimization
+{
+
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
@@ -269,3 +272,5 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setNodeBalanceConstraints(Pi.data(), Colonne.data());
     setBindingConstraints(Pi.data(), Colonne.data());
 }
+
+} //namespace Antares::Solver::Optimization

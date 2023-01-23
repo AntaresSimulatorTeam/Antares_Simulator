@@ -30,14 +30,14 @@
 #include "base_weekly_optimization.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
-class weeklyOptimization : public interfaceWeeklyOptimization
+class DefaultWeeklyOptimization : public WeeklyOptimization
 {
 public:
-    explicit weeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    ~weeklyOptimization() override = default;
+    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    ~DefaultWeeklyOptimization() override = default;
     void solve(uint, int) override;
     void postProcess(Antares::Data::AreaList&, uint, uint) override;
 };
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization

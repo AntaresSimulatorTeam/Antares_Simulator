@@ -41,7 +41,7 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
-#include "../solver/optimisation/adq_patch_curtailment_sharing.h"
+#include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>

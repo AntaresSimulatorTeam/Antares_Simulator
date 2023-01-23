@@ -30,7 +30,7 @@
 #include <antares/exception/AssertionError.hpp>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
-#include "../optimisation/adq_patch_curtailment_sharing.h"
+#include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
 #include "opt_time_writer.h"
 
@@ -103,9 +103,10 @@ bool Economy::simulationBegin()
                 return false;
             }
 
-            weeklyOptProblems_[numSpace] = 
-                interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled, 
-                                                    pProblemesHebdo[numSpace], 
+            weeklyOptProblems_[numSpace] =
+                Antares::Solver::Optimization::WeeklyOptimization::create(
+                                                    study.parameters.adqPatch.enabled,
+                                                    pProblemesHebdo[numSpace],
                                                     numSpace);
         }
 
@@ -176,7 +177,7 @@ bool Economy::year(Progression::Task& progression,
             Antares::Data::AdequacyPatch::adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
 
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
-            
+
             interpolateWaterValue(
               study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
 

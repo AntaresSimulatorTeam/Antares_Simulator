@@ -38,7 +38,7 @@ namespace Antares::Data::AdequacyPatch
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
+static NtcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType)
 {
     switch (ExtremityNodeAdequacyPatchType)
@@ -66,7 +66,7 @@ static ntcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsi
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
+static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
   AdequacyPatchMode ExtremityNodeAdequacyPatchType,
   bool setToZeroNTCfromOutToIn_AdqPatch,
   bool setToZeroNTCfromOutToOut_AdqPatch)
@@ -92,7 +92,7 @@ static ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static ntcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo,
+static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo,
                                                            int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
@@ -124,7 +124,7 @@ void setNTCbounds(double& Xmax,
                   const int Interco,
                   PROBLEME_HEBDO* ProblemeHebdo)
 {
-    ntcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
+    NtcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
     // set as default values
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
