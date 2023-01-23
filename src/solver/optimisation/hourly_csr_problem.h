@@ -41,6 +41,25 @@ private:
     void allocateProblem();
     void resetProblem();
 
+    // Variable construction
+    void constructVariableENS();
+    void constructVariableSpilledEnergy();
+    void constructVariableFlows();
+
+    // Variable bounds
+    void setBoundsOnENS();
+    void setBoundsOnSpilledEnergy();
+    void setBoundsOnFlows();
+
+    // Constraints
+    void setRHSvalueOnFlows();
+    void setRHSnodeBalanceValue();
+    void setRHSbindingConstraintsValue();
+
+    // Costs
+    void setQuadraticCost();
+    void setLinearCost();
+
 public:
     void run(uint week, uint year);
 
