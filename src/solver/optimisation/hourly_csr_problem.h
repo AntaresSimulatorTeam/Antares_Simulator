@@ -27,13 +27,7 @@
 
 #pragma once
 
-// forward declaration
-namespace Antares::Solver::Variable
-{
-class State;
-}
-
-class HOURLY_CSR_PROBLEM
+class HourlyCSRProblem
 {
 private:
     void calculateCsrParameters();
@@ -47,17 +41,21 @@ private:
 
 public:
     void run(uint week, uint year);
-
+    // TODO[FOM] Make these members private
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
-    PROBLEME_HEBDO* problemeHebdo;
-    HOURLY_CSR_PROBLEM(int hourInWeek, PROBLEME_HEBDO* pProblemeHebdo) :
-        hourInWeekTriggeredCsr(hourInWeek),
-        problemeHebdo(pProblemeHebdo)
+    PROBLEME_HEBDO* problemeHebdo_;
+    HourlyCSRProblem(PROBLEME_HEBDO* p) : problemeHebdo_(p)
     {
         belowThisThresholdSetToZero
-          = pProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
+          = p->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     };
+
+    inline void setHour(int hour)
+    {
+        hourInWeekTriggeredCsr = hour;
+    }
+
     std::map<int, int> numberOfConstraintCsrEns;
     std::map<int, int> numberOfConstraintCsrAreaBalance;
     std::map<int, int> numberOfConstraintCsrFlowDissociation;
