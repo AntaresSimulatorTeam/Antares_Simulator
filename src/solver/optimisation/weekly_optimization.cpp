@@ -30,17 +30,17 @@
 
 namespace Antares::Solver::Simulation
 {
-WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint thread_number) :
- DefaultWeeklyOptimization(problemeHebdo, thread_number)
+DefaultWeeklyOptimization::DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint thread_number) :
+ WeeklyOptimization(problemeHebdo, thread_number)
 {
 }
 
-void WeeklyOptimization::solve(uint, int)
+void DefaultWeeklyOptimization::solve(uint, int)
 {
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-void WeeklyOptimization::postProcess(Antares::Data::AreaList&, uint, uint)
+void DefaultWeeklyOptimization::postProcess(Antares::Data::AreaList&, uint, uint)
 {
     // Nothing to finalize for a classic weekly optimization
 }

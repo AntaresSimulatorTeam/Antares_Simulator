@@ -32,18 +32,18 @@
 
 namespace Antares::Solver::Simulation
 {
-class DefaultWeeklyOptimization
+class WeeklyOptimization
 {
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
     virtual void postProcess(Antares::Data::AreaList& areas, uint year, uint week) = 0;
-    virtual ~DefaultWeeklyOptimization() = default;
-    static std::unique_ptr<DefaultWeeklyOptimization> create(bool adqPatchEnabled,
+    virtual ~WeeklyOptimization() = default;
+    static std::unique_ptr<WeeklyOptimization> create(bool adqPatchEnabled,
                                                                PROBLEME_HEBDO* problemesHebdo,
                                                                uint numSpace);
 
 protected:
-    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
+    explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     const uint thread_number_ = 0;
 };

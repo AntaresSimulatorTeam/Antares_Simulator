@@ -32,11 +32,11 @@
 
 namespace Antares::Solver::Simulation
 {
-class WeeklyOptimization : public DefaultWeeklyOptimization
+class DefaultWeeklyOptimization : public WeeklyOptimization
 {
 public:
-    explicit WeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    ~WeeklyOptimization() override = default;
+    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    ~DefaultWeeklyOptimization() override = default;
     void solve(uint, int) override;
     void postProcess(Antares::Data::AreaList&, uint, uint) override;
 };

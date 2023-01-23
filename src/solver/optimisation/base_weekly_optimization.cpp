@@ -32,13 +32,13 @@
 
 namespace Antares::Solver::Simulation
 {
-DefaultWeeklyOptimization::DefaultWeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
+WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
                                                          uint thread_number) :
  problemeHebdo_(problemesHebdo), thread_number_(thread_number)
 {
 }
 
-std::unique_ptr<DefaultWeeklyOptimization> DefaultWeeklyOptimization::create(
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
     bool adqPatchEnabled,
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number)
@@ -46,7 +46,7 @@ std::unique_ptr<DefaultWeeklyOptimization> DefaultWeeklyOptimization::create(
     if (adqPatchEnabled)
         return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);
     else
-        return std::make_unique<WeeklyOptimization>(problemeHebdo, thread_number);
+        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, thread_number);
 }
 
 } // namespace Antares::Solver::Simulation
