@@ -29,6 +29,9 @@
 
 class HourlyCSRProblem;
 
+namespace Antares::Solver::Optimization
+{
+
 class CsrQuadraticProblem
 {
 public:
@@ -48,3 +51,5 @@ private:
     void setNodeBalanceConstraints(double* Pi, int* Colonne);
     void setBindingConstraints(double* Pi, int* Colonne);
 };
+
+} //namespace Antares::Solver::Optimization

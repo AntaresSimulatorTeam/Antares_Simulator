@@ -25,8 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "adequacy_patch_weekly_optimization.h"
-#include "adq_patch_curtailment_sharing.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
 #include "antares/study/area/scratchpad.h"
@@ -36,11 +36,11 @@ const int nbHoursInAWeek = 168;
 
 using namespace Antares::Data::AdequacyPatch;
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
- interfaceWeeklyOptimization(problemeHebdo, thread_number)
+ WeeklyOptimization(problemeHebdo, thread_number)
 {
 }
 void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
@@ -160,4 +160,4 @@ void AdequacyPatchOptimization::postProcess(Antares::Data::AreaList& areas,
         hourlyCsrProblem.run(week, year);
     }
 }
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization
