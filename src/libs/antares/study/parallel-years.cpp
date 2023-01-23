@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <utility>
 #include <vector>
 #include <climits>
 #include <cassert>
@@ -52,14 +53,12 @@ namespace Antares
 
 bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
 {
-    inputFolder = folder_;
-    loadAreaList();
+    inputFolder = std::move(folder_);
+    loadAreaList(); //Build areaNames
 
-    return std::any_of(areaNames.begin(), areaNames.end(),[this](Yuni::String areaName){
-                
+    return std::any_of(areaNames.begin(), areaNames.end(),[this](const Yuni::String& areaName){
             auto folder = inputFolder;
             Yuni::Clob thermalPlant = folder << SEP << "thermal" << SEP << "clusters" << SEP << areaName << SEP << "list.ini";
-
             IniFile ini;
             bool ret = false;
             if (ini.open(thermalPlant))
@@ -73,16 +72,13 @@ bool TempAreaListHolder::checkThermalTSGeneration(YString folder_)
                             ret = ret || (property->key == "gen-ts");
                         }
                     }
-
                 }
                 return ret;
             }
             logs.error() << "Thermal Cluster Ini file cannot be opened: " << thermalPlant.c_str();
             return false;
-
         }
     );
-
 }
 
 /*!
