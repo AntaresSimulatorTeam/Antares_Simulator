@@ -108,6 +108,14 @@ bool Economy::simulationBegin()
                 interfaceWeeklyOptimization::create(study.parameters.adqPatch.enabled, 
                                                     pProblemesHebdo[numSpace], 
                                                     numSpace);
+            postProcessesList_[numSpace] =
+                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
+                                                 pProblemesHebdo[numSpace],
+                                                 numSpace,
+                                                 study.areas,
+                                                 study.parameters.shedding.policy,
+                                                 study.parameters.simplexOptimizationRange,
+                                                 study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -164,11 +172,20 @@ bool Economy::year(Progression::Task& progression,
         {
             weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
 
-            DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+            // Runs all the post processes (in the list of post-process commands)
+            optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
+            postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            // DispatchableMarginForAllAreas(
+            //  study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+
+            // We need to move this post process in the list of post-process commands.
+            // In case of default weekly optimization, it does nothing.
+            // In case of adq patch optimization, it solves some hourly problems of curtailement sharing
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
+            // Next post process to be moved to the list of post-process commands
             computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
 
             RemixHydroForAllAreas(

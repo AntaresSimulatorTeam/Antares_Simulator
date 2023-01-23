@@ -32,7 +32,7 @@
 #include "../variable/state.h"
 
 #include "../optimisation/base_weekly_optimization.h"
-#include "base_post_process_list.h"
+#include "base_post_process.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
 

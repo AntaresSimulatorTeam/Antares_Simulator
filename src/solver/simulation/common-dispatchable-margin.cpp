@@ -35,15 +35,16 @@
 
 namespace Antares::Solver::Simulation
 {
-void DispatchableMarginForAllAreas(const Data::Study& study,
+void DispatchableMarginForAllAreas(const Data::AreaList& areas,
                                    PROBLEME_HEBDO& problem,
                                    uint numSpace,
                                    uint hourInYear)
 {
-    assert(study.parameters.mode == Data::stdmEconomy);
+    // gp : do we really need this ? 
+    // assert(study.parameters.mode == Data::stdmEconomy);
     const uint nbHoursInWeek = 168;
 
-    study.areas.each([&](Data::Area& area) {
+    areas.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[numSpace]->dispatchableGenerationMargin;
         for (uint h = 0; h != nbHoursInWeek; ++h)
             dtgmrg[h] = 0.;

@@ -115,12 +115,12 @@ void computingHydroLevels(const Data::Study& study,
 /*!
 ** \brief Calculate the Dispatchable margin for all areas
 **
-** \param study The Antares study
+** \param areas The areas list
 ** \param problem The weekly problem, from the solver
 ** \param hourInYear The hour in the year of the first hour in the current week
 ** \param nbHours The number of hour for a week
 */
-void DispatchableMarginForAllAreas(const Data::Study& study,
+void DispatchableMarginForAllAreas(const Data::AreaList& areas,
                                    PROBLEME_HEBDO& problem,
                                    uint numSpace,
                                    uint hourInYear);
