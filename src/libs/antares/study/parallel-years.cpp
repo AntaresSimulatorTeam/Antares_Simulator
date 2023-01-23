@@ -123,7 +123,7 @@ void SetsOfParallelYearCalculator::computeRawNbParallelYear()
         return;
 
     std::map<NumberOfCoresMode, int> numberOfMCYearThreads;
-    const uint nbLogicalCores = Yuni::System::CPU::Count();
+    const uint nbLogicalCores = number_of_cores_;
 
     numberOfMCYearThreads[ncMin] = 1;
     switch (nbLogicalCores)

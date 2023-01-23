@@ -231,7 +231,7 @@ void Study::getNumberOfCores(const bool forceParallel, const bool enableParallel
 
     SetsOfParallelYearCalculator setsBuilder(forceParallel,
                                              enableParallel,
-                                             nbYearsParallelForced,
+                                             nbYearsParallelForced, Yuni::System::CPU::Count(),
                                              thermalTSRefresh,
                                              parameters);
     // For GUI

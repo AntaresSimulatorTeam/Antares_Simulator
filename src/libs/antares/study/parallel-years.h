@@ -103,15 +103,12 @@ class SetsOfParallelYearCalculator
 {
 public:
     
-    SetsOfParallelYearCalculator(
-        bool forceParallel_,
-        bool enableParallel_,
-        uint forcedNbOfParallelYears_,
-        bool thermalTSRefresh_, // Temporary parameter needed. To be removed once TSGen will be detached from simulator
-        Parameters& params_)
+    SetsOfParallelYearCalculator(bool forceParallel_, bool enableParallel_, uint forcedNbOfParallelYears_,
+                                 uint number_of_cores, bool thermalTSRefresh_, Parameters &params_)
     : forceParallel{forceParallel_},
     enableParallel {enableParallel_},
     forcedNbOfParallelYears{forcedNbOfParallelYears_},
+    number_of_cores_{number_of_cores},
     thermalTSRefresh{thermalTSRefresh_},
     p{params_}{
         this->build();
@@ -120,22 +117,22 @@ public:
         
     bool allSetsParallelYearsHaveSameSize();
 
-    uint getForcedNbOfParallelYears() const
+    [[nodiscard]] uint getForcedNbOfParallelYears() const
     {
         return forcedNbOfParallelYears; 
     } 
 
-    uint getMinNbParallelYearsForGUI() const
+    [[nodiscard]] uint getMinNbParallelYearsForGUI() const
     {
         return computeMinNbParallelYears();
     }
 
-    std::vector<setOfParallelYears> getSetsOfParallelYears() const
+    [[nodiscard]] std::vector<setOfParallelYears> getSetsOfParallelYears() const
     {
         return setsOfParallelYears;
     }
 
-    uint getNbYearsReallyPerformed() const
+    [[nodiscard]] uint getNbYearsReallyPerformed() const
     {
         return nbYearsReallyPerformed;
     }
@@ -149,7 +146,7 @@ private:
     
     void buildSetsOfParallelYears();
 
-    uint computeMinNbParallelYears() const;
+    [[nodiscard]] uint computeMinNbParallelYears() const;
     void computeForcedNbYearsInParallelYearSet();
 
     bool isRefreshNeededForCurrentYear(uint y);
@@ -159,6 +156,7 @@ private:
     bool forceParallel;
     bool enableParallel;
     uint forcedNbOfParallelYears;
+    uint number_of_cores_;
     bool thermalTSRefresh;
     Parameters& p;
     uint nbYearsReallyPerformed{0};

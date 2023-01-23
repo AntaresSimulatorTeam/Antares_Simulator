@@ -13,19 +13,6 @@ namespace tt = boost::test_tools;
 using namespace Yuni;
 using namespace Antares::Data;
 
-
-uint nbLogicalCores_{2};
-
-namespace Yuni::System::CPU
-{
-    uint Count()
-    {
-        // The number of processors online (capable of running processes)
-        return nbLogicalCores_;
-    }
-
-}
-
 struct Fixture
 {
 	Fixture(const Fixture& f) = delete;
@@ -53,12 +40,11 @@ BOOST_AUTO_TEST_CASE(default_params_no_force)
 {
     bool thermalTSRefresh = false;
 
-    nbLogicalCores_ = 1;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncHigh;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 1,
                                          thermalTSRefresh,
                                          params);
     
@@ -71,12 +57,11 @@ BOOST_AUTO_TEST_CASE(default_params_no_force_bad_number_of_cores, *utf::expected
 {
     bool thermalTSRefresh = false;
 
-    nbLogicalCores_ = 0;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncUnknown;
 
     SetsOfParallelYearCalculator builder(options.forceParallel,
                                          options.enableParallel,
-                                         options.maxNbYearsInParallel,
+                                         options.maxNbYearsInParallel, 0,
                                          thermalTSRefresh,
                                          params);
 
@@ -86,28 +71,27 @@ BOOST_AUTO_TEST_CASE(default_params_no_force_bad_ncmode, *utf::expected_failures
 {
     bool thermalTSRefresh = false;
 
-    nbLogicalCores_ = 1;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncUnknown;
 
     SetsOfParallelYearCalculator builder(options.forceParallel,
                                          options.enableParallel,
-                                         options.maxNbYearsInParallel,
+                                         options.maxNbYearsInParallel, 1,
                                          thermalTSRefresh,
                                          params);
 
 }
 
+constexpr uint default_number_of_core = 12;
 BOOST_AUTO_TEST_CASE(hundred_years_no_force)
 {
     bool thermalTSRefresh = false;
     params.nbYears = 100;
 
-    nbLogicalCores_ = 12;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncAvg;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, default_number_of_core,
                                          thermalTSRefresh,
                                          params);
     
@@ -126,9 +110,9 @@ BOOST_AUTO_TEST_CASE(four_mc_years_force_parallel)
     options.maxNbYearsInParallel = 2;
     params.nbYears = 4;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, default_number_of_core,
                                          thermalTSRefresh,
                                          params);
 
@@ -147,9 +131,9 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_force_parallel_sets_size_five_thermal_refr
     options.maxNbYearsInParallel = 5;
     params.nbYears = 100;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, default_number_of_core,
                                          thermalTSRefresh,
                                          params);
 
@@ -168,12 +152,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_no_force_thermal_refresh_on)
     options.enableParallel = false;
     params.nbYears = 100;
 
-    nbLogicalCores_ = 5;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncAvg;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 5,
                                          thermalTSRefresh,
                                          params);
 
@@ -195,12 +178,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_no_force_enable_parallel)
 
     params.nbYears = 100;
 
-    nbLogicalCores_ = 16;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncHigh;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 16,
                                          thermalTSRefresh,
                                          params);
 
@@ -222,12 +204,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_no_force_enable_parallel_thermal_refresh_o
 
     params.nbYears = 100;
 
-    nbLogicalCores_ = 8;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncAvg;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 8,
                                          thermalTSRefresh,
                                          params);
 
@@ -248,12 +229,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_no_force_enable_parallel_thermal_refresh_o
 
     params.nbYears = 100;
 
-    nbLogicalCores_ = 3;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncAvg;
 
     SetsOfParallelYearCalculator builder(options.forceParallel,
                                          options.enableParallel,
-                                         options.maxNbYearsInParallel,
+                                         options.maxNbYearsInParallel, 3,
                                          thermalTSRefresh,
                                          params);
 
@@ -276,12 +256,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_force_parallel_enable_parallel_thermal_ref
 
     params.nbYears = 100;
 
-    nbLogicalCores_ = 4;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncAvg;
 
     SetsOfParallelYearCalculator builder(options.forceParallel,
                                          options.enableParallel,
-                                         options.maxNbYearsInParallel,
+                                         options.maxNbYearsInParallel, 4,
                                          thermalTSRefresh,
                                          params);
 
@@ -315,12 +294,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_force_10_parallel_user_playlist_thermal_re
     params.setYearWeight(2,3);
 
     // Override number of raw cores
-    nbLogicalCores_ = 7;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncLow;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 7,
                                          thermalTSRefresh,
                                          params);
 
@@ -359,12 +337,11 @@ BOOST_AUTO_TEST_CASE(hundred_mc_years_enable_parallel_user_playlist_thermal_refr
     params.setYearWeight(2,3);
 
     // Override number of raw cores
-    nbLogicalCores_ = 9;
     params.nbCores.ncMode = Antares::Data::NumberOfCoresMode::ncHigh;
 
-    SetsOfParallelYearCalculator builder(options.forceParallel, 
-                                         options.enableParallel, 
-                                         options.maxNbYearsInParallel,
+    SetsOfParallelYearCalculator builder(options.forceParallel,
+                                         options.enableParallel,
+                                         options.maxNbYearsInParallel, 9,
                                          thermalTSRefresh,
                                          params);
 
