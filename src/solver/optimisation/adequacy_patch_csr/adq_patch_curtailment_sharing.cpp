@@ -27,8 +27,8 @@
 
 #include "adq_patch_curtailment_sharing.h"
 #include "../opt_fonctions.h"
-#include "adequacy_patch_csr/csr_quadratic_problem.h"
-#include "adequacy_patch_csr/count_constraints_variables.h"
+#include "csr_quadratic_problem.h"
+#include "count_constraints_variables.h"
 
 #include <cmath>
 #include "../study/area/scratchpad.h"
