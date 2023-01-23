@@ -31,25 +31,34 @@ class HourlyCSRProblem
 {
 private:
     void calculateCsrParameters();
-    void resetProblem();
+
     void buildProblemVariables();
     void setVariableBounds();
     void buildProblemConstraintsLHS();
     void buildProblemConstraintsRHS();
     void setProblemCost();
     void solveProblem(uint week, int year);
+    void allocateProblem();
+    void resetProblem();
 
 public:
     void run(uint week, uint year);
+
     // TODO[FOM] Make these members private
     int hourInWeekTriggeredCsr;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
     HourlyCSRProblem(PROBLEME_HEBDO* p) : problemeHebdo_(p)
     {
-        belowThisThresholdSetToZero
-          = p->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    };
+        belowThisThresholdSetToZero = p->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
+        allocateProblem();
+    }
+
+    ~HourlyCSRProblem()
+    {
+        resetProblem();
+    }
 
     inline void setHour(int hour)
     {

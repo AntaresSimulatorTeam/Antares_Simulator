@@ -30,10 +30,12 @@
 #include "../solver/simulation/sim_extern_variables_globales.h"
 #include "../solver/optimisation/opt_fonctions.h"
 
-void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+namespace
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
+void setRHSvalueOnFlows(const PROBLEME_HEBDO* ProblemeHebdo,
+                        PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                        HourlyCSRProblem& hourlyCsrProblem)
+{
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
     for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
@@ -48,18 +50,18 @@ void setRHSvalueOnFlows(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyC
             if (it != hourlyCsrProblem.numberOfConstraintCsrFlowDissociation.end())
             {
                 int Cnt = it->second;
-                ProblemeAResoudre->SecondMembre[Cnt] = 0.;
+                ProblemeAResoudre.SecondMembre[Cnt] = 0.;
                 logs.debug() << Cnt << "Flow=D-I: RHS[" << Cnt
-                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt];
+                             << "] = " << ProblemeAResoudre.SecondMembre[Cnt];
             }
         }
     }
 }
 
-void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hourlyCsrProblem)
+void setRHSnodeBalanceValue(const PROBLEME_HEBDO* ProblemeHebdo,
+                            PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+                            HourlyCSRProblem& hourlyCsrProblem)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
     // constraint:
     // ENS(node A) +
     // [ Sum flow_direct(node 2 upstream -> node A) + Sum flow_indirect(node A <- node 2 downstream)
@@ -77,22 +79,22 @@ void setRHSnodeBalanceValue(PROBLEME_HEBDO* ProblemeHebdo, HourlyCSRProblem& hou
             if (it != hourlyCsrProblem.numberOfConstraintCsrAreaBalance.end())
             {
                 int Cnt = it->second;
-                ProblemeAResoudre->SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
+                ProblemeAResoudre.SecondMembre[Cnt] = hourlyCsrProblem.rhsAreaBalanceValues[Area];
                 logs.debug() << Cnt << ": Area Balance: RHS[" << Cnt
-                             << "] = " << ProblemeAResoudre->SecondMembre[Cnt]
+                             << "] = " << ProblemeAResoudre.SecondMembre[Cnt]
                              << " (Area = " << Area << ")";
             }
         }
     }
 }
 
-void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
+void setRHSbindingConstraintsValue(const PROBLEME_HEBDO* ProblemeHebdo,
+                                   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                    const HourlyCSRProblem& hourlyCsrProblem)
 {
     int hour = hourlyCsrProblem.hourInWeekTriggeredCsr;
     double csrSolverRelaxationRHS = ProblemeHebdo->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    double* SecondMembre = ProblemeAResoudre->SecondMembre;
+    double* SecondMembre = ProblemeAResoudre.SecondMembre;
     std::map<int, int> bingdingConstraintNumber
         = hourlyCsrProblem.numberOfConstraintCsrHourlyBinding;
 
@@ -162,13 +164,15 @@ void setRHSbindingConstraintsValue(PROBLEME_HEBDO* ProblemeHebdo,
         }
     }
 }
+} // namespace
 
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(PROBLEME_HEBDO* ProblemeHebdo,
-                                                            HourlyCSRProblem& hourlyCsrProblem)
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(
+  const PROBLEME_HEBDO* ProblemeHebdo,
+  PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
+  HourlyCSRProblem& hourlyCsrProblem)
 {
     logs.debug() << "[CSR] RHS: ";
-
-    setRHSvalueOnFlows(ProblemeHebdo, hourlyCsrProblem);
-    setRHSnodeBalanceValue(ProblemeHebdo, hourlyCsrProblem);
-    setRHSbindingConstraintsValue(ProblemeHebdo, hourlyCsrProblem);
+    setRHSvalueOnFlows(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    setRHSnodeBalanceValue(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
+    setRHSbindingConstraintsValue(ProblemeHebdo, ProblemeAResoudre, hourlyCsrProblem);
 }
