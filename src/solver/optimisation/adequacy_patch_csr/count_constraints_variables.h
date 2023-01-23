@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2023 RTE
+** Copyright 2007-2022 RTE
 ** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,29 +27,10 @@
 
 #pragma once
 
-class HourlyCSRProblem;
+#include "../../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares::Solver::Optimization
+namespace Antares::Data::AdequacyPatch
 {
-
-class CsrQuadraticProblem
-{
-public:
-    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
-      problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
-    {
-    }
-
-    void buildConstraintMatrix();
-
-private:
-    const PROBLEME_HEBDO* problemeHebdo_;
-    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
-    HourlyCSRProblem& hourlyCsrProblem_;
-
-    void setConstraintsOnFlows(double* Pi, int* Colonne);
-    void setNodeBalanceConstraints(double* Pi, int* Colonne);
-    void setBindingConstraints(double* Pi, int* Colonne);
-};
-
-} //namespace Antares::Solver::Optimization
+int countConstraints(const PROBLEME_HEBDO* ProblemeHebdo);
+int countVariables(const PROBLEME_HEBDO* ProblemeHebdo);
+} // namespace Antares::Data::AdequacyPatch

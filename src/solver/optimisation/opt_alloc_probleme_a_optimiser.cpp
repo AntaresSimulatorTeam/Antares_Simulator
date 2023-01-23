@@ -52,14 +52,93 @@ using namespace Antares;
 #define SNPRINTF snprintf
 #endif
 
+void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                                 int NbTermes)
+{
+    const size_t szNbVarsDouble = ProblemeAResoudre->NombreDeVariables * sizeof(double);
+    const size_t szNbVarsint = ProblemeAResoudre->NombreDeVariables * sizeof(int);
+    const size_t szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
+
+    ProblemeAResoudre->Sens
+      = (char*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(char));
+    ProblemeAResoudre->IndicesDebutDeLigne = (int*)MemAlloc(szNbContint);
+    ProblemeAResoudre->NombreDeTermesDesLignes = (int*)MemAlloc(szNbContint);
+
+    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
+      = (double*)MemAlloc(NbTermes * sizeof(double));
+    ProblemeAResoudre->IndicesColonnes = (int*)MemAlloc(NbTermes * sizeof(int));
+
+    ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
+    ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
+
+    ProblemeAResoudre->CoutQuadratique = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->CoutLineaire = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->TypeDeVariable = (int*)MemAlloc(szNbVarsint);
+    ProblemeAResoudre->Xmin = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->Xmax = (double*)MemAlloc(szNbVarsDouble);
+    ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
+
+    ProblemeAResoudre->SecondMembre
+      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
+
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
+      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
+    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
+      = (double**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(void*));
+
+    ProblemeAResoudre->CoutsMarginauxDesContraintes
+      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
+    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(szNbVarsDouble);
+
+    ProblemeAResoudre->PositionDeLaVariable
+      = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    ProblemeAResoudre->ComplementDeLaBase
+      = (int*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(int));
+
+    ProblemeAResoudre->Pi
+      = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+
+    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
+}
+
+void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
+{
+    MemFree(ProblemeAResoudre->Sens);
+    MemFree(ProblemeAResoudre->IndicesDebutDeLigne);
+    MemFree(ProblemeAResoudre->NombreDeTermesDesLignes);
+    MemFree(ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes);
+    MemFree(ProblemeAResoudre->IndicesColonnes);
+    MemFree(ProblemeAResoudre->CoutQuadratique);
+    MemFree(ProblemeAResoudre->CoutLineaire);
+    MemFree(ProblemeAResoudre->TypeDeVariable);
+    MemFree(ProblemeAResoudre->Xmin);
+    MemFree(ProblemeAResoudre->Xmax);
+    MemFree(ProblemeAResoudre->X);
+    MemFree(ProblemeAResoudre->SecondMembre);
+    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
+    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
+    MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
+    MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
+    MemFree(ProblemeAResoudre->CoutsReduits);
+
+    MemFree(ProblemeAResoudre->PositionDeLaVariable);
+    MemFree(ProblemeAResoudre->ComplementDeLaBase);
+    MemFree(ProblemeAResoudre->Pi);
+    MemFree(ProblemeAResoudre->Colonne);
+
+    ProblemeAResoudre->NomDesVariables.clear();
+    ProblemeAResoudre->NomDesContraintes.clear();
+}
+
 static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int mxPaliers)
 {
     int NbTermes;
     int NbIntervalles;
     int NumIntervalle;
-    size_t szNbVarsDouble;
-    size_t szNbVarsint;
-    size_t szNbContint;
     int NombreDePasDeTempsPourUneOptimisation;
     int Adder;
     int Sparsity;
@@ -67,15 +146,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
 
     NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-    szNbVarsDouble = ProblemeAResoudre->NombreDeVariables * sizeof(double);
-    szNbVarsint = ProblemeAResoudre->NombreDeVariables * sizeof(int);
-    szNbContint = ProblemeAResoudre->NombreDeContraintes * sizeof(int);
-
-    ProblemeAResoudre->Sens
-      = (char*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(char));
-    ProblemeAResoudre->IndicesDebutDeLigne = (int*)MemAlloc(szNbContint);
-    ProblemeAResoudre->NombreDeTermesDesLignes = (int*)MemAlloc(szNbContint);
 
     Sparsity = (int)mxPaliers * ProblemeHebdo->NombreDePays;
     Sparsity += ProblemeHebdo->NombreDInterconnexions;
@@ -129,33 +199,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
         AntaresSolverEmergencyShutdown();
     }
 
-    ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes
-      = (double*)MemAlloc(NbTermes * sizeof(double));
-    ProblemeAResoudre->IndicesColonnes = (int*)MemAlloc(NbTermes * sizeof(int));
-
-    ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
-    ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes = (int)(0.1 * NbTermes);
-
-    ProblemeAResoudre->CoutQuadratique = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->CoutLineaire = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->TypeDeVariable = (int*)MemAlloc(szNbVarsint);
-    ProblemeAResoudre->Xmin = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->Xmax = (double*)MemAlloc(szNbVarsDouble);
-    ProblemeAResoudre->X = (double*)MemAlloc(szNbVarsDouble);
-
-    ProblemeAResoudre->SecondMembre
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
-
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(void*));
-    ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux
-      = (double**)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(void*));
-
-    ProblemeAResoudre->CoutsMarginauxDesContraintes
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(double));
-    ProblemeAResoudre->CoutsReduits = (double*)MemAlloc(szNbVarsDouble);
+    OPT_AllocateFromNumberOfVariableConstraints(ProblemeHebdo->ProblemeAResoudre, NbTermes);
 
     NbIntervalles
       = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
@@ -164,18 +208,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
     for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
         ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
-
-    ProblemeAResoudre->PositionDeLaVariable
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
-    ProblemeAResoudre->ComplementDeLaBase
-      = (int*)MemAlloc(ProblemeAResoudre->NombreDeContraintes * sizeof(int));
-
-    ProblemeAResoudre->Pi
-      = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
-
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
-    ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
 
     logs.info();
     logs.info() << " Status of Preliminary Allocations for Generic Problem Resolution : Successful";
@@ -224,47 +256,16 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
 
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
-        MemFree(ProblemeAResoudre->Sens);
-        MemFree(ProblemeAResoudre->IndicesDebutDeLigne);
-        MemFree(ProblemeAResoudre->NombreDeTermesDesLignes);
-        MemFree(ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes);
-        MemFree(ProblemeAResoudre->IndicesColonnes);
-        MemFree(ProblemeAResoudre->CoutQuadratique);
-        MemFree(ProblemeAResoudre->CoutLineaire);
-        MemFree(ProblemeAResoudre->TypeDeVariable);
-        MemFree(ProblemeAResoudre->Xmin);
-        MemFree(ProblemeAResoudre->Xmax);
-        MemFree(ProblemeAResoudre->X);
-        MemFree(ProblemeAResoudre->SecondMembre);
-        MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees);
-        MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits);
-        MemFree(ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux);
-        MemFree(ProblemeAResoudre->CoutsMarginauxDesContraintes);
-        MemFree(ProblemeAResoudre->CoutsReduits);
-
+        OPT_FreeOptimizationData(ProblemeAResoudre);
         if (ProblemeAResoudre->ProblemesSpx)
         {
             MemFree(ProblemeAResoudre->ProblemesSpx->ProblemeSpx);
             MemFree(ProblemeAResoudre->ProblemesSpx);
         }
-
-        MemFree(ProblemeAResoudre->PositionDeLaVariable);
-        MemFree(ProblemeAResoudre->ComplementDeLaBase);
-        MemFree(ProblemeAResoudre->Pi);
-        MemFree(ProblemeAResoudre->Colonne);
-
-        ProblemeAResoudre->NomDesVariables.clear();
-        ProblemeAResoudre->NomDesContraintes.clear();
-
         MemFree(ProblemeAResoudre);
-
         ProblemeAResoudre = nullptr;
     }
-    return;
 }
