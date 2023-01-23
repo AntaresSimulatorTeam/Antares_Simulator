@@ -198,7 +198,13 @@ bool Economy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->firstWeekOfSimulation = true;
     bool reinitOptim = true;
 
-    OptimizationStatisticsWriter optWriter(study.resultWriter, state.year);
+    OptimizationStatisticsWriter optWriter(study.resultWriter,
+                                           "weeksSolveTimes_",
+                                           state.year);
+
+    OptimizationStatisticsWriter updateWriter(study.resultWriter,
+                                              "weeksUpdateTimes_",
+                                              state.year);
 
     for (uint w = 0; w != pNbWeeks; ++w)
     {
@@ -261,6 +267,9 @@ bool Economy::year(Progression::Task& progression,
             optWriter.addTime(w,
                               pProblemesHebdo[numSpace]->tempsResolution1[0],
                               pProblemesHebdo[numSpace]->tempsResolution2[0]);
+            updateWriter.addTime(w,
+                                 pProblemesHebdo[numSpace]->updateTime1[0],
+                                 pProblemesHebdo[numSpace]->updateTime2[0]);
         }
         catch (Data::AssertionError& ex)
         {
@@ -299,6 +308,7 @@ bool Economy::year(Progression::Task& progression,
     updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
+    updateWriter.finalize();    
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
 
     return true;

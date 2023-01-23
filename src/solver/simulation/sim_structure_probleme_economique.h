@@ -607,8 +607,12 @@ struct PROBLEME_HEBDO
     double* coutOptimalSolution1;
     double* coutOptimalSolution2;
 
+    // TODO[FOM] Move
     double* tempsResolution1;
     double* tempsResolution2;
+
+    double* updateTime1;
+    double* updateTime2;
 
     COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
     /* Unused for now, will be used in future revisions */

@@ -2,12 +2,13 @@
 
 OptimizationStatisticsWriter::OptimizationStatisticsWriter(
   Antares::Solver::IResultWriter::Ptr writer,
+  const std::string& prefix,
   uint year) :
  pWriter(writer)
 {
     printHeader();
 #define SEP Yuni::IO::Separator
-    pFilename << "debug" << SEP << "solver" << SEP << "weeksSolveTimes_" << year << ".txt";
+    pFilename << "debug" << SEP << "solver" << SEP << prefix << year << ".txt";
 #undef SEP
 }
 

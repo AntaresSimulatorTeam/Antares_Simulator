@@ -573,6 +573,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     problem.tempsResolution1 = (double*)MemAlloc(7 * sizeof(double));
     problem.tempsResolution2 = (double*)MemAlloc(7 * sizeof(double));
+
+    problem.updateTime1 = (double*)MemAlloc(7 * sizeof(double));
+    problem.updateTime2 = (double*)MemAlloc(7 * sizeof(double));
+
 }
 
 void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
@@ -899,4 +903,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.coutOptimalSolution2);
     MemFree(problem.tempsResolution1);
     MemFree(problem.tempsResolution2);
+
+    MemFree(problem.updateTime1);
+    MemFree(problem.updateTime2);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <yuni/core/string.h>
+#include <string>
 #include <i_writer.h>
 
 #include "simulation.h"
@@ -7,7 +8,7 @@
 class OptimizationStatisticsWriter
 {
 public:
-    OptimizationStatisticsWriter(Antares::Solver::IResultWriter::Ptr writer, uint year);
+    OptimizationStatisticsWriter(Antares::Solver::IResultWriter::Ptr writer, const std::string& prefix, uint year);
     void addTime(uint week, double opt_1_ms, double opt_2_ms);
     void finalize();
 

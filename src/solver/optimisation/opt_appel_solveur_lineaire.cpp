@@ -105,7 +105,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
     double* pt;
     char PremierPassage;
     double CoutOpt;
-    long long solveTime;
+    long long solveTime, updateTime;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     PROBLEME_SPX* ProbSpx;
@@ -184,6 +184,7 @@ RESOLUTION:
             }
             measure.tick();
             optimizationStatistics->addUpdateTime(measure.duration_ms());
+            updateTime = measure.duration_ms();
         }
     }
 
@@ -334,11 +335,13 @@ RESOLUTION:
         {
             ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+            ProblemeHebdo->updateTime1[NumIntervalle] = updateTime;
         }
         else
         {
             ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
             ProblemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+            ProblemeHebdo->updateTime2[NumIntervalle] = updateTime;
         }
         for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
