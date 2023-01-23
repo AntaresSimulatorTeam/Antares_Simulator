@@ -2,9 +2,13 @@
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
 
+
 namespace Antares::Solver::Simulation
 {
 
+// -----------------------------
+// Dispatchable Margin
+// -----------------------------
 DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(
         PROBLEME_HEBDO* problemeHebdo,
         unsigned int thread_number,
@@ -22,7 +26,41 @@ void DispatchableMarginPostProcessCmd::acquireOptRuntimeData(const struct optRun
 
 void DispatchableMarginPostProcessCmd::run()
 {
-    DispatchableMarginForAllAreas(area_list_, *problemeHebdo_, thread_number_, hourInYear_);
+    const uint nbHoursInWeek = 168;
+
+    area_list_.each([&](Data::Area& area) {
+        double* dtgmrg = area.scratchpad[thread_number_]->dispatchableGenerationMargin;
+        for (uint h = 0; h != nbHoursInWeek; ++h)
+            dtgmrg[h] = 0.;
+
+        if (not area.thermal.list.empty())
+        {
+            auto& hourlyResults = *(problemeHebdo_->ResultatsHoraires[area.index]);
+            auto end = area.thermal.list.end();
+
+            for (auto i = area.thermal.list.begin(); i != end; ++i)
+            {
+                auto& cluster = *(i->second);
+                uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
+                    ->ThermiqueParPalier[cluster.areaWideIndex];
+                auto& matrix = cluster.series->series;
+                assert(chro < matrix.width);
+                auto& column = matrix.entry[chro];
+                assert(hourInYear + nbHoursInWeek <= matrix.height && "index out of bounds");
+
+                for (uint h = 0; h != nbHoursInWeek; ++h)
+                {
+                    double production = hourlyResults.ProductionThermique[h]
+                        ->ProductionThermiqueDuPalier[cluster.index];
+                    dtgmrg[h] += column[h + hourInYear_] - production;
+                }
+            }
+        }
+    });
 }
+
+// -----------------------------
+//  Next post process
+// -----------------------------
 
 } // namespace Antares::Solver::Simulation

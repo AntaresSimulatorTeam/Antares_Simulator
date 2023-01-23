@@ -34,7 +34,6 @@ set(SRC_SIMULATION
 		simulation/common-eco-adq.cpp
 		simulation/common-hydro-remix.cpp
 		simulation/common-hydro-levels.cpp
-		simulation/common-dispatchable-margin.cpp
 		simulation/adequacy-draft.h
 		simulation/adequacy-draft.cpp
 		simulation/adequacy.h
