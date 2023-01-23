@@ -17,7 +17,7 @@ DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(
 
 void DispatchableMarginPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
 {
-    hourInYear_ = opt_runtime_data.year;
+    hourInYear_ = opt_runtime_data.hourInTheYear;
 }
 
 void DispatchableMarginPostProcessCmd::run()

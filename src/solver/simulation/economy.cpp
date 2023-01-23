@@ -178,7 +178,7 @@ bool Economy::year(Progression::Task& progression,
 
             // Not in use anymore, as this post process was moved in the list of post-process commands
             // DispatchableMarginForAllAreas(
-            //  study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
+            //        study.areas, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             // We need to move this post process in the list of post-process commands.
             // In case of default weekly optimization, it does nothing.
