@@ -35,6 +35,9 @@
 
 using namespace Antares::Data;
 
+namespace Antares::Solver::Optimization
+{
+
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
@@ -274,3 +277,5 @@ void CsrQuadraticProblem::OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadrat
     MemFree(Pi);
     MemFree(Colonne);
 }
+
+} //namespace Antares::Solver::Optimization

@@ -28,7 +28,7 @@
 #include "weekly_optimization.h"
 #include "opt_fonctions.h"
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 DefaultWeeklyOptimization::DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint thread_number) :
  WeeklyOptimization(problemeHebdo, thread_number)
@@ -45,4 +45,4 @@ void DefaultWeeklyOptimization::postProcess(Antares::Data::AreaList&, uint, uint
     // Nothing to finalize for a classic weekly optimization
 }
 
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization

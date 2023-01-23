@@ -36,7 +36,7 @@ const int nbHoursInAWeek = 168;
 
 using namespace Antares::Data::AdequacyPatch;
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo,
                                                      uint thread_number) :
@@ -159,4 +159,4 @@ void AdequacyPatchOptimization::postProcess(Antares::Data::AreaList& areas,
         hourlyCsrProblem.run(week, year);
     }
 }
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization

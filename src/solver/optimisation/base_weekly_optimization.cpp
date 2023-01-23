@@ -30,7 +30,7 @@
 #include "weekly_optimization.h"
 #include "adequacy_patch_weekly_optimization.h"
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
                                                          uint thread_number) :
@@ -49,4 +49,4 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
         return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, thread_number);
 }
 
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization

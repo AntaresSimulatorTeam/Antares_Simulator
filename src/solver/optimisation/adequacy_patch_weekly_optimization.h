@@ -33,7 +33,7 @@
 
 using Antares::Data::AreaList;
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 class AdequacyPatchOptimization : public WeeklyOptimization
 {
@@ -49,4 +49,4 @@ private:
     std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 };
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization

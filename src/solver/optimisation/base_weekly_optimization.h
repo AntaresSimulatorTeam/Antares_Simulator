@@ -30,7 +30,7 @@
 #include <yuni/yuni.h> // for "uint" definition
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares::Solver::Simulation
+namespace Antares::Solver::Optimization
 {
 class WeeklyOptimization
 {
@@ -47,4 +47,4 @@ protected:
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
     const uint thread_number_ = 0;
 };
-} // namespace Antares::Solver::Simulation
+} // namespace Antares::Solver::Optimization
