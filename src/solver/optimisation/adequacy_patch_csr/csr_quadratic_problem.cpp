@@ -41,7 +41,7 @@ namespace Antares::Solver::Optimization
 
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
@@ -94,7 +94,7 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 
 void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.triggeredHour;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour];
 
@@ -199,7 +199,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 
 void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
 {
-    int hour = hourlyCsrProblem_.hourInWeekTriggeredCsr;
+    int hour = hourlyCsrProblem_.triggeredHour;
 
     // Special case of the binding constraints
     for (int CntCouplante = 0; CntCouplante < problemeHebdo_->NombreDeContraintesCouplantes;

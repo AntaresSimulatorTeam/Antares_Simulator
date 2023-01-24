@@ -45,7 +45,7 @@ void HourlyCSRProblem::setBoundsOnENS()
     double* AdresseDuResultat;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double csrSolverRelaxation = problemeHebdo_->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
 
     // variables: ENS for each area inside adq patch
@@ -58,15 +58,15 @@ void HourlyCSRProblem::setBoundsOnENS()
 
             problemeAResoudre_.Xmin[Var] = -csrSolverRelaxation;
             problemeAResoudre_.Xmax[Var]
-              = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDENS[hourInWeekTriggeredCsr]
+              = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDENS[triggeredHour]
                 + csrSolverRelaxation;
 
             problemeAResoudre_.X[Var]
               = problemeHebdo_->ResultatsHoraires[area]
-                  ->ValeursHorairesDeDefaillancePositive[hourInWeekTriggeredCsr];
+                  ->ValeursHorairesDeDefaillancePositive[triggeredHour];
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
-                                    ->ValeursHorairesDeDefaillancePositive[hourInWeekTriggeredCsr]);
+                                    ->ValeursHorairesDeDefaillancePositive[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
@@ -80,7 +80,7 @@ void HourlyCSRProblem::setBoundsOnENS()
 void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 {
     const auto* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double csrSolverRelaxation = problemeHebdo_->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
 
     // variables: Spilled Energy for each area inside adq patch
@@ -96,11 +96,11 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
 
             problemeAResoudre_.X[Var]
               = problemeHebdo_->ResultatsHoraires[area]
-                  ->ValeursHorairesDeDefaillanceNegative[hourInWeekTriggeredCsr];
+                  ->ValeursHorairesDeDefaillanceNegative[triggeredHour];
 
             double* AdresseDuResultat
               = &(problemeHebdo_->ResultatsHoraires[area]
-                    ->ValeursHorairesSpilledEnergyAfterCSR[hourInWeekTriggeredCsr]);
+                    ->ValeursHorairesSpilledEnergyAfterCSR[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]
               = AdresseDuResultat;
@@ -115,11 +115,11 @@ void HourlyCSRProblem::setBoundsOnFlows()
 {
     double csrSolverRelaxation = problemeHebdo_->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double* Xmin = problemeAResoudre_.Xmin;
     double* Xmax = problemeAResoudre_.Xmax;
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC
-      = problemeHebdo_->ValeursDeNTC[hourInWeekTriggeredCsr];
+      = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on

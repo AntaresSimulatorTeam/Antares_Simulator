@@ -64,7 +64,7 @@ public:
     void run(uint week, uint year);
 
     // TODO[FOM] Make these members private
-    int hourInWeekTriggeredCsr;
+    int triggeredHour;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
@@ -81,7 +81,7 @@ public:
 
     inline void setHour(int hour)
     {
-        hourInWeekTriggeredCsr = hour;
+        triggeredHour = hour;
     }
 
     std::map<int, int> numberOfConstraintCsrEns;

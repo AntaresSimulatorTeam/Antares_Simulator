@@ -36,7 +36,7 @@ void HourlyCSRProblem::constructVariableENS()
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
     NumberOfVariables = 0;
     auto CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS of each area inside adq patch
     logs.debug() << " ENS of each area inside adq patch: ";
@@ -62,7 +62,7 @@ void HourlyCSRProblem::constructVariableENS()
 void HourlyCSRProblem::constructVariableSpilledEnergy()
 {
     auto CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
     // variables: Spilled Energy  of each area inside adq patch
@@ -88,7 +88,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
 void HourlyCSRProblem::constructVariableFlows()
 {
     auto CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     int& NumberOfVariables = problemeAResoudre_.NombreDeVariables;
 
     // variables: transmissin flows (flow, direct_direct and flow_indirect). For links between 2

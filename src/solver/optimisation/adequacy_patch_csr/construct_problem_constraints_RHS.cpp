@@ -100,7 +100,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
 
             // 1. The original RHS of bingding constraint
             SecondMembre[Cnt] = MatriceDesContraintesCouplantes
-                                  ->SecondMembreDeLaContrainteCouplante[hourInWeekTriggeredCsr];
+                                  ->SecondMembreDeLaContrainteCouplante[triggeredHour];
 
             // 2. RHS part 2: flow other than 2<->2
             int NbInterco
@@ -116,7 +116,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                          != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 {
                     double ValueOfFlow
-                      = problemeHebdo_->ValeursDeNTC[hourInWeekTriggeredCsr]->ValeurDuFlux[Interco];
+                      = problemeHebdo_->ValeursDeNTC[triggeredHour]->ValeurDuFlux[Interco];
                     SecondMembre[Cnt] -= ValueOfFlow * Poids;
                 }
             }
@@ -135,7 +135,7 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
                 double Poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[Index];
 
                 double ValueOfVar = problemeHebdo_->ResultatsHoraires[Area]
-                                      ->ProductionThermique[hourInWeekTriggeredCsr]
+                                      ->ProductionThermique[triggeredHour]
                                       ->ProductionThermiqueDuPalier[IndexNumeroDuPalierDispatch];
 
                 SecondMembre[Cnt] -= ValueOfVar * Poids;

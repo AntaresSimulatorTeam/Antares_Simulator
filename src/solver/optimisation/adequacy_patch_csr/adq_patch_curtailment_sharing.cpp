@@ -155,7 +155,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
 void HourlyCSRProblem::calculateCsrParameters()
 {
     double netPositionInit;
-    int hour = hourInWeekTriggeredCsr;
+    int hour = triggeredHour;
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {

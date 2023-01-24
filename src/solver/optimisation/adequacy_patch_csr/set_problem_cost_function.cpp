@@ -63,7 +63,7 @@ void HourlyCSRProblem::setQuadraticCost()
 {
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
     // obj function term is: 1 / (PTO * PTO) * ENS * ENS
@@ -81,7 +81,7 @@ void HourlyCSRProblem::setQuadraticCost()
             if (Var >= 0 && Var < problemeAResoudre_.NombreDeVariables)
             {
                 problemeAResoudre_.CoutQuadratique[Var]
-                  = calculateQuadraticCost(problemeHebdo_, hourInWeekTriggeredCsr, area);
+                  = calculateQuadraticCost(problemeHebdo_, triggeredHour, area);
                 logs.debug() << Var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[Var];
             }
         }
@@ -94,7 +94,7 @@ void HourlyCSRProblem::setLinearCost()
     const COUTS_DE_TRANSPORT* TransportCost;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim
-      = problemeHebdo_->CorrespondanceVarNativesVarOptim[hourInWeekTriggeredCsr];
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
     // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x
@@ -131,7 +131,7 @@ void HourlyCSRProblem::setLinearCost()
                 problemeAResoudre_.CoutLineaire[Var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[Var]
-                  = TransportCost->CoutDeTransportOrigineVersExtremite[hourInWeekTriggeredCsr];
+                  = TransportCost->CoutDeTransportOrigineVersExtremite[triggeredHour];
             logs.debug() << Var << ". Linear C = " << problemeAResoudre_.CoutLineaire[Var];
         }
 
@@ -143,7 +143,7 @@ void HourlyCSRProblem::setLinearCost()
                 problemeAResoudre_.CoutLineaire[Var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[Var]
-                  = TransportCost->CoutDeTransportExtremiteVersOrigine[hourInWeekTriggeredCsr];
+                  = TransportCost->CoutDeTransportExtremiteVersOrigine[triggeredHour];
             logs.debug() << Var << ". Linear C = " << problemeAResoudre_.CoutLineaire[Var];
         }
     }
