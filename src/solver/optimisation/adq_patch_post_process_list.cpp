@@ -1,4 +1,6 @@
 #include "adq_patch_post_process_list.h"
+#include "post_process_commands.h"
+
 
 namespace Antares::Solver::Simulation
 {
@@ -11,6 +13,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
                                                  Calendar& calendar) 
     : interfacePostProcessList(problemeHebdo, thread_number)
 {
+    post_process_list.push_back(std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, thread_number_, areas));
     // post_process_list.push_back(std::make_unique<DispatchableMargin>());
     // post_process_list.push_back(std::make_unique<DispatchableMargin>());
 }

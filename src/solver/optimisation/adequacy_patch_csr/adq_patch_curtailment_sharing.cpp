@@ -114,11 +114,11 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     }
 }
 
-void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
+void adqPatchPostProcess(const Data::AreaList& areas, PROBLEME_HEBDO& problem, int numSpace)
 {
-    // gp : is just about to be removed
-    if (!study.parameters.adqPatch.enabled)
-        return;
+    // gp : is just about to be removed, because this will become an adq patch post process 
+    // if (!study.parameters.adqPatch.enabled)
+    //    return;
 
     const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problem.NombreDePays; Area++)
@@ -129,7 +129,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
         for (int hour = 0; hour < numOfHoursInWeek; hour++)
         {
             // define access to the required variables
-            const auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
+            const auto& scratchpad = *(areas[Area]->scratchpad[numSpace]);
             double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
 
             auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
@@ -143,7 +143,7 @@ void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int 
                 ens = std::max(0.0, ens - dtgMrg);
                 // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
                 if (ens > 0.5)
-                    mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
+                    mrgCost = -areas[Area]->thermal.unsuppliedEnergyCost;
             }
             else
                 dtgMrgCsr = dtgMrg;

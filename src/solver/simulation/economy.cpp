@@ -187,19 +187,22 @@ bool Economy::year(Progression::Task& progression,
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
             // Next post process to be moved to the list of post-process commands
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-            RemixHydroForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+            RemixHydroForAllAreas(study.areas, 
+                                  *pProblemesHebdo[numSpace],
+                                  study.parameters.shedding.policy,
+                                  study.parameters.simplexOptimizationRange,
+                                  numSpace,
+                                  hourInTheYear);
 
-            Antares::Data::AdequacyPatch::adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
+            Antares::Data::AdequacyPatch::adqPatchPostProcess(study.areas, *pProblemesHebdo[numSpace], numSpace);
 
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             
-            interpolateWaterValue(
-              study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
+            interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-            updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+            updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -265,7 +268,7 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
