@@ -27,8 +27,6 @@ struct Fixture
 
 	~Fixture(){}
 
-    //creating a study, maybe not needed
-    Study::Ptr study = std::make_shared<Study>();
     Parameters params{};
     bool forceParallel = false;
     bool enableParallel = false;
