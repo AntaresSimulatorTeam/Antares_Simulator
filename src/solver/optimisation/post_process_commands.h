@@ -59,4 +59,20 @@ private:
 
 };
 
+
+class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
+{  
+public:
+    DTGmarginForAdqPatchPostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas, 
+        unsigned int thread_number);
+    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
+    void run() override;
+
+private:
+    const AreaList& area_list_;
+    unsigned int thread_number_ = 0;
+};
+
 } // namespace Antares::Solver::Simulation

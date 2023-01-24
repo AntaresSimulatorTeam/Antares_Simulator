@@ -2,7 +2,6 @@
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
 
-
 namespace Antares::Solver::Simulation
 {
 
@@ -115,6 +114,60 @@ void RemixHydroPostProcessCmd::run()
                           thread_number_,
                           hourInYear_);
 }
+
+// -----------------------------
+//  DTG margin for adq patch
+// -----------------------------
+using namespace Antares::Data::AdequacyPatch;
+
+DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
+    PROBLEME_HEBDO* problemeHebdo,
+    AreaList& areas,
+    unsigned int thread_number)
+    : basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    thread_number_(thread_number)
+{
+}
+
+void DTGmarginForAdqPatchPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    // No need for runtime data
+}
+
+void DTGmarginForAdqPatchPostProcessCmd::run()
+{
+    const int numOfHoursInWeek = 168;
+    for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
+    {
+        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
+            continue;
+
+        for (int hour = 0; hour < numOfHoursInWeek; hour++)
+        {
+            // define access to the required variables
+            const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
+            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
+
+            auto& hourlyResults = *(problemeHebdo_->ResultatsHoraires[Area]);
+            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
+            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
+            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
+            // calculate DTG MRG CSR and adjust ENS if neccessary
+            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            {
+                dtgMrgCsr = std::max(0.0, dtgMrg - ens);
+                ens = std::max(0.0, ens - dtgMrg);
+                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
+                if (ens > 0.5)
+                    mrgCost = -area_list_[Area]->thermal.unsuppliedEnergyCost;
+            }
+            else
+                dtgMrgCsr = dtgMrg;
+        }
+    }
+}
+
 // -----------------------------
 //  Next post process
 // -----------------------------

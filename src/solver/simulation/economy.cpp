@@ -189,20 +189,22 @@ bool Economy::year(Progression::Task& progression,
             // Not in use anymore, as this post process was moved in the list of post-process commands
             // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            //RemixHydroForAllAreas(study.areas, 
+            //                      *pProblemesHebdo[numSpace],
+            //                      study.parameters.shedding.policy,
+            //                      study.parameters.simplexOptimizationRange,
+            //                      numSpace,
+            //                      hourInTheYear);
+
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            //Antares::Data::AdequacyPatch::adqPatchPostProcess(
+            //    study.areas, 
+            //    *pProblemesHebdo[numSpace],
+            //    study.parameters.adqPatch.enabled,
+            //    numSpace);
+
             // Next post process to be moved to the list of post-process commands
-            RemixHydroForAllAreas(study.areas, 
-                                  *pProblemesHebdo[numSpace],
-                                  study.parameters.shedding.policy,
-                                  study.parameters.simplexOptimizationRange,
-                                  numSpace,
-                                  hourInTheYear);
-
-            Antares::Data::AdequacyPatch::adqPatchPostProcess(
-                study.areas, 
-                *pProblemesHebdo[numSpace],
-                study.parameters.adqPatch.enabled,
-                numSpace);
-
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             
             interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
