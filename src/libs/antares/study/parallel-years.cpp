@@ -119,7 +119,7 @@ void SetsOfParallelYearCalculator::computeRawNbParallelYear()
 {
     // In case solver option '--force-parallel n' is used, this computation is not needed
     // and n will remain the forcedNbOfParallelYears
-    if (forceParallel)
+    if (forceParallel_)
         return;
 
     std::map<NumberOfCoresMode, int> numberOfMCYearThreads;
@@ -220,7 +220,7 @@ void SetsOfParallelYearCalculator::computeRawNbParallelYear()
 
     try
     {
-        forcedNbOfParallelYears = numberOfMCYearThreads.at(p.nbCores.ncMode);
+        forcedNbOfParallelYears_ = numberOfMCYearThreads.at(p.nbCores.ncMode);
     }
     catch(const std::out_of_range& e)
     {
@@ -244,7 +244,7 @@ void SetsOfParallelYearCalculator::limitNbOfParallelYearsbyMinRefreshSpan()
     if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
         TSlimit = std::min(p.refreshIntervalThermal, TSlimit);
 
-    forcedNbOfParallelYears = std::min({p.nbYears, TSlimit, forcedNbOfParallelYears});
+    forcedNbOfParallelYears_ = std::min({p.nbYears, TSlimit, forcedNbOfParallelYears_});
 }
 
 bool SetsOfParallelYearCalculator::isRefreshNeededForCurrentYear(uint y)
@@ -268,7 +268,7 @@ bool SetsOfParallelYearCalculator::isRefreshNeededForCurrentYear(uint y)
 
     bool haveToRefreshTSThermal 
         = ((p.timeSeriesToGenerate & timeSeriesThermal)
-                        && (p.timeSeriesToRefresh & timeSeriesThermal)) || thermalTSRefresh;
+                        && (p.timeSeriesToRefresh & timeSeriesThermal)) || thermalTSRefresh_;
     refreshing
         = refreshing || (haveToRefreshTSThermal && (y % p.refreshIntervalThermal == 0));
 
@@ -349,20 +349,20 @@ void SetsOfParallelYearCalculator::buildSetsOfParallelYears()
 
         // In case the study is run in the draft mode, only 1 core is allowed
         if (p.mode == Antares::Data::stdmAdequacyDraft){
-            forcedNbOfParallelYears = 1;
+            forcedNbOfParallelYears_ = 1;
         }
 
         // In case parallel mode was not chosen, only 1 core is allowed
-        if (!enableParallel && !forceParallel){
-            forcedNbOfParallelYears = 1;
+        if (!enableParallel_ && !forceParallel_){
+            forcedNbOfParallelYears_ = 1;
         }
 
-        if (indexSpace == forcedNbOfParallelYears - 1 || y == p.nbYears - 1)
+        if (indexSpace == forcedNbOfParallelYears_ - 1 || y == p.nbYears - 1)
         {
             buildNewSet = true;
             foundFirstPerformedYearOfCurrentSet = false;
-            if (set->nbPerformedYears > forcedNbOfParallelYears)
-                forcedNbOfParallelYears = set->nbPerformedYears;
+            if (set->nbPerformedYears > forcedNbOfParallelYears_)
+                forcedNbOfParallelYears_ = set->nbPerformedYears;
         }
         else
             buildNewSet = false;
@@ -377,7 +377,7 @@ void SetsOfParallelYearCalculator::buildSetsOfParallelYears()
 bool SetsOfParallelYearCalculator::allSetsParallelYearsHaveSameSize()
 {
     if (p.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
-        && !setsOfParallelYears.empty() && forcedNbOfParallelYears > 1)
+        && !setsOfParallelYears.empty() && forcedNbOfParallelYears_ > 1)
     {
         uint currentSetSize = (uint)setsOfParallelYears[0].setsSizes;
         return all_of(setsOfParallelYears.begin(), setsOfParallelYears.end(),
@@ -390,7 +390,7 @@ bool SetsOfParallelYearCalculator::allSetsParallelYearsHaveSameSize()
 uint SetsOfParallelYearCalculator::computeMinNbParallelYears() const
 {
     // Now finding the smallest size among all sets.
-    uint minNbYearsInParallel = forcedNbOfParallelYears;
+    uint minNbYearsInParallel = forcedNbOfParallelYears_;
     for (uint s = 0; s < setsOfParallelYears.size(); s++)
     {
         uint setSize = (uint)setsOfParallelYears[s].setsSizes;
@@ -412,7 +412,7 @@ void SetsOfParallelYearCalculator::computeForcedNbYearsInParallelYearSet()
             maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].setsSizes;
     }
 
-    forcedNbOfParallelYears = maxNbYearsOverAllSets;
+    forcedNbOfParallelYears_ = maxNbYearsOverAllSets;
 
 }
 

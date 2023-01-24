@@ -102,14 +102,14 @@ class SetsOfParallelYearCalculator
 {
 public:
     
-    SetsOfParallelYearCalculator(bool forceParallel_, bool enableParallel_, uint forcedNbOfParallelYears_,
-                                 uint number_of_cores, bool thermalTSRefresh_, Parameters &params_)
-    : forceParallel{forceParallel_},
-    enableParallel {enableParallel_},
-    forcedNbOfParallelYears{forcedNbOfParallelYears_},
+    SetsOfParallelYearCalculator(bool forceParallel, bool enableParallel, uint forcedNbOfParallelYears,
+                                 uint number_of_cores, bool thermalTSRefresh, Parameters &params)
+    : forceParallel_{forceParallel},
+    enableParallel_ {enableParallel},
+    forcedNbOfParallelYears_{forcedNbOfParallelYears},
     number_of_cores_{number_of_cores},
-    thermalTSRefresh{thermalTSRefresh_},
-    p{params_}{
+    thermalTSRefresh_{thermalTSRefresh},
+    p{params}{
         this->build();
     }
 
@@ -118,7 +118,7 @@ public:
 
     [[nodiscard]] uint getForcedNbOfParallelYears() const
     {
-        return forcedNbOfParallelYears; 
+        return forcedNbOfParallelYears_;
     } 
 
     [[nodiscard]] uint getMinNbParallelYearsForGUI() const
@@ -152,11 +152,11 @@ private:
   
     std::vector<setOfParallelYears> setsOfParallelYears;
    
-    bool forceParallel;
-    bool enableParallel;
-    uint forcedNbOfParallelYears;
+    bool forceParallel_;
+    bool enableParallel_;
+    uint forcedNbOfParallelYears_;
     uint number_of_cores_;
-    bool thermalTSRefresh;
+    bool thermalTSRefresh_;
     Parameters& p;
     uint nbYearsReallyPerformed{0};
 
