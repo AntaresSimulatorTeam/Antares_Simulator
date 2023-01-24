@@ -321,7 +321,7 @@ void SetsOfParallelYearCalculator::buildSetsOfParallelYears()
 
         if (performCalculations)
         {
-            set->setsSizes.push_back(y);
+            set->setsSizes++;
             // Another year performed
             ++nbYearsReallyPerformed;
 
@@ -379,9 +379,9 @@ bool SetsOfParallelYearCalculator::allSetsParallelYearsHaveSameSize()
     if (p.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart
         && !setsOfParallelYears.empty() && forcedNbOfParallelYears > 1)
     {
-        uint currentSetSize = (uint)setsOfParallelYears[0].setsSizes.size();
+        uint currentSetSize = (uint)setsOfParallelYears[0].setsSizes;
         return all_of(setsOfParallelYears.begin(), setsOfParallelYears.end(),
-                    [currentSetSize](const setOfParallelYears& v){ return v.setsSizes.size() == currentSetSize; } );
+                    [currentSetSize](const setOfParallelYears& v){ return v.setsSizes == currentSetSize; } );
     } // End if hot start
     return true;
     // parameters.allSetsHaveSameSize takes this result;
@@ -393,7 +393,7 @@ uint SetsOfParallelYearCalculator::computeMinNbParallelYears() const
     uint minNbYearsInParallel = forcedNbOfParallelYears;
     for (uint s = 0; s < setsOfParallelYears.size(); s++)
     {
-        uint setSize = (uint)setsOfParallelYears[s].setsSizes.size();
+        uint setSize = (uint)setsOfParallelYears[s].setsSizes;
         // Empty sets are not taken into account because, on the solver side,
         // they will contain only skipped years
         if (setSize && (setSize < minNbYearsInParallel))
@@ -408,8 +408,8 @@ void SetsOfParallelYearCalculator::computeForcedNbYearsInParallelYearSet()
     uint maxNbYearsOverAllSets = 0;
     for (uint s = 0; s < setsOfParallelYears.size(); s++)
     {
-        if (setsOfParallelYears[s].setsSizes.size() > maxNbYearsOverAllSets)
-            maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].setsSizes.size();
+        if (setsOfParallelYears[s].setsSizes > maxNbYearsOverAllSets)
+            maxNbYearsOverAllSets = (uint)setsOfParallelYears[s].setsSizes;
     }
 
     forcedNbOfParallelYears = maxNbYearsOverAllSets;

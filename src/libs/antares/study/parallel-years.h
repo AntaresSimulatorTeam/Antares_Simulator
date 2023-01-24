@@ -38,8 +38,7 @@ struct setOfParallelYears
     // Un lot d'année à exécuter en parallèle.
     // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
 
-public:
-    std::vector<unsigned int> setsSizes;
+    unsigned int setsSizes = 0;
     // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
     // play-list "trouée")
     std::vector<unsigned int> yearsIndices;
