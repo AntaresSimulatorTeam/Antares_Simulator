@@ -135,6 +135,10 @@ void DTGmarginForAdqPatchPostProcessCmd::acquireOptRuntimeData(const struct optR
     // No need for runtime data
 }
 
+/*!
+** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
+** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
+** */
 void DTGmarginForAdqPatchPostProcessCmd::run()
 {
     const int numOfHoursInWeek = 168;
