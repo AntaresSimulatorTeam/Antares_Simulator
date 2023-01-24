@@ -1,6 +1,6 @@
 /*
 ** Copyright 2007-2023 RTE
-** Authors: Antares_Simulator Team
+** Authors: RTE-international / Redstork / Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
 **
@@ -27,17 +27,29 @@
 
 #pragma once
 
-#include "base_weekly_optimization.h"
-#include "../simulation/sim_structure_probleme_economique.h"
+class HourlyCSRProblem;
 
 namespace Antares::Solver::Optimization
 {
-class DefaultWeeklyOptimization : public WeeklyOptimization
+
+class CsrQuadraticProblem
 {
 public:
-    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
-    ~DefaultWeeklyOptimization() override = default;
-    void solve(uint, int) override;
-    void postProcess(Antares::Data::AreaList&, uint, uint) override;
+    CsrQuadraticProblem(const PROBLEME_HEBDO* p, PROBLEME_ANTARES_A_RESOUDRE& pa, HourlyCSRProblem& hourly) :
+      problemeHebdo_(p), problemeAResoudre_(pa), hourlyCsrProblem_(hourly)
+    {
+    }
+
+    void buildConstraintMatrix();
+
+private:
+    const PROBLEME_HEBDO* problemeHebdo_;
+    PROBLEME_ANTARES_A_RESOUDRE& problemeAResoudre_;
+    HourlyCSRProblem& hourlyCsrProblem_;
+
+    void setConstraintsOnFlows(double* Pi, int* Colonne);
+    void setNodeBalanceConstraints(double* Pi, int* Colonne);
+    void setBindingConstraints(double* Pi, int* Colonne);
 };
-} // namespace Antares::Solver::Optimization
+
+} //namespace Antares::Solver::Optimization

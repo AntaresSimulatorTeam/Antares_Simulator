@@ -1,4 +1,5 @@
 
+
 #TODO : define flags with CMake way
 if(NOT MSVC)
 	set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -Wno-unused-variable")
@@ -65,15 +66,17 @@ set(RTESOLVER_OPT
 		optimisation/post_process_commands.cpp
 		optimisation/adq_patch_local_matching.h
 		optimisation/adq_patch_local_matching.cpp
-		optimisation/adq_patch_curtailment_sharing.h
-		optimisation/adq_patch_curtailment_sharing.cpp
+		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
+		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
 		optimisation/adequacy_patch_csr/solve_problem.cpp
 		optimisation/adequacy_patch_csr/set_variable_boundaries.cpp
 		optimisation/adequacy_patch_csr/set_problem_cost_function.cpp
 		optimisation/adequacy_patch_csr/construct_problem_variables.cpp
 		optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp
-		optimisation/csr_quadratic_problem.h
-		optimisation/csr_quadratic_problem.cpp
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.h
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.cpp
+        optimisation/adequacy_patch_csr/count_constraints_variables.h
+        optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
 		optimisation/opt_period_string_generator_base.h        
 
