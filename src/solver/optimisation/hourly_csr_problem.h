@@ -41,11 +41,30 @@ private:
     void allocateProblem();
     void resetProblem();
 
+    // Variable construction
+    void constructVariableENS();
+    void constructVariableSpilledEnergy();
+    void constructVariableFlows();
+
+    // Variable bounds
+    void setBoundsOnENS();
+    void setBoundsOnSpilledEnergy();
+    void setBoundsOnFlows();
+
+    // Constraints
+    void setRHSvalueOnFlows();
+    void setRHSnodeBalanceValue();
+    void setRHSbindingConstraintsValue();
+
+    // Costs
+    void setQuadraticCost();
+    void setLinearCost();
+
 public:
     void run(uint week, uint year);
 
     // TODO[FOM] Make these members private
-    int hourInWeekTriggeredCsr;
+    int triggeredHour;
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
@@ -62,7 +81,7 @@ public:
 
     inline void setHour(int hour)
     {
-        hourInWeekTriggeredCsr = hour;
+        triggeredHour = hour;
     }
 
     std::map<int, int> numberOfConstraintCsrEns;

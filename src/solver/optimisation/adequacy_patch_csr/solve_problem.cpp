@@ -146,7 +146,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
              "solution is set as LMR . year: "
           << yearNb + 1
-          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
@@ -272,7 +272,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     else
     {
         handleInteriorPointError(
-          *Probleme, hourlyCsrProblem.hourInWeekTriggeredCsr, weekNb, yearNb);
+          *Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }
