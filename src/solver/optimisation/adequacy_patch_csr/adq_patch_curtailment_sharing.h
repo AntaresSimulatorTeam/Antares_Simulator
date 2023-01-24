@@ -74,5 +74,5 @@ double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
 ** ** \param problem The weekly problem, from the solver
 ** ** \return
 ** */
-void adqPatchPostProcess(const Data::AreaList& areas, PROBLEME_HEBDO& problem, int numSpace);
+void adqPatchPostProcess(const Data::AreaList& areas, PROBLEME_HEBDO& problem, bool adqPatchEnabled, int numSpace);
 } // namespace Antares::Data::AdequacyPatch

@@ -196,7 +196,11 @@ bool Economy::year(Progression::Task& progression,
                                   numSpace,
                                   hourInTheYear);
 
-            Antares::Data::AdequacyPatch::adqPatchPostProcess(study.areas, *pProblemesHebdo[numSpace], numSpace);
+            Antares::Data::AdequacyPatch::adqPatchPostProcess(
+                study.areas, 
+                *pProblemesHebdo[numSpace],
+                study.parameters.adqPatch.enabled,
+                numSpace);
 
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             

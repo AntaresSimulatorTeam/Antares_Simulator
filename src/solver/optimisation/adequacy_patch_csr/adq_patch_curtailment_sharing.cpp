@@ -114,11 +114,11 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     }
 }
 
-void adqPatchPostProcess(const Data::AreaList& areas, PROBLEME_HEBDO& problem, int numSpace)
+void adqPatchPostProcess(const Data::AreaList& areas, PROBLEME_HEBDO& problem, bool adqPatchEnabled, int numSpace)
 {
     // gp : is just about to be removed, because this will become an adq patch post process 
-    // if (!study.parameters.adqPatch.enabled)
-    //    return;
+    if (!adqPatchEnabled)
+       return;
 
     const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problem.NombreDePays; Area++)
