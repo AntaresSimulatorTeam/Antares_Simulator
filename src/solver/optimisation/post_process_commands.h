@@ -20,6 +20,7 @@ private:
     unsigned int hourInYear_ = 0;
 };
 
+
 class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
 {
 public:
@@ -34,6 +35,28 @@ private:
     const AreaList& area_list_;
     bool remixWasRun_ = false;
     bool computeAnyway_ = false;
+};
+
+
+class RemixHydroPostProcessCmd : public basePostProcessCommand
+{
+public:
+    RemixHydroPostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        SheddingPolicy sheddingPolicy,
+        SimplexOptimization simplexOptimization,
+        unsigned int thread_number);
+    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
+    void run() override;
+
+private:
+    const AreaList& area_list_;
+    unsigned int thread_number_ = 0;
+    SheddingPolicy shedding_policy_;
+    SimplexOptimization splx_optimization_;
+    unsigned int hourInYear_ = 0;
+
 };
 
 } // namespace Antares::Solver::Simulation

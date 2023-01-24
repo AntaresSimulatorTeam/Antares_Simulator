@@ -15,7 +15,14 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
 {
     post_process_list.push_back(std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo_, thread_number_, areas));
     post_process_list.push_back(std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo_, areas, false, false));
-    // post_process_list.push_back(std::make_unique<DispatchableMargin>());
+    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(
+        problemeHebdo_,
+        areas,
+        sheddingPolicy,
+        splxOptimization,
+        thread_number));
+
+    // post_process_list.push_back(std::make_unique<something>());
 }
 
 } // namespace Antares::Solver::Simulation

@@ -63,10 +63,10 @@ void DispatchableMarginPostProcessCmd::run()
 //  Hydro levels update
 // -----------------------------
 HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(
-    PROBLEME_HEBDO* problemeHebdo,
-    AreaList& areas,
-    bool remixWasRun,
-    bool computeAnyway)
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        bool remixWasRun,
+        bool computeAnyway)
     : basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     remixWasRun_(remixWasRun),
@@ -84,6 +84,37 @@ void HydroLevelsUpdatePostProcessCmd::run()
     computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
 }
 
+// -----------------------------
+//  Remix Hydro
+// -----------------------------
+RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        SheddingPolicy sheddingPolicy,
+        SimplexOptimization simplexOptimization,
+        unsigned int thread_number)
+    : basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    shedding_policy_(sheddingPolicy),
+    splx_optimization_(simplexOptimization),
+    thread_number_(thread_number)
+{
+}
+
+void RemixHydroPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    hourInYear_ = opt_runtime_data.hourInTheYear;
+}
+
+void RemixHydroPostProcessCmd::run()
+{
+    RemixHydroForAllAreas(area_list_,
+                          *problemeHebdo_,
+                          shedding_policy_,
+                          splx_optimization_,
+                          thread_number_,
+                          hourInYear_);
+}
 // -----------------------------
 //  Next post process
 // -----------------------------
