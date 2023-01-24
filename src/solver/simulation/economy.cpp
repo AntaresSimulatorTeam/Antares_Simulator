@@ -186,9 +186,10 @@ bool Economy::year(Progression::Task& progression,
             // In case of adq patch optimization, it solves some hourly problems of curtailement sharing
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
-            // Next post process to be moved to the list of post-process commands
-            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
+            // Next post process to be moved to the list of post-process commands
             RemixHydroForAllAreas(study.areas, 
                                   *pProblemesHebdo[numSpace],
                                   study.parameters.shedding.policy,

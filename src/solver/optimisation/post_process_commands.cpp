@@ -60,6 +60,31 @@ void DispatchableMarginPostProcessCmd::run()
 }
 
 // -----------------------------
+//  Hydro levels update
+// -----------------------------
+HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(
+    PROBLEME_HEBDO* problemeHebdo,
+    AreaList& areas,
+    bool remixWasRun,
+    bool computeAnyway)
+    : basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    remixWasRun_(remixWasRun),
+    computeAnyway_(computeAnyway)
+{
+}
+
+void HydroLevelsUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    // No need for runtime data
+}
+
+void HydroLevelsUpdatePostProcessCmd::run()
+{
+    computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
+}
+
+// -----------------------------
 //  Next post process
 // -----------------------------
 
