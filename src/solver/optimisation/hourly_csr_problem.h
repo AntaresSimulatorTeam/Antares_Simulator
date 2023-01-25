@@ -79,6 +79,9 @@ public:
         resetProblem();
     }
 
+    HourlyCSRProblem(const HourlyCSRProblem&) = delete;
+    HourlyCSRProblem& operator=(const HourlyCSRProblem&) = delete;
+
     inline void setHour(int hour)
     {
         triggeredHour = hour;
@@ -100,6 +103,15 @@ public:
         }
         LinkVariable(int direct, int indirect) : directVar(direct), indirectVar(indirect)
         {
+        }
+        inline bool check() const
+        {
+            if (directVar < 0)
+                logs.warning() << "directVar < 0 detected, this should not happen";
+            if (indirectVar < 0)
+                logs.warning() << "indirectVar < 0 detected, this should not happen";
+
+            return (directVar >= 0) && (indirectVar >= 0);
         }
         int directVar;
         int indirectVar;

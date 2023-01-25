@@ -115,7 +115,6 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResou
             *pt = ProblemeAResoudre.X[Var];
 
         logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
-
     }
 }
 
@@ -144,8 +143,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
              "solution is set as LMR . year: "
-          << yearNb + 1
-          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
+          << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
@@ -162,17 +160,19 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
     for (int i = 0; i < Probleme.NombreDeVariables; i++)
     {
         logs.debug() << "i: " << i;
-        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(i) != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(i)
+                != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
-            cost += Probleme.X[i] * Probleme.X[i]
-                    * Probleme.CoutQuadratique[i];
+            cost += Probleme.X[i] * Probleme.X[i] * Probleme.CoutQuadratique[i];
             logs.debug() << "X-Q: " << Probleme.X[i] * 1e3;
             logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[i] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
 
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
-        if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end()) || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
+        if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
+                || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr
+                || !itLink->second.check())
             continue;
 
         if (Probleme.X[i] >= 0)
@@ -195,6 +195,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
             {
                 logs.warning() << "VarIndirect < 0 detected, this should not happen";
                 continue;
+
             }
             cost -= Probleme.X[i] * Probleme.CoutLineaire[VarIndirect];
             logs.debug() << "X-: " << Probleme.X[i] * 1e3;
@@ -271,8 +272,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(
-          *Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
+        handleInteriorPointError(*Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }
