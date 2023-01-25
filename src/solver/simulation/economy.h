@@ -101,7 +101,7 @@ private:
     PROBLEME_HEBDO** pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>>
       weeklyOptProblems_;
-    std::vector<std::unique_ptr<PostProcessCommand>> postProcessesList_;
+    std::vector<std::vector<std::unique_ptr<PostProcessCommand>>> postProcessesList_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

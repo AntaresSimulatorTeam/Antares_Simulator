@@ -91,7 +91,7 @@ bool Economy::simulationBegin()
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
-
+        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
@@ -108,15 +108,14 @@ bool Economy::simulationBegin()
               = Antares::Solver::Optimization::WeeklyOptimization::create(
                 study.parameters.adqPatch.enabled, pProblemesHebdo[numSpace], numSpace);
 
-            // TODO [numSpace]
-            postProcessesList_ = createPostProcess(Data::stdmEconomy,
-                                                   study.parameters.adqPatch.enabled,
-                                                   pProblemesHebdo[numSpace],
-                                                   numSpace,
-                                                   study.areas,
-                                                   study.parameters.shedding.policy,
-                                                   study.parameters.simplexOptimizationRange,
-                                                   study.calendar);
+            postProcessesList_[numSpace] = createPostProcess(Data::stdmEconomy,
+                                                             study.parameters.adqPatch.enabled,
+                                                             pProblemesHebdo[numSpace],
+                                                             numSpace,
+                                                             study.areas,
+                                                             study.parameters.shedding.policy,
+                                                             study.parameters.simplexOptimizationRange,
+                                                             study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -174,7 +173,7 @@ bool Economy::year(Progression::Task& progression,
 
             // Runs all the post processes (in the list of post-process commands)
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-            for (auto& cmd : postProcessesList_)
+            for (auto& cmd : postProcessesList_[numSpace])
             {
                 cmd->execute(opt_runtime_data);
             }

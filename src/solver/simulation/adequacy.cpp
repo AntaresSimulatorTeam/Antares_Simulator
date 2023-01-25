@@ -87,6 +87,7 @@ bool Adequacy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
@@ -100,15 +101,14 @@ bool Adequacy::simulationBegin()
                 logs.fatal() << "internal error";
                 return false;
             }
-            // TODO[FOM] [numSpace]
-            postProcessesList_ = createPostProcess(Data::stdmAdequacy,
-                                                   study.parameters.adqPatch.enabled,
-                                                   pProblemesHebdo[numSpace],
-                                                   numSpace,
-                                                   study.areas,
-                                                   study.parameters.shedding.policy,
-                                                   study.parameters.simplexOptimizationRange,
-                                                   study.calendar);
+            postProcessesList_[numSpace] = createPostProcess(Data::stdmAdequacy,
+                                                             study.parameters.adqPatch.enabled,
+                                                             pProblemesHebdo[numSpace],
+                                                             numSpace,
+                                                             study.areas,
+                                                             study.parameters.shedding.policy,
+                                                             study.parameters.simplexOptimizationRange,
+                                                             study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -231,7 +231,7 @@ bool Adequacy::year(Progression::Task& progression,
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
                 // Runs all the post processes (in the list of post-process commands)
                 optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-                for (auto& cmd : postProcessesList_)
+                for (auto& cmd : postProcessesList_[numSpace])
                 {
                     cmd->execute(opt_runtime_data);
                 }

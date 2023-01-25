@@ -26,7 +26,6 @@
 */
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
-
 #include "../variable/variable.h"
 #include "../variable/adequacy/all.h"
 #include "../variable/economy/all.h"
@@ -101,7 +100,7 @@ private:
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
     Matrix<> pRES;
-    std::vector<std::unique_ptr<PostProcessCommand>> postProcessesList_;
+    std::vector<std::vector<std::unique_ptr<PostProcessCommand>>> postProcessesList_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation
