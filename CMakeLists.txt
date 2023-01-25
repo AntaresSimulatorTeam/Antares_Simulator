@@ -18,7 +18,7 @@ set(ANTARES_BETA 0)
 set(ANTARES_RC 0)
 
 # OR-Tools tag
-file(READ "../ortools_tag" ORTOOLS_TAG)
+file(READ "ortools_tag" ORTOOLS_TAG)
 
 # CMAKE - Suppress useless features
 set(CMAKE_SKIP_PREPROCESSED_SOURCE_RULES true)
@@ -41,10 +41,10 @@ endif()
 
 
 #CMake function
-include("cmake/utils.cmake")
+include("src/cmake/utils.cmake")
 
 #CMake Macro to display message
-include("cmake/messages.cmake")
+include("src/cmake/messages.cmake")
 
 set(ANTARES_VERSION_TAG "")
 
@@ -79,10 +79,10 @@ OMESSAGE("")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # Copy changelog
-include("cmake/changelog.cmake")
+include("src/cmake/changelog.cmake")
 
 #Check compiler version
-include("cmake/checks.cmake")
+include("src/cmake/checks.cmake")
 
 
 if (ANTARES_LICENSE)
@@ -216,10 +216,10 @@ list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR})
 message(STATUS "CMAKE_PREFIX_PATH : ${CMAKE_PREFIX_PATH}")
 
 # Build Needed dependencies
-add_subdirectory(antares-deps)
+add_subdirectory(src/antares-deps)
 
 #Add needed definition in case of external dependencies compilation
-include (antares-deps/cmake/additionnal-definitions.cmake)
+include (src/antares-deps/cmake/additionnal-definitions.cmake)
 
 #TODO : Add ZLIB if  VCPKG used why is this needed
 if (VCPKG_TOOLCHAIN) 
@@ -301,30 +301,30 @@ if (VCPKG_TOOLCHAIN AND NOT BUILD_wxWidgets)
 endif()
 
 # TODO : review Standard Settings
-include(cmake/common-settings.cmake)
+include(src/cmake/common-settings.cmake)
 
 # Configure config.h with current ANTARES version
-configure_file("config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
-configure_file("config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
+configure_file("src/config.h.cmake" "${CMAKE_CURRENT_BINARY_DIR}/config.h")
+configure_file("src/config.h.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/config.h")
 
 # Yuni Framework
-configure_file("cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
-add_subdirectory("ext/yuni/src")
+configure_file("src/cmake/ProfileBuild.template.cmake" "ext/yuni/src/ProfileBuild.cmake")
+add_subdirectory("src/ext/yuni/src")
 
 OMESSAGE("") # empty line
 
 # Sub Directories
-add_subdirectory(libs) 		#antares-core fswalker
+add_subdirectory(src/libs) 		#antares-core fswalker
 
 if(BUILD_UI)
-	add_subdirectory(ui)		#all antares ui libs + antares simulator
+	add_subdirectory(src/ui)		#all antares ui libs + antares simulator
 endif()
 
-add_subdirectory(solver)	#antares solver and all associated libs
-add_subdirectory(analyzer)	#antares analyser
+add_subdirectory(src/solver)	#antares solver and all associated libs
+add_subdirectory(src/analyzer)	#antares analyser
 
 # Tools
-add_subdirectory(tools)	#All antares tools
+add_subdirectory(src/tools)	#All antares tools
 
 # Tests
 # 	Not setting BUILD_TESTING as a command line argument is equivalent to use -DBUILD_TESTING=OFF
@@ -430,7 +430,7 @@ else()
     set(CPACK_RPM_PACKAGE_REQUIRES "wxGTK3")
     set(CPACK_RPM_PACKAGE_AUTOREQPROV "0")
 
-	configure_file("distrib/unix/packages.cmake" "distrib/unix/packages.sh")
+	configure_file("src/distrib/unix/packages.cmake" "src/distrib/unix/packages.sh")
 
 
 endif()

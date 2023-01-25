@@ -1,6 +1,6 @@
 # Useful variables definitions
-set(src_solver_simulation "${CMAKE_SOURCE_DIR}/solver/simulation")
-set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
+set(src_solver_simulation "${CMAKE_SOURCE_DIR}/src/solver/simulation")
+set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/src/libs/antares/study")
 
 set(SRC_TS_NUMBERS
 	# For confort in IDE, but not necessary
