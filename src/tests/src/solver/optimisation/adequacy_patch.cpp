@@ -81,10 +81,10 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*;
     problem.ValeursDeNTC[0] = new VALEURS_DE_NTC_ET_RESISTANCES;
     problem.ValeursDeNTC[0]->ValeurDuFlux = new double;
-    problem.IndexSuivantIntercoOrigine = new int;
-    problem.IndexSuivantIntercoExtremite = new int;
-    problem.IndexDebutIntercoOrigine = new int;
-    problem.IndexDebutIntercoExtremite = new int;
+    problem.IndexSuivantIntercoOrigine = new int[3];
+    problem.IndexSuivantIntercoExtremite = new int[3];
+    problem.IndexDebutIntercoOrigine = new int[3];
+    problem.IndexDebutIntercoExtremite = new int[3];
 
     // input values
     adqPatchParams->SetNTCOutsideToInsideToZero = !includeFlowsOutsideAdqPatchToDensNew;
@@ -107,10 +107,10 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
-    delete problem.IndexDebutIntercoExtremite;
-    delete problem.IndexSuivantIntercoExtremite;
-    delete problem.IndexDebutIntercoOrigine;
-    delete problem.IndexSuivantIntercoOrigine;
+    delete[] problem.IndexDebutIntercoExtremite;
+    delete[] problem.IndexSuivantIntercoExtremite;
+    delete[] problem.IndexDebutIntercoOrigine;
+    delete[] problem.IndexSuivantIntercoOrigine;
     delete problem.ValeursDeNTC[0]->ValeurDuFlux;
     delete problem.ValeursDeNTC[0];
     delete problem.ValeursDeNTC;
