@@ -124,8 +124,7 @@ void Study::parameterFiller(const StudyLoadOptions& options){
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
-    if (not prepareOutput()) // will abort early if not usedByTheSolver
-        logs.error() << "Not usedByTheSolver, aborting";
+    prepareOutput(); // will abort early if not usedByTheSolver
 
     // Scenario Rules sets, only available since v3.6
     // After two consecutive load, some scenario builder data
