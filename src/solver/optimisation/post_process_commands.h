@@ -96,4 +96,18 @@ public:
 private:
     const Data::AreaList& area_list_;
 };
+
+class CurtailmentSharingPostProcessCmd : public PostProcessCommand
+{
+public:
+    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, Data::AreaList& areas);
+    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
+    void run() override;
+
+private:
+    const Data::AreaList& area_list_;
+    unsigned int year_ = 0;
+    unsigned int week_ = 0;
+};
+
 } // namespace Antares::Solver::Simulation

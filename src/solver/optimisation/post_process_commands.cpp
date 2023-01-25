@@ -1,6 +1,7 @@
 
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
+#include "adequacy_patch_weekly_optimization.h"
 
 namespace Antares::Solver::Simulation
 {
@@ -212,4 +213,27 @@ void HydroLevelsFinalUpdatePostProcessCmd::run()
     updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
 }
 
+// --------------------------------------
+//  Curtailment sharing for adq patch
+// --------------------------------------
+CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo, 
+        Data::AreaList& areas)
+    : PostProcessCommand(problemeHebdo),
+    area_list_(areas)
+{
+}
+
+void CurtailmentSharingPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    year_ = opt_runtime_data.year;
+    week_ = opt_runtime_data.week;
+}
+
+void CurtailmentSharingPostProcessCmd::run()
+{
+    // TO DO : mive the curtailment sharing post process here
+
+}
 } // namespace Antares::Solver::Simulation
+
