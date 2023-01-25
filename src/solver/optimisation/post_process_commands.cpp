@@ -4,21 +4,18 @@
 
 namespace Antares::Solver::Simulation
 {
-
 // -----------------------------
 // Dispatchable Margin
 // -----------------------------
-DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        unsigned int thread_number,
-        AreaList& areas) 
-    : basePostProcessCommand(problemeHebdo), 
-      thread_number_(thread_number), 
-      area_list_(areas)
+DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                                                   unsigned int thread_number,
+                                                                   Data::AreaList& areas) :
+ PostProcessCommand(problemeHebdo), thread_number_(thread_number), area_list_(areas)
 {
 }
 
-void DispatchableMarginPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void DispatchableMarginPostProcessCmd::acquireOptRuntimeData(
+  const struct optRuntimeData& opt_runtime_data)
 {
     hourInYear_ = opt_runtime_data.hourInTheYear;
 }
@@ -41,16 +38,16 @@ void DispatchableMarginPostProcessCmd::run()
             {
                 auto& cluster = *(i->second);
                 uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
-                    ->ThermiqueParPalier[cluster.areaWideIndex];
+                              ->ThermiqueParPalier[cluster.areaWideIndex];
                 auto& matrix = cluster.series->series;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
-                assert(hourInYear + nbHoursInWeek <= matrix.height && "index out of bounds");
+                assert(hourInYear_ + nbHoursInWeek <= matrix.height && "index out of bounds");
 
                 for (uint h = 0; h != nbHoursInWeek; ++h)
                 {
                     double production = hourlyResults.ProductionThermique[h]
-                        ->ProductionThermiqueDuPalier[cluster.index];
+                                          ->ProductionThermiqueDuPalier[cluster.index];
                     dtgmrg[h] += column[h + hourInYear_] - production;
                 }
             }
@@ -61,19 +58,19 @@ void DispatchableMarginPostProcessCmd::run()
 // -----------------------------
 //  Hydro levels update
 // -----------------------------
-HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas,
-        bool remixWasRun,
-        bool computeAnyway)
-    : basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    remixWasRun_(remixWasRun),
-    computeAnyway_(computeAnyway)
+HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                                                 Data::AreaList& areas,
+                                                                 bool remixWasRun,
+                                                                 bool computeAnyway) :
+ PostProcessCommand(problemeHebdo),
+ area_list_(areas),
+ remixWasRun_(remixWasRun),
+ computeAnyway_(computeAnyway)
 {
 }
 
-void HydroLevelsUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void HydroLevelsUpdatePostProcessCmd::acquireOptRuntimeData(
+  const struct optRuntimeData& opt_runtime_data)
 {
     // No need for runtime data
 }
@@ -86,17 +83,16 @@ void HydroLevelsUpdatePostProcessCmd::run()
 // -----------------------------
 //  Remix Hydro
 // -----------------------------
-RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas,
-        SheddingPolicy sheddingPolicy,
-        SimplexOptimization simplexOptimization,
-        unsigned int thread_number)
-    : basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    shedding_policy_(sheddingPolicy),
-    splx_optimization_(simplexOptimization),
-    thread_number_(thread_number)
+RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                                   Data::AreaList& areas,
+                                                   Data::SheddingPolicy sheddingPolicy,
+                                                   Data::SimplexOptimization simplexOptimization,
+                                                   unsigned int thread_number) :
+ PostProcessCommand(problemeHebdo),
+ area_list_(areas),
+ shedding_policy_(sheddingPolicy),
+ splx_optimization_(simplexOptimization),
+ thread_number_(thread_number)
 {
 }
 
@@ -121,16 +117,15 @@ void RemixHydroPostProcessCmd::run()
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas,
-        unsigned int thread_number)
-    : basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    thread_number_(thread_number)
+  PROBLEME_HEBDO* problemeHebdo,
+  Data::AreaList& areas,
+  unsigned int thread_number) :
+ PostProcessCommand(problemeHebdo), area_list_(areas), thread_number_(thread_number)
 {
 }
 
-void DTGmarginForAdqPatchPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void DTGmarginForAdqPatchPostProcessCmd::acquireOptRuntimeData(
+  const struct optRuntimeData& opt_runtime_data)
 {
     // No need for runtime data
 }
@@ -177,16 +172,15 @@ void DTGmarginForAdqPatchPostProcessCmd::run()
 // -----------------------------
 
 InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas,
-        const Date::Calendar& calendar)
-    : basePostProcessCommand(problemeHebdo),
-    area_list_(areas),
-    calendar_(calendar)
+  PROBLEME_HEBDO* problemeHebdo,
+  Data::AreaList& areas,
+  const Date::Calendar& calendar) :
+ PostProcessCommand(problemeHebdo), area_list_(areas), calendar_(calendar)
 {
 }
 
-void InterpolateWaterValuePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void InterpolateWaterValuePostProcessCmd::acquireOptRuntimeData(
+  const struct optRuntimeData& opt_runtime_data)
 {
     hourInYear_ = opt_runtime_data.hourInTheYear;
 }
@@ -201,14 +195,14 @@ void InterpolateWaterValuePostProcessCmd::run()
 // -----------------------------
 // HydroLevelsFinalUpdatePostProcessCmd
 HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
-    PROBLEME_HEBDO* problemeHebdo,
-    AreaList& areas)
-    : basePostProcessCommand(problemeHebdo),
-    area_list_(areas)
+  PROBLEME_HEBDO* problemeHebdo,
+  Data::AreaList& areas) :
+ PostProcessCommand(problemeHebdo), area_list_(areas)
 {
 }
 
-void HydroLevelsFinalUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void HydroLevelsFinalUpdatePostProcessCmd::acquireOptRuntimeData(
+  const struct optRuntimeData& opt_runtime_data)
 {
     // No need for runtime data
 }

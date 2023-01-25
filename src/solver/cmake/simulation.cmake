@@ -40,8 +40,6 @@ set(SRC_SIMULATION
 		simulation/adequacy.cpp
 		simulation/economy.h
 		simulation/economy.cpp
-		simulation/base_post_process.h
-		simulation/base_post_process.cpp
         simulation/opt_time_writer.h
         simulation/opt_time_writer.cpp
 )

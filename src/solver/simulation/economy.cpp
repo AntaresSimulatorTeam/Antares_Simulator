@@ -31,6 +31,7 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include "../optimisation/post_process_commands.h"
 #include "common-eco-adq.h"
 #include "opt_time_writer.h"
 
@@ -84,13 +85,43 @@ void Economy::initializeState(Variable::State& state, uint numSpace)
     state.numSpace = numSpace;
 }
 
+// TODO[FOM] move
+std::vector<std::unique_ptr<PostProcessCommand>> createPostProcess(
+  bool adqPatchEnabled,
+  PROBLEME_HEBDO* problemeHebdo,
+  uint thread_number,
+  Data::AreaList& areas,
+  Data::SheddingPolicy sheddingPolicy,
+  Data::SimplexOptimization splxOptimization,
+  Date::Calendar& calendar)
+{
+    std::vector<std::unique_ptr<PostProcessCommand>> post_process_list;
+    post_process_list.push_back(
+      std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo, thread_number, areas));
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo, areas, false, false));
+    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(
+      problemeHebdo, areas, sheddingPolicy, splxOptimization, thread_number));
+
+    if (adqPatchEnabled)
+        post_process_list.push_back(std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(
+          problemeHebdo, areas, thread_number));
+
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo, areas, true, false));
+    post_process_list.push_back(
+      std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo, areas, calendar));
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(problemeHebdo, areas));
+    return post_process_list;
+}
+
 bool Economy::simulationBegin()
 {
     if (!preproOnly)
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
-        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -104,19 +135,18 @@ bool Economy::simulationBegin()
                 return false;
             }
 
-            weeklyOptProblems_[numSpace] =
-                Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study.parameters.adqPatch.enabled,
-                                                    pProblemesHebdo[numSpace],
-                                                    numSpace);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
-                                                 pProblemesHebdo[numSpace],
-                                                 numSpace,
-                                                 study.areas,
-                                                 study.parameters.shedding.policy,
-                                                 study.parameters.simplexOptimizationRange,
-                                                 study.calendar);
+            weeklyOptProblems_[numSpace]
+              = Antares::Solver::Optimization::WeeklyOptimization::create(
+                study.parameters.adqPatch.enabled, pProblemesHebdo[numSpace], numSpace);
+
+            // TODO [numSpace]
+            postProcessesList_ = createPostProcess(study.parameters.adqPatch.enabled,
+                                                   pProblemesHebdo[numSpace],
+                                                   numSpace,
+                                                   study.areas,
+                                                   study.parameters.shedding.policy,
+                                                   study.parameters.simplexOptimizationRange,
+                                                   study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -132,7 +162,6 @@ bool Economy::simulationBegin()
     pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
     return true;
 }
-
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -175,43 +204,51 @@ bool Economy::year(Progression::Task& progression,
 
             // Runs all the post processes (in the list of post-process commands)
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-            postProcessesList_[numSpace]->runAll(opt_runtime_data);
+            for (auto& cmd : postProcessesList_)
+            {
+                cmd->acquireOptRuntimeData(opt_runtime_data);
+                cmd->run();
+            }
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // DispatchableMarginForAllAreas(
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands DispatchableMarginForAllAreas(
             //        study.areas, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
             // We need to move this post process in the list of post-process commands.
             // In case of default weekly optimization, it does nothing.
-            // In case of adq patch optimization, it solves some hourly problems of curtailement sharing
+            // In case of adq patch optimization, it solves some hourly problems of curtailement
+            // sharing
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            //RemixHydroForAllAreas(study.areas, 
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands
+            // RemixHydroForAllAreas(study.areas,
             //                      *pProblemesHebdo[numSpace],
             //                      study.parameters.shedding.policy,
             //                      study.parameters.simplexOptimizationRange,
             //                      numSpace,
             //                      hourInTheYear);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            //Antares::Data::AdequacyPatch::adqPatchPostProcess(
-            //    study.areas, 
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands
+            // Antares::Data::AdequacyPatch::adqPatchPostProcess(
+            //    study.areas,
             //    *pProblemesHebdo[numSpace],
             //    study.parameters.adqPatch.enabled,
             //    numSpace);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
-            
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace],
+            // study.calendar, hourInTheYear);
+
+            // Not in use anymore, as this post process was moved in the list of post-process
+            // commands updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
