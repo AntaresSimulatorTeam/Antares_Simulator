@@ -75,18 +75,16 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adqPatchParams = std::make_unique<AdequacyPatchParameters>();
     const auto& adqPatchParams = problem.adqPatchParams;
 
-    problem.ResultatsHoraires = (RESULTATS_HORAIRES**)malloc(1 * sizeof(void*));
-    problem.ResultatsHoraires[0] = (RESULTATS_HORAIRES*)malloc(sizeof(RESULTATS_HORAIRES));
-    problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive
-      = (double*)malloc(1 * sizeof(double));
-    problem.ValeursDeNTC = (VALEURS_DE_NTC_ET_RESISTANCES**)malloc(1 * sizeof(void*));
-    problem.ValeursDeNTC[0]
-      = (VALEURS_DE_NTC_ET_RESISTANCES*)malloc(sizeof(VALEURS_DE_NTC_ET_RESISTANCES));
-    problem.ValeursDeNTC[0]->ValeurDuFlux = (double*)malloc(3 * sizeof(double));
-    problem.IndexSuivantIntercoOrigine = (int*)malloc(3 * sizeof(int));
-    problem.IndexSuivantIntercoExtremite = (int*)malloc(3 * sizeof(int));
-    problem.IndexDebutIntercoOrigine = (int*)malloc(1 * sizeof(int));
-    problem.IndexDebutIntercoExtremite = (int*)malloc(1 * sizeof(int));
+    problem.ResultatsHoraires = new RESULTATS_HORAIRES*;
+    problem.ResultatsHoraires[0] = new RESULTATS_HORAIRES;
+    problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive = new double;
+    problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*;
+    problem.ValeursDeNTC[0] = new VALEURS_DE_NTC_ET_RESISTANCES;
+    problem.ValeursDeNTC[0]->ValeurDuFlux = new double;
+    problem.IndexSuivantIntercoOrigine = new int;
+    problem.IndexSuivantIntercoExtremite = new int;
+    problem.IndexDebutIntercoOrigine = new int;
+    problem.IndexDebutIntercoExtremite = new int;
 
     // input values
     adqPatchParams->SetNTCOutsideToInsideToZero = !includeFlowsOutsideAdqPatchToDensNew;
@@ -109,16 +107,16 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
-    free(problem.IndexDebutIntercoExtremite);
-    free(problem.IndexSuivantIntercoExtremite);
-    free(problem.IndexDebutIntercoOrigine);
-    free(problem.IndexSuivantIntercoOrigine);
-    free(problem.ValeursDeNTC[0]->ValeurDuFlux);
-    free(problem.ValeursDeNTC[0]);
-    free(problem.ValeursDeNTC);
-    free(problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive);
-    free(problem.ResultatsHoraires[0]);
-    free(problem.ResultatsHoraires);
+    delete problem.IndexDebutIntercoExtremite;
+    delete problem.IndexSuivantIntercoExtremite;
+    delete problem.IndexDebutIntercoOrigine;
+    delete problem.IndexSuivantIntercoOrigine;
+    delete problem.ValeursDeNTC[0]->ValeurDuFlux;
+    delete problem.ValeursDeNTC[0];
+    delete problem.ValeursDeNTC;
+    delete problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive;
+    delete problem.ResultatsHoraires[0];
+    delete problem.ResultatsHoraires;
 
     // return
     return std::make_pair(netPositionInit, densNew);
