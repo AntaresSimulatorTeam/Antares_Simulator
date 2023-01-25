@@ -115,7 +115,6 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResou
             *pt = ProblemeAResoudre.X[Var];
 
         logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
-
     }
 }
 
@@ -144,8 +143,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
              "solution is set as LMR . year: "
-          << yearNb + 1
-          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
+          << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
@@ -162,16 +160,17 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
     for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
     {
         logs.debug() << "Var: " << Var;
-        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var) != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var)
+            != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
-            cost += Probleme.X[Var] * Probleme.X[Var]
-                    * Probleme.CoutQuadratique[Var];
+            cost += Probleme.X[Var] * Probleme.X[Var] * Probleme.CoutQuadratique[Var];
             logs.debug() << "X-Q: " << Probleme.X[Var] * 1e3;
             logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[Var] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
-        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
+        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end())
+            && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
         {
             if (!itLink->second.check())
                 continue;
@@ -263,8 +262,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(
-          *Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
+        handleInteriorPointError(*Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }

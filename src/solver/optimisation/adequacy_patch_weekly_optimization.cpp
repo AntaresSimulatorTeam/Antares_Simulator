@@ -82,7 +82,8 @@ double AdequacyPatchOptimization::calculateDensNewAndTotalLmrViolation(AreaList&
         {
             for (int hour = 0; hour < numOfHoursInWeek; hour++)
             {
-                std::tie(netPositionInit, densNew, totalNodeBalance) = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
+                std::tie(netPositionInit, densNew, totalNodeBalance)
+                  = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
 
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
@@ -113,7 +114,8 @@ std::vector<double> AdequacyPatchOptimization::calculateENSoverAllAreasForEachHo
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            const double* ENS= problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+            const double* ENS
+              = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInAWeek; ++h)
                 sumENS[h] += ENS[h];
         }
@@ -143,9 +145,7 @@ std::set<int> AdequacyPatchOptimization::getHoursRequiringCurtailmentSharing() c
     return identifyHoursForCurtailmentSharing(sumENS);
 }
 
-void AdequacyPatchOptimization::postProcess(Antares::Data::AreaList& areas,
-                                         uint year,
-                                         uint week)
+void AdequacyPatchOptimization::postProcess(Antares::Data::AreaList& areas, uint year, uint week)
 {
     double totalLmrViolation = calculateDensNewAndTotalLmrViolation(areas);
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
