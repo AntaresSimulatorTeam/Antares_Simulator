@@ -37,8 +37,9 @@ OptPostProcessList::OptPostProcessList(PROBLEME_HEBDO* problemeHebdo,
         problemeHebdo_,
         areas,
         calendar));
-
-    // post_process_list.push_back(std::make_unique<something>());
+    post_process_list.push_back(std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(
+        problemeHebdo_,
+        areas));
 }
 
 } // namespace Antares::Solver::Simulation

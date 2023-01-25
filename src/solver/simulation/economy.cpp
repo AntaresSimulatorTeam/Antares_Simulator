@@ -210,8 +210,8 @@ bool Economy::year(Progression::Task& progression,
             // Not in use anymore, as this post process was moved in the list of post-process commands
             // interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-            // Next post process to be moved to the list of post-process commands
-            updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            // updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;

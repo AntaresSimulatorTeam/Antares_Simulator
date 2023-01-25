@@ -92,4 +92,17 @@ private:
     unsigned int hourInYear_ = 0;
 };
 
+class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
+{
+public:
+    HydroLevelsFinalUpdatePostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas);
+    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
+    void run() override;
+
+private:
+    const AreaList& area_list_;
+};
+
 } // namespace Antares::Solver::Simulation

@@ -172,6 +172,10 @@ void DTGmarginForAdqPatchPostProcessCmd::run()
     }
 }
 
+// -----------------------------
+//  Interpolate Water Values
+// -----------------------------
+
 InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
         PROBLEME_HEBDO* problemeHebdo,
         AreaList& areas,
@@ -193,7 +197,25 @@ void InterpolateWaterValuePostProcessCmd::run()
 }
 
 // -----------------------------
-//  Next post process
+//  Hydro Levels Final Update
 // -----------------------------
+// HydroLevelsFinalUpdatePostProcessCmd
+HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
+    PROBLEME_HEBDO* problemeHebdo,
+    AreaList& areas)
+    : basePostProcessCommand(problemeHebdo),
+    area_list_(areas)
+{
+}
+
+void HydroLevelsFinalUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    // No need for runtime data
+}
+
+void HydroLevelsFinalUpdatePostProcessCmd::run()
+{
+    updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
+}
 
 } // namespace Antares::Solver::Simulation
