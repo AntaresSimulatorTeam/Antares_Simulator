@@ -593,7 +593,7 @@ enum AdequacyPatchMode
 /*!
 ** \brief Setting Link Capacity (NTC) for Adequacy patch first step
 */
-enum NtcSetToZeroStatus_AdqPatchStep1
+enum class NtcSetToZeroStatus_AdqPatchStep1
 {
     //! Leave NTC local values
     leaveLocalValues = 0,

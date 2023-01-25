@@ -157,40 +157,50 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
         return cost;
     }
 
-    for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
+    for (int i = 0; i < Probleme.NombreDeVariables; i++)
     {
-        logs.debug() << "Var: " << Var;
-        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var)
-            != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
+        logs.debug() << "i: " << i;
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(i)
+                != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
-            cost += Probleme.X[Var] * Probleme.X[Var] * Probleme.CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << Probleme.X[Var] * 1e3;
-            logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[Var] * 1e3;
+            cost += Probleme.X[i] * Probleme.X[i] * Probleme.CoutQuadratique[i];
+            logs.debug() << "X-Q: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[i] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
-        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
-        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end())
-            && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
+
+        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
+        if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
+                || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr
+                || !itLink->second.check())
+            continue;
+
+        if (Probleme.X[i] >= 0)
         {
-            if (!itLink->second.check())
+            const int VarDirect = itLink->second.directVar;
+            if (VarDirect < 0)
+            {
+                logs.warning() << "VarDirect < 0 detected, this should not happen";
+                continue;
+            }
+            cost += Probleme.X[i] * Probleme.CoutLineaire[VarDirect];
+            logs.debug() << "X+: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
+        }
+        else
+        {
+            const int VarIndirect = itLink->second.indirectVar;
+            if (VarIndirect < 0)
+            {
+                logs.warning() << "VarIndirect < 0 detected, this should not happen";
                 continue;
 
-            if (Probleme.X[Var] >= 0)
-            {
-                const int VarDirect = itLink->second.directVar;
-                cost += Probleme.X[Var] * Probleme.CoutLineaire[VarDirect];
-                logs.debug() << "X+: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
-                logs.debug() << "TotalCost: " << cost * 1e3;
             }
-            else
-            {
-                const int VarIndirect = itLink->second.indirectVar;
-                cost -= Probleme.X[Var] * Probleme.CoutLineaire[VarIndirect];
-                logs.debug() << "X-: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;
-                logs.debug() << "TotalCost: " << cost * 1e3;
-            }
+            cost -= Probleme.X[i] * Probleme.CoutLineaire[VarIndirect];
+            logs.debug() << "X-: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
         }
     }
     return cost;
@@ -202,12 +212,12 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
-    for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
+    for (int i = 0; i < Probleme.NombreDeVariables; i++)
     {
         logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-                                 Var,
-                                 Probleme.CoutLineaire[Var],
-                                 Probleme.CoutQuadratique[Var]);
+                                 i,
+                                 Probleme.CoutLineaire[i],
+                                 Probleme.CoutQuadratique[i]);
     }
     for (int Cnt = 0; Cnt < Probleme.NombreDeContraintes; Cnt++)
     {
