@@ -20,8 +20,7 @@ public:
     PostProcessCommand(PROBLEME_HEBDO* p) : problemeHebdo_(p)
     {
     }
-    virtual void acquireOptRuntimeData(const optRuntimeData& opt_runtime_data) = 0;
-    virtual void run() = 0;
+    virtual void execute(const optRuntimeData& opt_runtime_data) = 0;
 
 protected:
     PROBLEME_HEBDO* problemeHebdo_;

@@ -206,8 +206,7 @@ bool Economy::year(Progression::Task& progression,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             for (auto& cmd : postProcessesList_)
             {
-                cmd->acquireOptRuntimeData(opt_runtime_data);
-                cmd->run();
+                cmd->execute(opt_runtime_data);
             }
 
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
