@@ -177,41 +177,10 @@ bool Economy::year(Progression::Task& progression,
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // DispatchableMarginForAllAreas(
-            //        study.areas, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
-
-            // We need to move this post process in the list of post-process commands.
+            // In case of adq patch optimization, the following instruction solves hourly problems of curtailement sharing.
             // In case of default weekly optimization, it does nothing.
-            // In case of adq patch optimization, it solves some hourly problems of curtailement sharing
+            // We need to move this post process (CSR) in the list of post-process commands.
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
-
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
-
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            //RemixHydroForAllAreas(study.areas, 
-            //                      *pProblemesHebdo[numSpace],
-            //                      study.parameters.shedding.policy,
-            //                      study.parameters.simplexOptimizationRange,
-            //                      numSpace,
-            //                      hourInTheYear);
-
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            //Antares::Data::AdequacyPatch::adqPatchPostProcess(
-            //    study.areas, 
-            //    *pProblemesHebdo[numSpace],
-            //    study.parameters.adqPatch.enabled,
-            //    numSpace);
-
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
-            
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
-
-            // Not in use anymore, as this post process was moved in the list of post-process commands
-            // updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
