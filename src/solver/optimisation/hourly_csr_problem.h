@@ -68,7 +68,7 @@ public:
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
-    HourlyCSRProblem(PROBLEME_HEBDO* p) : problemeHebdo_(p)
+    explicit HourlyCSRProblem(PROBLEME_HEBDO* p) : problemeHebdo_(p)
     {
         belowThisThresholdSetToZero = p->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
         allocateProblem();
