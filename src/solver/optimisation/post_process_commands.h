@@ -11,13 +11,11 @@ public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                      unsigned int thread_number,
                                      AreaList& areas);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     unsigned int thread_number_ = 0;
     const AreaList& area_list_;
-    unsigned int hourInYear_ = 0;
 };
 
 
@@ -28,8 +26,7 @@ public:
                                     AreaList& areas,
                                     bool remixWasRun,
                                     bool computeAnyway);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -47,16 +44,13 @@ public:
         SheddingPolicy sheddingPolicy,
         SimplexOptimization simplexOptimization,
         unsigned int thread_number);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
     unsigned int thread_number_ = 0;
     SheddingPolicy shedding_policy_;
     SimplexOptimization splx_optimization_;
-    unsigned int hourInYear_ = 0;
-
 };
 
 
@@ -67,8 +61,8 @@ public:
         PROBLEME_HEBDO* problemeHebdo,
         AreaList& areas, 
         unsigned int thread_number);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -83,13 +77,12 @@ public:
         PROBLEME_HEBDO* problemeHebdo, 
         AreaList& areas,
         const Date::Calendar& calendar);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
     const Date::Calendar& calendar_;
-    unsigned int hourInYear_ = 0;
 };
 
 class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
@@ -98,8 +91,8 @@ public:
     HydroLevelsFinalUpdatePostProcessCmd(
         PROBLEME_HEBDO* problemeHebdo,
         AreaList& areas);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -109,13 +102,11 @@ class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
 public:
     CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
-    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
-    void run() override;
+
+    void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
-    unsigned int year_ = 0;
-    unsigned int week_ = 0;
 };
 
 } // namespace Antares::Solver::Simulation

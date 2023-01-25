@@ -37,12 +37,10 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
 
 void interfacePostProcessList::runAll(const struct optRuntimeData& opt_runtime_data)
 {
-    for (auto it = post_process_list.begin(); it != post_process_list.end(); it++)
+    for (auto& post_process : post_process_list)
     {
-        (*it)->acquireOptRuntimeData(opt_runtime_data);
-        (*it)->run();
+        post_process->execute(opt_runtime_data);
     }
 }
-
 
 } // namespace Antares::Solver::Simulation

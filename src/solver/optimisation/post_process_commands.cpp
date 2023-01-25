@@ -19,14 +19,10 @@ DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(
 {
 }
 
-void DispatchableMarginPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
-{
-    hourInYear_ = opt_runtime_data.hourInTheYear;
-}
-
-void DispatchableMarginPostProcessCmd::run()
+void DispatchableMarginPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
     const uint nbHoursInWeek = 168;
+    unsigned int hourInYear = opt_runtime_data.hourInTheYear;
 
     area_list_.each([&](Data::Area& area) {
         double* dtgmrg = area.scratchpad[thread_number_]->dispatchableGenerationMargin;
@@ -52,7 +48,7 @@ void DispatchableMarginPostProcessCmd::run()
                 {
                     double production = hourlyResults.ProductionThermique[h]
                         ->ProductionThermiqueDuPalier[cluster.index];
-                    dtgmrg[h] += column[h + hourInYear_] - production;
+                    dtgmrg[h] += column[h + hourInYear] - production;
                 }
             }
         }
@@ -74,12 +70,7 @@ HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(
 {
 }
 
-void HydroLevelsUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
-{
-    // No need for runtime data
-}
-
-void HydroLevelsUpdatePostProcessCmd::run()
+void HydroLevelsUpdatePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
     computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
 }
@@ -101,19 +92,15 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(
 {
 }
 
-void RemixHydroPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void RemixHydroPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
-    hourInYear_ = opt_runtime_data.hourInTheYear;
-}
-
-void RemixHydroPostProcessCmd::run()
-{
+    unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     RemixHydroForAllAreas(area_list_,
                           *problemeHebdo_,
                           shedding_policy_,
                           splx_optimization_,
                           thread_number_,
-                          hourInYear_);
+                          hourInYear);
 }
 
 // -----------------------------
@@ -131,16 +118,11 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 {
 }
 
-void DTGmarginForAdqPatchPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
-{
-    // No need for runtime data
-}
-
 /*!
 ** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** */
-void DTGmarginForAdqPatchPostProcessCmd::run()
+void DTGmarginForAdqPatchPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
     const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
@@ -187,14 +169,10 @@ InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
 {
 }
 
-void InterpolateWaterValuePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void InterpolateWaterValuePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
-    hourInYear_ = opt_runtime_data.hourInTheYear;
-}
-
-void InterpolateWaterValuePostProcessCmd::run()
-{
-    interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear_);
+    unsigned int hourInYear = opt_runtime_data.hourInTheYear;
+    interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear);
 }
 
 // -----------------------------
@@ -209,12 +187,7 @@ HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
 {
 }
 
-void HydroLevelsFinalUpdatePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
-{
-    // No need for runtime data
-}
-
-void HydroLevelsFinalUpdatePostProcessCmd::run()
+void HydroLevelsFinalUpdatePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
     updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
 }
@@ -230,15 +203,12 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
 {
 }
 
-void CurtailmentSharingPostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+void CurtailmentSharingPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
-    year_ = opt_runtime_data.year;
-    week_ = opt_runtime_data.week;
-}
+    unsigned int year = opt_runtime_data.year;
+    unsigned int week = opt_runtime_data.week;
 
-void CurtailmentSharingPostProcessCmd::run()
-{
-    // TO DO : mive the curtailment sharing post process here
+    // TO DO : move the curtailment sharing post process here
 
 }
 

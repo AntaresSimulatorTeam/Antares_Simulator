@@ -27,8 +27,7 @@ class basePostProcessCommand
 {
 public:
     virtual ~basePostProcessCommand() = default;
-    virtual void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) = 0;
-    virtual void run() = 0;
+    virtual void execute(const struct optRuntimeData& opt_runtime_data) = 0;
 
 protected:
     // Memeber functions
