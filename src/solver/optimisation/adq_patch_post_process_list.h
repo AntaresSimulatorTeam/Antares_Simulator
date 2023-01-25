@@ -17,7 +17,7 @@ public:
                             SimplexOptimization splxOptimization,
                             Calendar& calendar);
 
-    ~AdqPatchPostProcessList() = default;
+    virtual ~AdqPatchPostProcessList() = default;
 };
 
 } // namespace Antares::Solver::Simulation
