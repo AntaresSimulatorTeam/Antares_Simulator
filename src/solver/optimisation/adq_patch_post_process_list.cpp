@@ -28,12 +28,16 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
         sheddingPolicy,
         splxOptimization,
         thread_number));
-
     // Here a post process particular to adq patch
     post_process_list.push_back(std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(
         problemeHebdo_,
         areas,
         thread_number));
+    post_process_list.push_back(std::make_unique<HydroLevelsUpdatePostProcessCmd>(
+        problemeHebdo_,
+        areas,
+        true,
+        false));
 
     // post_process_list.push_back(std::make_unique<something>());
 }

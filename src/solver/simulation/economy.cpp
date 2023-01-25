@@ -204,9 +204,10 @@ bool Economy::year(Progression::Task& progression,
             //    study.parameters.adqPatch.enabled,
             //    numSpace);
 
-            // Next post process to be moved to the list of post-process commands
-            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
+            // Not in use anymore, as this post process was moved in the list of post-process commands
+            // computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             
+            // Next post process to be moved to the list of post-process commands
             interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
             updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
