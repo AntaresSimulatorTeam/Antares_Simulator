@@ -91,7 +91,7 @@ void computingHydroLevels(const Data::AreaList& areas,
 
 void interpolateWaterValue(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
-                           Date::Calendar& calendar,
+                           const Date::Calendar& calendar,
                            int firstHourOfTheWeek)
 {
     uint daysOfWeek[7] = {0, 0, 0, 0, 0, 0, 0};

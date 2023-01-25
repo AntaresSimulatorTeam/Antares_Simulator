@@ -75,4 +75,21 @@ private:
     unsigned int thread_number_ = 0;
 };
 
+
+class InterpolateWaterValuePostProcessCmd : public basePostProcessCommand
+{
+public:
+    InterpolateWaterValuePostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo, 
+        AreaList& areas,
+        const Date::Calendar& calendar);
+    void acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data) override;
+    void run() override;
+
+private:
+    const AreaList& area_list_;
+    const Date::Calendar& calendar_;
+    unsigned int hourInYear_ = 0;
+};
+
 } // namespace Antares::Solver::Simulation

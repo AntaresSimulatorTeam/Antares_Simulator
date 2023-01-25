@@ -121,9 +121,9 @@ void RemixHydroPostProcessCmd::run()
 using namespace Antares::Data::AdequacyPatch;
 
 DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
-    PROBLEME_HEBDO* problemeHebdo,
-    AreaList& areas,
-    unsigned int thread_number)
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        unsigned int thread_number)
     : basePostProcessCommand(problemeHebdo),
     area_list_(areas),
     thread_number_(thread_number)
@@ -170,6 +170,26 @@ void DTGmarginForAdqPatchPostProcessCmd::run()
                 dtgMrgCsr = dtgMrg;
         }
     }
+}
+
+InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
+        PROBLEME_HEBDO* problemeHebdo,
+        AreaList& areas,
+        const Date::Calendar& calendar)
+    : basePostProcessCommand(problemeHebdo),
+    area_list_(areas),
+    calendar_(calendar)
+{
+}
+
+void InterpolateWaterValuePostProcessCmd::acquireOptRuntimeData(const struct optRuntimeData& opt_runtime_data)
+{
+    hourInYear_ = opt_runtime_data.hourInTheYear;
+}
+
+void InterpolateWaterValuePostProcessCmd::run()
+{
+    interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear_);
 }
 
 // -----------------------------
