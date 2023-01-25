@@ -111,8 +111,7 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResou
 {
     for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
     {
-        double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-        if (pt)
+        if (double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]; pt)
             *pt = ProblemeAResoudre.X[Var];
 
         logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
@@ -174,14 +173,12 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
         if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
         {
+            if (!itLink->second.check())
+                continue;
+
             if (Probleme.X[Var] >= 0)
             {
                 const int VarDirect = itLink->second.directVar;
-                if (VarDirect < 0)
-                {
-                    logs.warning() << "VarDirect < 0 detected, this should not happen";
-                    continue;
-                }
                 cost += Probleme.X[Var] * Probleme.CoutLineaire[VarDirect];
                 logs.debug() << "X+: " << Probleme.X[Var] * 1e3;
                 logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
@@ -190,11 +187,6 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
             else
             {
                 const int VarIndirect = itLink->second.indirectVar;
-                if (VarIndirect < 0)
-                {
-                    logs.warning() << "VarIndirect < 0 detected, this should not happen";
-                    continue;
-                }
                 cost -= Probleme.X[Var] * Probleme.CoutLineaire[VarIndirect];
                 logs.debug() << "X-: " << Probleme.X[Var] * 1e3;
                 logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;

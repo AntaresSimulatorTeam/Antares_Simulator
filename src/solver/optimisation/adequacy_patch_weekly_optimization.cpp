@@ -87,7 +87,7 @@ double AdequacyPatchOptimization::calculateDensNewAndTotalLmrViolation(AreaList&
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
-                auto& scratchpad = *(areas[Area]->scratchpad[thread_number_]);
+                const auto& scratchpad = *(areas[Area]->scratchpad[thread_number_]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 densNew = std::max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
