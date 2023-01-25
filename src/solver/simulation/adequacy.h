@@ -101,7 +101,7 @@ private:
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
     Matrix<> pRES;
-
+    std::vector<std::unique_ptr<PostProcessCommand>> postProcessesList_;
 }; // class Adequacy
 
 } // namespace Antares::Solver::Simulation

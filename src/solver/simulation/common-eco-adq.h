@@ -34,6 +34,7 @@
 #include "../variable/economy/all.h"
 #include <yuni/core/bind.h>
 #include "../variable/economy/dispatchable-generation-margin.h" // for OP.MRG
+#include "../optimisation/post_process_command.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
 
@@ -49,6 +50,16 @@ namespace Simulation
 // that adequacy has the same variable (to get the same type)
 typedef Solver::Variable::Economy::VCardBalance AvgExchangeVCardBalance;
 typedef Variable::Storage<AvgExchangeVCardBalance>::ResultsType AvgExchangeResults;
+
+std::vector<std::unique_ptr<PostProcessCommand>> createPostProcess(
+  Data::StudyMode mode,
+  bool adqPatchEnabled,
+  PROBLEME_HEBDO* problemeHebdo,
+  uint thread_number,
+  Data::AreaList& areas,
+  Data::SheddingPolicy sheddingPolicy,
+  Data::SimplexOptimization splxOptimization,
+  Date::Calendar& calendar);
 
 /*!
 ** \brief Compute then random unserved energy cost and the new random hydro virtual cost for all
@@ -111,7 +122,6 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway = false);
 
-
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
@@ -134,8 +144,7 @@ void interpolateWaterValue(const Data::AreaList& areas,
 ** \param areas : the areas of study
 ** \param problem The weekly problem, from the solver
 */
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
-                                   PROBLEME_HEBDO& problem);
+void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Updating the year final reservoir level, to be used as a start for the year.

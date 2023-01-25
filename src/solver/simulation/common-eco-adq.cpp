@@ -38,11 +38,51 @@
 #include <map>
 #include "simulation.h"
 #include "../aleatoire/alea_fonctions.h"
+#include "../optimisation/post_process_commands.h"
 
 using namespace Yuni;
 
 namespace Antares::Solver::Simulation
 {
+std::vector<std::unique_ptr<PostProcessCommand>> createPostProcess(
+  Data::StudyMode mode,
+  bool adqPatchEnabled,
+  PROBLEME_HEBDO* problemeHebdo,
+  uint thread_number,
+  Data::AreaList& areas,
+  Data::SheddingPolicy sheddingPolicy,
+  Data::SimplexOptimization splxOptimization,
+  Date::Calendar& calendar)
+{
+    std::vector<std::unique_ptr<PostProcessCommand>> post_process_list;
+    using namespace Antares::Data;
+    if (mode == stdmEconomy)
+        post_process_list.push_back(
+          std::make_unique<DispatchableMarginPostProcessCmd>(problemeHebdo, thread_number, areas));
+
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo, areas, false, false));
+
+    post_process_list.push_back(std::make_unique<RemixHydroPostProcessCmd>(
+      problemeHebdo, areas, sheddingPolicy, splxOptimization, thread_number));
+
+    if (adqPatchEnabled && mode == stdmEconomy)
+        post_process_list.push_back(std::make_unique<DTGmarginForAdqPatchPostProcessCmd>(
+          problemeHebdo, areas, thread_number));
+
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsUpdatePostProcessCmd>(problemeHebdo, areas, true, false));
+
+    if (mode == stdmEconomy)
+        post_process_list.push_back(
+          std::make_unique<InterpolateWaterValuePostProcessCmd>(problemeHebdo, areas, calendar));
+
+    post_process_list.push_back(
+      std::make_unique<HydroLevelsFinalUpdatePostProcessCmd>(problemeHebdo, areas));
+
+    return post_process_list;
+}
+
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
                                       const std::vector<AvgExchangeResults*>& balance,

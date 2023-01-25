@@ -100,6 +100,15 @@ bool Adequacy::simulationBegin()
                 logs.fatal() << "internal error";
                 return false;
             }
+            // TODO[FOM] [numSpace]
+            postProcessesList_ = createPostProcess(Data::stdmAdequacy,
+                                                   study.parameters.adqPatch.enabled,
+                                                   pProblemesHebdo[numSpace],
+                                                   numSpace,
+                                                   study.areas,
+                                                   study.parameters.shedding.policy,
+                                                   study.parameters.simplexOptimizationRange,
+                                                   study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -170,7 +179,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -220,17 +229,12 @@ bool Adequacy::year(Progression::Task& progression,
             try
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
-
-                RemixHydroForAllAreas(study.areas, 
-                                      *pProblemesHebdo[numSpace],
-                                      study.parameters.shedding.policy,
-                                      study.parameters.simplexOptimizationRange,
-                                      numSpace, 
-                                      hourInTheYear);
-
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
+                // Runs all the post processes (in the list of post-process commands)
+                optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
+                for (auto& cmd : postProcessesList_)
+                {
+                    cmd->execute(opt_runtime_data);
+                }
             }
             catch (Data::AssertionError& ex)
             {
@@ -323,7 +327,8 @@ bool Adequacy::year(Progression::Task& progression,
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+        interpolateWaterValue(
+          study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
         updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 

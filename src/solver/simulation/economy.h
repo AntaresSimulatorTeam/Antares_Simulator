@@ -32,9 +32,9 @@
 #include "../variable/state.h"
 
 #include "../optimisation/base_weekly_optimization.h"
-#include "../optimisation/post_process_command.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
+#include "common-eco-adq.h"
 
 namespace Antares::Solver::Simulation
 {
