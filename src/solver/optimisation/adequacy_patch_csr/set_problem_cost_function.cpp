@@ -65,10 +65,6 @@ void HourlyCSRProblem::setQuadraticCost()
     CorrespondanceVarNativesVarOptim
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
-    std::fill_n(ProblemeAResoudre.CoutQuadratique,
-                ProblemeAResoudre.NombreDeVariables,
-                0.);
-
     // variables: ENS for each area inside adq patch
     // obj function term is: 1 / (PTO) * ENS * ENS
     //  => quadratic cost: 1 / (PTO)

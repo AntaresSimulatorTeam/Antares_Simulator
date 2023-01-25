@@ -233,6 +233,7 @@ void HourlyCSRProblem::setProblemCost()
 {
     logs.debug() << "[CSR] cost";
     std::fill_n(problemeAResoudre_.CoutLineaire, problemeAResoudre_.NombreDeVariables, 0.);
+    std::fill_n(problemeAResoudre_.CoutQuadratique, problemeAResoudre_.NombreDeVariables, 0.);
 
     setQuadraticCost();
     if (problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
