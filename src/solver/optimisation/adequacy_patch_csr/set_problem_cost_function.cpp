@@ -65,9 +65,13 @@ void setQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo,
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
 
+    std::fill_n(ProblemeAResoudre.CoutQuadratique,
+                ProblemeAResoudre.NombreDeVariables,
+                0.);
+
     // variables: ENS for each area inside adq patch
-    // obj function term is: 1 / (PTO * PTO) * ENS * ENS
-    //  => quadratic cost: 1 / (PTO * PTO)
+    // obj function term is: 1 / (PTO) * ENS * ENS
+    //  => quadratic cost: 1 / (PTO)
     //  => linear cost: 0
     // PTO can take two different values according to option:
     //  1. from DENS
