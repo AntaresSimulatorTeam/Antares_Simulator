@@ -60,21 +60,6 @@ static void ResetButton(Component::Button* button, bool value)
     }
 }
 
-static void ResetButtonSpecify(Component::Button* button, bool value)
-{
-    assert(button != NULL);
-    if (value)
-    {
-        button->image("images/16x16/light_green.png");
-        button->caption(wxT("true"));
-    }
-    else
-    {
-        button->image("images/16x16/light_orange.png");
-        button->caption(wxT("false"));
-    }
-}
-
 static void ResetButton(Component::Button* button, Data::GlobalTransmissionCapacities value)
 {
     assert(button != NULL);
