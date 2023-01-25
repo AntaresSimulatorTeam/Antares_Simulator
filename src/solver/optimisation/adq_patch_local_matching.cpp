@@ -45,9 +45,9 @@ static NtcSetToZeroStatus_AdqPatchStep1 SetNTCForAdequacyFirstStepOriginNodeInsi
     {
     case physicalAreaInsideAdqPatch:
     case physicalAreaOutsideAdqPatch:
-        return setToZero;
+        return NtcSetToZeroStatus_AdqPatchStep1::setToZero;
     default:
-        return leaveLocalValues;
+        return NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     }
 }
 
@@ -74,11 +74,13 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZeroNTCfromOutToIn_AdqPatch ? setToZero : setExtremityOriginToZero;
+        return setToZeroNTCfromOutToIn_AdqPatch ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+            : NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
-        return setToZeroNTCfromOutToOut_AdqPatch ? setToZero : leaveLocalValues;
+        return setToZeroNTCfromOutToOut_AdqPatch ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+            : NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     default:
-        return leaveLocalValues;
+        return NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     }
 }
 
@@ -114,7 +116,7 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* Probl
                                                       setToZeroNTCfromOutToIn_AdqPatch,
                                                       setToZeroNTCfromOutToOut_AdqPatch);
     default:
-        return leaveLocalValues;
+        return NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     }
 }
 
@@ -137,19 +139,19 @@ void setNTCbounds(double& Xmax,
 
         switch (ntcToZeroStatusForAdqPatch)
         {
-        case setToZero:
+        case NtcSetToZeroStatus_AdqPatchStep1::setToZero:
         {
             Xmax = 0.;
             Xmin = 0.;
             break;
         }
-        case setOriginExtremityToZero:
+        case NtcSetToZeroStatus_AdqPatchStep1::setOriginExtremityToZero:
         {
             Xmax = 0.;
             Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
             break;
         }
-        case setExtremityOriginToZero:
+        case NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero:
         {
             Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
             Xmin = 0.;

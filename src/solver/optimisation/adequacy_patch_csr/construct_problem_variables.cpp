@@ -103,7 +103,9 @@ void HourlyCSRProblem::constructVariableFlows()
             && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            int algebraicFluxVar, directVar, indirectVar;
+            int algebraicFluxVar;
+            int directVar;
+            int indirectVar;
             algebraicFluxVar
               = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
               = NumberOfVariables;
