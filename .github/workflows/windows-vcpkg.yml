@@ -144,12 +144,6 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
-    - name: Run MPS comparison test
-      shell: bash
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R mps
-
     - name: Upload build on failure
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
@@ -177,6 +171,13 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
         os: ${{ matrix.test-platform }}
 
     - name: Solver archive creation
