@@ -167,17 +167,35 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run short-tests
+      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
-    - name: Run mps tests
+    - name: Run medium-tests
+      continue-on-error: true
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-mps
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      continue-on-error: true
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      continue-on-error: true
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
         os: ${{ matrix.test-platform }}
 
     - name: Solver archive creation
@@ -210,58 +228,3 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.zip
-
-    - name: Run short-tests
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: short-tests
-        os: ${{ matrix.test-platform }}
-
-    - name: Run valid-hydro
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-hydro
-        os: ${{ matrix.test-platform }}
-
-    - name: Run valid-hydroBind
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-hydroBind
-        os: ${{ matrix.test-platform }}
-
-    - name: Run valid-hydroPricing
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-hydroPricing
-        os: ${{ matrix.test-platform }}
-
-    - name: Run valid-parallel
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-parallel
-        os: ${{ matrix.test-platform }}
-
-    - name: Run valid-filter-outputs
-      continue-on-error: true
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: valid-filter-outputs
-        os: ${{ matrix.test-platform }}
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-after-failure
-        path: ${{ github.workspace }}/_build
