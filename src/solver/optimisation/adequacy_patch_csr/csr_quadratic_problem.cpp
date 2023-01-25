@@ -156,20 +156,22 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
             if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                Var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
-                if (Var >= 0)
-                {
-                    Pi[NombreDeTermes] = 1.0;
-                    Colonne[NombreDeTermes] = Var;
-                    NombreDeTermes++;
-                    logs.debug()
-                      << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
-                      << problemeHebdo_->NomsDesPays[Area] << "]-["
-                      << problemeHebdo_
-                           ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
-                      << "]";
-                }
+                Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
+                continue;
+            }
+            Var = CorrespondanceVarNativesVarOptim
+                    ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
+            if (Var >= 0)
+            {
+                Pi[NombreDeTermes] = 1.0;
+                Colonne[NombreDeTermes] = Var;
+                NombreDeTermes++;
+                logs.debug()
+                  << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
+                  << problemeHebdo_->NomsDesPays[Area] << "]-["
+                  << problemeHebdo_
+                       ->NomsDesPays[problemeHebdo_->PaysOrigineDeLInterconnexion[Interco]]
+                  << "]";
             }
             Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
         }
