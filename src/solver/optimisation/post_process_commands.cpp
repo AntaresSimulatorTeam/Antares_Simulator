@@ -22,7 +22,7 @@ DispatchableMarginPostProcessCmd::DispatchableMarginPostProcessCmd(
 {
 }
 
-void DispatchableMarginPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
 
@@ -72,7 +72,7 @@ HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(
 {
 }
 
-void HydroLevelsUpdatePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
 }
@@ -94,7 +94,7 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(
 {
 }
 
-void RemixHydroPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void RemixHydroPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     RemixHydroForAllAreas(area_list_,
@@ -124,7 +124,7 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** */
-void DTGmarginForAdqPatchPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
@@ -170,7 +170,7 @@ InterpolateWaterValuePostProcessCmd::InterpolateWaterValuePostProcessCmd(
 {
 }
 
-void InterpolateWaterValuePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void InterpolateWaterValuePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
     interpolateWaterValue(area_list_, *problemeHebdo_, calendar_, hourInYear);
@@ -188,7 +188,7 @@ HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
 {
 }
 
-void HydroLevelsFinalUpdatePostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
 }
@@ -206,7 +206,7 @@ CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(
 {
 }
 
-void CurtailmentSharingPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
+void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
 {
     unsigned int year = opt_runtime_data.year;
     unsigned int week = opt_runtime_data.week;
@@ -228,9 +228,6 @@ void CurtailmentSharingPostProcessCmd::execute(const struct optRuntimeData& opt_
 
 double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 {
-    double netPositionInit;
-    double densNew;
-    double totalNodeBalance;
     double totalLmrViolation = 0.0;
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
@@ -239,16 +236,14 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
         {
             for (int hour = 0; hour < nbHoursInWeek; hour++)
             {
-                std::tie(netPositionInit, densNew, totalNodeBalance) = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
-
+                const auto [netPositionInit, densNew, totalNodeBalance] = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
-                auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
+                const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-                densNew = std::max(0.0, densNew - dtgMrg);
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = densNew;
+                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] = std::max(0.0, densNew - dtgMrg);;
                 // copy spilled Energy values into spilled Energy values after CSR
                 problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
                     = problemeHebdo_->ResultatsHoraires[Area]

@@ -11,7 +11,7 @@ public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                      unsigned int thread_number,
                                      AreaList& areas);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     unsigned int thread_number_ = 0;
@@ -26,7 +26,7 @@ public:
                                     AreaList& areas,
                                     bool remixWasRun,
                                     bool computeAnyway);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -44,7 +44,7 @@ public:
         SheddingPolicy sheddingPolicy,
         SimplexOptimization simplexOptimization,
         unsigned int thread_number);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -62,7 +62,7 @@ public:
         AreaList& areas, 
         unsigned int thread_number);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -78,7 +78,7 @@ public:
         AreaList& areas,
         const Date::Calendar& calendar);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -92,7 +92,7 @@ public:
         PROBLEME_HEBDO* problemeHebdo,
         AreaList& areas);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     const AreaList& area_list_;
@@ -105,7 +105,7 @@ public:
                                      AreaList& areas, 
                                      unsigned int thread_number);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     double calculateDensNewAndTotalLmrViolation();
