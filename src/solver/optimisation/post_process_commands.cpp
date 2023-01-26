@@ -126,13 +126,12 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** */
 void DTGmarginForAdqPatchPostProcessCmd::execute(const struct optRuntimeData& opt_runtime_data)
 {
-    const int numOfHoursInWeek = 168;
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
             continue;
 
-        for (int hour = 0; hour < numOfHoursInWeek; hour++)
+        for (int hour = 0; hour < nbHoursInWeek; hour++)
         {
             // define access to the required variables
             const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
@@ -212,7 +211,6 @@ void CurtailmentSharingPostProcessCmd::execute(const struct optRuntimeData& opt_
     unsigned int year = opt_runtime_data.year;
     unsigned int week = opt_runtime_data.week;
 
-    // TO DO : move the curtailment sharing post process here
     double totalLmrViolation = calculateDensNewAndTotalLmrViolation();
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
         << ".Total LMR violation:" << totalLmrViolation;
@@ -234,13 +232,12 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
     double densNew;
     double totalNodeBalance;
     double totalLmrViolation = 0.0;
-    const int numOfHoursInWeek = 168;
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
         {
-            for (int hour = 0; hour < numOfHoursInWeek; hour++)
+            for (int hour = 0; hour < nbHoursInWeek; hour++)
             {
                 std::tie(netPositionInit, densNew, totalNodeBalance) = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
 
