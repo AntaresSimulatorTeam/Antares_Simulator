@@ -101,12 +101,20 @@ private:
 class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
 public:
-    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
+    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, 
+                                     AreaList& areas, 
+                                     unsigned int thread_number);
 
     void execute(const struct optRuntimeData& opt_runtime_data) override;
 
 private:
+    double calculateDensNewAndTotalLmrViolation();
+    std::vector<double> calculateENSoverAllAreasForEachHour() const;
+    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
+    std::set<int> getHoursRequiringCurtailmentSharing() const;
+
     const AreaList& area_list_;
+    unsigned int thread_number_ = 0;
 };
 
 } // namespace Antares::Solver::Simulation

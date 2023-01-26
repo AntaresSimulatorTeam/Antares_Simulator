@@ -20,7 +20,8 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
     // Here a post process particular to adq patch
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(
         problemeHebdo_,
-        areas));
+        areas,
+        thread_number_));
     post_process_list.push_back(std::make_unique<HydroLevelsUpdatePostProcessCmd>(
         problemeHebdo_, 
         areas, 

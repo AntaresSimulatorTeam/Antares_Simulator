@@ -36,7 +36,6 @@ class WeeklyOptimization
 {
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
-    virtual void postProcess(Antares::Data::AreaList& areas, uint year, uint week) = 0;
     virtual ~WeeklyOptimization() = default;
     static std::unique_ptr<WeeklyOptimization> create(bool adqPatchEnabled,
                                                                PROBLEME_HEBDO* problemesHebdo,
