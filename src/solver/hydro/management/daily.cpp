@@ -56,7 +56,7 @@ enum
 };
 enum
 {
-    maxDTG = 32
+    maxDailyTargetGen = 32
 };
 
 struct DebugData
@@ -67,7 +67,7 @@ struct DebugData
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
     std::array<double, 366> OPP;
-    std::array<double, 366> DTG;
+    std::array<double, 366> DailyTargetGen;
 
     std::array<double, 365> OVF;
     std::array<double, 365> DEV;
@@ -84,7 +84,7 @@ struct DebugData
     const InflowsType& srcinflows;
     const MaxPowerType& maxP;
     const MaxPowerType& maxE;
-    const double* dtg;
+    const double* dailyTargetGen;
     const ReservoirLevelType& lowLevel;
     const double reservoirCapacity;
 
@@ -94,7 +94,7 @@ struct DebugData
               const InflowsType& srcinflows,
               const MaxPowerType& maxP,
               const MaxPowerType& maxE,
-              const double* dtg,
+              const double* dailyTargetGen,
               const ReservoirLevelType& lowLevel,
               double reservoirCapacity) :
      pWriter(writer),
@@ -103,7 +103,7 @@ struct DebugData
      srcinflows(srcinflows),
      maxP(maxP),
      maxE(maxE),
-     dtg(dtg),
+     dailyTargetGen(dailyTargetGen),
      lowLevel(lowLevel),
      reservoirCapacity(reservoirCapacity)
     {
@@ -126,8 +126,8 @@ struct DebugData
         for (uint day = 0; day != 365; ++day)
         {
             double value = valgen.HydrauliqueModulableQuotidien[day];
-            buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DTG[day] << '\t'
-                   << data.DLE[day] << '\t' << data.DLN[day];
+            buffer << day << '\t' << value << '\t' << OPP[day] << '\t' << DailyTargetGen[day]
+                   << '\t' << data.DLE[day] << '\t' << data.DLN[day];
             buffer << '\n';
         }
         auto buffer_str = buffer.str();
@@ -174,9 +174,9 @@ struct DebugData
                 double niveauFin = valgen.NiveauxReservoirsFinJours[day];
                 double apports = srcinflows[day] / reservoirCapacity;
                 double turbMax = maxP[day] * maxE[day] / reservoirCapacity;
-                double turbCible = dtg[day] / reservoirCapacity;
-                double turbCibleUpdated
-                  = dtg[day] / reservoirCapacity + previousMonthWaste[realmonth] / daysPerMonth;
+                double turbCible = dailyTargetGen[day] / reservoirCapacity;
+                double turbCibleUpdated = dailyTargetGen[day] / reservoirCapacity
+                                          + previousMonthWaste[realmonth] / daysPerMonth;
                 buffer << day << '\t' << '\t' << dayMonth << '\t' << lowLevel[day] * 100 << '\t'
                        << apports * 100 << '\t' << turbMax * 100 << '\t' << turbCible * 100 << '\t'
                        << turbCibleUpdated * 100 << '\t' << '\t' << niveauDeb * 100 << '\t'
@@ -227,7 +227,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
 
     auto& lowLevel = area.hydro.reservoirLevel[Data::PartHydro::minimum];
 
-    double dtg[12 * maxDTG];
+    double dailyTargetGen[12 * maxDailyTargetGen];
 
     uint dayYear = 0;
 
@@ -248,7 +248,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                                                 srcinflows,
                                                 maxP,
                                                 maxE,
-                                                dtg,
+                                                dailyTargetGen,
                                                 lowLevel,
                                                 reservoirCapacity);
     }
@@ -257,7 +257,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
     {
         auto daysPerMonth = study.calendar.months[month].days;
         assert(daysPerMonth <= maxOPP);
-        assert(daysPerMonth <= maxDTG);
+        assert(daysPerMonth <= maxDailyTargetGen);
         assert(daysPerMonth + dayYear - 1 < maxPower.height);
 
         for (uint day = 0; day != daysPerMonth; ++day)
@@ -274,7 +274,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
         dayYear += daysPerMonth;
     }
 
-    if (not area.hydro.useHeuristicTarget)
+    if (!area.hydro.useHeuristicTarget
+        || (area.hydro.useHeuristicTarget && !area.hydro.followLoadModulations))
     {
         dayYear = 0;
         for (uint month = 0; month != 12; ++month)
@@ -282,7 +283,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             auto daysPerMonth = study.calendar.months[month].days;
             for (uint day = 0; day != daysPerMonth; ++day)
             {
-                dtg[dayYear + day] = srcinflows[dayYear + day];
+                dailyTargetGen[dayYear + day] = srcinflows[dayYear + day];
             }
 
             dayYear += daysPerMonth;
@@ -323,9 +324,9 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     for (uint day = 0; day != daysPerMonth; ++day)
                     {
                         auto dYear = day + dayYear;
-                        dtg[dYear] = coeff
-                                     * Math::Power(data.DLE[dYear] / demandMax,
-                                                   area.hydro.interDailyBreakdown);
+                        dailyTargetGen[dYear] = coeff
+                                                * Math::Power(data.DLE[dYear] / demandMax,
+                                                              area.hydro.interDailyBreakdown);
                     }
                 }
                 else
@@ -334,25 +335,25 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                     double coeff = data.MOG[realmonth] / daysPerMonth;
 
                     for (uint day = 0; day != daysPerMonth; ++day)
-                        dtg[day + dayYear] = coeff;
-                }
-            }
-            else
-            {
-                for (uint day = 0; day != daysPerMonth; ++day)
-                    dtg[day + dayYear] = srcinflows[dayYear + day];
-            }
-
-            if (debugData)
-            {
-                for (uint day = 0; day != daysPerMonth; ++day)
-                {
-                    auto dYear = day + dayYear;
-                    debugData->DTG[dYear] = dtg[dYear];
+                        dailyTargetGen[day + dayYear] = coeff;
                 }
             }
 
             dayYear += daysPerMonth;
+        }
+    }
+
+    if (debugData)
+    {
+        for (uint month = 0; month != 12; ++month)
+        {
+            auto daysPerMonth = study.calendar.months[month].days;
+
+            for (uint day = 0; day != daysPerMonth; ++day)
+            {
+                auto dYear = day + dayYear;
+                debugData->DailyTargetGen[dYear] = dailyTargetGen[dYear];
+            }
         }
     }
 
@@ -377,7 +378,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
-                problem.TurbineCible[dayMonth] = dtg[day];
+                problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
 
@@ -457,7 +458,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth]
-                  = (dtg[day] + wasteFromPreviousMonth / daysPerMonth) / reservoirCapacity;
+                  = (dailyTargetGen[day] + wasteFromPreviousMonth / daysPerMonth)
+                    / reservoirCapacity;
 
                 problem.niveauBas[dayMonth] = lowLevel[(day + 1) % 365];
                 problem.apports[dayMonth] = srcinflows[day] / reservoirCapacity;

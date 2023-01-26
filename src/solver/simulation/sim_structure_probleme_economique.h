@@ -279,7 +279,7 @@ typedef struct
     double WeeklyWaterValueStateDown;
 
     char TurbinageEntreBornes;
-
+    char SansHeuristique;
     char SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
@@ -576,7 +576,6 @@ struct PROBLEME_HEBDO
 
     int* NumeroDeContrainteDeSoldeDEchange;
 
-    int* NumeroDeContrainteBorneStockFinal;
     int* NumeroDeContrainteEquivalenceStockFinal;
     int* NumeroDeContrainteExpressionStockFinal;
 
