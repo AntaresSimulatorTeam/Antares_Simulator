@@ -131,7 +131,8 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
             CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[Pdt]
               = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[Pdt];
-
+            if (CaracteristiquesHydrauliques->SansHeuristique == OUI_ANTARES)
+                continue;
             Jour = NumeroDeJourDuPasDeTemps[Pdt];
             PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour];
             PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
@@ -142,13 +143,6 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
             {
                 PmaxHydUplift = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt];
                 PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
-                // The uplifted energy  cannot, throughout the week, exceed the remaining stock
-                if (PmaxHydUplift * double(168)
-                    > CaracteristiquesHydrauliques->NiveauInitialReservoir)
-                {
-                    PmaxHydUplift
-                      = CaracteristiquesHydrauliques->NiveauInitialReservoir / double(168);
-                }
 
                 if (PmaxHydEcretee < PmaxHydUplift)
                     PmaxHydEcretee = PmaxHydUplift;

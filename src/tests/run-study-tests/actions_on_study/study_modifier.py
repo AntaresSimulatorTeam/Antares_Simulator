@@ -19,7 +19,7 @@ class study_modifier:
                                            value=self.new_value,
                                            file_nick_name=self.file_id)
 
-    def rewind(self):
+    def back_to_initial_state(self):
         self.study_input_handler.set_value(variable=self.parameter,
                                            value=self.original_value,
                                            file_nick_name=self.file_id)

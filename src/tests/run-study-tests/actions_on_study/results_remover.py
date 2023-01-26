@@ -4,7 +4,7 @@ from os import remove
 from os.path import isdir, isfile, basename
 
 
-class resuts_remover:
+class results_remover:
     def __init__(self, study_path):
         self.study_path = study_path
 
