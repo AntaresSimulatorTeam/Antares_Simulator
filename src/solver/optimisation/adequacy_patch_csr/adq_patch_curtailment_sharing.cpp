@@ -119,7 +119,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
 void HourlyCSRProblem::calculateCsrParameters()
 {
     double netPositionInit;
-    int hour = hourInWeekTriggeredCsr;
+    int hour = triggeredHour;
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
@@ -161,8 +161,11 @@ void HourlyCSRProblem::allocateProblem()
 
 void HourlyCSRProblem::buildProblemVariables()
 {
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique_CSR(
-      problemeHebdo_, problemeAResoudre_, *this);
+    logs.debug() << "[CSR] variable list:";
+
+    constructVariableENS();
+    constructVariableSpilledEnergy();
+    constructVariableFlows();
 }
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
@@ -173,20 +176,32 @@ void HourlyCSRProblem::buildProblemConstraintsLHS()
 
 void HourlyCSRProblem::setVariableBounds()
 {
-    OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique_CSR(
-      problemeHebdo_, problemeAResoudre_, hourInWeekTriggeredCsr);
+    for (int Var = 0; Var < problemeAResoudre_.NombreDeVariables; Var++)
+        problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
+
+    logs.debug() << "[CSR] bounds";
+    setBoundsOnENS();
+    setBoundsOnSpilledEnergy();
+    setBoundsOnFlows();
 }
 
 void HourlyCSRProblem::buildProblemConstraintsRHS()
 {
-    OPT_InitialiserLeSecondMembreDuProblemeQuadratique_CSR(
-      problemeHebdo_, problemeAResoudre_, *this);
+    logs.debug() << "[CSR] RHS: ";
+    setRHSvalueOnFlows();
+    setRHSnodeBalanceValue();
+    setRHSbindingConstraintsValue();
 }
 
 void HourlyCSRProblem::setProblemCost()
 {
-    OPT_InitialiserLesCoutsQuadratiques_CSR(
-      problemeHebdo_, problemeAResoudre_, hourInWeekTriggeredCsr);
+    logs.debug() << "[CSR] cost";
+    std::fill_n(problemeAResoudre_.CoutLineaire, problemeAResoudre_.NombreDeVariables, 0.);
+    std::fill_n(problemeAResoudre_.CoutQuadratique, problemeAResoudre_.NombreDeVariables, 0.);
+
+    setQuadraticCost();
+    if (problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
+        setLinearCost();
 }
 
 void HourlyCSRProblem::solveProblem(uint week, int year)

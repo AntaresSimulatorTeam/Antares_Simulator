@@ -57,45 +57,44 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int
     else
         return (1. / priceTakingOrders);
 }
+} // namespace
 
-void setQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo,
-                      PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-                      int hour)
+void HourlyCSRProblem::setQuadraticCost()
 {
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    CorrespondanceVarNativesVarOptim
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: ENS for each area inside adq patch
-    // obj function term is: 1 / (PTO * PTO) * ENS * ENS
-    //  => quadratic cost: 1 / (PTO * PTO)
+    // obj function term is: 1 / (PTO) * ENS * ENS
+    //  => quadratic cost: 1 / (PTO)
     //  => linear cost: 0
     // PTO can take two different values according to option:
     //  1. from DENS
     //  2. from load
-    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
-            if (Var >= 0 && Var < ProblemeAResoudre.NombreDeVariables)
+            if (Var >= 0 && Var < problemeAResoudre_.NombreDeVariables)
             {
-                ProblemeAResoudre.CoutQuadratique[Var]
-                  = calculateQuadraticCost(ProblemeHebdo, hour, area);
-                logs.debug() << Var << ". Quad C = " << ProblemeAResoudre.CoutQuadratique[Var];
+                problemeAResoudre_.CoutQuadratique[Var]
+                  = calculateQuadraticCost(problemeHebdo_, triggeredHour, area);
+                logs.debug() << Var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[Var];
             }
         }
     }
 }
 
-void setLinearCost(const PROBLEME_HEBDO* ProblemeHebdo,
-                   PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-                   int hour)
+void HourlyCSRProblem::setLinearCost()
 {
     int Var;
     const COUTS_DE_TRANSPORT* TransportCost;
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[hour];
+    CorrespondanceVarNativesVarOptim
+      = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
 
     // variables: transmission cost for links between nodes of type 2 (area inside adequacy patch)
     // obj function term is: Sum ( hurdle_cost_direct x flow_direct )+ Sum ( hurdle_cost_indirect x
@@ -105,63 +104,47 @@ void setLinearCost(const PROBLEME_HEBDO* ProblemeHebdo,
     // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
     // OUI_ANTARES (use hurdle cost option is true). otherwise these members are zero.
 
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
               != Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            || ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            || problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             continue;
         }
 
-        TransportCost = ProblemeHebdo->CoutDeTransport[Interco];
+        TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        if (Var >= 0 && Var < ProblemeAResoudre.NombreDeVariables)
+        if (Var >= 0 && Var < problemeAResoudre_.NombreDeVariables)
         {
-            ProblemeAResoudre.CoutLineaire[Var] = 0.0;
-            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre.CoutLineaire[Var];
+            problemeAResoudre_.CoutLineaire[Var] = 0.0;
+            logs.debug() << Var << ". Linear C = " << problemeAResoudre_.CoutLineaire[Var];
         }
         // direct / indirect flow
         Var = CorrespondanceVarNativesVarOptim
-            ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-        if (Var >= 0 && Var < ProblemeAResoudre.NombreDeVariables)
+                ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < problemeAResoudre_.NombreDeVariables)
         {
             if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
-                ProblemeAResoudre.CoutLineaire[Var] = 0;
+                problemeAResoudre_.CoutLineaire[Var] = 0;
             else
-                ProblemeAResoudre.CoutLineaire[Var]
-                    = TransportCost->CoutDeTransportOrigineVersExtremite[hour];
-            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre.CoutLineaire[Var];
+                problemeAResoudre_.CoutLineaire[Var]
+                  = TransportCost->CoutDeTransportOrigineVersExtremite[triggeredHour];
+            logs.debug() << Var << ". Linear C = " << problemeAResoudre_.CoutLineaire[Var];
         }
 
         Var = CorrespondanceVarNativesVarOptim
-            ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-        if (Var >= 0 && Var < ProblemeAResoudre.NombreDeVariables)
+                ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
+        if (Var >= 0 && Var < problemeAResoudre_.NombreDeVariables)
         {
             if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
-                ProblemeAResoudre.CoutLineaire[Var] = 0;
+                problemeAResoudre_.CoutLineaire[Var] = 0;
             else
-                ProblemeAResoudre.CoutLineaire[Var]
-                    = TransportCost->CoutDeTransportExtremiteVersOrigine[hour];
-            logs.debug() << Var << ". Linear C = " << ProblemeAResoudre.CoutLineaire[Var];
+                problemeAResoudre_.CoutLineaire[Var]
+                  = TransportCost->CoutDeTransportExtremiteVersOrigine[triggeredHour];
+            logs.debug() << Var << ". Linear C = " << problemeAResoudre_.CoutLineaire[Var];
         }
     }
-}
-}
-
- 
-void OPT_InitialiserLesCoutsQuadratiques_CSR(const PROBLEME_HEBDO* ProblemeHebdo,
-                                             PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
-                                             int hour)
-{
-    logs.debug() << "[CSR] cost";
-    std::fill_n(ProblemeAResoudre.CoutLineaire,
-                ProblemeAResoudre.NombreDeVariables,
-                0.);
-
-    setQuadraticCost(ProblemeHebdo, ProblemeAResoudre, hour);
-    if (ProblemeHebdo->adqPatchParams->IncludeHurdleCostCsr)
-        setLinearCost(ProblemeHebdo, ProblemeAResoudre, hour);
 }
