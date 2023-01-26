@@ -110,14 +110,14 @@ const char* VersionToCStr(const Version v)
         return "8.1";
     case version800:
         return "8.0";
+
+    // older versions
     case version720:
         return "7.2";
     case version710:
         return "7.1";
     case version700:
         return "7.0";
-
-    // older versions
     case version650:
         return "6.5";
     case version640:
@@ -197,14 +197,14 @@ const wchar_t* VersionToWStr(const Version v)
         return L"8.1";
     case version800:
         return L"8.0";
+
+    // older versions
     case version720:
         return L"7.2";
     case version710:
         return L"7.1";
     case version700:
         return L"7.0";
-
-    // older versions
     case version650:
         return L"6.5";
     case version640:
@@ -282,6 +282,8 @@ Version VersionIntToVersion(uint version)
         return version810;
     case 800:
         return version800;
+
+    // older versions
     case 720:
         return version720;
     case 710:
