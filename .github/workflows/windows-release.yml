@@ -98,7 +98,7 @@ jobs:
         ortools-dir: ${{env.ORTOOLS_DIR}}
 
     - name: Install pip dependencies if necessary
-      run: pip install -r src/tests/examples/requirements.txt
+      run: pip install -r tests/examples/requirements.txt
 
     # TODO : don't download submodule Antares_Simulator_Tests
     - name: Init submodule
@@ -135,7 +135,7 @@ jobs:
     # TODO : don't download submodule Antares_Simulator_Tests
     - name: Remove Antares_Simulator_Tests to free some disk space
       shell: bash
-      run: rm -rf ${{ github.workspace }}/src/tests/resources/Antares_Simulator_Tests
+      run: rm -rf ${{ github.workspace }}/tests/resources/Antares_Simulator_Tests
 
     - name: Remove _deps to free some disk space
       shell: bash
@@ -194,8 +194,8 @@ jobs:
     - name: NSIS Installer creation
       shell: bash
       run: |
-           rm -rf src/tests/resources/Antares_Simulator_Tests
-           rm -rf src/tests/resources/NonRegTests
+           rm -rf tests/resources/Antares_Simulator_Tests
+           rm -rf tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)

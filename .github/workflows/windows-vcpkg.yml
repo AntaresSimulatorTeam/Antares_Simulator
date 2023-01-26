@@ -101,7 +101,7 @@ jobs:
         python-version: '3.11'
 
     - name: Install pip dependencies if necessary
-      run: pip install -r src/tests/examples/requirements.txt
+      run: pip install -r tests/examples/requirements.txt
 
     - name: Init submodule
       run: |
@@ -140,7 +140,7 @@ jobs:
     - name: Run kirchhoff-constraint-tests
       shell: bash
       run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
+           tar xvf tests/kirchhoff-cbuilder/reference.tar.gz -C tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
@@ -149,7 +149,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: MPS-diff
-        path: ${{ github.workspace }}/src/tests/mps
+        path: ${{ github.workspace }}/tests/mps
 
     # simtest
     - name: Read simtest version
@@ -189,8 +189,8 @@ jobs:
     - name: NSIS Installer creation
       shell: bash
       run: |
-           rm -rf src/tests/resources/Antares_Simulator_Tests
-           rm -rf src/tests/resources/NonRegTests
+           rm -rf tests/resources/Antares_Simulator_Tests
+           rm -rf tests/resources/NonRegTests
            cd _build
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)

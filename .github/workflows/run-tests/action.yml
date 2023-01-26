@@ -17,7 +17,7 @@ runs:
   - id: download-extract
     shell: bash
     run: |
-           cd src/tests/resources/batches
+           cd tests/resources/batches
            wget -q https://github.com/AntaresSimulatorTeam/SimTest/releases/download/${{ inputs.simtest-tag }}/${{ inputs.batch-name }}-${{ inputs.os }}.zip -O batch.zip
            unzip -q batch.zip
            rm batch.zip
@@ -33,5 +33,5 @@ runs:
   - name: Clean batches
     shell: bash
     run: |
-           rm -rf src/tests/resources/batches/*
+           rm -rf tests/resources/batches/*
            (exit ${{env.RET_CODE}})

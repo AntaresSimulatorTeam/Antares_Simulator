@@ -39,7 +39,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-          pip3 install -r src/tests/examples/requirements.txt
+          pip3 install -r tests/examples/requirements.txt
 
     - name: Configure
       run: |

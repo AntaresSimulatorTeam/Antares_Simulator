@@ -83,12 +83,12 @@ jobs:
     - name: Install dependencies
       run: |
           python -m pip install --upgrade pip
-          pip3 install -r src/tests/examples/requirements.txt
+          pip3 install -r tests/examples/requirements.txt
 
     - name: Init submodule
       run: |
           git submodule update --init src/antares-deps
-          git submodule update --init src/tests/resources/Antares_Simulator_Tests
+          git submodule update --init tests/resources/Antares_Simulator_Tests
 
     - name: Configure push
       run: |
@@ -120,7 +120,7 @@ jobs:
     - name: Run kirchhoff constraints tests
       shell: bash
       run: |
-           tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
+           tar xvf tests/kirchhoff-cbuilder/reference.tar.gz -C tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
