@@ -97,7 +97,9 @@ const char* VersionToCStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return ">8.4";
+        return ">8.5";
+    case version850:
+        return "8.5";
     case version840:
         return "8.4";
     case version830:
@@ -182,7 +184,9 @@ const wchar_t* VersionToWStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return L">8.3";
+        return L">8.5";
+    case version850:
+        return L"8.5";
     case version840:
         return L"8.4";
     case version830:
@@ -266,6 +270,8 @@ Version VersionIntToVersion(uint version)
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
+    case 850:
+        return version850;
     case 840:
         return version840;
     case 830:
