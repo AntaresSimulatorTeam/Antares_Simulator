@@ -43,7 +43,7 @@ using namespace Yuni;
 namespace Antares::Solver::Simulation
 {
 template<uint step>
-static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear)
+static bool Remix(const Data::Study& study, PROBLEME_HEBDO& problem, uint numSpace, uint hourInYear)
 {
     double HE[168];
 
@@ -55,7 +55,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
 
     bool status = true;
 
-    areas.each([&](const Data::Area& area) {
+    study.areas.each([&](const Data::Area& area) {
         auto index = area.index;
 
         auto& weeklyResults = *(problem.ResultatsHoraires[index]);
@@ -208,31 +208,27 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
     return status;
 }
 
-void RemixHydroForAllAreas(const Data::AreaList& areas,
+void RemixHydroForAllAreas(const Data::Study& study,
                            PROBLEME_HEBDO& problem,
-                           Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization simplexOptimizationRange,
                            uint numSpace,
-                           uint hourInYear)
+                           uint hourInYear,
+                           uint nbHour)
 {
-    // gp : useless ==> we remove it
-    // assert(nbHour == 168 && "endHour seems invalid");
-    // (void)nbHour;
-    
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
+    assert(nbHour == 168 && "endHour seems invalid");
+    (void)nbHour;
+    assert(study.parameters.mode != Data::stdmAdequacyDraft);
 
-    if (sheddingPolicy == Data::shpShavePeaks)
+    if (study.parameters.shedding.policy == Data::shpShavePeaks)
     {
         bool result = true;
 
-        switch (simplexOptimizationRange)
+        switch (study.parameters.simplexOptimizationRange)
         {
         case Data::sorWeek:
-            result = Remix<168>(areas, problem, numSpace, hourInYear);
+            result = Remix<168>(study, problem, numSpace, hourInYear);
             break;
         case Data::sorDay:
-            result = Remix<24>(areas, problem, numSpace, hourInYear);
+            result = Remix<24>(study, problem, numSpace, hourInYear);
             break;
         case Data::sorUnknown:
             logs.fatal() << "invalid simplex optimization range";

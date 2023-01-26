@@ -65,4 +65,14 @@ double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
                                             AreaList& areas,
                                             uint numSpace);
+
+/*!
+** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
+** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
+** **
+** ** \param study The Antares study
+** ** \param problem The weekly problem, from the solver
+** ** \return
+** */
+void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
 } // namespace Antares::Data::AdequacyPatch

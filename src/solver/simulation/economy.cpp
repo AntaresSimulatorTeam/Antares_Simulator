@@ -90,7 +90,6 @@ bool Economy::simulationBegin()
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
-        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
 
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
@@ -109,14 +108,6 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatch.enabled,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
-                                                 pProblemesHebdo[numSpace],
-                                                 numSpace,
-                                                 study.areas,
-                                                 study.parameters.shedding.policy,
-                                                 study.parameters.simplexOptimizationRange,
-                                                 study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -173,14 +164,24 @@ bool Economy::year(Progression::Task& progression,
         {
             weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
 
-            // Runs all the post processes (in the list of post-process commands)
-            optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-            postProcessesList_[numSpace]->runAll(opt_runtime_data);
+            DispatchableMarginForAllAreas(
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
 
-            // In case of adq patch optimization, the following instruction solves hourly problems of curtailement sharing.
-            // In case of default weekly optimization, it does nothing.
-            // We need to move this post process (CSR) in the list of post-process commands.
             weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
+
+            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+
+            RemixHydroForAllAreas(
+              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+
+            Antares::Data::AdequacyPatch::adqPatchPostProcess(study, *pProblemesHebdo[numSpace], numSpace);
+
+            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+
+            interpolateWaterValue(
+              study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
+
+            updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -246,7 +247,7 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);

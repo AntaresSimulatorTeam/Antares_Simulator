@@ -88,16 +88,16 @@ void ComputeFlowQuad(Data::Study& study,
 /*!
 ** \brief Hydro Remix
 **
-** \param areas : the areas of study
+** \param study The Antares study
 ** \param problem The weekly problem, from the solver
 ** \param hourInYear The hour in the year of the first hour in the current week
+** \param nbHours The number of hour for a week
 */
-void RemixHydroForAllAreas(const Data::AreaList& areas,
+void RemixHydroForAllAreas(const Data::Study& study,
                            PROBLEME_HEBDO& problem,
-                           Data::SheddingPolicy sheddingPolicy,
-                           Data::SimplexOptimization splxOptimization,
                            uint numSpace,
-                           uint hourInYear);
+                           uint hourInYear,
+                           uint nbHours);
 
 /*
 ** \brief Computing levels from hydro generation, natural and pumping inflows
@@ -106,49 +106,65 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
 *heuristic
 ** If hydro remix was done, levels are computed only for areas for which we use the heuristic
 */
-void computingHydroLevels(const Data::AreaList& areas,
+void computingHydroLevels(const Data::Study& study,
                           PROBLEME_HEBDO& problem,
+                          uint nbHoursInAWeek,
                           bool remixWasRun,
                           bool computeAnyway = false);
 
+/*!
+** \brief Calculate the Dispatchable margin for all areas
+**
+** \param study The Antares study
+** \param problem The weekly problem, from the solver
+** \param hourInYear The hour in the year of the first hour in the current week
+** \param nbHours The number of hour for a week
+*/
+void DispatchableMarginForAllAreas(const Data::Study& study,
+                                   PROBLEME_HEBDO& problem,
+                                   uint numSpace,
+                                   uint hourInYear);
 
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
-** \param areas : the areas of study
+** \param study The Antares study
 ** \param problem The weekly problem, from the solver
 *point of weekly simulation)
 ** \param hourInYear The hour in the year of the first hour in the current week
+** \param nbHoursInAWeek Number of hours in a week
 **
 ** For any hour, the computed water values are related to the beginning of the hour, not the end.
 */
-void interpolateWaterValue(const Data::AreaList& areas,
+void interpolateWaterValue(const Data::Study& study,
                            PROBLEME_HEBDO& problem,
-                           const Date::Calendar& calendar,
-                           int hourInTheYear);
+                           int hourInTheYear,
+                           uint nbHoursInAWeek);
 
 /*
 ** \brief Updating the weekly simulation final reservoir level, to be used as a start for the next
 *week.
 **
-** \param areas : the areas of study
+** \param study The Antares study
 ** \param problem The weekly problem, from the solver
+** \param nbHoursInAWeek Number of hours in a week
 */
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
-                                   PROBLEME_HEBDO& problem);
+void updatingWeeklyFinalHydroLevel(const Data::Study& study,
+                                   PROBLEME_HEBDO& problem,
+                                   uint nbHoursInAWeek);
 
 /*
 ** \brief Updating the year final reservoir level, to be used as a start for the year.
 **
-** \param areas : the areas of study
+** \param study The Antares study
 ** \param problem The weekly problem, living over the whole simuation.
 */
-void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Compute the weighted average NTC for a link
 **
-** \param areas : the areas of study
+** \param study The Antares study
 ** \param link The link
 ** \param Weighted average NTC for the direct direction
 ** \param Weighted average NTC for the indirect direction
