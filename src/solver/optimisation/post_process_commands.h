@@ -4,7 +4,6 @@
 
 namespace Antares::Solver::Simulation
 {
-
 class DispatchableMarginPostProcessCmd : public basePostProcessCommand
 {
 public:
@@ -17,7 +16,6 @@ private:
     unsigned int thread_number_ = 0;
     const AreaList& area_list_;
 };
-
 
 class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
 {
@@ -34,16 +32,14 @@ private:
     bool computeAnyway_ = false;
 };
 
-
 class RemixHydroPostProcessCmd : public basePostProcessCommand
 {
 public:
-    RemixHydroPostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas,
-        SheddingPolicy sheddingPolicy,
-        SimplexOptimization simplexOptimization,
-        unsigned int thread_number);
+    RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                             AreaList& areas,
+                             SheddingPolicy sheddingPolicy,
+                             SimplexOptimization simplexOptimization,
+                             unsigned int thread_number);
     void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
@@ -53,14 +49,12 @@ private:
     SimplexOptimization splx_optimization_;
 };
 
-
 class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
-{  
+{
 public:
-    DTGmarginForAdqPatchPostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas, 
-        unsigned int thread_number);
+    DTGmarginForAdqPatchPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                       AreaList& areas,
+                                       unsigned int thread_number);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -69,14 +63,12 @@ private:
     unsigned int thread_number_ = 0;
 };
 
-
 class InterpolateWaterValuePostProcessCmd : public basePostProcessCommand
 {
 public:
-    InterpolateWaterValuePostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo, 
-        AreaList& areas,
-        const Date::Calendar& calendar);
+    InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                        AreaList& areas,
+                                        const Date::Calendar& calendar);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -88,9 +80,7 @@ private:
 class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
 {
 public:
-    HydroLevelsFinalUpdatePostProcessCmd(
-        PROBLEME_HEBDO* problemeHebdo,
-        AreaList& areas);
+    HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
 
@@ -101,8 +91,8 @@ private:
 class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
 public:
-    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, 
-                                     AreaList& areas, 
+    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                     AreaList& areas,
                                      unsigned int thread_number);
 
     void execute(const optRuntimeData& opt_runtime_data) override;
