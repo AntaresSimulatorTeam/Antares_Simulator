@@ -114,42 +114,6 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* Prob
     }
 }
 
-void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace)
-{
-    if (!study.parameters.adqPatch.enabled)
-        return;
-
-    const int numOfHoursInWeek = 168;
-    for (int Area = 0; Area < problem.NombreDePays; Area++)
-    {
-        if (problem.adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
-            continue;
-
-        for (int hour = 0; hour < numOfHoursInWeek; hour++)
-        {
-            // define access to the required variables
-            const auto& scratchpad = *(study.areas[Area]->scratchpad[numSpace]);
-            double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
-
-            auto& hourlyResults = *(problem.ResultatsHoraires[Area]);
-            double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
-            double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
-            double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
-            // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
-            {
-                dtgMrgCsr = std::max(0.0, dtgMrg - ens);
-                ens = std::max(0.0, ens - dtgMrg);
-                // set MRG PRICE to value of unsupplied energy cost, if LOLD=1.0 (ENS>0.5)
-                if (ens > 0.5)
-                    mrgCost = -study.areas[Area]->thermal.unsuppliedEnergyCost;
-            }
-            else
-                dtgMrgCsr = dtgMrg;
-        }
-    }
-}
-
 } // namespace Antares::Data::AdequacyPatch
 
 void HourlyCSRProblem::calculateCsrParameters()
