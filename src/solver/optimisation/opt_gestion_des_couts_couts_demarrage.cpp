@@ -40,7 +40,7 @@
 
 #include "spx_constantes_externes.h"
 
-void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHebdo,
+void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo,
                                                      const int PremierPdtDeLIntervalle,
                                                      const int DernierPdtDeLIntervalle)
 {
@@ -55,17 +55,17 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHeb
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     CoutLineaire = ProblemeAResoudre->CoutLineaire;
 
     for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
          PdtHebdo++, PdtJour++)
     {
-        CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
+        CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
 
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
             for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
             {

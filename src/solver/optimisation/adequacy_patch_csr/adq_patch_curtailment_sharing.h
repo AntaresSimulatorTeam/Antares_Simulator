@@ -43,26 +43,26 @@ const int defaultValueThresholdVarBoundsRelaxation = 3;
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
  * given area and hour.
  */
-std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
                                                             int Area,
                                                             int hour);
 
 /*!
  * Calculate total local matching rule violation per one area, per one hour.
  */
-double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
+double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
                             int Area,
                             int hour);
 
 /*!
  * Calculate densNew values for all hours and areas inside adequacy patch and places them into
- * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
  * copy-pastes spilled Energy values into spilled Energy values after CSR
  * calculates total LMR violations and LMR violations per area per hour inside
- * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
+ * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo,
                                             AreaList& areas,
                                             uint numSpace);
 } // namespace Antares::Data::AdequacyPatch

@@ -37,19 +37,19 @@
 
 namespace
 {
-double calculateQuadraticCost(const PROBLEME_HEBDO* ProblemeHebdo, int hour, int area)
+double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, int hour, int area)
 {
     double priceTakingOrders = 0.0; // PTO
-    if (ProblemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    if (problemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
     {
         priceTakingOrders
-          = ProblemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
-            + ProblemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
+          = problemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
+            + problemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
     }
-    else if (ProblemeHebdo->adqPatchParams->PriceTakingOrder
+    else if (problemeHebdo->adqPatchParams->PriceTakingOrder
              == Data::AdequacyPatch::AdqPatchPTO::isDens)
     {
-        priceTakingOrders = ProblemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+        priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
     }
 
     if (priceTakingOrders <= 0.0)

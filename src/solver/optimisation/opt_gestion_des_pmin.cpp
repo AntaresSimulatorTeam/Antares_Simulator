@@ -37,7 +37,7 @@
 
 #define ZERO 1.e-2
 
-void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Palier;
@@ -48,11 +48,11 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* ProblemeHebdo)
     double* PuissanceMinDuPalierThermique_SV;
     int NombreDePasDeTempsProblemeHebdo;
 
-    NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTempsRef;
+    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
         for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {

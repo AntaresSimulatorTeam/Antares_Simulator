@@ -95,7 +95,7 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     return (Cout);
 }
 
-void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Palier;
@@ -123,14 +123,14 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     int* minUpDownTime;
 
-    NombreDePasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
-    NbGrpCourbeGuide = ProblemeHebdo->NbGrpCourbeGuide;
-    NbGrpOpt = ProblemeHebdo->NbGrpOpt;
+    NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
+    NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+    NbGrpOpt = problemeHebdo->NbGrpOpt;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
-        ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
         TailleUnitaireDUnGroupeDuPalierThermique

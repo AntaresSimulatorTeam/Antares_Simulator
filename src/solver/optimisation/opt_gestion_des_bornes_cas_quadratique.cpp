@@ -42,7 +42,7 @@
 
 using namespace Yuni;
 
-void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo,
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo,
                                                                int PdtHebdo)
 {
     int Interco;
@@ -52,15 +52,15 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* P
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
         ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
 
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
+    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
         ProblemeAResoudre->Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
