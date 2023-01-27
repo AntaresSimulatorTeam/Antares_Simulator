@@ -8,7 +8,7 @@ endif(MSVC)
 
 
 include("cmake/infeasible-problem-analysis.cmake")
-include("cmake/writer.cmake")
+add_subdirectory(writer)
 include("cmake/solver.cmake")
 include("cmake/hydro.cmake")
 include("cmake/main.cmake")
