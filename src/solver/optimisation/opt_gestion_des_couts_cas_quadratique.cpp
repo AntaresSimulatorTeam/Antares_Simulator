@@ -36,7 +36,7 @@
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
     int Interco;
-    int Var;
+    int var;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -51,9 +51,9 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
 
     for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            ProblemeAResoudre->CoutQuadratique[Var]
+        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+            ProblemeAResoudre->CoutQuadratique[var]
               = ValeursDeResistances->ResistanceApparente[Interco];
     }
 }

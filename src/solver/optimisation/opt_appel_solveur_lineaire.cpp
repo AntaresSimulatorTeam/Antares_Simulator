@@ -100,7 +100,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          const int optimizationNumber,
                          std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
-    int Var;
+    int var;
     int Cnt;
     double* pt;
     char PremierPassage;
@@ -317,17 +317,17 @@ RESOLUTION:
         }
         CoutOpt = 0.0;
 
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++)
         {
-            CoutOpt += ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];
+            CoutOpt += ProblemeAResoudre->CoutLineaire[var] * ProblemeAResoudre->X[var];
 
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var];
             if (pt != nullptr)
-                *pt = ProblemeAResoudre->X[Var];
+                *pt = ProblemeAResoudre->X[var];
 
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[var];
             if (pt != nullptr)
-                *pt = ProblemeAResoudre->CoutsReduits[Var];
+                *pt = ProblemeAResoudre->CoutsReduits[var];
         }
 
         if (optimizationNumber == PREMIERE_OPTIMISATION)

@@ -97,24 +97,24 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
 void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                HourlyCSRProblem& hourlyCsrProblem)
 {
-    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
+    for (int var = 0; var < ProblemeAResoudre.NombreDeVariables; var++)
     {
-        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
+        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(var)
                      != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
-        bool belowLimit = ProblemeAResoudre.X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
+        bool belowLimit = ProblemeAResoudre.X[var] < hourlyCsrProblem.belowThisThresholdSetToZero;
         if (inSet && belowLimit)
-            ProblemeAResoudre.X[Var] = 0.0;
+            ProblemeAResoudre.X[var] = 0.0;
     }
 }
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
+    for (int var = 0; var < ProblemeAResoudre.NombreDeVariables; var++)
     {
-        if (double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var]; pt)
-            *pt = ProblemeAResoudre.X[Var];
+        if (double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]; pt)
+            *pt = ProblemeAResoudre.X[var];
 
-        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
+        logs.debug() << "[CSR] X[" << var << "] = " << ProblemeAResoudre.X[var];
     }
 }
 
@@ -177,29 +177,29 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
 
         if (Probleme.X[i] >= 0)
         {
-            const int VarDirect = itLink->second.directVar;
-            if (VarDirect < 0)
+            const int varDirect = itLink->second.directVar;
+            if (varDirect < 0)
             {
                 logs.warning() << "VarDirect < 0 detected, this should not happen";
                 continue;
             }
-            cost += Probleme.X[i] * Probleme.CoutLineaire[VarDirect];
+            cost += Probleme.X[i] * Probleme.CoutLineaire[varDirect];
             logs.debug() << "X+: " << Probleme.X[i] * 1e3;
-            logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[varDirect] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
         else
         {
-            const int VarIndirect = itLink->second.indirectVar;
-            if (VarIndirect < 0)
+            const int varIndirect = itLink->second.indirectVar;
+            if (varIndirect < 0)
             {
                 logs.warning() << "VarIndirect < 0 detected, this should not happen";
                 continue;
 
             }
-            cost -= Probleme.X[i] * Probleme.CoutLineaire[VarIndirect];
+            cost -= Probleme.X[i] * Probleme.CoutLineaire[varIndirect];
             logs.debug() << "X-: " << Probleme.X[i] * 1e3;
-            logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[varIndirect] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
     }
@@ -228,13 +228,13 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
         int ilMax = il + Probleme.NombreDeTermesDesLignes[Cnt];
         for (; il < ilMax; ++il)
         {
-            int Var = Probleme.IndicesColonnes[il];
+            int var = Probleme.IndicesColonnes[il];
             logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
                                      Probleme.CoefficientsDeLaMatriceDesContraintes[il],
-                                     Var,
-                                     Probleme.Xmin[Var],
-                                     Probleme.Xmax[Var],
-                                     Probleme.TypeDeVariable[Var]);
+                                     var,
+                                     Probleme.Xmin[var],
+                                     Probleme.Xmax[var],
+                                     Probleme.TypeDeVariable[var]);
         }
     }
 }

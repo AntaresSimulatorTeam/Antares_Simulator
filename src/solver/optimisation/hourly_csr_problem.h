@@ -41,12 +41,12 @@ private:
     void allocateProblem();
     void resetProblem();
 
-    // Variable construction
+    // variable construction
     void constructVariableENS();
     void constructVariableSpilledEnergy();
     void constructVariableFlows();
 
-    // Variable bounds
+    // variable bounds
     void setBoundsOnENS();
     void setBoundsOnSpilledEnergy();
     void setBoundsOnFlows();

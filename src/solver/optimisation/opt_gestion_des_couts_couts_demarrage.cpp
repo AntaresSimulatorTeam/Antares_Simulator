@@ -47,7 +47,7 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
     int PdtJour;
     int Pays;
     int Palier;
-    int Var;
+    int var;
     int Index;
     int PdtHebdo;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
@@ -72,33 +72,33 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                 Palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[Var]
+                    CoutLineaire[var]
                       = PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index];
                 }
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[Var]
+                    CoutLineaire[var]
                       = PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index];
                 }
 
-                Var
+                var
                   = CorrespondanceVarNativesVarOptim
                       ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-                    CoutLineaire[Var] = 0;
+                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    CoutLineaire[var] = 0;
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
-                if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
+                if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
-                    CoutLineaire[Var]
+                    CoutLineaire[var]
                       = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
                 }
             }
