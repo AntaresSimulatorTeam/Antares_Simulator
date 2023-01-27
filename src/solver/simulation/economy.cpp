@@ -173,14 +173,9 @@ bool Economy::year(Progression::Task& progression,
         {
             weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
 
-            // Runs all the post processes (in the list of post-process commands)
+            // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
             postProcessesList_[numSpace]->runAll(opt_runtime_data);
-
-            // In case of adq patch optimization, the following instruction solves hourly problems of curtailement sharing.
-            // In case of default weekly optimization, it does nothing.
-            // We need to move this post process (CSR) in the list of post-process commands.
-            weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
