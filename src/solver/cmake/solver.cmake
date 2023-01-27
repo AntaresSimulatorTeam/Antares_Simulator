@@ -99,4 +99,11 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver infeasible_problem_analysis)
+target_link_libraries(libmodel_antares
+		PUBLIC
+		libantares-core
+		ortools::ortools
+		sirius_solver
+		infeasible_problem_analysis
+		libantares-solver-simulation
+		)
