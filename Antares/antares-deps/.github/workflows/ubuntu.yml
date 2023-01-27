@@ -1,0 +1,41 @@
+name: Ubuntu CI
+
+on:
+  push:
+    branches:
+      - main
+      - feature/*
+      - features/*
+      - fix/*
+jobs:
+
+  build:
+
+    runs-on: ${{ matrix.os }}
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    strategy:
+      matrix:
+        os: [ubuntu-20.04]
+        buildtype: [Release,Debug]
+        include:
+          - system_build: OFF
+
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install libraries
+      run: |
+           sudo apt-get update --fix-missing
+           sudo apt-get install libuuid1 uuid-dev libssh2-1 libssh2-1-dev libidn2-0 libidn2-dev libidn11 libidn11-dev gtk2.0 libb64-dev 
+    
+    - name: Configure and build
+      run: |
+           cmake -B _build -S . -DBUILD_not_system=ON -DBUILD_system=${{ matrix.system_build }} -DCMAKE_BUILD_TYPE=${{ matrix.buildtype }} -DDEPS_INSTALL_DIR=rte-antares-deps-${{ matrix.buildtype }}
+           
+    - name: Archive upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: antares-deps-${{ matrix.os }}-${{ matrix.buildtype }}
+        path: |
+          rte-antares-deps-${{ matrix.buildtype }}
+
