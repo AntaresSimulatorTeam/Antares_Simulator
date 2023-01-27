@@ -43,7 +43,7 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHebdo,
+void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                      int PremierPdtDeLIntervalle,
                                                      int DernierPdtDeLIntervalle,
                                                      int NumeroDeLIntervalle,
@@ -81,27 +81,27 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES* CorrespondanceCntNativesCntOptimJournalieres;
     CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES* CorrespondanceCntNativesCntOptimHebdomadaires;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     SecondMembre = ProblemeAResoudre->SecondMembre;
 
     AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
-    NumeroDeJourDuPasDeTemps = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
-    NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-    NumeroDeContrainteEnergieHydraulique = ProblemeHebdo->NumeroDeContrainteEnergieHydraulique;
+    NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
+    NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
+    NumeroDeContrainteEnergieHydraulique = problemeHebdo->NumeroDeContrainteEnergieHydraulique;
     NumeroDeContrainteMinEnergieHydraulique
-      = ProblemeHebdo->NumeroDeContrainteMinEnergieHydraulique;
+      = problemeHebdo->NumeroDeContrainteMinEnergieHydraulique;
     NumeroDeContrainteMaxEnergieHydraulique
-      = ProblemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
-    NumeroDeContrainteMaxPompage = ProblemeHebdo->NumeroDeContrainteMaxPompage;
-    NombreDePasDeTempsDUneJournee = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+      = problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
+    NumeroDeContrainteMaxPompage = problemeHebdo->NumeroDeContrainteMaxPompage;
+    NombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
 
     DefaillanceNegativeUtiliserConsoAbattue
-      = ProblemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
+      = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
     DefaillanceNegativeUtiliserPMinThermique
-      = ProblemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
+      = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
 
     for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
     {
@@ -113,25 +113,25 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     for (PdtJour = 0, PdtHebdo = PremierPdtDeLIntervalle; PdtHebdo < DernierPdtDeLIntervalle;
          PdtHebdo++, PdtJour++)
     {
-        CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
+        CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
 
-        ConsommationsAbattues = ProblemeHebdo->ConsommationsAbattues[PdtHebdo];
-        AllMustRunGeneration = ProblemeHebdo->AllMustRunGeneration[PdtHebdo];
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[PdtHebdo];
+        AllMustRunGeneration = problemeHebdo->AllMustRunGeneration[PdtHebdo];
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
             Cnt = CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[Pays];
             SecondMembre[Cnt] = -ConsommationsAbattues->ConsommationAbattueDuPays[Pays];
 
-            bool reserveJm1 = (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
+            bool reserveJm1 = (problemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES);
             bool opt1 = (optimizationNumber == PREMIERE_OPTIMISATION);
             if (reserveJm1 && opt1)
             {
                 SecondMembre[Cnt]
-                  -= ProblemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
+                  -= problemeHebdo->ReserveJMoins1[Pays]->ReserveHoraireJMoins1[PdtHebdo];
             }
 
             AdresseDuResultat
-              = &(ProblemeHebdo->ResultatsHoraires[Pays]->CoutsMarginauxHoraires[PdtHebdo]);
+              = &(problemeHebdo->ResultatsHoraires[Pays]->CoutsMarginauxHoraires[PdtHebdo]);
             AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
 
             Cnt = CorrespondanceCntNativesCntOptim
@@ -155,21 +155,21 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
 
             if (DefaillanceNegativeUtiliserPMinThermique[Pays] == 0)
             {
-                SecondMembre[Cnt] -= OPT_SommeDesPminThermiques(ProblemeHebdo, Pays, PdtHebdo);
+                SecondMembre[Cnt] -= OPT_SommeDesPminThermiques(problemeHebdo, Pays, PdtHebdo);
             }
 
             AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
         }
 
-        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+        for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
         {
-            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
                 Cnt = CorrespondanceCntNativesCntOptim
                         ->NumeroDeContrainteDeDissociationDeFlux[Interco];
                 if (CoutDeTransport->IntercoGereeAvecLoopFlow == OUI_ANTARES)
-                    SecondMembre[Cnt] = ProblemeHebdo->ValeursDeNTC[PdtHebdo]
+                    SecondMembre[Cnt] = problemeHebdo->ValeursDeNTC[PdtHebdo]
                                           ->ValeurDeLoopFlowOrigineVersExtremite[Interco];
                 else
                     SecondMembre[Cnt] = 0.;
@@ -177,11 +177,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
             }
         }
 
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             {
                 Cnt = CorrespondanceCntNativesCntOptim
@@ -191,7 +191,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                     SecondMembre[Cnt] = MatriceDesContraintesCouplantes
                                           ->SecondMembreDeLaContrainteCouplante[PdtHebdo];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt]
-                      = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
+                      = problemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
                         + PdtHebdo;
                 }
             }
@@ -201,21 +201,21 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     for (PdtHebdo = PremierPdtDeLIntervalle; PdtHebdo < DernierPdtDeLIntervalle;)
     {
         Jour = NumeroDeJourDuPasDeTemps[PdtHebdo];
-        if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+        if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
         {
             CorrespondanceCntNativesCntOptimJournalieres
-              = ProblemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[0];
+              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[0];
         }
         else
         {
             CorrespondanceCntNativesCntOptimJournalieres
-              = ProblemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[Jour];
+              = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[Jour];
         }
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_JOURNALIERE)
             {
@@ -226,7 +226,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                     SecondMembre[Cnt]
                       = MatriceDesContraintesCouplantes->SecondMembreDeLaContrainteCouplante[Jour];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt]
-                      = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
+                      = problemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
                         + Jour;
                 }
             }
@@ -234,17 +234,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
         PdtHebdo += NombreDePasDeTempsDUneJournee;
     }
 
-    if (ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
-        > ProblemeHebdo->NombreDePasDeTempsDUneJournee)
+    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+        > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
         Semaine = 0;
         CorrespondanceCntNativesCntOptimHebdomadaires
-          = ProblemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires[Semaine];
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+          = problemeHebdo->CorrespondanceCntNativesCntOptimHebdomadaires[Semaine];
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {
@@ -255,40 +255,40 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                     SecondMembre[Cnt] = MatriceDesContraintesCouplantes
                                           ->SecondMembreDeLaContrainteCouplante[Semaine];
                     AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt]
-                      = ProblemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
+                      = problemeHebdo->ResultatsContraintesCouplantes[CntCouplante].variablesDuales
                         + Semaine;
                 }
             }
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         Cnt = NumeroDeContrainteEnergieHydraulique[Pays];
         if (Cnt >= 0)
         {
-            SecondMembre[Cnt] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+            SecondMembre[Cnt] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                   ->CntEnergieH2OParIntervalleOptimise[NumeroDeLIntervalle];
             AdresseDuResultat = NULL;
             AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         char presenceHydro
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
         if (presenceHydro == OUI_ANTARES
             && (TurbEntreBornes == OUI_ANTARES
-                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                || problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
                      == OUI_ANTARES))
         {
             Cnt = NumeroDeContrainteMinEnergieHydraulique[Pays];
             if (Cnt >= 0)
             {
-                SecondMembre[Cnt] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                SecondMembre[Cnt] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                       ->MinEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseDuResultat = NULL;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
@@ -296,21 +296,21 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         char presenceHydro
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
         if (presenceHydro == OUI_ANTARES
             && (TurbEntreBornes == OUI_ANTARES
-                || ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                || problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
                      == OUI_ANTARES))
         {
             Cnt = NumeroDeContrainteMaxEnergieHydraulique[Pays];
             if (Cnt >= 0)
             {
-                SecondMembre[Cnt] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                SecondMembre[Cnt] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                       ->MaxEnergieHydrauParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseDuResultat = NULL;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
@@ -318,15 +318,15 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+        if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
             == OUI_ANTARES)
         {
             Cnt = NumeroDeContrainteMaxPompage[Pays];
             if (Cnt >= 0)
             {
-                SecondMembre[Cnt] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                SecondMembre[Cnt] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                       ->MaxEnergiePompageParIntervalleOptimise[NumeroDeLIntervalle];
                 AdresseDuResultat = NULL;
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = AdresseDuResultat;
@@ -337,21 +337,21 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
     for (PdtJour = 0, PdtHebdo = PremierPdtDeLIntervalle; PdtHebdo < DernierPdtDeLIntervalle;
          PdtHebdo++, PdtJour++)
     {
-        CorrespondanceCntNativesCntOptim = ProblemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
+        CorrespondanceCntNativesCntOptim = problemeHebdo->CorrespondanceCntNativesCntOptim[PdtJour];
 
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->SuiviNiveauHoraire
+            if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->SuiviNiveauHoraire
                 == OUI_ANTARES)
             {
                 Cnt = CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[Pays];
                 if (Cnt >= 0)
                 {
-                    SecondMembre[Cnt] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                    SecondMembre[Cnt] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                           ->ApportNaturelHoraire[PdtHebdo];
                     if (PdtHebdo == 0)
                     {
-                        SecondMembre[Cnt] += ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                        SecondMembre[Cnt] += problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                                ->NiveauInitialReservoir;
                     }
                     AdresseDuResultat = NULL;
@@ -361,12 +361,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES
-            && ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES
+            && problemeHebdo->CaracteristiquesHydrauliques[Pays]->DirectLevelAccess == OUI_ANTARES)
         {
-            Cnt = ProblemeHebdo->NumeroDeContrainteEquivalenceStockFinal[Pays];
+            Cnt = problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[Pays];
             if (Cnt >= 0)
             {
                 SecondMembre[Cnt] = 0;
@@ -374,9 +374,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
                 AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt] = NULL;
             }
         }
-        if (ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
         {
-            Cnt = ProblemeHebdo->NumeroDeContrainteExpressionStockFinal[Pays];
+            Cnt = problemeHebdo->NumeroDeContrainteExpressionStockFinal[Pays];
             if (Cnt >= 0)
             {
                 SecondMembre[Cnt] = 0;
@@ -386,10 +386,10 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* ProblemeHeb
         }
     }
 
-    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
     {
         OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(
-          ProblemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
     }
 
     return;

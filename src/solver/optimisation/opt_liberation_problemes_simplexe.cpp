@@ -45,7 +45,7 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_SPX* ProbSpx;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
@@ -54,24 +54,24 @@ void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
     int NombreDePasDeTempsPourUneOptimisation;
     MPSolver* solver;
 
-    if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+    if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
     {
-        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+        NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
     }
     else
     {
-        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
+        NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
     }
     NbIntervalles
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
         auto& study = *Data::Study::Current::Get();
         bool ortoolsUsed = study.parameters.ortoolsUsed;
 
-        if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+        if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
         {
             for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
             {

@@ -33,7 +33,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
+void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
     int Interco;
     int Var;
@@ -41,15 +41,15 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtH
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeResistances = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
+    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    ValeursDeResistances = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
         if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)

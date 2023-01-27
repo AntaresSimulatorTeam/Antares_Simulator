@@ -60,15 +60,15 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 } // namespace Antares
 
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
-                       PROBLEME_HEBDO* ProblemeHebdo)
+                       PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
-    for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
+    for (int i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
     {
         Flot.appendFormat("%d %d %d\n",
                           i,
-                          ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                          ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+                          problemeHebdo->PaysOrigineDeLInterconnexion[i],
+                          problemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
     // TODO[FOM] "interco.txt"
     std::string filename = "interco-1-1.txt";

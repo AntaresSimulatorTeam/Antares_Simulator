@@ -32,18 +32,18 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
     int Cnt;
     int Pays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays - 1; Pays++)
     {
-        Cnt = ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
+        Cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
         ProblemeAResoudre->SecondMembre[Cnt]
-          = ProblemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];
+          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];
     }
 }

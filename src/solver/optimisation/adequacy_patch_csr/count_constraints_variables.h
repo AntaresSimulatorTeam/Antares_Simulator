@@ -31,6 +31,6 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-int countConstraints(const PROBLEME_HEBDO* ProblemeHebdo);
-int countVariables(const PROBLEME_HEBDO* ProblemeHebdo);
+int countConstraints(const PROBLEME_HEBDO* problemeHebdo);
+int countVariables(const PROBLEME_HEBDO* problemeHebdo);
 } // namespace Antares::Data::AdequacyPatch
