@@ -47,8 +47,6 @@ static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
 {
     using namespace Antares::Data;
 
-    double d;
-
     auto& study = *Antares::Data::Study::Current::Get();
     const Area::Map::const_iterator end = study.areas.end();
     for (Area::Map::const_iterator i = study.areas.begin(); i != end; ++i)
@@ -60,7 +58,7 @@ static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
 
         for (int i = PremierPasDeTempsHebdo; i < DernierPasDeTempsHebdo; ++i)
         {
-            d = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
+            double d = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
             if (d < scratchpad.consoMin)
                 scratchpad.consoMin = d;
             if (d > scratchpad.consoMax)
@@ -74,23 +72,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int DernierPdtDeLIntervalle,
                                      uint numSpace)
 {
-    int PdtJour;
-    int Interco;
-    int Pays;
-    int Palier;
-    int Index;
-    int PdtHebdo;
-    double P;
-    int layerindex;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     COUTS_DE_TRANSPORT* CoutDeTransport;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     auto& study = *Antares::Data::Study::Current::Get();
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    PdtJour = 0;
+    int PdtJour = 0;
 
     memset((char*)ProblemeAResoudre->CoutQuadratique,
            0,
@@ -99,12 +88,12 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     ComputeMinMaxValueForLoad(
       problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
-    for (PdtHebdo = PremierPdtDeLIntervalle; PdtHebdo < DernierPdtDeLIntervalle; PdtHebdo++)
+    for (int PdtHebdo = PremierPdtDeLIntervalle; PdtHebdo < DernierPdtDeLIntervalle; PdtHebdo++)
     {
         int var;
         CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
 
-        for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+        for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
         {
             CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
 
@@ -133,14 +122,14 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             }
         }
 
-        for (Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
+        for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
         {
             assert((unsigned int)Pays < study.areas.size());
 
             PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-            for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            for (int Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
             {
-                Palier
+                int Palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[Palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
@@ -171,6 +160,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
             if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable
                 == OUI_ANTARES)
             {
+                double P;
                 if (problemeHebdo->TypeDeLissageHydraulique
                     == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
                 {
@@ -319,7 +309,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         PdtJour++;
     }
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
+    for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
         {
@@ -329,7 +319,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 ProblemeAResoudre->CoutLineaire[var] = 0;
             }
 
-            for (layerindex = 0; layerindex < 100; layerindex++)
+            for (int layerindex = 0; layerindex < 100; layerindex++)
             {
                 var = problemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][layerindex];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
