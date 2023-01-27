@@ -4,7 +4,7 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include "adq_patch_local_matching.h"
+#include "adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <vector>
