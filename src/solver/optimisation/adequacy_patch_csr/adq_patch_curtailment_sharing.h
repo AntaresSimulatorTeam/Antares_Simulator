@@ -35,7 +35,7 @@ namespace Antares::Data::AdequacyPatch
 const double defaultThresholdToRunCurtailmentSharing = 0.0;
 //! A default threshold value for display local matching rule violations
 const double defaultThresholdDisplayLocalMatchingRuleViolations = 0.0;
-//! CSR Variables relaxation threshold
+//! CSR variables relaxation threshold
 const int defaultValueThresholdVarBoundsRelaxation = 3;
 
 
@@ -43,36 +43,26 @@ const int defaultValueThresholdVarBoundsRelaxation = 3;
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per
  * given area and hour.
  */
-std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* ProblemeHebdo,
+std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
                                                             int Area,
                                                             int hour);
 
 /*!
  * Calculate total local matching rule violation per one area, per one hour.
  */
-double LmrViolationAreaHour(const PROBLEME_HEBDO* ProblemeHebdo,
+double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
                             int Area,
                             int hour);
 
 /*!
  * Calculate densNew values for all hours and areas inside adequacy patch and places them into
- * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
  * copy-pastes spilled Energy values into spilled Energy values after CSR
  * calculates total LMR violations and LMR violations per area per hour inside
- * ProblemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
+ * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
  */
-double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* ProblemeHebdo,
+double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo,
                                             AreaList& areas,
                                             uint numSpace);
-
-/*!
-** ** \brief Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
-** ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
-** **
-** ** \param study The Antares study
-** ** \param problem The weekly problem, from the solver
-** ** \return
-** */
-void adqPatchPostProcess(const Data::Study& study, PROBLEME_HEBDO& problem, int numSpace);
 } // namespace Antares::Data::AdequacyPatch

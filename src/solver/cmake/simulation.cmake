@@ -34,13 +34,14 @@ set(SRC_SIMULATION
 		simulation/common-eco-adq.cpp
 		simulation/common-hydro-remix.cpp
 		simulation/common-hydro-levels.cpp
-		simulation/common-dispatchable-margin.cpp
 		simulation/adequacy-draft.h
 		simulation/adequacy-draft.cpp
 		simulation/adequacy.h
 		simulation/adequacy.cpp
 		simulation/economy.h
 		simulation/economy.cpp
+		simulation/base_post_process.h
+		simulation/base_post_process.cpp
         simulation/opt_time_writer.h
         simulation/opt_time_writer.cpp
 )

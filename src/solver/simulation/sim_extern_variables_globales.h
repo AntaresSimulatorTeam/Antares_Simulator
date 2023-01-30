@@ -41,7 +41,7 @@ extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParIn
 
 /* Optimisation */
 /*-Economique-*/
-// extern PROBLEME_HEBDO                        ProblemeHebdo;
+// extern PROBLEME_HEBDO                        problemeHebdo;
 /*-Adequation-*/
 extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;

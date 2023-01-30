@@ -131,6 +131,78 @@ jobs:
         name: test-log
         path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
+    # simtest
+    - name: Read simtest version
+      id: simtest-version
+      uses: notiz-dev/github-action-json-property@release
+      with:
+        path: 'simtest.json'
+        prop_path: 'version'
+
+    - name: Run tests for adequacy patch (CSR)
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests about infinity on BCs RHS
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-v830
+        os: ${{ matrix.test-platform }}
+
+    - name: Run short-tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
+
+    - name: Run medium-tests
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: medium-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-1
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-1
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-2
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-2
+        os: ${{ matrix.test-platform }}
+
+    - name: Run long-tests-3
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: long-tests-3
+        os: ${{ matrix.test-platform }}
+
     - name: Installer .deb creation
       run: |
            cd _build

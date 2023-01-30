@@ -29,16 +29,16 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-int countConstraints(const PROBLEME_HEBDO* ProblemeHebdo)
+int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
 {
     int numberOfConstraints = 0;
     // constraint: Flow = Flow_direct - Flow_indirect (+ loop flow) for links between nodes of
     // type 2.
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfConstraints++;
     }
@@ -49,15 +49,15 @@ int countConstraints(const PROBLEME_HEBDO* ProblemeHebdo)
     // - spillage(node A) =
     // ENS_init(node A) + net_position_init(node A) – spillage_init(node A)
     // for all areas inside adequacy patch
-    for (int Area = 0; Area < ProblemeHebdo->NombreDePays; ++Area)
+    for (int Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
     {
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfConstraints++;
     }
     // Special case of the hourly binding constraints
-    const auto MatrixBindingConstraints = ProblemeHebdo->MatriceDesContraintesCouplantes;
-    for (int CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+    const auto MatrixBindingConstraints = problemeHebdo->MatriceDesContraintesCouplantes;
+    for (int CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
          CntCouplante++)
     {
         if (MatrixBindingConstraints[CntCouplante]->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
@@ -66,24 +66,24 @@ int countConstraints(const PROBLEME_HEBDO* ProblemeHebdo)
     return numberOfConstraints;
 }
 
-int countVariables(const PROBLEME_HEBDO* ProblemeHebdo)
+int countVariables(const PROBLEME_HEBDO* problemeHebdo)
 {
     int numberOfVariables = 0;
     // variables: ENS of each area inside adq patch
-    for (int area = 0; area < ProblemeHebdo->NombreDePays; ++area)
+    for (int area = 0; area < problemeHebdo->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
-        if (ProblemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfVariables += 2; // ENS, spilled energy
     }
 
-    for (int Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfVariables += 3; // algebraic flow, direct flow, indirect flow

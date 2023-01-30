@@ -134,7 +134,7 @@ void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     ProblemeAResoudre->NomDesContraintes.clear();
 }
 
-static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int mxPaliers)
+static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
     int NbTermes;
     int NbIntervalles;
@@ -143,12 +143,12 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     int Adder;
     int Sparsity;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    Sparsity = (int)mxPaliers * ProblemeHebdo->NombreDePays;
-    Sparsity += ProblemeHebdo->NombreDInterconnexions;
+    Sparsity = (int)mxPaliers * problemeHebdo->NombreDePays;
+    Sparsity += problemeHebdo->NombreDInterconnexions;
     if (Sparsity > 100)
         Sparsity = 100;
 
@@ -157,38 +157,38 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
 
     Adder = (int)mxPaliers;
     Adder += 4;
-    Adder *= ProblemeHebdo->NombreDePays;
-    Adder += 2 * ProblemeHebdo->NombreDInterconnexions;
+    Adder *= problemeHebdo->NombreDePays;
+    Adder += 2 * problemeHebdo->NombreDInterconnexions;
     Adder *= NombreDePasDeTempsPourUneOptimisation;
 
     NbTermes += Adder;
 
     NbTermes += Adder;
 
-    Adder = 3 * ProblemeHebdo->NombreDInterconnexions * NombreDePasDeTempsPourUneOptimisation;
+    Adder = 3 * problemeHebdo->NombreDInterconnexions * NombreDePasDeTempsPourUneOptimisation;
     NbTermes += Adder;
 
-    Adder = Sparsity * ProblemeHebdo->NombreDeContraintesCouplantes;
+    Adder = Sparsity * problemeHebdo->NombreDeContraintesCouplantes;
     Adder *= (NombreDePasDeTempsPourUneOptimisation);
-    Adder += Sparsity * (7 + 7) * ProblemeHebdo->NombreDeContraintesCouplantes;
+    Adder += Sparsity * (7 + 7) * problemeHebdo->NombreDeContraintesCouplantes;
 
     NbTermes += Adder;
 
-    NbTermes += 3 * ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;
-    NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
-    NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
+    NbTermes += 3 * problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation;
+    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 4;
+    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation * 5;
 
-    NbTermes += ProblemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation
+    NbTermes += problemeHebdo->NombreDePays * NombreDePasDeTempsPourUneOptimisation
                 * 2; /*inequality constraint on final hydros level*/
     NbTermes += 1;   /* constraint includes hydro generation, pumping and final level */
     NbTermes += 101; /* constraint expressing final level as a sum of stock layers */
 
-    NbTermes += ProblemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
+    NbTermes += problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage;
 
     logs.info();
     logs.info()
       << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
-    logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " Variables "
+    logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables "
                 << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
     logs.info();
@@ -199,10 +199,10 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
         AntaresSolverEmergencyShutdown();
     }
 
-    OPT_AllocateFromNumberOfVariableConstraints(ProblemeHebdo->ProblemeAResoudre, NbTermes);
+    OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre, NbTermes);
 
     NbIntervalles
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
     ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
     ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
@@ -214,17 +214,17 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* ProblemeHebdo, const int
     logs.info();
 }
 
-void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     int mxPaliers;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     ProblemeAResoudre
       = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
-    ProblemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
+    problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
 
-    OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(ProblemeHebdo, &mxPaliers);
+    OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo, &mxPaliers);
 
-    optimisationAllocateProblem(ProblemeHebdo, mxPaliers);
+    optimisationAllocateProblem(problemeHebdo, mxPaliers);
 }
 
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
@@ -254,9 +254,9 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
     ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes = NbTermes;
 }
 
-void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
         OPT_FreeOptimizationData(ProblemeAResoudre);

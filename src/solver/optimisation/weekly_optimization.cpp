@@ -40,9 +40,4 @@ void DefaultWeeklyOptimization::solve(uint, int)
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
 }
 
-void DefaultWeeklyOptimization::postProcess(Antares::Data::AreaList&, uint, uint)
-{
-    // Nothing to finalize for a classic weekly optimization
-}
-
 } // namespace Antares::Solver::Optimization

@@ -58,25 +58,16 @@ using namespace Antares;
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                    const int PdtHebdo)
 {
-    int Var;
-    double* pt;
-    double ToleranceSurLAdmissibilite;
-    int ChoixToleranceParDefautSurLAdmissibilite;
-    double ToleranceSurLaStationnarite;
-    int ChoixToleranceParDefautSurLaStationnarite;
-    double ToleranceSurLaComplementarite;
-    int ChoixToleranceParDefautSurLaComplementarite;
-
     PROBLEME_POINT_INTERIEUR Probleme;
 
-    ToleranceSurLAdmissibilite = 1.e-5;
-    ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
+    double ToleranceSurLAdmissibilite = 1.e-5;
+    int ChoixToleranceParDefautSurLAdmissibilite = OUI_PI;
 
-    ToleranceSurLaStationnarite = 1.e-5;
-    ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
+    double ToleranceSurLaStationnarite = 1.e-5;
+    int ChoixToleranceParDefautSurLaStationnarite = OUI_PI;
 
-    ToleranceSurLaComplementarite = 1.e-5;
-    ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
+    double ToleranceSurLaComplementarite = 1.e-5;
+    int ChoixToleranceParDefautSurLaComplementarite = OUI_PI;
 
     Probleme.NombreMaxDIterations = -1;
     Probleme.CoutQuadratique = ProblemeAResoudre->CoutQuadratique;
@@ -121,11 +112,11 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_PI)
     {
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
-                *pt = ProblemeAResoudre->X[Var];
+                *pt = ProblemeAResoudre->X[i];
         }
 
         return true;
@@ -134,9 +125,9 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     {
         logs.warning() << "Quadratic Optimisation: No solution, hour " << PdtHebdo;
 
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = std::numeric_limits<double>::quiet_NaN();
         }
@@ -149,12 +140,12 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
             logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
 
             logs.info() << "Here is the trace:";
-            for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+            for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
             {
                 logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-                                         Var,
-                                         ProblemeAResoudre->CoutLineaire[Var],
-                                         ProblemeAResoudre->CoutQuadratique[Var]);
+                                         i,
+                                         ProblemeAResoudre->CoutLineaire[i],
+                                         ProblemeAResoudre->CoutQuadratique[i]);
             }
             for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
             {
@@ -167,14 +158,14 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
                 int ilMax = il + ProblemeAResoudre->NombreDeTermesDesLignes[Cnt];
                 for (; il < ilMax; ++il)
                 {
-                    Var = ProblemeAResoudre->IndicesColonnes[il];
+                    int var = ProblemeAResoudre->IndicesColonnes[il];
                     logs.info().appendFormat(
                       "      coeff %e var %ld xmin %e xmax %e type %ld",
                       ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes[il],
-                      Var,
-                      ProblemeAResoudre->Xmin[Var],
-                      ProblemeAResoudre->Xmax[Var],
-                      ProblemeAResoudre->TypeDeVariable[Var]);
+                      var,
+                      ProblemeAResoudre->Xmin[var],
+                      ProblemeAResoudre->Xmax[var],
+                      ProblemeAResoudre->TypeDeVariable[var]);
                 }
             }
         }

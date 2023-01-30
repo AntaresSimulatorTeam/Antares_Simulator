@@ -39,6 +39,6 @@ void setNTCbounds(double& Xmax,
                   double& Xmin,
                   const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                   const int Interco,
-                  PROBLEME_HEBDO* ProblemeHebdo);
+                  PROBLEME_HEBDO* problemeHebdo);
 
 } // namespace Antares::Data::AdequacyPatch

@@ -221,12 +221,16 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-                RemixHydroForAllAreas(
-                  study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+                RemixHydroForAllAreas(study.areas, 
+                                      *pProblemesHebdo[numSpace],
+                                      study.parameters.shedding.policy,
+                                      study.parameters.simplexOptimizationRange,
+                                      numSpace, 
+                                      hourInTheYear);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -316,13 +320,12 @@ bool Adequacy::year(Progression::Task& progression,
                 }
             }
 
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false, true);
+            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(
-          study, *pProblemesHebdo[numSpace], hourInTheYear, nbHoursInAWeek);
+        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-        updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+        updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
@@ -356,7 +359,7 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);

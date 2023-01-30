@@ -42,14 +42,12 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
                                    int* NbGrpCourbeGuide,
                                    int* NbGrpOpt)
 {
-    double Cout;
-    int NbMx;
     int T;
     int i;
 
-    Cout = 0.0;
+    double Cout = 0.0;
+    int NbMx = 0;
 
-    NbMx = 0;
     for (T = 0; T < PremierPdt; T++)
     {
         if (NbGrpCourbeGuide[T] > NbMx)
@@ -95,13 +93,8 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     return (Cout);
 }
 
-void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Palier;
-    int Pdt;
-    double P;
-    int NombreDePasDeTemps;
     int MUTetMDT;
     double* PminDuPalierThermiquePendantUneHeure;
     double* TailleUnitaireDUnGroupeDuPalierThermique;
@@ -111,7 +104,6 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
     int* NbGrpOpt;
     double EcartOpt;
     int iOpt;
-    int i;
     double Ecart;
     int PremierPdt;
     int IntervalleDAjustement;
@@ -123,14 +115,14 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     int* minUpDownTime;
 
-    NombreDePasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
-    NbGrpCourbeGuide = ProblemeHebdo->NbGrpCourbeGuide;
-    NbGrpOpt = ProblemeHebdo->NbGrpOpt;
+    int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
+    NbGrpCourbeGuide = problemeHebdo->NbGrpCourbeGuide;
+    NbGrpOpt = problemeHebdo->NbGrpOpt;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
+    for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
-        ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
         TailleUnitaireDUnGroupeDuPalierThermique
@@ -139,7 +131,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
 
         ProductionThermiqueOptimale = ResultatsHoraires->ProductionThermique;
 
-        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        for (int Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {
             PuissanceDispoEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
             PuissanceMinDuPalierThermique = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
@@ -149,9 +141,9 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
                 continue;
 
-            for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+            for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
-                P = ProductionThermiqueOptimale[Pdt]->ProductionThermiqueDuPalier[Palier];
+                double P = ProductionThermiqueOptimale[Pdt]->ProductionThermiqueDuPalier[Palier];
 
                 NbGrpCourbeGuide[Pdt] = 0;
                 if (fabs(P) < ZERO_PMIN)
@@ -176,7 +168,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
             if (IntervalleDAjustement < 0)
                 IntervalleDAjustement = 0;
 
-            for (i = 0; i <= IntervalleDAjustement; i++)
+            for (int i = 0; i <= IntervalleDAjustement; i++)
             {
                 PremierPdt = i;
                 DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + i;
@@ -195,10 +187,12 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* ProblemeH
             PremierPdt = iOpt;
             DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + iOpt;
 
+            //TODO vpayet: how is getting the return value useful ?
+            //Ecart is only assigned in the next loop
             Ecart = OPT_CalculerAireMaxPminJour(
               PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
 
-            for (Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
+            for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
                 if (PminDuPalierThermiquePendantUneHeure[Palier] * NbGrpOpt[Pdt]
                     > PuissanceMinDuPalierThermique[Pdt])
