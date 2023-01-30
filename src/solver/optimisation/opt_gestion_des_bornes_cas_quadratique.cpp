@@ -42,55 +42,55 @@
 
 using namespace Yuni;
 
-void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo,
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo,
                                                                int PdtHebdo)
 {
     int Interco;
-    int Var;
+    int var;
     double* AdresseDuResultat;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++)
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
 
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
+    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        ProblemeAResoudre->Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        ProblemeAResoudre->Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        ProblemeAResoudre->Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
-        if (ProblemeAResoudre->Xmax[Var] - ProblemeAResoudre->Xmin[Var]
+        if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
         {
-            ProblemeAResoudre->X[Var]
-              = 0.5 * (ProblemeAResoudre->Xmax[Var] - ProblemeAResoudre->Xmin[Var]);
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_FIXE;
+            ProblemeAResoudre->X[var]
+              = 0.5 * (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]);
+            ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_FIXE;
         }
         else
         {
-            if (Math::Infinite(ProblemeAResoudre->Xmax[Var]) == 1)
+            if (Math::Infinite(ProblemeAResoudre->Xmax[var]) == 1)
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
         }
         AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
     }
 }

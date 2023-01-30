@@ -60,15 +60,15 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 } // namespace Antares
 
 void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
-                       PROBLEME_HEBDO* ProblemeHebdo)
+                       PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
-    for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
+    for (int i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
     {
         Flot.appendFormat("%d %d %d\n",
                           i,
-                          ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                          ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+                          problemeHebdo->PaysOrigineDeLInterconnexion[i],
+                          problemeHebdo->PaysExtremiteDeLInterconnexion[i]);
     }
     // TODO[FOM] "interco.txt"
     std::string filename = "interco-1-1.txt";
@@ -89,16 +89,16 @@ void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
 }
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
+                             int var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int ts, // TODO remove
                              int firstVal,
                              std::optional<int> secondVal)
 {
-    if ((int)varname.size() > Var && varname[Var].empty())
+    if ((int)varname.size() > var && varname[var].empty())
     {
         std::stringstream buffer;
-        buffer << Var << " ";
+        buffer << var << " ";
         buffer << Antares::Data::Enum::toString(structDict) << " ";
         buffer << firstVal << " ";
         if (secondVal.has_value())
@@ -106,7 +106,7 @@ void OPT_Export_add_variable(std::vector<std::string>& varname,
             buffer << secondVal.value() << " ";
         }
         buffer << ts << " ";
-        varname[Var] = buffer.str();
+        varname[var] = buffer.str();
     }
 }
 

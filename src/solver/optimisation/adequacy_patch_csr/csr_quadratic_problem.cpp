@@ -55,27 +55,27 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int NombreDeTermes = 0;
-            int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (Var >= 0)
+            int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
             }
-            Var = CorrespondanceVarNativesVarOptim
+            var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
-            if (Var >= 0)
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = -1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
             }
-            Var = CorrespondanceVarNativesVarOptim
+            var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
-            if (Var >= 0)
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
             }
 
@@ -113,11 +113,11 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 
         // + ENS
         int NombreDeTermes = 0;
-        int Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
-        if (Var >= 0)
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Area];
+        if (var >= 0)
         {
             Pi[NombreDeTermes] = 1.0;
-            Colonne[NombreDeTermes] = Var;
+            Colonne[NombreDeTermes] = var;
             NombreDeTermes++;
         }
 
@@ -132,12 +132,12 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
                 continue;
             }
 
-            Var = CorrespondanceVarNativesVarOptim
+            var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (A->2)
-            if (Var >= 0)
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = -1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
                 logs.debug()
                   << "S-Interco number: [" << std::to_string(Interco) << "] between: ["
@@ -159,12 +159,12 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
                 Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
                 continue;
             }
-            Var = CorrespondanceVarNativesVarOptim
+            var = CorrespondanceVarNativesVarOptim
                     ->NumeroDeVariableDeLInterconnexion[Interco]; // flow (2 -> A)
-            if (Var >= 0)
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
                 logs.debug()
                   << "E-Interco number: [" << std::to_string(Interco) << "] between: ["
@@ -177,11 +177,11 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         }
 
         // - Spilled Energy
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Area];
-        if (Var >= 0)
+        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Area];
+        if (var >= 0)
         {
             Pi[NombreDeTermes] = -1.0;
-            Colonne[NombreDeTermes] = Var;
+            Colonne[NombreDeTermes] = var;
             NombreDeTermes++;
         }
 
@@ -226,13 +226,13 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
                 && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
-                int Var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
+                int var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
                             ->NumeroDeVariableDeLInterconnexion[Interco];
 
-                if (Var >= 0)
+                if (var >= 0)
                 {
                     Pi[NombreDeTermes] = Poids;
-                    Colonne[NombreDeTermes] = Var;
+                    Colonne[NombreDeTermes] = var;
                     NombreDeTermes++;
                 }
             }

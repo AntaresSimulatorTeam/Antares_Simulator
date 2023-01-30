@@ -87,24 +87,24 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
 /*!
  * Determines restriction type for transmission links for first step of adequacy patch.
  *
- * @param ProblemeHebdo PROBLEME_HEBDO*: Weekly problem structure.
+ * @param problemeHebdo PROBLEME_HEBDO*: Weekly problem structure.
  *
  * @param Interco int: Index of the link.
  *
  * @return uint from an enumeration that describes the type of restrictions to put on this link for
  * adq purposes.
  */
-static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* ProblemeHebdo,
+static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* problemeHebdo,
                                                            int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
-      = ProblemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
+      = problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
     AdequacyPatchMode ExtremityNodeAdequacyPatchType
-      = ProblemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
+      = problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
     bool setToZeroNTCfromOutToIn_AdqPatch
-      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
+      = problemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
     bool setToZeroNTCfromOutToOut_AdqPatch
-      = ProblemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
+      = problemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
 
     switch (OriginNodeAdequacyPatchType)
     {
@@ -124,7 +124,7 @@ void setNTCbounds(double& Xmax,
                   double& Xmin,
                   const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                   const int Interco,
-                  PROBLEME_HEBDO* ProblemeHebdo)
+                  PROBLEME_HEBDO* problemeHebdo)
 {
     NtcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
@@ -133,9 +133,9 @@ void setNTCbounds(double& Xmax,
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
-    if (ProblemeHebdo->adqPatchParams && ProblemeHebdo->adqPatchParams->AdequacyFirstStep)
+    if (problemeHebdo->adqPatchParams && problemeHebdo->adqPatchParams->AdequacyFirstStep)
     {
-        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(ProblemeHebdo, Interco);
+        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, Interco);
 
         switch (ntcToZeroStatusForAdqPatch)
         {

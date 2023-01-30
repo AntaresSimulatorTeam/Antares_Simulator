@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <iostream>
 
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizationNumber)
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
 {
     int Pays;
     int Interco;
@@ -61,15 +61,15 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
     COUTS_DE_TRANSPORT* CoutDeTransport;
     int* NumeroDeJourDuPasDeTemps;
 
-    DernierPasDeTemps = ProblemeHebdo->NombreDePasDeTemps;
-    NumeroDeJourDuPasDeTemps = ProblemeHebdo->NumeroDeJourDuPasDeTemps;
+    DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
+    NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        ValeursDeNTCRef = ProblemeHebdo->ValeursDeNTCRef[Pdt];
-        ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[Pdt];
+        ValeursDeNTCRef = problemeHebdo->ValeursDeNTCRef[Pdt];
+        ValeursDeNTC = problemeHebdo->ValeursDeNTC[Pdt];
 
-        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+        for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
         {
             ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco]
               = ValeursDeNTCRef->ValeurDeNTCOrigineVersExtremite[Interco];
@@ -82,9 +82,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+        for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
         {
-            CoutDeTransport = ProblemeHebdo->CoutDeTransport[Interco];
+            CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
             {
                 CoutDeTransport->CoutDeTransportOrigineVersExtremite[Pdt]
@@ -97,23 +97,23 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        ConsommationsAbattuesRef = ProblemeHebdo->ConsommationsAbattuesRef[Pdt];
-        ConsommationsAbattues = ProblemeHebdo->ConsommationsAbattues[Pdt];
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        ConsommationsAbattuesRef = problemeHebdo->ConsommationsAbattuesRef[Pdt];
+        ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[Pdt];
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
             ConsommationsAbattues->ConsommationAbattueDuPays[Pays]
               = ConsommationsAbattuesRef->ConsommationAbattueDuPays[Pays];
         }
     }
 
-    if (ProblemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES
+    if (problemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES
         && optimizationNumber == PREMIERE_OPTIMISATION)
     {
         for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
         {
-            for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+            for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
             {
-                ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1[Pays];
+                ReserveJMoins1 = problemeHebdo->ReserveJMoins1[Pays];
                 ReserveJMoins1->ReserveHoraireJMoins1[Pdt]
                   = ReserveJMoins1->ReserveHoraireJMoins1Ref[Pdt];
             }
@@ -122,9 +122,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
+            CaracteristiquesHydrauliques = problemeHebdo->CaracteristiquesHydrauliques[Pays];
 
             if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable != OUI_ANTARES)
                 continue;
@@ -135,14 +135,14 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
                 continue;
             Jour = NumeroDeJourDuPasDeTemps[Pdt];
             PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[Jour];
-            PmaxHydEcretee *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
-            PmaxHydEcretee /= (double)ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+            PmaxHydEcretee *= problemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+            PmaxHydEcretee /= (double)problemeHebdo->NombreDePasDeTempsDUneJournee;
             // The primary generating power allowance may need to be uplifted to match pumping power
             // allowance
             if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
             {
                 PmaxHydUplift = CaracteristiquesHydrauliques->ContrainteDePmaxPompageHoraire[Pdt];
-                PmaxHydUplift *= ProblemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
+                PmaxHydUplift *= problemeHebdo->CoefficientEcretementPMaxHydraulique[Pays];
 
                 if (PmaxHydEcretee < PmaxHydUplift)
                     PmaxHydEcretee = PmaxHydUplift;
@@ -160,11 +160,11 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps;)
     {
-        Intervalle = ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[Pdt];
-        Pdt += ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        Intervalle = problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[Pdt];
+        Pdt += problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
+            CaracteristiquesHydrauliques = problemeHebdo->CaracteristiquesHydrauliques[Pays];
             if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
             {
                 CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimise[Intervalle]
@@ -173,9 +173,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
         }
     }
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        CaracteristiquesHydrauliques = ProblemeHebdo->CaracteristiquesHydrauliques[Pays];
+        CaracteristiquesHydrauliques = problemeHebdo->CaracteristiquesHydrauliques[Pays];
         if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
         {
             CaracteristiquesHydrauliques->MaxDesPmaxHydrauliques
@@ -185,9 +185,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
             for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
             {
                 PuissanceDisponibleEtCout
@@ -200,9 +200,9 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
         {
-            PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+            PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
             for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
             {
                 PuissanceDisponibleEtCout
@@ -237,11 +237,11 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps; Pdt++)
     {
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
 
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante == CONTRAINTE_HORAIRE)
             {
@@ -253,13 +253,13 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
 
     for (Pdt = 0; Pdt < DernierPasDeTemps;)
     {
-        Jour = ProblemeHebdo->NumeroDeJourDuPasDeTemps[Pdt];
-        Pdt += ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+        Jour = problemeHebdo->NumeroDeJourDuPasDeTemps[Pdt];
+        Pdt += problemeHebdo->NombreDePasDeTempsDUneJournee;
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_JOURNALIERE)
             {
@@ -269,15 +269,15 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* ProblemeHebdo, const int optimizati
         }
     }
 
-    if (ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
-        > ProblemeHebdo->NombreDePasDeTempsDUneJournee)
+    if (problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+        > problemeHebdo->NombreDePasDeTempsDUneJournee)
     {
         Semaine = 0;
-        for (CntCouplante = 0; CntCouplante < ProblemeHebdo->NombreDeContraintesCouplantes;
+        for (CntCouplante = 0; CntCouplante < problemeHebdo->NombreDeContraintesCouplantes;
              CntCouplante++)
         {
             MatriceDesContraintesCouplantes
-              = ProblemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
+              = problemeHebdo->MatriceDesContraintesCouplantes[CntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
                 == CONTRAINTE_HEBDOMADAIRE)
             {

@@ -41,7 +41,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_liberation_problemes_simplexe.cpp
 		optimisation/opt_restaurer_les_donnees.cpp
 		optimisation/opt_gestion_des_couts_cas_quadratique.cpp
-		optimisation/opt_construction_contraintes_couts_demarrage.cpp 
+		optimisation/opt_construction_contraintes_couts_demarrage.cpp
 		optimisation/opt_construction_variables_couts_demarrages.cpp
 		optimisation/opt_gestion_des_bornes_couts_demarrage.cpp
 		optimisation/opt_gestion_des_couts_couts_demarrage.cpp
@@ -64,8 +64,8 @@ set(RTESOLVER_OPT
 		optimisation/adq_patch_post_process_list.cpp
 		optimisation/post_process_commands.h
 		optimisation/post_process_commands.cpp
-		optimisation/adq_patch_local_matching.h
-		optimisation/adq_patch_local_matching.cpp
+		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
+		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.cpp
 		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
 		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
 		optimisation/adequacy_patch_csr/solve_problem.cpp
@@ -78,7 +78,7 @@ set(RTESOLVER_OPT
         optimisation/adequacy_patch_csr/count_constraints_variables.h
         optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
-		optimisation/opt_period_string_generator_base.h        
+		optimisation/opt_period_string_generator_base.h
 
 		utils/ortools_utils.h
 		utils/ortools_utils.cpp
@@ -99,4 +99,11 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver infeasible_problem_analysis)
+target_link_libraries(libmodel_antares
+		PUBLIC
+		libantares-core
+		ortools::ortools
+		sirius_solver
+		infeasible_problem_analysis
+		libantares-solver-simulation
+		)
