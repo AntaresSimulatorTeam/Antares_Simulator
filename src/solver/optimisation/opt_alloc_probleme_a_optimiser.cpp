@@ -188,7 +188,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     logs.info();
     logs.info()
       << " Starting Memory Allocation for a Weekly Optimization problem in Canonical form ";
-    logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " Variables "
+    logs.info() << " ( Problem Size :" << ProblemeAResoudre->NombreDeVariables << " variables "
                 << ProblemeAResoudre->NombreDeContraintes << " Constraints) ";
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
     logs.info();

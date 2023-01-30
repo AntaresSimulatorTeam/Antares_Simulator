@@ -53,7 +53,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     int PdtJour;
     int Pays;
     int Palier;
-    int Var;
+    int var;
     int Index;
     double* AdresseDuResultat;
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
@@ -98,58 +98,58 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
-                Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
-                Xmin[Var] = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
+                Xmin[var] = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
 
                 AdresseDuResultat = &(problemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
                                         ->NombreDeGroupesEnMarcheDuPalier[Index]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
-                Xmax[Var] = LINFINI_ANTARES;
-                Xmin[Var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
+                Xmin[var] = 0;
                 AdresseDuResultat = &(problemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
                                         ->NombreDeGroupesQuiDemarrentDuPalier[Index]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
-                Var = CorrespondanceVarNativesVarOptim
+                var = CorrespondanceVarNativesVarOptim
                         ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
-                Xmax[Var] = LINFINI_ANTARES;
-                Xmin[Var] = 0;
+                Xmax[var] = LINFINI_ANTARES;
+                Xmin[var] = 0;
                 AdresseDuResultat = &(problemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
                                         ->NombreDeGroupesQuiSArretentDuPalier[Index]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
 
-                Var
+                var
                   = CorrespondanceVarNativesVarOptim
                       ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier];
-                Xmin[Var] = 0;
+                Xmin[var] = 0;
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-                Xmax[Var] = LINFINI_ANTARES;
+                Xmax[var] = LINFINI_ANTARES;
 #else
                 t1 = PdtHebdo;
                 t1moins1 = t1 - 1;
                 if (t1moins1 < 0)
                     t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
-                Xmax[Var] = 0;
+                Xmax[var] = 0;
                 if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                       - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
                     > 0)
                 {
-                    Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+                    Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
                 }
 #endif
                 AdresseDuResultat = &(problemeHebdo->ResultatsHoraires[Pays]
                                         ->ProductionThermique[PdtHebdo]
                                         ->NombreDeGroupesQuiTombentEnPanneDuPalier[Index]);
-                AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+                AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
             }
         }
     }

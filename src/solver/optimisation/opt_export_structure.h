@@ -65,7 +65,7 @@ class Study;
 struct PROBLEME_HEBDO;
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
+                             int var,
                              Antares::Data::Enum::ExportStructDict structDict,
                              int ts, // TODO remove
                              int firstVal,

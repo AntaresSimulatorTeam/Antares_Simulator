@@ -270,7 +270,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     int* PositionDeLaVariable;
     int* ComplementDeLaBase;
     int ResoudreLeProblemeLineaire;
-    int Var;
+    int var;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
 
     PROBLEME_SIMPLEXE Probleme;
@@ -576,17 +576,17 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         }
         NombreDeContraintes++;
 #else
-        Var = NumeroDeVariableDeMMoinsMoins[Pdt];
+        var = NumeroDeVariableDeMMoinsMoins[Pdt];
         t1 = Pdt;
         t1moins1 = t1 - 1;
         if (t1moins1 < 0)
             t1moins1 = NombreDePasDeTemps + t1moins1;
-        Xmax[Var] = 0;
+        Xmax[var] = 0;
         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
               - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
             > 0)
         {
-            Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+            Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
         }
 #endif

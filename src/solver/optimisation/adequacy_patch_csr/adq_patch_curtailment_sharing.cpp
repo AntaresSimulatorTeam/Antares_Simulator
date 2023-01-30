@@ -176,8 +176,8 @@ void HourlyCSRProblem::buildProblemConstraintsLHS()
 
 void HourlyCSRProblem::setVariableBounds()
 {
-    for (int Var = 0; Var < problemeAResoudre_.NombreDeVariables; Var++)
-        problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = nullptr;
+    for (int var = 0; var < problemeAResoudre_.NombreDeVariables; var++)
+        problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = nullptr;
 
     logs.debug() << "[CSR] bounds";
     setBoundsOnENS();
