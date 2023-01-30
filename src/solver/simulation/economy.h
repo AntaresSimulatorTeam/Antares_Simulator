@@ -32,8 +32,7 @@
 #include "../variable/state.h"
 
 #include "../optimisation/base_weekly_optimization.h"
-#include "base_post_process.h"
-
+#include "../optimisation/post_process_command.h"
 #include "solver.h" // for definition of type yearRandomNumbers
 
 namespace Antares::Solver::Simulation
@@ -100,7 +99,7 @@ private:
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
     std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
-    std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
+    std::vector<std::unique_ptr<PostProcessCommand>> postProcessesList_;
 }; // class Economy
 
 } // namespace Antares::Solver::Simulation

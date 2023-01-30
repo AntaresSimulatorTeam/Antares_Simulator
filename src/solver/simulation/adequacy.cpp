@@ -230,16 +230,9 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
-
-                RemixHydroForAllAreas(study.areas, 
-                                      *pProblemesHebdo[numSpace],
-                                      study.parameters.shedding.policy,
-                                      study.parameters.simplexOptimizationRange,
-                                      numSpace, 
-                                      hourInTheYear);
-
-                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
+                optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
+                for (auto& cmd : postProcessesList_[numSpace])
+                    cmd->execute(opt_runtime_data);
             }
             catch (Data::AssertionError& ex)
             {

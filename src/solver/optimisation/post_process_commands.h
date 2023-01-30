@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../simulation/base_post_process.h"
+#include "post_process_command.h"
 
 namespace Antares::Solver::Simulation
 {
-class DispatchableMarginPostProcessCmd : public basePostProcessCommand
+class DispatchableMarginPostProcessCmd : public PostProcessCommand
 {
 public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -17,7 +17,7 @@ private:
     const AreaList& area_list_;
 };
 
-class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
+class HydroLevelsUpdatePostProcessCmd : public PostProcessCommand
 {
 public:
     HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -32,7 +32,7 @@ private:
     bool computeAnyway_ = false;
 };
 
-class RemixHydroPostProcessCmd : public basePostProcessCommand
+class RemixHydroPostProcessCmd : public PostProcessCommand
 {
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -49,7 +49,7 @@ private:
     SimplexOptimization splx_optimization_;
 };
 
-class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
+class DTGmarginForAdqPatchPostProcessCmd : public PostProcessCommand
 {
 public:
     DTGmarginForAdqPatchPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -63,7 +63,7 @@ private:
     unsigned int thread_number_ = 0;
 };
 
-class InterpolateWaterValuePostProcessCmd : public basePostProcessCommand
+class InterpolateWaterValuePostProcessCmd : public PostProcessCommand
 {
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
@@ -77,7 +77,7 @@ private:
     const Date::Calendar& calendar_;
 };
 
-class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
+class HydroLevelsFinalUpdatePostProcessCmd : public PostProcessCommand
 {
 public:
     HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
@@ -88,7 +88,7 @@ private:
     const AreaList& area_list_;
 };
 
-class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
+class CurtailmentSharingPostProcessCmd : public PostProcessCommand
 {
 public:
     CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,

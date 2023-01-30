@@ -109,14 +109,14 @@ bool Economy::simulationBegin()
                                                     study.parameters.adqPatch.enabled,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace);
-            postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
-                                                 pProblemesHebdo[numSpace],
-                                                 numSpace,
-                                                 study.areas,
-                                                 study.parameters.shedding.policy,
-                                                 study.parameters.simplexOptimizationRange,
-                                                 study.calendar);
+            postProcessesList_[numSpace] = createPostProcess(Data::stdmEconomy,
+                                                             study.parameters.adqPatch.enabled,
+                                                             pProblemesHebdo[numSpace],
+                                                             numSpace,
+                                                             study.areas,
+                                                             study.parameters.shedding.policy,
+                                                             study.parameters.simplexOptimizationRange,
+                                                             study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -175,7 +175,8 @@ bool Economy::year(Progression::Task& progression,
 
             // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-            postProcessesList_[numSpace]->runAll(opt_runtime_data);
+            for (auto& cmd : postProcessesList_[numSpace])
+                cmd->execute(opt_runtime_data);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
