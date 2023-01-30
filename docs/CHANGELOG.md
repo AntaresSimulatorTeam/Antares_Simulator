@@ -1,9 +1,15 @@
 Antares Changelog
 =================
 
+v8.5.0-rc2 (01/2022)
+--------------------
+* Re-publish of v8.5.0-rc1.
+
 v8.5.0-rc1 (01/2022)
 --------------------
-TODO[FOM]
+## New features
+* Hydraulic patch (#697)
+* Curtailment sharing rule for Adequacy Patch (#1062)
 
 
 v8.4.2 (01/2022)
