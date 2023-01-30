@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,34 +25,20 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
-#define __SOLVER_ADEQUACY_FUNCTIONS_H__
+#pragma once
 
-#include <antares/study/fwd.h>
 #include "../simulation/sim_structure_probleme_economique.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
- * Sets link bounds for first step of adequacy patch.
+ * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
+ * not used.
  */
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo);
-/*!
- * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
- */
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco);
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
-#endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* problemeHebdo);
+
+} // namespace Antares::Data::AdequacyPatch

@@ -29,12 +29,9 @@
 
 #include <antares/study.h>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 void ApplyCustomScenario(Data::Study& study);
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_APPLY_SCENARIO_H__

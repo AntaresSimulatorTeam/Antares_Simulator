@@ -45,11 +45,7 @@
 #include <yuni/core/system/suspend.h>
 #include <yuni/job/job.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 template<class Impl>
 class yearJob final : public Yuni::Job::IJob
@@ -1632,8 +1628,6 @@ void ISimulation<Impl>::loopThroughYears(uint firstYear,
     }
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_HXX__

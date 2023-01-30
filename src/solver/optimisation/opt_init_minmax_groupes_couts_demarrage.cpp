@@ -33,7 +33,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Index;
@@ -48,14 +48,14 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* Prob
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
     double* PuissanceDisponibleDuPalierThermiqueRef_SV;
 
-    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         return;
 
-    NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
+    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
         for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)

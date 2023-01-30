@@ -33,19 +33,19 @@
 
 #include "opt_fonctions.h"
 
-void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     char Simulation;
 
-    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         return;
 
     Simulation = OUI_ANTARES;
 
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo,
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                             Simulation);
 
-    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(ProblemeHebdo,
+    OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
                                                                                   Simulation);
 
     return;

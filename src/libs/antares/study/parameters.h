@@ -41,9 +41,8 @@
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 /*!
 ** \brief General data for a study
@@ -135,6 +134,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all threshold values in adequacy patch
+    */
+    void resetThresholdsAdqPatch();
     /*!
     ** \brief Reset to default all adequacy patch values
     */
@@ -501,10 +504,37 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
+            /*!
+             ** \brief Reset to default values related to local matching
+             */
+            void reset();
         };
         bool enabled;
         LocalMatching localMatching;
+
+        struct CurtailmentSharing
+        {
+            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
+            //! Threshold to initiate curtailment sharing rule
+            double thresholdRun;
+            //! Threshold to display Local Matching Rule violations
+            double thresholdDisplayViolations;
+            //! CSR Variables relaxation threshold
+            int thresholdVarBoundsRelaxation;
+            //! Include hurdle cost in CSR cost function
+            bool includeHurdleCost;
+            //! Check CSR cost function prior & after CSR optimization
+            bool checkCsrCostFunction;
+            /*!
+             ** \brief Reset to default values related to curtailment sharing
+             */
+            void reset();
+        };
+        CurtailmentSharing curtailmentSharing;
+
         void addExcludedVariables(std::vector<std::string>&) const;
+
     };
 
     AdequacyPatch adqPatch;
@@ -565,8 +595,7 @@ const char* StudyModeToCString(StudyMode mode);
 */
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "parameters.hxx"
 

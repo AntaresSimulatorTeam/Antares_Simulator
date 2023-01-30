@@ -58,11 +58,22 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.adqPatchParams
           = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
-        // AdqBehaviorMap will be initialized during the economy solve
         problem.adqPatchParams->SetNTCOutsideToInsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
         problem.adqPatchParams->SetNTCOutsideToOutsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
+        problem.adqPatchParams->PriceTakingOrder
+          = parameters.adqPatch.curtailmentSharing.priceTakingOrder;
+        problem.adqPatchParams->IncludeHurdleCostCsr
+          = parameters.adqPatch.curtailmentSharing.includeHurdleCost;
+        problem.adqPatchParams->CheckCsrCostFunctionValue
+          = parameters.adqPatch.curtailmentSharing.checkCsrCostFunction;
+        problem.adqPatchParams->ThresholdRunCurtailmentSharingRule
+          = parameters.adqPatch.curtailmentSharing.thresholdRun;
+        problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
+          = parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations;
+        double temp = pow(10, -parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
+        problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
 
         problem.adequacyPatchRuntimeData.initialize(study);
     }
@@ -308,7 +319,7 @@ void SIM_InitialisationResultats()
 }
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
-                                    Antares::Solver::Variable::State& state,
+                                    uint weekInTheYear,
                                     uint numSpace,
                                     const int PasDeTempsDebut)
 {
@@ -436,14 +447,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             double nivInit = problem.CaracteristiquesHydrauliques[k]->NiveauInitialReservoir;
             if (nivInit < 0.)
             {
-                logs.fatal() << "Area " << area.name << ", week " << problem.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
                              << " : initial level < 0";
                 AntaresSolverEmergencyShutdown();
             }
 
             if (nivInit > area.hydro.reservoirCapacity)
             {
-                logs.fatal() << "Area " << area.name << ", week " << problem.weekInTheYear + 1
+                logs.fatal() << "Area " << area.name << ", week " << weekInTheYear + 1
                              << " : initial level over capacity";
                 AntaresSolverEmergencyShutdown();
             }
@@ -469,7 +480,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                   problem.previousSimulationFinalLevel[k] * 100 / area.hydro.reservoirCapacity,
                   area.hydro.waterValues,
                   weekFirstDay,
-                  state.h2oValueWorkVars,
                   problem.CaracteristiquesHydrauliques[k]->WeeklyWaterValueStateRegular);
             }
 

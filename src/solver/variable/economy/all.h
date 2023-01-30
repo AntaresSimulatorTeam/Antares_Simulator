@@ -61,6 +61,9 @@
 #include "hydroCost.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
+#include "localMatchingRuleViolations.h"
+#include "spilledEnergyAfterCSR.h"
+#include "dtgMarginAfterCsr.h"
 #include "spilledEnergy.h"
 
 #include "lold.h"
@@ -93,13 +96,7 @@
 // Output variables associated to binding constraints
 #include "bindingConstraints/bindingConstraintsMarginalCost.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 /*!
 ** \brief All variables for a single link (economy)
@@ -152,18 +149,24 @@ typedef          // Prices
                        <HydroCost        // Hydro costs
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
-                          <SpilledEnergy           // Spilled Energy
-                           <LOLD                   // LOLD
-                            <LOLP                  // LOLP
-                             <AvailableDispatchGen<DispatchableGenMargin<Marge<NonProportionalCost<
-                               NonProportionalCostByDispatchablePlant // Startup cost + Fixed cost
-                                                                      // per thermal plant detail
-                               <NbOfDispatchedUnits                   // Number of Units Dispatched
-                                <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by plant
-                                 <ProfitByPlant
-                                  // Links
-                                  <Variable::Economy::Links // All links
-                                   >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                          <LMRViolations           // LMR Violations
+                           <SpilledEnergy          // Spilled Energy
+                            <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
+                             <LOLD                 // LOLD
+                              <LOLP                // LOLP
+                               <AvailableDispatchGen<DispatchableGenMargin<
+                                 DtgMarginCsr // DTG MRG CSR
+                                 <Marge<NonProportionalCost<
+                                   NonProportionalCostByDispatchablePlant // Startup cost + Fixed
+                                                                          // cost per thermal
+                                                                          // plant detail
+                                   <NbOfDispatchedUnits         // Number of Units Dispatched
+                                    <NbOfDispatchedUnitsByPlant // Number of Units Dispatched by
+                                                                // plant
+                                     <ProfitByPlant
+                                      // Links
+                                      <Variable::Economy::Links // All links
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -222,31 +225,41 @@ typedef // Prices
                                               Common::SpatialAggregate<
                                                 DomesticUnsuppliedEnergy,
                                                 Common::SpatialAggregate<
-                                                  SpilledEnergy,
-                                                  // LOLD
+                                                  LMRViolations,
                                                   Common::SpatialAggregate<
-                                                    LOLD,
+                                                    SpilledEnergy,
                                                     Common::SpatialAggregate<
-                                                      LOLP,
-
+                                                      SpilledEnergyAfterCSR,
+                                                      // LOLD
                                                       Common::SpatialAggregate<
-                                                        AvailableDispatchGen,
+                                                        LOLD,
                                                         Common::SpatialAggregate<
-                                                          DispatchableGenMargin,
+                                                          LOLP,
                                                           Common::SpatialAggregate<
-                                                            Marge,
-
-                                                            // Detail Prices
+                                                            AvailableDispatchGen,
                                                             Common::SpatialAggregate<
-                                                              NonProportionalCost, // MBO 13/05/2014
-                                                                                   // - refs: #21
-
-                                                              // Number Of Dispatched Units
+                                                              DispatchableGenMargin,
                                                               Common::SpatialAggregate<
-                                                                NbOfDispatchedUnits // MBO
-                                                                                    // 25/02/2016
-                                                                                    // - refs: #55
-                                                                >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                DtgMarginCsr,
+                                                                Common::SpatialAggregate<
+                                                                  Marge,
+
+                                                                  // Detail Prices
+                                                                  Common::SpatialAggregate<
+                                                                    NonProportionalCost, // MBO
+                                                                                         // 13/05/2014
+                                                                                         // -
+                                                                                         // refs:
+                                                                                         // #21
+
+                                                                    // Number Of Dispatched Units
+                                                                    Common::SpatialAggregate<
+                                                                      NbOfDispatchedUnits // MBO
+                                                                                          // 25/02/2016
+                                                                                          // -
+                                                                                          // refs:
+                                                                                          // #55
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
@@ -269,10 +282,7 @@ typedef Variable::Join<
 */
 typedef Container::List<ItemList> AllVariables;
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy
 
 // post include
 #include "links.h"
