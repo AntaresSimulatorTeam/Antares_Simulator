@@ -16,7 +16,7 @@ include("cmake/main.cmake")
 include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
-include("cmake/constraints-builder.cmake")
+add_subdirectory(constraints-builder)
 
 #
 # Resource file for Windows
