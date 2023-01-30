@@ -1,6 +1,22 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.5.0
+### Input
+In file **settings/generaldata.ini**, in section `adequacy patch`, add properties
+
+* `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
+* `include-hurdle-cost-csr` [bool]. Default value = `false`
+* `check-csr-cost-function` [bool]. Default value = `false`
+* `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
+* `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
+* `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`
+
+### Output
+* If `include-adq-patch` is set to `true`, add column `LMR VIOL.` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+* If `include-adq-patch` is set to `true`, add column `SPIL. ENRG. CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+* If `include-adq-patch` is set to `true`, add column `DTG MRG CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+
 ## v8.4.0
 ### Input
 #### Zero/infinite capacity for physical links only
@@ -20,22 +36,9 @@ In existing section `optimization`, remove property `include-split-exported-mps`
 #### Result format
 In file **settings/generaldata.ini**, in existing section `output`, add property `result-format` [str]. Default value = `txt-files`. If this property is set to `zip`, all results are written into a single zip archive, instead of multiple files.
 
-In file **settings/generaldata.ini**, in section `adequacy patch`, add properties
-
-* `price-taking-order` [Enum[isDens = 0, isLoad = 1]]. Default value = `isDens`
-* `include-hurdle-cost-csr` [bool]. Default value = `false`
-* `check-csr-cost-function` [bool]. Default value = `false`
-* `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
-* `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
-* `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`
-
 ### Output
 #### Result format
 If property `output/result-format` is set to `zip`, all results are stored in a single archive. The hierarchy within this archive remains identical, for example **economy/mc-all/areas/**. Otherwise, txt files are created like in previous versions.
-
-* If `include-adq-patch` is set to `true`, add column `LMR VIOL.` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
-* If `include-adq-patch` is set to `true`, add column `SPIL. ENRG. CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
-* If `include-adq-patch` is set to `true`, add column `DTG MRG CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
 
 ## v8.3.2
 ### Writing MPS files
