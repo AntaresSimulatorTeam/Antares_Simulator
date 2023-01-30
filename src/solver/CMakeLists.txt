@@ -7,7 +7,7 @@ if(MSVC)
 endif(MSVC)
 
 
-include("cmake/infeasible-problem-analysis.cmake")
+add_subdirectory(infeasible-problem-analysis)
 add_subdirectory(writer)
 add_subdirectory(variable)
 add_subdirectory(hydro)
