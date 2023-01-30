@@ -139,14 +139,6 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
-    - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }}
-      uses: ./.github/workflows/run-tests
-      with:
-        simtest-tag: ${{steps.simtest-version.outputs.prop}}
-        batch-name: adequacy-patch-CSR
-        os: ${{ matrix.test-platform }}
-
     - name: Run tests about infinity on BCs RHS
       if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
@@ -169,6 +161,14 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests for adequacy patch (CSR)
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
