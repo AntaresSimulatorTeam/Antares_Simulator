@@ -35,7 +35,7 @@ std::unique_ptr<interfacePostProcessList> interfacePostProcessList::create(
             problemeHebdo, thread_number, areas, sheddingPolicy, splxOptimization, calendar);
 }
 
-void interfacePostProcessList::runAll(const struct optRuntimeData& opt_runtime_data)
+void interfacePostProcessList::runAll(const optRuntimeData& opt_runtime_data)
 {
     for (auto& post_process : post_process_list)
     {

@@ -27,7 +27,7 @@ class basePostProcessCommand
 {
 public:
     virtual ~basePostProcessCommand() = default;
-    virtual void execute(const struct optRuntimeData& opt_runtime_data) = 0;
+    virtual void execute(const optRuntimeData& opt_runtime_data) = 0;
 
 protected:
     // Memeber functions
@@ -53,7 +53,7 @@ public:
                                                             SheddingPolicy sheddingPolicy,
                                                             SimplexOptimization splxOptimization,
                                                             Calendar& calendar);
-    void runAll(const struct optRuntimeData& opt_runtime_data);
+    void runAll(const optRuntimeData& opt_runtime_data);
     
 protected:
     // Member functions
