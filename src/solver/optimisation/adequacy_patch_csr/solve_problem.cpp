@@ -97,26 +97,24 @@ std::unique_ptr<PROBLEME_POINT_INTERIEUR> buildInteriorPointProblem(
 void setToZeroIfBelowThreshold(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                HourlyCSRProblem& hourlyCsrProblem)
 {
-    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
+    for (int var = 0; var < ProblemeAResoudre.NombreDeVariables; var++)
     {
-        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(Var)
+        bool inSet = hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.find(var)
                      != hourlyCsrProblem.varToBeSetToZeroIfBelowThreshold.end();
-        bool belowLimit = ProblemeAResoudre.X[Var] < hourlyCsrProblem.belowThisThresholdSetToZero;
+        bool belowLimit = ProblemeAResoudre.X[var] < hourlyCsrProblem.belowThisThresholdSetToZero;
         if (inSet && belowLimit)
-            ProblemeAResoudre.X[Var] = 0.0;
+            ProblemeAResoudre.X[var] = 0.0;
     }
 }
 
 void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre)
 {
-    for (int Var = 0; Var < ProblemeAResoudre.NombreDeVariables; Var++)
+    for (int var = 0; var < ProblemeAResoudre.NombreDeVariables; var++)
     {
-        double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
-        if (pt)
-            *pt = ProblemeAResoudre.X[Var];
+        if (double* pt = ProblemeAResoudre.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]; pt)
+            *pt = ProblemeAResoudre.X[var];
 
-        logs.debug() << "[CSR] X[" << Var << "] = " << ProblemeAResoudre.X[Var];
-
+        logs.debug() << "[CSR] X[" << var << "] = " << ProblemeAResoudre.X[var];
     }
 }
 
@@ -145,8 +143,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
              "solution is set as LMR . year: "
-          << yearNb + 1
-          << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.hourInWeekTriggeredCsr + 1;
+          << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
 double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
@@ -160,46 +157,50 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
         return cost;
     }
 
-    for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
+    for (int i = 0; i < Probleme.NombreDeVariables; i++)
     {
-        logs.debug() << "Var: " << Var;
-        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(Var) != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
+        logs.debug() << "i: " << i;
+        if (hourlyCsrProblem.ensVariablesInsideAdqPatch.find(i)
+                != hourlyCsrProblem.ensVariablesInsideAdqPatch.end())
         {
-            cost += Probleme.X[Var] * Probleme.X[Var]
-                    * Probleme.CoutQuadratique[Var];
-            logs.debug() << "X-Q: " << Probleme.X[Var] * 1e3;
-            logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[Var] * 1e3;
+            cost += Probleme.X[i] * Probleme.X[i] * Probleme.CoutQuadratique[i];
+            logs.debug() << "X-Q: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutQ: " << Probleme.CoutQuadratique[i] * 1e3;
             logs.debug() << "TotalCost: " << cost * 1e3;
         }
-        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(Var);
-        if ((itLink != hourlyCsrProblem.linkInsideAdqPatch.end()) && hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr)
+
+        auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
+        if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
+                || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr
+                || !itLink->second.check())
+            continue;
+
+        if (Probleme.X[i] >= 0)
         {
-            if (Probleme.X[Var] >= 0)
+            const int varDirect = itLink->second.directVar;
+            if (varDirect < 0)
             {
-                const int VarDirect = itLink->second.directVar;
-                if (VarDirect < 0)
-                {
-                    logs.warning() << "VarDirect < 0 detected, this should not happen";
-                    continue;
-                }
-                cost += Probleme.X[Var] * Probleme.CoutLineaire[VarDirect];
-                logs.debug() << "X+: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarDirect] * 1e3;
-                logs.debug() << "TotalCost: " << cost * 1e3;
+                logs.warning() << "VarDirect < 0 detected, this should not happen";
+                continue;
             }
-            else
+            cost += Probleme.X[i] * Probleme.CoutLineaire[varDirect];
+            logs.debug() << "X+: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[varDirect] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
+        }
+        else
+        {
+            const int varIndirect = itLink->second.indirectVar;
+            if (varIndirect < 0)
             {
-                const int VarIndirect = itLink->second.indirectVar;
-                if (VarIndirect < 0)
-                {
-                    logs.warning() << "VarIndirect < 0 detected, this should not happen";
-                    continue;
-                }
-                cost -= Probleme.X[Var] * Probleme.CoutLineaire[VarIndirect];
-                logs.debug() << "X-: " << Probleme.X[Var] * 1e3;
-                logs.debug() << "CoutL: " << Probleme.CoutLineaire[VarIndirect] * 1e3;
-                logs.debug() << "TotalCost: " << cost * 1e3;
+                logs.warning() << "VarIndirect < 0 detected, this should not happen";
+                continue;
+
             }
+            cost -= Probleme.X[i] * Probleme.CoutLineaire[varIndirect];
+            logs.debug() << "X-: " << Probleme.X[i] * 1e3;
+            logs.debug() << "CoutL: " << Probleme.CoutLineaire[varIndirect] * 1e3;
+            logs.debug() << "TotalCost: " << cost * 1e3;
         }
     }
     return cost;
@@ -211,12 +212,12 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
     logs.info() << LOG_UI_DISPLAY_MESSAGES_OFF;
     logs.info() << "Here is the trace:";
 
-    for (int Var = 0; Var < Probleme.NombreDeVariables; Var++)
+    for (int i = 0; i < Probleme.NombreDeVariables; i++)
     {
         logs.info().appendFormat("Variable %ld cout lineaire %e  cout quadratique %e",
-                                 Var,
-                                 Probleme.CoutLineaire[Var],
-                                 Probleme.CoutQuadratique[Var]);
+                                 i,
+                                 Probleme.CoutLineaire[i],
+                                 Probleme.CoutQuadratique[i]);
     }
     for (int Cnt = 0; Cnt < Probleme.NombreDeContraintes; Cnt++)
     {
@@ -227,13 +228,13 @@ void CSR_DEBUG_HANDLE(const PROBLEME_POINT_INTERIEUR& Probleme)
         int ilMax = il + Probleme.NombreDeTermesDesLignes[Cnt];
         for (; il < ilMax; ++il)
         {
-            int Var = Probleme.IndicesColonnes[il];
+            int var = Probleme.IndicesColonnes[il];
             logs.info().appendFormat("      coeff %e var %ld xmin %e xmax %e type %ld",
                                      Probleme.CoefficientsDeLaMatriceDesContraintes[il],
-                                     Var,
-                                     Probleme.Xmin[Var],
-                                     Probleme.Xmax[Var],
-                                     Probleme.TypeDeVariable[Var]);
+                                     var,
+                                     Probleme.Xmin[var],
+                                     Probleme.Xmax[var],
+                                     Probleme.TypeDeVariable[var]);
         }
     }
 }
@@ -271,8 +272,7 @@ bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
     }
     else
     {
-        handleInteriorPointError(
-          *Probleme, hourlyCsrProblem.hourInWeekTriggeredCsr, weekNb, yearNb);
+        handleInteriorPointError(*Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }

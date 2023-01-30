@@ -31,7 +31,6 @@
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
 #include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
-#include "../optimisation/post_process_commands.h"
 #include "common-eco-adq.h"
 #include "opt_time_writer.h"
 
@@ -92,6 +91,7 @@ bool Economy::simulationBegin()
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
         weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
         postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
@@ -104,18 +104,19 @@ bool Economy::simulationBegin()
                 return false;
             }
 
-            weeklyOptProblems_[numSpace]
-              = Antares::Solver::Optimization::WeeklyOptimization::create(
-                study.parameters.adqPatch.enabled, pProblemesHebdo[numSpace], numSpace);
-
-            postProcessesList_[numSpace] = createPostProcess(Data::stdmEconomy,
-                                                             study.parameters.adqPatch.enabled,
-                                                             pProblemesHebdo[numSpace],
-                                                             numSpace,
-                                                             study.areas,
-                                                             study.parameters.shedding.policy,
-                                                             study.parameters.simplexOptimizationRange,
-                                                             study.calendar);
+            weeklyOptProblems_[numSpace] =
+                Antares::Solver::Optimization::WeeklyOptimization::create(
+                                                    study.parameters.adqPatch.enabled,
+                                                    pProblemesHebdo[numSpace],
+                                                    numSpace);
+            postProcessesList_[numSpace] =
+                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
+                                                 pProblemesHebdo[numSpace],
+                                                 numSpace,
+                                                 study.areas,
+                                                 study.parameters.shedding.policy,
+                                                 study.parameters.simplexOptimizationRange,
+                                                 study.calendar);
         }
 
         SIM_InitialisationResultats();
@@ -131,6 +132,7 @@ bool Economy::simulationBegin()
     pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
     return true;
 }
+
 
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
@@ -171,14 +173,9 @@ bool Economy::year(Progression::Task& progression,
         {
             weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
 
-            // Runs all the post processes (in the list of post-process commands)
+            // Runs all the post processes in the list of post-process commands
             optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-            for (auto& cmd : postProcessesList_[numSpace])
-            {
-                cmd->execute(opt_runtime_data);
-            }
-
-            weeklyOptProblems_[numSpace]->postProcess(study.areas, state.year, w);
+            postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;

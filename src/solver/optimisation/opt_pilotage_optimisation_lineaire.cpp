@@ -36,56 +36,56 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* ProblemeHebdo, uint numSpace)
+bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
 {
-    if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
-        if (ProblemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
+        if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            for (int Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+            for (int Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
             {
-                ProblemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
+                problemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
             }
 
-            ProblemeHebdo->NombreDePasDeTempsRef = ProblemeHebdo->NombreDePasDeTemps;
-            ProblemeHebdo->NombreDePasDeTempsDUneJourneeRef
-              = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-            ProblemeHebdo->NombreDeJours = (int)(ProblemeHebdo->NombreDePasDeTemps
-                                                 / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
+            problemeHebdo->NombreDePasDeTempsRef = problemeHebdo->NombreDePasDeTemps;
+            problemeHebdo->NombreDePasDeTempsDUneJourneeRef
+              = problemeHebdo->NombreDePasDeTempsDUneJournee;
+            problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
+                                                 / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
-            if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+            if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
             {
-                ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
+                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+                  = problemeHebdo->NombreDePasDeTempsDUneJournee;
             }
             else
             {
-                ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation
-                  = ProblemeHebdo->NombreDePasDeTemps;
+                problemeHebdo->NombreDePasDeTempsPourUneOptimisation
+                  = problemeHebdo->NombreDePasDeTemps;
             }
 
-            OPT_AllocDuProblemeAOptimiser(ProblemeHebdo);
+            OPT_AllocDuProblemeAOptimiser(problemeHebdo);
 
-            OPT_ChainagesDesIntercoPartantDUnNoeud(ProblemeHebdo);
+            OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
         }
 
-        ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
     }
 
-    OPT_VerifierPresenceReserveJmoins1(ProblemeHebdo);
+    OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
 
-    OPT_SauvegarderLesPmaxThermiques(ProblemeHebdo);
+    OPT_SauvegarderLesPmaxThermiques(problemeHebdo);
 
-    OPT_InitialiserLesPminHebdo(ProblemeHebdo);
+    OPT_InitialiserLesPminHebdo(problemeHebdo);
 
-    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(ProblemeHebdo);
+    OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(problemeHebdo);
 
-    OPT_MaxDesPmaxHydrauliques(ProblemeHebdo);
+    OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
     {
-        OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(ProblemeHebdo);
+        OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(ProblemeHebdo, numSpace);
+    return OPT_OptimisationLineaire(problemeHebdo, numSpace);
 }

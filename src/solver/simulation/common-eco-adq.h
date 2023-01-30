@@ -122,6 +122,7 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway = false);
 
+
 /*
 ** \brief Interpolates water values related to reservoir levels for outputs only
 **
@@ -144,7 +145,8 @@ void interpolateWaterValue(const Data::AreaList& areas,
 ** \param areas : the areas of study
 ** \param problem The weekly problem, from the solver
 */
-void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem);
+void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
+                                   PROBLEME_HEBDO& problem);
 
 /*
 ** \brief Updating the year final reservoir level, to be used as a start for the year.

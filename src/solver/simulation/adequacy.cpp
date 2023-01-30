@@ -179,7 +179,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -229,12 +229,17 @@ bool Adequacy::year(Progression::Task& progression,
             try
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
-                // Runs all the post processes (in the list of post-process commands)
-                optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
-                for (auto& cmd : postProcessesList_[numSpace])
-                {
-                    cmd->execute(opt_runtime_data);
-                }
+
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
+
+                RemixHydroForAllAreas(study.areas, 
+                                      *pProblemesHebdo[numSpace],
+                                      study.parameters.shedding.policy,
+                                      study.parameters.simplexOptimizationRange,
+                                      numSpace, 
+                                      hourInTheYear);
+
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -327,8 +332,7 @@ bool Adequacy::year(Progression::Task& progression,
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(
-          study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
         updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 

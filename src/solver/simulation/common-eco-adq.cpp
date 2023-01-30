@@ -44,16 +44,6 @@ using namespace Yuni;
 
 namespace Antares::Solver::Simulation
 {
-std::vector<std::unique_ptr<PostProcessCommand>> createPostProcess(
-  Data::StudyMode mode,
-  bool adqPatchEnabled,
-  PROBLEME_HEBDO* problemeHebdo,
-  uint thread_number,
-  Data::AreaList& areas,
-  Data::SheddingPolicy sheddingPolicy,
-  Data::SimplexOptimization splxOptimization,
-  Date::Calendar& calendar)
-{
     std::vector<std::unique_ptr<PostProcessCommand>> post_process_list;
     using namespace Antares::Data;
     if (mode == stdmEconomy)

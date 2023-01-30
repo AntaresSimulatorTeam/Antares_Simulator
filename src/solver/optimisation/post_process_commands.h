@@ -1,105 +1,110 @@
 #pragma once
 
-#include <antares/study.h>
-#include <antares/study/fwd.h>
-
-#include "post_process_command.h"
+#include "../simulation/base_post_process.h"
 
 namespace Antares::Solver::Simulation
 {
-class DispatchableMarginPostProcessCmd : public PostProcessCommand
+class DispatchableMarginPostProcessCmd : public basePostProcessCommand
 {
 public:
     DispatchableMarginPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
                                      unsigned int thread_number,
-                                     Data::AreaList& areas);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+                                     AreaList& areas);
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
     unsigned int thread_number_ = 0;
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
 };
 
-class HydroLevelsUpdatePostProcessCmd : public PostProcessCommand
+class HydroLevelsUpdatePostProcessCmd : public basePostProcessCommand
 {
 public:
     HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                    Data::AreaList& areas,
+                                    AreaList& areas,
                                     bool remixWasRun,
                                     bool computeAnyway);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
     bool remixWasRun_ = false;
     bool computeAnyway_ = false;
 };
 
-class RemixHydroPostProcessCmd : public PostProcessCommand
+class RemixHydroPostProcessCmd : public basePostProcessCommand
 {
 public:
     RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                             Data::AreaList& areas,
-                             Data::SheddingPolicy sheddingPolicy,
-                             Data::SimplexOptimization simplexOptimization,
+                             AreaList& areas,
+                             SheddingPolicy sheddingPolicy,
+                             SimplexOptimization simplexOptimization,
                              unsigned int thread_number);
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
     unsigned int thread_number_ = 0;
-    Data::SheddingPolicy shedding_policy_;
-    Data::SimplexOptimization splx_optimization_;
+    SheddingPolicy shedding_policy_;
+    SimplexOptimization splx_optimization_;
 };
 
-class DTGmarginForAdqPatchPostProcessCmd : public PostProcessCommand
+class DTGmarginForAdqPatchPostProcessCmd : public basePostProcessCommand
 {
 public:
     DTGmarginForAdqPatchPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                       Data::AreaList& areas,
+                                       AreaList& areas,
                                        unsigned int thread_number);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
     unsigned int thread_number_ = 0;
 };
 
-class InterpolateWaterValuePostProcessCmd : public PostProcessCommand
+class InterpolateWaterValuePostProcessCmd : public basePostProcessCommand
 {
 public:
     InterpolateWaterValuePostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
-                                        Data::AreaList& areas,
+                                        AreaList& areas,
                                         const Date::Calendar& calendar);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
     const Date::Calendar& calendar_;
 };
 
-class HydroLevelsFinalUpdatePostProcessCmd : public PostProcessCommand
+class HydroLevelsFinalUpdatePostProcessCmd : public basePostProcessCommand
 {
 public:
-    HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, Data::AreaList& areas);
+    HydroLevelsFinalUpdatePostProcessCmd(PROBLEME_HEBDO* problemeHebdo, AreaList& areas);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    const AreaList& area_list_;
 };
 
-class CurtailmentSharingPostProcessCmd : public PostProcessCommand
+class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
 public:
-    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo, Data::AreaList& areas);
+    CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+                                     AreaList& areas,
+                                     unsigned int thread_number);
 
-    void execute(const struct optRuntimeData& opt_runtime_data) override;
+    void execute(const optRuntimeData& opt_runtime_data) override;
 
 private:
-    const Data::AreaList& area_list_;
+    double calculateDensNewAndTotalLmrViolation();
+    std::vector<double> calculateENSoverAllAreasForEachHour() const;
+    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
+    std::set<int> getHoursRequiringCurtailmentSharing() const;
+
+    const AreaList& area_list_;
+    unsigned int thread_number_ = 0;
 };
 
 } // namespace Antares::Solver::Simulation
