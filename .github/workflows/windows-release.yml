@@ -150,7 +150,6 @@ jobs:
         prop_path: 'version'
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
