@@ -32,7 +32,7 @@
 #include "../solver/simulation/sim_structure_donnees.h"
 #include "../solver/optimisation/opt_fonctions.h"
 #include "csr_quadratic_problem.h"
-#include "../hourly_csr_problem.h"
+#include "hourly_csr_problem.h"
 
 using namespace Antares::Data;
 

@@ -28,7 +28,7 @@
 #include <memory>
 #include "base_weekly_optimization.h"
 #include "weekly_optimization.h"
-#include "adequacy_patch_weekly_optimization.h"
+#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
 namespace Antares::Solver::Optimization
 {
