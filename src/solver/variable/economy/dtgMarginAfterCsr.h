@@ -96,8 +96,7 @@ struct VCardDtgMarginCsr
 **   the thermal dispatchable clusters
 */
 template<class NextT = Container::EndOfList>
-class DtgMarginCsr
- : public Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardDtgMarginCsr>
+class DtgMarginCsr : public Variable::IVariable<DtgMarginCsr<NextT>, NextT, VCardDtgMarginCsr>
 {
 public:
     //! Type of the next static variable
@@ -234,12 +233,6 @@ public:
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
