@@ -35,6 +35,8 @@
 
 #include <memory>
 #include <yuni/core/math.h>
+#include <utility>
+#include <set>
 
 typedef struct
 {
@@ -310,6 +312,17 @@ public:
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
+
+    bool wasCSRTriggeredAtAreaHour(int area, int hour) const
+    {
+        return csrTriggered_.find(std::pair(area, hour)) != csrTriggered_.end();
+    }
+
+    void addCSRTriggeredAtAreaHour(int area, int hour)
+    {
+        csrTriggered_.insert(std::pair(area, hour));
+    }
+
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -324,6 +337,9 @@ public:
             extremityAreaMode.push_back(link.with->adequacyPatchMode);
         }
     }
+
+private:
+    std::set<std::pair<int, int>> csrTriggered_;
 };
 
 class computeTimeStepLevel

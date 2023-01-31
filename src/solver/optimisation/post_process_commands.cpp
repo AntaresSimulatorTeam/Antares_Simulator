@@ -133,7 +133,7 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData& opt_runti
             double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
             // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            if (problemeHebdo_->adequacyPatchRuntimeData.wasCSRTriggeredAtAreaHour(Area, hour))
             {
                 dtgMrgCsr = std::max(0.0, dtgMrg - ens);
                 ens = std::max(0.0, ens - dtgMrg);

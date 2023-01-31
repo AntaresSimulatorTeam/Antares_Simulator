@@ -126,8 +126,8 @@ void HourlyCSRProblem::calculateCsrParameters()
         if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
             == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
-            problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
+            problemeHebdo_->adequacyPatchRuntimeData.addCSRTriggeredAtAreaHour(Area, hour);
+
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
               = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo_, Area, hour);
@@ -170,7 +170,8 @@ void HourlyCSRProblem::buildProblemVariables()
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_, problemeAResoudre_, *this);
+    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(
+      problemeHebdo_, problemeAResoudre_, *this);
     csrProb.buildConstraintMatrix();
 }
 
