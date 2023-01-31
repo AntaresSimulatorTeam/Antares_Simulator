@@ -29,7 +29,9 @@
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 
-#include "simulation.h"
+//#include "simulation.h"
+#include "sim_structure_probleme_economique.h"
+#include "sim_extern_variables_globales.h"
 
 #include <antares/emergency.h>
 

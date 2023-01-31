@@ -29,9 +29,6 @@
 
 #include "../config.h"
 #include <antares/study/study.h>
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "../variable/state.h"
 
 #define OUI_ANTARES 1
 #define NON_ANTARES 0
@@ -47,6 +44,8 @@
 #define ZERO_RESERVE_J_MOINS1 1.e-2
 
 void SIM_AllocationTableaux(void);
+
+class PROBLEME_HEBDO;
 
 /*!
 ** \brief Alloue toutes les donnees d'un probleme hebdo

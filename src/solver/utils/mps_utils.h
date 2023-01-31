@@ -67,7 +67,8 @@ public:
 class mpsWriterFactory
 {
 public:
-    mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo,
+    mpsWriterFactory(Data::mpsExportStatus exportMPS,
+                     bool exportMPSOnError,
                      const int current_optim_number,
                      PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                      bool ortoolsUsed,
