@@ -35,6 +35,8 @@
 #include <yuni/io/file.h>
 #include "opt_fonctions.h"
 
+#define ZERO_PMIN 1.e-2
+
 double OPT_CalculerAireMaxPminJour(int PremierPdt,
                                    int DernierPdt,
                                    int MUTetMDT,
