@@ -32,7 +32,7 @@
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "defines.h"
+#include "sim_defines.h"
 #include <memory>
 #include <yuni/core/math.h>
 

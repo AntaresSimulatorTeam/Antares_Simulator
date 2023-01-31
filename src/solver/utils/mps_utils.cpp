@@ -49,6 +49,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include <vector>
 #include <algorithm>
 #include "filename.h"
+#include "../optimisation/opt_defines.h"
 
 using namespace Yuni;
 
@@ -142,7 +143,6 @@ mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    bool ortoolsUsed,
                                    MPSolver* solver) :
- // TODO[FOM] reorder to avoid compile errors
  export_mps_(exportMPS),
  export_mps_on_error_(exportMPSOnError),
  named_splx_problem_(named_splx_problem),
@@ -159,10 +159,9 @@ bool mpsWriterFactory::doWeExportMPS()
     case Data::mpsExportStatus::EXPORT_BOTH_OPTIMS:
         return true;
     case Data::mpsExportStatus::EXPORT_FIRST_OPTIM:
-        // TODO[FOM] restore constants
-        return current_optim_number_ == 1;
+        return current_optim_number_ == PREMIERE_OPTIMISATION;
     case Data::mpsExportStatus::EXPORT_SECOND_OPTIM:
-        return current_optim_number_ == 2;
+        return current_optim_number_ == DEUXIEME_OPTIMISATION;
     default:
         return false;
     }

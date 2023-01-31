@@ -29,34 +29,7 @@
 
 #include <vector>
 #include <string>
-
-#define PREMIERE_OPTIMISATION 1
-#define DEUXIEME_OPTIMISATION 2
-
-/* # define CONTRAINTE_DE_RESERVE       NON_ANTARES */ /* OUI_ANTARES ou NON_ANTARES */
-
-#define RESERVE_J_MOINS_1 OUI_ANTARES
-
-/*
-# define CONTRAINTE_HORAIRE       1
-# define CONTRAINTE_MULTI_HORAIRE 2
-*/
-
-#define CONTRAINTE_HORAIRE 1
-#define CONTRAINTE_JOURNALIERE 2
-#define CONTRAINTE_HEBDOMADAIRE 3
-
-#define PAS_DE_LISSAGE_HYDRAULIQUE 0
-#define LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS 1
-#define LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX 2
-
-#define ALTRUISTE 1
-#define EGOISTE 2
-
-#define ANTARES_SIMPLEXE 1
-#define ANTARES_PNE 2
-
-#define VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES OUI_ANTARES
+#include "opt_defines.h"
 
 /*--------------------------------------------------------------------------------------*/
 

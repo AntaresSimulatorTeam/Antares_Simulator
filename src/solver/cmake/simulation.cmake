@@ -15,7 +15,7 @@ set(SRC_SIMULATION
 		simulation/sim_structure_probleme_adequation.h
 		simulation/sim_structure_probleme_economique.h
 		simulation/sim_variables_globales.cpp
-        simulation/defines.h
+        simulation/sim_defines.h
 		simulation/simulation.h
 		simulation/solver.h
 		simulation/solver.hxx
