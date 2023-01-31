@@ -1,6 +1,10 @@
 Antares Changelog
 =================
 
+v8.5.0 (01/2022)
+--------------------
+* Fix examples studies (invalid v8.3.0 -> v8.5.0)
+
 v8.5.0-rc2 (01/2022)
 --------------------
 * Re-publish of v8.5.0-rc1.
