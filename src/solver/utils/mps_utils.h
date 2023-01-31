@@ -83,11 +83,10 @@ private:
     bool doWeExportMPS();
 
     // Member data...
-    PROBLEME_HEBDO* pb_hebdo_ = nullptr;
+    Data::mpsExportStatus export_mps_;
+    bool export_mps_on_error_;
     PROBLEME_SIMPLEXE_NOMME* named_splx_problem_ = nullptr;
     bool ortools_used_;
     MPSolver* solver_ = nullptr;
     uint current_optim_number_;
-    Data::mpsExportStatus export_mps_;
-    bool export_mps_on_error_;
 };
