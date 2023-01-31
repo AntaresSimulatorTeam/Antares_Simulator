@@ -216,7 +216,9 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           tar czf antares-solver_ubuntu20.04.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           cmake --install . --prefix install
+           tar czf antares-solver_ubuntu20.04.tar.gz install/bin/antares-*-solver install/bin/libsirius_solver.so
+           rm -rf install
 
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3
