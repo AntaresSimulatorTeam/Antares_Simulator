@@ -270,14 +270,14 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 auto& varduales
                   = *(pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i]);
-                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount; ++lnkindex)
+                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
                 auto* ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount);
+                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount());
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)
@@ -391,7 +391,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
