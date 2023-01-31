@@ -19,7 +19,7 @@ using namespace Yuni;
 constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
