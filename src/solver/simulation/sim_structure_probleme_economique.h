@@ -35,7 +35,7 @@
 
 #include <memory>
 #include <yuni/core/math.h>
-#include <utility>
+#include <vector>
 #include <set>
 
 typedef struct
@@ -307,6 +307,7 @@ class AdequacyPatchRuntimeData
 {
 private:
     using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+    std::vector<std::set<int>> csrTriggered;
 
 public:
     std::vector<adqPatchParamsMode> areaMode;
@@ -315,16 +316,17 @@ public:
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const
     {
-        return csrTriggered_.find(std::pair(area, hour)) != csrTriggered_.end();
+        return csrTriggered[area].count(hour) > 0;
     }
 
     void addCSRTriggeredAtAreaHour(int area, int hour)
     {
-        csrTriggered_.insert(std::pair(area, hour));
+        csrTriggered[area].insert(hour);
     }
 
     void initialize(Antares::Data::Study& study)
     {
+        csrTriggered.resize(study.areas.size());
         for (uint i = 0; i != study.areas.size(); ++i)
         {
             auto& area = *(study.areas[i]);
@@ -337,9 +339,6 @@ public:
             extremityAreaMode.push_back(link.with->adequacyPatchMode);
         }
     }
-
-private:
-    std::set<std::pair<int, int>> csrTriggered_;
 };
 
 class computeTimeStepLevel
