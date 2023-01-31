@@ -27,7 +27,7 @@
 
 #pragma once
 
-#include "base_weekly_optimization.h"
+#include "../base_weekly_optimization.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "antares/study/area/area.h"
 

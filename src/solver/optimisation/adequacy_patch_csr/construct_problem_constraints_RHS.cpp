@@ -27,7 +27,7 @@
 
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../solver/simulation/simulation.h"
-#include "../hourly_csr_problem.h"
+#include "hourly_csr_problem.h"
 
 void HourlyCSRProblem::setRHSvalueOnFlows()
 {
