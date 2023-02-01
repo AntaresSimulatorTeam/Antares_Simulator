@@ -15,12 +15,12 @@ void AdequacyPatchRuntimeData::initialize(Antares::Data::Study& study)
     csrTriggered.resize(study.areas.size());
     for (uint i = 0; i != study.areas.size(); ++i)
     {
-        auto& area = *(study.areas[i]);
+        const auto& area = *(study.areas[i]);
         areaMode.push_back(area.adequacyPatchMode);
     }
     for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
     {
-        auto& link = *(study.runtime->areaLink[i]);
+        const auto& link = *(study.runtime->areaLink[i]);
         originAreaMode.push_back(link.from->adequacyPatchMode);
         extremityAreaMode.push_back(link.with->adequacyPatchMode);
     }
