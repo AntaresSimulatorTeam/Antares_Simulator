@@ -49,7 +49,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include <vector>
 #include <algorithm>
 #include "filename.h"
-#include "../optimisation/opt_defines.h"
+#include "../optimisation/opt_constants.h"
 
 using namespace Yuni;
 
