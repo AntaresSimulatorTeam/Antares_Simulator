@@ -517,7 +517,7 @@ struct PROBLEME_HEBDO
 
     int NombreDePasDeTemps = 0;
     int NombreDePasDeTempsRef = 0;
-    int* NumeroDeJourDuPasDeTemps = 0;
+    int* NumeroDeJourDuPasDeTemps = nullptr;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;
     int* NumeroDIntervalleOptimiseDuPasDeTemps = nullptr;
