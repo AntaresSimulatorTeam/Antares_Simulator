@@ -73,7 +73,8 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adequacyPatchRuntimeData->originAreaMode.resize(3);
     problem.adequacyPatchRuntimeData->extremityAreaMode.resize(3);
 
-    const auto& adqPatchParams = problem.adqPatchParams;
+    auto& adqPatchParams = problem.adqPatchParams;
+    adqPatchParams = std::make_shared<AdequacyPatchParameters>();
 
     problem.ResultatsHoraires = new RESULTATS_HORAIRES*;
     problem.ResultatsHoraires[0] = new RESULTATS_HORAIRES;
