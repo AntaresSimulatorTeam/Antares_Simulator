@@ -30,6 +30,5 @@
 
 PROBLEME_HEBDO::PROBLEME_HEBDO()
 {
-    adqPatchParams = std::make_shared<AdequacyPatchParameters>();
     adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
 }
