@@ -2,7 +2,7 @@
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
-#include "adequacy_patch_weekly_optimization.h"
+#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation

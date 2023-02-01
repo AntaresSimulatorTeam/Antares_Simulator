@@ -31,6 +31,8 @@
 
 #include "simulation.h"
 #include "adequacy_patch_runtime_data.h"
+#include "sim_extern_variables_globales.h"
+#include "sim_structure_probleme_economique.h"
 
 #include <antares/emergency.h>
 

@@ -25,9 +25,8 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "adequacy_patch_weekly_optimization.h"
-#include "opt_fonctions.h"
+#include "../opt_fonctions.h"
 #include "../simulation/simulation.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/area/scratchpad.h"

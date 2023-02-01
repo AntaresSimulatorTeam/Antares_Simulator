@@ -20,6 +20,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_pilotage_optimisation_lineaire.cpp
 		optimisation/opt_pilotage_optimisation_quadratique.cpp
 		optimisation/opt_structure_probleme_a_resoudre.h
+        optimisation/opt_defines.h
 		optimisation/opt_alloc_probleme_a_optimiser.cpp
 		optimisation/opt_gestion_des_bornes_cas_quadratique.cpp
 		optimisation/opt_construction_variables_optimisees_lineaire.cpp
@@ -54,16 +55,16 @@ set(RTESOLVER_OPT
 		optimisation/opt_export_structure.cpp
 		optimisation/base_weekly_optimization.h
 		optimisation/base_weekly_optimization.cpp
-		optimisation/adequacy_patch_weekly_optimization.h
-		optimisation/adequacy_patch_weekly_optimization.cpp
+		optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
+		optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
 		optimisation/weekly_optimization.h
 		optimisation/weekly_optimization.cpp
 		optimisation/optim_post_process_list.h
 		optimisation/optim_post_process_list.cpp
-		optimisation/adq_patch_post_process_list.h
-		optimisation/adq_patch_post_process_list.cpp
 		optimisation/post_process_commands.h
 		optimisation/post_process_commands.cpp
+		optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
+		optimisation/adequacy_patch_csr/adq_patch_post_process_list.cpp
 		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
 		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.cpp
 		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
