@@ -30,13 +30,14 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
+#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 
 #include <memory>
 #include <yuni/core/math.h>
-#include <vector>
-#include <set>
+
+class AdequacyPatchRuntimeData;
 
 typedef struct
 {
@@ -302,44 +303,6 @@ typedef struct
     double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
-
-class AdequacyPatchRuntimeData
-{
-private:
-    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
-    std::vector<std::set<int>> csrTriggered;
-
-public:
-    std::vector<adqPatchParamsMode> areaMode;
-    std::vector<adqPatchParamsMode> originAreaMode;
-    std::vector<adqPatchParamsMode> extremityAreaMode;
-
-    bool wasCSRTriggeredAtAreaHour(int area, int hour) const
-    {
-        return csrTriggered[area].count(hour) > 0;
-    }
-
-    void addCSRTriggeredAtAreaHour(int area, int hour)
-    {
-        csrTriggered[area].insert(hour);
-    }
-
-    void initialize(Antares::Data::Study& study)
-    {
-        csrTriggered.resize(study.areas.size());
-        for (uint i = 0; i != study.areas.size(); ++i)
-        {
-            auto& area = *(study.areas[i]);
-            areaMode.push_back(area.adequacyPatchMode);
-        }
-        for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
-        {
-            auto& link = *(study.runtime->areaLink[i]);
-            originAreaMode.push_back(link.from->adequacyPatchMode);
-            extremityAreaMode.push_back(link.with->adequacyPatchMode);
-        }
-    }
-};
 
 class computeTimeStepLevel
 {
@@ -614,8 +577,8 @@ struct PROBLEME_HEBDO
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
-    AdequacyPatchRuntimeData adequacyPatchRuntimeData;
+    std::shared_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
+    std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData = nullptr;
 
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique;

@@ -29,6 +29,7 @@
 #include "../opt_fonctions.h"
 #include "csr_quadratic_problem.h"
 #include "count_constraints_variables.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include <cmath>
 #include "../study/area/scratchpad.h"
@@ -70,12 +71,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     int Interco = problemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
             netPositionInit -= problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+        else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
@@ -86,12 +87,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     Interco = problemeHebdo->IndexDebutIntercoExtremite[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
             netPositionInit += problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
@@ -123,10 +124,10 @@ void HourlyCSRProblem::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            problemeHebdo_->adequacyPatchRuntimeData.addCSRTriggeredAtAreaHour(Area, hour);
+            problemeHebdo_->adequacyPatchRuntimeData->addCSRTriggeredAtAreaHour(Area, hour);
 
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)

@@ -26,6 +26,7 @@
 */
 
 #include "count_constraints_variables.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
 {
@@ -36,9 +37,9 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     // type 2.
     for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfConstraints++;
     }
@@ -51,7 +52,7 @@ int countConstraints(const PROBLEME_HEBDO* problemeHebdo)
     // for all areas inside adequacy patch
     for (int Area = 0; Area < problemeHebdo->NombreDePays; ++Area)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[Area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfConstraints++;
     }
@@ -73,7 +74,7 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
     for (int area = 0; area < problemeHebdo->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             numberOfVariables += 2; // ENS, spilled energy
     }
@@ -81,9 +82,9 @@ int countVariables(const PROBLEME_HEBDO* problemeHebdo)
     for (int Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             numberOfVariables += 3; // algebraic flow, direct flow, indirect flow

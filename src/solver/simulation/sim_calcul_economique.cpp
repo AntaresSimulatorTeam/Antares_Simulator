@@ -30,6 +30,7 @@
 #include <antares/study/area/scratchpad.h>
 
 #include "simulation.h"
+#include "adequacy_patch_runtime_data.h"
 
 #include <antares/emergency.h>
 
@@ -75,7 +76,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         double temp = pow(10, -parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
         problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
 
-        problem.adequacyPatchRuntimeData.initialize(study);
+        problem.adequacyPatchRuntimeData->initialize(study);
     }
 
     problem.WaterValueAccurate

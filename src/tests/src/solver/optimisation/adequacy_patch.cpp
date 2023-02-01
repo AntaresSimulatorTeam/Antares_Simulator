@@ -6,6 +6,7 @@
 
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
+#include <adequacy_patch_runtime_data.h>
 
 #include <vector>
 #include <tuple>
@@ -25,11 +26,11 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
                                                      bool SetNTCOutsideToInsideToZero)
 {
     PROBLEME_HEBDO problem;
-    problem.adequacyPatchRuntimeData.originAreaMode.resize(1);
-    problem.adequacyPatchRuntimeData.extremityAreaMode.resize(1);
+    problem.adequacyPatchRuntimeData->originAreaMode.resize(1);
+    problem.adequacyPatchRuntimeData->extremityAreaMode.resize(1);
 
-    problem.adequacyPatchRuntimeData.originAreaMode[0] = originType;
-    problem.adequacyPatchRuntimeData.extremityAreaMode[0] = extremityType;
+    problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
+    problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
     problem.adqPatchParams
       = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
     auto& adqPatchParams = problem.adqPatchParams;
@@ -69,8 +70,8 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     uint hour = 0;
 
     // allocate memory
-    problem.adequacyPatchRuntimeData.originAreaMode.resize(3);
-    problem.adequacyPatchRuntimeData.extremityAreaMode.resize(3);
+    problem.adequacyPatchRuntimeData->originAreaMode.resize(3);
+    problem.adequacyPatchRuntimeData->extremityAreaMode.resize(3);
 
     problem.adqPatchParams = std::make_unique<AdequacyPatchParameters>();
     const auto& adqPatchParams = problem.adqPatchParams;
@@ -91,20 +92,21 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
-    problem.adequacyPatchRuntimeData.extremityAreaMode[Interco] = Area1Mode;
+    problem.adequacyPatchRuntimeData->extremityAreaMode[Interco] = Area1Mode;
     problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowToArea1;
     problem.IndexSuivantIntercoOrigine[Interco] = -1;
 
     Interco = 2;
     problem.IndexDebutIntercoExtremite[Area] = Interco;
-    problem.adequacyPatchRuntimeData.originAreaMode[Interco] = Area2Mode;
+    problem.adequacyPatchRuntimeData->originAreaMode[Interco] = Area2Mode;
     problem.ValeursDeNTC[hour]->ValeurDuFlux[Interco] = flowFromArea2;
     problem.IndexSuivantIntercoExtremite[Interco] = -1;
 
     // get results
     double netPositionInit;
     double densNew;
-    std::tie(netPositionInit, densNew, std::ignore) = calculateAreaFlowBalance(&problem, Area, hour);
+    std::tie(netPositionInit, densNew, std::ignore)
+      = calculateAreaFlowBalance(&problem, Area, hour);
 
     // free memory
     delete[] problem.IndexDebutIntercoExtremite;
@@ -273,7 +275,7 @@ BOOST_AUTO_TEST_CASE(
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_positive);
     BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive);
-    BOOST_CHECK_EQUAL(densNew, positiveEnsInit-flowArea0toArea1_positive);
+    BOOST_CHECK_EQUAL(densNew, positiveEnsInit - flowArea0toArea1_positive);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:
@@ -456,7 +458,7 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                flowArea0toArea1_positive,
                                                flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
-    BOOST_CHECK_EQUAL(densNew, positiveEnsInit+netPositionInit);
+    BOOST_CHECK_EQUAL(densNew, positiveEnsInit + netPositionInit);
 }
 
 // Area 0 is physical area inside adq-patch connected to two areas:

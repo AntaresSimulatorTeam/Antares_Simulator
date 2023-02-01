@@ -29,6 +29,7 @@
 #include "adequacy_patch_weekly_optimization.h"
 #include "opt_fonctions.h"
 #include "../simulation/simulation.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 #include "antares/study/area/scratchpad.h"
 #include "antares/study/fwd.h"
 
@@ -51,7 +52,7 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 
     for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[pays]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             memcpy(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
                    problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
