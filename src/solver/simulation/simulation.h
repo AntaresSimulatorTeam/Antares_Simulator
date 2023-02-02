@@ -64,7 +64,7 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
 void SIM_PreallocationTableaux(void);
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
-                                    Antares::Solver::Variable::State& state,
+                                    uint weekInTheYear,
                                     uint numSpace,
                                     const int);
 

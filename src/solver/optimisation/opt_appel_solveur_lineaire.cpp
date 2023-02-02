@@ -95,37 +95,27 @@ private:
     clock::time_point end_;
 };
 
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* ProblemeHebdo,
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          int NumIntervalle,
                          const int optimizationNumber,
                          std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
-    int Var;
-    int Cnt;
-    double* pt;
-    char PremierPassage;
-    double CoutOpt;
-    long long solveTime;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    PROBLEME_SPX* ProbSpx;
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes);
-    PremierPassage = OUI_ANTARES;
-    MPSolver* solver;
+    char PremierPassage = OUI_ANTARES;
 
-    ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    MPSolver* solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
 
     const int opt = optimizationNumber - 1;
     assert(opt >= 0 && opt < 2);
-    OptimizationStatistics* optimizationStatistics = &(ProblemeHebdo->optimizationStatistics[opt]);
+    OptimizationStatistics* optimizationStatistics = &(problemeHebdo->optimizationStatistics[opt]);
 
 RESOLUTION:
 
@@ -136,7 +126,7 @@ RESOLUTION:
     }
     else
     {
-        if (ProblemeHebdo->ReinitOptimisation == OUI_ANTARES)
+        if (problemeHebdo->ReinitOptimisation == OUI_ANTARES)
         {
             if (ortoolsUsed && solver != nullptr)
             {
@@ -246,7 +236,7 @@ RESOLUTION:
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
     mpsWriterFactory mps_writer_factory(
-      ProblemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
+      problemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
@@ -269,7 +259,7 @@ RESOLUTION:
         }
     }
     measure.tick();
-    solveTime = measure.duration_ms();
+    long long solveTime = measure.duration_ms();
     optimizationStatistics->addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
@@ -315,32 +305,34 @@ RESOLUTION:
         {
             logs.info() << " Solver: Safe resolution succeeded";
         }
-        CoutOpt = 0.0;
 
-        for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
+        double *pt;
+        double CoutOpt = 0.0;
+
+        for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            CoutOpt += ProblemeAResoudre->CoutLineaire[Var] * ProblemeAResoudre->X[Var];
+            CoutOpt += ProblemeAResoudre->CoutLineaire[i] * ProblemeAResoudre->X[i];
 
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var];
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt != nullptr)
-                *pt = ProblemeAResoudre->X[Var];
+                *pt = ProblemeAResoudre->X[i];
 
-            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[Var];
+            pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsReduits[i];
             if (pt != nullptr)
-                *pt = ProblemeAResoudre->CoutsReduits[Var];
+                *pt = ProblemeAResoudre->CoutsReduits[i];
         }
 
         if (optimizationNumber == PREMIERE_OPTIMISATION)
         {
-            ProblemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
-            ProblemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
+            problemeHebdo->coutOptimalSolution1[NumIntervalle] = CoutOpt;
+            problemeHebdo->tempsResolution1[NumIntervalle] = solveTime;
         }
         else
         {
-            ProblemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
-            ProblemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
+            problemeHebdo->coutOptimalSolution2[NumIntervalle] = CoutOpt;
+            problemeHebdo->tempsResolution2[NumIntervalle] = solveTime;
         }
-        for (Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
+        for (int Cnt = 0; Cnt < ProblemeAResoudre->NombreDeContraintes; Cnt++)
         {
             pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux[Cnt];
             if (pt != nullptr)

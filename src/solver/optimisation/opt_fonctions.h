@@ -30,6 +30,7 @@
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
+#include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
 
 void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
@@ -52,8 +53,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
-
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&, HourlyCSRProblem&, uint week, int year);
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
@@ -85,6 +86,9 @@ void OPT_ChargerLaContrainteDansLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOU
                                                         const std::string& NomDeLaContrainte = "");
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO*);
 
+void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+                                                 int);
+void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);
 void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*, int*);
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);

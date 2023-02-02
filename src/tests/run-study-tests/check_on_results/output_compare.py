@@ -8,7 +8,7 @@ from check_on_results.check_general import check_interface
 from check_decorators.print_name import printNameDecorator
 from utils.assertions import check
 from utils.find_reference import find_reference_folder
-from utils.find_output import find_output_folder
+from utils.find_output import find_dated_output_folder, find_simulation_folder
 from actions_on_study.study_modifier import study_modifier
 from utils.csv import read_csv
 
@@ -18,6 +18,7 @@ class output_compare(check_interface):
     def __init__(self, study_path, tolerances = get_tolerances()):
         super().__init__(study_path)
         self.tol = tolerances
+        # Retrieve the full path of 'reference' folder
         self.ref_folder = find_reference_folder(self.study_path)
 
         print_results = study_modifier(self.study_path, study_parameter="synthesis", new_value="true",
@@ -26,23 +27,21 @@ class output_compare(check_interface):
         self.study_modifiers_.append(print_results)
 
     def run(self):
-        reference_folder = find_simulation_folder(self.ref_folder)
+        # Reference simulation folder (can be "adequacy", "economy" or "adequacy-draft")
+        ref_simulation_folder = find_simulation_folder(self.ref_folder)
 
-        path_to_output = find_output_folder(self.study_path)
+        # Folder of results (of which content is compared to content of reference folder)
+        # ... of form yyyymmdd-hhmm<mode> (ex : 20230105-0944eco)
+        path_to_output = find_dated_output_folder(self.study_path)
+        # ... can be "adequacy", "economy"
         other_folder = find_simulation_folder(path_to_output)
 
-        simulation_files = find_simulation_files(reference_folder, other_folder)
+        simulation_files = find_simulation_files(ref_simulation_folder, other_folder)
 
         check(compare_simulation_files(simulation_files, self.tol), "Results comparison failed")
 
     def name(self):
         return "output compare"
-
-
-def find_simulation_folder(output_dir):
-    for root, dirs, files in walk(output_dir):
-        if basename(root) in ["adequacy", "economy"]:
-            return Path(root)
 
 def find_simulation_files(reference_folder, other_folder):
     list_files_to_compare = []

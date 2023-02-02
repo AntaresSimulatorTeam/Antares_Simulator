@@ -136,12 +136,12 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
-mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* ProblemeHebdo,
+mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo,
                                    const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    bool ortoolsUsed,
                                    MPSolver* solver) :
- pb_hebdo_(ProblemeHebdo),
+ pb_hebdo_(problemeHebdo),
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),
  solver_(solver),

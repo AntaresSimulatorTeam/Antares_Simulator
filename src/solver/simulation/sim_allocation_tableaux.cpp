@@ -1,4 +1,3 @@
-
 /*
 ** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team

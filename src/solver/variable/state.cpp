@@ -31,11 +31,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 State::State(Data::Study& s) :
  hourInTheSimulation(0u),
@@ -50,8 +46,6 @@ State::State(Data::Study& s) :
  averageOptimizationTime1(0.),
  averageOptimizationTime2(0.)
 {
-    h2oValueWorkVars.levelUp = 0.;
-    h2oValueWorkVars.levelDown = 0.;
 }
 
 void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
@@ -509,6 +503,4 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
         }
 }
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable

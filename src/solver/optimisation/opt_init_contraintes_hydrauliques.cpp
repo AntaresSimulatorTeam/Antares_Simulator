@@ -37,7 +37,7 @@
 #include "../simulation/sim_structure_probleme_adequation.h"
 
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
-  PROBLEME_HEBDO* ProblemeHebdo)
+  PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     int NbIntervallesOptimises;
@@ -55,29 +55,29 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
     double* CntEnergieH2OParJour;
     double InflowSum;
 
-    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     NbIntervallesOptimises
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
     NombreDeJoursParIntervalle
-      = (int)(NombreDePasDeTempsPourUneOptimisation / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
+      = (int)(NombreDePasDeTempsPourUneOptimisation / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         char presenceHydro
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
         if (presenceHydro == OUI_ANTARES && TurbEntreBornes == NON_ANTARES)
         {
-            CntEnergieH2OParIntervalleOptimise = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+            CntEnergieH2OParIntervalleOptimise = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                                    ->CntEnergieH2OParIntervalleOptimise;
             CntEnergieH2OParIntervalleOptimiseRef
-              = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                   ->CntEnergieH2OParIntervalleOptimiseRef;
             CntEnergieH2OParJour
-              = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
+              = problemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
 
             Jour = 0;
             for (i = 0; i < NbIntervallesOptimises; i++)
@@ -100,22 +100,25 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
     double* MinEnergieHydrauParIntervalleOptimise;
     double* MaxEnergieHydrauParIntervalleOptimise;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         char presenceHydro
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable;
         char TurbEntreBornes
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == OUI_ANTARES)
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->TurbinageEntreBornes;
+        if (presenceHydro == OUI_ANTARES
+            && (TurbEntreBornes == OUI_ANTARES
+                || problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
+                     == OUI_ANTARES))
         {
             MinEnergieHydrauParIntervalleOptimise
-              = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                   ->MinEnergieHydrauParIntervalleOptimise;
             MaxEnergieHydrauParIntervalleOptimise
-              = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+              = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                   ->MaxEnergieHydrauParIntervalleOptimise;
             CntEnergieH2OParJour
-              = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
+              = problemeHebdo->CaracteristiquesHydrauliques[Pays]->CntEnergieH2OParJour;
             Jour = 0;
             for (i = 0; i < NbIntervallesOptimises; i++)
             {
@@ -126,7 +129,7 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
                     CntMinEParIntervalle += MinEnergieHydrauParIntervalleOptimise[Jour];
                     CntMaxEParIntervalle += MaxEnergieHydrauParIntervalleOptimise[Jour];
 
-                    CntEnergieH2OParJour[Jour] = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+                    CntEnergieH2OParJour[Jour] = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                                    ->MaxEnergieHydrauParIntervalleOptimise[Jour];
                 }
                 MinEnergieHydrauParIntervalleOptimise[i] = CntMinEParIntervalle;
@@ -137,9 +140,9 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     double* MaxEnergiePompageParIntervalleOptimise;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        MaxEnergiePompageParIntervalleOptimise = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]
+        MaxEnergiePompageParIntervalleOptimise = problemeHebdo->CaracteristiquesHydrauliques[Pays]
                                                    ->MaxEnergiePompageParIntervalleOptimise;
 
         Jour = 0;
@@ -156,10 +159,10 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     double* InflowForTimeInterval;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         InflowForTimeInterval
-          = ProblemeHebdo->CaracteristiquesHydrauliques[Pays]->InflowForTimeInterval;
+          = problemeHebdo->CaracteristiquesHydrauliques[Pays]->InflowForTimeInterval;
         Jour = 0;
         for (i = 0; i < NbIntervallesOptimises; i++)
         {

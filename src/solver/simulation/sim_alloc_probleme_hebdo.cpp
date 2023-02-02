@@ -80,7 +80,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.NumeroDeContrainteMaxPompage = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteDeSoldeDEchange = (int*)MemAlloc(nbPays * sizeof(int));
 
-    problem.NumeroDeContrainteBorneStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteEquivalenceStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
     problem.NumeroDeContrainteExpressionStockFinal = (int*)MemAlloc(nbPays * sizeof(int));
 
@@ -452,6 +451,12 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDENS
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
+        problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations
+          = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int)); // adq patch
+        problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR
+          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
+        problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr
+          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown
@@ -816,6 +821,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.PaliersThermiquesDuPays[k]);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR);
+        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny);
@@ -879,7 +887,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.NumeroDeContrainteMaxPompage);
     MemFree(problem.NumeroDeContrainteDeSoldeDEchange);
 
-    MemFree(problem.NumeroDeContrainteBorneStockFinal);
     MemFree(problem.NumeroDeContrainteEquivalenceStockFinal);
     MemFree(problem.NumeroDeContrainteExpressionStockFinal);
     MemFree(problem.NumeroDeVariableStockFinal);
