@@ -41,11 +41,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
@@ -416,6 +412,4 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
     secondOptStat.reset();
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

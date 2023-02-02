@@ -42,11 +42,11 @@
 /*! Hours per year */
 #define HOURS_PER_YEAR 8760
 
-namespace Antares::Constants {
-
+namespace Antares::Constants
+{
 extern const std::array<unsigned int, 12> daysPerMonth;
 
-} // namespace constants
+} // namespace Antares::Constants
 
 /*! Max number of MC years */
 constexpr unsigned int MAX_NB_MC_YEARS = 50000;

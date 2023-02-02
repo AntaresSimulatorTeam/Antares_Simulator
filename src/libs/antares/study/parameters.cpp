@@ -24,6 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <algorithm>
+
 #include <yuni/yuni.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -39,21 +41,17 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
+#include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
 
 using namespace Yuni;
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Data
-{
-enum
-{
-    //! Hard coded maximum number of MC years
-    maximumMCYears = 100000,
-};
+//! Hard coded maximum number of MC years
+const uint maximumMCYears = 100000;
 
 static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
 {
@@ -208,15 +206,45 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
+bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
+{
+    CString<24, false> s = PTO_as_string;
+    s.trim();
+    s.toLower();
+    if (s == "dens")
+    {
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
+        return true;
+    }
+    if (s == "load")
+    {
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isLoad;
+        return true;
+    }
 
-Parameters::Parameters() : yearsFilter(nullptr), noOutput(false)
+    logs.warning() << "parameters: invalid price taking order. Got '" << PTO_as_string << "'";
+
+    return false;
+}
+
+const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
+{
+    switch (pto)
+    {
+    case AdequacyPatch::AdqPatchPTO::isDens:
+        return "DENS";
+    case AdequacyPatch::AdqPatchPTO::isLoad:
+        return "Load";
+    default:
+        return "";
+    }
+}
+
+Parameters::Parameters() : noOutput(false)
 {
 }
 
-Parameters::~Parameters()
-{
-    delete[] yearsFilter;
-}
+Parameters::~Parameters() = default;
 
 void Parameters::resetSeeds()
 {
@@ -232,12 +260,46 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
+void Parameters::resetThresholdsAdqPatch()
+{
+    // Initialize all thresholds values for adequacy patch
+    adqPatch.curtailmentSharing.thresholdRun
+      = Antares::Data::AdequacyPatch::defaultThresholdToRunCurtailmentSharing;
+    adqPatch.curtailmentSharing.thresholdDisplayViolations
+      = Antares::Data::AdequacyPatch::defaultThresholdDisplayLocalMatchingRuleViolations;
+    adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+      = Antares::Data::AdequacyPatch::defaultValueThresholdVarBoundsRelaxation;
+}
+
+void Parameters::AdequacyPatch::LocalMatching::reset()
+{
+    setToZeroOutsideInsideLinks = true;
+    setToZeroOutsideOutsideLinks = true;
+}
+
+void Parameters::AdequacyPatch::CurtailmentSharing::reset()
+{
+    priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+    includeHurdleCost = false;
+    checkCsrCostFunction = false;
+}
 
 void Parameters::resetAdqPatchParameters()
 {
     adqPatch.enabled = false;
-    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
-    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+    adqPatch.localMatching.reset();
+    adqPatch.curtailmentSharing.reset();
+    resetThresholdsAdqPatch();
+}
+
+void Parameters::resetPlayedYears(uint nbOfYears)
+{
+    // Set the number of years
+    nbYears = std::min(nbOfYears, maximumMCYears);
+
+    // Reset the filter
+    yearsFilter.resize(nbYears);
+    std::fill(yearsFilter.begin(), yearsFilter.end(), true);
 }
 
 void Parameters::reset()
@@ -256,10 +318,7 @@ void Parameters::reset()
     variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
-    nbYears = 1;
-    delete[] yearsFilter;
-    yearsFilter = nullptr;
-
+    resetPlayedYears(1);
     resetYearsWeigth();
 
     yearByYear = false;
@@ -322,7 +381,6 @@ void Parameters::reset()
     unitCommitment.ucMode = ucHeuristic;
     nbCores.ncMode = ncAvg;
     renewableGeneration.rgModelling = rgAggregated;
-    reserveManagement.daMode = daGlobal;
 
     // Misc
     improveUnitsStartup = false;
@@ -353,7 +411,7 @@ void Parameters::reset()
     hydroDebug = false;
 
     ortoolsUsed = false;
-    ortoolsEnumUsed = OrtoolsSolver::sirius;
+    ortoolsSolver = "sirius";
 
     resultFormat = legacyFilesDirectories;
 
@@ -468,10 +526,10 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         uint y;
         if (value.to<uint>(y))
         {
-            d.years(y);
+            d.resetPlaylist(y);
             return true;
         }
-        d.years(1);
+        d.resetPlaylist(1);
         return false;
     }
     if (key == "nbtimeseriesload")
@@ -672,6 +730,22 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    // Price taking order
+    if (key == "price-taking-order")
+        return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
+    // Include Hurdle Cost
+    if (key == "include-hurdle-cost-csr")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
+    // Check CSR cost function prior and after CSR
+    if (key == "check-csr-cost-function")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.checkCsrCostFunction);
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdRun);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+    if (key == "threshold-csr-variable-bounds-relaxation")
+        return value.to<int>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
 
     return false;
 }
@@ -682,19 +756,6 @@ static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
                                               const String&,
                                               uint)
 {
-    if (key == "day-ahead-reserve-management") // after 5.0
-    {
-        auto daReserve = StringToDayAheadReserveManagementMode(value);
-        if (daReserve != daReserveUnknown)
-        {
-            d.reserveManagement.daMode = daReserve;
-            return true;
-        }
-        logs.warning() << "parameters: invalid day ahead reserve management mode. Got '" << value
-                       << "'. reset to global mode";
-        d.reserveManagement.daMode = daGlobal;
-        return false;
-    }
     if (key == "hydro-heuristic-policy")
     {
         auto hhpolicy = StringToHydroHeuristicPolicy(value);
@@ -1018,6 +1079,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "shedding-strategy") // Was never used
         return true;
 
+    if (key == "day-ahead-reserve-management") // ignored since 8.4
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1107,23 +1171,8 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
     {
         if (options.nbYears > nbYears)
         {
-            if (yearsFilter)
-            {
-                // The variable `yearsFilter` must be enlarged
-                bool* newset = new bool[options.nbYears];
-                for (uint i = 0; i != nbYears; ++i)
-                    newset[i] = yearsFilter[i];
-                for (uint i = nbYears; i < options.nbYears; ++i)
-                    newset[i] = false;
-                delete[] yearsFilter;
-                yearsFilter = newset;
-            }
-            else
-            {
-                yearsFilter = new bool[options.nbYears];
-                for (uint i = 0; i < options.nbYears; ++i)
-                    yearsFilter[i] = true;
-            }
+            // The variable `yearsFilter` must be enlarged
+            yearsFilter.resize(options.nbYears, false);
         }
         nbYears = options.nbYears;
 
@@ -1171,7 +1220,7 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
 
     // Define ortools parameters from options
     ortoolsUsed = options.ortoolsUsed;
-    ortoolsEnumUsed = options.ortoolsEnumUsed;
+    ortoolsSolver = options.ortoolsSolver;
 
     // Attempt to fix bad values if any
     fixBadValues();
@@ -1246,14 +1295,8 @@ void Parameters::fixBadValues()
 
     if (derated)
     {
-        // Force the number of years
-        nbYears = 1;
-        if (!yearsFilter)
-        {
-            yearsFilter = new bool[1];
-            yearsFilter[0] = true;
-        }
-
+        // Force the number of years to 1
+        resetPlayedYears(1);
         resetYearsWeigth();
     }
     else
@@ -1387,11 +1430,10 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     }
 
     // If the user's playlist is disabled, the filter must be reset
-    assert(yearsFilter && "The array yearsFilter must be valid at this point");
+    assert(!yearsFilter.empty() && "The array yearsFilter must be not be empty at this point");
     if (!userPlaylist)
     {
-        for (uint i = 0; i < nbYears; ++i)
-            yearsFilter[i] = true;
+        std::fill(yearsFilter.begin(), yearsFilter.end(), true);
         effectiveNbYears = nbYears;
     }
     else
@@ -1608,31 +1650,13 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
     // Indicate ortools solver used
     if (ortoolsUsed)
     {
-        logs.info() << "  :: ortools solver " << Enum::toString(ortoolsEnumUsed)
-                    << " used for problem resolution";
+        logs.info() << "  :: ortools solver " << ortoolsSolver << " used for problem resolution";
     }
 }
 
-void Parameters::years(uint y)
+void Parameters::resetPlaylist(uint nbOfYears)
 {
-    // Resetting the filter on the years
-    delete[] yearsFilter;
-
-    if (y < 2)
-    {
-        nbYears = 1;
-        yearsFilter = new bool[1];
-        yearsFilter[0] = true;
-    }
-    else
-    {
-        nbYears = (y > (uint)maximumMCYears) ? (uint)maximumMCYears : y;
-        // Reset the filter
-        yearsFilter = new bool[nbYears];
-        for (uint i = 0; i != nbYears; ++i)
-            yearsFilter[i] = true;
-    }
-
+    resetPlayedYears(nbOfYears);
     resetYearsWeigth();
 }
 
@@ -1761,7 +1785,19 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+        section->add("price-taking-order",
+                     PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
+        section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
+        section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
+        // Thresholds
+        section->add("threshold-initiate-curtailment-sharing-rule",
+                     adqPatch.curtailmentSharing.thresholdRun);
+        section->add("threshold-display-local-matching-rule-violations",
+                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        section->add("threshold-csr-variable-bounds-relaxation",
+                     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
+
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1776,8 +1812,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("number-of-cores-mode", NumberOfCoresModeToCString(nbCores.ncMode));
         section->add("renewable-generation-modelling",
                      RenewableGenerationModellingToCString(renewableGeneration()));
-        section->add("day-ahead-reserve-management",
-                     DayAheadReserveManagementModeToCString(reserveManagement.daMode));
     }
 
     // Advanced parameters
@@ -1792,7 +1826,7 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // User's playlist
     {
-        assert(yearsFilter);
+        assert(!yearsFilter.empty());
         uint effNbYears = 0;
         bool weightEnabled = false;
         for (uint i = 0; i != nbYears; ++i)
@@ -1824,7 +1858,7 @@ void Parameters::saveToINI(IniFile& ini) const
             {
                 for (uint i = 0; i != nbYears; ++i)
                 {
-                    if (not yearsFilter[i])
+                    if (!yearsFilter[i])
                         section->add("playlist_year -", i);
                 }
             }
@@ -1940,7 +1974,12 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
 void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
 {
     if (!enabled)
-        out.emplace_back("dens");
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("DTG MRG CSR");
+    }
 }
 
 bool Parameters::haveToImport(int tsKind) const
@@ -1979,5 +2018,4 @@ bool Parameters::RenewableGeneration::isClusters() const
     return rgModelling == Antares::Data::rgClusters;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

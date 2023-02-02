@@ -33,7 +33,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Palier;
@@ -43,9 +43,9 @@ void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo)
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
         for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {
@@ -57,7 +57,7 @@ void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo)
 
             memcpy((char*)PuissanceDisponibleDuPalierThermiqueRef_SV,
                    (char*)PuissanceDisponibleDuPalierThermiqueRef,
-                   ProblemeHebdo->NombreDePasDeTempsRef * sizeof(double));
+                   problemeHebdo->NombreDePasDeTempsRef * sizeof(double));
         }
     }
     return;

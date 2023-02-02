@@ -1,34 +1,103 @@
 Antares Changelog
 =================
 
-v8.4.0-rc3 (11/2022)
+v8.5.0 (01/2022)
 --------------------
-* Enable MPS write with OR-Tools+Sirius
+* Fix examples studies (invalid v8.3.0 -> v8.5.0)
 
-v8.4.0-rc2 (11/2022)
+v8.5.0-rc2 (01/2022)
 --------------------
-Re-publish v8.4.0-rc1, assets not uploaded.
+* Re-publish of v8.5.0-rc1.
 
-v8.4.0-rc1 (11/2022)
+v8.5.0-rc1 (01/2022)
 --------------------
+## New features
+* Hydraulic patch (#697)
+* Curtailment sharing rule for Adequacy Patch (#1062)
+
+
+v8.4.2 (01/2022)
+--------------------
+
+## Improvements
+* Generate a solver-only asset for every release #976, #1080
+* Use MPS writer from solvers, instead of copy-pasted functions #1023
+
+## GUI
+* Allow more than 100 thermal clusters #1011
+* Remove status bar count. The sum was sometimes wrong #1029
+* Remove unused "District marginal prices" button from Advanced Parameters (#1067)
+
+## Bugfix
+* Fix overwritten MPS files when optimization/simplex-range=day #1041
+* Restore warm start for OR-Tools+XPRESS #1079
+* Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
+* Fix crash when generaldata.ini is empty, using default values #892
+
+
+## Testing
+* Introduce missing MPS comparison tests #1035
+
+## For developers
+* Fix empty CMAKE_BUILD_TYPE #1028
+* Fix memory leaks #669
+
+## Code cleaning
+* Clean up Yuni #1055
+* Remove default implementation for hourEnd (see variable.hxx) #1020
+* Remove free functions for areas' mem allocation #922
+* Remove dead code associated to debug #1048
+* Remove unused `ContrainteDeReserveJMoins1ParZone`, `NumeroDeVariableDefaillanceEnReserve` #1047
+* Extract code related to spilled energy bounds #1049
+* Simplify code for adq patch (Local matching) #1054
+* Refactor naming for {MPS, criterion, etc.} files and exported structures (see parameter optimization/include-exportstructure) #1030
+* Refactor: move current year and week from study to weekly optimization problem #1032
+* Pass optimization number as an argument #1040
+
+
+## New Contributors
+* @JasonMarechal25 made their first contribution in #1055
+
+**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.1...v8.4.2
+
+v8.4.1 (12/2022)
+--------------------
+
+### Bugfix
+* Fix formula for profit calculation #1022
+
+v8.4.0 (12/2022)
+--------------------
+
 ### Features
 * Add option & command-line argument to write results into a single zip archive #794
 * Add option to set link capacity to null/infinity for physical links only #792
 * Speed up simulations by extracting simplex basis in XPRESS/OR-Tools #957
 * Move Kirchhoff constraint generator to an executable #909
 * Do not export BC MARG PRICE variable by default by #928
+* Enable MPS write with OR-Tools+Sirius
 
-### Bug fix
+### GUI
+* Make sure that RC/beta are displayed in version numbers #739
+
+### Bugfix
 * Remove error message printed on -h/--help in antares-solver #895
 * Use average for BC MARG PRICE (daily & weekly) #940
 * Fix crash when exporting MPS with OR-Tools #923
 * Remove obsolete option `include-split-exported-mps` #956
 * Fix crash when many binding constraints are present in a study #924
-
-### GUI
-* Make sure that RC/beta are displayed in version numbers #739
+* Fix BC MARG COST values in parallel by @flomnes in #1015
+* Use min gen modulation to compute variable "profit by plant" by @guilpier-code in #1016
+* Round renewable power generation by @flomnes in #985
+* Make logs more expressive when checking link values by @flomnes in #1005
+* Add condition to avoid null pointer by @payetvin in #989
 
 ### For developers
+* Case insensitive option for build type by @payetvin in #986
+* [DEV] Refactored ortools_utils by @payetvin in #978
+* [CI] Integrate ortools v9.2-rte2.0 by @payetvin in #1007
+* [FIX] Cleaned day ahead reserve management by @payetvin in #1010
+* [CentOS 7] Remove deps from docker image by @flomnes in #994
 * Cleaning, renaming (#896, #897, #898, #935, #937, #944, #945, #950, #954, #959 , #966)
 * Refactor average results #946
 * CI: upgrade deprecated Github actions #938
@@ -36,9 +105,21 @@ v8.4.0-rc1 (11/2022)
 * Use GIT_SHALLOW for OR-Tools's FetchContent #904
 * Remove antares-solver swap variant & librairies, reduce build duration #906
 
+
 ### Documentation
+* [DOC] OR-Tools build #880
 * Document how to run JSON tests #902
-* OR-Tools build #880
+* Document option --list-solvers #770
+
+## New Contributors
+* @kathvargasr made their first contribution in #967
+
+**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.3.2..v8.4.0
+
+v8.3.3 (12/2022)
+--------------------
+### Bugfix
+- Round renewable production (#985)
 
 v8.3.2 (09/2022)
 --------------------
@@ -122,6 +203,11 @@ v8.3.0 (07/2022)
 ### Misc. improvements
 - Generate 2 assets in CentOS 7 : one that includes XPRESS, one that does not #689
 - Upgrade examples 8.1 -> 8.3 (#733)
+
+v8.2.3 (11/2022)
+--------------------
+### Bug fixes
+- Round renewable production (#985)
 
 v8.2.2 (04/2022)
 --------------------

@@ -113,8 +113,7 @@ bool Memory::initializeTemporaryFolder()
     if (not pCacheFolder.empty() and not pAllowedToChangeCacheFolder
         and not IO::Directory::Create(pCacheFolder))
     {
-        logs.warning() << "Impossible to create the cache folder "
-                       << pCacheFolder;
+        logs.warning() << "Impossible to create the cache folder " << pCacheFolder;
         pCacheFolder.clear();
     }
     return true;

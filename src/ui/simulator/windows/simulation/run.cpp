@@ -73,11 +73,9 @@ enum
     timerInterval = 3500 // ms
 };
 
-static const wxString featuresNames[featuresCount]
-  = {wxT(" Default  "), wxT(" Parallel ")};
+static const wxString featuresNames[featuresCount] = {wxT(" Default  "), wxT(" Parallel ")};
 
-static const Solver::Feature featuresAlias[featuresCount]
-  = {Solver::standard, Solver::parallel};
+static const Solver::Feature featuresAlias[featuresCount] = {Solver::standard, Solver::parallel};
 
 static wxString TimeSeriesToWxString(uint m)
 {
@@ -335,7 +333,7 @@ Run::Run(wxWindow* parent, bool preproOnly) :
           = Antares::Component::CreateLabel(pBigDaddy, wxT("Ortools solver : "));
 
         pOrtoolsSolverCombox = new wxComboBox(pBigDaddy, wxID_ANY);
-        std::list<std::string> ortoolsSolverList = OrtoolsUtils().getAvailableOrtoolsSolverName();
+        std::list<std::string> ortoolsSolverList = getAvailableOrtoolsSolverName();
         for (const std::string& ortoolsSolver : ortoolsSolverList)
         {
             pOrtoolsSolverCombox->Append(ortoolsSolver);

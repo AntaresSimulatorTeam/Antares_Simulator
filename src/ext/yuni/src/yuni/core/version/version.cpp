@@ -13,13 +13,6 @@
 
 namespace Yuni
 {
-void Version::InternalLib(Version& v)
-{
-    v.hi = YUNI_VERSION_HI;
-    v.lo = YUNI_VERSION_LO;
-    v.revision = YUNI_VERSION_REV;
-}
-
 bool Version::isLessThan(const Version& rhs) const
 {
     if (hi < rhs.hi)

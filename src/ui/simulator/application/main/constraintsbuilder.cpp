@@ -84,7 +84,7 @@ protected:
         logs.info() << "Location of ini file: " << pFilename;
 
         // making sure that all internal data are allocated
-        study->ensureDataAreAllInitialized();
+        study->areas.ensureDataIsInitialized(study->parameters, false);
 
         // The swap memory MUST not be flushed. This can happen since we are not
         // in the main thread

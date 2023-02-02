@@ -49,7 +49,8 @@ public:
     virtual void add(wxBoxSizer* sizer,
                      wxWindow* parent,
                      Interconnection* intercoWindow,
-                     Toolbox::InputSelector::Connections* notifier) = 0;
+                     Toolbox::InputSelector::Connections* notifier)
+      = 0;
 };
 
 class linkParametersGrid : public linkGrid
@@ -73,8 +74,6 @@ public:
              Interconnection* intercoWindow,
              Toolbox::InputSelector::Connections* notifier) override;
 };
-
-
 
 class Interconnection : public wxScrolledWindow, public Yuni::IEventObserver<Interconnection>
 {
@@ -110,7 +109,7 @@ private:
     assetTypeButton* assetTypeButton_ = nullptr;
     loopFlowUsageButton* loopFlowUsageButton_ = nullptr;
     phaseShifterUsageButton* phaseShifterUsageButton_ = nullptr;
- 
+
     //! No Link
     wxWindow* pNoLink;
     //! Link data

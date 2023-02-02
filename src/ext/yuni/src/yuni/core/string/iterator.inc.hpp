@@ -173,7 +173,8 @@ struct Model
         {
             do
             {
-                if (pChar == (uint)' ' || pChar == (uint)'\t' || pChar == (uint)'\n' || pChar == (uint)'\r')
+                if (pChar == (uint)' ' || pChar == (uint)'\t' || pChar == (uint)'\n'
+                    || pChar == (uint)'\r')
                 {
                     forward();
                     if (pOffset >= end)

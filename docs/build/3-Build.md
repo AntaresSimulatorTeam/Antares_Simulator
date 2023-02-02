@@ -15,7 +15,7 @@ git submodule update --init src/antares-deps
 === "Windows"
     Note :
     > cpack NSIS installer creation need an 'out of source build'. The build directory must be outside `[antares_src]` directory
-    
+
     ```
     cmake -B _build -S [antares_src] -DVCPKG_ROOT=[vcpkg_root] -DVCPKG_TARGET_TRIPLET=[vcpkg-triplet] -DCMAKE_BUILD_TYPE=release
     ```
@@ -34,7 +34,7 @@ Here is a list of available CMake configure option :
 
 |Option | Description |
 |:-------|-------|
-|`CMAKE_BUILD_TYPE` | Define build type. Available values are `release` and `debug`  |
+|`CMAKE_BUILD_TYPE` | Define build type. Available values are `release` and `debug` (case insensitive) |
 |`BUILD_UI`|Enable or disable Antares Simulator UI compilation (default `ON`)|
 |`BUILD_ALL`|Enable build of ALL external libraries (default `OFF`)|
 |`DEPS_INSTALL_DIR`|Define dependencies libraries install directory|

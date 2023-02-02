@@ -43,8 +43,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
 void printSolvers()
 {
     std::cout << "Available solvers :" << std::endl;
-    OrtoolsUtils utils;
-    for (const auto& solver : utils.getAvailableOrtoolsSolverName())
+    for (const auto& solver : getAvailableOrtoolsSolverName())
     {
         std::cout << solver << std::endl;
     }
@@ -114,6 +113,18 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
         if (!containsAdqArea)
             throw Error::NoAreaInsideAdqPatchMode();
     }
+}
+
+void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
+                                    const bool includeHurdleCost,
+                                    const bool includeHurdleCostCsr)
+{
+    // No need to check if adq-patch is disabled
+    if (!adqPatchOn)
+        return;
+
+    if (includeHurdleCostCsr && !includeHurdleCost)
+        throw Error::IncompatibleHurdleCostCSR();
 }
 
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
@@ -283,7 +294,11 @@ void Application::prepare(int argc, char* argv[])
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+
     checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
+    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
+                                   pParameters->include.hurdleCosts,
+                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -466,11 +481,16 @@ void Application::readDataForTheStudy(Data::StudyLoadOptions& options)
     {
         pParameters->resultFormat = Antares::Data::zipArchive;
     }
+
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    study.prepareOutput();
+
     // Initialize the result writer
     study.prepareWriter(&pDurationCollector);
 
     // Save about-the-study files (comments, notes, etc.)
-    pStudy->saveAboutTheStudy();
+    study.saveAboutTheStudy();
 
     // Name of the simulation (again, if the value has been overwritten)
     if (!pSettings.simulationName.empty())

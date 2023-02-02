@@ -11,6 +11,6 @@ jobs:
 
     - name: Verify branch name
       run: |
-        if ! [[ "$GITHUB_REF_NAME" =~ ^feature/.*|^features/.*|^fix/.*|^release/.*|^doc/.*|develop ]]; then
+        if ! [[ "$GITHUB_REF_NAME" =~ ^feature/.*|^features/.*|^fix/.*|^release/.*|^doc/.*|develop|^issue-* ]]; then
             exit 1
         fi

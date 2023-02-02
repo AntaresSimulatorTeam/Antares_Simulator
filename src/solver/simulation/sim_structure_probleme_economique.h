@@ -54,8 +54,6 @@ typedef struct
 
     int* NumeroDeVariableDefaillanceNegative;
 
-    int* NumeroDeVariableDefaillanceEnReserve;
-
     int* NumeroDeVariablesVariationHydALaBaisse;
 
     int* NumeroDeVariablesVariationHydALaHausse;
@@ -281,7 +279,7 @@ typedef struct
     double WeeklyWaterValueStateDown;
 
     char TurbinageEntreBornes;
-
+    char SansHeuristique;
     char SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
@@ -310,8 +308,8 @@ private:
 
 public:
     std::vector<adqPatchParamsMode> areaMode;
-    std::vector<adqPatchParamsMode> originAreaType;
-    std::vector<adqPatchParamsMode> extremityAreaType;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -322,8 +320,8 @@ public:
         for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
         {
             auto& link = *(study.runtime->areaLink[i]);
-            originAreaType.push_back(link.from->adequacyPatchMode);
-            extremityAreaType.push_back(link.with->adequacyPatchMode);
+            originAreaMode.push_back(link.from->adequacyPatchMode);
+            extremityAreaMode.push_back(link.with->adequacyPatchMode);
         }
     }
 };
@@ -434,7 +432,10 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
+    double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
+    int* ValeursHorairesLmrViolations;            // adq patch lmr violations
+    double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    double* ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -486,10 +487,19 @@ struct AdequacyPatchParameters
     bool AdequacyFirstStep;
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
+    bool IncludeHurdleCostCsr;
+    bool CheckCsrCostFunctionValue;
+    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
+    double ThresholdRunCurtailmentSharingRule;
+    double ThresholdDisplayLocalMatchingRuleViolations;
+    double ThresholdCSRVarBoundsRelaxation;
 };
 
 struct PROBLEME_HEBDO
 {
+    uint weekInTheYear = 0;
+    uint year = 0;
+
     /* Business problem */
     char OptimisationAuPasHebdomadaire;
     char TypeDeLissageHydraulique;
@@ -575,19 +585,13 @@ struct PROBLEME_HEBDO
 
     int* NumeroDeContrainteDeSoldeDEchange;
 
-    int* NumeroDeContrainteBorneStockFinal;
     int* NumeroDeContrainteEquivalenceStockFinal;
     int* NumeroDeContrainteExpressionStockFinal;
 
     int* NumeroDeVariableStockFinal;
     int** NumeroDeVariableDeTrancheDeStock;
 
-    int* numeroOptimisation;
-
     char YaDeLaReserveJmoins1;
-    char ContrainteDeReserveJMoins1ParZone;
-    int NombreDeZonesDeReserveJMoins1;
-    int* NumeroDeZoneDeReserveJMoins1;
 
     double* previousYearFinalLevels;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
@@ -690,8 +694,8 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-
 #endif
+
 public:
     /* Unknown status */
     int* NbGrpCourbeGuide; // ?
@@ -700,9 +704,5 @@ public:
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
     double maxPminThermiqueByDay[366];
-
-    /* Debug */
-    char debugFolder[1024];
 };
-
 #endif

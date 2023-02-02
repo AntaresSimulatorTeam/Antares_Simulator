@@ -40,11 +40,9 @@
 #include "variable-print-info.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
-#include <antares/study/OrtoolsSolver.hpp>
 
-namespace Antares
-{
-namespace Data
+
+namespace Antares::Data
 {
 /*!
 ** \brief General data for a study
@@ -80,9 +78,9 @@ public:
     //@}
 
     /*!
-    ** \brief Assign a new number of MC years
+    ** \brief Reset the playlist (played years and associated years)
     */
-    void years(uint y);
+    void resetPlaylist(uint nbOfYears);
 
     /*!
     ** \brief Load data from a file
@@ -136,6 +134,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all threshold values in adequacy patch
+    */
+    void resetThresholdsAdqPatch();
     /*!
     ** \brief Reset to default all adequacy patch values
     */
@@ -241,7 +243,7 @@ public:
     //! Custom playlist (each year will be manually selected by the user)
     bool userPlaylist;
     //! Flag to perform the calculations or not from the solver
-    bool* yearsFilter;
+    std::vector<bool> yearsFilter;
 
     //! Custom variable selection (each variable will be manually selected for print by the user)
     bool thematicTrimming;
@@ -482,12 +484,6 @@ public:
     //     (obvious if the parallel mode is not required : answer is yes).
     bool allSetsHaveSameSize;
 
-    struct
-    {
-        //! Day ahead reserve allocation mode
-        DayAheadReserveManagement daMode;
-    } reserveManagement;
-
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
     //! Asset type
@@ -508,10 +504,37 @@ public:
             //! NTC is set to null (if true) only in the first step of adequacy patch local matching
             //! rule.
             bool setToZeroOutsideOutsideLinks = true;
+            /*!
+             ** \brief Reset to default values related to local matching
+             */
+            void reset();
         };
         bool enabled;
         LocalMatching localMatching;
+
+        struct CurtailmentSharing
+        {
+            //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
+            Data::AdequacyPatch::AdqPatchPTO priceTakingOrder;
+            //! Threshold to initiate curtailment sharing rule
+            double thresholdRun;
+            //! Threshold to display Local Matching Rule violations
+            double thresholdDisplayViolations;
+            //! CSR Variables relaxation threshold
+            int thresholdVarBoundsRelaxation;
+            //! Include hurdle cost in CSR cost function
+            bool includeHurdleCost;
+            //! Check CSR cost function prior & after CSR optimization
+            bool checkCsrCostFunction;
+            /*!
+             ** \brief Reset to default values related to curtailment sharing
+             */
+            void reset();
+        };
+        CurtailmentSharing curtailmentSharing;
+
         void addExcludedVariables(std::vector<std::string>&) const;
+
     };
 
     AdequacyPatch adqPatch;
@@ -542,7 +565,7 @@ public:
     //! Define if ortools is used
     bool ortoolsUsed;
     //! Ortool solver used for simulation
-    OrtoolsSolver ortoolsEnumUsed;
+    std::string ortoolsSolver;
     //@}
     // Format of results. Currently, only single files or zip archive are supported
     ResultFormat resultFormat = legacyFilesDirectories;
@@ -550,6 +573,8 @@ public:
 private:
     //! Load data from an INI file
     bool loadFromINI(const IniFile& ini, uint version, const StudyLoadOptions& options);
+
+    void resetPlayedYears(uint nbOfYears);
 
     //! MC year weight for MC synthesis
     std::vector<float> yearsWeight;
@@ -570,8 +595,7 @@ const char* StudyModeToCString(StudyMode mode);
 */
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "parameters.hxx"
 

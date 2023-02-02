@@ -31,7 +31,6 @@ namespace Antares
 {
 namespace Data
 {
-
 inline Yuni::uint64 PreproThermal::memoryUsage() const
 {
     return sizeof(PreproThermal);

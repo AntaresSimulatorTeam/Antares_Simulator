@@ -127,7 +127,8 @@ protected:
 
 protected:
     //! The most suitable type for a bool
-    using EnableType = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>,bool>::ResultType;
+    using EnableType
+      = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>, bool>::ResultType;
 
     //! Object Identifier
     const Ref pOID;
