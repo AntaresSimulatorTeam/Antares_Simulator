@@ -53,26 +53,26 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
-    if (parameters.adqPatch.enabled)
+    if (parameters.adqPatchParams.enabled)
     {
         problem.adqPatchParams
           = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
         // AdequacyFirstStep will be initialized during the economy solve
         problem.adqPatchParams->SetNTCOutsideToInsideToZero
-          = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
+          = parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks;
         problem.adqPatchParams->SetNTCOutsideToOutsideToZero
-          = parameters.adqPatch.localMatching.setToZeroOutsideOutsideLinks;
+          = parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks;
         problem.adqPatchParams->PriceTakingOrder
-          = parameters.adqPatch.curtailmentSharing.priceTakingOrder;
+          = parameters.adqPatchParams.curtailmentSharing.priceTakingOrder;
         problem.adqPatchParams->IncludeHurdleCostCsr
-          = parameters.adqPatch.curtailmentSharing.includeHurdleCost;
+          = parameters.adqPatchParams.curtailmentSharing.includeHurdleCost;
         problem.adqPatchParams->CheckCsrCostFunctionValue
-          = parameters.adqPatch.curtailmentSharing.checkCsrCostFunction;
+          = parameters.adqPatchParams.curtailmentSharing.checkCsrCostFunction;
         problem.adqPatchParams->ThresholdRunCurtailmentSharingRule
-          = parameters.adqPatch.curtailmentSharing.thresholdRun;
+          = parameters.adqPatchParams.curtailmentSharing.thresholdRun;
         problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
-          = parameters.adqPatch.curtailmentSharing.thresholdDisplayViolations;
-        double temp = pow(10, -parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
+          = parameters.adqPatchParams.curtailmentSharing.thresholdDisplayViolations;
+        double temp = pow(10, -parameters.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
         problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
 
         problem.adequacyPatchRuntimeData.initialize(study);

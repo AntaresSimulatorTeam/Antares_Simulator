@@ -375,7 +375,7 @@ struct PStudyHorizon
     using Type = String;
     static Type Value(const Data::Study::Ptr& study)
     {
-        return !(!study) ? study->parameters.horizon : nullptr;
+        return !(!study) ? study->parameters.horizon : Type();
     }
     static wxString ConvertToString(const Type v)
     {

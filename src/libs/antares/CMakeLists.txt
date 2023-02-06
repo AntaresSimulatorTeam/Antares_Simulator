@@ -265,6 +265,8 @@ set(SRC_STUDY_PARAMETERS
 	study/parameters.h
 	study/parameters.hxx
 	study/parameters.cpp
+	study/parameters/adq-patch-params.h
+	study/parameters/adq-patch-params.cpp
 	study/UnfeasibleProblemBehavior.cpp
     # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
     study/UnfeasibleProblemBehavior.hpp
