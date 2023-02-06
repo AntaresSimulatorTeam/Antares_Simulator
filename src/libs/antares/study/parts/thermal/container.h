@@ -115,6 +115,8 @@ public:
     */
     bool hasForcedNoTimeseriesGeneration() const;
 
+    void checkMinStablePower();
+
 public:
     //! The unsupplied energy cost (Euros/MWh)
     double unsuppliedEnergyCost;
