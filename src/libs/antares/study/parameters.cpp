@@ -206,39 +206,6 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
-bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
-{
-    CString<24, false> s = PTO_as_string;
-    s.trim();
-    s.toLower();
-    if (s == "dens")
-    {
-        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
-        return true;
-    }
-    if (s == "load")
-    {
-        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isLoad;
-        return true;
-    }
-
-    logs.warning() << "parameters: invalid price taking order. Got '" << PTO_as_string << "'";
-
-    return false;
-}
-
-const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
-{
-    switch (pto)
-    {
-    case AdequacyPatch::AdqPatchPTO::isDens:
-        return "DENS";
-    case AdequacyPatch::AdqPatchPTO::isLoad:
-        return "Load";
-    default:
-        return "";
-    }
-}
 
 Parameters::Parameters() : noOutput(false)
 {
@@ -694,30 +661,7 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
                                       const String&,
                                       uint)
 {
-    if (key == "include-adq-patch")
-        return value.to<bool>(d.adqPatchParams.enabled);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-        return value.to<bool>(d.adqPatchParams.localMatching.setToZeroOutsideInsideLinks);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-        return value.to<bool>(d.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks);
-    // Price taking order
-    if (key == "price-taking-order")
-        return StringToPriceTakingOrder(value, d.adqPatchParams.curtailmentSharing.priceTakingOrder);
-    // Include Hurdle Cost
-    if (key == "include-hurdle-cost-csr")
-        return value.to<bool>(d.adqPatchParams.curtailmentSharing.includeHurdleCost);
-    // Check CSR cost function prior and after CSR
-    if (key == "check-csr-cost-function")
-        return value.to<bool>(d.adqPatchParams.curtailmentSharing.checkCsrCostFunction);
-    // Thresholds
-    if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<double>(d.adqPatchParams.curtailmentSharing.thresholdRun);
-    if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<double>(d.adqPatchParams.curtailmentSharing.thresholdDisplayViolations);
-    if (key == "threshold-csr-variable-bounds-relaxation")
-        return value.to<int>(d.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-
-    return false;
+    return d.adqPatchParams.updateFromKeyValue(key, value);
 }
 
 static bool SGDIntLoadFamily_OtherPreferences(Parameters& d,
@@ -1747,25 +1691,7 @@ void Parameters::saveToINI(IniFile& ini) const
     }
 
     // Adequacy patch
-    {
-        auto* section = ini.addSection("adequacy patch");
-        section->add("include-adq-patch", adqPatchParams.enabled);
-        section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-                     adqPatchParams.localMatching.setToZeroOutsideInsideLinks);
-        section->add("set-to-null-ntc-between-physical-out-for-first-step",
-                     adqPatchParams.localMatching.setToZeroOutsideOutsideLinks);
-        section->add("price-taking-order",
-                     PriceTakingOrderToString(adqPatchParams.curtailmentSharing.priceTakingOrder));
-        section->add("include-hurdle-cost-csr", adqPatchParams.curtailmentSharing.includeHurdleCost);
-        section->add("check-csr-cost-function", adqPatchParams.curtailmentSharing.checkCsrCostFunction);
-        // Thresholds
-        section->add("threshold-initiate-curtailment-sharing-rule",
-                     adqPatchParams.curtailmentSharing.thresholdRun);
-        section->add("threshold-display-local-matching-rule-violations",
-                     adqPatchParams.curtailmentSharing.thresholdDisplayViolations);
-        section->add("threshold-csr-variable-bounds-relaxation",
-                     adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-    }
+    adqPatchParams.saveToINI(ini);
 
     // Other preferences
     {
