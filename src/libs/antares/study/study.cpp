@@ -226,16 +226,18 @@ uint64 Study::memoryUsage() const
 
 void Study::getNumberOfCores(const bool forceParallel, const bool enableParallel, const uint nbYearsParallelForced) {
 
-    TempAreaListHolder holder{};
+    TempAreaListHolder holder;
     bool thermalTSRefresh = holder.checkThermalTSGeneration(folderInput);
 
     SetsOfParallelYearCalculator setsBuilder(forceParallel,
                                              enableParallel,
-                                             nbYearsParallelForced, Yuni::System::CPU::Count(),
+                                             nbYearsParallelForced,
+                                             Yuni::System::CPU::Count(),
                                              thermalTSRefresh,
                                              parameters);
     // For GUI
     minNbYearsInParallel_save = setsBuilder.getMinNbParallelYearsForGUI();
+    nbYearsParallelRaw = setsBuilder.getRawNbParallelYearsForGUI();
     maxNbYearsInParallel_save = setsBuilder.getForcedNbOfParallelYears();
 
     // For the solver

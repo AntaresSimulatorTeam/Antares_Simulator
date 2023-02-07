@@ -220,13 +220,12 @@ void SetsOfParallelYearCalculator::computeRawNbParallelYear()
 
     try
     {
-        forcedNbOfParallelYears_ = numberOfMCYearThreads.at(p.nbCores.ncMode);
+        rawNbOfParallelYears_ = numberOfMCYearThreads.at(p.nbCores.ncMode);
     }
     catch(const std::out_of_range& e)
     {
-        logs.fatal() << "Simulation cores level not correct : " << (int)p.nbCores.ncMode;
+        logs.fatal() << "Simulation cores level not correct : " << static_cast<int>(p.nbCores.ncMode);
     }
-    
 }
 
 
@@ -244,7 +243,7 @@ void SetsOfParallelYearCalculator::limitNbOfParallelYearsbyMinRefreshSpan()
     if ((p.timeSeriesToGenerate & timeSeriesThermal) && (p.timeSeriesToRefresh & timeSeriesThermal))
         TSlimit = std::min(p.refreshIntervalThermal, TSlimit);
 
-    forcedNbOfParallelYears_ = std::min({p.nbYears, TSlimit, forcedNbOfParallelYears_});
+    forcedNbOfParallelYears_ = std::min({p.nbYears, TSlimit, rawNbOfParallelYears_});
 }
 
 bool SetsOfParallelYearCalculator::isRefreshNeededForCurrentYear(uint y)
@@ -370,7 +369,6 @@ void SetsOfParallelYearCalculator::buildSetsOfParallelYears()
      // End of loop over years
 
     }
-
 }
 
 

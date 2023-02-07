@@ -121,6 +121,11 @@ public:
         return forcedNbOfParallelYears_;
     } 
 
+    [[nodiscard]] uint getRawNbParallelYearsForGUI() const
+    {
+        return rawNbOfParallelYears_;
+    }
+
     [[nodiscard]] uint getMinNbParallelYearsForGUI() const
     {
         return computeMinNbParallelYears();
@@ -155,6 +160,7 @@ private:
     bool forceParallel_;
     bool enableParallel_;
     uint forcedNbOfParallelYears_;
+    uint rawNbOfParallelYears_;
     uint number_of_cores_;
     bool thermalTSRefresh_;
     Parameters& p;
