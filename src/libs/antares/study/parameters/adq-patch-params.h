@@ -76,8 +76,9 @@ struct LocalMatching
     void reset();
 };
 
-struct CurtailmentSharing
+class CurtailmentSharing
 {
+public:
     //! PTO (Price Taking Order) for adequacy patch. User can choose between DENS and Load.
     AdqPatchPTO priceTakingOrder;
     //! Threshold to initiate curtailment sharing rule
@@ -93,6 +94,8 @@ struct CurtailmentSharing
     
     
     void reset();
+
+private:
     void resetThresholds();
 };
 
