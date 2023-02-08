@@ -81,33 +81,40 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 impedanceVector.push_back((*line)->ptr->parameters[columnImpedance][hour]);
                 /*PN-TODO: Check the formula (page 3)*/
                 if (currentCycle.opType == Data::BindingConstraint::opEquality)
+                {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                             * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow
-                           + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                               * includePhaseShift)
-                          * currentCycle.sign[i];
+                                 * (*line)->ptr->parameters[columnLoopFlow][hour]
+                                 * includeLoopFlow
+                             + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                 * includePhaseShift)
+                         * currentCycle.sign[i];
+                }
                 else if (currentCycle.opType == Data::BindingConstraint::opBoth
                          && hour + 1 <= calendarEnd && hour + 1 >= calendarStart)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
-                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
-                            * currentCycle.sign[i]
-                          + std::min(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i],
-                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i]);
+                               * (*line)->ptr->parameters[columnLoopFlow][hour]
+                               * includeLoopFlow)
+                               * currentCycle.sign[i]
+                            + std::min(
+                                 ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                    * includePhaseShift)
+                                    * currentCycle.sign[i],
+                                 ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                    * includePhaseShift)
+                                    * currentCycle.sign[i]);
 
                     lb += ((*line)->ptr->parameters[columnImpedance][hour]
-                           * (*line)->ptr->parameters[columnLoopFlow][hour] * includeLoopFlow)
-                            * currentCycle.sign[i]
-                          + std::max(((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i],
-                                     ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
-                                      * includePhaseShift)
-                                       * currentCycle.sign[i]);
+                               * (*line)->ptr->parameters[columnLoopFlow][hour]
+                               * includeLoopFlow)
+                               * currentCycle.sign[i]
+                            + std::max(
+                                 ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
+                                    * includePhaseShift)
+                                    * currentCycle.sign[i],
+                                 ((*line)->ptr->parameters[Data::fhlPShiftPlus][hour]
+                                    * includePhaseShift)
+                                    * currentCycle.sign[i]);
                 }
                 else
                 {
