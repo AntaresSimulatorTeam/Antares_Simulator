@@ -196,7 +196,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
     const bool flowQuadEnabled
-      = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+      = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 

@@ -86,12 +86,6 @@ void variablePrintInfoCollector::add(const AnyString& name,
 // ============================================================
 // All variables print information
 // ============================================================
-AllVariablesPrintInfo::AllVariablesPrintInfo() :
- maxColumnsCount(0), numberSelectedAreaVariables(0), numberSelectedLinkVariables(0)
-{
-    // Re-initializing the iterator
-    it_info = allVarsPrintInfo.begin();
-}
 
 AllVariablesPrintInfo::~AllVariablesPrintInfo()
 {
@@ -129,7 +123,7 @@ size_t AllVariablesPrintInfo::size() const
 
 bool AllVariablesPrintInfo::isEmpty() const
 {
-    return size() == 0;
+    return allVarsPrintInfo.empty();
 }
 
 // Resetting iterator at the beginning of the list of all variables' print info
@@ -138,26 +132,23 @@ void AllVariablesPrintInfo::resetInfoIterator() const
     it_info = allVarsPrintInfo.begin();
 }
 
+static std::string to_uppercase(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    return str;
+}
+
 bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
-    /*
-        From the position of the iterator on the print info collection, shifting right until
-        reaching the print info associated to 'varname' argument. Then setting the good print
-        info object with 'printStatus' argument. If searched variable print info not found,
-       returning 'false' meaing we have an error.
-    */
-    std::transform(varname.begin(), varname.end(), varname.begin(), ::toupper);
+    auto has_uppercase_name = [&](VariablePrintInfo* v) { 
+        std::string name = to_uppercase(v->name());
+        return to_uppercase(v->name()) == to_uppercase(varname); };
 
-    for (it_info = allVarsPrintInfo.begin(); it_info != allVarsPrintInfo.end(); it_info++)
+    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_uppercase_name);
+    if (it != allVarsPrintInfo.end())
     {
-        std::string current_var_name = (*it_info)->name();
-        std::transform(
-          current_var_name.begin(), current_var_name.end(), current_var_name.begin(), ::toupper);
-        if (varname == current_var_name)
-        {
-            (*it_info)->enablePrint(printStatus);
-            return true;
-        }
+        (*it)->enablePrint(printStatus);
+        return true;
     }
     return false;
 }
@@ -186,52 +177,19 @@ void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
     countSelectedLinkVars();
 }
 
-bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(std::string var_name) const
-{
-    // Finds out if an output variable is selected for print or not.
-    // The search for the variable in the print info list is incremental :
-    // it resumes where it was left at the previous call.
-    // This function is meant to be called over the whole list of variables,
-    // not to find the print status of one isolated variable.
-    // We want to avoid to search from the start of the print info list at each call.
-
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->name() == var_name)
-        {
-            return (*it_info)->isPrinted();
-        }
-    }
-
-    // This is the case where we have an adequacy-draft variable :
-    // in the case of other study modes, we never get here.
-    resetInfoIterator();
-    return true;
-}
-
 bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 {
-    // Finds out if an output variable selected for print or not.
-    // The search for a variable starts from the beginning of the variable print info list.
-
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
-    {
-        if ((*it_info)->name() == var_name)
-        {
-            return (*it_info)->isPrinted();
-        }
-    }
-
-    // This point is not supposed to be reached (except in draft mode),
-    // because the searched variables should be found.
-    return true;
+    auto has_name = [&](VariablePrintInfo* v) { return v->name() == var_name; };
+    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_name);
+    if (it != allVarsPrintInfo.end())
+        return (*it)->isPrinted();
+    return false;
 }
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (uint i = 0; i < size(); ++i)
-        allVarsPrintInfo[i]->enablePrint(b);
+    for (VariablePrintInfo* v : allVarsPrintInfo)
+        v->enablePrint(b);
 }
 
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
@@ -258,9 +216,12 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
         for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
         {
-            if ((*it)->isPrinted() && (*it)->getFileLevel() & CFileLevel
-                && (*it)->getDataLevel() & CDataLevel)
+            if ((*it)->isPrinted() &&
+                (*it)->getFileLevel() & CFileLevel &&
+                (*it)->getDataLevel() & CDataLevel)
+            {
                 currentColumnsCount += (*it)->getMaxColumnsCount();
+            }
         }
 
         if (currentColumnsCount > maxColumnsCount)
@@ -273,20 +234,18 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
+    for (VariablePrintInfo* v : allVarsPrintInfo)
     {
-        if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::area)
+        if (v->isPrinted() && v->getDataLevel() == Category::area)
             numberSelectedAreaVariables++;
     }
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    resetInfoIterator();
-    for (; it_info != allVarsPrintInfo.end(); it_info++)
+    for (VariablePrintInfo* v : allVarsPrintInfo)
     {
-        if ((*it_info)->isPrinted() && (*it_info)->getDataLevel() == Category::link)
+        if (v->isPrinted() && v->getDataLevel() == Category::link)
             numberSelectedLinkVariables++;
     }
 }

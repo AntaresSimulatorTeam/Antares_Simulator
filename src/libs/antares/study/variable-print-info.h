@@ -97,7 +97,7 @@ class AllVariablesPrintInfo
 {
 public:
     // Public methods
-    AllVariablesPrintInfo();
+    AllVariablesPrintInfo() = default;
     ~AllVariablesPrintInfo();
 
     void add(VariablePrintInfo* v);
@@ -113,8 +113,6 @@ public:
     void prepareForSimulation(bool userSelection,
                               const std::vector<std::string>& excluded_vars = {});
 
-    // Incremental search for the variable, then get the print status.
-    bool searchIncrementally_getPrintStatus(std::string var_name) const;
     // Classic search, then get the print status
     bool isPrinted(std::string var_name) const;
 
@@ -147,12 +145,12 @@ private:
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.
-    uint maxColumnsCount;
+    uint maxColumnsCount = 0;
 
     // Number of selected zonal variables
-    uint numberSelectedAreaVariables;
+    uint numberSelectedAreaVariables = 0;
     // Number of selected link variables
-    uint numberSelectedLinkVariables;
+    uint numberSelectedLinkVariables = 0;
 };
 
 } // namespace Data

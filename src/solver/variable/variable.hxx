@@ -167,8 +167,7 @@ public:
         {
             // Shifting inside the variables print info collection until reaching the print info
             // associated with the current name, and then getting its print status.
-            isPrinted[i] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-              VCardT::Multiple::Caption(i));
+            isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Multiple::Caption(i));
         }
     }
 };
@@ -182,8 +181,7 @@ public:
     {
         // Shifting inside the variables print info collection until reaching the print info
         // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-          VCardT::Caption());
+        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
     }
 };
 
@@ -196,8 +194,7 @@ public:
     {
         // Shifting inside the variables print info collection until reaching the print info
         // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-          VCardT::Caption());
+        isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
     }
 };
 } // namespace
