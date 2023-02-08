@@ -235,8 +235,7 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
-    mpsWriterFactory mps_writer_factory(
-      problemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS, problemeHebdo->exportMPSOnError, optimizationNumber, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 

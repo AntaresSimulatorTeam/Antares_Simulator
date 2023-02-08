@@ -49,6 +49,7 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 #include <vector>
 #include <algorithm>
 #include "filename.h"
+#include "../optimisation/opt_constants.h"
 
 using namespace Yuni;
 
@@ -136,19 +137,19 @@ void fullOrToolsMPSwriter::runIfNeeded(Solver::IResultWriter::Ptr writer,
     ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(solver_, writer, filename);
 }
 
-mpsWriterFactory::mpsWriterFactory(PROBLEME_HEBDO* problemeHebdo,
+mpsWriterFactory::mpsWriterFactory(Data::mpsExportStatus exportMPS,
+                                   bool exportMPSOnError,
                                    const int current_optim_number,
                                    PROBLEME_SIMPLEXE_NOMME* named_splx_problem,
                                    bool ortoolsUsed,
                                    MPSolver* solver) :
- pb_hebdo_(problemeHebdo),
+ export_mps_(exportMPS),
+ export_mps_on_error_(exportMPSOnError),
  named_splx_problem_(named_splx_problem),
  ortools_used_(ortoolsUsed),
  solver_(solver),
  current_optim_number_(current_optim_number)
 {
-    export_mps_ = pb_hebdo_->ExportMPS;
-    export_mps_on_error_ = pb_hebdo_->exportMPSOnError;
 }
 
 bool mpsWriterFactory::doWeExportMPS()

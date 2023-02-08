@@ -20,6 +20,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_pilotage_optimisation_lineaire.cpp
 		optimisation/opt_pilotage_optimisation_quadratique.cpp
 		optimisation/opt_structure_probleme_a_resoudre.h
+        optimisation/opt_constants.h
 		optimisation/opt_alloc_probleme_a_optimiser.cpp
 		optimisation/opt_gestion_des_bornes_cas_quadratique.cpp
 		optimisation/opt_construction_variables_optimisees_lineaire.cpp
