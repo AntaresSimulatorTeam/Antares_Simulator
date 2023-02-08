@@ -308,7 +308,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     MPSolverParameters params;
     // setGenericOptions(params);
 
-    params.SetIntegerParam(MPSolverParameters::PRESOLVE, keepBasis == 0 ? 0 : 1);
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, keepBasis ? 0 : 1);
 
     bool warmStart = solverSupportsWarmStart(solver);
     // Provide an initial simplex basis, if any
