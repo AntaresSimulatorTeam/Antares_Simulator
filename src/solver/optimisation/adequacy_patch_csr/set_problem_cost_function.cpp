@@ -113,7 +113,7 @@ void HourlyCSRProblem::setLinearCost()
         {
             continue;
         }
-
+        const double coeff = problemeHebdo_->adequacyPatchRuntimeData.linkCostCoefficient[Interco];
         TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
         var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
@@ -131,7 +131,7 @@ void HourlyCSRProblem::setLinearCost()
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost->CoutDeTransportOrigineVersExtremite[triggeredHour];
+                  = TransportCost->CoutDeTransportOrigineVersExtremite[triggeredHour] * coeff;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
 
@@ -143,7 +143,7 @@ void HourlyCSRProblem::setLinearCost()
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
-                  = TransportCost->CoutDeTransportExtremiteVersOrigine[triggeredHour];
+                  = TransportCost->CoutDeTransportExtremiteVersOrigine[triggeredHour] * coeff;
             logs.debug() << var << ". Linear C = " << problemeAResoudre_.CoutLineaire[var];
         }
     }

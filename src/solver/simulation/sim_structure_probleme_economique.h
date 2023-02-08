@@ -301,27 +301,44 @@ typedef struct
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
 
+// TODO[FOM] move to new .h/.cpp
 class AdequacyPatchRuntimeData
 {
 private:
+    static double computeLinkCostCoefficient(double a, double b)
+    {
+        double m = std::max(a, b);
+        if (std::fabs(m) < 1.e-9)
+            m = 1.e-9;
+        return 1. / m;
+    }
     using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
 
 public:
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
+    std::vector<double> linkCostCoefficient;
+
     void initialize(Antares::Data::Study& study)
     {
+        areaMode.resize(study.areas.size());
         for (uint i = 0; i != study.areas.size(); ++i)
         {
             auto& area = *(study.areas[i]);
-            areaMode.push_back(area.adequacyPatchMode);
+            areaMode[i] = area.adequacyPatchMode;
         }
-        for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
+        const auto numberOfLinks = study.runtime->interconnectionsCount();
+        originAreaMode.resize(numberOfLinks);
+        extremityAreaMode.resize(numberOfLinks);
+        linkCostCoefficient.resize(numberOfLinks);
+        for (uint i = 0; i < numberOfLinks; ++i)
         {
             auto& link = *(study.runtime->areaLink[i]);
-            originAreaMode.push_back(link.from->adequacyPatchMode);
-            extremityAreaMode.push_back(link.with->adequacyPatchMode);
+            originAreaMode[i] = link.from->adequacyPatchMode;
+            extremityAreaMode[i] = link.with->adequacyPatchMode;
+            linkCostCoefficient[i] = computeLinkCostCoefficient(
+              link.from->thermal.unsuppliedEnergyCost, link.with->thermal.unsuppliedEnergyCost);
         }
     }
 };
