@@ -24,7 +24,6 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <filesystem>
 #include <cmath>
 #include "cbuilder.h"
 #include "grid.h"
