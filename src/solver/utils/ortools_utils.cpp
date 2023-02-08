@@ -9,7 +9,7 @@
 
 using namespace operations_research;
 
-const char* const XPRESS_PARAMS = "THREADS 1 SCALING 0";
+const char* const XPRESS_PARAMS = "THREADS 1";
 
 static void transferVariables(MPSolver* solver,
                               const double* bMin,
@@ -97,6 +97,12 @@ static void transferMatrix(const MPSolver* solver,
             ct->SetCoefficient(variables[indexCols[pos]], coeffs[pos]);
         }
     }
+}
+
+static void setGenericOptions(MPSolverParameters& params)
+{
+    params.SetIntegerParam(MPSolverParameters::SCALING, 0);
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
 }
 
 static void tuneSolverSpecificOptions(MPSolver* solver)
@@ -300,6 +306,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            bool keepBasis)
 {
     MPSolverParameters params;
+    // setGenericOptions(params);
+
+    params.SetIntegerParam(MPSolverParameters::PRESOLVE, keepBasis == 0 ? 0 : 1);
+
     bool warmStart = solverSupportsWarmStart(solver);
     // Provide an initial simplex basis, if any
     if (warmStart && Probleme->basisExists() && !Probleme->isMIP())
