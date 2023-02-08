@@ -305,11 +305,14 @@ typedef struct
 class AdequacyPatchRuntimeData
 {
 private:
-    static double computeLinkCostCoefficient(double a, double b)
+    // TODO[FOM] out of class
+    static constexpr double thresholdForCostCoefficient = 1.e-9;
+    // TODO[FOM] free function
+    static double computeHurdleCostCoefficient(double a, double b)
     {
         double m = std::max(a, b);
-        if (std::fabs(m) < 1.e-9)
-            m = 1.e-9;
+        if (std::fabs(m) < thresholdForCostCoefficient)
+            m = thresholdForCostCoefficient;
         return 1. / m;
     }
     using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
@@ -318,7 +321,7 @@ public:
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
-    std::vector<double> linkCostCoefficient;
+    std::vector<double> hurdleCostCoefficients;
 
     void initialize(Antares::Data::Study& study)
     {
@@ -331,13 +334,13 @@ public:
         const auto numberOfLinks = study.runtime->interconnectionsCount();
         originAreaMode.resize(numberOfLinks);
         extremityAreaMode.resize(numberOfLinks);
-        linkCostCoefficient.resize(numberOfLinks);
+        hurdleCostCoefficients.resize(numberOfLinks);
         for (uint i = 0; i < numberOfLinks; ++i)
         {
             auto& link = *(study.runtime->areaLink[i]);
             originAreaMode[i] = link.from->adequacyPatchMode;
             extremityAreaMode[i] = link.with->adequacyPatchMode;
-            linkCostCoefficient[i] = computeLinkCostCoefficient(
+            hurdleCostCoefficients[i] = computeHurdleCostCoefficient(
               link.from->thermal.unsuppliedEnergyCost, link.with->thermal.unsuppliedEnergyCost);
         }
     }

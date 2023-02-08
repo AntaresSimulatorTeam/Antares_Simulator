@@ -113,7 +113,8 @@ void HourlyCSRProblem::setLinearCost()
         {
             continue;
         }
-        const double coeff = problemeHebdo_->adequacyPatchRuntimeData.linkCostCoefficient[Interco];
+        const double coeff
+          = problemeHebdo_->adequacyPatchRuntimeData.hurdleCostCoefficients[Interco];
         TransportCost = problemeHebdo_->CoutDeTransport[Interco];
         // flow
         var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
