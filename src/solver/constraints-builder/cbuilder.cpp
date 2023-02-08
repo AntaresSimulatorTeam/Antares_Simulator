@@ -24,6 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <filesystem>
 #include <cmath>
 #include "cbuilder.h"
 #include "grid.h"
@@ -88,20 +89,6 @@ bool CBuilder::update(bool applyCheckBox)
     pMesh.clear();
 
     // Update impedances from study file and compute impedance changes
-
-    for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
-    {
-        auto linkInfo = *linkInfoIt;
-        Data::AreaLink* link = linkInfo->ptr;
-
-        // Try to open link data files (GUI only)
-        if (link->parameters.jit)
-        {
-            YString dataFilename = link->parameters.jit->sourceFilename;
-            if (!link->loadTimeSeries(*pStudy, dataFilename))
-                return false;
-        }
-    }
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
@@ -308,13 +295,7 @@ bool CBuilder::deletePreviousConstraints()
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        if (link->parameters.jit)
-        {
-            YString dataFilename = link->parameters.jit->sourceFilename;
-            if (!link->loadTimeSeries(*pStudy, dataFilename))
-                return false;
-        }
-
+        link->forceReload(true);
         link->useLoopFlow = false;
         link->usePST = false;
     }
