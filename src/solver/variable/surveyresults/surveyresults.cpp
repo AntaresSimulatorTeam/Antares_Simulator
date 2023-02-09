@@ -504,10 +504,16 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime)
+void SurveyResults::initializeMaxVariables(const Data::Study& s)
 {
+    const auto* runtime = s.runtime;
+
+    // Getting the any report's max number of columns
+    maxVariables = s.parameters.variablesPrintInfo.getMaxColumnsCount();
+    logs.debug() << "  (for " << maxVariables << " columns)";
+
     if (!runtime)
-        return maxVars;
+        return;
 
     // Adding new files / variables ? Change the values below to avoid maxVariables being too small
 
@@ -529,27 +535,27 @@ uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime
 
     const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
 
-    return max(maxVars,
-               static_cast<uint>(nbVariablesPerDetailThermalCluster
+    maxVariables = max(maxVariables,
+                       static_cast<uint>(nbVariablesPerDetailThermalCluster
                                  * runtime->maxThermalClustersForSingleArea),
-               static_cast<uint>(nbVariablesPerDetailRenewableCluster
+                       static_cast<uint>(nbVariablesPerDetailRenewableCluster
                                  * runtime->maxRenewableClustersForSingleArea),
-               maxNbVariablesPerInequalityBindingConstraint
-                 * runtime->getNumberOfInequalityBindingConstraints());
+                       maxNbVariablesPerInequalityBindingConstraint
+                                * runtime->getNumberOfInequalityBindingConstraints());
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
-SurveyResults::SurveyResults(uint maxVars,
-                             const Data::Study& s,
+SurveyResults::SurveyResults(const Data::Study& s,
                              const String& o,
                              IResultWriter::Ptr writer) :
  data(s, o),
- maxVariables(initializeMaxVariables(maxVars, s.runtime)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),
  pResultWriter(writer)
 {
+    initializeMaxVariables(s);
+    
     variableCaption.reserve(10);
 
     data.initialize(maxVariables);
