@@ -98,7 +98,12 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           tar czf antares-solver_centos7.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           cmake3 --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_centos7.tar.gz antares-*-solver libsirius_solver.so
+           popd
+           rm -rf install
 
     - name: .tar.gz creation
       run: |

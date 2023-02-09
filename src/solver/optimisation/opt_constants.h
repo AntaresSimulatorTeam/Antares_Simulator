@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../simulation/sim_defines.h"
+#include "../simulation/sim_constants.h"
 
 constexpr char PREMIERE_OPTIMISATION  = 1;
 constexpr char DEUXIEME_OPTIMISATION = 2;

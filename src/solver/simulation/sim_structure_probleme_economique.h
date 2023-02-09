@@ -33,7 +33,7 @@
 #include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "sim_defines.h"
+#include "sim_constants.h"
 #include <memory>
 #include <yuni/core/math.h>
 
