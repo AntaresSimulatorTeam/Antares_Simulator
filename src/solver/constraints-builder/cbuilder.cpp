@@ -80,7 +80,7 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::update(bool applyCheckBox)
+bool CBuilder::update()
 {
     buildAreaToLinkInfosMap();
     // Keep only enabled AC lines, remove disabled or DC lines
@@ -94,18 +94,15 @@ bool CBuilder::update(bool applyCheckBox)
         auto linkInfo = *linkInfoIt;
         Data::AreaLink* link = linkInfo->ptr;
 
-        if (applyCheckBox)
-        {
-            link->useLoopFlow = includeLoopFlow;
+        link->forceReload(true);
+        link->useLoopFlow = includeLoopFlow;
+        link->usePST = includePhaseShift;
 
-            link->usePST = includePhaseShift;
-        }
         // set used to count the number of different impedances
         std::set<double> impedances;
 
         uint columnImpedance = (uint)Data::fhlImpedances;
 
-        link->forceReload(true);
         // load the impedance
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
@@ -261,7 +258,7 @@ bool CBuilder::update(bool applyCheckBox)
 bool CBuilder::runConstraintsBuilder(bool standalone)
 {
     // build the set of loops which span the grid
-    if (!update(true))
+    if (!update())
         return false;
 
     // create the constraints
