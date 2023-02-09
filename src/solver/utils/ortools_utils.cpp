@@ -99,7 +99,8 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
-static void setGenericOptions(MPSolverParameters& params)
+// MPSolverParameters's copy constructor is private
+static void setGenericParameters(MPSolverParameters& params)
 {
     params.SetIntegerParam(MPSolverParameters::SCALING, 0);
     params.SetIntegerParam(MPSolverParameters::PRESOLVE, 0);
@@ -122,12 +123,9 @@ static void tuneSolverSpecificOptions(MPSolver* solver)
     }
 }
 
-static bool solverSupportsWarmStart(const MPSolver* solver)
+static bool solverSupportsWarmStart(const MPSolver::OptimizationProblemType solverType)
 {
-    if (!solver)
-        return false;
-
-    switch (solver->ProblemType())
+    switch (solverType)
     {
     case MPSolver::XPRESS_LINEAR_PROGRAMMING:
         return true;
@@ -272,7 +270,7 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
     removeTemporaryFile(tmpPath);
 }
 
-bool solveAndManageStatus(MPSolver* solver, int& resultStatus, MPSolverParameters& params)
+bool solveAndManageStatus(MPSolver* solver, int& resultStatus, const MPSolverParameters& params)
 {
     auto status = solver->Solve(params);
 
@@ -306,13 +304,10 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            bool keepBasis)
 {
     MPSolverParameters params;
-    // setGenericOptions(params);
-
-    params.SetIntegerParam(MPSolverParameters::PRESOLVE, keepBasis ? 0 : 1);
-
-    bool warmStart = solverSupportsWarmStart(solver);
+    setGenericParameters(params);
+    const bool warmStart = solverSupportsWarmStart(solver->ProblemType());
     // Provide an initial simplex basis, if any
-    if (warmStart && Probleme->basisExists() && !Probleme->isMIP())
+    if (warmStart && Probleme->basisExists())
     {
         solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
@@ -321,7 +316,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
-        if (warmStart && keepBasis && !Probleme->isMIP())
+        if (warmStart && keepBasis)
         {
             solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
                                        Probleme->StatutDesContraintes);
