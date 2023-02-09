@@ -13,7 +13,7 @@ It should be noted that, in the current implementation of the patch within Antar
 
 3. The implemented solution does not yet consider the feature in EUPHEMIA, related to ‘minimization of curtailment’ in the primal problem which includes an extra penalty term directly in the global objective function in EUPHEMIA by multiplying the maximum curtailment ratio with a large M pre-factor in the total welfare.
 
-## Local matching rule
+## Local matching rule (Antares Simulator 8.3)
 
 The rule implemented is called the « Local Matching » rule:
 
@@ -56,7 +56,7 @@ During the second iteration, all link capacities between physical nodes are set 
 - ENS $\le$ DENS   
  (for all physical areas inside the adequacy patch).
 
-## Curtailment sharing rule
+## Curtailment sharing rule  (Antares Simulator 8.5)
 
 The second implemented rule is called the « Curtailment Sharing » rule (henceforth CSR).
 
