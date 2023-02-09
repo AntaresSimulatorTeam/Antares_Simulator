@@ -44,8 +44,7 @@ inline Links::Links()
 
 inline void Links::initializeFromStudy(Data::Study& study)
 {
-    // Do nothing but resetting the pointer on print info collection
-    study.parameters.variablesPrintInfo.resetInfoIterator();
+    // Do nothing
 }
 
 inline void Links::initializeFromAreaLink(Data::Study*, Data::AreaLink*)

@@ -126,12 +126,6 @@ bool AllVariablesPrintInfo::isEmpty() const
     return allVarsPrintInfo.empty();
 }
 
-// Resetting iterator at the beginning of the list of all variables' print info
-void AllVariablesPrintInfo::resetInfoIterator() const
-{
-    it_info = allVarsPrintInfo.begin();
-}
-
 static std::string to_uppercase(std::string str)
 {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
@@ -183,7 +177,10 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
     auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_name);
     if (it != allVarsPrintInfo.end())
         return (*it)->isPrinted();
-    return false;
+
+    // This point is not supposed to be reached (except in draft mode),
+    // because the searched variables should be found.
+    return true;
 }
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)

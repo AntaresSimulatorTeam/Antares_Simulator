@@ -106,8 +106,6 @@ public:
     size_t size() const;
     bool isEmpty() const;
 
-    void resetInfoIterator() const;
-
     bool setPrintStatus(std::string varname, bool printStatus);
 
     void prepareForSimulation(bool userSelection,
@@ -139,9 +137,6 @@ private:
 private:
     // Contains print info for all variables
     std::vector<VariablePrintInfo*> allVarsPrintInfo;
-
-    // Const iterator on variable print info list, that cannot change current object.
-    mutable std::vector<VariablePrintInfo*>::const_iterator it_info;
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.

@@ -315,7 +315,6 @@ void Parameters::reset()
     variablesPrintInfo.clear();
     variablePrintInfoCollector collector(&variablesPrintInfo);
     Antares::Solver::Variable::Economy::AllVariables::RetrieveVariableList(collector);
-    variablesPrintInfo.resetInfoIterator();
     thematicTrimming = false;
 
     resetPlayedYears(1);
