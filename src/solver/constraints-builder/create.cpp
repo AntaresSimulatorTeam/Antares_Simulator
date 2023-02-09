@@ -84,7 +84,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
                                  * (*line)->ptr->parameters[columnLoopFlow][hour]
-                                 * includeLoopFlow
+                                 * (int)includeLoopFlow
                              + (*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
                                  * includePhaseShift)
                          * currentCycle.sign[i];
@@ -94,7 +94,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                 {
                     ub += ((*line)->ptr->parameters[columnImpedance][hour]
                                * (*line)->ptr->parameters[columnLoopFlow][hour]
-                               * includeLoopFlow)
+                               * (int)includeLoopFlow)
                                * currentCycle.sign[i]
                             + std::min(
                                  ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
@@ -106,7 +106,7 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
 
                     lb += ((*line)->ptr->parameters[columnImpedance][hour]
                                * (*line)->ptr->parameters[columnLoopFlow][hour]
-                               * includeLoopFlow)
+                               * (int)includeLoopFlow)
                                * currentCycle.sign[i]
                             + std::max(
                                  ((*line)->ptr->parameters[Data::fhlPShiftMinus][hour]
