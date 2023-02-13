@@ -41,6 +41,7 @@
 #include "toolbox/components/datagrid/renderer/scenario-builder-wind-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-solar-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-hydro-levels-renderer.h"
+#include "toolbox/components/datagrid/renderer/scenario-builder-hydro-final-levels-renderer.h"
 #include "toolbox/components/datagrid/renderer/scenario-builder-ntc-renderer.h"
 
 using namespace Yuni;
@@ -227,7 +228,7 @@ class hydroFinalLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 
     Renderer::ScBuilderRendererBase* getRenderer() override
     {
-        return new_check_allocation<Renderer::hydroLevelsScBuilderRenderer>();
+        return new_check_allocation<Renderer::hydroFinalLevelsScBuilderRenderer>();
     }
     Notebook::Page* addPageToNotebook() override
     {
@@ -390,6 +391,7 @@ void ApplWnd::createNBScenarioBuilder()
     hydroInitialLevelsScBuilderPageMaker hydroInitialLevelsSBpageMaker(scenarioBuilderPanel,
                                                          pScenarioBuilderNotebook);
     pageScBuilderHydroInitialLevels = hydroInitialLevelsSBpageMaker.createPage();
+    
     hydroFinalLevelsScBuilderPageMaker hydroFinalLevelsSBpageMaker(scenarioBuilderPanel,
                                                          pScenarioBuilderNotebook);
     pageScBuilderHydroFinalLevels = hydroFinalLevelsSBpageMaker.createPage();

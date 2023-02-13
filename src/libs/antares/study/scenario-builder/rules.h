@@ -32,6 +32,7 @@
 #include "../fwd.h"
 #include "TSnumberData.h"
 #include "hydroLevelsData.h"
+#include "hydroFinalLevelsData.h"
 #include <map>
 #include <memory>
 
@@ -117,8 +118,10 @@ public:
     //! Renewable (array [0..pAreaCount - 1])
     std::vector<renewableTSNumberData> renewable;
 
-    //! hydro levels
+    //! hydro initial levels
     hydroLevelsData hydroLevels;
+    //! hydro final levels
+    hydroFinalLevelsData hydroFinalLevels;
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
@@ -132,6 +135,7 @@ private:
     bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readFinalHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);
