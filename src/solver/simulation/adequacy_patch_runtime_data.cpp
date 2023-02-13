@@ -10,18 +10,18 @@ void AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
     csrTriggeredHoursPerArea_[area].insert(hour);
 }
 
-AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(Antares::Data::Study& study)
+AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
+  const Antares::Data::AreaList& areas,
+  const std::vector<Antares::Data::AreaLink*>& links)
 {
-    csrTriggeredHoursPerArea_.resize(study.areas.size());
-    for (uint i = 0; i != study.areas.size(); ++i)
+    csrTriggeredHoursPerArea_.resize(areas.size());
+    for (uint i = 0; i != areas.size(); ++i)
     {
-        const auto& area = *(study.areas[i]);
-        areaMode.push_back(area.adequacyPatchMode);
+        areaMode.push_back(areas[i]->adequacyPatchMode);
     }
-    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
+    for (uint i = 0; i < links.size(); ++i)
     {
-        const auto& link = *(study.runtime->areaLink[i]);
-        originAreaMode.push_back(link.from->adequacyPatchMode);
-        extremityAreaMode.push_back(link.with->adequacyPatchMode);
+        originAreaMode.push_back(links[i]->from->adequacyPatchMode);
+        extremityAreaMode.push_back(links[i]->with->adequacyPatchMode);
     }
 }

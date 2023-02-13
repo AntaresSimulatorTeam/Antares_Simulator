@@ -26,6 +26,7 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
                                                      bool SetNTCOutsideToInsideToZero)
 {
     PROBLEME_HEBDO problem;
+    problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
     problem.adequacyPatchRuntimeData->originAreaMode.resize(1);
     problem.adequacyPatchRuntimeData->extremityAreaMode.resize(1);
 
@@ -70,6 +71,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     uint hour = 0;
 
     // allocate memory
+    problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>();
     problem.adequacyPatchRuntimeData->originAreaMode.resize(3);
     problem.adequacyPatchRuntimeData->extremityAreaMode.resize(3);
 

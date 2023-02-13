@@ -38,7 +38,9 @@ private:
     std::vector<std::set<int>> csrTriggeredHoursPerArea_;
 
 public:
-    explicit AdequacyPatchRuntimeData(Antares::Data::Study& study);
+    explicit AdequacyPatchRuntimeData() = default;
+    AdequacyPatchRuntimeData(const Antares::Data::AreaList& areas,
+                             const std::vector<Antares::Data::AreaLink*>& links);
 
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
