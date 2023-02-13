@@ -243,7 +243,7 @@ typedef struct
     double* CoutDeDemarrageDUnGroupeDuPalierThermique;
     double* CoutDArretDUnGroupeDuPalierThermique;
     double* CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-    double* PminDUnGroupeDuPalierThermique;
+    double* pminDUnGroupeDuPalierThermique;
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;

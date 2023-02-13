@@ -34,29 +34,23 @@
 
 void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Interco;
-    int Index;
-    int NoeudOrigine;
-    int NoeudExtremite;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        problemeHebdo->IndexDebutIntercoOrigine[Pays] = -1;
-        problemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
+        problemeHebdo->IndexDebutIntercoOrigine[pays] = -1;
+        problemeHebdo->IndexDebutIntercoExtremite[pays] = -1;
     }
 
-    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        NoeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[Interco];
-        Index = problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
-        problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine] = Interco;
-        problemeHebdo->IndexSuivantIntercoOrigine[Interco] = Index;
+        int noeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[interco];
+        int index = problemeHebdo->IndexDebutIntercoOrigine[noeudOrigine];
+        problemeHebdo->IndexDebutIntercoOrigine[noeudOrigine] = interco;
+        problemeHebdo->IndexSuivantIntercoOrigine[interco] = index;
 
-        NoeudExtremite = problemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
-        Index = problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
-        problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite] = Interco;
-        problemeHebdo->IndexSuivantIntercoExtremite[Interco] = Index;
+        int noeudExtremite = problemeHebdo->PaysExtremiteDeLInterconnexion[interco];
+        index = problemeHebdo->IndexDebutIntercoExtremite[noeudExtremite];
+        problemeHebdo->IndexDebutIntercoExtremite[noeudExtremite] = interco;
+        problemeHebdo->IndexSuivantIntercoExtremite[interco] = index;
     }
 
     return;

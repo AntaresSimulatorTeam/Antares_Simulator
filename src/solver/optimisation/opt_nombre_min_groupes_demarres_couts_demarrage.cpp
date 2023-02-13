@@ -76,7 +76,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
     double* PuissanceDisponibleDuPalierThermique;
     double* PuissanceMinDuPalierThermique;
     double ProductionThermiqueDuPalier;
-    double PminDUnGroupeDuPalierThermique;
+    double pminDUnGroupeDuPalierThermique;
     double PmaxDUnGroupeDuPalierThermique;
 
     double P;
@@ -149,8 +149,8 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                   = PuissanceDisponibleEtCout[Index]->NombreMaxDeGroupesEnMarcheDuPalierThermique;
                 PuissanceDisponibleDuPalierThermique
                   = PuissanceDisponibleEtCout[Index]->PuissanceDisponibleDuPalierThermique;
-                PminDUnGroupeDuPalierThermique
-                  = PaliersThermiquesDuPays->PminDUnGroupeDuPalierThermique[Index];
+                pminDUnGroupeDuPalierThermique
+                  = PaliersThermiquesDuPays->pminDUnGroupeDuPalierThermique[Index];
                 PmaxDUnGroupeDuPalierThermique
                   = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index];
 
@@ -178,7 +178,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                                NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo]);
                     }
                     P = ProductionThermique[PdtHebdo]->ProductionThermiqueDuPalier[Index];
-                    if (P < X * PminDUnGroupeDuPalierThermique - Eps)
+                    if (P < X * pminDUnGroupeDuPalierThermique - Eps)
                     {
                         printf(
                           "Attention, AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage: \n");
@@ -188,7 +188,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                           Index,
                           P,
                           X,
-                          PminDUnGroupeDuPalierThermique);
+                          pminDUnGroupeDuPalierThermique);
                     }
                     if (P > X * PmaxDUnGroupeDuPalierThermique + Eps)
                     {
@@ -216,11 +216,11 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                         NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
                           = NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
 
-                    if (PminDUnGroupeDuPalierThermique
+                    if (pminDUnGroupeDuPalierThermique
                           * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
                         > PuissanceDisponibleDuPalierThermique[PdtHebdo])
                         PuissanceDisponibleDuPalierThermique[PdtHebdo]
-                          = PminDUnGroupeDuPalierThermique
+                          = pminDUnGroupeDuPalierThermique
                             * NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo];
                 }
             }

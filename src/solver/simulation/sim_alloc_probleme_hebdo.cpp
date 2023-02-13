@@ -401,7 +401,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique
           = (double*)MemAlloc(nbPaliers * sizeof(double));
-        problem.PaliersThermiquesDuPays[k]->PminDUnGroupeDuPalierThermique
+        problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique
           = (double*)MemAlloc(nbPaliers * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique
           = (double*)MemAlloc(nbPaliers * sizeof(double));
@@ -746,7 +746,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.PaliersThermiquesDuPays[k]->CoutDeDemarrageDUnGroupeDuPalierThermique);
         MemFree(problem.PaliersThermiquesDuPays[k]->CoutDArretDUnGroupeDuPalierThermique);
         MemFree(problem.PaliersThermiquesDuPays[k]->CoutFixeDeMarcheDUnGroupeDuPalierThermique);
-        MemFree(problem.PaliersThermiquesDuPays[k]->PminDUnGroupeDuPalierThermique);
+        MemFree(problem.PaliersThermiquesDuPays[k]->pminDUnGroupeDuPalierThermique);
         MemFree(problem.PaliersThermiquesDuPays[k]->PmaxDUnGroupeDuPalierThermique);
         MemFree(
           problem.PaliersThermiquesDuPays[k]->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique);

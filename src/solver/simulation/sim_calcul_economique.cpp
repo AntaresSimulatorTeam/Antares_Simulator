@@ -282,7 +282,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
             pbPalier.DureeMinimaleDArretDUnGroupeDuPalierThermique[l] = cluster.minDownTime;
 
             pbPalier.PmaxDUnGroupeDuPalierThermique[l] = cluster.nominalCapacityWithSpinning;
-            pbPalier.PminDUnGroupeDuPalierThermique[l]
+            pbPalier.pminDUnGroupeDuPalierThermique[l]
               = (pbPalier.PmaxDUnGroupeDuPalierThermique[l] < cluster.minStablePower)
                   ? pbPalier.PmaxDUnGroupeDuPalierThermique[l]
                   : cluster.minStablePower;

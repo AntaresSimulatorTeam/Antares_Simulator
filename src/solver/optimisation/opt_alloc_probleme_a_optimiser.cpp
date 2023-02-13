@@ -136,26 +136,19 @@ void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 
 static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int mxPaliers)
 {
-    int NbTermes;
-    int NbIntervalles;
-    int NumIntervalle;
-    int NombreDePasDeTempsPourUneOptimisation;
-    int Adder;
-    int Sparsity;
-
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    Sparsity = (int)mxPaliers * problemeHebdo->NombreDePays;
+    int Sparsity = (int)mxPaliers * problemeHebdo->NombreDePays;
     Sparsity += problemeHebdo->NombreDInterconnexions;
     if (Sparsity > 100)
         Sparsity = 100;
 
-    NbTermes = 0;
+    int NbTermes = 0;
     NbTermes += ProblemeAResoudre->NombreDeContraintes;
 
-    Adder = (int)mxPaliers;
+    int Adder = (int)mxPaliers;
     Adder += 4;
     Adder *= problemeHebdo->NombreDePays;
     Adder += 2 * problemeHebdo->NombreDInterconnexions;
@@ -201,12 +194,12 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre, NbTermes);
 
-    NbIntervalles
+    int NbIntervalles
       = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
     ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
     ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
-    for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+    for (int NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
         ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = NULL;
 
     logs.info();
@@ -216,12 +209,11 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    int mxPaliers;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    ProblemeAResoudre
-      = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre
+        = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
     problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
 
+    int mxPaliers;
     OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo, &mxPaliers);
 
     optimisationAllocateProblem(problemeHebdo, mxPaliers);
@@ -229,9 +221,7 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
 {
-    int NbTermes;
-
-    NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
+    int NbTermes = ProblemeAResoudre->NombreDeTermesAllouesDansLaMatriceDesContraintes;
     NbTermes += ProblemeAResoudre->IncrementDAllocationMatriceDesContraintes;
 
     logs.info();

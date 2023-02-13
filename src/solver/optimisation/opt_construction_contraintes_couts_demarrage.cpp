@@ -45,133 +45,114 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
   char Simulation)
 {
-    int Index;
-    int Pays;
-    int Pdt;
-    int Palier;
-    int NombreDeTermes;
-    int NombreDePasDeTempsPourUneOptimisation;
-    int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
-    int DureeMinimaleDArretDUnGroupeDuPalierThermique;
-    int k;
-    int t1;
-    double PminDUnGroupeDuPalierThermique;
-    double PmaxDUnGroupeDuPalierThermique;
-    int NbTermesContraintesPourLesCoutsDeDemarrage;
-    int var;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    double* Pi;
-    int* Colonne;
-    int Pdtmoins1;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptimTmoins1;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    Pi = ProblemeAResoudre->Pi;
-    Colonne = ProblemeAResoudre->Colonne;
+    double Pi = ProblemeAResoudre->Pi;
+    int* Colonne = ProblemeAResoudre->Colonne;
 
-    NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            PminDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->PminDUnGroupeDuPalierThermique[Index];
-            PmaxDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[Index];
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            double pminDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays->pminDUnGroupeDuPalierThermique[index];
+            double pmaxDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays->PmaxDUnGroupeDuPalierThermique[index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                NombreDeTermes = 0;
+                int nombreDeTermes = 0;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var
-                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[Palier];
+                    int var
+                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = -PmaxDUnGroupeDuPalierThermique;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = -pmaxDUnGroupeDuPalierThermique;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 0)
+                    if (nombreDeTermes > 0)
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
                 }
                 else
                     ProblemeAResoudre->NombreDeContraintes += 1;
 
-                NombreDeTermes = 0;
+                nombreDeTermes = 0;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var
-                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[Palier];
+                    int var
+                      = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = -PminDUnGroupeDuPalierThermique;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = -pminDUnGroupeDuPalierThermique;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 0)
+                    if (nombreDeTermes > 0)
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
                 }
                 else
@@ -180,91 +161,91 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                Pdtmoins1 = Pdt - 1;
+                int Pdtmoins1 = pdt - 1;
                 if (Pdtmoins1 < 0)
-                    Pdtmoins1 = NombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
+                    Pdtmoins1 = nombreDePasDeTempsPourUneOptimisation + Pdtmoins1;
                 CorrespondanceVarNativesVarOptimTmoins1
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
 
-                NombreDeTermes = 0;
+                int nombreDeTermes = 0;
                 if (Simulation == NON_ANTARES)
                 {
-                    var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var = CorrespondanceVarNativesVarOptimTmoins1
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = CorrespondanceVarNativesVarOptimTmoins1
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = -1;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = -1;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var
+                    int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
+                          ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = -1;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = -1;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var
+                    int var
                       = CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
+                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 0)
+                    if (nombreDeTermes > 0)
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                     }
                 }
                 else
@@ -273,60 +254,60 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[Palier]
+                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
-                NombreDeTermes = 0;
+                int nombreDeTermes = 0;
                 if (Simulation == NON_ANTARES)
                 {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]
+                    int var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-                              [Palier];
+                              [palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    var
-                      = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]
-                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
+                    int var
+                      = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                          ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = -1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = -1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 0)
+                    if (nombreDeTermes > 0)
                     {
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
                 }
                 else
@@ -336,51 +317,51 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     }
 
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne[Palier]
+                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne[palier]
                   = -1;
 
-                NombreDeTermes = 0;
-                var = 0;
+                int nombreDeTermes = 0;
+                int var = 0;
                 if (Simulation == NON_ANTARES)
                 {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]
+                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-                              [Palier];
+                              [palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 0)
+                    if (nombreDeTermes > 0)
                     {
                         CorrespondanceCntNativesCntOptim
                           ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-                            [Palier]
+                            [palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
                 }
                 else
@@ -390,90 +371,90 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     }
 #endif
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index];
+            int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[index];
             if (DureeMinimaleDeMarcheDUnGroupeDuPalierThermique <= 0)
                 continue;
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[Palier]
+                  ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                   = -1;
 
-                NombreDeTermes = 0;
+                int nombreDeTermes = 0;
                 if (Simulation == NON_ANTARES)
                 {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt]
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                for (k = Pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
+                for (int k = pdt - DureeMinimaleDeMarcheDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
                 {
-                    t1 = k;
+                    int t1 = k;
                     if (t1 < 0)
-                        t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                        t1 = nombreDePasDeTempsPourUneOptimisation + t1;
 
                     if (Simulation == NON_ANTARES)
                     {
-                        var = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
+                        int var = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
                                 ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
-                                  [Palier];
+                                  [palier];
                         if (var >= 0)
                         {
-                            Pi[NombreDeTermes] = -1.0;
-                            Colonne[NombreDeTermes] = var;
-                            NombreDeTermes++;
+                            Pi[nombreDeTermes] = -1.0;
+                            Colonne[nombreDeTermes] = var;
+                            nombreDeTermes++;
                         }
                     }
                     else
-                        NbTermesContraintesPourLesCoutsDeDemarrage++;
+                        nbTermesContraintesPourLesCoutsDeDemarrage++;
 
                     if (Simulation == NON_ANTARES)
                     {
-                        var
+                        int var
                           = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
                               ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-                                [Palier];
+                                [palier];
                         if (var >= 0)
                         {
-                            Pi[NombreDeTermes] = 1.0;
-                            Colonne[NombreDeTermes] = var;
-                            NombreDeTermes++;
+                            Pi[nombreDeTermes] = 1.0;
+                            Colonne[nombreDeTermes] = var;
+                            nombreDeTermes++;
                         }
                     }
                     else
-                        NbTermesContraintesPourLesCoutsDeDemarrage++;
+                        nbTermesContraintesPourLesCoutsDeDemarrage++;
                 }
 
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 1)
+                    if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[Palier]
+                          ->NumeroDeContrainteDesContraintesDeDureeMinDeMarche[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '>');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
                     }
                 }
                 else
@@ -482,83 +463,83 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            DureeMinimaleDArretDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            int DureeMinimaleDArretDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
+            int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[Pdt];
+                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
                 CorrespondanceCntNativesCntOptim
-                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret[Palier]
+                  ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                   = -1;
 
                 CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 if (Simulation == NON_ANTARES)
                 {
                     CorrespondanceCntNativesCntOptim
-                      ->NumeroDeContrainteDesContraintesDeDureeMinDArret[Palier]
+                      ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                       = -1;
                 }
 
-                NombreDeTermes = 0;
+                int nombreDeTermes = 0;
                 if (Simulation == NON_ANTARES)
                 {
-                    var = CorrespondanceVarNativesVarOptim
-                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                    int var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                     if (var >= 0)
                     {
-                        Pi[NombreDeTermes] = 1.0;
-                        Colonne[NombreDeTermes] = var;
-                        NombreDeTermes++;
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
                     }
                 }
                 else
-                    NbTermesContraintesPourLesCoutsDeDemarrage++;
+                    nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                for (k = Pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= Pdt; k++)
+                for (int k = pdt - DureeMinimaleDArretDUnGroupeDuPalierThermique + 1; k <= pdt; k++)
                 {
-                    t1 = k;
+                    int t1 = k;
                     if (t1 < 0)
-                        t1 = NombreDePasDeTempsPourUneOptimisation + t1;
+                        t1 = nombreDePasDeTempsPourUneOptimisation + t1;
 
                     CorrespondanceVarNativesVarOptim
                       = problemeHebdo->CorrespondanceVarNativesVarOptim[t1];
                     if (Simulation == NON_ANTARES)
                     {
-                        var = CorrespondanceVarNativesVarOptim
+                        int var = CorrespondanceVarNativesVarOptim
                                 ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
-                                  [Palier];
+                                  [palier];
                         if (var >= 0)
                         {
-                            Pi[NombreDeTermes] = 1.0;
-                            Colonne[NombreDeTermes] = var;
-                            NombreDeTermes++;
+                            Pi[nombreDeTermes] = 1.0;
+                            Colonne[nombreDeTermes] = var;
+                            nombreDeTermes++;
                         }
                     }
                     else
-                        NbTermesContraintesPourLesCoutsDeDemarrage++;
+                        nbTermesContraintesPourLesCoutsDeDemarrage++;
                 }
                 if (Simulation == NON_ANTARES)
                 {
-                    if (NombreDeTermes > 1)
+                    if (nombreDeTermes > 1)
                     {
                         CorrespondanceCntNativesCntOptim
-                          ->NumeroDeContrainteDesContraintesDeDureeMinDArret[Palier]
+                          ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
                           = ProblemeAResoudre->NombreDeContraintes;
 
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '<');
+                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }
                 }
                 else
@@ -569,7 +550,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     if (Simulation == OUI_ANTARES)
         problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
-          = NbTermesContraintesPourLesCoutsDeDemarrage;
+          = nbTermesContraintesPourLesCoutsDeDemarrage;
 
     return;
 }
