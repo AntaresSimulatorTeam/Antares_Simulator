@@ -205,7 +205,7 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
     }
 };
 
-// Hydro levels ...
+// Hydro Initial levels ...
 class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
@@ -216,7 +216,7 @@ class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
     }
     Notebook::Page* addPageToNotebook() override
     {
-        return notebook()->add(grid(), wxT("hydro levels"), wxT("Hydro Levels"));
+        return notebook()->add(grid(), wxT("hydro initial levels"), wxT("Hydro Initial Levels"));
     }
 };
 
