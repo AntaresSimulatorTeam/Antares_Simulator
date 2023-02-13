@@ -573,11 +573,7 @@ class Sets;
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
 ** \brief Types of Adequacy patch mode
@@ -595,21 +591,32 @@ enum AdequacyPatchMode
 /*!
 ** \brief Setting Link Capacity (NTC) for Adequacy patch first step
 */
-enum LinkCapacityForAdequacyPatchFirstStep
+enum class NtcSetToZeroStatus_AdqPatchStep1
 {
     //! Leave NTC local values
     leaveLocalValues = 0,
     //! Set NTC to zero
     setToZero,
     //! set only origine->extremity NTC to zero
-    setOrigineExtremityToZero,
+    setOriginExtremityToZero,
     //! set only extremity->origine NTC to zero
     setExtremityOriginToZero
 
 }; // enum NTC
-} // namespace AdequacyPatch
-} // namespace Data
-} // namespace Antares
+
+/*!
+** \brief Types of Price Taking Order (PTO) for Adequacy Patch
+*/
+enum class AdqPatchPTO
+{
+    //! PTO is DENS
+    isDens = 0,
+    //! PTO is Load
+    isLoad
+
+}; // enum AdqPatchPTO
+
+} // namespace Antares::Data::AdequacyPatch
 
 namespace Benchmarking
 {

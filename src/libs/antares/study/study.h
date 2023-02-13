@@ -54,8 +54,6 @@
 
 #include <memory>
 
-#include "equipments/equipments.h" // experimental
-
 //# include "../../../solver/variable/state.h"
 
 namespace Antares

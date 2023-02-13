@@ -15,7 +15,8 @@
                     {"required": ["output_compare"]},
                     {"required": ["integrity_compare"]},
                     {"required": ["hydro_level"]},
-                    {"required": ["unfeasible_problem"]}
+                    {"required": ["unfeasible_problem"]},
+                    {"required": ["mps_compare"]}
                 ],
                 "properties":
                 {
@@ -31,6 +32,7 @@
                     },
 
                     "integrity_compare" : {"type" : "null"},
+                    "mps_compare" : {"type" : "null"},
 
                     "hydro_level" :
                     {

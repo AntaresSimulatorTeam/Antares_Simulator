@@ -1,4 +1,3 @@
-
 /*
 ** Copyright 2007-2018 RTE
 ** Authors: Antares_Simulator Team
@@ -44,8 +43,8 @@ static void AllocateResultsForEconomicMode(void)
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
     ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION**)MemAlloc(
-      (1 + study.runtime->interconnectionsCount) * sizeof(void*));
-    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
+      (1 + study.runtime->interconnectionsCount()) * sizeof(void*));
+    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
@@ -68,7 +67,7 @@ static void DeallocateResultsForEconomicMode(void)
     auto& study = *Data::Study::Current::Get();
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
-    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
+    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = ResultatsParInterconnexion[i];
 

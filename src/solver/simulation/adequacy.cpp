@@ -32,11 +32,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 enum
 {
@@ -94,7 +90,6 @@ bool Adequacy::simulationBegin()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
             assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
@@ -174,7 +169,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -225,12 +220,16 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-                RemixHydroForAllAreas(
-                  study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+                RemixHydroForAllAreas(study.areas, 
+                                      *pProblemesHebdo[numSpace],
+                                      study.parameters.shedding.policy,
+                                      study.parameters.simplexOptimizationRange,
+                                      numSpace, 
+                                      hourInTheYear);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -270,14 +269,14 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 auto& varduales
                   = *(pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i]);
-                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount; ++lnkindex)
+                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
                 auto* ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount);
+                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount());
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)
@@ -320,13 +319,12 @@ bool Adequacy::year(Progression::Task& progression,
                 }
             }
 
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false, true);
+            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(
-          study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-        updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+        updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
@@ -360,7 +358,7 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
@@ -392,7 +390,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
@@ -404,6 +402,4 @@ void Adequacy::prepareClustersInMustRunMode(uint numSpace)
     PrepareDataFromClustersInMustrunMode(study, numSpace);
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

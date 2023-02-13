@@ -32,56 +32,56 @@
 #include "../simulation/sim_extern_variables_globales.h"
 #include "opt_fonctions.h"
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     int Interco;
     int Pays;
-    int Var;
+    int var;
     int NombreDeTermes;
     double* Pi;
     int* Colonne;
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays - 1; Pays++)
     {
         NombreDeTermes = 0;
 
-        Interco = ProblemeHebdo->IndexDebutIntercoOrigine[Pays];
+        Interco = problemeHebdo->IndexDebutIntercoOrigine[Pays];
         while (Interco >= 0)
         {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (Var >= 0)
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
             }
-            Interco = ProblemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            Interco = problemeHebdo->IndexSuivantIntercoOrigine[Interco];
         }
-        Interco = ProblemeHebdo->IndexDebutIntercoExtremite[Pays];
+        Interco = problemeHebdo->IndexDebutIntercoExtremite[Pays];
         while (Interco >= 0)
         {
-            Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (Var >= 0)
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+            if (var >= 0)
             {
                 Pi[NombreDeTermes] = -1.0;
-                Colonne[NombreDeTermes] = Var;
+                Colonne[NombreDeTermes] = var;
                 NombreDeTermes++;
             }
-            Interco = ProblemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
         }
 
-        ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays]
+        problemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays]
           = ProblemeAResoudre->NombreDeContraintes;
 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(

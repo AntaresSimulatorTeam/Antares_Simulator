@@ -61,7 +61,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBL
                                                                            int,
                                                                            int);
 
-void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Index;
@@ -89,23 +89,23 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
 
-    if (ProblemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         return;
 
-    NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
+    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
     Eps = 1.e-3;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; ++Pays)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
-        ResultatsHoraires = ProblemeHebdo->ResultatsHoraires[Pays];
+        ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
         ProductionThermique = ResultatsHoraires->ProductionThermique;
 
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
         PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
         for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
         {
-            if (ProblemeHebdo->Expansion)
+            if (problemeHebdo->Expansion)
             {
                 NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout[Index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
@@ -207,7 +207,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
                 }
 
                 OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
-                  ProblemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
+                  problemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
 
                 for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
                 {
@@ -231,7 +231,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* Pro
 }
 
 void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
-  PROBLEME_HEBDO* ProblemeHebdo,
+  PROBLEME_HEBDO* problemeHebdo,
   int* NbMinOptDeGroupesEnMarche,
   int Pays,
   int Index)
@@ -270,16 +270,16 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     int* PositionDeLaVariable;
     int* ComplementDeLaBase;
     int ResoudreLeProblemeLineaire;
-    int Var;
+    int var;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
 
     PROBLEME_SIMPLEXE Probleme;
     PROBLEME_SPX* ProbSpx;
 
-    NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTemps;
+    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
     NombreDePasDeTemps = NombreDePasDeTempsProblemeHebdo;
 
-    PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+    PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
     NombreMaxDeGroupesEnMarcheDuPalierThermique
       = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
           ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
@@ -288,7 +288,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     DureeMinimaleDArretDUnGroupeDuPalierThermique
       = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
 
-    ProductionThermique = ProblemeHebdo->ResultatsHoraires[Pays]->ProductionThermique;
+    ProductionThermique = problemeHebdo->ResultatsHoraires[Pays]->ProductionThermique;
 
     ResoudreLeProblemeLineaire = NON_ANTARES;
 
@@ -576,17 +576,17 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         }
         NombreDeContraintes++;
 #else
-        Var = NumeroDeVariableDeMMoinsMoins[Pdt];
+        var = NumeroDeVariableDeMMoinsMoins[Pdt];
         t1 = Pdt;
         t1moins1 = t1 - 1;
         if (t1moins1 < 0)
             t1moins1 = NombreDePasDeTemps + t1moins1;
-        Xmax[Var] = 0;
+        Xmax[var] = 0;
         if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
               - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
             > 0)
         {
-            Xmax[Var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
+            Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
         }
 #endif

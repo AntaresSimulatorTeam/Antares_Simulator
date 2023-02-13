@@ -41,15 +41,14 @@
 #include <limits.h>
 #include <antares/study/memory-usage.h>
 #include "../solver/variable/economy/all.h"
+#include "../solver/optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 #include <antares/exception/AssertionError.hpp>
 #include <antares/Enum.hxx>
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 //! Hard coded maximum number of MC years
 const uint maximumMCYears = 100000;
@@ -200,6 +199,39 @@ const char* StudyModeToCString(StudyMode mode)
     }
     return "Unknown";
 }
+bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
+{
+    CString<24, false> s = PTO_as_string;
+    s.trim();
+    s.toLower();
+    if (s == "dens")
+    {
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isDens;
+        return true;
+    }
+    if (s == "load")
+    {
+        PTO_as_enum = AdequacyPatch::AdqPatchPTO::isLoad;
+        return true;
+    }
+
+    logs.warning() << "parameters: invalid price taking order. Got '" << PTO_as_string << "'";
+
+    return false;
+}
+
+const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
+{
+    switch (pto)
+    {
+    case AdequacyPatch::AdqPatchPTO::isDens:
+        return "DENS";
+    case AdequacyPatch::AdqPatchPTO::isLoad:
+        return "Load";
+    default:
+        return "";
+    }
+}
 
 Parameters::Parameters() : noOutput(false)
 {
@@ -221,12 +253,36 @@ void Parameters::resetSeeds()
     for (auto i = (uint)seedTsGenLoad; i != seedMax; ++i)
         seed[i] = (s += increment);
 }
+void Parameters::resetThresholdsAdqPatch()
+{
+    // Initialize all thresholds values for adequacy patch
+    adqPatch.curtailmentSharing.thresholdRun
+      = Antares::Data::AdequacyPatch::defaultThresholdToRunCurtailmentSharing;
+    adqPatch.curtailmentSharing.thresholdDisplayViolations
+      = Antares::Data::AdequacyPatch::defaultThresholdDisplayLocalMatchingRuleViolations;
+    adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation
+      = Antares::Data::AdequacyPatch::defaultValueThresholdVarBoundsRelaxation;
+}
+
+void Parameters::AdequacyPatch::LocalMatching::reset()
+{
+    setToZeroOutsideInsideLinks = true;
+    setToZeroOutsideOutsideLinks = true;
+}
+
+void Parameters::AdequacyPatch::CurtailmentSharing::reset()
+{
+    priceTakingOrder = Data::AdequacyPatch::AdqPatchPTO::isDens;
+    includeHurdleCost = false;
+    checkCsrCostFunction = false;
+}
 
 void Parameters::resetAdqPatchParameters()
 {
     adqPatch.enabled = false;
-    adqPatch.localMatching.setToZeroOutsideInsideLinks = true;
-    adqPatch.localMatching.setToZeroOutsideOutsideLinks = true;
+    adqPatch.localMatching.reset();
+    adqPatch.curtailmentSharing.reset();
+    resetThresholdsAdqPatch();
 }
 
 void Parameters::resetPlayedYears(uint nbOfYears)
@@ -665,6 +721,22 @@ static bool SGDIntLoadFamily_AdqPatch(Parameters& d,
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(d.adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+    // Price taking order
+    if (key == "price-taking-order")
+        return StringToPriceTakingOrder(value, d.adqPatch.curtailmentSharing.priceTakingOrder);
+    // Include Hurdle Cost
+    if (key == "include-hurdle-cost-csr")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.includeHurdleCost);
+    // Check CSR cost function prior and after CSR
+    if (key == "check-csr-cost-function")
+        return value.to<bool>(d.adqPatch.curtailmentSharing.checkCsrCostFunction);
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdRun);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<double>(d.adqPatch.curtailmentSharing.thresholdDisplayViolations);
+    if (key == "threshold-csr-variable-bounds-relaxation")
+        return value.to<int>(d.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
 
     return false;
 }
@@ -1677,7 +1749,19 @@ void Parameters::saveToINI(IniFile& ini) const
                      adqPatch.localMatching.setToZeroOutsideInsideLinks);
         section->add("set-to-null-ntc-between-physical-out-for-first-step",
                      adqPatch.localMatching.setToZeroOutsideOutsideLinks);
+        section->add("price-taking-order",
+                     PriceTakingOrderToString(adqPatch.curtailmentSharing.priceTakingOrder));
+        section->add("include-hurdle-cost-csr", adqPatch.curtailmentSharing.includeHurdleCost);
+        section->add("check-csr-cost-function", adqPatch.curtailmentSharing.checkCsrCostFunction);
+        // Thresholds
+        section->add("threshold-initiate-curtailment-sharing-rule",
+                     adqPatch.curtailmentSharing.thresholdRun);
+        section->add("threshold-display-local-matching-rule-violations",
+                     adqPatch.curtailmentSharing.thresholdDisplayViolations);
+        section->add("threshold-csr-variable-bounds-relaxation",
+                     adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
     }
+
     // Other preferences
     {
         auto* section = ini.addSection("other preferences");
@@ -1852,7 +1936,12 @@ void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::stri
 void Parameters::AdequacyPatch::addExcludedVariables(std::vector<std::string>& out) const
 {
     if (!enabled)
-        out.emplace_back("dens");
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("DTG MRG CSR");
+    }
 }
 
 bool Parameters::haveToImport(int tsKind) const
@@ -1891,5 +1980,4 @@ bool Parameters::RenewableGeneration::isClusters() const
     return rgModelling == Antares::Data::rgClusters;
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

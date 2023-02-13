@@ -124,11 +124,6 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
 
-    - name: Run MPS comparison test
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R mps
-
     - name: Upload logs for failed tests
       if: ${{ failure() }}
       uses: actions/upload-artifact@v3
@@ -158,6 +153,22 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests for adequacy patch (CSR)
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
@@ -205,7 +216,12 @@ jobs:
     - name: Solver archive creation
       run: |
            cd _build
-           tar czf solver_centos7.tar.gz solver/antares-*-solver solver/libsirius_solver.so
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           popd
+           rm -rf install
 
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3

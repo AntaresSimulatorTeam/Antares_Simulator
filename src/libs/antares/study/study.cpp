@@ -1186,7 +1186,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         // Output - Areas
         ticksPerOutput += (int)areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime->interconnectionsCount;
+        ticksPerOutput += (int)runtime->interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
         ticksPerYear = 1;

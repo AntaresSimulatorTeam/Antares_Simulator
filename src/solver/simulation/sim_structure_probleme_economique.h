@@ -32,7 +32,7 @@
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-
+#include "sim_constants.h"
 #include <memory>
 #include <yuni/core/math.h>
 
@@ -279,7 +279,7 @@ typedef struct
     double WeeklyWaterValueStateDown;
 
     char TurbinageEntreBornes;
-
+    char SansHeuristique;
     char SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
@@ -308,8 +308,8 @@ private:
 
 public:
     std::vector<adqPatchParamsMode> areaMode;
-    std::vector<adqPatchParamsMode> originAreaType;
-    std::vector<adqPatchParamsMode> extremityAreaType;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
     void initialize(Antares::Data::Study& study)
     {
         for (uint i = 0; i != study.areas.size(); ++i)
@@ -317,11 +317,11 @@ public:
             auto& area = *(study.areas[i]);
             areaMode.push_back(area.adequacyPatchMode);
         }
-        for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+        for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
         {
             auto& link = *(study.runtime->areaLink[i]);
-            originAreaType.push_back(link.from->adequacyPatchMode);
-            extremityAreaType.push_back(link.with->adequacyPatchMode);
+            originAreaMode.push_back(link.from->adequacyPatchMode);
+            extremityAreaMode.push_back(link.with->adequacyPatchMode);
         }
     }
 };
@@ -407,10 +407,8 @@ public:
 
 typedef struct
 {
-    double* ReserveHoraireJMoins1;
-
-    double* ReserveHoraireJMoins1Ref;
-
+    double* ReserveHoraireJMoins1 = nullptr;
+    double* ReserveHoraireJMoins1Ref = nullptr;
 } RESERVE_JMOINS1;
 
 typedef struct
@@ -432,7 +430,10 @@ typedef struct
 typedef struct
 {
     double* ValeursHorairesDeDefaillancePositive;
-    double* ValeursHorairesDENS; // adq patch domestic unsupplied energy
+    double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
+    int* ValeursHorairesLmrViolations;            // adq patch lmr violations
+    double* ValeursHorairesSpilledEnergyAfterCSR; // adq patch spillage after CSR
+    double* ValeursHorairesDtgMrgCsr;             // adq patch DTG MRG after CSR
     double* ValeursHorairesDeDefaillancePositiveUp;
     double* ValeursHorairesDeDefaillancePositiveDown;
     double* ValeursHorairesDeDefaillancePositiveAny;
@@ -471,12 +472,12 @@ typedef struct
 
 typedef struct
 {
-    double* VariableDualeParInterconnexion;
+    double* VariableDualeParInterconnexion = nullptr;
 } VARIABLES_DUALES_INTERCONNEXIONS;
 
 typedef struct
 {
-    double* CoutsMarginauxHorairesDeLaReserveParZone;
+    double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
 } COUTS_MARGINAUX_ZONES_DE_RESERVE;
 
 struct AdequacyPatchParameters
@@ -484,6 +485,12 @@ struct AdequacyPatchParameters
     bool AdequacyFirstStep;
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
+    bool IncludeHurdleCostCsr;
+    bool CheckCsrCostFunctionValue;
+    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
+    double ThresholdRunCurtailmentSharingRule;
+    double ThresholdDisplayLocalMatchingRuleViolations;
+    double ThresholdCSRVarBoundsRelaxation;
 };
 
 struct PROBLEME_HEBDO
@@ -492,101 +499,100 @@ struct PROBLEME_HEBDO
     uint year = 0;
 
     /* Business problem */
-    char OptimisationAuPasHebdomadaire;
-    char TypeDeLissageHydraulique;
-    char WaterValueAccurate; /* OUI_ANTARES /NON_ANTARES*/
-    char OptimisationAvecCoutsDeDemarrage;
-    int NombreDePays;
-    const char** NomsDesPays;
-    int NombreDePaliersThermiques;
+    char OptimisationAuPasHebdomadaire = NON_ANTARES;
+    char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
+    char WaterValueAccurate = NON_ANTARES;
+    char OptimisationAvecCoutsDeDemarrage = NON_ANTARES;
+    int NombreDePays = 0;
+    const char** NomsDesPays = nullptr;
+    int NombreDePaliersThermiques = 0;
 
-    int NombreDInterconnexions;
-    int* PaysOrigineDeLInterconnexion;
-    int* PaysExtremiteDeLInterconnexion;
-    COUTS_DE_TRANSPORT** CoutDeTransport;
+    int NombreDInterconnexions = 0;
+    int* PaysOrigineDeLInterconnexion = nullptr;
+    int* PaysExtremiteDeLInterconnexion = nullptr;
+    COUTS_DE_TRANSPORT** CoutDeTransport = nullptr;
 
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC;
-    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef;
+    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
+    VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
 
-    int NombreDePasDeTemps;
-    int NombreDePasDeTempsRef;
-    int* NumeroDeJourDuPasDeTemps;
+    int NombreDePasDeTemps = 0;
+    int NombreDePasDeTempsRef = 0;
+    int* NumeroDeJourDuPasDeTemps = nullptr;
 
-    int NombreDePasDeTempsPourUneOptimisation;
-    int* NumeroDIntervalleOptimiseDuPasDeTemps;
-    int NombreDeJours;
+    int NombreDePasDeTempsPourUneOptimisation = 0;
+    int* NumeroDIntervalleOptimiseDuPasDeTemps = nullptr;
+    int NombreDeJours = 0;
 
-    int NombreDePasDeTempsDUneJournee;
-    int NombreDePasDeTempsDUneJourneeRef;
+    int NombreDePasDeTempsDUneJournee = 0;
+    int NombreDePasDeTempsDUneJourneeRef = 0;
 
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattues;
+    CONSOMMATIONS_ABATTUES** ConsommationsAbattues = nullptr;
 
-    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef;
+    CONSOMMATIONS_ABATTUES** ConsommationsAbattuesRef = nullptr;
 
-    double* CoutDeDefaillancePositive;
-    double* CoutDeDefaillanceNegative;
-    double* CoutDeDefaillanceEnReserve;
+    double* CoutDeDefaillancePositive = nullptr;
+    double* CoutDeDefaillanceNegative = nullptr;
+    double* CoutDeDefaillanceEnReserve = nullptr;
 
-    PALIERS_THERMIQUES** PaliersThermiquesDuPays;
-    ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques;
+    PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
+    ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
     /* Optimization problem */
-    int NbTermesContraintesPourLesCoutsDeDemarrage;
-    char* DefaillanceNegativeUtiliserPMinThermique;
-    char* DefaillanceNegativeUtiliserHydro;
-    char* DefaillanceNegativeUtiliserConsoAbattue;
+    int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
+    char* DefaillanceNegativeUtiliserPMinThermique = nullptr;
+    char* DefaillanceNegativeUtiliserHydro = nullptr;
+    char* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
-    char TypeDOptimisation; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
-    double** BruitSurCoutHydraulique;
+    double** BruitSurCoutHydraulique = nullptr;
 
-    int NombreDeContraintesCouplantes;
-    CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes;
-    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes;
+    int NombreDeContraintesCouplantes = 0;
+    CONTRAINTES_COUPLANTES** MatriceDesContraintesCouplantes = nullptr;
+    RESULTATS_CONTRAINTES_COUPLANTES* ResultatsContraintesCouplantes = nullptr;
 
-    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire; // Used for quadratic opt
+    SOLDE_MOYEN_DES_ECHANGES** SoldeMoyenHoraire = nullptr; // Used for quadratic opt
     /* Implementation details : I/O, error management, etc. */
-    char ReinitOptimisation;
+    bool ReinitOptimisation = false;
 
-    Data::mpsExportStatus ExportMPS;
-    bool exportMPSOnError;
-    bool ExportStructure;
+    Data::mpsExportStatus ExportMPS = Data::mpsExportStatus::NO_EXPORT;
+    bool exportMPSOnError = false;
+    bool ExportStructure = false;
 
-    unsigned int HeureDansLAnnee;
-    char LeProblemeADejaEteInstancie;
-    bool firstWeekOfSimulation;
+    unsigned int HeureDansLAnnee = 0;
+    char LeProblemeADejaEteInstancie = 0;
+    bool firstWeekOfSimulation = false;
 
-    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim;
-    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires;
+    CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
 
-    RESERVE_JMOINS1** ReserveJMoins1;
+    RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
 
-    int* IndexDebutIntercoOrigine;
-    int* IndexSuivantIntercoOrigine;
-    int* IndexDebutIntercoExtremite;
-    int* IndexSuivantIntercoExtremite;
+    int* IndexDebutIntercoOrigine = nullptr;
+    int* IndexSuivantIntercoOrigine = nullptr;
+    int* IndexDebutIntercoExtremite = nullptr;
+    int* IndexSuivantIntercoExtremite = nullptr;
 
-    char Expansion;
+    char Expansion = NON_ANTARES;
 
-    int* NumeroDeContrainteEnergieHydraulique;
-    int* NumeroDeContrainteMinEnergieHydraulique;
-    int* NumeroDeContrainteMaxEnergieHydraulique;
-    int* NumeroDeContrainteMaxPompage;
+    int* NumeroDeContrainteEnergieHydraulique = nullptr;
+    int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
+    int* NumeroDeContrainteMaxEnergieHydraulique = nullptr;
+    int* NumeroDeContrainteMaxPompage = nullptr;
 
-    int* NumeroDeContrainteDeSoldeDEchange;
+    int* NumeroDeContrainteDeSoldeDEchange = nullptr;
 
-    int* NumeroDeContrainteBorneStockFinal;
-    int* NumeroDeContrainteEquivalenceStockFinal;
-    int* NumeroDeContrainteExpressionStockFinal;
+    int* NumeroDeContrainteEquivalenceStockFinal = nullptr;
+    int* NumeroDeContrainteExpressionStockFinal = nullptr;
 
-    int* NumeroDeVariableStockFinal;
-    int** NumeroDeVariableDeTrancheDeStock;
+    int* NumeroDeVariableStockFinal = nullptr;
+    int** NumeroDeVariableDeTrancheDeStock = nullptr;
 
-    char YaDeLaReserveJmoins1;
+    char YaDeLaReserveJmoins1 = NON_ANTARES;
 
-    double* previousYearFinalLevels;
-    ALL_MUST_RUN_GENERATION** AllMustRunGeneration;
+    double* previousYearFinalLevels = nullptr;
+    ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;
 
     OptimizationStatistics optimizationStatistics[2];
 
@@ -595,22 +601,22 @@ struct PROBLEME_HEBDO
     AdequacyPatchRuntimeData adequacyPatchRuntimeData;
 
     /* Hydro management */
-    double* CoefficientEcretementPMaxHydraulique;
-    bool hydroHotStart;
-    double* previousSimulationFinalLevel;
+    double* CoefficientEcretementPMaxHydraulique = nullptr;
+    bool hydroHotStart = false;
+    double* previousSimulationFinalLevel = nullptr;
     computeTimeStepLevel computeLvl_object;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires;
-    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC;
+    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
+    VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
 
-    double* coutOptimalSolution1;
-    double* coutOptimalSolution2;
+    double* coutOptimalSolution1 = nullptr;
+    double* coutOptimalSolution2 = nullptr;
 
-    double* tempsResolution1;
-    double* tempsResolution2;
+    double* tempsResolution1 = nullptr;
+    double* tempsResolution2 = nullptr;
 
-    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone;
+    COUTS_MARGINAUX_ZONES_DE_RESERVE** CoutsMarginauxDesContraintesDeReserveParZone = nullptr;
     /* Unused for now, will be used in future revisions */
 #if 0
     char SecondeOptimisationRelaxee;
@@ -686,19 +692,15 @@ struct PROBLEME_HEBDO
     int* FlexUpDemandPoolOfNode;
     int* FlexDownOfferPoolOfNode;
     int* FlexDownDemandPoolOfNode;
-
 #endif
+
 public:
     /* Unknown status */
-    int* NbGrpCourbeGuide; // ?
-    int* NbGrpOpt;         // ?
+    int* NbGrpCourbeGuide = nullptr; // ?
+    int* NbGrpOpt = nullptr;         // ?
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = nullptr;
 
     double maxPminThermiqueByDay[366];
-
-    /* Debug */
-    char debugFolder[1024];
 };
-
 #endif

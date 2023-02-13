@@ -12,6 +12,7 @@ set(SRC_SIMULATION
 		simulation/sim_structure_donnees.h
 		simulation/sim_structure_probleme_economique.h
 		simulation/sim_variables_globales.cpp
+        simulation/sim_constants.h
 		simulation/simulation.h
 		simulation/solver.h
 		simulation/solver.hxx
@@ -31,11 +32,12 @@ set(SRC_SIMULATION
 		simulation/common-eco-adq.cpp
 		simulation/common-hydro-remix.cpp
 		simulation/common-hydro-levels.cpp
-		simulation/common-dispatchable-margin.cpp
 		simulation/adequacy.h
 		simulation/adequacy.cpp
 		simulation/economy.h
 		simulation/economy.cpp
+		simulation/base_post_process.h
+		simulation/base_post_process.cpp
         simulation/opt_time_writer.h
         simulation/opt_time_writer.cpp
 )

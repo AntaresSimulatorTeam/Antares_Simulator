@@ -116,6 +116,20 @@ static void tuneSolverSpecificOptions(MPSolver* solver)
     }
 }
 
+static bool solverSupportsWarmStart(const MPSolver* solver)
+{
+    if (!solver)
+        return false;
+
+    switch (solver->ProblemType())
+    {
+    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
+        return true;
+    default:
+        return false;
+    }
+}
+
 namespace Antares
 {
 namespace Optimization
@@ -286,8 +300,9 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
                            bool keepBasis)
 {
     MPSolverParameters params;
+    bool warmStart = solverSupportsWarmStart(solver);
     // Provide an initial simplex basis, if any
-    if (Probleme->basisExists() && !Probleme->isMIP() && Probleme->solverSupportsWarmStart)
+    if (warmStart && Probleme->basisExists() && !Probleme->isMIP())
     {
         solver->SetStartingLpBasisInt(Probleme->StatutDesVariables, Probleme->StatutDesContraintes);
     }
@@ -296,7 +311,7 @@ MPSolver* ORTOOLS_Simplexe(Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* Probl
     {
         extract_from_MPSolver(solver, Probleme);
         // Save the final simplex basis for next resolutions
-        if (keepBasis && !Probleme->isMIP() && Probleme->solverSupportsWarmStart)
+        if (warmStart && keepBasis && !Probleme->isMIP())
         {
             solver->GetFinalLpBasisInt(Probleme->StatutDesVariables,
                                        Probleme->StatutDesContraintes);
@@ -387,9 +402,6 @@ MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* 
         logs.error() << "Solver creation failed";
         AntaresSolverEmergencyShutdown();
     }
-
-    if (solverName == "xpress")
-        probleme->solverSupportsWarmStart = true;
 
     return solver;
 }
