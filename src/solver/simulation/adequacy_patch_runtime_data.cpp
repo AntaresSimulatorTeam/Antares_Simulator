@@ -18,7 +18,7 @@ void AdequacyPatchRuntimeData::initialize(Antares::Data::Study& study)
         const auto& area = *(study.areas[i]);
         areaMode.push_back(area.adequacyPatchMode);
     }
-    for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
         const auto& link = *(study.runtime->areaLink[i]);
         originAreaMode.push_back(link.from->adequacyPatchMode);

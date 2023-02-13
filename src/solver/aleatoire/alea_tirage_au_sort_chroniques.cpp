@@ -177,7 +177,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     }     // each area
     // Transmission capacities
     // each link
-    for (unsigned int i = 0; i < runtime.interconnectionsCount; ++i)
+    for (unsigned int i = 0; i < runtime.interconnectionsCount(); ++i)
     {
         AreaLink* link = runtime.areaLink[i];
         assert(year < link->timeseriesNumbers.height);
