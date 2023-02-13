@@ -58,11 +58,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // Precache allocation correlation coefficients
         area.hydro.allocation.prepareForSolver(study.areas);
 
-        // Creating runtime-data for the area
-
-        // alias to the simulation mode
-        auto mode = r.mode;
-
         // Hydro TS Generator: log(expectation) ; log(stddeviation)
         if (area.hydro.prepro)
         {
