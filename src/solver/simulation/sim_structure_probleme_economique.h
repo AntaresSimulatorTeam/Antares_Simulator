@@ -577,8 +577,8 @@ struct PROBLEME_HEBDO
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    std::shared_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
-    std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData = nullptr;
+    std::shared_ptr<AdequacyPatchParameters> adqPatchParams;
+    std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique = nullptr;
