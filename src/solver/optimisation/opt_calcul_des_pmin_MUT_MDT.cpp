@@ -75,16 +75,15 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     while (i < DernierPdt)
     {
         NbMx = 0;
-        int tmp = 0;
-        for (int j = 0; j < MUTetMDT && i < DernierPdt; j++, i++)
+        int countMUT = 0;
+        for (int countMUT = 0; countMUT < MUTetMDT && i < DernierPdt; countMUT++, i++)
         {
             if (NbGrpCourbeGuide[i] > NbMx)
                 NbMx = NbGrpCourbeGuide[i];
-            tmp = j;
         }
 
-        i -= tmp;
-        for (int j = 0; j < MUTetMDT && i < DernierPdt; j++, i++)
+        i -= countMUT;
+        for (countMUT = 0; countMUT < MUTetMDT && i < DernierPdt; countMUT++, i++)
         {
             NbGrpOpt[i] = NbMx;
             Cout += (double)(NbGrpOpt[i] - NbGrpCourbeGuide[i]);
