@@ -38,11 +38,12 @@ private:
     std::vector<std::set<int>> csrTriggeredHoursPerArea_;
 
 public:
+    explicit AdequacyPatchRuntimeData(Antares::Data::Study& study);
+
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);
-    void initialize(Antares::Data::Study& study);
 };

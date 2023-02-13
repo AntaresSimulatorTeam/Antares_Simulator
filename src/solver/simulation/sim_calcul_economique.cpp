@@ -57,8 +57,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     if (parameters.adqPatch.enabled)
     {
-        problem.adqPatchParams
-          = std::make_shared<AdequacyPatchParameters>();
+        problem.adqPatchParams = std::make_shared<AdequacyPatchParameters>();
         // AdequacyFirstStep will be initialized during the economy solve
         problem.adqPatchParams->SetNTCOutsideToInsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
@@ -77,7 +76,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         double temp = pow(10, -parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
         problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
 
-        problem.adequacyPatchRuntimeData->initialize(study);
+        problem.adequacyPatchRuntimeData = std::make_shared<AdequacyPatchRuntimeData>(study);
     }
 
     problem.WaterValueAccurate

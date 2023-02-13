@@ -10,7 +10,7 @@ void AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
     csrTriggeredHoursPerArea_[area].insert(hour);
 }
 
-void AdequacyPatchRuntimeData::initialize(Antares::Data::Study& study)
+AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(Antares::Data::Study& study)
 {
     csrTriggeredHoursPerArea_.resize(study.areas.size());
     for (uint i = 0; i != study.areas.size(); ++i)
