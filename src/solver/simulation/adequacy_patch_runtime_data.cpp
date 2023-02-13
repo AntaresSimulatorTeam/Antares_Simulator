@@ -2,17 +2,17 @@
 
 bool AdequacyPatchRuntimeData::wasCSRTriggeredAtAreaHour(int area, int hour) const
 {
-    return csrTriggered[area].count(hour) > 0;
+    return csrTriggeredHoursPerArea_[area].count(hour) > 0;
 }
 
 void AdequacyPatchRuntimeData::addCSRTriggeredAtAreaHour(int area, int hour)
 {
-    csrTriggered[area].insert(hour);
+    csrTriggeredHoursPerArea_[area].insert(hour);
 }
 
 void AdequacyPatchRuntimeData::initialize(Antares::Data::Study& study)
 {
-    csrTriggered.resize(study.areas.size());
+    csrTriggeredHoursPerArea_.resize(study.areas.size());
     for (uint i = 0; i != study.areas.size(); ++i)
     {
         const auto& area = *(study.areas[i]);

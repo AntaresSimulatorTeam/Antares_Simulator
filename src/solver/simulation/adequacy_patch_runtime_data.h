@@ -35,7 +35,7 @@ class AdequacyPatchRuntimeData
 {
 private:
     using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
-    std::vector<std::set<int>> csrTriggered;
+    std::vector<std::set<int>> csrTriggeredHoursPerArea_;
 
 public:
     std::vector<adqPatchParamsMode> areaMode;
