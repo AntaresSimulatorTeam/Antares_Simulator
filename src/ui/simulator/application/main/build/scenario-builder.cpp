@@ -206,7 +206,7 @@ class solarScBuilderPageMaker final : public simpleScBuilderPageMaker
 };
 
 // Hydro Initial levels ...
-class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
+class hydroInitialLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
 {
     using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
 
@@ -217,6 +217,21 @@ class hydroLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
     Notebook::Page* addPageToNotebook() override
     {
         return notebook()->add(grid(), wxT("hydro initial levels"), wxT("Hydro Initial Levels"));
+    }
+};
+
+// Hydro Final levels ...
+class hydroFinalLevelsScBuilderPageMaker final : public simpleScBuilderPageMaker
+{
+    using simpleScBuilderPageMaker::simpleScBuilderPageMaker;
+
+    Renderer::ScBuilderRendererBase* getRenderer() override
+    {
+        return new_check_allocation<Renderer::hydroLevelsScBuilderRenderer>();
+    }
+    Notebook::Page* addPageToNotebook() override
+    {
+        return notebook()->add(grid(), wxT("hydro final levels"), wxT("Hydro Final Levels"));
     }
 };
 
@@ -372,9 +387,12 @@ void ApplWnd::createNBScenarioBuilder()
 
     pScenarioBuilderNotebook->addSeparator();
 
-    hydroLevelsScBuilderPageMaker hydroLevelsSBpageMaker(scenarioBuilderPanel,
+    hydroInitialLevelsScBuilderPageMaker hydroInitialLevelsSBpageMaker(scenarioBuilderPanel,
                                                          pScenarioBuilderNotebook);
-    pageScBuilderHydroLevels = hydroLevelsSBpageMaker.createPage();
+    pageScBuilderHydroInitialLevels = hydroInitialLevelsSBpageMaker.createPage();
+    hydroFinalLevelsScBuilderPageMaker hydroFinalLevelsSBpageMaker(scenarioBuilderPanel,
+                                                         pScenarioBuilderNotebook);
+    pageScBuilderHydroFinalLevels = hydroFinalLevelsSBpageMaker.createPage();
 }
 
 void ApplWnd::createNBOutputViewer()
