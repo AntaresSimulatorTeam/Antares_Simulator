@@ -1,9 +1,8 @@
 # Output files
 
-The general file organization is the same for Economy, Adequacy and Draft simulations.
+The general file organization is the same for Economy and Adequacy simulations.
 
-- Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)
-- Draft results are available only as flat .txt files. They can be viewed with "Tool /csv viewer" in the main menu (As well as any other files, they can also be accessed by Excel or suchlike)
+Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)
 
 **Economy:**
 
@@ -16,8 +15,8 @@ The general file organization is the same for Economy, Adequacy and Draft simula
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
-_The variables present in each file are detailed in the following sections._  
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file are detailed in the following sections._
 _In "Economy" simulations, all variables have a techno-economic meaning._
 
 **Adequacy:**
@@ -31,25 +30,15 @@ _In "Economy" simulations, all variables have a techno-economic meaning._
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
-_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._  
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._
 _The only variables that have a techno-economic meaning are the "Adequacy" indicators (unsupplied energy,LOLD,LOLP)_
-
-**Draft:**
-
-| OUTPUT/Simu id/adequacy-draft/mc-all/   |             |                                         |
-|----------------------------------|-------------------|-----------------------------------|
-|                                  |/grid/...         | contains a summary file "digest.txt"  |
-|                                  |/areas/name/...| contains area-related results         |
-
-
-_("mc-all" files contains mostly synthetic results over all years; However, there is (for each area) a "mc-annual.txt" file that gives a short view of local results for each simulated year)_
 
 **IMPORTANT** Adequacy and Economy files look the same but their content are specific
 
 In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
 
-In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.  
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
 In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints in "Adequacy" simulations.
 
 As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact that they contain clusters in must-run.
@@ -65,13 +54,13 @@ The files and their content are hereafter described.
 
 - The first attribute defines the nature of the results presented in the file :
 
-**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.  
+**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.
 These results appear under the label "general values" in the output GUI.
 
-**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.  
+**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.
 These results appear under the label "thermal plants" in the output GUI.
 
-**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files  
+**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
 These results appear under the label "record years" in the output GUI
 
 The area files that belong to the « values » class display **122** fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
@@ -138,10 +127,10 @@ Note: The net profit is computed on full precision values for MRG. PRICE. The us
 - The first attribute defines the nature of the results presented in the file.
 
 
-**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere  
+**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere
 These results appear under the label "general values" in the output GUI.
 
-**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.  
+**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.
 These results appear under the label "record years" in the output GUI.
 
 

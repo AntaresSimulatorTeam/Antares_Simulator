@@ -2,7 +2,7 @@
 
 ## Antares at one glance
 
-This section gives a summary of the whole simulation process followed by Antares in Economy simulations (Adequacy and Draft simulations being simplified variants of it):
+This section gives a summary of the whole simulation process followed by Antares in Economy simulations (Adequacy being simplified variant of it):
 
 1. Load or Generate [stochastic generators] Time-series of every kind for all system areas
 
@@ -31,7 +31,7 @@ Besides, all of them need not be modeled with the same level of accuracy in a si
 Several classes of reserves may therefore be used in Antares; how to use them at best depend on the kind and quality of operational data at hand, and on the aim of the studies to carry out; though all kinds of reserves may always be defined in the INPUT dataset, the set of reserves that will effectively be used depends on the kind of simulations to run. Note that any or all classes of reserves may be ignored in a given simulation (without being removed from the INPUT dataset) by setting the matching "optimization preference" to "ignore reserve X":
 
 - **Pre-allocated reserve on dispatchable thermal plants (R0)** <br/>
-  This reserve (which corresponds to the parameter "spinning" attached to the thermal plants) is expressed as a percentage of the nominal capacity of the plants. It is simply used as a derating parameter: for instance, a 1000 MW plant with a 2.5% spinning parameter will not be able to generate more than 975 MW. It is important to notice that, if the plant is not scheduled on, it will NOT contribute to the spinning reserve (to be effectively available, the 25 MW of reserve would need the plant to be started). This first class of reserve is available for **Adequacy** as well as for **Economy** simulations but is not taken into account in **Draft** simulations.
+  This reserve (which corresponds to the parameter "spinning" attached to the thermal plants) is expressed as a percentage of the nominal capacity of the plants. It is simply used as a derating parameter: for instance, a 1000 MW plant with a 2.5% spinning parameter will not be able to generate more than 975 MW. It is important to notice that, if the plant is not scheduled on, it will NOT contribute to the spinning reserve (to be effectively available, the 25 MW of reserve would need the plant to be started). This first class of reserve is available for **Adequacy** as well as for **Economy**.
 
 
 - **Primary and strategic reserves (R1,R2):** <br/>
@@ -56,12 +56,12 @@ Note that this "standard" feature of Antares makes it possible to assess the pot
 
 The table below gives an overview of the different reserves available in Antares
 
-| | _Economy_ | _Adequacy_ | _Draft_ |
+| | _Economy_ | _Adequacy_ |
 |:---:|:---:|:---:|:---:|
-| _R0_ | _Yes_ | _Yes_ | _No_ |
-| _R1_ | _No_ | _No_ | _Yes_ |
-| _R2_ | _No_ | _No_ | _Yes_ |
-| _R3_ | _Yes_ | _Yes_ | _No_ |
+| _R0_ | _Yes_ | _Yes_ |
+| _R1_ | _No_ | _No_ |
+| _R2_ | _No_ | _No_ |
+| _R3_ | _Yes_ | _Yes_ |
 
 
 ## The heuristic for seasonal hydro pre-allocation
