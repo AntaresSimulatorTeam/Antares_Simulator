@@ -58,6 +58,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     for (uint d = 0; d != DAYS_PER_YEAR; ++d)
     {
         optimalMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
+        pumpingMaxPower[d] = std::numeric_limits<double>::quiet_NaN();
     }
 
     // Fatal hors hydro
@@ -118,14 +119,14 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     else
     {
         auto& m = area.hydro.prepro->data;
-        double value = 0.;
+        double valueCol = 0.;
         auto& colPowerOverWater = m[PreproHydro::powerOverWater];
         auto& colMaxEnergy = m[PreproHydro::maximumEnergy];
 
         for (uint m = 0; m < rinfos.nbMonthsPerYear; ++m)
-            value += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
+            valueCol += colMaxEnergy[m] * (1. - colPowerOverWater[m]);
 
-        hydroHasInflows = (value > 0.);
+        hydroHasInflows = (valueCol > 0.);
     }
 
     // --------------------------
@@ -147,12 +148,13 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     for (uint d = 0; d != DAYS_PER_YEAR; ++d)
         pumpingMaxPower[d] = maxPumpingP[d];
 
+    double valuePumping = 0.;
     // ... Computing 'pumpHasMod' parameter
     for (uint d = 0; d < DAYS_PER_YEAR; ++d)
-        value += maxPumpingP[d] * maxPumpingE[d];
+        valuePumping += maxPumpingP[d] * maxPumpingE[d];
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
-    pumpHasMod = (value > 0.);
+    pumpHasMod = (valuePumping > 0.);
 
     // Spinning reserves
     memcpy(
