@@ -229,6 +229,13 @@ set(SRC_STUDY_PART_RENEWABLE
     )
 source_group("study\\part\\renewable" FILES ${SRC_STUDY_PART_RENEWABLE})
 
+set(SRC_STUDY_PART_SHORT_TERM_STORAGE
+    study/parts/short-term-storage/container.h
+    study/parts/short-term-storage/properties.h
+    study/parts/short-term-storage/series.h
+    study/parts/short-term-storage/unit.h)
+source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
+
 set(SRC_STUDY_PART_WIND
 	study/parts/wind/container.h
 	study/parts/wind/container.cpp
@@ -541,6 +548,7 @@ add_library(libantares-core
 	${SRC_STUDY_PART_COMMON}
 	${SRC_STUDY_PART_THERMAL}
 	${SRC_STUDY_PART_RENEWABLE}
+    ${SRC_STUDY_PART_SHORT_TERM_STORAGE}
 	${SRC_STUDY_SCENARIO_BUILDER}
 	${SRC_EXCEPTION}
 	${SRC_STDCXX}

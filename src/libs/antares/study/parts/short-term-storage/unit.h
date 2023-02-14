@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,39 +24,18 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-#define __ANTARES_LIBS_STUDY_PARTS_H__
 
-// Load
-#include "load/series.h"
-#include "load/container.h"
+#pragma once
+#include <string>
+#include "properties.h"
+#include "series.h"
 
-// Solar
-#include "solar/series.h"
-#include "solar/container.h"
-
-// Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
-#include "hydro/container.h"
-
-// Wind
-#include "wind/prepro.h"
-#include "wind/series.h"
-#include "wind/container.h"
-
-// Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
-#include "thermal/cluster.h"
-#include "thermal/container.h"
-
-// Renewable
-#include "renewable/defines.h"
-#include "renewable/cluster.h"
-#include "renewable/container.h"
-
-// Short-term storage
-#include "short-term-storage/container.h"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_H__
+namespace Antares::Data::ShortTermStorage {
+  class Unit {
+    bool Validate() const;
+    bool loadFromFolder(const std::string& folder);
+  private:
+    Series series;
+    Properties properties;
+  };
+}

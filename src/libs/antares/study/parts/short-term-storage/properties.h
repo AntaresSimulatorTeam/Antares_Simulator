@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,39 +24,35 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_H__
-#define __ANTARES_LIBS_STUDY_PARTS_H__
 
-// Load
-#include "load/series.h"
-#include "load/container.h"
+#pragma once
 
-// Solar
-#include "solar/series.h"
-#include "solar/container.h"
+namespace Antares::Data::ShortTermStorage {
+  enum class Group
+  {
+    PSP_open,
+    PSP_closed,
+    Pondage,
+    Battery,
+    Other
+  };
 
-// Hydro
-#include "hydro/prepro.h"
-#include "hydro/series.h"
-#include "hydro/container.h"
-
-// Wind
-#include "wind/prepro.h"
-#include "wind/series.h"
-#include "wind/container.h"
-
-// Thermal
-#include "thermal/defines.h"
-#include "thermal/prepro.h"
-#include "thermal/cluster.h"
-#include "thermal/container.h"
-
-// Renewable
-#include "renewable/defines.h"
-#include "renewable/cluster.h"
-#include "renewable/container.h"
-
-// Short-term storage
-#include "short-term-storage/container.h"
-
-#endif // __ANTARES_LIBS_STUDY_PARTS_H__
+  class Properties {
+    bool Validate() const;
+    bool loadFromFolder(const std::string& folder);
+    // Number of units, >= 1
+    unsigned int unitCount;
+    // Injection nominal capacity, >= 0
+    double injectionCapacity;
+    // Withdrawal nominal capacity, >= 0
+    double withdrawalCapacity;
+    // Reservoir capacity in MWh, >= 0
+    double reservoirCapacity;
+    // Efficiency factor between 0 and 1
+    double efficiencyFactor;
+    // Cycle duration, 1 <= cycleDuration <= 168
+    unsigned int cycleDuration;
+    // Used to sort outputs
+    Group group;
+  };
+}
