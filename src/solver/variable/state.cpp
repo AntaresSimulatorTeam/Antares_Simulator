@@ -316,77 +316,77 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
             thermalClusterProduction = thermalClusterProductionForYear[h];
         }
 
-        if (thermalClusterProduction > 0.)
+        if (thermalClusterProduction <= 0.)
+            continue;
+
+        thermalClusterOperatingCostForYear[h]
+            = (thermalClusterProduction * currentCluster->productionCost[h]);
+
+        switch (unitCommitmentMode)
         {
-            thermalClusterOperatingCostForYear[h]
-                = (thermalClusterProduction * currentCluster->productionCost[h]);
+            case Antares::Data::UnitCommitmentMode::ucHeuristic:
+                {
+                    /*if (thermalClusterPMinOfAGroup > 0.) // code 5.0.2
+                      {
+                      ON_min[h] = Math::Max(
+                      static_cast<uint>(Math::Ceil(thermalClusterProduction
+                      / currentCluster->nominalCapacityWithSpinning)),
+                      static_cast<uint>(Math::Ceil(thermalClusterPMinOfTheClusterForYear[h]
+                      / currentCluster->pminOfAGroup)) );
 
-            switch (unitCommitmentMode)
-            {
-                case Antares::Data::UnitCommitmentMode::ucHeuristic:
-                    {
-                        /*if (thermalClusterPMinOfAGroup > 0.) // code 5.0.2
-                          {
-                          ON_min[h] = Math::Max(
-                          static_cast<uint>(Math::Ceil(thermalClusterProduction
-                          / currentCluster->nominalCapacityWithSpinning)),
-                          static_cast<uint>(Math::Ceil(thermalClusterPMinOfTheClusterForYear[h]
-                          / currentCluster->pminOfAGroup)) );
-
-                          }
-                          else*/
-                        //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
-                        // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
-                        // 5.0.3b7
-                        if (currentCluster->pminOfAGroup[numSpace] > 0.)
-                        {
-                            ON_min[h] = Math::Max(
-                                    Math::Min(static_cast<uint>(
-                                            Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
-                                                / currentCluster->pminOfAGroup[numSpace])),
-                                        static_cast<uint>(
-                                            Math::Ceil(thermalClusterAvailableProduction
-                                                / currentCluster->nominalCapacityWithSpinning))),
-                                    static_cast<uint>(
-                                        Math::Ceil(thermalClusterProduction
-                                            / currentCluster->nominalCapacityWithSpinning)));
-                        }
-                        else
-                            ON_min[h] = static_cast<uint>(Math::Ceil(
-                                        thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
-                        break;
-                    }
-                case Antares::Data::UnitCommitmentMode::ucMILP:
+                      }
+                      else*/
+                    //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
+                    // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
+                    // 5.0.3b7
+                    if (currentCluster->pminOfAGroup[numSpace] > 0.)
                     {
                         ON_min[h] = Math::Max(
-                                static_cast<uint>(Math::Ceil(thermalClusterProduction
-                                        / currentCluster->nominalCapacityWithSpinning)),
-                                thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
-                        // that hour
-
-                        break;
+                                Math::Min(static_cast<uint>(
+                                        Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
+                                            / currentCluster->pminOfAGroup[numSpace])),
+                                    static_cast<uint>(
+                                        Math::Ceil(thermalClusterAvailableProduction
+                                            / currentCluster->nominalCapacityWithSpinning))),
+                                static_cast<uint>(
+                                    Math::Ceil(thermalClusterProduction
+                                        / currentCluster->nominalCapacityWithSpinning)));
                     }
-                case Antares::Data::UnitCommitmentMode::ucUnknown:
-                    {
-                        logs.warning() << "Unknown unit-commitment mode";
-                        break;
-                    }
-            }
+                    else
+                        ON_min[h] = static_cast<uint>(Math::Ceil(
+                                    thermalClusterProduction / currentCluster->nominalCapacityWithSpinning));
+                    break;
+                }
+            case Antares::Data::UnitCommitmentMode::ucMILP:
+                {
+                    ON_min[h] = Math::Max(
+                            static_cast<uint>(Math::Ceil(thermalClusterProduction
+                                    / currentCluster->nominalCapacityWithSpinning)),
+                            thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
+                    // that hour
 
-            ON_max[h] = static_cast<uint>(Math::Ceil(
-                        thermalClusterAvailableProduction / currentCluster->nominalCapacityWithSpinning));
-
-            if (currentCluster->minStablePower > 0.)
-            {
-                maxUnitNeeded = static_cast<uint>(
-                        Math::Floor(thermalClusterProduction / currentCluster->minStablePower));
-                if (ON_max[h] > maxUnitNeeded)
-                    ON_max[h] = maxUnitNeeded;
-            }
-
-            if (ON_max[h] < ON_min[h])
-                ON_max[h] = ON_min[h];
+                    break;
+                }
+            case Antares::Data::UnitCommitmentMode::ucUnknown:
+                {
+                    logs.warning() << "Unknown unit-commitment mode";
+                    break;
+                }
         }
+
+        ON_max[h] = static_cast<uint>(Math::Ceil(
+                    thermalClusterAvailableProduction / currentCluster->nominalCapacityWithSpinning));
+
+        if (currentCluster->minStablePower > 0.)
+        {
+            maxUnitNeeded = static_cast<uint>(
+                    Math::Floor(thermalClusterProduction / currentCluster->minStablePower));
+            if (ON_max[h] > maxUnitNeeded)
+                ON_max[h] = maxUnitNeeded;
+        }
+
+        if (ON_max[h] < ON_min[h])
+            ON_max[h] = ON_min[h];
     }
 
     if (dur > 0)

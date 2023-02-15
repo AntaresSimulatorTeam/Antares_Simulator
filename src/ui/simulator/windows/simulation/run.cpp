@@ -857,11 +857,9 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
     // cleanup
     pMappingSolverMode.clear();
 
-    auto& study = *Data::Study::Current::Get();
-
     for (uint i = 0; i != featuresCount; ++i)
     {
-        wxMenuItem* it = Menu::CreateItem(&menu,
+        const wxMenuItem* it = Menu::CreateItem(&menu,
                                           wxID_ANY,
                                           featuresNames[i],
                                           "images/16x16/empty.png",

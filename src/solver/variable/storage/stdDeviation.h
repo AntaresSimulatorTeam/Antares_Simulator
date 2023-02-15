@@ -135,11 +135,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        switch (fileLevel)
-        {
-        case Category::id:
-            break;
-        default:
+        if (!(fileLevel & Category::id))
         {
             switch (precision)
             {
@@ -164,7 +160,6 @@ protected:
                   report, results, &stdDeviationYear);
                 break;
             }
-        }
         }
         // Next
         NextType::template buildSurveyReport<S, VCardT>(

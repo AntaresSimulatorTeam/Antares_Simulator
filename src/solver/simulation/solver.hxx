@@ -199,13 +199,13 @@ private:
             // 9 - Write results for the current year
             if (yearByYear)
             {
-                Benchmarking::Timer timer;
+                Benchmarking::Timer timerYear;
                 // Before writing, some variable may require minor modifications
                 simulationObj->variables.beforeYearByYearExport(y, numSpace);
                 // writing the results for the current year into the output
                 simulationObj->writeResults(false, y, numSpace); // false for synthesis
-                timer.stop();
-                pDurationCollector->addDuration("yby_export", timer.get_duration());
+                timerYear.stop();
+                pDurationCollector->addDuration("yby_export", timerYear.get_duration());
             }
         }
         else

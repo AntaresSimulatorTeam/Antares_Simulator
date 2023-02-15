@@ -150,10 +150,9 @@ void SIM_AllocationTableaux()
 
 void SIM_DesallocationTableaux()
 {
-    auto studyptr = Data::Study::Current::Get();
-    if (!(!studyptr))
+    if (Data::Study::Current::Valid())
     {
-        auto& study = *studyptr;
+        auto& study = *Data::Study::Current::Get();
         for (uint i = 0; i < study.areas.size(); ++i)
             MemFree(DonneesParPays[i]);
 

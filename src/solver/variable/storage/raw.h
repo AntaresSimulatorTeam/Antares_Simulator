@@ -102,13 +102,10 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (0 != (fileLevel & FileFilter))
+        if (fileLevel & FileFilter)
         {
-            switch (fileLevel)
+            if (!(fileLevel & Category::id))
             {
-            case Category::id:
-                break;
-            default:
                 switch (precision)
                 {
                 case Category::hourly:

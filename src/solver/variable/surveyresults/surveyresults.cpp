@@ -236,7 +236,6 @@ namespace Solver
 namespace Variable
 {
 static inline uint GetRangeLimit(const Data::Study& study,
-                                 int fileLevel,
                                  int precisionLevel,
                                  int index)
 {
@@ -259,7 +258,7 @@ static inline uint GetRangeLimit(const Data::Study& study,
 }
 
 // inline : only used in this cpp file
-inline void SurveyResults::writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel)
+inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLevel)
 {
     auto& out = data.fileBuffer;
     auto& calendar = data.study.calendarOutput; // data.study.calendar;
@@ -698,9 +697,9 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     data.fileBuffer.reserve(2 * 1024 * 1024);
 
     // How many rows have we got ?
-    const uint heightBegin = GetRangeLimit(data.study, fileLevel, precisionLevel, Data::rangeBegin);
+    const uint heightBegin = GetRangeLimit(data.study, precisionLevel, Data::rangeBegin);
     // (+1 for condition stop)
-    const uint heightEnd = GetRangeLimit(data.study, fileLevel, precisionLevel, Data::rangeEnd) + 1;
+    const uint heightEnd = GetRangeLimit(data.study, precisionLevel, Data::rangeEnd) + 1;
 
     // Big header
     if (data.area)
@@ -761,7 +760,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         // Asserts
         assert(y < maxHoursInAYear);
         // Index
-        writeDateToFileDescriptor(y + 1, fileLevel, precisionLevel);
+        writeDateToFileDescriptor(y + 1, precisionLevel);
 
         // Each column
         assert(data.columnIndex <= maxVariables);
