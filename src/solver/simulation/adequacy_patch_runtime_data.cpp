@@ -2,10 +2,10 @@
 
 namespace
 {
-constexpr double thresholdForCostCoefficient = 1.e-9;
-double computeHurdleCostCoefficient(double a, double b)
+constexpr double thresholdForCostCoefficient = 1.e-12;
+double computeHurdleCostCoefficient(double unsuppliedEnergyCost1, double unsuppliedEnergyCost2)
 {
-    double m = std::max(a, b);
+    double m = std::max(unsuppliedEnergyCost1, unsuppliedEnergyCost2);
     if (std::fabs(m) < thresholdForCostCoefficient)
         m = thresholdForCostCoefficient;
     return 1. / m;
