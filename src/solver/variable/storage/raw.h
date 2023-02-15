@@ -106,9 +106,6 @@ protected:
         {
             switch (fileLevel)
             {
-            case Category::mc:
-                InternalExportValuesMC<1, VCardT>(precision, report, rawdata.year);
-                break;
             case Category::id:
                 break;
             default:

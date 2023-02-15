@@ -86,8 +86,6 @@ protected:
     {
         switch (fileLevel)
         {
-        case Category::mc:
-            break;
         case Category::id:
         {
             switch (precision)

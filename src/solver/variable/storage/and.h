@@ -107,40 +107,6 @@ protected:
         NextType::merge(year, rhs);
     }
 
-    template<class S, class VCardT>
-    void buildSurveyReport(SurveyResults& report,
-                           const S& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
-    {
-        if (fileLevel & Category::mc)
-        {
-            InternalExportValuesMC<S, 1, VCardT>(precision, report, results, andYear);
-        }
-        else
-        {
-            if ((fileLevel & (Category::is | Category::cn)))
-            {
-                switch (precision)
-                {
-                case Category::hourly:
-                    InternalExportValues<Category::hourly, S, maxHoursInAYear, VCardT>(
-                      report, results, andHourly);
-                    break;
-                case Category::annual:
-                    InternalExportValues<Category::annual, S, 1, VCardT>(report, results, andYear);
-                    break;
-                default:
-                    break;
-                }
-            }
-        }
-        // Next
-        NextType::template buildSurveyReport<S, VCardT>(
-          report, results, dataLevel, fileLevel, precision);
-    }
-
     template<class VCardT>
     void buildDigest(SurveyResults& report, int digestLevel, int dataLevel) const
     {

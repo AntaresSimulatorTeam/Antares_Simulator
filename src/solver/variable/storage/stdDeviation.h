@@ -139,19 +139,6 @@ protected:
         {
         case Category::id:
             break;
-        case Category::mc:
-        {
-            switch (precision)
-            {
-            case Category::hourly:
-                InternalExportValuesMC<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report, results, stdDeviationHourly);
-                break;
-            default:
-                break;
-            }
-            break;
-        }
         default:
         {
             switch (precision)
