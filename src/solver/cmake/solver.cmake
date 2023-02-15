@@ -63,6 +63,7 @@ set(RTESOLVER_OPT
 		optimisation/optim_post_process_list.cpp
 		optimisation/post_process_commands.h
 		optimisation/post_process_commands.cpp
+        optimisation/adequacy_patch_csr/hourly_csr_problem.h
 		optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
 		optimisation/adequacy_patch_csr/adq_patch_post_process_list.cpp
 		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
