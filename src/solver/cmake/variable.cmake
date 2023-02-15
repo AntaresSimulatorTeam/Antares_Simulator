@@ -47,7 +47,6 @@ set(SRC_VARIABLE_STORAGE
 		variable/storage/averagedata.h
 		variable/storage/averagedata.cpp
 		variable/storage/stdDeviation.h
-		variable/storage/and.h
 		variable/storage/fwd.h
 		)
 source_group("variable\\storage" FILES ${SRC_VARIABLE_STORAGE})
