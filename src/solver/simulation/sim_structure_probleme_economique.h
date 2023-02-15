@@ -30,11 +30,14 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
+#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 #include "sim_constants.h"
 #include <memory>
 #include <yuni/core/math.h>
+
+class AdequacyPatchRuntimeData;
 
 typedef struct
 {
@@ -300,51 +303,6 @@ typedef struct
     double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
 } ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
-
-// TODO[FOM] move to new .h/.cpp
-class AdequacyPatchRuntimeData
-{
-private:
-    // TODO[FOM] out of class
-    static constexpr double thresholdForCostCoefficient = 1.e-9;
-    // TODO[FOM] free function
-    static double computeHurdleCostCoefficient(double a, double b)
-    {
-        double m = std::max(a, b);
-        if (std::fabs(m) < thresholdForCostCoefficient)
-            m = thresholdForCostCoefficient;
-        return 1. / m;
-    }
-    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
-
-public:
-    std::vector<adqPatchParamsMode> areaMode;
-    std::vector<adqPatchParamsMode> originAreaMode;
-    std::vector<adqPatchParamsMode> extremityAreaMode;
-    std::vector<double> hurdleCostCoefficients;
-
-    void initialize(Antares::Data::Study& study)
-    {
-        areaMode.resize(study.areas.size());
-        for (uint i = 0; i != study.areas.size(); ++i)
-        {
-            auto& area = *(study.areas[i]);
-            areaMode[i] = area.adequacyPatchMode;
-        }
-        const auto numberOfLinks = study.runtime->interconnectionsCount();
-        originAreaMode.resize(numberOfLinks);
-        extremityAreaMode.resize(numberOfLinks);
-        hurdleCostCoefficients.resize(numberOfLinks);
-        for (uint i = 0; i < numberOfLinks; ++i)
-        {
-            auto& link = *(study.runtime->areaLink[i]);
-            originAreaMode[i] = link.from->adequacyPatchMode;
-            extremityAreaMode[i] = link.with->adequacyPatchMode;
-            hurdleCostCoefficients[i] = computeHurdleCostCoefficient(
-              link.from->thermal.unsuppliedEnergyCost, link.with->thermal.unsuppliedEnergyCost);
-        }
-    }
-};
 
 class computeTimeStepLevel
 {
@@ -617,8 +575,8 @@ struct PROBLEME_HEBDO
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    std::unique_ptr<AdequacyPatchParameters> adqPatchParams = nullptr;
-    AdequacyPatchRuntimeData adequacyPatchRuntimeData;
+    std::shared_ptr<AdequacyPatchParameters> adqPatchParams;
+    std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
     double* CoefficientEcretementPMaxHydraulique = nullptr;

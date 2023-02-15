@@ -45,6 +45,8 @@ set(SRC_SIMULATION
 		simulation/base_post_process.cpp
         simulation/opt_time_writer.h
         simulation/opt_time_writer.cpp
+        simulation/adequacy_patch_runtime_data.h
+        simulation/adequacy_patch_runtime_data.cpp
 )
 source_group("simulation" FILES ${SRC_SIMULATION})
 
@@ -57,5 +59,8 @@ source_group("simulation" FILES ${SRC_SIMULATION})
 #
 add_library(libantares-solver-simulation
 		${SRC_SIMULATION}  )
+
+target_include_directories(libantares-solver-simulation PUBLIC
+                          ${CMAKE_SOURCE_DIR}/solver/simulation)
 
 target_link_libraries(libantares-solver-simulation PRIVATE libantares-core)
