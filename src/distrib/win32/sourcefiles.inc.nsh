@@ -16,7 +16,7 @@ ${SetOutPath} "$INSTDIR\Sources\docs"
 File /nonfatal /r  ${ANTARES_SRC_DIR}\..\docs\*.*
 
 ${SetOutPath} "$INSTDIR\Sources\resources"
-File /r  ${ANTARES_SRC_DIR}\..\resources\*.*
+File /nonfatal /r  ${ANTARES_SRC_DIR}\..\resources\*.*
 
 ; TODO For now build_deps source are not provided
 
