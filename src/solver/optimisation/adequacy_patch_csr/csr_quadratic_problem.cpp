@@ -30,6 +30,7 @@
 
 #include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_structure_donnees.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 #include "../solver/optimisation/opt_fonctions.h"
 #include "csr_quadratic_problem.h"
 #include "hourly_csr_problem.h"
@@ -38,7 +39,6 @@ using namespace Antares::Data;
 
 namespace Antares::Solver::Optimization
 {
-
 void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
 {
     int hour = hourlyCsrProblem_.triggeredHour;
@@ -49,9 +49,9 @@ void CsrQuadraticProblem::setConstraintsOnFlows(double* Pi, int* Colonne)
     // type 2.
     for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int NombreDeTermes = 0;
@@ -107,7 +107,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; ++Area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             continue;
 
@@ -125,7 +125,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         int Interco = problemeHebdo_->IndexDebutIntercoOrigine[Area];
         while (Interco >= 0)
         {
-            if (problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 Interco = problemeHebdo_->IndexSuivantIntercoOrigine[Interco];
@@ -153,7 +153,7 @@ void CsrQuadraticProblem::setNodeBalanceConstraints(double* Pi, int* Colonne)
         Interco = problemeHebdo_->IndexDebutIntercoExtremite[Area];
         while (Interco >= 0)
         {
-            if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
                 != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 Interco = problemeHebdo_->IndexSuivantIntercoExtremite[Interco];
@@ -221,9 +221,9 @@ void CsrQuadraticProblem::setBindingConstraints(double* Pi, int* Colonne)
             int Interco = MatriceDesContraintesCouplantes->NumeroDeLInterconnexion[Index];
             double Poids = MatriceDesContraintesCouplantes->PoidsDeLInterconnexion[Index];
 
-            if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
+            if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
                   == Data::AdequacyPatch::physicalAreaInsideAdqPatch
-                && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+                && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
             {
                 int var = problemeHebdo_->CorrespondanceVarNativesVarOptim[hour]
@@ -275,4 +275,4 @@ void CsrQuadraticProblem::buildConstraintMatrix()
     setBindingConstraints(Pi.data(), Colonne.data());
 }
 
-} //namespace Antares::Solver::Optimization
+} // namespace Antares::Solver::Optimization

@@ -164,7 +164,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
