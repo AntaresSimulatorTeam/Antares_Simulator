@@ -55,7 +55,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
+           echo "URL_ORTOOLS=https://github.com/rte-france/or-tools/releases/download/v9.5-rte1.0/ortools_cxx_centos7_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download OR-Tools
       id: ortools
