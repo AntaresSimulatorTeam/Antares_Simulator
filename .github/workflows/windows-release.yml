@@ -149,6 +149,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run tests for adequacy patch (CSR)
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ matrix.test-platform }}
+
     - name: Run medium-tests
       uses: ./.github/workflows/run-tests
       with:
