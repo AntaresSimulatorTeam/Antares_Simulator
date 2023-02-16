@@ -32,7 +32,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-  class Container {
+  class PartShortTermStorage {
   public:
     bool Validate() const;
     // 1. Read list.ini
