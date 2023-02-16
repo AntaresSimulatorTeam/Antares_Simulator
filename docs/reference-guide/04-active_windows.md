@@ -598,11 +598,7 @@ On picking any area in the primary list, the user gets direct access to all data
 
 ## Reserves / DSM
 
-This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). The last two are available in either "adequacy" or "economy" simulations:
-
-- Primary reserve: must be provided whatever the circumstances, even at the price of some unsupplied energy (Draft simulations only)
-
-- Strategic reserve: sets a limit on the backup power that an area is supposed to be able to export to its neighbors. This reserve may represent an actual generation reserve, an energy constraint too complex to model by standard means (e.g. energy policy regarding special reservoirs) or can also be justified by simplifications made in grid modeling. (Draft simulations only).
+This window is used to handle all input data regarding reserves and the potential of "smart" load management (when not modeled using "fake" thermal dispatchable plants). On picking any area in the primary list, the user gets direct access to all data regarding the area, which amount to **four** ready-made 8760-hour time-series (expressed in MW). Those reserves are available in either "adequacy" or "economy" simulations:
 
 - Day-ahead reserve: power accounted for in setting up the optimal unit-commitment and schedule of the following day(s), which must consider possible forecasting errors or last-minute incidents. If the optimization range is of one day, the reserve will be actually seen as "day-ahead". If the optimization range is of one week, the need for reserve will be interpreted as "week-ahead". (Adequacy and Economy simulations)
 

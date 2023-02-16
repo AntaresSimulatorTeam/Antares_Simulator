@@ -102,32 +102,29 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (fileLevel & FileFilter)
+        if (fileLevel & FileFilter && !(fileLevel & Category::id))
         {
-            if (!(fileLevel & Category::id))
+            switch (precision)
             {
-                switch (precision)
-                {
-                case Category::hourly:
-                    InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
-                      report, ::Antares::Memory::RawPointer(rawdata.hourly));
-                    break;
-                case Category::daily:
-                    InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
-                                                                                  rawdata.daily);
-                    break;
-                case Category::weekly:
-                    InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
-                                                                                    rawdata.weekly);
-                    break;
-                case Category::monthly:
-                    InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
-                                                                               rawdata.monthly);
-                    break;
-                case Category::annual:
-                    InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
-                    break;
-                }
+            case Category::hourly:
+                InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
+                  report, ::Antares::Memory::RawPointer(rawdata.hourly));
+                break;
+            case Category::daily:
+                InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
+                                                                              rawdata.daily);
+                break;
+            case Category::weekly:
+                InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
+                                                                                rawdata.weekly);
+                break;
+            case Category::monthly:
+                InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
+                                                                           rawdata.monthly);
+                break;
+            case Category::annual:
+                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
+                break;
             }
         }
         // Next

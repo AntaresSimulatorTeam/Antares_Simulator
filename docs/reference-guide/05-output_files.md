@@ -175,52 +175,6 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 
 These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
 
-
-## Draft, area results
-
-**1** file « annual » + **6** files resulting from the combination of the following attributes :
-[with-network | without-network | id] X [hourly | annual]
-
-- The second attribute defines the period of time over which the results are assessed : hourly detail or annual summary.
-
-- The first attribute defines the nature of the results presented in the file
-
-**with network** values of adequacy indices (shortfall duration, loss of load probability) assessed while taking into account the effective grid capacities. The results in these files bear the suffix –CN (connex).
-
-**without network** values of adequacy indices (shortfall duration, loss of load probability) assessed without taking into account any interconnection. The results in these files bear the suffix –IS (isolated areas).
-
-**id** identifiers (numbers) of the MC years for which were observed the extreme values of the different variables presented in the « w/net » and "wo/net" files.
-
-Files « with network » and « without network » present the expectations and extreme values observed for the variables whose list is given hereafter:
-
-| variables | description |
-|-----------|-------------|
-|LOLD | Overall length of time for which there were shortfalls (Loss of Load Duration) <br/> (note: the commonly used LOLE index is equivalent to LOLD expectation )|
-|LOLP | Loss of Load Probability |
-|EENS | Energy Not Supplied |
-|MARG | Margin = available generation – (load + primary reserve) <br/> When MARG &gt; 0, MARG is a security margin <br/> When MARG &lt; 0, MARG is a curtailment depth |
-
-
-The file « annual » has one line per simulated Monte-Carlo year and gives, for each year, the following information:
-
-| variables | description |
-|-----------|-------------|
-| LOLD IS | Load shedding duration, if the grid capacities are not considered as available |
-| LOLD CN | Load shedding duration, if the grid capacities are actually available |
-| MAX DEPTH IS | Margin available at the most critical hour of the whole MC year, w/o grid <br/> When MAX DEPTH &gt; 0, MAX DEPTH is a security margin <br/> When MAX DEPTH &lt; 0, MAX DEPTH is a shortfall depth |
-| MAX DEPTH CN | Margin available at the most critical hour of the whole MC year, w/ grid <br/> When MAX DEPTH &gt;0, MAX DEPTH is a security margin <br/> When MAX DEPTH &lt; 0, MAX DEPTH is a shortfall depth |
-
-_Remark: In spite of their likenesses, the fields  « MARG » of the files w/net, wo/net and the fields « MAX DEPTH » of the file mc-details are not identical (hence different names):_
-
-- _MARG (expectation, min, max) is related to the whole set of MC years_
-- _MAX DEPTH regards one single year._
-
-_Note that the following relations hold:_
-
-_Min { MC years } MAX DEPTH IS = Min { hours} MARG IS [MIN]_
-
-_Min { MC years } MAX DEPTH CN = Min { hours} MARG CN [MIN]_
-
 ## Miscellaneous
 
 Alike Input data, output results can be filtered so as to include only items that are associated with Areas and Links defined as "visible" in the current map. In addition, the output filtering dialog box makes it possible to filter according to two special categories (**Districts** and **Unknown**) that are not related to standard maps:

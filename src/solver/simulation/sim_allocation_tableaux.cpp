@@ -152,7 +152,7 @@ void SIM_DesallocationTableaux()
 {
     if (Data::Study::Current::Valid())
     {
-        auto& study = *Data::Study::Current::Get();
+        const auto& study = *Data::Study::Current::Get();
         for (uint i = 0; i < study.areas.size(); ++i)
             MemFree(DonneesParPays[i]);
 
