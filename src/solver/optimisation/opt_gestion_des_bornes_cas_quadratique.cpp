@@ -45,26 +45,20 @@ using namespace Yuni;
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo,
                                                                int PdtHebdo)
 {
-    int Interco;
-    int var;
-    double* AdresseDuResultat;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = NULL;
 
-    for (var = 0; var < ProblemeAResoudre->NombreDeVariables; var++)
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
-
-    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        ProblemeAResoudre->Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+        ProblemeAResoudre->Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco];
+        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco]);
 
         if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
@@ -90,7 +84,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
                     ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
         }
-        AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = AdresseDuResultat;
+        double* adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
     }
 }

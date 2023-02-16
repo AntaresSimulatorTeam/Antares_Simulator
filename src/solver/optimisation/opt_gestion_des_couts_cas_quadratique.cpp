@@ -35,25 +35,21 @@
 
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    int Interco;
-    int var;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeResistances = problemeHebdo->ValeursDeNTC[PdtHebdo];
 
-    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
         if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
             ProblemeAResoudre->CoutQuadratique[var]
-              = ValeursDeResistances->ResistanceApparente[Interco];
+              = ValeursDeResistances->ResistanceApparente[interco];
     }
 }

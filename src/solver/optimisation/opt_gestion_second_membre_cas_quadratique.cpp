@@ -34,16 +34,12 @@
 
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    int Cnt;
-    int Pays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays - 1; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
-        Cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
-        ProblemeAResoudre->SecondMembre[Cnt]
-          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];
+        int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
+        ProblemeAResoudre->SecondMembre[cnt]
+          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[pays];
     }
 }
