@@ -41,9 +41,7 @@ extern "C"
 
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    int PdtHebdo;
-
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
@@ -55,21 +53,21 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
     bool result = true;
     if (problemeHebdo->NombreDInterconnexions > 0)
     {
-        for (PdtHebdo = 0; PdtHebdo < problemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+        for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
 #ifdef dbgInfos
             printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
-                   PdtHebdo);
+                   pdtHebdo);
 #endif
 
-            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
             result
-              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
+              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, pdtHebdo) && result;
         }
     }
 
