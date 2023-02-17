@@ -25,89 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
 #include "economy.h"
-#include <antares/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include <yuni/core/math.h>
 #include "simulation.h"
 #include "../optimisation/opt_fonctions.h"
+#include "../optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include "common-eco-adq.h"
 #include "opt_time_writer.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 enum
 {
-
     nbHoursInAWeek = 168,
 };
-
-EconomyWeeklyOptimization::EconomyWeeklyOptimization(PROBLEME_HEBDO** problemesHebdo) :
- pProblemesHebdo(problemesHebdo)
-{
-}
-
-EconomyWeeklyOptimization::Ptr EconomyWeeklyOptimization::create(bool adqPatchEnabled,
-                                                                 PROBLEME_HEBDO** problemesHebdo)
-{
-    if (adqPatchEnabled)
-        return std::make_unique<AdequacyPatchOptimization>(problemesHebdo);
-    else
-        return std::make_unique<NoAdequacyPatchOptimization>(problemesHebdo);
-
-    return nullptr;
-}
-
-// Adequacy patch
-AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
- EconomyWeeklyOptimization(problemesHebdo)
-{
-}
-void AdequacyPatchOptimization::solve(Variable::State& state, int hourInTheYear, uint numSpace)
-{
-    auto problemeHebdo = pProblemesHebdo[numSpace];
-    problemeHebdo->adqPatchParams->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-    problemeHebdo->adqPatchParams->AdequacyFirstStep = false;
-
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
-    {
-        if (problemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
-        else
-            memset(problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   0,
-                   problemeHebdo->NombreDePasDeTemps * sizeof(double));
-    }
-
-    // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
-    // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo, state, numSpace, hourInTheYear);
-    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-}
-
-// No adequacy patch
-NoAdequacyPatchOptimization::NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo) :
- EconomyWeeklyOptimization(problemesHebdo)
-{
-}
-void NoAdequacyPatchOptimization::solve(Variable::State&, int, uint numSpace)
-{
-    auto problemeHebdo = pProblemesHebdo[numSpace];
-    OPT_OptimisationHebdomadaire(problemeHebdo, numSpace);
-}
 
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
@@ -147,6 +81,7 @@ void Economy::setNbPerformedYearsInParallel(uint nbMaxPerformedYearsInParallel)
 void Economy::initializeState(Variable::State& state, uint numSpace)
 {
     state.problemeHebdo = pProblemesHebdo[numSpace];
+    state.numSpace = numSpace;
 }
 
 bool Economy::simulationBegin()
@@ -154,10 +89,12 @@ bool Economy::simulationBegin()
     if (!preproOnly)
     {
         pProblemesHebdo = new PROBLEME_HEBDO*[pNbMaxPerformedYearsInParallel];
+        weeklyOptProblems_.resize(pNbMaxPerformedYearsInParallel);
+        postProcessesList_.resize(pNbMaxPerformedYearsInParallel);
+
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
             if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
@@ -165,10 +102,21 @@ bool Economy::simulationBegin()
                 logs.fatal() << "internal error";
                 return false;
             }
-        }
 
-        weeklyOptProblem
-          = EconomyWeeklyOptimization::create(study.parameters.adqPatch.enabled, pProblemesHebdo);
+            weeklyOptProblems_[numSpace] =
+                Antares::Solver::Optimization::WeeklyOptimization::create(
+                                                    study.parameters.adqPatch.enabled,
+                                                    pProblemesHebdo[numSpace],
+                                                    numSpace);
+            postProcessesList_[numSpace] =
+                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
+                                                 pProblemesHebdo[numSpace],
+                                                 numSpace,
+                                                 study.areas,
+                                                 study.parameters.shedding.policy,
+                                                 study.parameters.simplexOptimizationRange,
+                                                 study.calendar);
+        }
 
         SIM_InitialisationResultats();
     }
@@ -184,6 +132,7 @@ bool Economy::simulationBegin()
     return true;
 }
 
+
 bool Economy::year(Progression::Task& progression,
                    Variable::State& state,
                    uint numSpace,
@@ -193,6 +142,7 @@ bool Economy::year(Progression::Task& progression,
 {
     // No failed week at year start
     failedWeekList.clear();
+    pProblemesHebdo[numSpace]->year = state.year;
 
     PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
 
@@ -208,11 +158,11 @@ bool Economy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        state.study.runtime->weekInTheYear[numSpace] = state.weekInTheYear = w;
+        pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
@@ -220,22 +170,11 @@ bool Economy::year(Progression::Task& progression,
 
         try
         {
-            weeklyOptProblem->solve(state, hourInTheYear, numSpace);
+            weeklyOptProblems_[numSpace]->solve(w, hourInTheYear);
 
-            DispatchableMarginForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear);
-
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
-
-            RemixHydroForAllAreas(
-              study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
-
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
-
-            interpolateWaterValue(
-              study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
-
-            updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+            // Runs all the post processes in the list of post-process commands
+            optRuntimeData opt_runtime_data(state.year, w, hourInTheYear);
+            postProcessesList_[numSpace]->runAll(opt_runtime_data);
 
             variables.weekBegin(state);
             uint previousHourInTheYear = state.hourInTheYear;
@@ -301,7 +240,7 @@ bool Economy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
@@ -333,7 +272,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
@@ -345,6 +284,4 @@ void Economy::prepareClustersInMustRunMode(uint numSpace)
     PrepareDataFromClustersInMustrunMode(study, numSpace);
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

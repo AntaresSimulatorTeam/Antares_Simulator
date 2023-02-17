@@ -32,7 +32,6 @@
 #include <wx/aui/aui.h>
 
 #include "../../toolbox/components/notebook/notebook.h"
-#include "../../toolbox/components/datagrid/selectionoperation.h"
 #include "../../toolbox/components/map/settings.h"
 #include <list>
 #include "fwd.h"
@@ -111,41 +110,6 @@ public:
     ** \brief Get the component used for the map
     */
     Map::Component* map() const;
-
-    /*!
-    ** \name Grid operator (for selected cells)
-    **
-    ** A grid operator computes an operation (Sum, average...) on all selected
-    ** cells of the grid that currently has the focus. The result of this
-    ** computation is displayed in the status bar.
-    **
-    ** \see Antares::Component::Datagrid::Component::onGridEnter()
-    ** \see Antares::Component::Datagrid::Component::onGridLeave()
-    */
-    //@{
-    /*!
-    ** \brief Get the current grid operator for selected cells
-    */
-    Component::Datagrid::Selection::IOperator* gridOperatorSelectedCells() const;
-
-    /*!
-    ** \brief Set the grid operator for selected cells
-    */
-    void gridOperatorSelectedCells(Component::Datagrid::Selection::IOperator* v);
-
-    /*!
-    ** \brief Update the GUI to display the result of the grid operator
-    **
-    ** This method should be called each time the cells selection changes.
-    ** \param grid The `wxGrid` that has currently the focus (may be NULL)
-    */
-    void gridOperatorSelectedCellsUpdateResult(wxGrid* grid);
-
-    /*!
-    ** \brief Disable the grid operator
-    */
-    void disableGridOperatorIfGrid(wxGrid* grid);
-    //@}
 
     //! \name Title of the Window
     //@{
@@ -369,8 +333,6 @@ private:
 
     //! Create a complete menu for the window
     wxMenuBar* createMenu();
-    //! Create a popup menu for all available operators on selected cells (grid)
-    wxMenu* createPopupMenuOperatorsOnGrid();
 
     //! Create menu: File
     wxMenu* createMenuFiles();
@@ -442,9 +404,6 @@ private:
 
     //! \name Event: Context menu
     //@{
-    //! Show the context menu associated to the status bar
-    void evtOnContextMenuStatusBar(wxContextMenuEvent& evt);
-    void evtOnContextMenuChangeOperator(wxCommandEvent& evt);
     void evtOnContextMenuMap(int x, int y);
     //@}
 
@@ -562,6 +521,10 @@ private:
     void evtOnOptionsOptimizationPrefs(wxCommandEvent& evt);
     //! Advanced parameters
     void evtOnOptionsAdvanced(wxCommandEvent& evt);
+    //! Adequacy Patch Configure
+    void evtOnOptionsAdequacyPatchOptions(wxCommandEvent& evt);
+    //! Adequacy Patch Areas
+    void evtOnOptionsAdequacyPatchAreas(wxCommandEvent& evt);
     //@}
 
     //! \name Event: Menu: Window
@@ -675,6 +638,8 @@ private:
     wxMenu* pMenuOptions;
     //! SubMenu: Options > Geographic trimming
     wxMenuItem* pMenuGeographicTrimming;
+    //! SubMenu: Options > Adequacy Patch
+    wxMenuItem* pMenuAdequacyPatch;
     //! Menu: Window
     wxMenu* pMenuWindow;
     //! Menu: Tools
@@ -739,10 +704,6 @@ private:
     Component::Notebook::Page* pageScBuilderNTC;
     Component::Notebook::Page* pageScBuilderRenewable;
     Component::Notebook::Page* pageScBuilderHydroLevels;
-
-    //! The current grid operator to use on selected cells
-    Component::Datagrid::Selection::IOperator* pGridSelectionOperator;
-    wxGrid* pGridSelectionAttachedGrid;
 
     //! A context menu for the map
     wxMenu* pMapContextMenu;

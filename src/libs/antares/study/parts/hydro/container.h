@@ -32,9 +32,7 @@
 #include "../../fwd.h"
 #include "allocation.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Hydro for a single area
@@ -176,14 +174,6 @@ public:
 
 }; // class PartHydro
 
-// Type encapsulating working variables for next function :
-// As the next function can be called a lot of times, passing an already created variable
-// avoids the overhead of local variables creation
-struct h2oValueWorkVarsType
-{
-    double levelUp;
-    double levelDown;
-};
 
 // Interpolates a water value from a table according to a level and a day.
 // As this function can be called a lot of times, we pass working variables and returned variables
@@ -192,7 +182,6 @@ struct h2oValueWorkVarsType
 void getWaterValue(const double& level,
                    const Matrix<double>& waterValues,
                    const uint day,
-                   h2oValueWorkVarsType& workVar,
                    double& waterValueToReturn);
 
 // Interpolates a rate from the credit modulation table according to a level
@@ -200,8 +189,7 @@ double getWeeklyModulation(const double& level /* format : in % of reservoir cap
                            Matrix<double, double>& creditMod,
                            int modType);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "../../area.h"
 

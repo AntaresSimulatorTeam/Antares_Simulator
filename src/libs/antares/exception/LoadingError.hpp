@@ -191,6 +191,12 @@ public:
     NoAreaInsideAdqPatchMode();
 };
 
+class IncompatibleHurdleCostCSR : public LoadingError
+{
+public:
+    IncompatibleHurdleCostCSR();
+};
+
 class IncompatibleOutputOptions : public LoadingError
 {
 public:

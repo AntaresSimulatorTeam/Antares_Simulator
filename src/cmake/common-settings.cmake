@@ -48,8 +48,8 @@ if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "t
 	set(ANTARES_VERSION_TARGET "release")
 
 	if(NOT WIN32)
-		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions")
-		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -O3 -funroll-loops -frerun-cse-after-loop -frerun-loop-opt -finline-functions ${ADDITIONAL_C_FLAGS}")
+		set(CMAKE_CXX_FLAGS_RELEASE "${COMMON_GCC_FLAGS} -O3 -funroll-loops -finline-functions")
+		set(CMAKE_C_FLAGS_RELEASE   "${COMMON_GCC_FLAGS} -O3 -funroll-loops -finline-functions ${ADDITIONAL_C_FLAGS}")
 	endif(NOT WIN32)
 	add_definitions("-DNDEBUG") # Remove asserts
 
@@ -169,9 +169,6 @@ if(MSVC)
 
 	#SET(CMAKE_EXE_LINKER_FLAGS_DEBUG   "/debug /VERSION:${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
 	#SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "/VERSION:${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}")
-else()
-	set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=gnu++11")
-	set(CMAKE_CXX_FLAGS_DEBUG   "${CMAKE_CXX_FLAGS_DEBUG}   -std=gnu++11")
 endif()
 
 if (NOT MSVC)
@@ -220,11 +217,9 @@ macro(executable_strip TARGET)
 	if("${CMAKE_BUILD_TYPE}" STREQUAL "release")
 		if(NOT MSVC)
 			if(WIN32)
-				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} ${TARGET}.exe
-					COMMENT "Stripping the executable '${TARGET}.exe'")
+				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} $<TARGET_FILE:${TARGET}>)
 			else()
-				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all ${TARGET}
-					COMMENT "Stripping the executable '${TARGET}'")
+				add_custom_command(TARGET ${TARGET} POST_BUILD COMMAND ${CMAKE_STRIP} --strip-all $<TARGET_FILE:${TARGET}>)
 			endif()
 		endif()
 	endif()

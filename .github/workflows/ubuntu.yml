@@ -9,6 +9,7 @@ on:
       - feature/*
       - features/*
       - fix/*
+      - issue-*
       - release/*
       - doc/*
 
@@ -25,9 +26,8 @@ jobs:
       artifact_name: pdf-doc
 
   build:
-    name: Build (XPRESS + OR-Tools=${{ matrix.ortools-xpress }})
+    name: Build
     env:
-      XPRESSDIR: ${{ github.workspace }}/xpressmp813
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
 
     outputs:
@@ -40,8 +40,6 @@ jobs:
       matrix:
         os: [ubuntu-20.04]
         test-platform: [ubuntu-20.04]
-        ortools-xpress: [ON, OFF]
-
 
     steps:
     - uses: actions/checkout@v3
@@ -49,7 +47,7 @@ jobs:
     - name: ccache
       uses: hendrikmuhs/ccache-action@v1.2
       with:
-          key: xpress-${{ matrix.ortools-xpress }}-${{ matrix.os }}
+          key: ${{ matrix.os }}
 
     - name: Install libraries
       run: |
@@ -67,13 +65,7 @@ jobs:
 
     - name: Config OR-Tools URL
       run: |
-          if [ "${{ matrix.ortools-xpress }}" == "ON" ]; then
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_ubuntu-20.04_static_sirius_xprs.zip" >> $GITHUB_ENV
-            echo "LABEL=-ortools-xpress" >> $GITHUB_ENV
-          else
-            echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
-            echo "LABEL=" >> $GITHUB_ENV
-          fi
+          echo "ORTOOLS_URL=https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_ubuntu-20.04_static_sirius.zip" >> $GITHUB_ENV
 
     - name: Download pre-compiled librairies
       uses: ./.github/workflows/download-extract-precompiled-libraries-tgz
@@ -98,12 +90,6 @@ jobs:
           git submodule update --init src/antares-deps
           git submodule update --init src/tests/resources/Antares_Simulator_Tests
 
-    - name: Download XPRESS if needed
-      if: ${{ matrix.ortools-xpress == 'ON' }}
-      run: |
-        git clone -b master https://${{ secrets.XPRS_USERNAME }}:${{ secrets.XPRS_TOKEN }}@github.com/rte-france/xpress-mp ${{ env.XPRESSDIR }}
-        ls -la ${{ env.XPRESSDIR }}
-
     - name: Configure push
       run: |
            cmake -B _build -S src \
@@ -114,24 +100,16 @@ jobs:
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
-           -DXPRESS_ROOT=${{ env.XPRESSDIR }}
 
     - name: Build
       run: |
-           cmake --build _build --config release -j2
+             cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
       run: |
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
-
-    - name: Run adq-patch related test
-      if: ${{ env.IS_PUSH == 'true' }}
-
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R test-adq-patch
 
     - name: Run unit and end-to-end tests
       if: ${{ env.IS_PUSH == 'true' }}
@@ -145,6 +123,13 @@ jobs:
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
+
+    - name: Upload logs for failed tests
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-log
+        path: ${{ github.workspace }}/_build/Testing/Temporary/LastTest.log
 
     # simtest
     - name: Read simtest version
@@ -168,6 +153,22 @@ jobs:
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
         batch-name: short-tests
+        os: ${{ matrix.test-platform }}
+
+    - name: Run mps tests
+      if: ${{ env.IS_PUSH == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
+
+    - name: Run tests for adequacy patch (CSR)
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
         os: ${{ matrix.test-platform }}
 
     - name: Run medium-tests
@@ -207,24 +208,20 @@ jobs:
            cd _build
            cpack -G DEB
 
-    - name: Rename .deb file
-      run: |
-           cd _build
-           DEB_NAME=$(ls *.deb)
-           DEB_NAME_WITH_SUFFIX=${DEB_NAME/.deb/${{ env.LABEL }}.deb}
-           mv "${DEB_NAME}" "${DEB_NAME_WITH_SUFFIX}" || true
-
     - name: .tar.gz creation
       run: |
            cd _build
            cpack -G TGZ
 
-    - name: Rename .tgz file
+    - name: Solver archive creation
       run: |
            cd _build
-           TGZ_NAME=$(ls *.tar.gz)
-           TGZ_NAME_WITH_SUFFIX=${TGZ_NAME/.tar.gz/${{ env.LABEL }}.tar.gz}
-           mv "${TGZ_NAME}" "${TGZ_NAME_WITH_SUFFIX}" || true
+           cmake --install . --prefix install
+           pushd .
+           cd install/bin
+           tar czf ../../antares-solver_ubuntu20.04.tar.gz antares-*-solver libsirius_solver.so
+           popd
+           rm -rf install
 
     - name: Installer archive upload push
       uses: actions/upload-artifact@v3
@@ -248,7 +245,7 @@ jobs:
 
     - name: Publish assets
       if: ${{ env.IS_RELEASE == 'true' }}
-      uses: alexellis/upload-assets@0.3.0
+      uses: alexellis/upload-assets@0.4.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
       with:

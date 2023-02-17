@@ -987,19 +987,18 @@ void PartHydro::copyFrom(const PartHydro& rhs)
 void getWaterValue(const double& level /* format : in % of reservoir capacity */,
                    const Matrix<double>& waterValues,
                    const uint day,
-                   h2oValueWorkVarsType& workVar,
                    double& waterValueToReturn)
 {
     assert((level >= 0. && level <= 100.) && "getWaterValue function : invalid level");
-    workVar.levelUp = ceil(level);
-    workVar.levelDown = floor(level);
+    double levelUp = ceil(level);
+    double levelDown = floor(level);
 
-    if ((int)(workVar.levelUp) == (int)(workVar.levelDown))
-        waterValueToReturn = waterValues[(int)(workVar.levelUp)][day];
+    if ((int)(levelUp) == (int)(levelDown))
+        waterValueToReturn = waterValues[(int)(levelUp)][day];
     else
         waterValueToReturn
-          = waterValues[(int)(workVar.levelUp)][day] * (level - workVar.levelDown)
-            + waterValues[(int)(workVar.levelDown)][day] * (workVar.levelUp - level);
+          = waterValues[(int)(levelUp)][day] * (level - levelDown)
+            + waterValues[(int)(levelDown)][day] * (levelUp - level);
 }
 
 double getWeeklyModulation(const double& level /* format : in % of reservoir capacity */,

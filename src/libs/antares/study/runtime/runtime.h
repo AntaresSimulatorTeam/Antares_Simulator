@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_RUNTIME_RUNTIME_INFOS_H__
 
 #include <string>
+#include <vector>
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
@@ -147,9 +148,9 @@ public:
     StudyMode mode;
 
     //! The number of interconnections
-    uint interconnectionsCount;
+    uint interconnectionsCount() const;
     //! All interconnections
-    AreaLink** areaLink;
+    std::vector<AreaLink*> areaLink;
 
     //! Random numbers generators
     MersenneTwister random[seedMax];
@@ -195,16 +196,6 @@ public:
     ** In this case, error on NaN should be disabled
     */
     bool quadraticOptimizationHasFailed;
-
-    /*!
-    ** \brief Store the current week of the simulation during the optimization
-    */
-    unsigned int* weekInTheYear;
-
-    /*!
-    ** \brief Store the current year of the simulation during the optimization
-    */
-    unsigned int* currentYear;
 
 private:
     void initializeBindingConstraints(BindConstList& list);

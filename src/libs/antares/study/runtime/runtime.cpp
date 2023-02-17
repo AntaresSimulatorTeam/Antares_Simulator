@@ -117,9 +117,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
 
 static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
-    r.interconnectionsCount = study.areas.areaLinkCount();
-    using AreaLinkPointer = AreaLink*;
-    r.areaLink = new AreaLinkPointer[r.interconnectionsCount];
+    r.areaLink.resize(study.areas.areaLinkCount());
 
     uint indx = 0;
 
@@ -414,25 +412,17 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbDaysPerYear(0),
  nbMonthsPerYear(0),
  parameters(nullptr),
- interconnectionsCount(0),
- areaLink(nullptr),
  timeseriesNumberYear(nullptr),
  bindingConstraintCount(0),
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
- quadraticOptimizationHasFailed(false),
- weekInTheYear(nullptr),
- currentYear(nullptr)
+ quadraticOptimizationHasFailed(false)
 {
-    currentYear = new uint[nbYearsParallel];
-    weekInTheYear = new uint[nbYearsParallel];
     // Evite les confusions de numeros de TS entre AMC
     timeseriesNumberYear = new uint[nbYearsParallel];
     for (uint numSpace = 0; numSpace < nbYearsParallel; numSpace++)
     {
-        currentYear[numSpace] = 999999;
-        weekInTheYear[numSpace] = 999999;
         timeseriesNumberYear[numSpace] = 999999;
     }
 }
@@ -442,11 +432,13 @@ void StudyRuntimeInfos::checkThermalTSGeneration(Study& study)
     const auto& gd = study.parameters;
     bool globalThermalTSgeneration = gd.timeSeriesToGenerate & timeSeriesThermal;
     thermalTSRefresh = globalThermalTSgeneration;
-    
+
     study.areas.each([this, globalThermalTSgeneration](Data::Area& area) {
-        area.thermal.list.each([this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
-            thermalTSRefresh = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
-        });
+        area.thermal.list.each(
+          [this, globalThermalTSgeneration](const Data::ThermalCluster& cluster) {
+              thermalTSRefresh
+                = thermalTSRefresh || cluster.doWeGenerateTS(globalThermalTSgeneration);
+          });
     });
 }
 
@@ -520,7 +512,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info();
     logs.info() << "Summary";
     logs.info() << "     areas: " << study.areas.size();
-    logs.info() << "     links: " << interconnectionsCount;
+    logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     binding constraints: " << bindingConstraintCount;
@@ -584,6 +576,11 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
     this->maxRenewableClustersForSingleArea
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
+}
+
+uint StudyRuntimeInfos::interconnectionsCount() const
+{
+    return static_cast<uint>(areaLink.size());
 }
 
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
@@ -711,10 +708,7 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
 {
     logs.debug() << "Releasing runtime data";
 
-    delete[] weekInTheYear;
-    delete[] currentYear;
     delete[] timeseriesNumberYear;
-    delete[] areaLink;
     delete[] bindingConstraint;
 }
 
@@ -722,7 +716,7 @@ Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
 {
     if (r)
     {
-        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount
+        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount()
                + sizeof(BindingConstraint*) * r->bindingConstraintCount;
     }
     return 0;

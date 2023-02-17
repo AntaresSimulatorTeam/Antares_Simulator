@@ -34,11 +34,7 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 class State
 {
@@ -231,16 +227,14 @@ public:
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
-
+    //! Index of the state in the state vector
+    unsigned int numSpace;
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
     **
     ** This flag is always true in economy mode, and always false in adequacy-draft
     */
     bool simplexHasBeenRan;
-
-    // Working variable for output water values computation
-    Antares::Data::h2oValueWorkVarsType h2oValueWorkVars;
 
     // Annual costs to be printed in output into separate files
     // -----------------------------------------------------------------
@@ -261,9 +255,7 @@ public:
     // -----------------------------------------------------------------
 }; // class State
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "state.hxx"
 

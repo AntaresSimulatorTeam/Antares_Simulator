@@ -300,18 +300,13 @@ public:
 
         // Thermal cluster profit
         pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = hourlyClusterProduction
+          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
             * (-areaMarginalCosts[hourInTheWeek]
                - cluster->marginalCost
                    * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
 
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

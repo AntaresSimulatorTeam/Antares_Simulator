@@ -123,10 +123,12 @@ The area files that belong to the « values » class display **122** fields corr
 | AVL. DTG | Available dispatchable thermal generation (sum of av. power over all plants) |
 | DTG. MRG | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
 | MAX. MRG | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
-| DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^DENS] |
+| DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp] |
+| LMR. VIOL | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp] |
+| SPIL. ENRG. CSR | Spilled Energy after the Curtailment Sharing Rule step of the dequacy patch[^adqp] |
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units [^13] |
-| Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * production of the cluster)  |
+| Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]  |
 
 Note: The net profit is computed on full precision values for MRG. PRICE. The user may obtain slightly different results applying the given formula because MRG. PRICE values are rounded to 10^-2.
 
@@ -245,10 +247,12 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^DENS]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](14-adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](14-adequacy-patch.md))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
 [^agg]: This output is only available if the parameter "renewable generation modelling" is set to "cluster" in the input of the simulation
 
 [^ren]: This output is only available if the parameter "renewable generation modelling" is set to "aggregated" in the input of the simulation
+
+[^15]: dispatchable production = power generation above min gen = (power generation) - (min gen modulation)*units*capacity

@@ -54,8 +54,6 @@
 
 #include <memory>
 
-#include "equipments/equipments.h" // experimental
-
 //# include "../../../solver/variable/state.h"
 
 namespace Antares
@@ -375,7 +373,7 @@ public:
     /*!
     ** \brief Prepare the output where the results of the simulation will be written
     */
-    bool prepareOutput();
+    void prepareOutput();
 
     void saveAboutTheStudy();
 
@@ -442,23 +440,6 @@ public:
 
     //! \name Internal Data TS-Generators / Series
     //@{
-    /*!
-    ** \brief Ensure data for time series/prepro are initalized if they should be
-    **
-    ** It initializes data for each area so it would be better to call this
-    ** routine when areas are already loaded.
-    */
-    void ensureDataAreInitializedAccordingParameters();
-
-    /*!
-    ** \brief Ensure data for time series/prepro are initalized
-    **
-    ** It initializes data (without any exceptions) for each area so it would be
-    ** better to call this routine when areas are already loaded.
-    **
-    ** This routine should only be used by the interface.
-    */
-    void ensureDataAreAllInitialized();
 
     /*!
     ** \brief Computes a raw number of cores table.
@@ -794,105 +775,14 @@ protected:
 */
 extern YString StudyIconFile;
 
-/*!
-** \brief Ensure data for load time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataLoadTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for load prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-**
-** \warning Actually do nothing as long as the prepro is not implemented
-**   for the load
-*/
-void StudyEnsureDataLoadPrepro(Study* s);
-
-/*!
-** \brief Ensure data for solar time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataSolarTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for solar prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-**
-** \warning Actually do nothing as long as the prepro is not implemented
-**   for the load
-*/
-void StudyEnsureDataSolarPrepro(Study* s);
-
-/*!
-** \brief Ensure data for wind time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataWindTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for wind prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataWindPrepro(Study* s);
-
-/*!
-** \brief Ensure data for hydro time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataHydroTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for hydro prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataHydroPrepro(Study* s);
-
-/*!
-** \brief Ensure data for thermal time-series are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataThermalTimeSeries(Study* s);
-
-/*!
-** \brief Ensure data for thermal prepro are initialized
-** \ingroup study
-**
-** \param s The study structure where data are stored
-** \see Study::ensureDataAreAllInitializedAccordingParameters()
-*/
-void StudyEnsureDataThermalPrepro(Study* s);
-
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);
 
+YString StudyCreateOutputPath(StudyMode mode,
+                              ResultFormat fmt,
+                              const YString& folder,
+                              const YString& label,
+                              Yuni::sint64 startTime);
 } // namespace Data
 } // namespace Antares
 

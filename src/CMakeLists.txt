@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.14) # FetchContent_MakeAvailable
 
 # Version
 set(ANTARES_VERSION_HI	      8)
-set(ANTARES_VERSION_LO	      4)
+set(ANTARES_VERSION_LO	      5)
 set(ANTARES_VERSION_REVISION  0)
-set(ANTARES_VERSION_YEAR      2022)
+set(ANTARES_VERSION_YEAR      2023)
 
 project(antares
         VERSION ${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION})
@@ -15,7 +15,7 @@ set(ANTARES_ONLINE_DOC "https://antares-simulator.readthedocs.io/")
 
 # Beta release
 set(ANTARES_BETA 0)
-set(ANTARES_RC 2)
+set(ANTARES_RC 0)
 
 # OR-Tools tag
 file(READ "../ortools_tag" ORTOOLS_TAG)
@@ -64,16 +64,10 @@ execute_process(COMMAND
   OUTPUT_VARIABLE GIT_SHA1_SHORT
   ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-# Build Configuration
-if("${CMAKE_BUILD_TYPE}" STREQUAL "release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "tuning")
-	set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
-else()
-	#Define CMAKE_BUILD_TYPE as Debug for external library use
-	set(CMAKE_BUILD_TYPE "Debug")
+string(TOLOWER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE)
 
-	#TODO : Antares Target is debug instead of Debug YUNI and Antares CMakeLists.txt to be reviewed to change debug to Debug
-	set(ANTARES_TARGET  "debug")
-endif()
+# Build Configuration
+set(ANTARES_TARGET "${CMAKE_BUILD_TYPE}")
 
 OMESSAGE("")
 OMESSAGE_TITLE("Antares " "v${ANTARES_VERSION_HI}.${ANTARES_VERSION_LO}.${ANTARES_VERSION_REVISION}${ANTARES_VERSION_TAG}-${ANTARES_TARGET}")
@@ -200,7 +194,7 @@ endif()
 
 
 # Add DEPS_INSTALL_DIR with antares-xpansion CMAKE_BUILD_TYPE
-if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "release")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Release
 			DEPS_INSTALL_DIR_XPANSION
@@ -208,7 +202,7 @@ if (${CMAKE_BUILD_TYPE} STREQUAL  "release")
 
 	list(APPEND CMAKE_PREFIX_PATH ${DEPS_INSTALL_DIR_XPANSION})
 	
-elseif(${CMAKE_BUILD_TYPE} STREQUAL  "debug")
+elseif("${CMAKE_BUILD_TYPE}" STREQUAL  "debug")
 
 	string(REPLACE ${CMAKE_BUILD_TYPE} Debug
 			DEPS_INSTALL_DIR_XPANSION

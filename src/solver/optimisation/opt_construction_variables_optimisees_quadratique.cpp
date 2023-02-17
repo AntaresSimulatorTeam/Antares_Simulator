@@ -35,7 +35,7 @@
 
 #include "pi_constantes_externes.h"
 
-void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
     int Interco;
@@ -43,12 +43,12 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_H
 
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
         CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
           = NombreDeVariables;

@@ -878,7 +878,8 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
     if (empty())
         return true;
 
-    const bool globalThermalTSgeneration = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
+    const bool globalThermalTSgeneration
+      = study.parameters.timeSeriesToGenerate & timeSeriesThermal;
 
     Clob buffer;
     bool ret = true;

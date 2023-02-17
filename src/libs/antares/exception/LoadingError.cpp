@@ -143,6 +143,11 @@ NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
 {
 }
 
+IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR() :
+ LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
+{
+}
+
 IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
 {
 }

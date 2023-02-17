@@ -1,4 +1,5 @@
 
+
 #TODO : define flags with CMake way
 if(NOT MSVC)
 	set(CMAKE_C_FLAGS_DEBUG   "${CMAKE_C_FLAGS} -Wno-unused-variable")
@@ -19,6 +20,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_pilotage_optimisation_lineaire.cpp
 		optimisation/opt_pilotage_optimisation_quadratique.cpp
 		optimisation/opt_structure_probleme_a_resoudre.h
+		optimisation/opt_constants.h
 		optimisation/opt_alloc_probleme_a_optimiser.cpp
 		optimisation/opt_gestion_des_bornes_cas_quadratique.cpp
 		optimisation/opt_construction_variables_optimisees_lineaire.cpp
@@ -40,7 +42,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_liberation_problemes_simplexe.cpp
 		optimisation/opt_restaurer_les_donnees.cpp
 		optimisation/opt_gestion_des_couts_cas_quadratique.cpp
-		optimisation/opt_construction_contraintes_couts_demarrage.cpp 
+		optimisation/opt_construction_contraintes_couts_demarrage.cpp
 		optimisation/opt_construction_variables_couts_demarrages.cpp
 		optimisation/opt_gestion_des_bornes_couts_demarrage.cpp
 		optimisation/opt_gestion_des_couts_couts_demarrage.cpp
@@ -51,20 +53,45 @@ set(RTESOLVER_OPT
 		optimisation/opt_nombre_min_groupes_demarres_couts_demarrage.cpp
 		optimisation/opt_export_structure.h
 		optimisation/opt_export_structure.cpp
-		optimisation/adequacy_patch.h
-		optimisation/adequacy_patch.cpp
+		optimisation/base_weekly_optimization.h
+		optimisation/base_weekly_optimization.cpp
+		optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h
+		optimisation/adequacy_patch_local_matching/adequacy_patch_weekly_optimization.cpp
+		optimisation/weekly_optimization.h
+		optimisation/weekly_optimization.cpp
+		optimisation/optim_post_process_list.h
+		optimisation/optim_post_process_list.cpp
+		optimisation/post_process_commands.h
+		optimisation/post_process_commands.cpp
+		optimisation/adequacy_patch_csr/hourly_csr_problem.h
+		optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
+		optimisation/adequacy_patch_csr/adq_patch_post_process_list.cpp
+		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
+		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.cpp
+		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.h
+		optimisation/adequacy_patch_csr/adq_patch_curtailment_sharing.cpp
+		optimisation/adequacy_patch_csr/solve_problem.cpp
+		optimisation/adequacy_patch_csr/set_variable_boundaries.cpp
+		optimisation/adequacy_patch_csr/set_problem_cost_function.cpp
+		optimisation/adequacy_patch_csr/construct_problem_variables.cpp
+		optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.h
+		optimisation/adequacy_patch_csr/csr_quadratic_problem.cpp
+		optimisation/adequacy_patch_csr/count_constraints_variables.h
+		optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
-        utils/ortools_utils.h
+		optimisation/opt_period_string_generator_base.h
+
+		utils/ortools_utils.h
 		utils/ortools_utils.cpp
-        
-        utils/filename.h
-        utils/filename.cpp
-
-        utils/named_problem.h
-        utils/named_problem.cpp
-
-        utils/mps_utils.h
-        utils/mps_utils.cpp
+		utils/filename.h
+		utils/filename.cpp
+		utils/named_problem.h
+		utils/named_problem.cpp
+		utils/mps_utils.h
+		utils/mps_utils.cpp
+		utils/opt_period_string_generator.h
+		utils/opt_period_string_generator.cpp
 	)
 
 
@@ -74,4 +101,11 @@ set(SRC_MODEL
 )
 
 add_library(libmodel_antares ${SRC_MODEL})
-target_link_libraries(libmodel_antares PUBLIC libantares-core ortools::ortools sirius_solver infeasible_problem_analysis)
+target_link_libraries(libmodel_antares
+		PUBLIC
+		libantares-core
+		ortools::ortools
+		sirius_solver
+		infeasible_problem_analysis
+		libantares-solver-simulation
+		)

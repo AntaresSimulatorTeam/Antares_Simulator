@@ -36,27 +36,27 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Pdt;
     double* ReserveHoraireJMoins1Ref;
     RESERVE_JMOINS1** ReserveJMoins1;
 
-    ProblemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
+    problemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
     if (RESERVE_J_MOINS_1 == NON_ANTARES)
         return;
 
-    ReserveJMoins1 = ProblemeHebdo->ReserveJMoins1;
+    ReserveJMoins1 = problemeHebdo->ReserveJMoins1;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         ReserveHoraireJMoins1Ref = ReserveJMoins1[Pays]->ReserveHoraireJMoins1Ref;
-        for (Pdt = 0; Pdt < ProblemeHebdo->NombreDePasDeTempsRef; Pdt++)
+        for (Pdt = 0; Pdt < problemeHebdo->NombreDePasDeTempsRef; Pdt++)
         {
             if (fabs(ReserveHoraireJMoins1Ref[Pdt]) > ZERO_RESERVE_J_MOINS1)
             {
-                ProblemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
+                problemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
                 return;
             }
         }

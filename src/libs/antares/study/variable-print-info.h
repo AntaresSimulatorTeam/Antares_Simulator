@@ -35,9 +35,6 @@
 #include <yuni/core/fwd.h>
 #include <yuni/core/string.h>
 
-using namespace std;
-// using namespace Yuni;
-
 namespace Antares
 {
 namespace Data
@@ -51,7 +48,7 @@ public:
     ~VariablePrintInfo(){};
 
     // Getting name of the (represented) output variable
-    string name();
+    std::string name();
 
     // Do we enable or disable variable's print in output reports ?
     void enablePrint(bool b);
@@ -111,15 +108,15 @@ public:
 
     void resetInfoIterator() const;
 
-    bool setPrintStatus(string varname, bool printStatus);
+    bool setPrintStatus(std::string varname, bool printStatus);
 
     void prepareForSimulation(bool userSelection,
                               const std::vector<std::string>& excluded_vars = {});
 
     // Incremental search for the variable, then get the print status.
-    bool searchIncrementally_getPrintStatus(string var_name) const;
+    bool searchIncrementally_getPrintStatus(std::string var_name) const;
     // Classic search, then get the print status
-    bool isPrinted(string var_name) const;
+    bool isPrinted(std::string var_name) const;
 
     uint getMaxColumnsCount() const
     {
@@ -143,10 +140,10 @@ private:
 
 private:
     // Contains print info for all variables
-    vector<VariablePrintInfo*> allVarsPrintInfo;
+    std::vector<VariablePrintInfo*> allVarsPrintInfo;
 
     // Const iterator on variable print info list, that cannot change current object.
-    mutable vector<VariablePrintInfo*>::const_iterator it_info;
+    mutable std::vector<VariablePrintInfo*>::const_iterator it_info;
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.

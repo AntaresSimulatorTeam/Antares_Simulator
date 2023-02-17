@@ -5,8 +5,8 @@ LIBYUNI_CONFIG_INCLUDE_PATH("intree" "core" "${CMAKE_CURRENT_SOURCE_DIR}/..")
 LIBYUNI_CONFIG_LIB_PATH("intree" "core" "${LIBRARY_OUTPUT_PATH}")
 
 # Paths for yuni-config, installed version.
-LIBYUNI_CONFIG_INCLUDE_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/include/${YUNI_VERSIONED_INST_PATH}/")
-LIBYUNI_CONFIG_LIB_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/lib/${YUNI_VERSIONED_INST_PATH}/")
+LIBYUNI_CONFIG_INCLUDE_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/include/")
+LIBYUNI_CONFIG_LIB_PATH("target" "core" "${CMAKE_INSTALL_PREFIX}/lib/")
 
 LIBYUNI_CONFIG_LIB("both" "core"       "yuni-static-core")
 
@@ -100,10 +100,6 @@ add_library(yuni-static-core STATIC
 		core/bit/bit.hxx
 		core/bit.h
 		core/boundingbox.h
-		#core/charset/charset.cpp
-		#core/charset/charset.h
-		#core/charset/charset.hxx
-		#core/charset.h
 		core/color/fwd.h
 		core/color/rgb.h
 		core/color/rgb.hxx
@@ -273,8 +269,6 @@ add_library(yuni-static-core STATIC
 		core/static/remove.h
 		core/static/typedef.h
 		core/static/types.h
-		core/stl/algorithm.h
-		core/stl/hash-combine.h
 		core/string/escape.h
 		core/string/escape.hxx
 		core/string/iterator.hxx
@@ -305,7 +299,6 @@ add_library(yuni-static-core STATIC
 		core/system/console.h
 		core/system/cpu.cpp
 		core/system/cpu.h
-		core/system/endian.h
 		core/system/environment.h
 		core/system/environment.cpp
 		core/system/gettimeofday.h
@@ -322,7 +315,6 @@ add_library(yuni-static-core STATIC
 		core/system/username.h
 		core/system/username.hxx
 		core/system/vs-banned.h
-		core/system/x11.hdr.h
 		core/traits/cstring.h
 		core/traits/extension/into-cstring.h
 		core/traits/extension/length.h
@@ -355,12 +347,6 @@ add_library(yuni-static-core STATIC
 		core/unit/unit.h
 		core/unit/unit.hxx
 		core/unit.h
-		core/uri/uri.cpp
-		core/uri/uri.h
-		core/uri/uri.hxx
-		core/uri/uri.private.cpp
-		core/uri/uri.private.h
-		core/uri.h
 		core/utils/hexdump.cpp
 		core/utils/hexdump.h
 		core/utils/hexdump.hxx
@@ -462,7 +448,6 @@ add_library(yuni-static-core STATIC
 
 		thread/array.h
 		thread/array.hxx
-		thread/async-sync.cpp
 		thread/every.cpp
 		thread/fwd.h
 		thread/id.cpp
@@ -505,13 +490,13 @@ set_target_properties(yuni-static-core PROPERTIES
 
 # Installation
 install(TARGETS yuni-static-core COMPONENT ${YUNICOMPONENT_CORE}
-	ARCHIVE DESTINATION lib/${YUNI_VERSIONED_INST_PATH})
+	ARCHIVE DESTINATION lib)
 
 # Install Core-related headers
 install(
 	DIRECTORY core job thread io
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni
+	DESTINATION include/yuni
 	FILES_MATCHING
 		PATTERN "*.h"
 		PATTERN "*.hxx"
@@ -526,25 +511,25 @@ install(FILES
 	platform.h
 	yuni.h
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni
+	DESTINATION include/yuni
 )
 
 install(FILES yuni.version
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/ RENAME "yuni.version")
+	DESTINATION include/yuni RENAME "yuni.version")
 
 install(FILES core/string/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/core/string)
+	DESTINATION include/yuni/core/string)
 
 install(FILES core/slist/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/core/slist)
+	DESTINATION include/yuni/core/slist)
 
 install(FILES io/directory/info/iterator.inc.hpp
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/yuni/io/directory/info)
+	DESTINATION include/yuni/io/directory/info)
 
 install(FILES "${YUNI_LIBYUNI_CONFIG_TARGET_INIFILE}"
 	COMPONENT ${YUNICOMPONENT_CORE}
-	DESTINATION include/${YUNI_VERSIONED_INST_PATH}/ RENAME "yuni.config.${YUNI_LIBYUNI_CONFIG_COMPILER}")
+	DESTINATION include/yuni RENAME "yuni.config.${YUNI_LIBYUNI_CONFIG_COMPILER}")

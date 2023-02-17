@@ -26,15 +26,9 @@
 */
 
 #include <sstream>
-
-#include <antares/study.h>
-
 #include "../simulation/sim_structure_probleme_economique.h"
 
 #include "opt_export_structure.h"
-
-#include "../utils/mps_utils.h"
-#include "../utils/filename.h"
 
 ////////////////////////////////////////////////////////////////////
 // Export de la structure des LPs
@@ -65,93 +59,65 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 } // namespace Data
 } // namespace Antares
 
-void OPT_ExportInterco(const Antares::Data::Study& study,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       uint numSpace)
-{
-    // Interco are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
-    {
-        Yuni::Clob Flot;
-        for (int i(0); i < ProblemeHebdo->NombreDInterconnexions; ++i)
-        {
-            Flot.appendFormat("%d %d %d\n",
-                              i,
-                              ProblemeHebdo->PaysOrigineDeLInterconnexion[i],
-                              ProblemeHebdo->PaysExtremiteDeLInterconnexion[i]);
-        }
-        auto filename = getFilenameWithExtension("interco", "txt", numSpace);
-        auto writer = study.resultWriter;
-        writer->addEntryFromBuffer(filename, Flot);
-    }
-}
-
-void OPT_ExportAreaName(const Antares::Data::Study& study,
-                        PROBLEME_HEBDO* ProblemeHebdo,
-                        uint numSpace)
-{
-    // Area name are exported only once for first year
-    if (ProblemeHebdo->firstWeekOfSimulation)
-    {
-        auto filename = getFilenameWithExtension("area", "txt", numSpace);
-        Yuni::Clob Flot;
-        for (uint i = 0; i < study.areas.size(); ++i)
-        {
-            Flot.appendFormat("%s\n", study.areas[i]->name.c_str());
-        }
-        auto writer = study.resultWriter;
-        writer->addEntryFromBuffer(filename, Flot);
-    }
-}
-
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal,
-                             int secondVal,
-                             int ts)
-{
-    if ((int)varname.size() > Var && varname[Var].empty())
-    {
-        std::stringstream buffer;
-        buffer << Var << " ";
-        buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal << " ";
-        buffer << secondVal << " ";
-        buffer << ts << " ";
-        varname[Var] = buffer.str();
-    }
-}
-
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal,
-                             int ts)
-{
-    if ((int)varname.size() > Var && varname[Var].empty())
-    {
-        std::stringstream buffer;
-        buffer << Var << " ";
-        buffer << Antares::Data::Enum::toString(structDict) << " ";
-        buffer << firstVal << " ";
-        buffer << ts << " ";
-        varname[Var] = buffer.str();
-    }
-}
-
-void OPT_ExportVariables(const Antares::Data::Study& study,
-                         const std::vector<std::string>& varname,
-                         const std::string& fileName,
-                         const std::string& fileExtension,
-                         uint numSpace)
+void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
+                       PROBLEME_HEBDO* problemeHebdo)
 {
     Yuni::Clob Flot;
-    auto filename = getFilenameWithExtension(fileName, fileExtension, numSpace);
+    for (int i(0); i < problemeHebdo->NombreDInterconnexions; ++i)
+    {
+        Flot.appendFormat("%d %d %d\n",
+                          i,
+                          problemeHebdo->PaysOrigineDeLInterconnexion[i],
+                          problemeHebdo->PaysExtremiteDeLInterconnexion[i]);
+    }
+    // TODO[FOM] "interco.txt"
+    std::string filename = "interco-1-1.txt";
+    writer->addEntryFromBuffer(filename, Flot);
+}
+
+void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
+                        const Antares::Data::AreaList& areas)
+{
+    // TODO[FOM] "area.txt"
+    std::string filename = "area-1-1.txt";
+    Yuni::Clob Flot;
+    for (uint i = 0; i < areas.size(); ++i)
+    {
+        Flot.appendFormat("%s\n", areas[i]->name.c_str());
+    }
+    writer->addEntryFromBuffer(filename, Flot);
+}
+
+void OPT_Export_add_variable(std::vector<std::string>& varname,
+                             int var,
+                             Antares::Data::Enum::ExportStructDict structDict,
+                             int ts, // TODO remove
+                             int firstVal,
+                             std::optional<int> secondVal)
+{
+    if ((int)varname.size() > var && varname[var].empty())
+    {
+        std::stringstream buffer;
+        buffer << var << " ";
+        buffer << Antares::Data::Enum::toString(structDict) << " ";
+        buffer << firstVal << " ";
+        if (secondVal.has_value())
+        {
+            buffer << secondVal.value() << " ";
+        }
+        buffer << ts << " ";
+        varname[var] = buffer.str();
+    }
+}
+
+void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
+                         const std::vector<std::string>& varname,
+                         const std::string& filename)
+{
+    Yuni::Clob Flot;
     for (auto const& line : varname)
     {
         Flot.appendFormat("%s\n", line.c_str());
     }
-    auto writer = study.resultWriter;
     writer->addEntryFromBuffer(filename, Flot);
 }

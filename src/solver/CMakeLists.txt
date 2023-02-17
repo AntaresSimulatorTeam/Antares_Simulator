@@ -45,7 +45,7 @@ OMESSAGE("  :: application solver")
 
 set(exec_name "antares-${ANTARES_PRG_VERSION}-solver")
 
-add_executable(${exec_name}
+add_executable(antares-solver
 	memory/mem.h
 
 	misc/options.h
@@ -59,9 +59,6 @@ add_executable(${exec_name}
 	misc/system-memory.h
 	misc/system-memory.cpp
 
-	mps/mps_define.h
-	mps/mps_extern_global.h
-	mps/mps_global.c
 	${SRCS}
 	main.cpp
 	application.h application.cpp
@@ -71,7 +68,9 @@ add_executable(${exec_name}
     signal-handling/common.cpp
     signal-handling/linux.cpp
     signal-handling/windows.cpp
-)
+    )
+
+set_target_properties(antares-solver PROPERTIES OUTPUT_NAME ${exec_name})
 
 set(ANTARES_SOLVER_LIBS		
 	libantares-core-calendar
@@ -92,20 +91,20 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libmodel_antares
 	libantares-core)
 
-target_link_libraries(${exec_name}
+target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
 		)
 
-import_std_libs(${exec_name})
-executable_strip(${exec_name})
+import_std_libs(antares-solver)
+executable_strip(antares-solver)
 
-copy_dependency(sirius_solver ${exec_name})
+copy_dependency(sirius_solver antares-solver)
 
 
 
 #TODO : not working inside macro
-install(TARGETS "antares-${ANTARES_PRG_VERSION}-solver" EXPORT antares-solver DESTINATION bin)
+install(TARGETS antares-solver EXPORT antares-solver DESTINATION bin)
 
 INSTALL(EXPORT antares-solver
 	FILE antares-solverConfig.cmake

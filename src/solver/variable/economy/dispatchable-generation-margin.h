@@ -254,11 +254,6 @@ public:
         NextType::hourForEachThermalCluster(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     template<class VCardToFindT>
     inline const double* retrieveHourlyResultsForCurrentYear(unsigned int numSpace) const
     {

@@ -535,23 +535,6 @@ const char* RenewableGenerationModellingToCString(RenewableGenerationModelling r
 */
 RenewableGenerationModelling StringToRenewableGenerationModelling(const AnyString& text);
 
-enum DayAheadReserveManagement
-{
-    daGlobal = 0,
-    daLocal,
-    daReserveUnknown,
-};
-
-/*!
-** \brief Convert a day ahead reserve allocation mode into a text
-*/
-const char* DayAheadReserveManagementModeToCString(DayAheadReserveManagement daReserveMode);
-
-/*!
-** \brief Convert a text into day ahead reserve allocation mode
-*/
-DayAheadReserveManagement StringToDayAheadReserveManagementMode(const AnyString& text);
-
 // Format of results
 enum ResultFormat
 {
@@ -567,8 +550,8 @@ enum ResultFormat
 enum class mpsExportStatus : int
 {
     NO_EXPORT = 0,
-    EXPORT_FIRST_OPIM = 1,
-    EXPORT_SECOND_OPIM = 2,
+    EXPORT_FIRST_OPTIM = 1,
+    EXPORT_SECOND_OPTIM = 2,
     EXPORT_BOTH_OPTIMS = 3,
     UNKNOWN_EXPORT = 4
 };
@@ -593,11 +576,7 @@ class Sets;
 } // namespace Data
 } // namespace Antares
 
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
+namespace Antares::Data::AdequacyPatch
 {
 /*!
 ** \brief Types of Adequacy patch mode
@@ -615,21 +594,32 @@ enum AdequacyPatchMode
 /*!
 ** \brief Setting Link Capacity (NTC) for Adequacy patch first step
 */
-enum LinkCapacityForAdequacyPatchFirstStep
+enum class NtcSetToZeroStatus_AdqPatchStep1
 {
     //! Leave NTC local values
     leaveLocalValues = 0,
     //! Set NTC to zero
     setToZero,
     //! set only origine->extremity NTC to zero
-    setOrigineExtremityToZero,
+    setOriginExtremityToZero,
     //! set only extremity->origine NTC to zero
-    setExtremityOrigineToZero
+    setExtremityOriginToZero
 
 }; // enum NTC
-} // namespace AdequacyPatch
-} // namespace Data
-} // namespace Antares
+
+/*!
+** \brief Types of Price Taking Order (PTO) for Adequacy Patch
+*/
+enum class AdqPatchPTO
+{
+    //! PTO is DENS
+    isDens = 0,
+    //! PTO is Load
+    isLoad
+
+}; // enum AdqPatchPTO
+
+} // namespace Antares::Data::AdequacyPatch
 
 namespace Benchmarking
 {

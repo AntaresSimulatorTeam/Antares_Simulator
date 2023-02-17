@@ -37,7 +37,7 @@
 #include "spx_constantes_externes.h"
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
-  PROBLEME_HEBDO* ProblemeHebdo,
+  PROBLEME_HEBDO* problemeHebdo,
   char Simulation)
 {
     int Pays;
@@ -50,14 +50,14 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     PALIERS_THERMIQUES* PaliersThermiquesDuPays;
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
         for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
         {
@@ -72,7 +72,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                     continue;
                 }
                 CorrespondanceVarNativesVarOptim
-                  = ProblemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
 
                 CorrespondanceVarNativesVarOptim
                   ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier]

@@ -70,21 +70,6 @@ wxMenuBar* ApplWnd::createMenu()
     return ret;
 }
 
-wxMenu* ApplWnd::createPopupMenuOperatorsOnGrid()
-{
-    auto* menu = new wxMenu();
-
-    // Wizard
-    Menu::CreateItem(menu, mnIDPopupOpNone, wxT("None"), "images/16x16/empty.png");
-    menu->AppendSeparator();
-    Menu::CreateItem(menu, mnIDPopupOpAverage, wxT("Average "));
-    Menu::CreateItem(menu, mnIDPopupOpCellCount, wxT("Cell count "));
-    Menu::CreateItem(menu, mnIDPopupOpMinimum, wxT("Minimum "));
-    Menu::CreateItem(menu, mnIDPopupOpMaximum, wxT("Maximum "));
-    Menu::CreateItem(menu, mnIDPopupOpSum, wxT("Sum "));
-    return menu;
-}
-
 wxMenu* ApplWnd::createMenuFiles()
 {
     delete pMenuFile;
@@ -462,6 +447,23 @@ wxMenu* ApplWnd::createMenuOptions()
                           wxT("Advanced parameters"),
                           "images/16x16/empty.png",
                           wxT("Set advanced parameters"));
+
+    delete pMenuAdequacyPatch;
+    pMenuAdequacyPatch
+      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
+
+    wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchOptions,
+                     wxT("Options"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Options"));
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchAreas,
+                     wxT("Areas"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Areas"));
+
     it->Enable(false);
 
     return pMenuOptions;

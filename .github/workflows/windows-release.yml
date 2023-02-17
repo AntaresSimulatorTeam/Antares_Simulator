@@ -29,20 +29,20 @@ jobs:
       # Indicates the location of the vcpkg as a Git submodule of the project repository.
       VCPKG_ROOT: ${{ github.workspace }}/vcpkg
       ORTOOLS_DIR: ${{ github.workspace }}/or-tools
-      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte1.6/ortools_cxx_windows-latest_static_sirius.zip"
+      ORTOOLS_URL: "https://github.com/rte-france/or-tools/releases/download/v9.2-rte2.1/ortools_cxx_windows-latest_static_sirius.zip"
 
     steps:
     - uses: actions/checkout@v3
 
     - name: Get release
       id: get_release
-      uses: bruceadams/get-release@v1.2.0
+      uses: bruceadams/get-release@v1.3.2
 
 
     - name: Pre-requisites
       shell: cmd
       run: |
-          choco install wget unzip --no-progress
+          choco install wget unzip zip --no-progress
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -59,7 +59,7 @@ jobs:
         # The key includes: hash of the vcpkg.json file, the hash of the vcpkg Git commit id, and the used vcpkg's triplet. The vcpkg's commit id would suffice, but computing an hash out it does not harm.
         # Note: given a key, the cache content is immutable. If a cache entry has been created improperly, in order the recreate the right content the key must be changed as well, and it must be brand new (i.e. not existing already).
         key: |
-          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}-invalidate
+          ${{ hashFiles( 'vcpkg_manifest/vcpkg.json' ) }}-${{ hashFiles( '.git/modules/vcpkg/HEAD' )}}-${{ matrix.triplet }}
 
     - name: Setup Python 3.11
       uses: actions/setup-python@v4
@@ -149,6 +149,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run tests for adequacy patch (CSR)
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ matrix.test-platform }}
+
     - name: Run medium-tests
       uses: ./.github/workflows/run-tests
       with:
@@ -185,17 +192,11 @@ jobs:
            export ZIP_NAME=$(ls *.zip)
            echo "ZIP_NAME=$ZIP_NAME" >> $GITHUB_ENV
 
-    - name: Upload .zip installer
-      uses: actions/upload-release-asset@v1.0.2
-      with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.ZIP_NAME}}
-        asset_name: ${{env.ZIP_NAME}}
-        asset_content_type: application/octet-stream
-
-    - name: Remove zip to free some disk space
+    - name: Solver archive creation
       shell: bash
-      run: rm _build/${{env.ZIP_NAME}}
+      run: |
+           cd _build
+           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash
@@ -214,10 +215,11 @@ jobs:
         name: NSISOutput.log
         path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
 
-    - name: Upload NSIS installer
-      uses: actions/upload-release-asset@v1.0.2
+    - name: Upload release assets
+      uses: softprops/action-gh-release@v0.1.15
+      if: startsWith(github.ref, 'refs/tags/')
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: _build/${{env.NSIS_NAME}}
-        asset_name: ${{env.NSIS_NAME}}
-        asset_content_type: application/octet-stream
+        files: |
+          _build/${{env.NSIS_NAME}}
+          _build/${{env.ZIP_NAME}}
+          _build/solver.zip

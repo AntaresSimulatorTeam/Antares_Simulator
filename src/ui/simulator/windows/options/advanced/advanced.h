@@ -115,10 +115,6 @@ public:
     void onSelectRGMaggregated(wxCommandEvent& evt);
     void onSelectRGMrenewableClusters(wxCommandEvent& evt);
 
-    void onDAReserveAllocationMode(Component::Button&, wxMenu& menu, void*);
-    void onSelectDAGlobal(wxCommandEvent& evt);
-    void onSelectDALocal(wxCommandEvent& evt);
-
 private:
     Component::Button* pBtnNumericQualityLoad;
     Component::Button* pBtnNumericQualityWind;
@@ -128,11 +124,9 @@ private:
     Component::Button* pBtnHydroHeuristicPolicy;
     Component::Button* pBtnHydroPricing;
     Component::Button* pBtnSheddingPolicy;
-    Component::Button* pBtnMultiNodalMarginalPrices;
     Component::Button* pBtnUnitCommitment;
     Component::Button* pBtnRenewableGenModelling;
     Component::Button* pBtnNumberOfCores;
-    Component::Button* pBtnDARreserveManagement;
     wxTextCtrl* pEditSeeds[Data::seedMax];
     // Only used for menus
     Data::TimeSeries pCurrentTS;

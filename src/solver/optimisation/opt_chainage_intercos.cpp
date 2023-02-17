@@ -32,7 +32,7 @@
 
 #include "opt_fonctions.h"
 
-void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* problemeHebdo)
 {
     int Pays;
     int Interco;
@@ -40,23 +40,23 @@ void OPT_ChainagesDesIntercoPartantDUnNoeud(PROBLEME_HEBDO* ProblemeHebdo)
     int NoeudOrigine;
     int NoeudExtremite;
 
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
-        ProblemeHebdo->IndexDebutIntercoOrigine[Pays] = -1;
-        ProblemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
+        problemeHebdo->IndexDebutIntercoOrigine[Pays] = -1;
+        problemeHebdo->IndexDebutIntercoExtremite[Pays] = -1;
     }
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
     {
-        NoeudOrigine = ProblemeHebdo->PaysOrigineDeLInterconnexion[Interco];
-        Index = ProblemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
-        ProblemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine] = Interco;
-        ProblemeHebdo->IndexSuivantIntercoOrigine[Interco] = Index;
+        NoeudOrigine = problemeHebdo->PaysOrigineDeLInterconnexion[Interco];
+        Index = problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine];
+        problemeHebdo->IndexDebutIntercoOrigine[NoeudOrigine] = Interco;
+        problemeHebdo->IndexSuivantIntercoOrigine[Interco] = Index;
 
-        NoeudExtremite = ProblemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
-        Index = ProblemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
-        ProblemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite] = Interco;
-        ProblemeHebdo->IndexSuivantIntercoExtremite[Interco] = Index;
+        NoeudExtremite = problemeHebdo->PaysExtremiteDeLInterconnexion[Interco];
+        Index = problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite];
+        problemeHebdo->IndexDebutIntercoExtremite[NoeudExtremite] = Interco;
+        problemeHebdo->IndexSuivantIntercoExtremite[Interco] = Index;
     }
 
     return;
