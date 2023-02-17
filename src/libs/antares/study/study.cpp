@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -1189,7 +1189,7 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         // Output - Areas
         ticksPerOutput += (int)areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime->interconnectionsCount;
+        ticksPerOutput += (int)runtime->interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
 

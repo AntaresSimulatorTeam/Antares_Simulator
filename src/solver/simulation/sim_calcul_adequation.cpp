@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -64,7 +64,7 @@ void SIM_AllocationProblemeHoraireAdequation()
     }
 
     ProblemeHoraireAdequation.NombreDElementsChainage
-      = 2 * study.runtime->interconnectionsCount + 4 * study.areas.size();
+      = 2 * study.runtime->interconnectionsCount() + 4 * study.areas.size();
     ProblemeHoraireAdequation.IndicesDesVoisins
       = (long*)MemAlloc(ProblemeHoraireAdequation.NombreDElementsChainage * sizeof(long));
     ProblemeHoraireAdequation.PointeurSurIndices
@@ -141,7 +141,7 @@ void SIM_InitialisationChainagePourAdequation()
            0,
            ProblemeHoraireAdequation.NombreDElementsChainage * sizeof(double));
 
-    for (i = 0; i < (long)study.runtime->interconnectionsCount; i++)
+    for (i = 0; i < (long)study.runtime->interconnectionsCount(); i++)
     {
         lnk = study.runtime->areaLink[i];
         assert(lnk != NULL);

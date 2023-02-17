@@ -67,5 +67,5 @@ set_target_properties(yuni-static-graphics-opengl PROPERTIES
 		ARCHIVE_OUTPUT_DIRECTORY "${YUNI_OUTPUT_DIRECTORY}/lib")
 
 # Installation
-install(TARGETS yuni-static-graphics-opengl ARCHIVE DESTINATION lib/${YUNI_VERSIONED_INST_PATH})
+install(TARGETS yuni-static-graphics-opengl ARCHIVE DESTINATION lib)
 

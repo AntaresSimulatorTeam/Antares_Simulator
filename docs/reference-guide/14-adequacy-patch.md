@@ -13,7 +13,7 @@ It should be noted that, in the current implementation of the patch within Antar
 
 3. The implemented solution does not yet consider the feature in EUPHEMIA, related to ‘minimization of curtailment’ in the primal problem which includes an extra penalty term directly in the global objective function in EUPHEMIA by multiplying the maximum curtailment ratio with a large M pre-factor in the total welfare.
 
-## Local matching rule
+## Local matching rule (Antares Simulator 8.3)
 
 The rule implemented is called the « Local Matching » rule:
 
@@ -56,7 +56,7 @@ During the second iteration, all link capacities between physical nodes are set 
 - ENS $\le$ DENS   
  (for all physical areas inside the adequacy patch).
 
-## Curtailment sharing rule
+## Curtailment sharing rule  (Antares Simulator 8.5)
 
 The second implemented rule is called the « Curtailment Sharing » rule (henceforth CSR).
 
@@ -160,7 +160,7 @@ The value of “net_position (node A)” is deduced from “flow” variable as 
 
 - **Constraint induced by Local matching rule:** 
 
-  - ENS (node A) $\le$ DENS_new(node A)  
+  - ENS (node A) $\le DENS_{new}(node~A)$  
  
 - **Positivity constraints:** 
 
@@ -183,25 +183,26 @@ _**Notes**_
 - _Spillage results after curtailment sharing rule quadratic optimization are presented in the separate column inside Antares output, titled “SPIL. ENRG. CSR” so the user has access to the spillage results both prior to and after CSR optimization._ 
 
 - _In order to avoid solver issues, lower and upper boundaries of the ENS and Spillage variables can be relaxed using GUI option “Relax CSR variable boundaries”. Following relaxations can be imposed:_ 
-   - -10$^-$$^m$ $\le$ ENS (node A) $\le$ DENS_new (node A) + 10$^-$$^m$ 
-   - -10$^-$$^m$ $\le$ spillage (node A) $\le$ + infinity   
-      Where _m_ is an integer defined by the user. 
+   - $-10^{-m} \le ENS(node~A) \le DENS_{new} (node~A) + 10^{-m}$ 
+   - $-10^{-m} \le spillage(node~A) \le + \infty$
+  
+      Where $m$ is an integer defined by the user. 
 
 ### Objective function
 
-- Minimize [$\sum$(ENS$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct) + $\sum$(hurdle_cost_indirect x flow_indirect)] 
+- Minimize $\left[ \sum\frac{ENS^2}{PTO} + \sum \frac{1}{M} \left( hurdle  cost  direct \times flow  direct \right) + \sum \frac{1}{M} \left( hurdle  cost  indirect \times flow_ indirect \right) \right]$
 
-The 2 latest terms are introduced to minimize loop flows in the considering domain.   
+The 2 latest terms are introduced to minimize loop flows in the considering domain, and $M$ is the highest curtailment cost between a links's origin and destination nodes, used to adapt the scale of hurdle costs to this new objective (in practice, those tend to be the same for all nodes, typically 3000€/MW or 10000€/MW).   
 In order to assess the quality of the CSR solution additional verification can be imposed by activating GUI option “Check CSR cost function value prior and after CSR optimization”. Values of the objective function prior to and after quadratic optimization will be calculated and compared. If the objective function value after the quadratic optimization has decreased, the new CSR solution will be accepted and presented in the Antares output. However, if after quadratic optimization the objective function value has increased (or stayed the same), LMR solution will be adopted as the final one and warning will be logged out with the appropriate information (year, hour cost prior to quad optimization, cost after quadratic optimization). 
 
-- QUAD$_0$ = [$\sum$(ENS_init$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct_init) + $\sum$(hurdle_cost_indirect x flow_indirect_init)] 
-- QUAD$_1$ = [$\sum$(ENS_final$^2$/PTO) + $\sum$(hurdle_cost_direct x flow_direct_final) + $\sum$(hurdle_cost_indirect x flow_indirect_final)] 
+- $QUAD  0 = \left[ \sum \frac{ENS  init^2}{PTO} + \sum \frac{1}{M} \left( hurdle  cost  direct \times flow  direct  init \right) + \sum \frac{1}{M} \left( hurdle  cost  indirect \times flow  indirect  init \right) \right]$
+- $QUAD  1 = \left[ \sum \frac{ENS  final^2}{PTO} + \sum \frac{1}{M} \left( hurdle  cost  direct \times flow  direct  final \right) + \sum \frac{1}{M} \left( hurdle  cost  indirect \times flow  indirect  final \right) \right]$ 
  
 If:
 
-- QUAD$_0$ $\le$ QUAD$_1$   
+- $QUAD  0 \le QUAD  1$   
 (CSR does not improve QUAD) then the “_init” solution is kept and the CSR solution is hence disregarded.   
-- QUAD$_0$ > QUAD$_1$   
+- $QUAD  0 > QUAD  1$   
 (CSR does improve QUAD) then the “CSR” solution is kept as final result updating the “_init” solution as stated above. 
 
 ### Post-optimization process

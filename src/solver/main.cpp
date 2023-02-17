@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -63,7 +63,7 @@ using namespace Yuni;
 #define SEP Yuni::IO::Separator
 
 const char* const GPL_ANNOUNCEMENT
-  = "Copyright 2007-2018 RTE  - Authors: The Antares_Simulator Team \n"
+  = "Copyright 2007-2023 RTE  - Authors: The Antares_Simulator Team \n"
     "\n"
     "Antares_Simulator is free software : you can redistribute it and / or modify\n"
     "it under the terms of the GNU General Public License as published by\n"
