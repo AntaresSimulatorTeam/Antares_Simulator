@@ -47,37 +47,28 @@ using namespace Antares;
 
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_SPX* ProbSpx;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    int NbIntervalles;
-    int NumIntervalle;
     int NombreDePasDeTempsPourUneOptimisation;
-    MPSolver* solver;
-
     if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
-    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    }
     else
-    {
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
-    }
-    NbIntervalles
-      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    int nbIntervalles = (int)(problemeHebdo->NombreDePasDeTemps
+        / NombreDePasDeTempsPourUneOptimisation);
+
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     if (ProblemeAResoudre)
     {
-        auto& study = *Data::Study::Current::Get();
+        const auto& study = *Data::Study::Current::Get();
         bool ortoolsUsed = study.parameters.ortoolsUsed;
 
         if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
         {
-            for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
+            for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
             {
-                ProbSpx
-                  = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
-                solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+                PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)
+                    (ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+                MPSolver* solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
 
                 if (ortoolsUsed && solver != NULL)
                 {
