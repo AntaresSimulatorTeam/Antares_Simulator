@@ -14,6 +14,23 @@ void LocalMatching::reset()
     setToZeroOutsideOutsideLinks = true;
 }
 
+void LocalMatching::updateFromKeyValue(const String& key, const String& value)
+{
+    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
+        value.to<bool>(setToZeroOutsideInsideLinks);
+    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
+        value.to<bool>(setToZeroOutsideOutsideLinks);
+
+    // Returns void : we wait until CurtailmentSharing::updateFromKeyValue completes.
+    // If an adequacy patch parameter is not correctly read, then CurtailmentSharing::updateFromKeyValue
+    // will return false
+}
+
+void LocalMatching::addProperties(IniFile::Section* section) const
+{
+    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step", setToZeroOutsideInsideLinks);
+    section->add("set-to-null-ntc-between-physical-out-for-first-step", setToZeroOutsideOutsideLinks);
+}
 
 // -----------------------
 // Curtailment sharing
@@ -32,29 +49,6 @@ void CurtailmentSharing::resetThresholds()
     thresholdRun = defaultThresholdToRunCurtailmentSharing;
     thresholdDisplayViolations = defaultThresholdDisplayLocalMatchingRuleViolations;
     thresholdVarBoundsRelaxation = defaultValueThresholdVarBoundsRelaxation;
-}
-
-
-// ------------------------
-// Adq patch parameters
-// ------------------------
-void AdqPatchParams::reset()
-{
-    enabled = false;
-
-    localMatching.reset();
-    curtailmentSharing.reset();
-}
-
-void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
-{
-    if (!enabled)
-    {
-        out.emplace_back("DENS");
-        out.emplace_back("LMR VIOL.");
-        out.emplace_back("SPIL. ENRG. CSR");
-        out.emplace_back("DTG MRG CSR");
-    }
 }
 
 static bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPatch::AdqPatchPTO& PTO_as_enum)
@@ -78,6 +72,28 @@ static bool StringToPriceTakingOrder(const AnyString& PTO_as_string, AdequacyPat
     return false;
 }
 
+bool CurtailmentSharing::updateFromKeyValue(const String& key, const String& value)
+{
+    // Price taking order
+    if (key == "price-taking-order")
+        return StringToPriceTakingOrder(value, priceTakingOrder);
+    // Include Hurdle Cost
+    if (key == "include-hurdle-cost-csr")
+        return value.to<bool>(includeHurdleCost);
+    // Check CSR cost function prior and after CSR
+    if (key == "check-csr-cost-function")
+        return value.to<bool>(checkCsrCostFunction);
+    // Thresholds
+    if (key == "threshold-initiate-curtailment-sharing-rule")
+        return value.to<double>(thresholdRun);
+    if (key == "threshold-display-local-matching-rule-violations")
+        return value.to<double>(thresholdDisplayViolations);
+    if (key == "threshold-csr-variable-bounds-relaxation")
+        return value.to<int>(thresholdVarBoundsRelaxation);
+
+    return false;
+}
+
 const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
 {
     switch (pto)
@@ -91,54 +107,57 @@ const char* PriceTakingOrderToString(AdequacyPatch::AdqPatchPTO pto)
     }
 }
 
+void CurtailmentSharing::addProperties(IniFile::Section* section) const
+{
+    section->add("price-taking-order", PriceTakingOrderToString(priceTakingOrder));
+    section->add("include-hurdle-cost-csr", includeHurdleCost);
+    section->add("check-csr-cost-function", checkCsrCostFunction);
+
+    // Thresholds
+    section->add("threshold-initiate-curtailment-sharing-rule", thresholdRun);
+    section->add("threshold-display-local-matching-rule-violations", thresholdDisplayViolations);
+    section->add("threshold-csr-variable-bounds-relaxation", thresholdVarBoundsRelaxation);
+}
+
+// ------------------------
+// Adq patch parameters
+// ------------------------
+void AdqPatchParams::reset()
+{
+    enabled = false;
+
+    localMatching.reset();
+    curtailmentSharing.reset();
+}
+
+void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
+{
+    if (!enabled)
+    {
+        out.emplace_back("DENS");
+        out.emplace_back("LMR VIOL.");
+        out.emplace_back("SPIL. ENRG. CSR");
+        out.emplace_back("DTG MRG CSR");
+    }
+}
+
 
 bool AdqPatchParams::updateFromKeyValue(const String& key, const String& value)
 {
     if (key == "include-adq-patch")
         return value.to<bool>(enabled);
-    if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-        return value.to<bool>(localMatching.setToZeroOutsideInsideLinks);
-    if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-        return value.to<bool>(localMatching.setToZeroOutsideOutsideLinks);
-    // Price taking order
-    if (key == "price-taking-order")
-        return StringToPriceTakingOrder(value, curtailmentSharing.priceTakingOrder);
-    // Include Hurdle Cost
-    if (key == "include-hurdle-cost-csr")
-        return value.to<bool>(curtailmentSharing.includeHurdleCost);
-    // Check CSR cost function prior and after CSR
-    if (key == "check-csr-cost-function")
-        return value.to<bool>(curtailmentSharing.checkCsrCostFunction);
-    // Thresholds
-    if (key == "threshold-initiate-curtailment-sharing-rule")
-        return value.to<double>(curtailmentSharing.thresholdRun);
-    if (key == "threshold-display-local-matching-rule-violations")
-        return value.to<double>(curtailmentSharing.thresholdDisplayViolations);
-    if (key == "threshold-csr-variable-bounds-relaxation")
-        return value.to<int>(curtailmentSharing.thresholdVarBoundsRelaxation);
 
-    return false;
+    localMatching.updateFromKeyValue(key, value);
+    return curtailmentSharing.updateFromKeyValue(key, value);;
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const
 {
     auto* section = ini.addSection("adequacy patch");
     section->add("include-adq-patch", enabled);
-    section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step",
-        localMatching.setToZeroOutsideInsideLinks);
-    section->add("set-to-null-ntc-between-physical-out-for-first-step",
-        localMatching.setToZeroOutsideOutsideLinks);
-    section->add("price-taking-order",
-        PriceTakingOrderToString(curtailmentSharing.priceTakingOrder));
-    section->add("include-hurdle-cost-csr", curtailmentSharing.includeHurdleCost);
-    section->add("check-csr-cost-function", curtailmentSharing.checkCsrCostFunction);
-    // Thresholds
-    section->add("threshold-initiate-curtailment-sharing-rule",
-        curtailmentSharing.thresholdRun);
-    section->add("threshold-display-local-matching-rule-violations",
-        curtailmentSharing.thresholdDisplayViolations);
-    section->add("threshold-csr-variable-bounds-relaxation",
-        curtailmentSharing.thresholdVarBoundsRelaxation);
+
+    localMatching.addProperties(section);
+    curtailmentSharing.addProperties(section);
 }
 
 
