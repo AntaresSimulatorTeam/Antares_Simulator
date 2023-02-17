@@ -94,8 +94,8 @@ bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
     return true;
 }
 
-void Study::parameterFiller(const StudyLoadOptions& options){
-
+void Study::parameterFiller(const StudyLoadOptions& options)
+{
     if (usedByTheSolver and not options.prepareOutput)
     {
         parameters.noOutput = true;
@@ -153,13 +153,10 @@ void Study::parameterFiller(const StudyLoadOptions& options){
 
     // Reducing memory footprint
     reduceMemoryUsage();
-
-
 }
 
 bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
-
     // Check if the path is correct
     if (!IO::Directory::Exists(path))
     {
@@ -179,10 +176,10 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     this->bufferLoadingTS.reserve(2096);
     assert(this->bufferLoadingTS.capacity() > 0);
 
-    if(not internalLoadIni(path, options)){
+    if (not internalLoadIni(path, options))
+    {
         return false;
     }
-
 
     // -------------------------
     // Logical cores
