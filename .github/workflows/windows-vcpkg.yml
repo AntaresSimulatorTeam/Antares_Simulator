@@ -180,7 +180,7 @@ jobs:
            rm -rf src/tests/resources/NonRegTests
            cd _build
            mkdir -p ui\simulator\resources\help\
-           touch antares-general-reference-guide.pdf system-map-editor-reference-guide.pdfi antares-examples-library.pdf
+           touch antares-general-reference-guide.pdf system-map-editor-reference-guide.pdf antares-examples-library.pdf
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
