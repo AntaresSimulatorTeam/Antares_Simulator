@@ -157,6 +157,9 @@ void Study::parameterFiller(const StudyLoadOptions& options)
 
 bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
+    // IO statistics
+    Statistics::LogsDumper statisticsDumper;
+
     // Check if the path is correct
     if (!IO::Directory::Exists(path))
     {
