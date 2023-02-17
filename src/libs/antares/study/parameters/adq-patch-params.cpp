@@ -14,16 +14,13 @@ void LocalMatching::reset()
     setToZeroOutsideOutsideLinks = true;
 }
 
-void LocalMatching::updateFromKeyValue(const String& key, const String& value)
+bool LocalMatching::updateFromKeyValue(const String& key, const String& value)
 {
     if (key == "set-to-null-ntc-from-physical-out-to-physical-in-for-first-step")
-        value.to<bool>(setToZeroOutsideInsideLinks);
+        return value.to<bool>(setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
-        value.to<bool>(setToZeroOutsideOutsideLinks);
-
-    // Returns void : we wait until CurtailmentSharing::updateFromKeyValue completes.
-    // If an adequacy patch parameter is not correctly read, then CurtailmentSharing::updateFromKeyValue
-    // will return false
+        return value.to<bool>(setToZeroOutsideOutsideLinks);
+    return false;
 }
 
 void LocalMatching::addProperties(IniFile::Section* section) const
@@ -147,8 +144,7 @@ bool AdqPatchParams::updateFromKeyValue(const String& key, const String& value)
     if (key == "include-adq-patch")
         return value.to<bool>(enabled);
 
-    localMatching.updateFromKeyValue(key, value);
-    return curtailmentSharing.updateFromKeyValue(key, value);;
+    return curtailmentSharing.updateFromKeyValue(key, value) || localMatching.updateFromKeyValue(key, value);
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const

@@ -74,7 +74,7 @@ struct LocalMatching
         ** \brief Reset to default values related to local matching
         */
     void reset();
-    void updateFromKeyValue(const String& key, const String& value);
+    bool updateFromKeyValue(const String& key, const String& value);
     void addProperties(IniFile::Section* section) const;
 
 };
