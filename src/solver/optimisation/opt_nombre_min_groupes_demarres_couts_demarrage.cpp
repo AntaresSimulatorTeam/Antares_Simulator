@@ -206,10 +206,10 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                     NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = (int)ceil(X);
                 }
 
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
+                if (problemeHebdo->OptimisationAvecVariablesEntieres == NON_ANTARES)
                 {
                     OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
-                      ProblemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
+                      problemeHebdo, NombreMinDeGroupesEnMarcheDuPalierThermique, Pays, Index);
 
                     for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
                     {
@@ -227,7 +227,7 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
                     }
                 }
                 else
-                { 
+                {
                     for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
                     {
                         NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]

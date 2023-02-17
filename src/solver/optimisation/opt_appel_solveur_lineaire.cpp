@@ -106,13 +106,13 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                                                    ProblemeAResoudre->VariablesEntieres,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes,
-                                                   ProblemeAResoudre->NumeroDOptimisation);
-    PremierPassage = OUI_ANTARES;
+                                                   optimizationNumber);
+    char PremierPassage = OUI_ANTARES;
 
     PROBLEMES_SIMPLEXE* ProblemesSpx;
-    if (Probleme.NumeroOptimisation == 1)
+    if (optimizationNumber == 1)
         ProblemesSpx = ProblemeAResoudre->ProblemesSpx1;
-    else if (Probleme.NumeroOptimisation == 2)
+    else if (optimizationNumber == 2)
         ProblemesSpx = ProblemeAResoudre->ProblemesSpx2;
 
     PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)(ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
@@ -243,7 +243,12 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS, problemeHebdo->exportMPSOnError, optimizationNumber, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        &Probleme,
+                                        ortoolsUsed,
+                                        solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
@@ -313,7 +318,7 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution succeeded";
         }
 
-        double *pt;
+        double* pt;
         double CoutOpt = 0.0;
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)

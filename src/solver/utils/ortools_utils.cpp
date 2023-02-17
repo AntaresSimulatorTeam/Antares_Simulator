@@ -105,23 +105,6 @@ static void transferMatrix(const MPSolver* solver,
     }
 }
 
-static void setDefaultParameters(MPSolver* solver)
-{
-    if (!solver)
-        return;
-
-    switch (solver->ProblemType())
-    {
-    case MPSolver::XPRESS_LINEAR_PROGRAMMING:
-    case MPSolver::XPRESS_MIXED_INTEGER_PROGRAMMING:
-        solver->SetSolverSpecificParametersAsString(XPRESS_PARAMS);
-        break;
-    // Add solver-specific options here
-    default:
-        break;
-    }
-}
-
 static bool solverSupportsWarmStart(const MPSolver* solver)
 {
     if (!solver)
@@ -148,15 +131,6 @@ MPSolver* convert_to_MPSolver(
     // Create the MPSolver
     MPSolver* solver = MPSolverFactory(problemeSimplexe, study->parameters.ortoolsSolver);
 
-    if (study.parameters.ortoolsParamsString.empty())
-    {
-        setDefaultParameters(solver);
-    }
-    else
-    {
-        solver->SetSolverSpecificParametersAsString(study.parameters.ortoolsParamsString);
-    }
-
     // Create the variables and set objective cost.
     transferVariables(solver,
                       problemeSimplexe->Xmin,
@@ -179,9 +153,6 @@ MPSolver* convert_to_MPSolver(
                    problemeSimplexe->IndicesColonnes,
                    problemeSimplexe->CoefficientsDeLaMatriceDesContraintes,
                    problemeSimplexe->NombreDeContraintes);
-
-    if (study.parameters.ortoolsVerbosityOn)
-        solver->EnableOutput();
 
     return solver;
 }

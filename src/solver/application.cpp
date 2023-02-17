@@ -44,7 +44,7 @@ void checkStudyVersion(const AnyString& optStudyFolder)
 // avec " ortools-solver != Sirius "
 void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
                        bool ortoolsUsed,
-                       Antares::Data::OrtoolsSolver ortoolsSolverUsed)
+                       const std::string& solverName)
 {
     using namespace Antares::Data;
     if (ucMode == UnitCommitmentMode::ucMILP)
@@ -53,7 +53,7 @@ void checkOrtoolsUsage(Antares::Data::UnitCommitmentMode ucMode,
         {
             throw Error::IncompatibleMILPWithoutOrtools();
         }
-        else if (ortoolsSolverUsed == OrtoolsSolver::sirius)
+        else if (solverName == "sirius")
         {
             throw Error::IncompatibleMILPOrtoolsSolver();
         }
@@ -308,7 +308,7 @@ void Application::prepare(int argc, char* argv[])
     // Some more checks require the existence of pParameters, hence of a study.
     // Their execution is delayed up to this point.
     checkOrtoolsUsage(
-      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsEnumUsed);
+      pParameters->unitCommitment.ucMode, pParameters->ortoolsUsed, pParameters->ortoolsSolver);
 
     checkSimplexRangeHydroPricing(pParameters->simplexOptimizationRange,
                                   pParameters->hydroPricing.hpMode);

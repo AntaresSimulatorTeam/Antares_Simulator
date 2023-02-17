@@ -205,6 +205,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     NbIntervalles
       = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
 
+    // TODO[FOM] refactor
     ProblemeAResoudre->ProblemesSpx1 = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
     ProblemeAResoudre->ProblemesSpx1->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
     for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)

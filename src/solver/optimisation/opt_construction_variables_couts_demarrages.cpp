@@ -79,7 +79,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                if (problemeHebdo->OptimisationAvecVariablesEntieres)
                     ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
@@ -89,7 +89,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                if (problemeHebdo->OptimisationAvecVariablesEntieres)
                     ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
@@ -98,7 +98,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                if (problemeHebdo->OptimisationAvecVariablesEntieres)
                     ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
 
@@ -112,7 +112,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 #endif
-                if (ProblemeHebdo->OptimisationAvecVariablesEntieres)
+                if (problemeHebdo->OptimisationAvecVariablesEntieres)
                     ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
                 NombreDeVariables++;
             }
