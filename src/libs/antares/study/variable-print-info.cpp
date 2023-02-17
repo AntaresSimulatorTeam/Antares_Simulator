@@ -40,10 +40,9 @@ namespace Data
 // ============================================================
 // One variable print information
 // ============================================================
-VariablePrintInfo::VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl) :
+VariablePrintInfo::VariablePrintInfo(AnyString vname, uint dataLvl, uint fileLvl) :
  varname(""),
  to_be_printed(true),
- maxNumberColumns(maxNbCols),
  dataLevel(dataLvl),
  fileLevel(fileLvl)
 {
@@ -64,7 +63,12 @@ bool VariablePrintInfo::isPrinted()
 }
 uint VariablePrintInfo::getMaxColumnsCount()
 {
-    return maxNumberColumns;
+    return maxNumberColumns_;
+}
+
+void VariablePrintInfo::setMaxColumns(uint maxColumnsNumber)
+{
+    maxNumberColumns_ = std::max(maxColumnsNumber, maxNumberColumns_);
 }
 
 // ============================================================
@@ -76,11 +80,10 @@ variablePrintInfoCollector::variablePrintInfoCollector(AllVariablesPrintInfo* al
 }
 
 void variablePrintInfoCollector::add(const AnyString& name,
-                                     uint nbGlobalResults,
                                      uint dataLevel,
                                      uint fileLevel)
 {
-    allvarsinfo->add(new VariablePrintInfo(name, nbGlobalResults, dataLevel, fileLevel));
+    allvarsinfo->add(new VariablePrintInfo(name, dataLevel, fileLevel));
 }
 
 // ============================================================
@@ -147,6 +150,14 @@ bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus
     return false;
 }
 
+void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
+{
+    auto has_name = [&](VariablePrintInfo* v) { return v->name() == varname; };
+    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_name);
+    if (it != allVarsPrintInfo.end())
+        return (*it)->setMaxColumns(maxColumnsNumber);
+}
+
 void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
                                                  const std::vector<std::string>& excluded_vars)
 {
@@ -162,9 +173,6 @@ void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
         if (not res)
             logs.info() << "Variable " << varname << " not found. Could not remove it";
     }
-
-    // Computing the max number columns a report of any kind can contain.
-    computeMaxColumnsCountInReports();
 
     // Counting zonal and link output selected variables
     countSelectedAreaVars();
@@ -195,37 +203,37 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         Among all reports a study can create, which is the one that contains the largest
         number of columns and especially what is this number ?
         If there are some unselected variables, the previous number is reduced.
-        This number is a rough over-estimation, not the exact maximum number a report can
-        contain.
+        Note that synthesis reports always contain more columns than year by year reports.
+        So the computed max number of columns is actually the max number of columns in a synthesis report.
     */
 
-    uint CFileLevel = 1;
-    uint CDataLevel = 1;
-
     // Looping over all kinds of data levels (area report, link reports, districts reports, thermal
-    // reports,...) and file levels (values reports, years ids reports, details reports, ...) the
-    // code can produce. For one particular kind of report, looping over (selected) output variables
+    // reports,...) and for a given data level, looping over file levels 
+    // (values reports, years ids reports, details reports, ...) the
+    // code can produce. 
+    // For one particular kind of report, looping over (selected) output variables
     // it contains, and incrementing a counter with as many columns as the current variable can take
     // up at most in a report.
-    while (CDataLevel <= Category::maxDataLevel && CFileLevel <= Category::maxFileLevel)
+
+    for (uint CDataLevel = 1; CDataLevel <= Category::maxDataLevel; CDataLevel *= 2)
     {
-        uint currentColumnsCount = 0;
-
-        for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
+        for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
         {
-            if ((*it)->isPrinted() &&
-                (*it)->getFileLevel() & CFileLevel &&
-                (*it)->getDataLevel() & CDataLevel)
+            uint currentColumnsCount = 0;
+            for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
             {
-                currentColumnsCount += (*it)->getMaxColumnsCount();
+                if ((*it)->isPrinted() &&
+                    (*it)->getFileLevel() & CFileLevel &&
+                    (*it)->getDataLevel() & CDataLevel)
+                {
+                    // For the current output variable, we retrieve the max number
+                    // of columns it takes in a sysnthesis report. 
+                    currentColumnsCount += (*it)->getMaxColumnsCount();
+                }
             }
+
+            totalMaxColumnsCount_ = std::max(totalMaxColumnsCount_, currentColumnsCount);
         }
-
-        if (currentColumnsCount > maxColumnsCount)
-            maxColumnsCount = currentColumnsCount;
-
-        CFileLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? 1 : CFileLevel * 2;
-        CDataLevel = (CFileLevel * 2 > (int)Category::maxFileLevel) ? CDataLevel * 2 : CDataLevel;
     }
 }
 

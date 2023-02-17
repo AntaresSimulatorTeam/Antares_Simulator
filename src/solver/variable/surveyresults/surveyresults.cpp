@@ -509,39 +509,8 @@ void SurveyResults::initializeMaxVariables(const Data::Study& s)
     const auto* runtime = s.runtime;
 
     // Getting the any report's max number of columns
-    maxVariables = s.parameters.variablesPrintInfo.getMaxColumnsCount();
+    maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
     logs.debug() << "  (for " << maxVariables << " columns)";
-
-    if (!runtime)
-        return;
-
-    // Adding new files / variables ? Change the values below to avoid maxVariables being too small
-
-    // TODO: count those variables at compile time / runtime
-    // using e.g VCardT::categoryDataLevel
-    const uint nbVariablesPerDetailThermalCluster = 4;
-    /*
-      - Production
-      - NODU,
-      - NP Costs
-      - Net profit
-    */
-    const uint nbVariablesPerDetailRenewableCluster = 1; // Production
-
-    // Max number of columns taken by an inequality binding constraint in a report
-    // (= output file). Here, this max is 4, and occurs in binding
-    // constraint synythesis reports.
-    const uint maxNbVariablesPerInequalityBindingConstraint = 4;
-
-    const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
-
-    maxVariables = max(maxVariables,
-                       static_cast<uint>(nbVariablesPerDetailThermalCluster
-                                 * runtime->maxThermalClustersForSingleArea),
-                       static_cast<uint>(nbVariablesPerDetailRenewableCluster
-                                 * runtime->maxRenewableClustersForSingleArea),
-                       maxNbVariablesPerInequalityBindingConstraint
-                                * runtime->getNumberOfInequalityBindingConstraints());
 }
 
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables

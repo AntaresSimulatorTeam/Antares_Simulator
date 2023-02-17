@@ -122,6 +122,15 @@ void BindingConstraints<NextT>::initializeFromStudy(Data::Study& study)
         // Does user want to print output results related to the current binding constraint ?
         bc.getPrintStatusFromStudy(study);
     }
+
+    // This is ugly (it's a work around). We should try to improve this.
+    // Supplying the max number of columns to the variable print info collector 
+    if (pBCcount > 0)
+    {
+        NextType& bc = pBindConstraints[0];
+        bc.setBindConstraintsCount(pBCcount);
+        bc.supplyMaxNumberOfColumns(study);
+    }
 }
 
 template<class NextT>

@@ -69,6 +69,12 @@ inline void Links::getPrintStatusFromStudy(Data::Study& study)
         pLinks[i].getPrintStatusFromStudy(study);
 }
 
+inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+        pLinks[i].supplyMaxNumberOfColumns(study);
+}
+
 inline void Links::yearBegin(uint year, unsigned int numSpace)
 {
     for (uint i = 0; i != pLinkCount; ++i)

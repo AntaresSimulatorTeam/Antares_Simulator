@@ -170,6 +170,16 @@ public:
         bindConstraintGlobalNumber_ = bcNumber;
     }
 
+    void setBindConstraintsCount(uint bcCount)
+    {
+        nbCount_ = bcCount;
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return nbCount_ * ResultsType::count;
+    }
+
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // Reset the values for the current year
@@ -383,6 +393,7 @@ private:
     unsigned int pNbYearsParallel = 0;
     Data::BindingConstraintRTI* associatedBC_ = nullptr;
     int bindConstraintGlobalNumber_ = -1;
+    uint nbCount_ = 0; // Number of inequality BCs 
 
 }; // class BindingConstMarginCost
 

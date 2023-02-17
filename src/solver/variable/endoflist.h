@@ -115,6 +115,10 @@ public:
     {
     }
 
+    void supplyMaxNumberOfColumns(Data::Study& study)
+    {
+    }
+
     static void simulationBegin()
     {
     }

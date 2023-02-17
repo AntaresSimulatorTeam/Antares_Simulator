@@ -217,6 +217,11 @@ public:
         NextType::initializeFromArea(study, area);
     }
 
+    uint getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
+    }
+
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)
     {
         // Next

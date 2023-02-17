@@ -44,7 +44,7 @@ namespace Data
 class VariablePrintInfo
 {
 public:
-    VariablePrintInfo(AnyString vname, uint maxNbCols, uint dataLvl, uint fileLvl);
+    VariablePrintInfo(AnyString vname, uint dataLvl, uint fileLvl);
     ~VariablePrintInfo(){};
 
     // Getting name of the (represented) output variable
@@ -55,6 +55,7 @@ public:
     bool isPrinted();
 
     uint getMaxColumnsCount();
+    void setMaxColumns(uint maxColumnsNumber);
     uint getDataLevel()
     {
         return dataLevel;
@@ -70,10 +71,15 @@ private:
     // Is the variable printed ?
     bool to_be_printed;
 
-    // All this useful to compute the max number of colums any report can contain
-    // ... maximum number of columns taken up by variable in the output files
-    uint maxNumberColumns;
-    // ... data and file levels
+    // The number of columns the output variable takes in a SYNTHESIS report.
+    // Recall that synthesis reports always contain more columns than
+    // any other reports (for instance year-by-year reports)
+    uint maxNumberColumns_ = 0;
+
+    // Which reports the output variable has columns in ?
+    // Example : areas/values-<time-interval>.txt
+    // dataLevel can be : areas, links, bindingConstraint
+    // fileLevel can be : values-<time-interval>.txt, details-<time-interval>.txt, id-<time-interval>.txt, ...
     uint dataLevel;
     uint fileLevel;
 };
@@ -84,7 +90,7 @@ class variablePrintInfoCollector
 {
 public:
     variablePrintInfoCollector(AllVariablesPrintInfo* allvarsprintinfo);
-    void add(const AnyString& name, uint nbGlobalResults, uint dataLevel, uint fileLevel);
+    void add(const AnyString& name, uint dataLevel, uint fileLevel);
 
 private:
     AllVariablesPrintInfo* allvarsinfo;
@@ -107,6 +113,7 @@ public:
     bool isEmpty() const;
 
     bool setPrintStatus(std::string varname, bool printStatus);
+    void setMaxColumns(std::string varname, uint maxColumnsNumber);
 
     void prepareForSimulation(bool userSelection,
                               const std::vector<std::string>& excluded_vars = {});
@@ -114,9 +121,9 @@ public:
     // Classic search, then get the print status
     bool isPrinted(std::string var_name) const;
 
-    uint getMaxColumnsCount() const
+    uint getTotalMaxColumnsCount() const
     {
-        return maxColumnsCount;
+        return totalMaxColumnsCount_;
     }
 
     uint getNbSelectedZonalVars() const
@@ -128,9 +135,10 @@ public:
         return numberSelectedLinkVariables;
     }
 
+    void computeMaxColumnsCountInReports();
+
 private:
     void setAllPrintStatusesTo(bool b);
-    void computeMaxColumnsCountInReports();
     void countSelectedAreaVars();
     void countSelectedLinkVars();
 
@@ -140,7 +148,7 @@ private:
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.
-    uint maxColumnsCount = 0;
+    uint totalMaxColumnsCount_ = 0;
 
     // Number of selected zonal variables
     uint numberSelectedAreaVariables = 0;

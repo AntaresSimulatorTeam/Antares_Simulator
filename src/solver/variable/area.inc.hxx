@@ -101,6 +101,8 @@ void Areas<NEXTTYPE>::initializeFromStudy(Data::Study& study)
         // For each current area's variable, getting the print status, that is :
         // is variable's column(s) printed in output (areas) reports ?
         n.getPrintStatusFromStudy(study);
+
+        n.supplyMaxNumberOfColumns(study);
     }
 }
 
