@@ -95,7 +95,6 @@ bool Economy::simulationBegin()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
             if ((uint)nbHoursInAWeek != (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps)
@@ -273,7 +272,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Economy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);

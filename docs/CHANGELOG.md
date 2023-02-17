@@ -1,16 +1,23 @@
 Antares Changelog
 =================
 
-v8.5.0-rc2 (01/2022)
+v8.5.0 (02/2022)
 --------------------
-* Re-publish of v8.5.0-rc1.
 
-v8.5.0-rc1 (01/2022)
---------------------
 ## New features
-* Hydraulic patch (#697)
-* Curtailment sharing rule for Adequacy Patch (#1062)
+* Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
 
+## Bugfix
+* Hydraulic patch #697
+* Fix link path error in Kirchhoff constraint builder #1157
+
+## For developers
+* Fix build on Ubuntu 22.04 #1160
+* Cleaning #1142, 1146, #1149
+
+## Examples & documentation
+* Update docs to include CSR #1156
+* Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
 
 v8.4.2 (01/2022)
 --------------------
@@ -22,7 +29,7 @@ v8.4.2 (01/2022)
 ## GUI
 * Allow more than 100 thermal clusters #1011
 * Remove status bar count. The sum was sometimes wrong #1029
-* Remove unused "District marginal prices" button from Advanced Parameters (#1067)
+* Remove unused "District marginal prices" button from Advanced Parameters #1067
 
 ## Bugfix
 * Fix overwritten MPS files when optimization/simplex-range=day #1041

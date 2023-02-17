@@ -352,7 +352,7 @@ public:
         return isUpToDate;
     }
 
-    bool update(bool applyCheckBox = false);
+    bool update();
 
     void setCalendarStart(int start)
     {
@@ -391,8 +391,8 @@ private:
     YString pPrefix;
     YString pPrefixDelete;
     bool pDelete;
-    bool includeLoopFlow = false;
-    bool includePhaseShift = false;
+    bool includeLoopFlow = true;
+    bool includePhaseShift = true;
     bool isUpToDate = false;
     bool checkNodalLoopFlow = true;
     double infiniteSecondMember = 1000000;

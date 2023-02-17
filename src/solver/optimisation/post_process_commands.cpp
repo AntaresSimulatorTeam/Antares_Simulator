@@ -1,7 +1,8 @@
 
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
-#include "adequacy_patch_weekly_optimization.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
+#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
@@ -66,7 +67,7 @@ HydroLevelsUpdatePostProcessCmd::HydroLevelsUpdatePostProcessCmd(PROBLEME_HEBDO*
 {
 }
 
-void HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void HydroLevelsUpdatePostProcessCmd::execute(const optRuntimeData&)
 {
     computingHydroLevels(area_list_, *problemeHebdo_, remixWasRun_, computeAnyway_);
 }
@@ -81,9 +82,9 @@ RemixHydroPostProcessCmd::RemixHydroPostProcessCmd(PROBLEME_HEBDO* problemeHebdo
                                                    unsigned int thread_number) :
  basePostProcessCommand(problemeHebdo),
  area_list_(areas),
+ thread_number_(thread_number),
  shedding_policy_(sheddingPolicy),
- splx_optimization_(simplexOptimization),
- thread_number_(thread_number)
+ splx_optimization_(simplexOptimization)
 {
 }
 
@@ -115,14 +116,14 @@ DTGmarginForAdqPatchPostProcessCmd::DTGmarginForAdqPatchPostProcessCmd(
 ** Calculate Dispatchable margin for all areas after CSR optimization and adjust ENS
 ** values if neccessary. If LOLD=1, Sets MRG COST to the max value (unsupplied energy cost)
 ** */
-void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 {
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
             continue;
 
-        for (int hour = 0; hour < nbHoursInWeek; hour++)
+        for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
             // define access to the required variables
             const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
@@ -133,7 +134,7 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData& opt_runti
             double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
             // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
                 dtgMrgCsr = std::max(0.0, dtgMrg - ens);
                 ens = std::max(0.0, ens - dtgMrg);
@@ -176,7 +177,7 @@ HydroLevelsFinalUpdatePostProcessCmd::HydroLevelsFinalUpdatePostProcessCmd(
 {
 }
 
-void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData& opt_runtime_data)
+void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 {
     updatingWeeklyFinalHydroLevel(area_list_, *problemeHebdo_);
 }
@@ -216,9 +217,9 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch)
         {
-            for (int hour = 0; hour < nbHoursInWeek; hour++)
+            for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
                 const auto [netPositionInit, densNew, totalNodeBalance]
                   = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
@@ -255,7 +256,7 @@ std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentShari
 {
     double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
-    for (int i = 0; i < nbHoursInWeek; ++i)
+    for (uint i = 0; i < nbHoursInWeek; ++i)
     {
         if (sumENS[i] > threshold)
         {
@@ -271,7 +272,7 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
     std::vector<double> sumENS(nbHoursInWeek, 0.0);
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             const double* ENS

@@ -24,4 +24,22 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-extern PROBLEME_MPS Mps;
+
+#pragma once
+
+#include "../base_weekly_optimization.h"
+#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/study/area/area.h"
+
+using Antares::Data::AreaList;
+
+namespace Antares::Solver::Optimization
+{
+class AdequacyPatchOptimization : public WeeklyOptimization
+{
+public:
+    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    ~AdequacyPatchOptimization() override = default;
+    void solve(uint weekInTheYear, int hourInTheYear) override;
+};
+} // namespace Antares::Solver::Optimization

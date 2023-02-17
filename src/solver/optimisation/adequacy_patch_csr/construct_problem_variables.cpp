@@ -28,7 +28,8 @@
 #include "../solver/optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_structure_donnees.h"
-#include "../hourly_csr_problem.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
+#include "hourly_csr_problem.h"
 
 #include "pi_constantes_externes.h"
 void HourlyCSRProblem::constructVariableENS()
@@ -43,7 +44,7 @@ void HourlyCSRProblem::constructVariableENS()
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only ENS for areas inside adq patch are considered as variables
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area]
@@ -70,7 +71,7 @@ void HourlyCSRProblem::constructVariableSpilledEnergy()
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
         // Only Spilled Energy  for areas inside adq patch are considered as variables
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area]
@@ -98,9 +99,9 @@ void HourlyCSRProblem::constructVariableFlows()
     for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
         // only consider link between 2 and 2
-        if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            && problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            && problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int algebraicFluxVar;

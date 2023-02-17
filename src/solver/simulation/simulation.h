@@ -29,22 +29,8 @@
 
 #include "../config.h"
 #include <antares/study/study.h>
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "../variable/state.h"
 
-#define OUI_ANTARES 1
-#define NON_ANTARES 0
-#define LINFINI_ANTARES 1.e+80
-#define LINFINI_ENTIER 20000000
-
-#define OPTIMISATION_LINEAIRE 1
-#define OPTIMISATION_QUADRATIQUE 2
-
-#define ZERO_PMAX 0.0
-#define ZERO_PMIN 1.e-2
-
-#define ZERO_RESERVE_J_MOINS1 1.e-2
+class PROBLEME_HEBDO;
 
 void SIM_AllocationTableaux(void);
 
