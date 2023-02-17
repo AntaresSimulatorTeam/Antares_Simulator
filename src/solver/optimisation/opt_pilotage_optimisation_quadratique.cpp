@@ -39,37 +39,37 @@ extern "C"
 #include "spx_fonctions.h"
 }
 
-bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* ProblemeHebdo)
+bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
     int PdtHebdo;
 
-    if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
-        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(ProblemeHebdo);
+        OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
-        OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(ProblemeHebdo);
+        OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
 
-        ProblemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
     }
 
     bool result = true;
-    if (ProblemeHebdo->NombreDInterconnexions > 0)
+    if (problemeHebdo->NombreDInterconnexions > 0)
     {
-        for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+        for (PdtHebdo = 0; PdtHebdo < problemeHebdo->NombreDePasDeTemps; PdtHebdo++)
         {
 #ifdef dbgInfos
             printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
                    PdtHebdo);
 #endif
 
-            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(ProblemeHebdo, PdtHebdo);
+            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, PdtHebdo);
 
-            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(ProblemeHebdo, PdtHebdo);
+            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, PdtHebdo);
 
-            OPT_InitialiserLesCoutsQuadratiques(ProblemeHebdo, PdtHebdo);
+            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, PdtHebdo);
 
             result
-              = OPT_AppelDuSolveurQuadratique(ProblemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
+              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
         }
     }
 

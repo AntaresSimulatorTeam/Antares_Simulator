@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,34 +25,28 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#ifndef __SOLVER_ADEQUACY_FUNCTIONS_H__
-#define __SOLVER_ADEQUACY_FUNCTIONS_H__
+#include <memory>
+#include "base_weekly_optimization.h"
+#include "weekly_optimization.h"
+#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
-#include <antares/study/fwd.h>
-#include "../simulation/sim_structure_probleme_economique.h"
+namespace Antares::Solver::Optimization
+{
+WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
+                                                         uint thread_number) :
+ problemeHebdo_(problemesHebdo), thread_number_(thread_number)
+{
+}
 
-namespace Antares
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
+    bool adqPatchEnabled,
+    PROBLEME_HEBDO* problemeHebdo,
+    uint thread_number)
 {
-namespace Data
-{
-namespace AdequacyPatch
-{
-/*!
- * Sets link bounds for first step of adequacy patch.
- */
-void setBoundsAdqPatch(double& Xmax,
-                       double& Xmin,
-                       VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                       const int Interco,
-                       PROBLEME_HEBDO* ProblemeHebdo);
-/*!
- * Sets link bounds when adequacy patch is not used or when first step of adequacy patch is false.
- */
-void setBoundsNoAdqPatch(double& Xmax,
-                         double& Xmin,
-                         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
-                         const int Interco);
-} // namespace AdequacyPatch
-} // end namespace Data
-} // namespace Antares
-#endif /* __SOLVER_ADEQUACY_FUNCTIONS_H__ */
+    if (adqPatchEnabled)
+        return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);
+    else
+        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, thread_number);
+}
+
+} // namespace Antares::Solver::Optimization

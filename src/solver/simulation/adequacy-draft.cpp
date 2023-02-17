@@ -33,11 +33,7 @@
 #include "../optimisation/opt_fonctions.h"
 #include "../aleatoire/alea_fonctions.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 AdequacyDraft::AdequacyDraft(Data::Study& study) : study(study), preproOnly(false)
 {
@@ -116,6 +112,4 @@ void AdequacyDraft::prepareClustersInMustRunMode(uint)
 {
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

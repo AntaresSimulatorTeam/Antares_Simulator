@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,4 +24,21 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-extern PROBLEME_MPS Mps;
+
+#pragma once
+
+#include "../simulation/sim_structure_probleme_economique.h"
+
+namespace Antares::Data::AdequacyPatch
+{
+/*!
+ * Sets link bounds for first step of adequacy patch or leaves default values if adequacy patch is
+ * not used.
+ */
+void setNTCbounds(double& Xmax,
+                  double& Xmin,
+                  const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
+                  const int Interco,
+                  PROBLEME_HEBDO* problemeHebdo);
+
+} // namespace Antares::Data::AdequacyPatch

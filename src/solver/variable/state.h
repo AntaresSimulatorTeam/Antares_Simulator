@@ -34,11 +34,7 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_extern_variables_globales.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
+namespace Antares::Solver::Variable
 {
 class State
 {
@@ -240,9 +236,6 @@ public:
     */
     bool simplexHasBeenRan;
 
-    // Working variable for output water values computation
-    Antares::Data::h2oValueWorkVarsType h2oValueWorkVars;
-
     // Annual costs to be printed in output into separate files
     // -----------------------------------------------------------------
     // Sum over all year's hours of  :
@@ -262,9 +255,7 @@ public:
     // -----------------------------------------------------------------
 }; // class State
 
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable
 
 #include "state.hxx"
 

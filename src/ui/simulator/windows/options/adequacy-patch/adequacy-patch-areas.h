@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -24,59 +24,42 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __SOLVER_MPS_DEFINE_H__
-#define __SOLVER_MPS_DEFINE_H__
 
-#define OUI_MPS 1
-#define NON_MPS 0
+#ifndef __ANTARES_APPLICATION_WINDOWS_ADEQUACY_PATCH_AREAS_H__
+#define __ANTARES_APPLICATION_WINDOWS_ADEQUACY_PATCH_AREAS_H__
 
-#define REEL 1
-#define ENTIER 2
+#include <antares/wx-wrapper.h>
+#include "../../../toolbox/components/datagrid/component.h"
+#include <wx/dialog.h>
+#include <wx/checkbox.h>
 
-#define NON_DEFINI 128
-
-typedef struct
+namespace Antares::Window::Options
 {
-    long NentreesVar;
-    long NentreesCnt;
+class AdequacyPatchAreas final : public wxDialog
+{
+public:
+    //! \name Constructor & Destructor
+    //@{
+    /*!
+    ** \brief Default constructor
+    **
+    ** \param parent The parent window
+    */
+    explicit AdequacyPatchAreas(wxFrame* parent);
+    //! Destructor
+    ~AdequacyPatchAreas() override;
+    //@}
 
-    long NbVar;
-    long NbCnt;
+private:
+    void mouseMoved(wxMouseEvent& evt);
+    void onClose(const void*);
 
-    long CoeffHaschCodeContraintes;
-    long SeuilHaschCodeContraintes;
-    long CoeffHaschCodeVariables;
-    long SeuilHaschCodeVariables;
+    Component::Datagrid::Component* pGrid;
+    wxWindow* pPanel;
+    DECLARE_EVENT_TABLE()
 
-    long* Mdeb;
-    double* A;
-    long* Nuvar;
-    long* Msui;
-    long* Mder;
-    long* NbTerm;
-    double* B;
-    char* SensDeLaContrainte;
-    double* VariablesDualesDesContraintes;
+}; // class AdequacyPatchAreas
 
-    char** LabelDeLaContrainte;
-    char** LabelDuSecondMembre;
-    char* LabelDeLObjectif;
+}
 
-    char** LabelDeLaVariable;
-
-    long* TypeDeVariable;
-    long* TypeDeBorneDeLaVariable;
-    double* U;
-    double* L;
-    double* Umin;
-    double* Umax;
-
-    long* FirstNomCnt;
-    long* NomCntSuivant;
-
-    long* FirstNomVar;
-    long* NomVarSuivant;
-
-} PROBLEME_MPS;
-
-#endif /* __SOLVER_MPS_DEFINE_H__ */
+#endif // __ANTARES_APPLICATION_WINDOWS_ADEQUACY_PATCH_AREAS_H__

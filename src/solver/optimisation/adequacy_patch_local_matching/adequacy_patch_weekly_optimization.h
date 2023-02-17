@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "mps_define.h"
+#pragma once
 
-/*! Global instance of a MPS problem */
-PROBLEME_MPS Mps;
+#include "../base_weekly_optimization.h"
+#include "../simulation/sim_structure_probleme_economique.h"
+#include "antares/study/area/area.h"
+
+using Antares::Data::AreaList;
+
+namespace Antares::Solver::Optimization
+{
+class AdequacyPatchOptimization : public WeeklyOptimization
+{
+public:
+    explicit AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    ~AdequacyPatchOptimization() override = default;
+    void solve(uint weekInTheYear, int hourInTheYear) override;
+};
+} // namespace Antares::Solver::Optimization

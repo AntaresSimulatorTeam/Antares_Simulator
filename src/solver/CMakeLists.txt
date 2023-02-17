@@ -59,9 +59,6 @@ add_executable(antares-solver
 	misc/system-memory.h
 	misc/system-memory.cpp
 
-	mps/mps_define.h
-	mps/mps_extern_global.h
-	mps/mps_global.c
 	${SRCS}
 	main.cpp
 	application.h application.cpp
