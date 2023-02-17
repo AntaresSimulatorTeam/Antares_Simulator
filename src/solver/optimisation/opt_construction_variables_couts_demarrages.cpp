@@ -55,6 +55,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
     NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
+    const bool intVariables = problemeHebdo->OptimisationAvecVariablesEntieres == OUI_ANTARES ? true : false;
+
     for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {
         PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
@@ -79,8 +81,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                if (problemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+
+                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -89,8 +91,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (problemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -98,8 +99,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                if (problemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
                 NombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
@@ -112,8 +112,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 #endif
-                if (problemeHebdo->OptimisationAvecVariablesEntieres)
-                    ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = true;
+                ProblemeAResoudre->VariablesEntieres[NombreDeVariables] = intVariables;
                 NombreDeVariables++;
             }
         }
