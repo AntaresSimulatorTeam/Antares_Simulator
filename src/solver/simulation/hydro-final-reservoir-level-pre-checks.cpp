@@ -74,7 +74,7 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
                   // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
                   // yearly_inflows
                   if ((finalReservoirLevel - initialReservoirLevel) * reservoirCapacity
-                      > totalYearInflows * 24)
+                      > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh (energy)
                   {
                       logs.error() << "Year: " << tsIndex + 1 << ". Area: " << area.name
                                    << ". Incompatible total inflows: " << totalYearInflows
