@@ -171,6 +171,8 @@ public:
     PreproHydro* prepro;
     //! Data for time-series
     DataSeriesHydro* series;
+    //! difference between initial and final reservoir levels for all scenario-builder years
+    std::vector<double> finalReservoirLevelCorrection;
 
 }; // class PartHydro
 

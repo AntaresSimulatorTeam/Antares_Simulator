@@ -41,6 +41,7 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
         study.areas.each(
           [&](Data::Area& area)
           {
+              double deltaReservoirLevel = 0.0;
               // TODO CR25:
               /*at this point the pre-checks are done for all MC before running the simulation
               and the simulation is ended immediately not waisting user time!
@@ -59,6 +60,8 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
               if (area.hydro.reservoirManagement && !area.hydro.useWaterValue
                   && !isnan(finalReservoirLevel) && !isnan(initialReservoirLevel))
               {
+                  // deltaReservoirLevel
+                  deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
                   // collect data for pre-checks
                   double reservoirCapacity = area.hydro.reservoirCapacity;
                   double lowLevelLastDay
@@ -94,6 +97,7 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
                       preChecksPasses = false;
                   }
               }
+              area.hydro.finalReservoirLevelCorrection.push_back(deltaReservoirLevel);
           });
     }
     if (!preChecksPasses)
