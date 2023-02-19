@@ -63,6 +63,10 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
                   // deltaReservoirLevel
                   deltaReservoirLevel = initialReservoirLevel - finalReservoirLevel;
                   // collect data for pre-checks
+                  uint initReservoirLvlMonth
+                    = area.hydro.initializeReservoirLevelDate; // month [0-11]
+                  uint initReservoirLvlDay
+                    = study.calendar.months[initReservoirLvlMonth].daysYear.first;
                   double reservoirCapacity = area.hydro.reservoirCapacity;
                   double lowLevelLastDay
                     = area.hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
@@ -70,7 +74,7 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
                     = area.hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
                   double totalYearInflows = 0.0;
                   // calculate yearly inflows
-                  for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+                  for (uint day = initReservoirLvlDay; day < DAYS_PER_YEAR; ++day)
                   {
                       totalYearInflows += srcinflows[day];
                   }
