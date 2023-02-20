@@ -37,7 +37,7 @@ void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
 {
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
         {

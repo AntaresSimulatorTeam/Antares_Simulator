@@ -59,7 +59,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable
             != OUI_ANTARES)
             continue;
-        double* ContrainteDePmaxHydrauliqueHoraire
+        const double* ContrainteDePmaxHydrauliqueHoraire
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->ContrainteDePmaxHydrauliqueHoraire;
         double pmaxHyd = -1;
         for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
@@ -75,10 +75,10 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
     return;
 }
 
-double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
+double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* const problemeHebdo, int Pays, int pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+    const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
     PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
     for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
@@ -87,7 +87,7 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* problemeHebdo, int Pays, int p
           += PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique[pdtHebdo];
     }
 
-    return (sommeDesPminThermiques);
+    return sommeDesPminThermiques;
 }
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
@@ -173,21 +173,21 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
     {
-        AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = NULL;
-        AdresseOuPlacerLaValeurDesCoutsReduits[i] = NULL;
+        AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
+        AdresseOuPlacerLaValeurDesCoutsReduits[i] = nullptr;
     }
 
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
-        CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
             = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
-            COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
 
             AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, interco, problemeHebdo);
 
@@ -256,7 +256,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             int maxThermalPlant = PaliersThermiquesDuPays->NombreDePaliersThermiques;
 
             for (int index = 0; index < maxThermalPlant; index++)
@@ -264,7 +264,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
 
                 Xmin[var] = PuissanceDisponibleEtCout->PuissanceMinDuPalierThermique[pdtHebdo];
@@ -316,31 +316,29 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     }
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
-                         == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+                         == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
+                         && pdtJour == 0)
                 {
-                    if (pdtJour == 0)
+                    var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariablesVariationHydALaBaisse[pays];
+                    if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     {
-                        var = CorrespondanceVarNativesVarOptim
-                                ->NumeroDeVariablesVariationHydALaBaisse[pays];
-                        if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-                        {
-                            Xmin[var] = 0.0;
-                            Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                          ->MaxDesPmaxHydrauliques;
-                            AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                            AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
-                        }
+                        Xmin[var] = 0.0;
+                        Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                      ->MaxDesPmaxHydrauliques;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
+                    }
 
-                        var = CorrespondanceVarNativesVarOptim
-                                ->NumeroDeVariablesVariationHydALaHausse[pays];
-                        if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
-                        {
-                            Xmin[var] = 0.0;
-                            Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
-                                          ->MaxDesPmaxHydrauliques;
-                            AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
-                            AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
-                        }
+                    var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariablesVariationHydALaHausse[pays];
+                    if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+                    {
+                        Xmin[var] = 0.0;
+                        Xmax[var] = problemeHebdo->CaracteristiquesHydrauliques[pays]
+                                      ->MaxDesPmaxHydrauliques;
+                        AdresseOuPlacerLaValeurDesCoutsReduits[var] = NULL;
+                        AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = NULL;
                     }
                 }
             }

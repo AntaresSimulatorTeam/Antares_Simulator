@@ -60,22 +60,22 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
             = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {
-                PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+                const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+                const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-                int* NombreMinDeGroupesEnMarcheDuPalierThermique
+                const int* NombreMinDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
                 int var = CorrespondanceVarNativesVarOptim

@@ -34,15 +34,15 @@
 #include "opt_fonctions.h"
 #include <iostream>
 
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
+void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* const problemeHebdo, const int optimizationNumber)
 {
 
-    int* NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
-    int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
+    const int* NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;
+    const int DernierPasDeTemps = problemeHebdo->NombreDePasDeTemps;
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTCRef = problemeHebdo->ValeursDeNTCRef[pdt];
+        const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTCRef = problemeHebdo->ValeursDeNTCRef[pdt];
         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdt];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -73,7 +73,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizati
 
     for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
     {
-        CONSOMMATIONS_ABATTUES* ConsommationsAbattuesRef = problemeHebdo->ConsommationsAbattuesRef[pdt];
+        const CONSOMMATIONS_ABATTUES* ConsommationsAbattuesRef = problemeHebdo->ConsommationsAbattuesRef[pdt];
         CONSOMMATIONS_ABATTUES* ConsommationsAbattues = problemeHebdo->ConsommationsAbattues[pdt];
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
@@ -167,7 +167,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizati
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
             {
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
@@ -182,7 +182,7 @@ void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizati
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
             {
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout

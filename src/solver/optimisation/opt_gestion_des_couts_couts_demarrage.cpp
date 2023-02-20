@@ -50,12 +50,12 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
-        CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
             = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
             for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {

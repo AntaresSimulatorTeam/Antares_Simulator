@@ -73,10 +73,10 @@ void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
     {
-        RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
+        const RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[pays];
         PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique = ResultatsHoraires->ProductionThermique;
 
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
         PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
             = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
@@ -212,14 +212,14 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
 {
     int NombreDePasDeTemps = problemeHebdo->NombreDePasDeTemps;
 
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+    const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
 
-    int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+    const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
         = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Index]
             ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
+    const int DureeMinimaleDeMarcheDUnGroupeDuPalierThermique
         = PaliersThermiquesDuPays->DureeMinimaleDeMarcheDUnGroupeDuPalierThermique[Index];
-    int DureeMinimaleDArretDUnGroupeDuPalierThermique
+    const int DureeMinimaleDArretDUnGroupeDuPalierThermique
         = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[Index];
 
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique
@@ -335,10 +335,10 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeVariables += NombreDePasDeTemps;
     NombreDeVariables += NombreDePasDeTemps;
 
-    int* NumeroDeVariableDeM = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    int* NumeroDeVariableDeMMoinsMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    int* NumeroDeVariableDeMPlus = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
-    int* NumeroDeVariableDeMMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    auto NumeroDeVariableDeM = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    auto NumeroDeVariableDeMMoinsMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    auto NumeroDeVariableDeMPlus = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
+    auto NumeroDeVariableDeMMoins = (int*)MemAlloc(NombreDePasDeTemps * sizeof(int));
 
     int NombreDeContraintes = 0;
     NombreDeContraintes += NombreDePasDeTemps;
@@ -347,18 +347,18 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     NombreDeContraintes += NombreDePasDeTemps;
     NombreDeContraintes += NombreDePasDeTemps;
 
-    int* PositionDeLaVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
-    double* CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    double* Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    double* Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    double* Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
-    int* TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+    auto PositionDeLaVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
+    auto CoutLineaire = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    auto Xsolution = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    auto Xmin = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    auto Xmax = (double*)MemAlloc(NombreDeVariables * sizeof(double));
+    auto TypeDeVariable = (int*)MemAlloc(NombreDeVariables * sizeof(int));
 
-    int* ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    int* IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    int* NombreDeTermesDesLignes = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
-    char* Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
-    double* SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
+    auto ComplementDeLaBase = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    auto IndicesDebutDeLigne = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    auto NombreDeTermesDesLignes = (int*)MemAlloc(NombreDeContraintes * sizeof(int));
+    auto Sens = (char*)MemAlloc(NombreDeContraintes * sizeof(char));
+    auto SecondMembre = (double*)MemAlloc(NombreDeContraintes * sizeof(double));
 
     int NbTermesMatrice = 0;
     NbTermesMatrice += 4 * NombreDePasDeTemps;
@@ -368,16 +368,16 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
       += NombreDePasDeTemps * (1 + (2 * DureeMinimaleDeMarcheDUnGroupeDuPalierThermique));
     NbTermesMatrice += NombreDePasDeTemps * (1 + DureeMinimaleDArretDUnGroupeDuPalierThermique);
 
-    int* IndicesColonnes = (int*)MemAlloc(NbTermesMatrice * sizeof(int));
-    double* CoefficientsDeLaMatriceDesContraintes = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
+    auto IndicesColonnes = (int*)MemAlloc(NbTermesMatrice * sizeof(int));
+    auto CoefficientsDeLaMatriceDesContraintes = (double*)MemAlloc(NbTermesMatrice * sizeof(double));
 
-    if (NumeroDeVariableDeM == NULL || NumeroDeVariableDeMMoinsMoins == NULL
-        || NumeroDeVariableDeMPlus == NULL || NumeroDeVariableDeMMoins == NULL
-        || PositionDeLaVariable == NULL || CoutLineaire == NULL || Xsolution == NULL || Xmin == NULL
-        || Xmax == NULL || TypeDeVariable == NULL || ComplementDeLaBase == NULL
-        || IndicesDebutDeLigne == NULL || NombreDeTermesDesLignes == NULL || Sens == NULL
-        || SecondMembre == NULL || IndicesColonnes == NULL
-        || CoefficientsDeLaMatriceDesContraintes == NULL)
+    if (NumeroDeVariableDeM == nullptr || NumeroDeVariableDeMMoinsMoins == nullptr
+        || NumeroDeVariableDeMPlus == nullptr || NumeroDeVariableDeMMoins == nullptr
+        || PositionDeLaVariable == nullptr || CoutLineaire == nullptr || Xsolution == nullptr || Xmin == nullptr
+        || Xmax == nullptr || TypeDeVariable == nullptr || ComplementDeLaBase == nullptr
+        || IndicesDebutDeLigne == nullptr || NombreDeTermesDesLignes == nullptr || Sens == nullptr
+        || SecondMembre == nullptr || IndicesColonnes == nullptr
+        || CoefficientsDeLaMatriceDesContraintes == nullptr)
     {
         logs.info();
         logs.error() << "Internal error: insufficient memory";
@@ -646,14 +646,14 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
     Probleme.UtiliserCoutMax = NON_SPX;
     Probleme.CoutMax = 0.0;
 
-    Probleme.CoutsMarginauxDesContraintes = NULL;
-    Probleme.CoutsReduits = NULL;
+    Probleme.CoutsMarginauxDesContraintes = nullptr;
+    Probleme.CoutsReduits = nullptr;
 
     Probleme.AffichageDesTraces = NON_SPX;
 
     Probleme.NombreDeContraintesCoupes = 0;
 
-    PROBLEME_SPX* ProbSpx = NULL;
+    PROBLEME_SPX* ProbSpx = nullptr;
     ProbSpx = SPX_Simplexe(&Probleme, ProbSpx);
 
     if (Probleme.ExistenceDUneSolution == OUI_SPX)

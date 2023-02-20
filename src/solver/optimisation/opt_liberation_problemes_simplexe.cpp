@@ -45,7 +45,7 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* problemeHebdo)
+void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* const problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
     if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
@@ -53,33 +53,31 @@ void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* problemeHebdo)
     else
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
 
-    int nbIntervalles = (int)(problemeHebdo->NombreDePasDeTemps
-        / NombreDePasDeTempsPourUneOptimisation);
+    int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    if (ProblemeAResoudre)
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    if (!ProblemeAResoudre)
+        return;
+
+    const auto& study = *Data::Study::Current::Get();
+    bool ortoolsUsed = study.parameters.ortoolsUsed;
+
+    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
     {
-        const auto& study = *Data::Study::Current::Get();
-        bool ortoolsUsed = study.parameters.ortoolsUsed;
-
-        if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+        for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
-            {
-                PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)
-                    (ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
-                MPSolver* solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+            auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
 
-                if (ortoolsUsed && solver != NULL)
-                {
-                    ORTOOLS_LibererProbleme(solver);
-                    solver = NULL;
-                }
-                else if (ProbSpx != NULL)
-                {
-                    SPX_LibererProbleme(ProbSpx);
-                    ProbSpx = NULL;
-                }
+            if (ortoolsUsed && solver != NULL)
+            {
+                ORTOOLS_LibererProbleme(solver);
+                solver = NULL;
+            }
+            else if (ProbSpx != NULL)
+            {
+                SPX_LibererProbleme(ProbSpx);
+                ProbSpx = NULL;
             }
         }
     }

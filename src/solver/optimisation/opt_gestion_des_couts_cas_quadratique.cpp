@@ -41,8 +41,8 @@ void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtH
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
 
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances = problemeHebdo->ValeursDeNTC[PdtHebdo];
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+    const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
         = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)

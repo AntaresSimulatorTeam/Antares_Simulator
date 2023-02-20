@@ -57,11 +57,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+            const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
                 = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
                     ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique
@@ -73,7 +73,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                  pdtHebdo < DernierPdtDeLIntervalle;
                  pdtHebdo++, pdtJour++)
             {
-                CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
+                const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
                 int cnt;
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
@@ -128,7 +128,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                                  - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1];
                         }
                     }
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = NULL;
+                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
                 }
             }
         }
