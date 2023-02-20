@@ -101,13 +101,13 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
     for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
-        RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        double *PminDuPalierThermiquePendantUneHeure
+        const RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        const double *PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
-        double* TailleUnitaireDUnGroupeDuPalierThermique
+        const double* TailleUnitaireDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique;
-        int* minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
+        const int* minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
 
         PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermiqueOptimale = ResultatsHoraires->ProductionThermique;
 
@@ -115,7 +115,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
         {
             PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDispoEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
             double* PuissanceMinDuPalierThermique = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
-            double* PuissanceDisponibleDuPalierThermique = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
+            const double* PuissanceDisponibleDuPalierThermique = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
                 continue;

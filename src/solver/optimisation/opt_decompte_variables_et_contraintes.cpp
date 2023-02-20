@@ -145,13 +145,10 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire;
 
         if (Pump == NON_ANTARES && TurbEntreBornes == NON_ANTARES
-            && MonitorHourlyLev == NON_ANTARES)
+            && MonitorHourlyLev == NON_ANTARES
+            && problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable
-                == OUI_ANTARES)
-            {
-                ProblemeAResoudre->NombreDeContraintes++;
-            }
+            ProblemeAResoudre->NombreDeContraintes++;
         }
 
         if (Pump == OUI_ANTARES && TurbEntreBornes == NON_ANTARES

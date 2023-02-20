@@ -140,7 +140,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
-    int Sparsity = (int)mxPaliers * problemeHebdo->NombreDePays;
+    int Sparsity = mxPaliers * problemeHebdo->NombreDePays;
     Sparsity += problemeHebdo->NombreDInterconnexions;
     if (Sparsity > 100)
         Sparsity = 100;
@@ -148,7 +148,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     int NbTermes = 0;
     NbTermes += ProblemeAResoudre->NombreDeContraintes;
 
-    int Adder = (int)mxPaliers;
+    int Adder = mxPaliers;
     Adder += 4;
     Adder *= problemeHebdo->NombreDePays;
     Adder += 2 * problemeHebdo->NombreDInterconnexions;
@@ -194,8 +194,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre, NbTermes);
 
-    int NbIntervalles
-      = (int)(problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+    int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
     ProblemeAResoudre->ProblemesSpx = (PROBLEMES_SIMPLEXE*)MemAlloc(sizeof(PROBLEMES_SIMPLEXE));
     ProblemeAResoudre->ProblemesSpx->ProblemeSpx = (void**)MemAlloc(NbIntervalles * sizeof(void*));
@@ -209,8 +208,7 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
 
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre
-        = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
+    auto ProblemeAResoudre = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
     problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
 
     int mxPaliers = OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);

@@ -36,12 +36,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    double* Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    int* Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    auto Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    auto Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    CORRESPONDANCES_DES_VARIABLES* correspondanceVarNativesVarOptim
+    const CORRESPONDANCES_DES_VARIABLES* correspondanceVarNativesVarOptim
         = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)

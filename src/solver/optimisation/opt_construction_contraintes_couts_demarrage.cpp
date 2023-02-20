@@ -60,7 +60,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -163,7 +163,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -256,7 +256,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -319,7 +319,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -373,7 +373,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -465,7 +465,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
