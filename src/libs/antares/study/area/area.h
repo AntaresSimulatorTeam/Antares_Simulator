@@ -279,6 +279,8 @@ public:
     PartRenewable renewable;
     //@}
 
+    ShortTermStorage::Part shortTermStorage;
+
     //! \name Interconnections
     //@{
     //! All connections with this area
