@@ -65,18 +65,12 @@ enum File
     id = 2,
     //! Detailed values regarding thermal generation
     de = 4,
-    //! Adequacy results not taking into account the interconnection capacities
-    is = 8,
-    //! Adequacy results taking into account the actually available interconnection capacities
-    cn = 16,
-    //! Annual adequacy results
-    mc = 32,
     //! Detailed values regarding RES generation
-    de_res = 64,
+    de_res = 8,
     //! Detailed values regarding binding constraints
-    bc = 128,
+    bc = 16,
     //! The maximum available value
-    maxFileLevel = 128,
+    maxFileLevel = 16,
     //! All file level
     allFile = va | id | de | is | cn | mc | de_res | bc,
 };
