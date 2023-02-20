@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,7 +30,9 @@
 #include <antares/study/area/scratchpad.h>
 
 #include "simulation.h"
-
+#include "sim_structure_probleme_economique.h"
+#include "sim_extern_variables_globales.h"
+#include "adequacy_patch_runtime_data.h"
 #include <antares/emergency.h>
 
 using namespace Antares;
@@ -55,8 +57,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     if (parameters.adqPatch.enabled)
     {
-        problem.adqPatchParams
-          = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+        problem.adqPatchParams = std::make_shared<AdequacyPatchParameters>();
         // AdequacyFirstStep will be initialized during the economy solve
         problem.adqPatchParams->SetNTCOutsideToInsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
@@ -75,7 +76,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         double temp = pow(10, -parameters.adqPatch.curtailmentSharing.thresholdVarBoundsRelaxation);
         problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
 
-        problem.adequacyPatchRuntimeData.initialize(study);
+        problem.adequacyPatchRuntimeData
+          = std::make_shared<AdequacyPatchRuntimeData>(study.areas, study.runtime->areaLink);
     }
 
     problem.WaterValueAccurate
@@ -91,7 +93,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NombreDePays = study.areas.size();
 
-    problem.NombreDInterconnexions = study.runtime->interconnectionsCount;
+    problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
 
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
@@ -203,7 +205,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
-    for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
         auto& link = *(study.runtime->areaLink[i]);
         problem.PaysOrigineDeLInterconnexion[i] = link.from->index;
@@ -300,7 +302,7 @@ void SIM_InitialisationResultats()
     const size_t sizeOfNbHoursDouble = study.runtime->nbHoursPerYear * sizeof(double);
     const size_t sizeOfNbHoursLong = study.runtime->nbHoursPerYear * sizeof(int);
 
-    for (uint i = 0; i < study.runtime->interconnectionsCount; ++i)
+    for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
         auto& interconnexion = *ResultatsParInterconnexion[i];
         memset(interconnexion.VariablesDualesMoyennes, 0, sizeOfNbHoursDouble);
@@ -328,7 +330,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     auto& studyruntime = *study.runtime;
     const uint nbPays = study.areas.size();
     const size_t pasDeTempsSizeDouble = problem.NombreDePasDeTemps * sizeof(double);
-    const size_t sizeOfIntercoDouble = sizeof(double) * studyruntime.interconnectionsCount;
+    const size_t sizeOfIntercoDouble = sizeof(double) * studyruntime.interconnectionsCount();
 
     const uint weekFirstDay = study.calendar.hours[PasDeTempsDebut].dayYear;
 
@@ -342,7 +344,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         problem.tempsResolution2[opt] = 0.;
     }
 
-    for (uint k = 0; k < studyruntime.interconnectionsCount; ++k)
+    for (uint k = 0; k < studyruntime.interconnectionsCount(); ++k)
     {
         auto* lnk = studyruntime.areaLink[k];
 
@@ -540,7 +542,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         assert(NULL != ntc);
 
         {
-            uint linkCount = studyruntime.interconnectionsCount;
+            uint linkCount = studyruntime.interconnectionsCount();
             for (uint k = 0; k != linkCount; ++k)
             {
                 auto& lnk = *(studyruntime.areaLink[k]);

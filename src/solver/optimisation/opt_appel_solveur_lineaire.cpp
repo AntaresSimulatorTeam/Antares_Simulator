@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -235,8 +235,7 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
-    mpsWriterFactory mps_writer_factory(
-      problemeHebdo, optimizationNumber, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS, problemeHebdo->exportMPSOnError, optimizationNumber, &Probleme, ortoolsUsed, solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 

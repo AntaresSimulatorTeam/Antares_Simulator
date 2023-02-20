@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -46,7 +46,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     uint nbPays = study.areas.size();
 
-    uint linkCount = study.runtime->interconnectionsCount;
+    uint linkCount = study.runtime->interconnectionsCount();
 
     problem.DefaillanceNegativeUtiliserPMinThermique = (char*)MemAlloc(nbPays * sizeof(char));
     problem.DefaillanceNegativeUtiliserHydro = (char*)MemAlloc(nbPays * sizeof(char));
@@ -683,7 +683,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.CorrespondanceCntNativesCntOptim);
     MemFree(problem.VariablesDualesDesContraintesDeNTC);
 
-    for (int k = 0; k < (int)study.runtime->interconnectionsCount; k++)
+    for (int k = 0; k < (int)study.runtime->interconnectionsCount(); k++)
     {
         MemFree(problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite);
         MemFree(problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine);

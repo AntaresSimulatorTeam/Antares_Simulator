@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -128,7 +128,6 @@ public:
         };
     };
 
-
     ~LMRViolations()
     {
         delete[] pValuesForTheCurrentYear;
@@ -233,11 +232,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        NextType::hourEnd(state, hourInTheYear);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const
@@ -269,6 +263,6 @@ private:
 
 }; // class LMRViolations
 
-}
+} // namespace Antares::Solver::Variable::Economy
 
 #endif // __SOLVER_VARIABLE_ECONOMY_LMR_VIOLATIONS_H__

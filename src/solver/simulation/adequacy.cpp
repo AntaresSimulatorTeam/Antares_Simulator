@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -90,7 +90,6 @@ bool Adequacy::simulationBegin()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
             assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
@@ -270,14 +269,14 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 auto& varduales
                   = *(pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i]);
-                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount; ++lnkindex)
+                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
                 auto* ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount);
+                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount());
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)
@@ -391,7 +390,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
