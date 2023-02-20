@@ -149,8 +149,6 @@ public:
     IResultWriter::Ptr pResultWriter;
 
 private:
-    void initializeMaxVariables(const Data::Study& s);
-
     template<class StringT, class ConvertT, class PrecisionT>
     void AppendDoubleValue(uint& error,
                            const double v,

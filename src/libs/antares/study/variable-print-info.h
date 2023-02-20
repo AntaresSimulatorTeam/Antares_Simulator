@@ -115,7 +115,7 @@ public:
     bool setPrintStatus(std::string varname, bool printStatus);
     void setMaxColumns(std::string varname, uint maxColumnsNumber);
 
-    void prepareForSimulation(bool userSelection,
+    void prepareForSimulation(bool isThematicTrimmingEnabled,
                               const std::vector<std::string>& excluded_vars = {});
 
     // Classic search, then get the print status
@@ -136,15 +136,16 @@ public:
     }
 
     void computeMaxColumnsCountInReports();
+    void setAllPrintStatusesTo(bool b);
 
 private:
-    void setAllPrintStatusesTo(bool b);
     void countSelectedAreaVars();
     void countSelectedLinkVars();
 
 private:
     // Contains print info for all variables
     std::vector<VariablePrintInfo*> allVarsPrintInfo;
+    // std::map<std::string, VariablePrintInfo> allVarsPrintInfo;
 
     // Max columns count a report of any kind can contain, depending on the number of selected
     // variables. The less variables are selected, the smallest this count is.

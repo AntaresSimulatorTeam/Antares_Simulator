@@ -504,15 +504,6 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-void SurveyResults::initializeMaxVariables(const Data::Study& s)
-{
-    const auto* runtime = s.runtime;
-
-    // Getting the any report's max number of columns
-    maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
-    logs.debug() << "  (for " << maxVariables << " columns)";
-}
-
 // TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(const Data::Study& s,
                              const String& o,
@@ -522,10 +513,11 @@ SurveyResults::SurveyResults(const Data::Study& s,
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),
  pResultWriter(writer)
-{
-    initializeMaxVariables(s);
-    
+{    
     variableCaption.reserve(10);
+
+    maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
+    logs.debug() << "  (for " << maxVariables << " columns)";
 
     data.initialize(maxVariables);
     // logs.debug() << "  :: survey results: allocating "

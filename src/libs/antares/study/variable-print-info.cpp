@@ -41,12 +41,11 @@ namespace Data
 // One variable print information
 // ============================================================
 VariablePrintInfo::VariablePrintInfo(AnyString vname, uint dataLvl, uint fileLvl) :
- varname(""),
- to_be_printed(true),
- dataLevel(dataLvl),
- fileLevel(fileLvl)
+    varname(vname),
+    to_be_printed(true),
+    dataLevel(dataLvl),
+    fileLevel(fileLvl)
 {
-    varname = vname;
 }
 
 std::string VariablePrintInfo::name()
@@ -158,13 +157,11 @@ void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNu
         return (*it)->setMaxColumns(maxColumnsNumber);
 }
 
-void AllVariablesPrintInfo::prepareForSimulation(bool userSelection,
+void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
                                                  const std::vector<std::string>& excluded_vars)
 {
-    assert(!isEmpty() && "The variable print info list must not be empty at this point");
-
     // Initializing output variables status
-    if (!userSelection)
+    if (not isThematicTrimmingEnabled)
         setAllPrintStatusesTo(true);
 
     for (const auto& varname : excluded_vars)

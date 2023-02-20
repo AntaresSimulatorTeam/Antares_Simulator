@@ -966,23 +966,20 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
 {
     if (key == "selected_vars_reset")
     {
-        bool mode = value.to<bool>();
-        if (mode)
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(true);
-        }
-        else
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(false);
-        }
+        bool printAllVariables = value.to<bool>();
+        d.variablesPrintInfo.setAllPrintStatusesTo(printAllVariables);
         return true;
     }
-    if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
-    if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
+    if (key == "select_var +" || key == "select_var -")
+    {
+        // Check if the read output variable exists 
+        if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+            return false;
+
+        bool is_var_printed = (key == "select_var +");
+        d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
+        return true;
+    }
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
