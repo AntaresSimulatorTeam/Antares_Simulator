@@ -1873,35 +1873,23 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // Variable selection
     {
-        assert(!variablesPrintInfo.isEmpty());
         uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint selected_vars = 0;
+        uint nb_selected_vars = (uint)variablesPrintInfo.namesPrinted.size();
 
-        for (uint i = 0; i != nb_tot_vars; ++i)
-        {
-            if (variablesPrintInfo[i]->isPrinted())
-                ++selected_vars;
-        }
-        if (selected_vars != nb_tot_vars)
+        if (nb_selected_vars != nb_tot_vars)
         {
             // We have something to write !
             auto* section = ini.addSection("variables selection");
-            if (selected_vars <= (nb_tot_vars / 2))
+            if (nb_selected_vars <= (nb_tot_vars / 2))
             {
                 section->add("selected_vars_reset", "false");
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var +", variablesPrintInfo[i]->name());
-                }
+                for (auto name : variablesPrintInfo.namesPrinted)
+                    section->add("select_var +", name);
             }
             else
             {
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (not variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var -", variablesPrintInfo[i]->name());
-                }
+                for (auto name : variablesPrintInfo.namesNotPrinted)
+                    section->add("select_var +", name);
             }
         }
     }

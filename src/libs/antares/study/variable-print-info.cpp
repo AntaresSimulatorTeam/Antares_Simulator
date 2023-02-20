@@ -40,25 +40,25 @@ namespace Data
 // ============================================================
 // One variable print information
 // ============================================================
-VariablePrintInfo::VariablePrintInfo(AnyString vname, uint dataLvl, uint fileLvl) :
-    varname(vname),
-    to_be_printed(true),
-    dataLevel(dataLvl),
-    fileLevel(fileLvl)
+VariablePrintInfo::VariablePrintInfo(uint dataLvl, uint fileLvl) :
+    to_be_printed_(true),
+    dataLevel_(dataLvl),
+    fileLevel_(fileLvl)
 {
 }
 
-std::string VariablePrintInfo::name()
-{
-    return varname.to<std::string>();
-}
 void VariablePrintInfo::enablePrint(bool b)
 {
-    to_be_printed = b;
+    to_be_printed_ = b;
 }
-bool VariablePrintInfo::isPrinted()
+bool VariablePrintInfo::isPrinted() const
 {
-    return to_be_printed;
+    return to_be_printed_;
+}
+
+void VariablePrintInfo::reverse()
+{
+    to_be_printed_ = !to_be_printed_;
 }
 uint VariablePrintInfo::getMaxColumnsCount()
 {
@@ -82,40 +82,32 @@ void variablePrintInfoCollector::add(const AnyString& name,
                                      uint dataLevel,
                                      uint fileLevel)
 {
-    allvarsinfo->add(new VariablePrintInfo(name, dataLevel, fileLevel));
+    allvarsinfo->add(name.to<std::string>(), VariablePrintInfo(dataLevel, fileLevel));
 }
 
 // ============================================================
 // All variables print information
 // ============================================================
 
-AllVariablesPrintInfo::~AllVariablesPrintInfo()
+void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
 {
-    clear();
-}
-
-void AllVariablesPrintInfo::add(VariablePrintInfo* v)
-{
-    allVarsPrintInfo.push_back(v);
+    if (not exists(name))
+    {
+        index_to_name[(unsigned int)allVarsPrintInfo.size()] = name;
+        allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(name, v));
+    }
 }
 
 void AllVariablesPrintInfo::clear()
 {
-    // Destroying objects in lists
-    // ---------------------------
-    // Deleting variable' print info objects pointed in the list
-    for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); ++it)
-        delete *it;
-
-    // After destroying objects in list, clearing lists
-    // ------------------------------------------------
-    // Clearing variables' print info list
     allVarsPrintInfo.clear();
+    index_to_name.clear();
 }
 
-VariablePrintInfo* AllVariablesPrintInfo::operator[](uint i) const
+VariablePrintInfo& AllVariablesPrintInfo::operator[](uint i)
 {
-    return allVarsPrintInfo[i];
+    std::string name = index_to_name[i];
+    return allVarsPrintInfo.at(name);
 }
 
 size_t AllVariablesPrintInfo::size() const
@@ -123,38 +115,29 @@ size_t AllVariablesPrintInfo::size() const
     return allVarsPrintInfo.size();
 }
 
+bool AllVariablesPrintInfo::exists(std::string name)
+{
+    return allVarsPrintInfo.find(name) != allVarsPrintInfo.end();
+}
+
 bool AllVariablesPrintInfo::isEmpty() const
 {
     return allVarsPrintInfo.empty();
 }
 
-static std::string to_uppercase(std::string str)
+void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-    return str;
-}
-
-bool AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
-{
-    auto has_uppercase_name = [&](VariablePrintInfo* v) { 
-        std::string name = to_uppercase(v->name());
-        return to_uppercase(v->name()) == to_uppercase(varname); };
-
-    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_uppercase_name);
-    if (it != allVarsPrintInfo.end())
-    {
-        (*it)->enablePrint(printStatus);
-        return true;
-    }
-    return false;
+    allVarsPrintInfo.at(varname).enablePrint(printStatus);
 }
 
 void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
 {
-    auto has_name = [&](VariablePrintInfo* v) { return v->name() == varname; };
-    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_name);
-    if (it != allVarsPrintInfo.end())
-        return (*it)->setMaxColumns(maxColumnsNumber);
+    allVarsPrintInfo.at(varname).setMaxColumns(maxColumnsNumber);
+}
+
+std::string AllVariablesPrintInfo::name_of(unsigned int index) const
+{
+    return index_to_name.at(index);
 }
 
 void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
@@ -166,34 +149,43 @@ void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
 
     for (const auto& varname : excluded_vars)
     {
-        const bool res = setPrintStatus(varname, false);
-        if (not res)
-            logs.info() << "Variable " << varname << " not found. Could not remove it";
+        setPrintStatus(varname, false);
     }
 
     // Counting zonal and link output selected variables
     countSelectedAreaVars();
     countSelectedLinkVars();
+    splitByPrintStatus();
 }
 
 bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 {
-    auto has_name = [&](VariablePrintInfo* v) { return v->name() == var_name; };
-    auto it = std::find_if(allVarsPrintInfo.begin(), allVarsPrintInfo.end(), has_name);
-    if (it != allVarsPrintInfo.end())
-        return (*it)->isPrinted();
-
-    // This point is not supposed to be reached (except in draft mode),
-    // because the searched variables should be found.
-    return true;
+    return allVarsPrintInfo.at(var_name).isPrinted();
 }
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (VariablePrintInfo* v : allVarsPrintInfo)
-        v->enablePrint(b);
+    for (auto pair : allVarsPrintInfo)
+        pair.second.enablePrint(b);
 }
 
+void AllVariablesPrintInfo::reverseAll()
+{
+    for (auto pair : allVarsPrintInfo)
+        pair.second.reverse();
+
+}
+
+void AllVariablesPrintInfo::splitByPrintStatus()
+{
+    for (auto pair : allVarsPrintInfo)
+    {
+        if (pair.second.isPrinted())
+            namesPrinted.push_back(pair.first);
+        else
+            namesNotPrinted.push_back(pair.first);
+    }
+}
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 {
     /*
@@ -217,15 +209,15 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
-            for (auto it = allVarsPrintInfo.begin(); it != allVarsPrintInfo.end(); it++)
+            for (auto pair : allVarsPrintInfo)
             {
-                if ((*it)->isPrinted() &&
-                    (*it)->getFileLevel() & CFileLevel &&
-                    (*it)->getDataLevel() & CDataLevel)
+                if (pair.second.isPrinted() &&
+                    pair.second.getFileLevel() & CFileLevel &&
+                    pair.second.getDataLevel() & CDataLevel)
                 {
                     // For the current output variable, we retrieve the max number
                     // of columns it takes in a sysnthesis report. 
-                    currentColumnsCount += (*it)->getMaxColumnsCount();
+                    currentColumnsCount += pair.second.getMaxColumnsCount();
                 }
             }
 
@@ -236,18 +228,18 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    for (VariablePrintInfo* v : allVarsPrintInfo)
+    for (auto pair : allVarsPrintInfo)
     {
-        if (v->isPrinted() && v->getDataLevel() == Category::area)
+        if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::area)
             numberSelectedAreaVariables++;
     }
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    for (VariablePrintInfo* v : allVarsPrintInfo)
+    for (auto pair : allVarsPrintInfo)
     {
-        if (v->isPrinted() && v->getDataLevel() == Category::link)
+        if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::link)
             numberSelectedLinkVariables++;
     }
 }
