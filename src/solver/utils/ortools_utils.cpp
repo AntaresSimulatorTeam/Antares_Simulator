@@ -40,6 +40,7 @@ static void transferVariables(MPSolver* solver,
             varName = NomDesVariables[idxVar];
         }
 
+        // TODO[FOM] FIXME, this is ugly
         integer = VariablesEntieres[idxVar] && (NumeroOptimisation == 1);
 
         const MPVariable* var = solver->MakeVar(min_l, max_l, integer, varName);
