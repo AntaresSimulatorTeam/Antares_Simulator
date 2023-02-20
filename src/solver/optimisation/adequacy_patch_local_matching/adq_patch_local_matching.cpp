@@ -26,6 +26,7 @@
 */
 
 #include "adq_patch_local_matching.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 namespace Antares::Data::AdequacyPatch
 {
@@ -74,11 +75,13 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
     switch (ExtremityNodeAdequacyPatchType)
     {
     case physicalAreaInsideAdqPatch:
-        return setToZeroNTCfromOutToIn_AdqPatch ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
-            : NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero;
+        return setToZeroNTCfromOutToIn_AdqPatch
+                 ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+                 : NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero;
     case physicalAreaOutsideAdqPatch:
-        return setToZeroNTCfromOutToOut_AdqPatch ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
-            : NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
+        return setToZeroNTCfromOutToOut_AdqPatch
+                 ? NtcSetToZeroStatus_AdqPatchStep1::setToZero
+                 : NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     default:
         return NtcSetToZeroStatus_AdqPatchStep1::leaveLocalValues;
     }
@@ -98,9 +101,9 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* probl
                                                            int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco];
+      = problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco];
     AdequacyPatchMode ExtremityNodeAdequacyPatchType
-      = problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco];
+      = problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco];
     bool setToZeroNTCfromOutToIn_AdqPatch
       = problemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
     bool setToZeroNTCfromOutToOut_AdqPatch

@@ -1,6 +1,8 @@
 
 #include "post_process_commands.h"
 #include "../simulation/common-eco-adq.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
+#include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 
 namespace Antares::Solver::Simulation
@@ -118,7 +120,7 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
 {
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] != physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] != physicalAreaInsideAdqPatch)
             continue;
 
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
@@ -132,7 +134,7 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
             double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
             // calculate DTG MRG CSR and adjust ENS if neccessary
-            if (dtgMrgCsr == -1.0) // area is inside adq-patch and it is CSR triggered hour
+            if (problemeHebdo_->adequacyPatchRuntimeData->wasCSRTriggeredAtAreaHour(Area, hour))
             {
                 dtgMrgCsr = std::max(0.0, dtgMrg - ens);
                 ens = std::max(0.0, ens - dtgMrg);
@@ -215,7 +217,7 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area] == physicalAreaInsideAdqPatch)
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area] == physicalAreaInsideAdqPatch)
         {
             for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
@@ -270,7 +272,7 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
     std::vector<double> sumENS(nbHoursInWeek, 0.0);
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             const double* ENS
