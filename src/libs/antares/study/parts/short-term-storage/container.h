@@ -34,7 +34,7 @@ namespace Antares::Data::ShortTermStorage
 {
   class PartShortTermStorage {
   public:
-    bool Validate() const;
+    bool validate() const;
     // 1. Read list.ini
     bool createUnitsFromIniFile(const std::string& path);
     // 2. Read ALL series

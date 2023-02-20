@@ -32,7 +32,7 @@
 
 namespace Antares::Data::ShortTermStorage {
   class Unit {
-    bool Validate() const;
+    bool validate() const;
     bool loadFromFolder(const std::string& folder);
   private:
     Series series;

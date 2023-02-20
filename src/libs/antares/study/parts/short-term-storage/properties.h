@@ -38,7 +38,7 @@ namespace Antares::Data::ShortTermStorage {
   };
 
   class Properties {
-    bool Validate() const;
+    bool validate() const;
     bool loadFromFolder(const std::string& folder);
     // Number of units, >= 1
     unsigned int unitCount;

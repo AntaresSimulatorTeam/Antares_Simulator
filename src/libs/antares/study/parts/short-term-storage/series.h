@@ -6,7 +6,7 @@
 
 namespace Antares::Data::ShortTermStorage {
   class Series {
-    bool Validate() const;
+    bool validate() const;
     bool loadFromFolder(const std::string& folder);
     std::vector<double> maxInjection;
     std::vector<double> maxWithdrawal;
