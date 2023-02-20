@@ -72,7 +72,7 @@ enum File
     //! The maximum available value
     maxFileLevel = 16,
     //! All file level
-    allFile = va | id | de | is | cn | mc | de_res | bc,
+    allFile = va | id | de | de_res | bc,
 };
 
 enum Precision
@@ -207,15 +207,6 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
     case de:
         out += "de";
         break;
-    case is:
-        out += "is";
-        break;
-    case cn:
-        out += "cn";
-        break;
-    case mc:
-        out += "mc";
-        break;
     case de_res:
         out += "res";
         break;
@@ -240,15 +231,6 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
         break;
     case de:
         out += "details";
-        break;
-    case is:
-        out += "without-network";
-        break;
-    case cn:
-        out += "with-network";
-        break;
-    case mc:
-        out += "mc";
         break;
     case de_res:
         out += "details-res";
