@@ -261,7 +261,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
-                int palier
+                const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout

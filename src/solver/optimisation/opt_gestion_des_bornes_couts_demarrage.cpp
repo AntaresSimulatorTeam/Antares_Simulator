@@ -71,7 +71,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
             {
                 PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
-                int palier
+                const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 int* NombreMaxDeGroupesEnMarcheDuPalierThermique
                   = PuissanceDisponibleEtCout->NombreMaxDeGroupesEnMarcheDuPalierThermique;

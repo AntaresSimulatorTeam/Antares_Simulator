@@ -47,46 +47,46 @@ double OPT_CalculerAireMaxPminJour(int PremierPdt,
     double Cout = 0.0;
     int NbMx = 0;
 
-    for (int i = 0; i < PremierPdt; i++)
+    for (int hour = 0; hour < PremierPdt; hour++)
     {
-        if (NbGrpCourbeGuide[i] > NbMx)
-            NbMx = NbGrpCourbeGuide[i];
+        if (NbGrpCourbeGuide[hour] > NbMx)
+            NbMx = NbGrpCourbeGuide[hour];
     }
 
-    for (int i = DernierPdt; i < NombreDePasDeTemps; i++)
+    for (int hour = DernierPdt; hour < NombreDePasDeTemps; hour++)
     {
-        if (NbGrpCourbeGuide[i] > NbMx)
-            NbMx = NbGrpCourbeGuide[i];
+        if (NbGrpCourbeGuide[hour] > NbMx)
+            NbMx = NbGrpCourbeGuide[hour];
     }
 
-    for (int i = 0; i < PremierPdt; i++)
+    for (int hour = 0; hour < PremierPdt; hour++)
     {
-        NbGrpOpt[i] = NbMx;
-        Cout += (double)(NbGrpOpt[i] - NbGrpCourbeGuide[i]);
+        NbGrpOpt[hour] = NbMx;
+        Cout += (double)(NbGrpOpt[hour] - NbGrpCourbeGuide[hour]);
     }
 
-    for (int i = DernierPdt; i < NombreDePasDeTemps; i++)
+    for (int hour = DernierPdt; hour < NombreDePasDeTemps; hour++)
     {
-        NbGrpOpt[i] = NbMx;
-        Cout += (double)(NbGrpOpt[i] - NbGrpCourbeGuide[i]);
+        NbGrpOpt[hour] = NbMx;
+        Cout += (double)(NbGrpOpt[hour] - NbGrpCourbeGuide[hour]);
     }
 
-    int i = PremierPdt;
-    while (i < DernierPdt)
+    int hour = PremierPdt;
+    while (hour < DernierPdt)
     {
         NbMx = 0;
         int countMUT = 0;
-        for (countMUT = 0; countMUT < MUTetMDT && i < DernierPdt; countMUT++, i++)
+        for (countMUT = 0; countMUT < MUTetMDT && hour < DernierPdt; countMUT++, hour++)
         {
-            if (NbGrpCourbeGuide[i] > NbMx)
-                NbMx = NbGrpCourbeGuide[i];
+            if (NbGrpCourbeGuide[hour] > NbMx)
+                NbMx = NbGrpCourbeGuide[hour];
         }
 
-        i -= countMUT;
-        for (countMUT = 0; countMUT < MUTetMDT && i < DernierPdt; countMUT++, i++)
+        hour -= countMUT;
+        for (countMUT = 0; countMUT < MUTetMDT && hour < DernierPdt; countMUT++, hour++)
         {
-            NbGrpOpt[i] = NbMx;
-            Cout += (double)(NbGrpOpt[i] - NbGrpCourbeGuide[i]);
+            NbGrpOpt[hour] = NbMx;
+            Cout += (double)(NbGrpOpt[hour] - NbGrpCourbeGuide[hour]);
         }
     }
 
@@ -147,16 +147,16 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
             if (IntervalleDAjustement < 0)
                 IntervalleDAjustement = 0;
 
-            for (int i = 0; i <= IntervalleDAjustement; i++)
+            for (int hour = 0; hour <= IntervalleDAjustement; hour++)
             {
-                int PremierPdt = i;
-                int DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + i;
+                int PremierPdt = hour;
+                int DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + hour;
                 double Ecart = OPT_CalculerAireMaxPminJour(
                   PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
                 if (Ecart < EcartOpt)
                 {
                     EcartOpt = Ecart;
-                    iOpt = i;
+                    iOpt = hour;
                 }
             }
 

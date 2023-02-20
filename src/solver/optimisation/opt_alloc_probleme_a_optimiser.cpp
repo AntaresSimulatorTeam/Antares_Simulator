@@ -213,8 +213,7 @@ void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
         = (PROBLEME_ANTARES_A_RESOUDRE*)MemAllocMemset(sizeof(PROBLEME_ANTARES_A_RESOUDRE));
     problemeHebdo->ProblemeAResoudre = ProblemeAResoudre;
 
-    int mxPaliers;
-    OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo, &mxPaliers);
+    int mxPaliers = OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(problemeHebdo);
 
     optimisationAllocateProblem(problemeHebdo, mxPaliers);
 }

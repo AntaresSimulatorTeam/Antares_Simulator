@@ -127,7 +127,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {
-                int palier
+                const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 if (var >= 0)
@@ -214,7 +214,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
             for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {
-                int palier
+                const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 if (var >= 0)
@@ -392,7 +392,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 {
                     int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
                     PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-                    int palier
+                    const int palier
                       = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                     double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];
@@ -501,7 +501,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 {
                     int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
                     PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-                    int palier
+                    const int palier
                       = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                     double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];
@@ -603,7 +603,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 {
                     int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
                     PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-                    int palier
+                    const int palier
                       = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                           [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
                     double poids = MatriceDesContraintesCouplantes->PoidsDuPalierDispatch[index];

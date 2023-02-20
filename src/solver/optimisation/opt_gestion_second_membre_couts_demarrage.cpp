@@ -64,9 +64,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
             int* NombreMaxDeGroupesEnMarcheDuPalierThermique
                 = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
                     ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            int DureeMinimaleDArretDUnGroupeDuPalierThermique
+            const int DureeMinimaleDArretDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
-            int palier
+            const int palier
               = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
             for (int pdtJour = 0, pdtHebdo = PremierPdtDeLIntervalle;
