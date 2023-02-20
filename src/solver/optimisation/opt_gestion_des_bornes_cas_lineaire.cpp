@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,7 +31,7 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_structure_probleme_adequation.h"
-#include "../simulation/sim_extern_variables_globales.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "opt_fonctions.h"
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
@@ -141,7 +141,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
             // adq patch: update ENS <= DENS in 2nd run
             if (problemeHebdo->adqPatchParams
                 && problemeHebdo->adqPatchParams->AdequacyFirstStep == false
-                && problemeHebdo->adequacyPatchRuntimeData.areaMode[pays]
+                && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 Xmax[var] = std::min(
                   Xmax[var], problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS[pdtHebdo]);

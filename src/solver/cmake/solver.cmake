@@ -20,7 +20,7 @@ set(RTESOLVER_OPT
 		optimisation/opt_pilotage_optimisation_lineaire.cpp
 		optimisation/opt_pilotage_optimisation_quadratique.cpp
 		optimisation/opt_structure_probleme_a_resoudre.h
-        optimisation/opt_constants.h
+		optimisation/opt_constants.h
 		optimisation/opt_alloc_probleme_a_optimiser.cpp
 		optimisation/opt_gestion_des_bornes_cas_quadratique.cpp
 		optimisation/opt_construction_variables_optimisees_lineaire.cpp
@@ -63,6 +63,7 @@ set(RTESOLVER_OPT
 		optimisation/optim_post_process_list.cpp
 		optimisation/post_process_commands.h
 		optimisation/post_process_commands.cpp
+		optimisation/adequacy_patch_csr/hourly_csr_problem.h
 		optimisation/adequacy_patch_csr/adq_patch_post_process_list.h
 		optimisation/adequacy_patch_csr/adq_patch_post_process_list.cpp
 		optimisation/adequacy_patch_local_matching/adq_patch_local_matching.h
@@ -76,8 +77,8 @@ set(RTESOLVER_OPT
 		optimisation/adequacy_patch_csr/construct_problem_constraints_RHS.cpp
 		optimisation/adequacy_patch_csr/csr_quadratic_problem.h
 		optimisation/adequacy_patch_csr/csr_quadratic_problem.cpp
-        optimisation/adequacy_patch_csr/count_constraints_variables.h
-        optimisation/adequacy_patch_csr/count_constraints_variables.cpp
+		optimisation/adequacy_patch_csr/count_constraints_variables.h
+		optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
 		optimisation/opt_period_string_generator_base.h
 
