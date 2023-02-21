@@ -38,6 +38,42 @@
 
 using namespace Antares::Data;
 
+
+void exportPaliers(PROBLEME_HEBDO* problemeHebdo,
+                    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
+                    int pays, int* nombreDeTermes,
+                    double* Pi, int* Colonne,
+                    int timeStepInYear)
+{
+    const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+    int nvars = problemeHebdo->ProblemeAResoudre->NombreDeVariables;
+    std::vector<std::string> varname;
+    varname.assign(nvars, "");
+
+    for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
+    {
+        const int palier
+            = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
+        if (var >= 0)
+        {
+            Pi[*nombreDeTermes] = -1.0;
+            Colonne[*nombreDeTermes] = var;
+            (*nombreDeTermes)++;
+
+            if (problemeHebdo->ExportStructure)
+            {
+                OPT_Export_add_variable(varname,
+                        var,
+                        Enum::ExportStructDict::PalierThermique,
+                        timeStepInYear, // TODO[FOM] remove
+                        pays,
+                        palier);
+            }
+        }
+    }
+}
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
     int var;
@@ -123,29 +159,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }
 
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
-            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
-            {
-                const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-
-                    if (exportStructure)
-                    {
-                        OPT_Export_add_variable(varname,
-                                                var,
-                                                Enum::ExportStructDict::PalierThermique,
-                                                timeStepInYear, // TODO[FOM] remove
-                                                pays,
-                                                palier);
-                    }
-                }
-            }
+            exportPaliers(problemeHebdo, CorrespondanceVarNativesVarOptim, pays, &nombreDeTermes,
+                Pi, Colonne, timeStepInYear);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
@@ -210,28 +225,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             nombreDeTermes = 0;
 
-            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
-            {
-                const int palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
-                if (var >= 0)
-                {
-                    Pi[nombreDeTermes] = -1.0;
-                    Colonne[nombreDeTermes] = var;
-                    nombreDeTermes++;
-
-                    if (exportStructure)
-                    {
-                        OPT_Export_add_variable(varname,
-                                                var,
-                                                Enum::ExportStructDict::PalierThermique,
-                                                timeStepInYear, // TODO[FOM] remove
-                                                pays,
-                                                palier);
-                    }
-                }
-            }
+            exportPaliers(problemeHebdo, CorrespondanceVarNativesVarOptim, pays, &nombreDeTermes,
+                Pi, Colonne, timeStepInYear);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
