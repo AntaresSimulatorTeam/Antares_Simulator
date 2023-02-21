@@ -125,9 +125,15 @@ bool AllVariablesPrintInfo::isEmpty() const
     return allVarsPrintInfo.empty();
 }
 
+static std::string to_uppercase(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    return str;
+}
+
 void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
-    allVarsPrintInfo.at(varname).enablePrint(printStatus);
+    allVarsPrintInfo.at(to_uppercase(varname)).enablePrint(printStatus);
 }
 
 void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
@@ -165,20 +171,20 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (auto pair : allVarsPrintInfo)
+    for (auto& pair : allVarsPrintInfo)
         pair.second.enablePrint(b);
 }
 
 void AllVariablesPrintInfo::reverseAll()
 {
-    for (auto pair : allVarsPrintInfo)
+    for (auto& pair : allVarsPrintInfo)
         pair.second.reverse();
 
 }
 
 void AllVariablesPrintInfo::splitByPrintStatus()
 {
-    for (auto pair : allVarsPrintInfo)
+    for (auto& pair : allVarsPrintInfo)
     {
         if (pair.second.isPrinted())
             namesPrinted.push_back(pair.first);
@@ -209,7 +215,7 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
-            for (auto pair : allVarsPrintInfo)
+            for (auto& pair : allVarsPrintInfo)
             {
                 if (pair.second.isPrinted() &&
                     pair.second.getFileLevel() & CFileLevel &&
@@ -228,7 +234,7 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    for (auto pair : allVarsPrintInfo)
+    for (auto& pair : allVarsPrintInfo)
     {
         if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::area)
             numberSelectedAreaVariables++;
@@ -237,7 +243,7 @@ void AllVariablesPrintInfo::countSelectedAreaVars()
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    for (auto pair : allVarsPrintInfo)
+    for (auto& pair : allVarsPrintInfo)
     {
         if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::link)
             numberSelectedLinkVariables++;
