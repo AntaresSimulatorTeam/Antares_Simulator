@@ -179,8 +179,10 @@ jobs:
            rm -rf src/tests/resources/Antares_Simulator_Tests
            rm -rf src/tests/resources/NonRegTests
            cd _build
-           mkdir -p ui\simulator\resources\help\
-           touch antares-general-reference-guide.pdf system-map-editor-reference-guide.pdf antares-examples-library.pdf
+           mkdir -p ui/simulator/resources/help/
+           touch ui/simulator/resources/help/antares-general-reference-guide.pdf
+           touch ui/simulator/resources/help/system-map-editor-reference-guide.pdf
+           touch ui/simulator/resources/help/antares-examples-library.pdf
            cpack -GNSIS
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
