@@ -27,7 +27,7 @@ class output_compare(check_interface):
         self.study_modifiers_.append(print_results)
 
     def run(self):
-        # Reference simulation folder (can be "adequacy", "economy" or "adequacy-draft")
+        # Reference simulation folder (can be "adequacy" or "economy")
         ref_simulation_folder = find_simulation_folder(self.ref_folder)
 
         # Folder of results (of which content is compared to content of reference folder)

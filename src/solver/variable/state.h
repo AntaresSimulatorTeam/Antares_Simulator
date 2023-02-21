@@ -156,15 +156,6 @@ public:
     //! The current link
     Data::AreaLink* link;
 
-    //! \name Adequacy Draft
-    //@{
-    RESULTATS_HORAIRES_ADEQUATION* hourlyAdequacyResults;
-    double eensSystemIS;
-    double eensSystemCN;
-    bool loleSystemIS_HasFailure;
-    bool loleSystemCN_HasFailure;
-    //@}
-
     //! \name Adequacy
     //@{
     /*!
