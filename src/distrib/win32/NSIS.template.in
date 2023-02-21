@@ -333,9 +333,9 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.png"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.gif"
 	${SetOutPath} "$INSTDIR\Resources\Help"
-	${File} "/nonfatal" "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-general-reference-guide.pdf"
-	${File} "/nonfatal" "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
-	${File} "/nonfatal" "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
+	${File} /nonfatal "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-general-reference-guide.pdf"
+	${File} /nonfatal "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
+	${File} /nonfatal "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
 	
 	${SetOutPath} "$INSTDIR\Documentation"
 	CreateShortCut "$INSTDIR\Documentation\General reference guide (PDF).lnk" "$INSTDIR\Resources\Help\antares-general-reference-guide.pdf" "" ""
