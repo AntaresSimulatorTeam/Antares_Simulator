@@ -220,6 +220,7 @@ void SelectOutput::updateCaption()
 
     if (d.thematicTrimming)
     {
+        d.variablesPrintInfo.sortVariablesByPrintStatus();
         uint nbPrintedVars = d.variablesPrintInfo.namesPrinted.size();
         if (nbPrintedVars < 2)
             pStatus->SetLabel(wxString()

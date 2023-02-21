@@ -89,12 +89,19 @@ void variablePrintInfoCollector::add(const AnyString& name,
 // All variables print information
 // ============================================================
 
+static std::string to_uppercase(std::string str)
+{
+    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
+    return str;
+}
+
 void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
 {
-    if (not exists(name))
+    std::string upperCaseName = to_uppercase(name);
+    if (not exists(upperCaseName))
     {
-        index_to_name[(unsigned int)allVarsPrintInfo.size()] = name;
-        allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(name, v));
+        index_to_name[(unsigned int)allVarsPrintInfo.size()] = upperCaseName;
+        allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(upperCaseName, v));
     }
 }
 
@@ -117,18 +124,12 @@ size_t AllVariablesPrintInfo::size() const
 
 bool AllVariablesPrintInfo::exists(std::string name)
 {
-    return allVarsPrintInfo.find(name) != allVarsPrintInfo.end();
+    return allVarsPrintInfo.find(to_uppercase(name)) != allVarsPrintInfo.end();
 }
 
 bool AllVariablesPrintInfo::isEmpty() const
 {
     return allVarsPrintInfo.empty();
-}
-
-static std::string to_uppercase(std::string str)
-{
-    std::transform(str.begin(), str.end(), str.begin(), ::toupper);
-    return str;
 }
 
 void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
@@ -138,7 +139,7 @@ void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus
 
 void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
 {
-    allVarsPrintInfo.at(varname).setMaxColumns(maxColumnsNumber);
+    allVarsPrintInfo.at(to_uppercase(varname)).setMaxColumns(maxColumnsNumber);
 }
 
 std::string AllVariablesPrintInfo::name_of(unsigned int index) const
@@ -155,18 +156,18 @@ void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
 
     for (const auto& varname : excluded_vars)
     {
-        setPrintStatus(varname, false);
+        setPrintStatus(varname, false); // varname is supposed to in uppercase already
     }
 
     // Counting zonal and link output selected variables
     countSelectedAreaVars();
     countSelectedLinkVars();
-    splitByPrintStatus();
+    sortVariablesByPrintStatus();
 }
 
 bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 {
-    return allVarsPrintInfo.at(var_name).isPrinted();
+    return allVarsPrintInfo.at(to_uppercase(var_name)).isPrinted();
 }
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
@@ -182,8 +183,11 @@ void AllVariablesPrintInfo::reverseAll()
 
 }
 
-void AllVariablesPrintInfo::splitByPrintStatus()
+void AllVariablesPrintInfo::sortVariablesByPrintStatus()
 {
+    namesPrinted.clear();
+    namesNotPrinted.clear();
+
     for (auto& pair : allVarsPrintInfo)
     {
         if (pair.second.isPrinted())

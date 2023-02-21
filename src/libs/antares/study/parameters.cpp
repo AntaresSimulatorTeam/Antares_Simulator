@@ -1889,7 +1889,7 @@ void Parameters::saveToINI(IniFile& ini) const
             else
             {
                 for (auto name : variablesPrintInfo.namesNotPrinted)
-                    section->add("select_var +", name);
+                    section->add("select_var -", name);
             }
         }
     }

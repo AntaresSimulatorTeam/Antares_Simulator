@@ -135,9 +135,9 @@ public:
     // Public attributes
     std::vector<std::string> namesPrinted;
     std::vector<std::string> namesNotPrinted;
+    void sortVariablesByPrintStatus();
 
 private:
-    void splitByPrintStatus();
     void countSelectedAreaVars();
     void countSelectedLinkVars();
 
