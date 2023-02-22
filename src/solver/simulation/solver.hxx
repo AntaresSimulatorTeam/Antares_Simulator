@@ -157,10 +157,12 @@ private:
             simulationObj->prepareClustersInMustRunMode(numSpace);
 
             // 4 - Hydraulic ventilation
-            Benchmarking::Timer timer;
-            simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
-            timer.stop();
-            pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
+            {
+                Benchmarking::Timer timer;
+                simulationObj->pHydroManagement(randomReservoirLevel, state[numSpace], y, numSpace);
+                timer.stop();
+                pDurationCollector->addDuration("hydro_ventilation", timer.get_duration());
+            }
 
             // Updating the state
             state[numSpace].year = y;

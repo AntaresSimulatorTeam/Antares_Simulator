@@ -222,8 +222,6 @@ public:
     unsigned int numSpace;
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
-    **
-    ** This flag is always true in economy mode, and always false in adequacy-draft
     */
     bool simplexHasBeenRan;
 

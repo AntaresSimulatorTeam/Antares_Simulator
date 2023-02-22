@@ -200,9 +200,6 @@ public:
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace = 9999)
     {
-        // Standard - Not related to anything
-        // previously adq patch, now do nothing
-
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)

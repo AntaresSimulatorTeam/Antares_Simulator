@@ -52,8 +52,6 @@ The table below gives an overview of the different reserves available in Antares
 | | _Economy_ | _Adequacy_ |
 |:---:|:---:|:---:|:---:|
 | _R0_ | _Yes_ | _Yes_ |
-| _R1_ | _No_ | _No_ |
-| _R2_ | _No_ | _No_ |
 | _R3_ | _Yes_ | _Yes_ |
 
 
