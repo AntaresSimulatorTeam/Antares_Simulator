@@ -89,7 +89,7 @@ void variablePrintInfoCollector::add(const AnyString& name,
 // All variables print information
 // ============================================================
 
-static std::string to_uppercase(std::string str)
+static std::string to_uppercase(std::string& str)
 {
     std::transform(str.begin(), str.end(), str.begin(), ::toupper);
     return str;
@@ -154,7 +154,7 @@ void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
                                                  const std::vector<std::string>& excluded_vars)
 {
     // Initializing output variables status
-    if (not isThematicTrimmingEnabled)
+    if (!isThematicTrimmingEnabled)
         setAllPrintStatusesTo(true);
 
     for (const auto& varname : excluded_vars)
