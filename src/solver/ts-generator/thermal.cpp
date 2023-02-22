@@ -77,8 +77,6 @@ public:
 
     uint nbThermalTimeseries;
 
-    bool economyMode;
-
     bool derated;
 
 private:
@@ -153,8 +151,6 @@ GeneratorTempData::GeneratorTempData(Data::Study& study,
     archive = (0 != (parameters.timeSeriesToArchive & Data::timeSeriesThermal));
 
     nbThermalTimeseries = parameters.nbTimeSeriesThermal;
-
-    economyMode = (parameters.mode != Data::stdmAdequacyDraft);
 
     derated = parameters.derated;
 }
@@ -632,8 +628,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     if (archive)
         writeResultsToDisk(area, cluster);
 
-    if (economyMode)
-        cluster.calculationOfSpinning();
+    cluster.calculationOfSpinning();
 }
 } // namespace
 

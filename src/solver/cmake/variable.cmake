@@ -47,7 +47,6 @@ set(SRC_VARIABLE_STORAGE
 		variable/storage/averagedata.h
 		variable/storage/averagedata.cpp
 		variable/storage/stdDeviation.h
-		variable/storage/and.h
 		variable/storage/fwd.h
 		)
 source_group("variable\\storage" FILES ${SRC_VARIABLE_STORAGE})
@@ -68,32 +67,6 @@ set(SRC_VARIABLE_COMMON
 		variable/commons/links/links.hxx.inc.hxx
 		)
 source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
-
-
-set(SRC_VARIABLE_ADEQUACY_DRAFT
-		variable/adequacy-draft/all.h
-		variable/adequacy-draft/area.cpp
-		variable/adequacy-draft/area.memory-estimation.cpp
-
-		# Variables for Adequacy
-		variable/adequacy-draft/lold_is.h
-		variable/adequacy-draft/lold_cn.h
-		variable/adequacy-draft/lold_is_system.h
-		variable/adequacy-draft/lold_cn_system.h
-		variable/adequacy-draft/ens_is.h
-		variable/adequacy-draft/ens_cn.h
-		variable/adequacy-draft/ens_is_system.h
-		variable/adequacy-draft/ens_cn_system.h
-		variable/adequacy-draft/lolp_is.h
-		variable/adequacy-draft/lolp_cn.h
-		variable/adequacy-draft/lolp_is_system.h
-		variable/adequacy-draft/lolp_cn_system.h
-		variable/adequacy-draft/minmarg_is.h
-		variable/adequacy-draft/minmarg_cn.h
-		variable/adequacy-draft/maxdepth_is.h
-		variable/adequacy-draft/maxdepth_cn.h
-		)
-source_group("variable\\adequacy-draft" FILES ${SRC_VARIABLE_ADEQUACY_DRAFT})
 
 set(SRC_VARIABLE_ADEQUACY
 		variable/adequacy/all.h
@@ -176,7 +149,6 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE}
 		${SRC_VARIABLE_COMMON}
 		${SRC_VARIABLE_STORAGE}
-		${SRC_VARIABLE_ADEQUACY_DRAFT}
 		${SRC_VARIABLE_ADEQUACY}
 		${SRC_VARIABLE_ECONOMY}  )
 
@@ -185,11 +157,9 @@ target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
 
 add_library(libantares-solver-variable-info
-		variable/adequacy-draft/all.h
 		variable/adequacy/all.h
 		variable/economy/all.h
 		variable/economy/area.memory-estimation.cpp
-		variable/adequacy-draft/area.memory-estimation.cpp
 		variable/adequacy/area.memory-estimation.cpp
 		variable/economy/bc.memory-estimation.cpp
 		variable/adequacy/bc.memory-estimation.cpp

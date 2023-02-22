@@ -68,7 +68,6 @@ private:
     void readDataForTheStudy(Antares::Data::StudyLoadOptions& options);
 
     void runSimulationInAdequacyMode();
-    void runSimulationInAdequacyDraftMode();
     void runSimulationInEconomicMode();
 
     void initializeRandomNumberGenerators();

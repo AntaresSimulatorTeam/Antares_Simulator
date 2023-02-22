@@ -51,11 +51,6 @@ inline bool Parameters::adequacy() const
     return mode == stdmAdequacy;
 }
 
-inline bool Parameters::adequacyDraft() const
-{
-    return mode == stdmAdequacyDraft;
-}
-
 } // namespace Data
 } // namespace Antares
 

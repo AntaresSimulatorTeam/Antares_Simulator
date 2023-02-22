@@ -156,15 +156,6 @@ public:
     //! The current link
     Data::AreaLink* link;
 
-    //! \name Adequacy Draft
-    //@{
-    RESULTATS_HORAIRES_ADEQUATION* hourlyAdequacyResults;
-    double eensSystemIS;
-    double eensSystemCN;
-    bool loleSystemIS_HasFailure;
-    bool loleSystemCN_HasFailure;
-    //@}
-
     //! \name Adequacy
     //@{
     /*!
@@ -221,7 +212,7 @@ public:
 
     //! The timeseries indexes for the current area
     NUMERO_CHRONIQUES_TIREES_PAR_PAYS* timeseriesIndex;
-    //! Study mode: economy / adequacy / draft
+    //! Study mode: economy / adequacy
     Data::StudyMode studyMode;
     //! Study unit commitment mode: fast(ucHeuristic) / accurate(ucMILP)
     Data::UnitCommitmentMode unitCommitmentMode;
@@ -231,8 +222,6 @@ public:
     unsigned int numSpace;
     /*!
     ** \brief Flag to know if the simplex has been used for the current week
-    **
-    ** This flag is always true in economy mode, and always false in adequacy-draft
     */
     bool simplexHasBeenRan;
 

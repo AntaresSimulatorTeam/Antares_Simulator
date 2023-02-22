@@ -1,9 +1,8 @@
 # Output files
 
-The general file organization is the same for Economy, Adequacy and Draft simulations.
+The general file organization is the same for Economy and Adequacy simulations.
 
-- Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)
-- Draft results are available only as flat .txt files. They can be viewed with "Tool /csv viewer" in the main menu (As well as any other files, they can also be accessed by Excel or suchlike)
+Economy and Adequacy results may be displayed in the GUI ( "Output" in main menu)
 
 **Economy:**
 
@@ -16,8 +15,8 @@ The general file organization is the same for Economy, Adequacy and Draft simula
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
-_The variables present in each file are detailed in the following sections._  
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file are detailed in the following sections._
 _In "Economy" simulations, all variables have a techno-economic meaning._
 
 **Adequacy:**
@@ -31,25 +30,15 @@ _In "Economy" simulations, all variables have a techno-economic meaning._
 |                                  |                    |/areas/name/...| contains area-related results|
 |                                  |                    |/links/name/...| contains interconnection-related results|
 
-_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_  
-_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._  
+_("mc-all" files contain synthetic results over all years, "year-number" files contain results for a single year)_
+_The variables present in each file bear exactly the same name as in Economy simulations but do not have the same values._
 _The only variables that have a techno-economic meaning are the "Adequacy" indicators (unsupplied energy,LOLD,LOLP)_
-
-**Draft:**
-
-| OUTPUT/Simu id/adequacy-draft/mc-all/   |             |                                         |
-|----------------------------------|-------------------|-----------------------------------|
-|                                  |/grid/...         | contains a summary file "digest.txt"  |
-|                                  |/areas/name/...| contains area-related results         |
-
-
-_("mc-all" files contains mostly synthetic results over all years; However, there is (for each area) a "mc-annual.txt" file that gives a short view of local results for each simulated year)_
 
 **IMPORTANT** Adequacy and Economy files look the same but their content are specific
 
 In "Economy" and "Adequacy" simulations, the optimization ignores the "primary" and "strategic" reserves (however, it may include the [other] spinning and day-ahead reserves, depending on the settings made in "optimization preferences").
 
-In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.  
+In "Adequacy" simulations, all dispatchable thermal units are given the "must-run" status (hence, they will generate at Pmax, regardless of the demand). As a consequence the only variables that are actually meaningful are the adequacy indicators (unsupplied energy, LOLD,LOLP), that may depend on assumptions made regarding the economic values of Unsupplied and spilled energies, and on hurdle costs on interconnections.
 In the specific case where binding constraints are present in the study, **all thermal clusters will consequently be de-activated from the binding constraints**. This can lead to incorrect adequacy indicators in Antares studies containing binding constraints in "Adequacy" simulations.
 
 As a consequence, both "Adequacy" and "Economy" simulations yield the same values for the adequacy indicators under the following conditions: if hurdle costs on interconnections are higher than the difference between the maximum VOLL and the minimum VOLL assigned to the different areas of the system, and if no binding constraint is altered due to the fact that they contain clusters in must-run.
@@ -65,13 +54,13 @@ The files and their content are hereafter described.
 
 - The first attribute defines the nature of the results presented in the file :
 
-**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.  
+**Values** Values of different variables (price, load, overall generation issued from coal, etc.), the list of which is common to all areas of the interconnected system. Files of type "values" have therefore the same size for all areas.
 These results appear under the label "general values" in the output GUI.
 
-**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.  
+**details** Values regarding the different dispatchable thermal generating plants of each area (e.g. "older 300 MW coal from the south coast"). The sizes of these files differ from one area to another.
 These results appear under the label "thermal plants" in the output GUI.
 
-**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files  
+**id** Identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files
 These results appear under the label "record years" in the output GUI
 
 The area files that belong to the « values » class display **122** fields corresponding to the expectation, standard deviation, minimal and maximal values of the variables whose list is given hereafter.
@@ -140,10 +129,10 @@ Note: The net profit is computed on full precision values for MRG. PRICE. The us
 - The first attribute defines the nature of the results presented in the file.
 
 
-**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere  
+**values** values of different variables (flow, congestion rent) the list of which is common to all interconnections. The files of type "values" have therefore the same size everywhere
 These results appear under the label "general values" in the output GUI.
 
-**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.  
+**id** identifier (number) of the Monte-Carlo years for which were observed the extreme values of the different variables presented in the « values » files.
 These results appear under the label "record years" in the output GUI.
 
 
@@ -187,52 +176,6 @@ These files contain, for each kind of time-series, the number drawn (randomly or
 
 
 These files contain, for each kind of Antares-generated time-series, copies of the whole set of time-series generated. Batch numbers depend on the values set for the "refresh span" parameters of the stochastic generators (files are present if "store in output" was set to "true").
-
-
-## Draft, area results
-
-**1** file « annual » + **6** files resulting from the combination of the following attributes :
-[with-network | without-network | id] X [hourly | annual]
-
-- The second attribute defines the period of time over which the results are assessed : hourly detail or annual summary.
-
-- The first attribute defines the nature of the results presented in the file
-
-**with network** values of adequacy indices (shortfall duration, loss of load probability) assessed while taking into account the effective grid capacities. The results in these files bear the suffix –CN (connex).
-
-**without network** values of adequacy indices (shortfall duration, loss of load probability) assessed without taking into account any interconnection. The results in these files bear the suffix –IS (isolated areas).
-
-**id** identifiers (numbers) of the MC years for which were observed the extreme values of the different variables presented in the « w/net » and "wo/net" files.
-
-Files « with network » and « without network » present the expectations and extreme values observed for the variables whose list is given hereafter:
-
-| variables | description |
-|-----------|-------------|
-|LOLD | Overall length of time for which there were shortfalls (Loss of Load Duration) <br/> (note: the commonly used LOLE index is equivalent to LOLD expectation )|
-|LOLP | Loss of Load Probability |
-|EENS | Energy Not Supplied |
-|MARG | Margin = available generation – (load + primary reserve) <br/> When MARG &gt; 0, MARG is a security margin <br/> When MARG &lt; 0, MARG is a curtailment depth |
-
-
-The file « annual » has one line per simulated Monte-Carlo year and gives, for each year, the following information:
-
-| variables | description |
-|-----------|-------------|
-| LOLD IS | Load shedding duration, if the grid capacities are not considered as available |
-| LOLD CN | Load shedding duration, if the grid capacities are actually available |
-| MAX DEPTH IS | Margin available at the most critical hour of the whole MC year, w/o grid <br/> When MAX DEPTH &gt; 0, MAX DEPTH is a security margin <br/> When MAX DEPTH &lt; 0, MAX DEPTH is a shortfall depth |
-| MAX DEPTH CN | Margin available at the most critical hour of the whole MC year, w/ grid <br/> When MAX DEPTH &gt;0, MAX DEPTH is a security margin <br/> When MAX DEPTH &lt; 0, MAX DEPTH is a shortfall depth |
-
-_Remark: In spite of their likenesses, the fields  « MARG » of the files w/net, wo/net and the fields « MAX DEPTH » of the file mc-details are not identical (hence different names):_
-
-- _MARG (expectation, min, max) is related to the whole set of MC years_
-- _MAX DEPTH regards one single year._
-
-_Note that the following relations hold:_
-
-_Min { MC years } MAX DEPTH IS = Min { hours} MARG IS [MIN]_
-
-_Min { MC years } MAX DEPTH CN = Min { hours} MARG CN [MIN]_
 
 ## Miscellaneous
 

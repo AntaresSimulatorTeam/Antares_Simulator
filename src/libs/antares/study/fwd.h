@@ -103,8 +103,6 @@ enum StudyError
 enum StudyMode
 {
     stdmUnknown = -1,
-    //! Adequation
-    stdmAdequacyDraft = 0,
     //! Economic
     stdmEconomy,
     //! Adequacy (subset of the economy mode)
