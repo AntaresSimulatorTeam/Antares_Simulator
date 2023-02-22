@@ -39,22 +39,20 @@ namespace Category
 {
 enum DataLevel
 {
-    //! Data that do not belong to any area
-    standard = 1,
     //! Data that belong to a single area
-    area = 2,
+    area = 1,
     //! Data that belong to a thermal dispatchable cluster
-    thermalAggregate = 4,
+    thermalAggregate = 2,
     //! Data that belong to a link
-    link = 8,
+    link = 4,
     //! Data that belong to a set
-    setOfAreas = 16,
+    setOfAreas = 8,
     // Data belonging to a binding constraint
-    bindingConstraint = 32,
+    bindingConstraint = 16,
     //! The maximum available level
-    maxDataLevel = 32,
+    maxDataLevel = 16,
     //! All data level
-    allDataLevel = standard | area | thermalAggregate | link | setOfAreas | bindingConstraint
+    allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
 };
 
 enum File
@@ -173,9 +171,6 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
     switch (dataLevel)
     {
-    case standard:
-        out += "group";
-        break;
     case area:
         out += "area";
         break;
