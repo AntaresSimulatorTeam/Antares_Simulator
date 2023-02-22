@@ -144,7 +144,7 @@ bool AdqPatchParams::updateFromKeyValue(const String& key, const String& value)
     if (key == "include-adq-patch")
         return value.to<bool>(enabled);
 
-    return curtailmentSharing.updateFromKeyValue(key, value) || localMatching.updateFromKeyValue(key, value);
+    return curtailmentSharing.updateFromKeyValue(key, value) != localMatching.updateFromKeyValue(key, value); // XOR
 }
 
 void AdqPatchParams::saveToINI(IniFile& ini) const
