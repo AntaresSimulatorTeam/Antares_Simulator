@@ -27,7 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: ./.github/workflows/build-userguide.yml
+      - uses: ./.github/workflows/build-userguide
         if: ${{ env.GENERATE_DOC }}
         with:
           artifact_name: pdf-doc
