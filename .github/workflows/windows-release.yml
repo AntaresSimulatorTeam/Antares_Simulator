@@ -9,7 +9,7 @@ env:
 
 jobs:
   doc_generation:
-    uses: ./.github/workflows/build-userguide
+    uses: ./.github/workflows/build-userguide.yml
     with:
       artifact_name: pdf-doc
 
