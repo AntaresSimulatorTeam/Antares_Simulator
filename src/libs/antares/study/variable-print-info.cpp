@@ -95,7 +95,7 @@ static std::string to_uppercase(std::string& str)
     return str;
 }
 
-void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
+void AllVariablesPrintInfo::add(std::string& name, VariablePrintInfo v)
 {
     std::string upperCaseName = to_uppercase(name);
     if (not exists(upperCaseName))

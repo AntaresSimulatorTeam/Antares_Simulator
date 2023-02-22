@@ -97,7 +97,7 @@ public:
     AllVariablesPrintInfo() = default;
     ~AllVariablesPrintInfo() = default;
 
-    void add(std::string name, VariablePrintInfo v);
+    void add(std::string& name, VariablePrintInfo v);
     void clear();
     VariablePrintInfo& operator[](uint i);
     size_t size() const;
