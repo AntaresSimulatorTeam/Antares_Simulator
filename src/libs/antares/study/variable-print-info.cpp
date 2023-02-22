@@ -102,6 +102,7 @@ void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
     {
         index_to_name[(unsigned int)allVarsPrintInfo.size()] = upperCaseName;
         allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(upperCaseName, v));
+        namesOfEnabledVariables.push_back(upperCaseName);
     }
 }
 
@@ -135,6 +136,13 @@ bool AllVariablesPrintInfo::isEmpty() const
 void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
     allVarsPrintInfo.at(to_uppercase(varname)).enablePrint(printStatus);
+    moveNameToAppropriateList(to_uppercase(varname), printStatus);
+}
+
+void AllVariablesPrintInfo::setPrintStatus(unsigned int index, bool printStatus)
+{
+    std::string name = index_to_name[index];
+    setPrintStatus(name, printStatus);
 }
 
 void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNumber)
@@ -162,7 +170,6 @@ void AllVariablesPrintInfo::prepareForSimulation(bool isThematicTrimmingEnabled,
     // Counting zonal and link output selected variables
     countSelectedAreaVars();
     countSelectedLinkVars();
-    sortVariablesByPrintStatus();
 }
 
 bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
@@ -173,29 +180,22 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
     for (auto& pair : allVarsPrintInfo)
+    {
         pair.second.enablePrint(b);
+        moveNameToAppropriateList(pair.first, b);
+    }
 }
 
 void AllVariablesPrintInfo::reverseAll()
 {
     for (auto& pair : allVarsPrintInfo)
-        pair.second.reverse();
-
-}
-
-void AllVariablesPrintInfo::sortVariablesByPrintStatus()
-{
-    namesPrinted.clear();
-    namesNotPrinted.clear();
-
-    for (auto& pair : allVarsPrintInfo)
     {
-        if (pair.second.isPrinted())
-            namesPrinted.push_back(pair.first);
-        else
-            namesNotPrinted.push_back(pair.first);
+        pair.second.reverse();
+        moveNameToAppropriateList(pair.first, pair.second.isPrinted());
     }
+
 }
+
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 {
     /*
@@ -252,6 +252,29 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
         if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::link)
             numberSelectedLinkVariables++;
     }
+}
+
+static void moveNameFromTo(std::string name, std::list<std::string>& fromList, std::list<std::string>& targetList)
+{
+    auto& it_begin = targetList.begin();
+    auto& it_end = targetList.end();
+    auto& it_found = std::find(it_begin, it_end, name);
+
+    // name is already in the target list
+    if (it_found != it_end)
+        return;
+
+    // Actually move name into the target list
+    it_found = std::find(fromList.begin(), fromList.end(), name);
+    targetList.splice(it_end, fromList, it_found);
+}
+
+void AllVariablesPrintInfo::moveNameToAppropriateList(std::string name, bool printStatus)
+{
+    if (printStatus)
+        moveNameFromTo(name, namesOfDisabledVariables, namesOfEnabledVariables);
+    else
+        moveNameFromTo(name, namesOfEnabledVariables, namesOfDisabledVariables);
 }
 
 } // namespace Data

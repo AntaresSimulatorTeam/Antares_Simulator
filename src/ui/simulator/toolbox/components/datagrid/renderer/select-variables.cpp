@@ -51,7 +51,7 @@ bool SelectVariables::cellValue(int, int var, const Yuni::String& value)
         s.toLower();
         bool v = s.to<bool>() || s == "active" || s == "enabled";
         assert(!study->parameters.variablesPrintInfo.isEmpty());
-        study->parameters.variablesPrintInfo[var].enablePrint(v);
+        study->parameters.variablesPrintInfo.setPrintStatus(var, v);
         onTriggerUpdate();
         Dispatcher::GUI::Refresh(pControl);
         return true;

@@ -105,6 +105,8 @@ public:
     bool isEmpty() const;
 
     void setPrintStatus(std::string varname, bool printStatus);
+    void setPrintStatus(unsigned int index, bool printStatus);
+
     void setMaxColumns(std::string varname, uint maxColumnsNumber);
     std::string name_of(unsigned int index) const;
 
@@ -133,11 +135,11 @@ public:
     void reverseAll();
 
     // Public attributes
-    std::vector<std::string> namesPrinted;
-    std::vector<std::string> namesNotPrinted;
-    void sortVariablesByPrintStatus();
+    std::list<std::string> namesOfEnabledVariables;
+    std::list<std::string> namesOfDisabledVariables;
 
 private:
+    void moveNameToAppropriateList(std::string name, bool printStatus);
     void countSelectedAreaVars();
     void countSelectedLinkVars();
 
