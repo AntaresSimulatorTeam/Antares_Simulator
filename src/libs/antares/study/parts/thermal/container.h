@@ -115,7 +115,9 @@ public:
     */
     bool hasForcedNoTimeseriesGeneration() const;
 
-    void checkMinStablePower();
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
 
 public:
     //! The unsupplied energy cost (Euros/MWh)

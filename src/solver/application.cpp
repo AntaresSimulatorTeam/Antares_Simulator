@@ -137,12 +137,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
             throw Error::InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
-
-    // CHECK PuissanceDisponible
-    /* Caracteristiques des paliers thermiques */
-    if (!tsGenThermal) // no time series generation asked (off mode)
+    else
     {
-        areas.each([](Antares::Data::Area& area) { area.thermal.checkMinStablePower(); });
+        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 } // namespace

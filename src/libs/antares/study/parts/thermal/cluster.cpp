@@ -730,5 +730,35 @@ unsigned int ThermalCluster::precision() const
 {
     return 0;
 }
+
+void ThermalCluster::checkAndCorrectAvailability()
+{
+    const auto PmaxDUnGroupeDuPalierThermique = nominalCapacityWithSpinning;
+    const auto PminDUnGroupeDuPalierThermique = (nominalCapacityWithSpinning < minStablePower)
+                                                  ? nominalCapacityWithSpinning
+                                                  : minStablePower;
+
+    bool condition = false;
+    bool report = false;
+
+    for (uint y = 0; y != series->series.height; ++y)
+    {
+        for (uint x = 0; x != series->series.width; ++x)
+        {
+            auto rightpart = PminDUnGroupeDuPalierThermique
+                             * ceil(series->series.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->series.entry[x][y];
+            if (condition)
+            {
+                series->series.entry[x][y] = rightpart;
+                report = true;
+            }
+        }
+    }
+
+    if (report)
+        logs.warning() << "Area : " << parentArea->name << " cluster name : " << name()
+                       << " available power lifted to match Pmin and Pnom requirements";
+}
 } // namespace Data
 } // namespace Antares

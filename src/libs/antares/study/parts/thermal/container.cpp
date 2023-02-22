@@ -32,6 +32,7 @@
 #include "../../../logs.h"
 
 #include <algorithm>
+#include <functional>
 
 using namespace Yuni;
 using namespace Antares;
@@ -194,39 +195,10 @@ bool PartThermal::hasForcedNoTimeseriesGeneration() const
     });
 }
 
-void PartThermal::checkMinStablePower()
+void PartThermal::checkAndCorrectAvailability()
 {
-    std::for_each(clusters.begin(), clusters.end(), [](ThermalCluster* cluster) {
-        const auto PmaxDUnGroupeDuPalierThermique = cluster->nominalCapacityWithSpinning;
-        const auto PminDUnGroupeDuPalierThermique
-          = (cluster->nominalCapacityWithSpinning < cluster->minStablePower)
-              ? cluster->nominalCapacityWithSpinning
-              : cluster->minStablePower;
-
-        bool condition = false;
-        bool report = false;
-
-        for (uint y = 0; y != cluster->series->series.height; ++y)
-        {
-            for (uint x = 0; x != cluster->series->series.width; ++x)
-            {
-                auto rightpart
-                  = PminDUnGroupeDuPalierThermique
-                    * ceil(cluster->series->series.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-                condition = rightpart > cluster->series->series.entry[x][y];
-                if (condition)
-                {
-                    cluster->series->series.entry[x][y] = rightpart;
-                    report = true;
-                }
-            }
-        }
-
-        if (report)
-            logs.warning() << "Area : " << cluster->parentArea->name
-                           << " cluster name : " << cluster->name()
-                           << " available power lifted to match Pmin and Pnom requirements";
-    });
+    std::for_each(
+      clusters.begin(), clusters.end(), std::mem_fn(&ThermalCluster::checkAndCorrectAvailability));
 }
 
 } // namespace Data
