@@ -17,11 +17,12 @@ env:
   GITHUB_TOKEN: ${{ github.token }}
   IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
   IS_PUSH: ${{ github.event_name == 'push' }}
+  GENERATE_DOC: ${{ github.event_name == 'release' || startsWith(github.ref_name, 'doc/') }}
 
 jobs:
 
   doc_generation:
-    if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/') }}
+    if: ${{ env.GENERATE_DOC == 'true' }}
     uses: ./.github/workflows/build-userguide.yml
     with:
       artifact_name: pdf-doc
