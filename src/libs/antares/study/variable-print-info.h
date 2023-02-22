@@ -102,7 +102,6 @@ public:
     VariablePrintInfo& operator[](uint i);
     size_t size() const;
     bool exists(std::string name);
-    bool isEmpty() const;
 
     void setPrintStatus(std::string varname, bool printStatus);
     void setPrintStatus(unsigned int index, bool printStatus);

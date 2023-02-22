@@ -128,11 +128,6 @@ bool AllVariablesPrintInfo::exists(std::string name)
     return allVarsPrintInfo.find(to_uppercase(name)) != allVarsPrintInfo.end();
 }
 
-bool AllVariablesPrintInfo::isEmpty() const
-{
-    return allVarsPrintInfo.empty();
-}
-
 void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
     allVarsPrintInfo.at(to_uppercase(varname)).enablePrint(printStatus);
