@@ -174,19 +174,20 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
 
 void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
 {
-    for (auto& pair : allVarsPrintInfo)
+    for (auto& [name, variable] : allVarsPrintInfo)
     {
-        pair.second.enablePrint(b);
-        moveNameToAppropriateList(pair.first, b);
+        variable.enablePrint(b);
+        moveNameToAppropriateList(name, b);
     }
+
 }
 
 void AllVariablesPrintInfo::reverseAll()
 {
-    for (auto& pair : allVarsPrintInfo)
+    for (auto& [name, variable] : allVarsPrintInfo)
     {
-        pair.second.reverse();
-        moveNameToAppropriateList(pair.first, pair.second.isPrinted());
+        variable.reverse();
+        moveNameToAppropriateList(name, variable.isPrinted());
     }
 
 }
@@ -214,15 +215,15 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
         for (uint CFileLevel = 1; CFileLevel <= Category::maxFileLevel; CFileLevel *= 2)
         {
             uint currentColumnsCount = 0;
-            for (auto& pair : allVarsPrintInfo)
+            for (auto& [name, variable] : allVarsPrintInfo)
             {
-                if (pair.second.isPrinted() &&
-                    pair.second.getFileLevel() & CFileLevel &&
-                    pair.second.getDataLevel() & CDataLevel)
+                if (variable.isPrinted() &&
+                    variable.getFileLevel() & CFileLevel &&
+                    variable.getDataLevel() & CDataLevel)
                 {
                     // For the current output variable, we retrieve the max number
                     // of columns it takes in a sysnthesis report. 
-                    currentColumnsCount += pair.second.getMaxColumnsCount();
+                    currentColumnsCount += variable.getMaxColumnsCount();
                 }
             }
 
@@ -233,18 +234,18 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    for (auto& pair : allVarsPrintInfo)
+    for (auto& [name, variable] : allVarsPrintInfo)
     {
-        if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::area)
+        if (variable.isPrinted() && variable.getDataLevel() == Category::area)
             numberSelectedAreaVariables++;
     }
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    for (auto& pair : allVarsPrintInfo)
+    for (auto& [name, variable] : allVarsPrintInfo)
     {
-        if (pair.second.isPrinted() && pair.second.getDataLevel() == Category::link)
+        if (variable.isPrinted() && variable.getDataLevel() == Category::link)
             numberSelectedLinkVariables++;
     }
 }
