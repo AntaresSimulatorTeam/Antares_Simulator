@@ -251,9 +251,9 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
 
 static void moveNameFromTo(std::string name, std::list<std::string>& fromList, std::list<std::string>& targetList)
 {
-    auto& it_begin = targetList.begin();
-    auto& it_end = targetList.end();
-    auto& it_found = std::find(it_begin, it_end, name);
+    auto it_begin = targetList.begin();
+    auto it_end = targetList.end();
+    auto it_found = std::find(it_begin, it_end, name);
 
     // name is already in the target list
     if (it_found != it_end)
