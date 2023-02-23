@@ -1,23 +1,3 @@
-#include <antares/study.h>
-#include <antares/emergency.h>
-
-#include "../simulation/simulation.h"
-
-#include "ortools_utils.h"
-#include "mps_utils.h"
-
-using namespace Antares;
-using namespace Antares::Data;
-using namespace Yuni;
-
-#ifdef _MSC_VER
-#define SNPRINTF sprintf_s
-#else
-#define SNPRINTF snprintf
-#endif
-
-constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
-
 /*
 ** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
@@ -44,6 +24,27 @@ constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+
+#include <antares/study.h>
+#include <antares/emergency.h>
+
+#include "../simulation/simulation.h"
+
+#include "ortools_utils.h"
+#include "mps_utils.h"
+
+using namespace Antares;
+using namespace Antares::Data;
+using namespace Yuni;
+
+#ifdef _MSC_VER
+#define SNPRINTF sprintf_s
+#else
+#define SNPRINTF snprintf
+#endif
+
+constexpr size_t OPT_APPEL_SOLVEUR_BUFFER_SIZE = 256;
+
 #include <antares/study.h>
 #include <string>
 #include <vector>

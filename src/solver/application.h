@@ -4,50 +4,12 @@
 #include <antares/study.h>
 #include <antares/study/load-options.h>
 #include <antares/benchmarking.h>
+#include <log_sink.h>
 #include "simulation/simulation.h"
 
 #include <i_writer.h>
 
 #include <yuni/core/string.h>
-
-// TODO[FOM] Move to appropriate file
-// Note that as of version 9.x, OR-Tools redefines the GLOG
-// library. Including glog/logging.h will result in compilation
-// errors (symbol redifinition)
-#include "ortools/base/logging.h"
-class AntaresSink : public google::LogSink
-{
-    void send(LogSeverity severity,
-              const char* /* full_filename */,
-              const char* /* base_filename */,
-              int /* line */,
-              const struct ::tm* /* tm_time */,
-              const char* message,
-              size_t message_len) override
-    {
-        // message *is not* '\0'-terminated
-        // We could use std::string_view to avoid copies,
-        // but Yuni::Logs::Logger doesn't support them at the moment.
-        const std::string msg(message, message_len);
-        switch (severity)
-        {
-        case google::GLOG_INFO:
-            Antares::logs.info() << msg;
-            break;
-        case google::GLOG_WARNING:
-            Antares::logs.warning() << msg;
-            break;
-        case google::GLOG_ERROR:
-            Antares::logs.error() << msg;
-            break;
-        case google::GLOG_FATAL:
-            Antares::logs.fatal() << msg;
-            break;
-        default:
-            Antares::logs.warning() << "Unknown log level " << msg;
-        }
-    }
-};
 
 namespace Antares
 {
@@ -135,7 +97,7 @@ private:
     Benchmarking::DurationCollector pDurationCollector;
     Benchmarking::OptimizationInfo pOptimizationInfo;
     // Log sink for OR-Tools
-    AntaresSink sink;
+    LogSink sink;
 }; // class Application
 } // namespace Solver
 } // namespace Antares

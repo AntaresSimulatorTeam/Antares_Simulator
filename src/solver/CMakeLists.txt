@@ -17,7 +17,7 @@ include("cmake/randomness.cmake")
 include("cmake/simulation.cmake")
 include("cmake/ts-generator.cmake")
 include("cmake/constraints-builder.cmake")
-
+include("cmake/log-sink.cmake")
 #
 # Resource file for Windows
 #
@@ -89,12 +89,12 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libantares-solver-simulation
 	libantares-solver-ts-generator
 	libmodel_antares
-	libantares-core)
+	libantares-core
+    libantares-log-sink)
 
 target_link_libraries(antares-solver
 		PRIVATE
-		${ANTARES_SOLVER_LIBS}
-        ortools::ortools
+			${ANTARES_SOLVER_LIBS}
 		)
 
 import_std_libs(antares-solver)
