@@ -31,7 +31,7 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-struct ThermalAirPollutantEmissions
+struct VCardThermalAirPollutantEmissions
 {
     //! Caption
     static const char* Caption()
@@ -47,7 +47,7 @@ struct ThermalAirPollutantEmissions
     //! The short description of the variable
     static const char* Description()
     {
-        return "Overall pollutant emissions expected from all the thermal dispatchable clusters"";
+        return "Overall pollutant emissions expected from all the thermal dispatchable clusters";
     }
 
     //! The expecte results
@@ -133,19 +133,19 @@ struct ThermalAirPollutantEmissions
 }; // class VCard
 
 /*!
-** \brief Marginal DispatchableGeneration
+** \brief Marginal ThermalAirPollutantEmissions
 */
 template<class NextT = Container::EndOfList>
-class DispatchableGeneration
- : public Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardDispatchableGeneration>
+class ThermalAirPollutantEmissions
+ : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>, NextT, VCardThermalAirPollutantEmissions>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardDispatchableGeneration VCardType;
+    typedef VCardThermalAirPollutantEmissions VCardType;
     //! Ancestor
-    typedef Variable::IVariable<DispatchableGeneration<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ThermalAirPollutantEmissions<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -172,7 +172,7 @@ public:
     };
 
 public:
-    ~DispatchableGeneration()
+    ~ThermalAirPollutantEmissions()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -313,7 +313,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class DispatchableGeneration
+}; // class ThermalAirPollutantEmissions
 
 } // namespace Antares::Solver::Variable::Economy
 

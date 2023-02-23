@@ -139,6 +139,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/dtgMarginAfterCsr.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
+		variable/economy/thermalAirPollutantEmissions.h
 		variable/economy/productionByDispatchablePlant.h
         variable/economy/productionByRenewablePlant.h
 		variable/economy/npCostByDispatchablePlant.h
