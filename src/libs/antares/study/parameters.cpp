@@ -1874,7 +1874,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // Variable selection
     {
         uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint nb_selected_vars = (uint)variablesPrintInfo.namesOfEnabledVariables.size();
+        uint nb_selected_vars = (uint)variablesPrintInfo.namesOfEnabledVariables().size();
 
         if (nb_selected_vars != nb_tot_vars)
         {
@@ -1883,12 +1883,12 @@ void Parameters::saveToINI(IniFile& ini) const
             if (nb_selected_vars <= (nb_tot_vars / 2))
             {
                 section->add("selected_vars_reset", "false");
-                for (auto& name : variablesPrintInfo.namesOfEnabledVariables)
+                for (auto& name : variablesPrintInfo.namesOfEnabledVariables())
                     section->add("select_var +", name);
             }
             else
             {
-                for (auto& name : variablesPrintInfo.namesOfDisabledVariables)
+                for (auto& name : variablesPrintInfo.namesOfDisabledVariables())
                     section->add("select_var -", name);
             }
         }

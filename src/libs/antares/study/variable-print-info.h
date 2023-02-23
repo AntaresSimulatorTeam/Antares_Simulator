@@ -133,12 +133,11 @@ public:
     void setAllPrintStatusesTo(bool b);
     void reverseAll();
 
-    // Public attributes
-    std::list<std::string> namesOfEnabledVariables;
-    std::list<std::string> namesOfDisabledVariables;
+    std::vector<std::string> namesOfEnabledVariables();
+    std::vector<std::string> namesOfDisabledVariables();
 
 private:
-    void moveNameToAppropriateList(std::string name, bool printStatus);
+    std::vector<std::string> namesOfVariablesWithPrintStatus(bool printStatus);
     void countSelectedAreaVars();
     void countSelectedLinkVars();
 

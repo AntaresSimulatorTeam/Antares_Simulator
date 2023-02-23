@@ -102,7 +102,6 @@ void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
     {
         index_to_name[(unsigned int)allVarsPrintInfo.size()] = upperCaseName;
         allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(upperCaseName, v));
-        namesOfEnabledVariables.push_back(upperCaseName);
     }
 }
 
@@ -131,7 +130,6 @@ bool AllVariablesPrintInfo::exists(std::string name)
 void AllVariablesPrintInfo::setPrintStatus(std::string varname, bool printStatus)
 {
     allVarsPrintInfo.at(to_uppercase(varname)).enablePrint(printStatus);
-    moveNameToAppropriateList(to_uppercase(varname), printStatus);
 }
 
 void AllVariablesPrintInfo::setPrintStatus(unsigned int index, bool printStatus)
@@ -177,7 +175,6 @@ void AllVariablesPrintInfo::setAllPrintStatusesTo(bool b)
     for (auto& [name, variable] : allVarsPrintInfo)
     {
         variable.enablePrint(b);
-        moveNameToAppropriateList(name, b);
     }
 
 }
@@ -187,9 +184,29 @@ void AllVariablesPrintInfo::reverseAll()
     for (auto& [name, variable] : allVarsPrintInfo)
     {
         variable.reverse();
-        moveNameToAppropriateList(name, variable.isPrinted());
     }
 
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfVariablesWithPrintStatus(bool printStatus)
+{
+    std::vector<std::string> vector_to_return;
+    for (auto& [name, variable] : allVarsPrintInfo)
+    {
+        if (variable.isPrinted() == printStatus)
+            vector_to_return.push_back(name);
+    }
+    return vector_to_return;
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfEnabledVariables()
+{
+    return namesOfVariablesWithPrintStatus(true);
+}
+
+std::vector<std::string> AllVariablesPrintInfo::namesOfDisabledVariables()
+{
+    return namesOfVariablesWithPrintStatus(false);
 }
 
 void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
@@ -250,28 +267,6 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
     }
 }
 
-static void moveNameFromTo(std::string name, std::list<std::string>& fromList, std::list<std::string>& targetList)
-{
-    auto it_begin = targetList.begin();
-    auto it_end = targetList.end();
-    auto it_found = std::find(it_begin, it_end, name);
-
-    // name is already in the target list
-    if (it_found != it_end)
-        return;
-
-    // Actually move name into the target list
-    it_found = std::find(fromList.begin(), fromList.end(), name);
-    targetList.splice(it_end, fromList, it_found);
-}
-
-void AllVariablesPrintInfo::moveNameToAppropriateList(std::string name, bool printStatus)
-{
-    if (printStatus)
-        moveNameFromTo(name, namesOfDisabledVariables, namesOfEnabledVariables);
-    else
-        moveNameFromTo(name, namesOfEnabledVariables, namesOfDisabledVariables);
-}
 
 } // namespace Data
 } // namespace Antares
