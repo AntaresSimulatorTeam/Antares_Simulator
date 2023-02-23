@@ -386,11 +386,13 @@ RESOLUTION:
 void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
   double optimalSolutionCost,
   OptPeriodStringGenerator& optPeriodStringGenerator,
-  int optimizationNumber)
+  int optimizationNumber,
+  const std::optional<unsigned int> optAdqPatchNumber)
 {
     Yuni::Clob buffer;
     auto study = Data::Study::Current::Get();
-    auto filename = createCriterionFilename(optPeriodStringGenerator, optimizationNumber);
+    auto filename
+      = createCriterionFilename(optPeriodStringGenerator, optimizationNumber, optAdqPatchNumber);
     auto writer = study->resultWriter;
 
     logs.info() << "Solver Criterion File: `" << filename << "'";

@@ -26,6 +26,7 @@
 */
 
 #include "../simulation/simulation.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "opt_fonctions.h"
 
@@ -118,8 +119,12 @@ OptimisationHebdo:
         {
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, NumeroDeLIntervalle, optimizationNumber);
-            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber);
+            auto adqPatchOptNumber
+              = getAdqPatchOptmizationNumber(problemeHebdo->adequacyPatchRuntimeData.get());
+            OPT_EcrireResultatFonctionObjectiveAuFormatTXT(optimalSolutionCost,
+                                                           *optPeriodStringGenerator,
+                                                           optimizationNumber,
+                                                           adqPatchOptNumber);
         }
     }
 

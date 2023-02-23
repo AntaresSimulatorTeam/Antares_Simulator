@@ -27,6 +27,8 @@
 #ifndef __SOLVER_OPTIMISATION_FUNCTIONS_H__
 #define __SOLVER_OPTIMISATION_FUNCTIONS_H__
 
+#include <optional>
+
 #include "../config.h"
 #include "opt_structure_probleme_a_resoudre.h"
 #include "../simulation/sim_structure_donnees.h"
@@ -91,7 +93,10 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double, OptPeriodStringGenerator&, int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double,
+                                                    OptPeriodStringGenerator&,
+                                                    int,
+                                                    const std::optional<unsigned int>);
 
 /*------------------------------*/
 
