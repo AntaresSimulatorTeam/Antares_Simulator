@@ -16,16 +16,20 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
 }
 
-std::string createCriterionFilename(OptPeriodStringGenerator& optPeriodStringGenerator,
-                                    const unsigned int optNumber)
+std::string createCriterionFilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                                    const unsigned int optNumber,
+                                    const std::optional<unsigned int> adqPatchOptNumber)
 {
-    return optPeriodStringGenerator.createOptimizationFilename("criterion", optNumber, "txt");
+    return optPeriodStringGenerator.createOptimizationFilename(
+      "criterion", optNumber, adqPatchOptNumber, "txt");
 }
 
-std::string createMPSfilename(OptPeriodStringGenerator& optPeriodStringGenerator,
-                              const unsigned int optNumber)
+std::string createMPSfilename(const OptPeriodStringGenerator& optPeriodStringGenerator,
+                              const unsigned int optNumber,
+                              const std::optional<unsigned int> adqPatchNumber)
 {
-    return optPeriodStringGenerator.createOptimizationFilename("problem", optNumber, "mps");
+    return optPeriodStringGenerator.createOptimizationFilename(
+      "problem", optNumber, adqPatchNumber, "mps");
 }
 // TODO[FOM] Remove this function
 std::string getFilenameWithExtension(const YString& prefix,

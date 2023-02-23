@@ -30,6 +30,7 @@
 #include <antares/study/study.h>
 #include <vector>
 #include <set>
+#include <optional>
 
 class AdequacyPatchRuntimeData
 {
@@ -52,3 +53,5 @@ public:
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);
 };
+
+std::optional<unsigned int> getAdqPatchOptmizationNumber(AdequacyPatchRuntimeData* data);

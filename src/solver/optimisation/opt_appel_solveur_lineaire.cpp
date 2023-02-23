@@ -34,6 +34,7 @@
 #include "../simulation/sim_structure_probleme_economique.h"
 #include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "opt_fonctions.h"
 
@@ -236,7 +237,11 @@ RESOLUTION:
     {
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
-    const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
+
+    auto adqPatchOptNumber
+      = getAdqPatchOptmizationNumber(problemeHebdo->adequacyPatchRuntimeData.get());
+    const std::string filename
+      = createMPSfilename(optPeriodStringGenerator, optimizationNumber, adqPatchOptNumber);
     mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
                                         problemeHebdo->exportMPSOnError,
                                         optimizationNumber,

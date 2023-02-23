@@ -47,3 +47,10 @@ AdequacyPatchRuntimeData::AdequacyPatchRuntimeData(
           from->thermal.unsuppliedEnergyCost, with->thermal.unsuppliedEnergyCost);
     }
 }
+
+std::optional<unsigned int> getAdqPatchOptmizationNumber(AdequacyPatchRuntimeData* data)
+{
+    if (!data)
+        return std::nullopt;
+    return data->LMR_FirstOptimization ? 1 : 2;
+}

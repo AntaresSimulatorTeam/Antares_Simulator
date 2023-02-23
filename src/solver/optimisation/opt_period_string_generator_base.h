@@ -28,6 +28,7 @@
 #pragma once
 
 #include <string>
+#include <optional>
 
 // ---------------------------------------------
 // Optimization period as string : base class
@@ -39,5 +40,6 @@ public:
     virtual ~OptPeriodStringGenerator() = default;
     std::string createOptimizationFilename(const std::string& title,
                                            unsigned int optNumber,
+                                           const std::optional<unsigned int> adqPatchOptNumber,
                                            const std::string& extension) const;
 };
