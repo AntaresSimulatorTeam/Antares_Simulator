@@ -1085,7 +1085,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
 
         const auto filename = getFilenameWithExtension(
-          "variables", "txt", problemeHebdo->year, problemeHebdo->weekInTheYear, 0);
+          "variables", "txt", problemeHebdo->year, problemeHebdo->weekInTheYear);
         OPT_ExportVariables(study->resultWriter, varname, filename);
     }
 

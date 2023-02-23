@@ -110,7 +110,7 @@ OptimisationHebdo:
                                     problemeHebdo->year);
 
         if (!OPT_AppelDuSimplexe(
-              problemeHebdo, NumeroDeLIntervalle, optimizationNumber, optPeriodStringGenerator))
+              problemeHebdo, NumeroDeLIntervalle, optimizationNumber, *optPeriodStringGenerator))
             return false;
 
         if (problemeHebdo->ExportMPS != Data::mpsExportStatus::NO_EXPORT
@@ -119,7 +119,7 @@ OptimisationHebdo:
             double optimalSolutionCost
               = OPT_ObjectiveFunctionResult(problemeHebdo, NumeroDeLIntervalle, optimizationNumber);
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
+              optimalSolutionCost, *optPeriodStringGenerator, optimizationNumber);
         }
     }
 

@@ -37,4 +37,7 @@ class OptPeriodStringGenerator
 public:
     virtual std::string to_string() const = 0;
     virtual ~OptPeriodStringGenerator() = default;
+    std::string createOptimizationFilename(const std::string& title,
+                                           unsigned int optNumber,
+                                           const std::string& extension) const;
 };

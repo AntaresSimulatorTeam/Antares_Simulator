@@ -16,46 +16,27 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
 }
 
-std::string createOptimizationFilename(
-  const std::string& title,
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
-  unsigned int optNumber,
-  const std::string& extension)
-{
-    std::ostringstream outputFile;
-    outputFile << title.c_str() << "-";
-    outputFile << optPeriodStringGenerator->to_string();
-    outputFile << "--optim-nb-" << std::to_string(optNumber);
-    outputFile << "." << extension.c_str();
-
-    return outputFile.str();
-}
-
 std::string createCriterionFilename(
-  std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+  OptPeriodStringGenerator& optPeriodStringGenerator,
   const unsigned int optNumber)
 {
-    return createOptimizationFilename("criterion", optPeriodStringGenerator, optNumber, "txt");
+    return optPeriodStringGenerator.createOptimizationFilename("criterion", optNumber, "txt");
 }
 
-std::string createMPSfilename(std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator,
+std::string createMPSfilename(OptPeriodStringGenerator& optPeriodStringGenerator,
                               const unsigned int optNumber)
 {
-    return createOptimizationFilename("problem", optPeriodStringGenerator, optNumber, "mps");
+    return optPeriodStringGenerator.createOptimizationFilename("problem", optNumber, "mps");
 }
 // TODO[FOM] Remove this function
 std::string getFilenameWithExtension(const YString& prefix,
                                      const YString& extension,
                                      uint year,
-                                     uint week,
-                                     uint optNumber)
+                                     uint week)
 {
     std::ostringstream outputFile;
     outputFile << prefix.c_str() << "-" << std::to_string(year + 1) << "-"
                << std::to_string(week + 1);
-
-    if (optNumber)
-        outputFile << "--optim-nb-" << std::to_string(optNumber);
 
     outputFile << "." << extension.c_str();
     return outputFile.str();

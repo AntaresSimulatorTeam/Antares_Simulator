@@ -81,6 +81,7 @@ set(RTESOLVER_OPT
 		optimisation/adequacy_patch_csr/count_constraints_variables.cpp
 
 		optimisation/opt_period_string_generator_base.h
+		optimisation/opt_period_string_generator_base.cpp
 
 		utils/ortools_utils.h
 		utils/ortools_utils.cpp
