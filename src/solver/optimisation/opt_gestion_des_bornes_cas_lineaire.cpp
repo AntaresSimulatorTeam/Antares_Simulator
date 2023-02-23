@@ -78,8 +78,10 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
 double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
-    const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+    const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+      = problemeHebdo->PaliersThermiquesDuPays[Pays];
+    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
+      = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
     for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
     {
@@ -182,7 +184,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[pdtHebdo];
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-            = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
@@ -206,8 +208,9 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
 
-            double* adresseDuResultat = &(problemeHebdo->VariablesDualesDesContraintesDeNTC[pdtHebdo]
-                                    ->VariableDualeParInterconnexion[interco]);
+            double* adresseDuResultat
+              = &(problemeHebdo->VariablesDualesDesContraintesDeNTC[pdtHebdo]
+                    ->VariableDualeParInterconnexion[interco]);
             AdresseOuPlacerLaValeurDesCoutsReduits[var] = adresseDuResultat;
 
             adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
@@ -256,14 +259,16 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
             int maxThermalPlant = PaliersThermiquesDuPays->NombreDePaliersThermiques;
 
             for (int index = 0; index < maxThermalPlant; index++)
             {
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-                int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
+                int var
+                  = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
                 const PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
                   = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index];
 
@@ -273,8 +278,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                   = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermique[pdtHebdo];
 
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                        ->ProductionThermique[pdtHebdo]
-                                        ->ProductionThermiqueDuPalier[index]);
+                                                ->ProductionThermique[pdtHebdo]
+                                                ->ProductionThermiqueDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 
@@ -316,7 +321,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                     }
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
-                         == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
+                           == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
                          && pdtJour == 0)
                 {
                     var = CorrespondanceVarNativesVarOptim
@@ -391,7 +396,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
                   ->ValeursHorairesDeDefaillanceNegative[pdtHebdo]
                   = 0.0;
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                        ->ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
+                                                ->ValeursHorairesDeDefaillanceNegative[pdtHebdo]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }
 

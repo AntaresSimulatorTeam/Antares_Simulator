@@ -38,8 +38,8 @@ public:
     virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
     virtual ~WeeklyOptimization() = default;
     static std::unique_ptr<WeeklyOptimization> create(bool adqPatchEnabled,
-                                                               PROBLEME_HEBDO* problemesHebdo,
-                                                               uint numSpace);
+                                                      PROBLEME_HEBDO* problemesHebdo,
+                                                      uint numSpace);
 
 protected:
     explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);

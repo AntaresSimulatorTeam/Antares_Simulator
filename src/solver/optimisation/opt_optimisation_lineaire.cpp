@@ -63,7 +63,8 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
         problemeHebdo->NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
     }
 
-    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     OPT_NumeroDeJourDuPasDeTemps(problemeHebdo);
 
@@ -112,9 +113,9 @@ OptimisationHebdo:
             || problemeHebdo->Expansion)
         {
             double optimalSolutionCost
-                = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
+              = OPT_ObjectiveFunctionResult(problemeHebdo, numeroDeLIntervalle, optimizationNumber);
             OPT_EcrireResultatFonctionObjectiveAuFormatTXT(
-                    optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
+              optimalSolutionCost, optPeriodStringGenerator, optimizationNumber);
         }
     }
 

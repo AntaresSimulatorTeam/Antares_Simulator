@@ -52,7 +52,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* p
 
     VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
     const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-        = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
     for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {

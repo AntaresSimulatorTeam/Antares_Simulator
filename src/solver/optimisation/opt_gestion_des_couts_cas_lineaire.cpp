@@ -58,7 +58,8 @@ static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
 
         for (int i = PremierPasDeTempsHebdo; i < DernierPasDeTempsHebdo; ++i)
         {
-            double d = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
+            double d
+              = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
             if (d < scratchpad.consoMin)
                 scratchpad.consoMin = d;
             if (d > scratchpad.consoMax)
@@ -88,7 +89,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-            = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
@@ -122,7 +123,8 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
         for (int pays = 0; pays < problemeHebdo->NombreDePays; ++pays)
         {
             assert((unsigned int)pays < study.areas.size());
-            const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
             int var;
 
             for (int Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
@@ -175,7 +177,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                         ProblemeAResoudre->CoutLineaire[var] = P;
                 }
                 else if (problemeHebdo->TypeDeLissageHydraulique
-                         == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
+                           == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
                          && pdtJour == 0)
                 {
                     P = problemeHebdo->CaracteristiquesHydrauliques[pays]

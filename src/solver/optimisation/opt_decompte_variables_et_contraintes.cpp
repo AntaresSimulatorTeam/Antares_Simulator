@@ -41,7 +41,8 @@ using namespace Antares;
 int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO* problemeHebdo)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    int nombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     int mxPaliers = 0;
     ProblemeAResoudre->NombreDeVariables = problemeHebdo->NombreDInterconnexions;
@@ -144,8 +145,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         char MonitorHourlyLev
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire;
 
-        if (Pump == NON_ANTARES && TurbEntreBornes == NON_ANTARES
-            && MonitorHourlyLev == NON_ANTARES
+        if (Pump == NON_ANTARES && TurbEntreBornes == NON_ANTARES && MonitorHourlyLev == NON_ANTARES
             && problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
         {
             ProblemeAResoudre->NombreDeContraintes++;

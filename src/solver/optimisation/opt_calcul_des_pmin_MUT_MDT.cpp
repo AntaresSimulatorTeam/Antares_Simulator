@@ -102,20 +102,25 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
     for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
         const RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        const double *PminDuPalierThermiquePendantUneHeure
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        const double* PminDuPalierThermiquePendantUneHeure
           = PaliersThermiquesDuPays->PminDuPalierThermiquePendantUneHeure;
         const double* TailleUnitaireDUnGroupeDuPalierThermique
           = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique;
         const int* minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
 
-        PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermiqueOptimale = ResultatsHoraires->ProductionThermique;
+        PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermiqueOptimale
+          = ResultatsHoraires->ProductionThermique;
 
         for (int Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {
-            PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDispoEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-            double* PuissanceMinDuPalierThermique = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
-            const double* PuissanceDisponibleDuPalierThermique = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
+            PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDispoEtCout
+              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
+            double* PuissanceMinDuPalierThermique
+              = PuissanceDispoEtCout->PuissanceMinDuPalierThermique;
+            const double* PuissanceDisponibleDuPalierThermique
+              = PuissanceDispoEtCout->PuissanceDisponibleDuPalierThermique;
 
             if (fabs(PminDuPalierThermiquePendantUneHeure[Palier]) < ZERO_PMIN)
                 continue;
@@ -166,7 +171,8 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
             int PremierPdt = iOpt;
             int DernierPdt = NombreDePasDeTemps - IntervalleDAjustement + iOpt;
 
-            OPT_CalculerAireMaxPminJour(PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
+            OPT_CalculerAireMaxPminJour(
+              PremierPdt, DernierPdt, MUTetMDT, NombreDePasDeTemps, NbGrpCourbeGuide, NbGrpOpt);
 
             for (int Pdt = 0; Pdt < NombreDePasDeTemps; Pdt++)
             {
@@ -183,4 +189,3 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
     return;
 }
-

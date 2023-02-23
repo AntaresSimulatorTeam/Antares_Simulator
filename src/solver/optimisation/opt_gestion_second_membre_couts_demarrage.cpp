@@ -53,17 +53,19 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
     double** AdresseOuPlacerLaValeurDesCoutsMarginaux
       = ProblemeAResoudre->AdresseOuPlacerLaValeurDesCoutsMarginaux;
 
-    int NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
             const int* NombreMaxDeGroupesEnMarcheDuPalierThermique
-                = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
-                    ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
+              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[index]
+                  ->NombreMaxDeGroupesEnMarcheDuPalierThermique;
             const int DureeMinimaleDArretDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays->DureeMinimaleDArretDUnGroupeDuPalierThermique[index];
             const int palier

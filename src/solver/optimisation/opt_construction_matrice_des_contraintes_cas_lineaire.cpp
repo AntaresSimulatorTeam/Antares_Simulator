@@ -38,20 +38,21 @@
 
 using namespace Antares::Data;
 
-
 void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
-                    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-                    int pays, int& nombreDeTermes,
-                    double* Pi, int* Colonne,
-                    int timeStepInYear,
-                    std::vector<std::string>& varname)
+                   const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+                   int pays,
+                   int& nombreDeTermes,
+                   double* Pi,
+                   int* Colonne,
+                   int timeStepInYear,
+                   std::vector<std::string>& varname)
 {
     const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo.PaliersThermiquesDuPays[pays];
 
     for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
     {
         const int palier
-            = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+          = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
         int var = CorrespondanceVarNativesVarOptim.NumeroDeVariableDuPalierThermique[palier];
         if (var >= 0)
         {
@@ -62,11 +63,11 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
             if (problemeHebdo.ExportStructure)
             {
                 OPT_Export_add_variable(varname,
-                        var,
-                        Enum::ExportStructDict::PalierThermique,
-                        timeStepInYear, // TODO[FOM] remove
-                        pays,
-                        palier);
+                                        var,
+                                        Enum::ExportStructDict::PalierThermique,
+                                        timeStepInYear, // TODO[FOM] remove
+                                        pays,
+                                        palier);
             }
         }
     }
@@ -86,7 +87,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
-    int nombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
 
     double* Pi = ProblemeAResoudre->Pi;
     int* Colonne = ProblemeAResoudre->Colonne;
@@ -157,8 +159,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }
 
-            exportPaliers(*problemeHebdo, *CorrespondanceVarNativesVarOptim, pays, nombreDeTermes,
-                Pi, Colonne, timeStepInYear, varname);
+            exportPaliers(*problemeHebdo,
+                          *CorrespondanceVarNativesVarOptim,
+                          pays,
+                          nombreDeTermes,
+                          Pi,
+                          Colonne,
+                          timeStepInYear,
+                          varname);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
@@ -223,8 +231,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             nombreDeTermes = 0;
 
-            exportPaliers(*problemeHebdo, *CorrespondanceVarNativesVarOptim, pays, nombreDeTermes,
-                Pi, Colonne, timeStepInYear, varname);
+            exportPaliers(*problemeHebdo,
+                          *CorrespondanceVarNativesVarOptim,
+                          pays,
+                          nombreDeTermes,
+                          Pi,
+                          Colonne,
+                          timeStepInYear,
+                          varname);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
@@ -261,7 +275,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
-                                + "::" + problemeHebdo->NomsDesPays[pays];
+                                            + "::" + problemeHebdo->NomsDesPays[pays];
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
@@ -280,7 +294,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var;
                     nombreDeTermes++;
 
-                    //TODO VP: var "pays" is used in function call below but is previously used to loop
+                    // TODO VP: var "pays" is used in function call below but is previously used to
+                    // loop
                     // until NombreDePays, check if it's expected behavior
                     // I added the next line to keep the same behavior as before
                     int pays = problemeHebdo->NombreDePays;
@@ -348,8 +363,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante != CONTRAINTE_HORAIRE)
                 continue;
 
-            int nbInterco = MatriceDesContraintesCouplantes
-                          ->NombreDInterconnexionsDansLaContrainteCouplante;
+            int nbInterco
+              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
             int nombreDeTermes = 0;
             for (int index = 0; index < nbInterco; index++)
             {
@@ -379,12 +394,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            int nbClusters = MatriceDesContraintesCouplantes
-                           ->NombreDePaliersDispatchDansLaContrainteCouplante;
+            int nbClusters
+              = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                  = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -427,8 +443,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte = "bc::hourly::" + std::to_string(timeStepInYear + 1) + "::"
-                                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string NomDeLaContrainte
+              = "bc::hourly::" + std::to_string(timeStepInYear + 1)
+                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -456,7 +473,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         while (pdtDebut < nombreDePasDeTempsPourUneOptimisation)
         {
             int jour = problemeHebdo->NumeroDeJourDuPasDeTemps[pdtDebut];
-            CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES* CorrespondanceCntNativesCntOptimJournalieres
+            CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES*
+              CorrespondanceCntNativesCntOptimJournalieres
               = problemeHebdo->CorrespondanceCntNativesCntOptimJournalieres[jour];
             int nombreDeTermes = 0;
 
@@ -493,7 +511,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                  = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -530,8 +549,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte = "bc::daily::" + std::to_string(jour + 1) + "::"
-                                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string NomDeLaContrainte
+              = "bc::daily::" + std::to_string(jour + 1)
+                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -555,11 +575,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             const CONTRAINTES_COUPLANTES* MatriceDesContraintesCouplantes
               = problemeHebdo->MatriceDesContraintesCouplantes[cntCouplante];
             if (MatriceDesContraintesCouplantes->TypeDeContrainteCouplante
-                    != CONTRAINTE_HEBDOMADAIRE)
+                != CONTRAINTE_HEBDOMADAIRE)
                 continue;
 
-            int nbInterco = MatriceDesContraintesCouplantes
-                          ->NombreDInterconnexionsDansLaContrainteCouplante;
+            int nbInterco
+              = MatriceDesContraintesCouplantes->NombreDInterconnexionsDansLaContrainteCouplante;
             int nombreDeTermes = 0;
             for (int index = 0; index < nbInterco; index++)
             {
@@ -590,12 +610,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            int nbClusters = MatriceDesContraintesCouplantes
-                           ->NombreDePaliersDispatchDansLaContrainteCouplante;
+            int nbClusters
+              = MatriceDesContraintesCouplantes->NombreDePaliersDispatchDansLaContrainteCouplante;
             for (int index = 0; index < nbClusters; index++)
             {
                 int pays = MatriceDesContraintesCouplantes->PaysDuPalierDispatch[index];
-                const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
+                const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+                  = problemeHebdo->PaliersThermiquesDuPays[pays];
                 const int palier
                   = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques
                       [MatriceDesContraintesCouplantes->NumeroDuPalierDispatch[index]];
@@ -630,8 +651,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte = std::string("bc::weekly::")
-                                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string NomDeLaContrainte
+              = std::string("bc::weekly::")
+                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -727,7 +749,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
                     pdt1 = 0;
 
-                if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]->NumeroDeVariablesDeLaProdHyd[pays];
+                if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
+                                 ->NumeroDeVariablesDeLaProdHyd[pays];
                     var1 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
@@ -735,7 +758,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
 
-                if (int var2 = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays];
+                if (int var2 = CorrespondanceVarNativesVarOptim
+                                 ->NumeroDeVariablesVariationHydALaBaisse[pays];
                     var2 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
@@ -743,7 +767,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
 
-                if (int var3 = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays];
+                if (int var3 = CorrespondanceVarNativesVarOptim
+                                 ->NumeroDeVariablesVariationHydALaHausse[pays];
                     var3 >= 0)
                 {
                     Pi[nombreDeTermes] = 1.0;
@@ -777,7 +802,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     nombreDeTermes++;
                 }
                 int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[0]
-                         ->NumeroDeVariablesVariationHydALaBaisse[pays];
+                             ->NumeroDeVariablesVariationHydALaBaisse[pays];
                 if (var1 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
@@ -924,7 +949,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 if (pdt > 0)
                 {
                     int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt - 1]
-                             ->NumeroDeVariablesDeNiveau[pays];
+                                 ->NumeroDeVariablesDeNiveau[pays];
                     if (var1 >= 0)
                     {
                         Pi[nombreDeTermes] = -1.0;
@@ -963,7 +988,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   = ProblemeAResoudre->NombreDeContraintes;
 
                 std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear + 1)
-                                    + "::" + problemeHebdo->NomsDesPays[pays];
+                                                + "::" + problemeHebdo->NomsDesPays[pays];
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                   ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', NomDeLaContrainte);

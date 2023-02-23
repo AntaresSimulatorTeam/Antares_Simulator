@@ -107,8 +107,10 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                                                    ProblemeAResoudre->StatutDesContraintes);
     char PremierPassage = OUI_ANTARES;
 
-    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    MPSolver* solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    PROBLEME_SPX* ProbSpx
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    MPSolver* solver
+      = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
@@ -235,7 +237,12 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS, problemeHebdo->exportMPSOnError, optimizationNumber, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        &Probleme,
+                                        ortoolsUsed,
+                                        solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
@@ -305,7 +312,7 @@ RESOLUTION:
             logs.info() << " Solver: Safe resolution succeeded";
         }
 
-        double *pt;
+        double* pt;
         double CoutOpt = 0.0;
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
