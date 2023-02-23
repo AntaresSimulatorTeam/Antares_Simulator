@@ -34,6 +34,7 @@
 #include "prepro.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
+#include "pollutant.h"
 #include <set>
 #include <map>
 #include <memory>
@@ -98,27 +99,7 @@ public:
         groupMax
     };
 
-    enum PollutantFactor
-    {
-        CO2 = 0,
-        NH3,
-        SO2,
-        NOX,
-        PM2_5,
-        PM5,
-        PM10,
-        NMVOC,
-        OP1,
-        OP2,
-        OP3,
-        OP4,
-        OP5,
-        POLLUTANT_MAX
-    };
-
-    std::array<double, PollutantFactor::POLLUTANT_MAX> emissionFactors;
-
-    void saveEmissionsFactor(IniFile::Section* s) const;
+    Pollutant emissions;
 
     //! Set of thermal clusters
     using Set = std::set<ThermalCluster*, CompareClusterName>;

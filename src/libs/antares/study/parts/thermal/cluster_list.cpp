@@ -612,7 +612,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("annuityInvestment", c.annuityInvestment);
 
             //pollutant factor
-            c.saveEmissionsFactor(s);
+            c.emissions.saveEmissionsFactor(s);
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
                            << c.parentArea->id << SEP << c.id();

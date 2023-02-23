@@ -880,13 +880,13 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
             return p->value.to<double>(cluster.nominalCapacity);
         if (p->key == "nh3")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NH3]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NH3]);
         if (p->key == "nox")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NOX]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NOX]);
         if (p->key == "nmvoc")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NMVOC]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NMVOC]);
 
         break;
     }
@@ -897,19 +897,19 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
             return p->value.to<double>(cluster.marketBidCost);
         if (p->key == "op1")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP1]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP1]);
         if (p->key == "op2")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP2]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP2]);
         if (p->key == "op3")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP3]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP3]);
         if (p->key == "op4")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP4]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP4]);
         if (p->key == "op5")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP5]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP5]);
 
         break;
     }
@@ -917,13 +917,13 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
     {
         if (p->key == "pm2_5")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM2_5]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM2_5]);
         if (p->key == "pm5")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM5]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM5]);
         if (p->key == "pm10")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM10]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM10]);
 
         break;
     }
@@ -940,7 +940,7 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
             return p->value.to<double>(cluster.spreadCost);
         if (p->key == "so2")
             return p->value.to<double>
-            (cluster.emissionFactors[ThermalCluster::PollutantFactor::SO2]);
+            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::SO2]);
 
         break;
     }
@@ -976,26 +976,6 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
 
     // The property is unknown
     return false;
-}
-
-void ThermalCluster::saveEmissionsFactor(IniFile::Section* s) const
-{
-    if (emissionFactors.empty())
-        return;
-
-    s->add("co2", emissionFactors[PollutantFactor::CO2]);
-    s->add("nh3", emissionFactors[PollutantFactor::NH3]);
-    s->add("so2", emissionFactors[PollutantFactor::SO2]);
-    s->add("nox", emissionFactors[PollutantFactor::NOX]);
-    s->add("pm2_5", emissionFactors[PollutantFactor::PM2_5]);
-    s->add("pm5", emissionFactors[PollutantFactor::PM5]);
-    s->add("pm10", emissionFactors[PollutantFactor::PM10]);
-    s->add("nmvoc", emissionFactors[PollutantFactor::NMVOC]);
-    s->add("op1", emissionFactors[PollutantFactor::OP1]);
-    s->add("op2", emissionFactors[PollutantFactor::OP2]);
-    s->add("op3", emissionFactors[PollutantFactor::OP3]);
-    s->add("op4", emissionFactors[PollutantFactor::OP4]);
-    s->add("op5", emissionFactors[PollutantFactor::OP5]);
 }
 
 } // namespace Data

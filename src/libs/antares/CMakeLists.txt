@@ -215,6 +215,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.cpp
     study/parts/thermal/cluster_list.h
     study/parts/thermal/cluster_list.cpp
+	study/parts/thermal/pollutant.h
+	study/parts/thermal/pollutant.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
