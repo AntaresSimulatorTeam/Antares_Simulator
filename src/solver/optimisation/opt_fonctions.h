@@ -65,10 +65,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 **
 ** \return True si l'operation s'est bien deroulee, false si le probleme n'a pas de solution
 */
-bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
-                         int,
-                         const int,
-                         OptPeriodStringGenerator&);
+bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*, int, const int, OptPeriodStringGenerator&);
 void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
@@ -94,9 +91,7 @@ void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
-void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double,
-                                                    OptPeriodStringGenerator&,
-                                                    int);
+void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double, OptPeriodStringGenerator&, int);
 
 /*------------------------------*/
 

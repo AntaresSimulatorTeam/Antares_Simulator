@@ -16,9 +16,8 @@ std::shared_ptr<OptPeriodStringGenerator> createOptPeriodAsString(bool isOptimiz
         return std::make_shared<OptDailyStringGenerator>(day, week, year);
 }
 
-std::string createCriterionFilename(
-  OptPeriodStringGenerator& optPeriodStringGenerator,
-  const unsigned int optNumber)
+std::string createCriterionFilename(OptPeriodStringGenerator& optPeriodStringGenerator,
+                                    const unsigned int optNumber)
 {
     return optPeriodStringGenerator.createOptimizationFilename("criterion", optNumber, "txt");
 }
