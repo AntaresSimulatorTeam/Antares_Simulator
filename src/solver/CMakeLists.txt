@@ -93,7 +93,8 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 
 target_link_libraries(antares-solver
 		PRIVATE
-			${ANTARES_SOLVER_LIBS}
+		${ANTARES_SOLVER_LIBS}
+        ortools::ortools
 		)
 
 import_std_libs(antares-solver)
