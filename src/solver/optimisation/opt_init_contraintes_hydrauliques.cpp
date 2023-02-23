@@ -45,10 +45,10 @@ void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char presenceHydro = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
 
-        if (!presenceHydro || TurbEntreBornes)
+        if (char presenceHydro = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
+            char TurbEntreBornes = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+            !presenceHydro || TurbEntreBornes)
             continue;
 
         double* CntEnergieH2OParJour = problemeHebdo->CaracteristiquesHydrauliques[pays]->CntEnergieH2OParJour;

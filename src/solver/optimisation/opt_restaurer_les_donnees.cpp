@@ -34,7 +34,7 @@
 #include "opt_fonctions.h"
 #include <iostream>
 
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
+void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int optimizationNumber)
 {
 
     const int* NumeroDeJourDuPasDeTemps = problemeHebdo->NumeroDeJourDuPasDeTemps;

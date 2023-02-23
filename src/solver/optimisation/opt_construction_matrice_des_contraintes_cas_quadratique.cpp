@@ -51,8 +51,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
         int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
         while (interco >= 0)
         {
-            int var = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
-            if (var >= 0)
+            if (int var = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                var >= 0)
             {
                 Pi[nombreDeTermes] = 1.0;
                 Colonne[nombreDeTermes] = var;
@@ -63,8 +63,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* 
         interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
         while (interco >= 0)
         {
-            int var = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
-            if (var >= 0)
+            if (int var = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                var >= 0)
             {
                 Pi[nombreDeTermes] = -1.0;
                 Colonne[nombreDeTermes] = var;

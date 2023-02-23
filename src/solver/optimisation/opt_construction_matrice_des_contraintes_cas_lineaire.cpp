@@ -39,8 +39,8 @@
 using namespace Antares::Data;
 
 
-void exportPaliers(PROBLEME_HEBDO& problemeHebdo,
-                    CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
+                    const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
                     int pays, int& nombreDeTermes,
                     double* Pi, int* Colonne,
                     int timeStepInYear,
@@ -727,27 +727,24 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 if (pdt1 >= nombreDePasDeTempsPourUneOptimisation)
                     pdt1 = 0;
 
-                int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]
-                         ->NumeroDeVariablesDeLaProdHyd[pays];
-                if (var1 >= 0)
+                if (int var1 = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1]->NumeroDeVariablesDeLaProdHyd[pays];
+                    var1 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
                 }
 
-                int var2
-                  = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays];
-                if (var2 >= 0)
+                if (int var2 = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays];
+                    var2 >= 0)
                 {
                     Pi[nombreDeTermes] = -1.0;
                     Colonne[nombreDeTermes] = var2;
                     nombreDeTermes++;
                 }
 
-                int var3
-                  = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays];
-                if (var3 >= 0)
+                if (int var3 = CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays];
+                    var3 >= 0)
                 {
                     Pi[nombreDeTermes] = 1.0;
                     Colonne[nombreDeTermes] = var3;

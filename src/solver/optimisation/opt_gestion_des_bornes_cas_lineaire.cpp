@@ -75,7 +75,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
     return;
 }
 
-double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
