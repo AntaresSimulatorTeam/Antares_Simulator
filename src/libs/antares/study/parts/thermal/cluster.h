@@ -98,36 +98,24 @@ public:
         groupMax
     };
 
-
-    double nh3_factor;
-    double so2_factor;
-    double nox_factor;
-    double pm2dot5_factor;
-    double pm5_factor;
-    double pm10_factor;
-    double nmvoc_factor;
-    double op1_factor;
-    double op2_factor;
-    double op3_factor;
-    double op4_factor;
-    double op5_factor;
-
-
     enum PollutantFactor
     {
-        nh3 = 0,
-        so2,
-        nox,
-        pm2_5,
-        pm5,
-        pm10,
-        nmvoc,
-        op1,
-        op2,
-        op3,
-        op4,
-        op5
+        NH3 = 0,
+        SO2,
+        NOX,
+        PM2_5,
+        PM5,
+        PM10,
+        NMVOC,
+        OP1,
+        OP2,
+        OP3,
+        OP4,
+        OP5,
+        POLLUTANT_MAX
     };
+
+    std::array<double, POLLUTANT_MAX> emissionFactors;
 
     //! Set of thermal clusters
     using Set = std::set<ThermalCluster*, CompareClusterName>;

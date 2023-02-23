@@ -522,8 +522,15 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             return true; // silently ignore it
         if (p->key == "nominalcapacity")
             return p->value.to<double>(cluster.nominalCapacity);
-        if (p->key == "nh3_factor")
-            return p->value.to<double>(cluster.nh3_factor);
+        if (p->key == "nh3")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NH3]);
+        if (p->key == "nox")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NOX]);
+        if (p->key == "nmvoc")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::NMVOC]);
 
         break;
     }
@@ -532,6 +539,36 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         // for compatibility <3.5
         if (p->key == "operatingcost")
             return p->value.to<double>(cluster.marketBidCost);
+        if (p->key == "op1")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP1]);
+        if (p->key == "op2")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP2]);
+        if (p->key == "op3")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP3]);
+        if (p->key == "op4")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP4]);
+        if (p->key == "op5")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::OP5]);
+
+        break;
+    }
+    case 'p':
+    {
+        if (p->key == "pm2_5")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM2_5]);
+        if (p->key == "pm5")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM5]);
+        if (p->key == "pm10")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::PM10]);
+
         break;
     }
     case 's':
@@ -545,6 +582,10 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         // for compatibility <3.5
         if (p->key == "stddeviationannualcost")
             return p->value.to<double>(cluster.spreadCost);
+        if (p->key == "so2")
+            return p->value.to<double>
+            (cluster.emissionFactors[ThermalCluster::PollutantFactor::SO2]);
+
         break;
     }
     case 'u':
