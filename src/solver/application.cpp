@@ -193,12 +193,14 @@ Application::Application()
     resetProcessPriority();
 }
 
+void Application::prepareLogSink(const char* argv0)
+{
+    google::InitGoogleLogging(argv0);
+    google::AddLogSink(&sink);
+}
+
 void Application::prepare(int argc, char* argv[])
 {
-    // TODO[FOM] Move to appropriate function
-    google::InitGoogleLogging(argv[0]);
-    google::AddLogSink(&sink);
-
     pArgc = argc;
     pArgv = argv;
 

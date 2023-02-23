@@ -41,6 +41,8 @@ public:
     */
     void prepare(int argc, char* argv[]);
 
+    void prepareLogSink(const char* argv0);
+
     /*!
     ** \brief Execute the simulation
     **
