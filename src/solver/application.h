@@ -11,7 +11,7 @@
 #include <yuni/core/string.h>
 
 // TODO[FOM] Move to appropriate file
-// Note that of version 9.x, OR-Tools redefines the GLOG
+// Note that as of version 9.x, OR-Tools redefines the GLOG
 // library. Including glog/logging.h will result in compilation
 // errors (symbol redifinition)
 #include "ortools/base/logging.h"
@@ -44,7 +44,7 @@ class AntaresSink : public google::LogSink
             Antares::logs.fatal() << msg;
             break;
         default:
-            Antares::logs.info() << "unknown log level " << message;
+            Antares::logs.info() << "unknown log level " << msg;
         }
     }
 };
