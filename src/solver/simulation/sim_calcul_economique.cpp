@@ -58,7 +58,6 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     if (parameters.adqPatch.enabled)
     {
         problem.adqPatchParams = std::make_shared<AdequacyPatchParameters>();
-        // AdequacyFirstStep will be initialized during the economy solve
         problem.adqPatchParams->SetNTCOutsideToInsideToZero
           = parameters.adqPatch.localMatching.setToZeroOutsideInsideLinks;
         problem.adqPatchParams->SetNTCOutsideToOutsideToZero

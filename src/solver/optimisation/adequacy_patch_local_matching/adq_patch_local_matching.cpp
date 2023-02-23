@@ -136,7 +136,8 @@ void setNTCbounds(double& Xmax,
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
-    if (problemeHebdo->adqPatchParams && problemeHebdo->adqPatchParams->AdequacyFirstStep)
+    if (problemeHebdo->adqPatchParams
+        && problemeHebdo->adequacyPatchRuntimeData->LMR_FirstOptimization)
     {
         ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, Interco);
 

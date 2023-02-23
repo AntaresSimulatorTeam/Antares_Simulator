@@ -45,9 +45,9 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHeb
 }
 void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 {
-    problemeHebdo_->adqPatchParams->AdequacyFirstStep = true;
+    problemeHebdo_->adequacyPatchRuntimeData->LMR_FirstOptimization = true;
     OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
-    problemeHebdo_->adqPatchParams->AdequacyFirstStep = false;
+    problemeHebdo_->adequacyPatchRuntimeData->LMR_FirstOptimization = false;
 
     for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {

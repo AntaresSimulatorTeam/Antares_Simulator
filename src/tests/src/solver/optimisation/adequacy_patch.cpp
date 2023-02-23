@@ -32,11 +32,12 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
 
     problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
     problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
-    problem.adqPatchParams
-      = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
+    problem.adequacyPatchRuntimeData->LMR_FirstOptimization = true;
+    problem.adqPatchParams = std::make_shared<AdequacyPatchParameters>();
+
     auto& adqPatchParams = problem.adqPatchParams;
 
-    adqPatchParams->AdequacyFirstStep = true;
+    
     adqPatchParams->SetNTCOutsideToOutsideToZero = SetNTCOutsideToOutsideToZero;
     adqPatchParams->SetNTCOutsideToInsideToZero = SetNTCOutsideToInsideToZero;
 

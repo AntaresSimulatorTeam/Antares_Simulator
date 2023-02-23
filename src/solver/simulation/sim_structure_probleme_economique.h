@@ -460,7 +460,6 @@ typedef struct
 
 struct AdequacyPatchParameters
 {
-    bool AdequacyFirstStep;
     bool SetNTCOutsideToInsideToZero;
     bool SetNTCOutsideToOutsideToZero;
     bool IncludeHurdleCostCsr;

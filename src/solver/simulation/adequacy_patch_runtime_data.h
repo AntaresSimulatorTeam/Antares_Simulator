@@ -42,6 +42,8 @@ public:
     AdequacyPatchRuntimeData(const Antares::Data::AreaList& areas,
                              const std::vector<Antares::Data::AreaLink*>& links);
 
+    bool LMR_FirstOptimization;
+
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;

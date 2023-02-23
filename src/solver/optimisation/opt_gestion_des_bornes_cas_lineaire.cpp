@@ -150,7 +150,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 
             // adq patch: update ENS <= DENS in 2nd run
             if (problemeHebdo->adqPatchParams
-                && problemeHebdo->adqPatchParams->AdequacyFirstStep == false
+                && !problemeHebdo->adequacyPatchRuntimeData->LMR_FirstOptimization
                 && problemeHebdo->adequacyPatchRuntimeData->areaMode[Pays]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 Xmax[var] = std::min(
