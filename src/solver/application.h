@@ -44,7 +44,7 @@ class AntaresSink : public google::LogSink
             Antares::logs.fatal() << msg;
             break;
         default:
-            Antares::logs.info() << "unknown log level " << msg;
+            Antares::logs.warning() << "Unknown log level " << msg;
         }
     }
 };
