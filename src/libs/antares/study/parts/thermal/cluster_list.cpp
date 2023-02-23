@@ -614,6 +614,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             //pollutant factor
             if (!c.emissionFactors.empty())
             {
+                s->add("co2", c.emissionFactors[ThermalCluster::PollutantFactor::CO2]);
                 s->add("nh3", c.emissionFactors[ThermalCluster::PollutantFactor::NH3]);
                 s->add("so2", c.emissionFactors[ThermalCluster::PollutantFactor::SO2]);
                 s->add("nox", c.emissionFactors[ThermalCluster::PollutantFactor::NOX]);

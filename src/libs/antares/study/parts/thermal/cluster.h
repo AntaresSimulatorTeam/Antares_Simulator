@@ -100,7 +100,8 @@ public:
 
     enum PollutantFactor
     {
-        NH3 = 0,
+        CO2 = 0,
+        NH3,
         SO2,
         NOX,
         PM2_5,
