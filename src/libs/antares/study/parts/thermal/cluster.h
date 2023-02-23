@@ -116,7 +116,9 @@ public:
         POLLUTANT_MAX
     };
 
-    std::array<double, POLLUTANT_MAX> emissionFactors;
+    std::array<double, PollutantFactor::POLLUTANT_MAX> emissionFactors;
+
+    void saveEmissionsFactor(IniFile::Section* s) const;
 
     //! Set of thermal clusters
     using Set = std::set<ThermalCluster*, CompareClusterName>;

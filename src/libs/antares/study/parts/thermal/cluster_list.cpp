@@ -612,22 +612,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("annuityInvestment", c.annuityInvestment);
 
             //pollutant factor
-            if (!c.emissionFactors.empty())
-            {
-                s->add("co2", c.emissionFactors[ThermalCluster::PollutantFactor::CO2]);
-                s->add("nh3", c.emissionFactors[ThermalCluster::PollutantFactor::NH3]);
-                s->add("so2", c.emissionFactors[ThermalCluster::PollutantFactor::SO2]);
-                s->add("nox", c.emissionFactors[ThermalCluster::PollutantFactor::NOX]);
-                s->add("pm2_5", c.emissionFactors[ThermalCluster::PollutantFactor::PM2_5]);
-                s->add("pm5", c.emissionFactors[ThermalCluster::PollutantFactor::PM5]);
-                s->add("pm10", c.emissionFactors[ThermalCluster::PollutantFactor::PM10]);
-                s->add("nmvoc", c.emissionFactors[ThermalCluster::PollutantFactor::NMVOC]);
-                s->add("op1", c.emissionFactors[ThermalCluster::PollutantFactor::OP1]);
-                s->add("op2", c.emissionFactors[ThermalCluster::PollutantFactor::OP2]);
-                s->add("op3", c.emissionFactors[ThermalCluster::PollutantFactor::OP3]);
-                s->add("op4", c.emissionFactors[ThermalCluster::PollutantFactor::OP4]);
-                s->add("op5", c.emissionFactors[ThermalCluster::PollutantFactor::OP5]);
-            }
+            c.saveEmissionsFactor(s);
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP
                            << c.parentArea->id << SEP << c.id();

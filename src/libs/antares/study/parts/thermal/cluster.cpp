@@ -978,5 +978,25 @@ bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Pr
     return false;
 }
 
+void ThermalCluster::saveEmissionsFactor(IniFile::Section* s) const
+{
+    if (emissionFactors.empty())
+        return;
+
+    s->add("co2", emissionFactors[PollutantFactor::CO2]);
+    s->add("nh3", emissionFactors[PollutantFactor::NH3]);
+    s->add("so2", emissionFactors[PollutantFactor::SO2]);
+    s->add("nox", emissionFactors[PollutantFactor::NOX]);
+    s->add("pm2_5", emissionFactors[PollutantFactor::PM2_5]);
+    s->add("pm5", emissionFactors[PollutantFactor::PM5]);
+    s->add("pm10", emissionFactors[PollutantFactor::PM10]);
+    s->add("nmvoc", emissionFactors[PollutantFactor::NMVOC]);
+    s->add("op1", emissionFactors[PollutantFactor::OP1]);
+    s->add("op2", emissionFactors[PollutantFactor::OP2]);
+    s->add("op3", emissionFactors[PollutantFactor::OP3]);
+    s->add("op4", emissionFactors[PollutantFactor::OP4]);
+    s->add("op5", emissionFactors[PollutantFactor::OP5]);
+}
+
 } // namespace Data
 } // namespace Antares
