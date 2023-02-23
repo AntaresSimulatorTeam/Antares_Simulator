@@ -30,6 +30,10 @@
 namespace Antares::Data
 {
 
+Pollutant::Pollutant() :
+    emissionFactors()
+{}
+
 void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
 {
     if (emissionFactors.empty())

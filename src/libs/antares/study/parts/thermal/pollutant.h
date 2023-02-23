@@ -55,6 +55,8 @@ public:
         POLLUTANT_MAX
     };
 
+    Pollutant();
+
     std::array<double, PollutantFactor::POLLUTANT_MAX> emissionFactors;
 
     void saveEmissionsFactor(IniFile::Section* s) const;

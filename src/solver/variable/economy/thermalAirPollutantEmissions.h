@@ -28,6 +28,7 @@
 #define __SOLVER_VARIABLE_ECONOMY_thermalAirPollutantEmissions_H__
 
 #include "../variable.h"
+#include "../../../libs/antares/study/parts/thermal/pollutant.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -47,7 +48,7 @@ struct VCardThermalAirPollutantEmissions
     //! The short description of the variable
     static const char* Description()
     {
-        return "Overall pollutant emissions expected from all the thermal dispatchable clusters";
+        return "Overall pollutant emissions expected from all the thermal clusters";
     }
 
     //! The expecte results
@@ -273,9 +274,14 @@ public:
 
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
-        // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
-          += state.thermalClusterProduction;
+        //Multiply every pollutant factor with production
+        for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+        {
+            pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
+                += state.thermalCluster->emissions.emissionFactors[i]
+                    * state.thermalClusterProduction;
+        }
+
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
     }
