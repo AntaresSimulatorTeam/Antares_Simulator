@@ -119,7 +119,7 @@ The area files that belong to the « values » class display **122** fields corr
 | UNSP. ENRG | Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS) |
 | SPIL. ENRG | Spilled energy (energy produced that cannot be used and has to be wasted) |
 | LOLD | Loss of load duration: adequacy indicator (length of shortfalls) |
-| LOLP | Loss of Load probability: adequacy indicator (probability of shortfalls) |
+| LOLP | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
 | AVL. DTG | Available dispatchable thermal generation (sum of av. power over all plants) |
 | DTG. MRG | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
 | MAX. MRG | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
@@ -209,7 +209,7 @@ Files « with network » and « without network » present the expectations and 
 | variables | description |
 |-----------|-------------|
 |LOLD | Overall length of time for which there were shortfalls (Loss of Load Duration) <br/> (note: the commonly used LOLE index is equivalent to LOLD expectation )|
-|LOLP | Loss of Load Probability |
+|LOLP | Loss of Load Probability (probability of at least one hour of shortfall within the considered period) |
 |EENS | Energy Not Supplied |
 |MARG | Margin = available generation – (load + primary reserve) <br/> When MARG &gt; 0, MARG is a security margin <br/> When MARG &lt; 0, MARG is a curtailment depth |
 
