@@ -522,6 +522,9 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
             return true; // silently ignore it
         if (p->key == "nominalcapacity")
             return p->value.to<double>(cluster.nominalCapacity);
+        if (p->key == "nh3_factor")
+            return p->value.to<double>(cluster.nh3_factor);
+
         break;
     }
     case 'o':
