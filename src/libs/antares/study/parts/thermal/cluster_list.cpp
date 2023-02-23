@@ -395,7 +395,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (not ThermalCluster::LoadFromProperty(cluster, property))
+            if (!ThermalCluster::loadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->key << "`: The property is unknown and ignored";

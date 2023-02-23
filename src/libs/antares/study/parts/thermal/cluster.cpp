@@ -731,7 +731,7 @@ unsigned int ThermalCluster::precision() const
     return 0;
 }
 
-bool ThermalCluster::LoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
+bool ThermalCluster::loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
         return false;

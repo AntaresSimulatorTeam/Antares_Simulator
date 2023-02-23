@@ -212,7 +212,7 @@ public:
     /*!
     ** \brief Load properties from files
     */
-    static bool LoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
+    static bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
     /*!
     ** \brief The group ID
