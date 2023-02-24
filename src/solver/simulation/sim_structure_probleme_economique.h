@@ -271,8 +271,8 @@ typedef struct
     double* MaxEnergiePompageParIntervalleOptimise;
     double* ContrainteDePmaxPompageHoraire;
 
-    char PresenceDePompageModulable;
-    char PresenceDHydrauliqueModulable;
+    bool PresenceDePompageModulable;
+    bool PresenceDHydrauliqueModulable;
 
     double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
     double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
@@ -281,9 +281,9 @@ typedef struct
     double WeeklyWaterValueStateUp;
     double WeeklyWaterValueStateDown;
 
-    char TurbinageEntreBornes;
-    char SansHeuristique;
-    char SuiviNiveauHoraire;
+    bool TurbinageEntreBornes;
+    bool SansHeuristique;
+    bool SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
     double* NiveauHoraireInf;
@@ -295,8 +295,8 @@ typedef struct
 
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
-    char DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    char AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
+    bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
+    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
     double* WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
                                  100, should be made dynamic)*/
@@ -438,8 +438,8 @@ typedef struct
 
 typedef struct
 {
-    char IntercoGereeAvecDesCouts;
-    char IntercoGereeAvecLoopFlow;
+    bool IntercoGereeAvecDesCouts;
+    bool IntercoGereeAvecLoopFlow;
     double* CoutDeTransportOrigineVersExtremite;
     double* CoutDeTransportExtremiteVersOrigine;
 
@@ -477,10 +477,10 @@ struct PROBLEME_HEBDO
     uint year = 0;
 
     /* Business problem */
-    char OptimisationAuPasHebdomadaire = NON_ANTARES;
+    bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    char WaterValueAccurate = NON_ANTARES;
-    char OptimisationAvecCoutsDeDemarrage = NON_ANTARES;
+    bool WaterValueAccurate = false;
+    bool OptimisationAvecCoutsDeDemarrage = false;
     int NombreDePays = 0;
     const char** NomsDesPays = nullptr;
     int NombreDePaliersThermiques = 0;
@@ -537,7 +537,7 @@ struct PROBLEME_HEBDO
     bool ExportStructure = false;
 
     unsigned int HeureDansLAnnee = 0;
-    char LeProblemeADejaEteInstancie = 0;
+    bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
@@ -552,7 +552,7 @@ struct PROBLEME_HEBDO
     int* IndexDebutIntercoExtremite = nullptr;
     int* IndexSuivantIntercoExtremite = nullptr;
 
-    char Expansion = NON_ANTARES;
+    bool Expansion = false;
 
     int* NumeroDeContrainteEnergieHydraulique = nullptr;
     int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
@@ -567,7 +567,7 @@ struct PROBLEME_HEBDO
     int* NumeroDeVariableStockFinal = nullptr;
     int** NumeroDeVariableDeTrancheDeStock = nullptr;
 
-    char YaDeLaReserveJmoins1 = NON_ANTARES;
+    bool YaDeLaReserveJmoins1 = false;
 
     double* previousYearFinalLevels = nullptr;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;
