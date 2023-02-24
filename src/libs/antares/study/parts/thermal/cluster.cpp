@@ -737,243 +737,178 @@ bool ThermalCluster::loadFromProperty(ThermalCluster& cluster, const IniFile::Pr
     if (p->key.empty())
         return false;
 
-    switch (p->key[0])
+    if (p->key == "annuityinvestment")
+        return p->value.to<uint>(cluster.annuityInvestment);
+    if (p->key == "dailyminimumcapacity")
     {
-    case 'a':
-    {
-        if (p->key == "annuityinvestment")
-            return p->value.to<uint>(cluster.annuityInvestment);
-        break;
+        double d = p->value.to<double>();
+        if (not Math::Zero(d) and cluster.minUpTime < 24)
+            cluster.minUpTime = 24;
+        if (not Math::Zero(d) and cluster.minDownTime < 24)
+            cluster.minDownTime = 24;
+        cluster.minStablePower = Math::Max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
     }
-    case 'c':
+    if (p->key == "enabled")
+        return p->value.to<bool>(cluster.enabled);
+    if (p->key == "fixed-cost")
+        return p->value.to<double>(cluster.fixedCost);
+    if (p->key == "flexibility")
     {
-        if (p->key == "co2")
-            return p->value.to<double>(cluster.co2);
-        break;
+        // The flexibility is now ignored since v3.5
+        return true;
     }
-    case 'd':
+    if (p->key == "groupmincount")
+        return p->value.to<uint>(cluster.groupMinCount);
+    if (p->key == "groupmaxcount")
+        return p->value.to<uint>(cluster.groupMaxCount);
+    if (p->key == "group")
     {
-        if (p->key == "dailyminimumcapacity")
-        {
-            double d = p->value.to<double>();
-            if (not Math::Zero(d) and cluster.minUpTime < 24)
-                cluster.minUpTime = 24;
-            if (not Math::Zero(d) and cluster.minDownTime < 24)
-                cluster.minDownTime = 24;
-            cluster.minStablePower = Math::Max(cluster.minStablePower, d);
-            return true; // ignored since 3.7
-        }
-        break;
+        cluster.setGroup(p->value);
+        return true;
     }
-    case 'e':
+    if (p->key == "gen-ts")
     {
-        if (p->key == "enabled")
-            return p->value.to<bool>(cluster.enabled);
-        break;
+        return p->value.to(cluster.tsGenBehavior);
     }
+    if (p->key == "hourlyminimumcapacity")
+    {
+        double d = p->value.to<double>();
+        cluster.minStablePower = Math::Max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
+    }
+    if (p->key == "law.planned")
+        return p->value.to(cluster.plannedLaw);
+    if (p->key == "law.forced")
+        return p->value.to(cluster.forcedLaw);
+    if (p->key == "market-bid-cost")
+        return p->value.to<double>(cluster.marketBidCost);
+    if (p->key == "marginal-cost")
+        return p->value.to<double>(cluster.marginalCost);
+    if (p->key == "must-run")
+        // mustrunOrigin will be initialized later, after LoadFromSection
+        return p->value.to<bool>(cluster.mustrun);
+    if (p->key == "min-stable-power")
+        return p->value.to<double>(cluster.minStablePower);
 
-    case 'f':
+    if (p->key == "min-up-time")
     {
-        if (p->key == "fixed-cost")
-            return p->value.to<double>(cluster.fixedCost);
-        if (p->key == "flexibility")
+        if (p->value.to<uint>(cluster.minUpTime))
         {
-            // The flexibility is now ignored since v3.5
-            return true;
-        }
-        break;
-    }
-    case 'g':
-    {
-        if (p->key == "groupmincount")
-            return p->value.to<uint>(cluster.groupMinCount);
-        if (p->key == "groupmaxcount")
-            return p->value.to<uint>(cluster.groupMaxCount);
-        if (p->key == "group")
-        {
-            cluster.setGroup(p->value);
-            return true;
-        }
-        if (p->key == "gen-ts")
-        {
-            return p->value.to(cluster.tsGenBehavior);
-        }
-        break;
-    }
-    case 'h':
-    {
-        if (p->key == "hourlyminimumcapacity")
-        {
-            double d = p->value.to<double>();
-            cluster.minStablePower = Math::Max(cluster.minStablePower, d);
-            return true; // ignored since 3.7
-        }
-        break;
-    }
-    case 'l':
-    {
-        if (p->key == "law.planned")
-            return p->value.to(cluster.plannedLaw);
-        if (p->key == "law.forced")
-            return p->value.to(cluster.forcedLaw);
-        break;
-    }
-    case 'm':
-    {
-        if (p->key == "market-bid-cost")
-            return p->value.to<double>(cluster.marketBidCost);
-        if (p->key == "marginal-cost")
-            return p->value.to<double>(cluster.marginalCost);
-        if (p->key == "must-run")
-            // mustrunOrigin will be initialized later, after LoadFromSection
-            return p->value.to<bool>(cluster.mustrun);
-        if (p->key == "min-stable-power")
-            return p->value.to<double>(cluster.minStablePower);
-
-        if (p->key == "min-up-time")
-        {
-            if (p->value.to<uint>(cluster.minUpTime))
-            {
-                if (cluster.minUpTime < 1)
-                    cluster.minUpTime = 1;
-                if (cluster.minUpTime > 168)
-                    cluster.minUpTime = 168;
-                return true;
-            }
-            return false;
-        }
-        if (p->key == "min-down-time")
-        {
-            if (p->value.to<uint>(cluster.minDownTime))
-            {
-                if (cluster.minDownTime < 1)
-                    cluster.minDownTime = 1;
-                if (cluster.minDownTime > 168)
-                    cluster.minDownTime = 168;
-                return true;
-            }
-            return false;
-        }
-        // for compatibility < 5.0
-        if (p->key == "min-updown-time")
-        {
-            uint val;
-            p->value.to<uint>(val);
-            if (val)
-            {
-                if (val < 1)
-                    val = 1;
-                if (val > 168)
-                    val = 168;
-                cluster.minUpTime = val;
-                cluster.minDownTime = val;
-                return true;
-            }
-            return false;
-        }
-        break;
-    }
-    case 'n':
-    {
-        if (p->key == "name")
-            return true; // silently ignore it
-        if (p->key == "nominalcapacity")
-            return p->value.to<double>(cluster.nominalCapacity);
-        if (p->key == "nh3")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NH3]);
-        if (p->key == "nox")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NOX]);
-        if (p->key == "nmvoc")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::NMVOC]);
-
-        break;
-    }
-    case 'o':
-    {
-        // for compatibility <3.5
-        if (p->key == "operatingcost")
-            return p->value.to<double>(cluster.marketBidCost);
-        if (p->key == "op1")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP1]);
-        if (p->key == "op2")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP2]);
-        if (p->key == "op3")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP3]);
-        if (p->key == "op4")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP4]);
-        if (p->key == "op5")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::OP5]);
-
-        break;
-    }
-    case 'p':
-    {
-        if (p->key == "pm2_5")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM2_5]);
-        if (p->key == "pm5")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM5]);
-        if (p->key == "pm10")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::PM10]);
-
-        break;
-    }
-    case 's':
-    {
-        if (p->key == "spread-cost")
-            return p->value.to<double>(cluster.spreadCost);
-        if (p->key == "spinning")
-            return p->value.to<double>(cluster.spinning);
-        if (p->key == "startup-cost")
-            return p->value.to<double>(cluster.startupCost);
-        // for compatibility <3.5
-        if (p->key == "stddeviationannualcost")
-            return p->value.to<double>(cluster.spreadCost);
-        if (p->key == "so2")
-            return p->value.to<double>
-            (cluster.emissions.emissionFactors[Pollutant::PollutantFactor::SO2]);
-
-        break;
-    }
-    case 'u':
-    {
-        if (p->key == "unitcount")
-            return p->value.to<uint>(cluster.unitCount);
-        break;
-    }
-    case 'v':
-    {
-        if (p->key == "volatility.planned")
-            return p->value.to(cluster.plannedVolatility);
-        if (p->key == "volatility.forced")
-            return p->value.to(cluster.forcedVolatility);
-        break;
-    }
-    case 'w':
-    {
-        if (p->key == "weeklyminimumcapacity")
-        {
-            double d = p->value.to<double>();
-            if (not Math::Zero(d) and cluster.minUpTime < 168)
+            if (cluster.minUpTime < 1)
+                cluster.minUpTime = 1;
+            if (cluster.minUpTime > 168)
                 cluster.minUpTime = 168;
-            if (not Math::Zero(d) and cluster.minDownTime < 168)
-                cluster.minDownTime = 168;
-            cluster.minStablePower = Math::Max(cluster.minStablePower, d);
-            return true; // ignored since 3.7
+            return true;
         }
-        break;
+        return false;
     }
+    if (p->key == "min-down-time")
+    {
+        if (p->value.to<uint>(cluster.minDownTime))
+        {
+            if (cluster.minDownTime < 1)
+                cluster.minDownTime = 1;
+            if (cluster.minDownTime > 168)
+                cluster.minDownTime = 168;
+            return true;
+        }
+        return false;
     }
+    // for compatibility < 5.0
+    if (p->key == "min-updown-time")
+    {
+        uint val;
+        p->value.to<uint>(val);
+        if (val)
+        {
+            if (val < 1)
+                val = 1;
+            if (val > 168)
+                val = 168;
+            cluster.minUpTime = val;
+            cluster.minDownTime = val;
+            return true;
+        }
+        return false;
+    }
+    if (p->key == "name")
+        return true; // silently ignore it
+    if (p->key == "nominalcapacity")
+        return p->value.to<double>(cluster.nominalCapacity);
+
+    // for compatibility <3.5
+    if (p->key == "operatingcost")
+        return p->value.to<double>(cluster.marketBidCost);
+
+    if (p->key == "spread-cost")
+        return p->value.to<double>(cluster.spreadCost);
+    if (p->key == "spinning")
+        return p->value.to<double>(cluster.spinning);
+    if (p->key == "startup-cost")
+        return p->value.to<double>(cluster.startupCost);
+    // for compatibility <3.5
+    if (p->key == "stddeviationannualcost")
+        return p->value.to<double>(cluster.spreadCost);
+
+    if (p->key == "unitcount")
+        return p->value.to<uint>(cluster.unitCount);
+    if (p->key == "volatility.planned")
+        return p->value.to(cluster.plannedVolatility);
+    if (p->key == "volatility.forced")
+        return p->value.to(cluster.forcedVolatility);
+    if (p->key == "weeklyminimumcapacity")
+    {
+        double d = p->value.to<double>();
+        if (not Math::Zero(d) and cluster.minUpTime < 168)
+            cluster.minUpTime = 168;
+        if (not Math::Zero(d) and cluster.minDownTime < 168)
+            cluster.minDownTime = 168;
+        cluster.minStablePower = Math::Max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
+    }
+
+    //pollutant
+    if (p->key == "co2")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::CO2]);
+    if (p->key == "nh3")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::NH3]);
+    if (p->key == "so2")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::SO2]);
+    if (p->key == "nox")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::NOX]);
+    if (p->key == "pm2_5")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::PM2_5]);
+    if (p->key == "pm5")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::PM5]);
+    if (p->key == "pm10")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::PM10]);
+    if (p->key == "nmvoc")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::NMVOC]);
+    if (p->key == "op1")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::OP1]);
+    if (p->key == "op2")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::OP2]);
+    if (p->key == "op3")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::OP3]);
+    if (p->key == "op4")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::OP4]);
+    if (p->key == "op5")
+        return p->value.to<double>
+            (cluster.emissions.emissionFactors[Pollutant::OP5]);
+
 
     // The property is unknown
     return false;

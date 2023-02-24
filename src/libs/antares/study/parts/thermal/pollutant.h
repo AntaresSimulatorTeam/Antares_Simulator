@@ -37,7 +37,7 @@ namespace Antares::Data
 class Pollutant
 {
 public:
-    enum PollutantFactor
+    enum PollutantList
     {
         CO2 = 0,
         NH3,
@@ -55,9 +55,7 @@ public:
         POLLUTANT_MAX
     };
 
-    Pollutant();
-
-    std::array<double, PollutantFactor::POLLUTANT_MAX> emissionFactors;
+    std::array<double, POLLUTANT_MAX> emissionFactors;
 
     void saveEmissionsFactor(IniFile::Section* s) const;
 

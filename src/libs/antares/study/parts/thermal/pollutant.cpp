@@ -30,28 +30,21 @@
 namespace Antares::Data
 {
 
-Pollutant::Pollutant() :
-    emissionFactors()
-{}
-
 void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
 {
-    if (emissionFactors.empty())
-        return;
-
-    s->add("co2", emissionFactors[PollutantFactor::CO2]);
-    s->add("nh3", emissionFactors[PollutantFactor::NH3]);
-    s->add("so2", emissionFactors[PollutantFactor::SO2]);
-    s->add("nox", emissionFactors[PollutantFactor::NOX]);
-    s->add("pm2_5", emissionFactors[PollutantFactor::PM2_5]);
-    s->add("pm5", emissionFactors[PollutantFactor::PM5]);
-    s->add("pm10", emissionFactors[PollutantFactor::PM10]);
-    s->add("nmvoc", emissionFactors[PollutantFactor::NMVOC]);
-    s->add("op1", emissionFactors[PollutantFactor::OP1]);
-    s->add("op2", emissionFactors[PollutantFactor::OP2]);
-    s->add("op3", emissionFactors[PollutantFactor::OP3]);
-    s->add("op4", emissionFactors[PollutantFactor::OP4]);
-    s->add("op5", emissionFactors[PollutantFactor::OP5]);
+    s->add("co2", emissionFactors[CO2]);
+    s->add("nh3", emissionFactors[NH3]);
+    s->add("so2", emissionFactors[SO2]);
+    s->add("nox", emissionFactors[NOX]);
+    s->add("pm2_5", emissionFactors[PM2_5]);
+    s->add("pm5", emissionFactors[PM5]);
+    s->add("pm10", emissionFactors[PM10]);
+    s->add("nmvoc", emissionFactors[NMVOC]);
+    s->add("op1", emissionFactors[OP1]);
+    s->add("op2", emissionFactors[OP2]);
+    s->add("op3", emissionFactors[OP3]);
+    s->add("op4", emissionFactors[OP4]);
+    s->add("op5", emissionFactors[OP5]);
 }
 
 } //namespace Antares::Data

@@ -42,7 +42,7 @@ struct VCardThermalAirPollutantEmissions
     //! Unit
     static const char* Unit()
     {
-        return "Tois";
+        return "Tons";
     }
 
     //! The short description of the variable
@@ -75,7 +75,7 @@ struct VCardThermalAirPollutantEmissions
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 13,
+        columnCount = Antares::Data::Pollutant::POLLUTANT_MAX,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
