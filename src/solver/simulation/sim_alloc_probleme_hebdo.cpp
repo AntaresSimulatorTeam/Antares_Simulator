@@ -48,9 +48,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     uint linkCount = study.runtime->interconnectionsCount();
 
-    problem.DefaillanceNegativeUtiliserPMinThermique = (char*)MemAlloc(nbPays * sizeof(char));
-    problem.DefaillanceNegativeUtiliserHydro = (char*)MemAlloc(nbPays * sizeof(char));
-    problem.DefaillanceNegativeUtiliserConsoAbattue = (char*)MemAlloc(nbPays * sizeof(char));
+    problem.DefaillanceNegativeUtiliserPMinThermique = (bool*)MemAlloc(nbPays * sizeof(char));
+    problem.DefaillanceNegativeUtiliserHydro = (bool*)MemAlloc(nbPays * sizeof(char));
+    problem.DefaillanceNegativeUtiliserConsoAbattue = (bool*)MemAlloc(nbPays * sizeof(char));
 
     problem.CoefficientEcretementPMaxHydraulique = (double*)MemAlloc(nbPays * sizeof(double));
 
@@ -268,7 +268,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     for (k = 0; k < (int)linkCount; ++k)
     {
         problem.CoutDeTransport[k] = (COUTS_DE_TRANSPORT*)MemAlloc(sizeof(COUTS_DE_TRANSPORT));
-        problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = NON_ANTARES;
+        problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
         problem.CoutDeTransport[k]->CoutDeTransportOrigineVersExtremite
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.CoutDeTransport[k]->CoutDeTransportExtremiteVersOrigine

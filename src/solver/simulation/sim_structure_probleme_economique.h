@@ -516,9 +516,9 @@ struct PROBLEME_HEBDO
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    char* DefaillanceNegativeUtiliserPMinThermique = nullptr;
-    char* DefaillanceNegativeUtiliserHydro = nullptr;
-    char* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
+    bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
+    bool* DefaillanceNegativeUtiliserHydro = nullptr;
+    bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 

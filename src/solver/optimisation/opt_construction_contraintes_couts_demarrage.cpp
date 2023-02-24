@@ -43,7 +43,7 @@
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
-  char Simulation)
+  bool Simulation)
 {
     CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
     CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim;

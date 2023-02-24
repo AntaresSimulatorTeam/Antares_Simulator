@@ -38,7 +38,7 @@
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
-  char Simulation)
+  bool Simulation)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 

@@ -165,7 +165,7 @@ bool Economy::year(Progression::Task& progression,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? true : false;
         reinitOptim = false;
 
         try

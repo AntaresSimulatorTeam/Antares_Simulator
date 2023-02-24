@@ -229,7 +229,7 @@ void ComputeFlowQuad(Data::Study& study,
         logs.info() << "Post-processing... (quadratic optimisation)";
 
         problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
-        problem.LeProblemeADejaEteInstancie = NON_ANTARES;
+        problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);

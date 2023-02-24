@@ -1,7 +1,6 @@
 #pragma once
 
 constexpr char OUI_ANTARES = 1;
-constexpr char NON_ANTARES = 0;
 
 constexpr double LINFINI_ANTARES = 1.e+80;
 constexpr int LINFINI_ENTIER = 20000000;

@@ -35,7 +35,7 @@
 
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)

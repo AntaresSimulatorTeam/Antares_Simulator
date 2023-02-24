@@ -67,9 +67,9 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
       = problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique;
     const int* NumeroDeContrainteMaxPompage = problemeHebdo->NumeroDeContrainteMaxPompage;
 
-    const char* DefaillanceNegativeUtiliserConsoAbattue
+    const bool* DefaillanceNegativeUtiliserConsoAbattue
       = problemeHebdo->DefaillanceNegativeUtiliserConsoAbattue;
-    const char* DefaillanceNegativeUtiliserPMinThermique
+    const bool* DefaillanceNegativeUtiliserPMinThermique
       = problemeHebdo->DefaillanceNegativeUtiliserPMinThermique;
 
     for (int i = 0; i < ProblemeAResoudre->NombreDeContraintes; i++)

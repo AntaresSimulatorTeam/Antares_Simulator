@@ -35,16 +35,13 @@
 
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
-    char simulation = OUI_ANTARES;
-
-    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                            simulation);
+    OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo, true);
 
     OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                  simulation);
+                                                                                  true);
 
     return;
 }
