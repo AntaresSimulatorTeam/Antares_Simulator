@@ -80,7 +80,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                 int nombreDeTermes = 0;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
@@ -94,7 +94,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -109,7 +109,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 0)
                     {
@@ -122,7 +122,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                 nombreDeTermes = 0;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier];
@@ -136,7 +136,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -151,7 +151,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 0)
                     {
@@ -187,7 +187,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdtmoins1];
 
                 int nombreDeTermes = 0;
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -202,7 +202,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptimTmoins1
@@ -217,7 +217,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -232,7 +232,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -247,7 +247,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 0)
                     {
@@ -280,7 +280,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                   = -1;
 
                 int nombreDeTermes = 0;
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
@@ -296,7 +296,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
@@ -311,7 +311,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 0)
                     {
@@ -325,7 +325,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES == false
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
@@ -346,7 +346,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                 int nombreDeTermes = 0;
                 int var = 0;
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
                             ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
@@ -361,7 +361,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 else
                     nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 0)
                     {
@@ -404,7 +404,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                   = -1;
 
                 int nombreDeTermes = 0;
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
@@ -426,7 +426,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (t1 < 0)
                         t1 = nombreDePasDeTempsPourUneOptimisation + t1;
 
-                    if (Simulation == NON_ANTARES)
+                    if (!Simulation)
                     {
                         int var = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
                                     ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique
@@ -441,7 +441,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     else
                         nbTermesContraintesPourLesCoutsDeDemarrage++;
 
-                    if (Simulation == NON_ANTARES)
+                    if (!Simulation)
                     {
                         int var
                           = problemeHebdo->CorrespondanceVarNativesVarOptim[t1]
@@ -458,7 +458,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         nbTermesContraintesPourLesCoutsDeDemarrage++;
                 }
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 1)
                     {
@@ -499,7 +499,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     CorrespondanceCntNativesCntOptim
                       ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier]
@@ -507,7 +507,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 }
 
                 int nombreDeTermes = 0;
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     int var
                       = CorrespondanceVarNativesVarOptim
@@ -530,7 +530,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
                     CorrespondanceVarNativesVarOptim
                       = problemeHebdo->CorrespondanceVarNativesVarOptim[t1];
-                    if (Simulation == NON_ANTARES)
+                    if (!Simulation)
                     {
                         int var = CorrespondanceVarNativesVarOptim
                                     ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique
@@ -545,7 +545,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     else
                         nbTermesContraintesPourLesCoutsDeDemarrage++;
                 }
-                if (Simulation == NON_ANTARES)
+                if (!Simulation)
                 {
                     if (nombreDeTermes > 1)
                     {
@@ -563,7 +563,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-    if (Simulation == OUI_ANTARES)
+    if (Simulation)
         problemeHebdo->NbTermesContraintesPourLesCoutsDeDemarrage
           = nbTermesContraintesPourLesCoutsDeDemarrage;
 

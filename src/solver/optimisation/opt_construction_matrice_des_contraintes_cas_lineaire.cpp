@@ -667,11 +667,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char presenceHydro
+        bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes
+        bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
-        char presencePompage
+        bool presencePompage
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
         if (presenceHydro && !TurbEntreBornes)
         {
@@ -835,11 +835,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const char presenceHydro
+        const bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
-        const char presencePompage
+        const bool presencePompage
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
-        const char TurbEntreBornes
+        const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {

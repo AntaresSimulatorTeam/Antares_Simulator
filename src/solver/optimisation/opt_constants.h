@@ -21,4 +21,4 @@ constexpr char EGOISTE = 2;
 constexpr char ANTARES_SIMPLEXE = 1;
 constexpr char ANTARES_PNE = 2;
 
-constexpr char VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES = OUI_ANTARES;
+constexpr bool VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES = true;

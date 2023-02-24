@@ -63,7 +63,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBL
 
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
     int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
@@ -407,7 +407,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         CoutLineaire[NombreDeVariables] = 0;
         Xsolution[NombreDeVariables] = 0;
         Xmin[NombreDeVariables] = 0;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES == false
         Xmax[NombreDeVariables] = LINFINI_ANTARES;
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
 #else
@@ -487,7 +487,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         SecondMembre[NombreDeContraintes] = 0;
         NombreDeContraintes++;
 
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES == FALSE
         int t1 = pdt;
         t1moins1 = t1 - 1;
         if (t1moins1 < 0)
