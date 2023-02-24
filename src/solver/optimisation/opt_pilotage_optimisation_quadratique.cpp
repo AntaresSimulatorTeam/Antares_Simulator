@@ -47,7 +47,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 
         OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     bool result = true;

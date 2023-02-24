@@ -78,7 +78,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
                 const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
                 int cnt;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
                 cnt = CorrespondanceCntNativesCntOptim
                         ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
                           [palier];

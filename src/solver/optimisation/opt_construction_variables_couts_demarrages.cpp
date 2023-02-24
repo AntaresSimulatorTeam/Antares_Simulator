@@ -57,7 +57,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
-                if (Simulation == OUI_ANTARES)
+                if (Simulation)
                 {
                     nombreDeVariables += 4;
                     continue;
@@ -90,7 +90,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 CorrespondanceVarNativesVarOptim
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
                   = nombreDeVariables;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
 #else

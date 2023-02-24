@@ -60,7 +60,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
                 CoutDeTransport->CoutDeTransportOrigineVersExtremite[pdt]
                   = CoutDeTransport->CoutDeTransportOrigineVersExtremiteRef[pdt];
@@ -82,8 +82,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         }
     }
 
-    if (problemeHebdo->YaDeLaReserveJmoins1 == OUI_ANTARES
-        && optimizationNumber == PREMIERE_OPTIMISATION)
+    if (problemeHebdo->YaDeLaReserveJmoins1 && optimizationNumber == PREMIERE_OPTIMISATION)
     {
         for (int pdt = 0; pdt < DernierPasDeTemps; pdt++)
         {
@@ -103,12 +102,12 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
             ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
               = problemeHebdo->CaracteristiquesHydrauliques[pays];
 
-            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable != OUI_ANTARES)
+            if (!CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
                 continue;
 
             CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraire[pdt]
               = CaracteristiquesHydrauliques->ContrainteDePmaxHydrauliqueHoraireRef[pdt];
-            if (CaracteristiquesHydrauliques->SansHeuristique == OUI_ANTARES)
+            if (CaracteristiquesHydrauliques->SansHeuristique)
                 continue;
             int jour = NumeroDeJourDuPasDeTemps[pdt];
             double PmaxHydEcretee = CaracteristiquesHydrauliques->CntEnergieH2OParJour[jour];
@@ -116,7 +115,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
             PmaxHydEcretee /= (double)problemeHebdo->NombreDePasDeTempsDUneJournee;
             // The primary generating power allowance may need to be uplifted to match pumping power
             // allowance
-            if (CaracteristiquesHydrauliques->PresenceDePompageModulable == OUI_ANTARES)
+            if (CaracteristiquesHydrauliques->PresenceDePompageModulable)
             {
                 // Hydro generating power required to make use of energy stored from pumps
                 double PmaxHydUplift
@@ -145,7 +144,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
         {
             ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
               = problemeHebdo->CaracteristiquesHydrauliques[pays];
-            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
+            if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
             {
                 CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimise[intervalle]
                   = CaracteristiquesHydrauliques->CntEnergieH2OParIntervalleOptimiseRef[intervalle];
@@ -157,7 +156,7 @@ void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO* problemeHebdo, const int opti
     {
         ENERGIES_ET_PUISSANCES_HYDRAULIQUES* CaracteristiquesHydrauliques
           = problemeHebdo->CaracteristiquesHydrauliques[pays];
-        if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable == OUI_ANTARES)
+        if (CaracteristiquesHydrauliques->PresenceDHydrauliqueModulable)
         {
             CaracteristiquesHydrauliques->MaxDesPmaxHydrauliques
               = CaracteristiquesHydrauliques->MaxDesPmaxHydrauliquesRef;

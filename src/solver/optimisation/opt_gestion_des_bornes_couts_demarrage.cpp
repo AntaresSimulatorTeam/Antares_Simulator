@@ -112,7 +112,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                   = CorrespondanceVarNativesVarOptim
                       ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 Xmin[var] = 0;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
+#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
                 Xmax[var] = LINFINI_ANTARES;
 #else
                 int t1 = pdtHebdo;

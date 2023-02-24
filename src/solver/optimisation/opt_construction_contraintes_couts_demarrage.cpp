@@ -325,7 +325,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES == false
+#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
