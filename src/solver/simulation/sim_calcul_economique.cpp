@@ -361,14 +361,14 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             memcpy(couts->CoutDeTransportExtremiteVersOrigineRef, indirect, pasDeTempsSizeDouble);
         }
         else
-            problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = true;
+            problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
 
         if (lnk->useLoopFlow)
         {
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = true;
         }
         else
-            problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = true;
+            problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = false;
     }
 
     if (studyruntime.bindingConstraintCount)
