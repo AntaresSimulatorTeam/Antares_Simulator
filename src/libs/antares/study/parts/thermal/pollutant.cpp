@@ -53,6 +53,11 @@ const std::string Pollutant::getPollutantName(int index)
     return pollutantNames.at(PollutantList(index));
 }
 
+const char* Pollutant::getPollutantNameChar(int index)
+{
+    return pollutantNames.at(PollutantList(index)).c_str();
+}
+
 void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
 {
     s->add("co2", emissionFactors[CO2]);

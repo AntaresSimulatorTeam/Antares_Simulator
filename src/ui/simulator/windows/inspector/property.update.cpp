@@ -699,7 +699,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         OnStudyThermalClusterCommonSettingsChanged();
         return true;
     }
-    if (name == "cluster.emissions.emissionFactors[0]")
+    if (name == "cluster.co2")
     {
         const double d = Math::Round(value.GetDouble(), 3);
         if (d < 0.)

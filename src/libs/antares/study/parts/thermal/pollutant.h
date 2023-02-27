@@ -58,6 +58,7 @@ public:
 
     static const std::map<enum PollutantList, std::string> pollutantNames;
     static const std::string getPollutantName(int index);
+    static const char* getPollutantNameChar(int index);
 
     std::array<double, POLLUTANT_MAX> emissionFactors;
 
