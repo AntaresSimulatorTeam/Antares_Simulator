@@ -242,6 +242,16 @@ enum TimeSeries
 
 }; // enum TimeSeries
 
+enum FinalReservoirLevelMode
+{
+    //! Case-1: Day-1 -> Day-365 (complete year)
+    completeYear = 1,
+    //! Case-2A: Day-? -> Day-365 (reservoir level not initialized at 1.Jan, Last Simulation Day = 365)
+    //! Case-2B: Day-1 -> Day-? (reservoir level initialized at 1.Jan, Last Simulation Day != 365)
+    //! Case-2C: Day-? -> Day-? (reservoir level not initialized at 1.Jan, Last Simulation Day != 365)
+    incompleteYear = 2,
+}; // enum Final Reservoir Level Mode
+
 template<int T>
 struct TimeSeriesBitPatternIntoIndex;
 
