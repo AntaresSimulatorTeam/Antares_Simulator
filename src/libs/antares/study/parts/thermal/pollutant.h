@@ -28,8 +28,9 @@
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 
 #include <array>
+#include <map>
 
-#include "../../../inifile.h"
+#include <antares/inifile.h>
 
 namespace Antares::Data
 {
@@ -54,6 +55,9 @@ public:
         OP5,
         POLLUTANT_MAX
     };
+
+    static const std::map<enum PollutantList, std::string> pollutantNames;
+    static const std::string getPollutantName(int index);
 
     std::array<double, POLLUTANT_MAX> emissionFactors;
 

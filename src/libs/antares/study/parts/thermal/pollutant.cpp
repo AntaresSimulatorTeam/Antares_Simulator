@@ -30,6 +30,29 @@
 namespace Antares::Data
 {
 
+const std::map<enum Pollutant::PollutantList, std::string> Pollutant::pollutantNames =
+{
+    {CO2, "CO2"},
+    {NH3, "NH3"},
+    {SO2, "SO2"},
+    {NOX, "NOX"},
+    {PM2_5, "PM2_5"},
+    {PM5, "PM5"},
+    {PM10, "PM10"},
+    {NMVOC, "NMVOC"},
+    {OP1, "OP1"},
+    {OP2, "OP2"},
+    {OP3,"OP3"},
+    {OP4,"OP4"},
+    {OP5,"OP5"},
+    {POLLUTANT_MAX, "POLLUTANT_MAX"}
+};
+
+const std::string Pollutant::getPollutantName(int index)
+{
+    return pollutantNames.at(PollutantList(index));
+}
+
 void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
 {
     s->add("co2", emissionFactors[CO2]);

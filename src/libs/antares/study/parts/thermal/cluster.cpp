@@ -111,7 +111,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  minUpTime(1),
  minDownTime(1),
  spinning(0.),
- co2(0.),
  forcedVolatility(0.),
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
@@ -155,7 +154,6 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  minUpTime(1),
  minDownTime(1),
  spinning(0.),
- co2(0.),
  forcedVolatility(0.),
  plannedVolatility(0.),
  forcedLaw(thermalLawUniform),
@@ -237,8 +235,9 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
 
     // spinning
     spinning = cluster.spinning;
-    // co2
-    co2 = cluster.co2;
+
+    //emissions
+    emissions = cluster.emissions;
 
     // volatility
     forcedVolatility = cluster.forcedVolatility;
@@ -468,9 +467,9 @@ void Data::ThermalCluster::reset()
 
     // spinning
     spinning = 0.;
-    // co2
-    co2 = 0.;
 
+    //pollutant emissions array
+    emissions.emissionFactors.fill(0);
     // volatility
     forcedVolatility = 0.;
     plannedVolatility = 0.;
@@ -569,13 +568,18 @@ bool Data::ThermalCluster::integrityCheck()
         ret = false;
         nominalCapacityWithSpinning = nominalCapacity;
     }
-    if (co2 < 0.)
+    //emissions
+    for (auto i = 0; i < Pollutant::POLLUTANT_MAX; i++)
     {
-        logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The co2 must be positive or null";
-        co2 = 0;
-        ret = false;
+        if (emissions.emissionFactors[i] < 0)
+        {
+            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
+                << ": The " << Pollutant::getPollutantName(i)
+                << " pollutant factor must be positive";
+        }
+
     }
+
     if (spreadCost < 0.)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName

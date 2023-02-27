@@ -575,9 +575,6 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             // spinning
             if (not Math::Zero(c.spinning))
                 s->add("spinning", c.spinning);
-            // co2
-            if (not Math::Zero(c.co2))
-                s->add("co2", c.co2);
 
             // volatility
             if (not Math::Zero(c.forcedVolatility))
