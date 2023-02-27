@@ -673,23 +673,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
         bool presencePompage
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
+
+        int nombreDeTermes = 0;
         if (presenceHydro && !TurbEntreBornes)
         {
-            int nombreDeTermes = 0;
-            if (!presencePompage)
-            {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            ->NumeroDeVariablesDeLaProdHyd[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
             if (presencePompage)
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -709,6 +696,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Pi[nombreDeTermes]
                           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PumpingRatio;
                         Pi[nombreDeTermes] *= -1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
+                    }
+                }
+            }
+            else
+            {
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                {
+                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                            ->NumeroDeVariablesDeLaProdHyd[pays];
+                    if (var >= 0)
+                    {
+                        Pi[nombreDeTermes] = 1.0;
                         Colonne[nombreDeTermes] = var;
                         nombreDeTermes++;
                     }
