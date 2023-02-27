@@ -699,19 +699,19 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         OnStudyThermalClusterCommonSettingsChanged();
         return true;
     }
-    if (name == "cluster.co2")
+    if (name == "cluster.emissions.emissionFactors[0]")
     {
         const double d = Math::Round(value.GetDouble(), 3);
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->co2 = 0.;
+                (*i)->emissions.emissionFactors[0] = 0.;
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
-                (*i)->co2 = d;
+                (*i)->emissions.emissionFactors[0] = d;
         }
         return true;
     }

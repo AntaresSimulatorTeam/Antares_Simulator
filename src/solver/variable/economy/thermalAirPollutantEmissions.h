@@ -97,10 +97,44 @@ struct VCardThermalAirPollutantEmissions
     {
         static const char* Caption(const unsigned int indx)
         {
-            if (indx < Pollutant::POLLUTANT_MAX)
-                return Pollutant::getPollutantName(indx).c_str();
+            /* if (indx < Pollutant::POLLUTANT_MAX) */
+            /*     return Pollutant::getPollutantName(indx).c_str(); */
 
-            return "<unknown>";
+            /* return "<unknown>"; */
+           switch (indx)
+            {
+            case 0:
+                return "CO2";
+            case 1:
+                return "NH3";
+            case 2:
+                return "SO2";
+            case 3:
+                return "NOX";
+            case 4:
+                return "PM2_5";
+            case 5:
+                return "PM5";
+            case 6:
+                return "PM5";
+            case 7:
+                return "PM10";
+            case 8:
+                return "NMVOC";
+            case 9:
+                return "OP1";
+            case 10:
+                return "OP2";
+            case 11:
+                return "OP3";
+            case 12:
+                return "OP4";
+            case 13:
+                return "OP5";
+
+            default:
+                return "<unknown>";
+            }
         }
     };
 }; // class VCard

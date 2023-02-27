@@ -153,7 +153,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
             outThermal << cluster.minUpTime << '\t';
             outThermal << cluster.minDownTime << '\t';
             outThermal << cluster.spinning << '\t';
-            outThermal << cluster.co2 << '\t';
+            outThermal << cluster.emissions.emissionFactors[0] << '\t'; //CO2
             outThermal << cluster.marginalCost << '\t';
             outThermal << cluster.fixedCost << '\t';
             outThermal << cluster.startupCost << '\t';
