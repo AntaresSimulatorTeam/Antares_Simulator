@@ -35,6 +35,22 @@
 namespace Antares::Data
 {
 /*!
+ ** \brief Final Reservoir Level data for a single area
+ */
+class FinalReservoirLevelRuntimeData
+{
+private:
+    using finalResLevelMode = Antares::Data::FinalReservoirLevelMode;
+
+public:
+    std::vector<bool> includeFinalReservoirLevel;
+    std::vector<finalResLevelMode> finResLevelMode;
+    std::vector<double> endLevel;
+    std::vector<double> deltaLevel;
+    std::vector<uint> endMonthIndex;
+};
+
+/*!
 ** \brief Hydro for a single area
 */
 class PartHydro
@@ -171,8 +187,9 @@ public:
     PreproHydro* prepro;
     //! Data for time-series
     DataSeriesHydro* series;
-    //! difference between initial and final reservoir levels for all scenario-builder years
-    std::vector<double> finalReservoirLevelCorrection;
+
+    //! Data for final reservoir level
+    FinalReservoirLevelRuntimeData finalReservoirLevelRuntimeData;
 
 }; // class PartHydro
 
