@@ -139,6 +139,39 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
     });
 }
 
+void HydroManagement::prepareFinalReservoirLevelData(uint numSpace, uint year)
+{
+    study.areas.each(
+      [&](Data::Area& area)
+      {
+          auto& data = pAreas[numSpace][area.index];
+          data.finalReservoirLevel = -1.0;
+          if (area.hydro.finalReservoirLevelRuntimeData.deltaLevel.empty())
+              return;
+
+          if (!area.hydro.finalReservoirLevelRuntimeData.includeFinalReservoirLevel[year])
+              return;
+
+          if (area.hydro.finalReservoirLevelRuntimeData.finResLevelMode[year]
+              == Data::FinalReservoirLevelMode::completeYear)
+          {
+              double delta = area.hydro.finalReservoirLevelRuntimeData.deltaLevel[year];
+              // must be done before prepareMonthlyTargetGenerations
+              if (delta > 0)
+                  data.inflows[0] += delta;
+              else if (delta < 0)
+                  data.inflows[11] += delta;
+          }
+          else if (area.hydro.finalReservoirLevelRuntimeData.finResLevelMode[year]
+                   == Data::FinalReservoirLevelMode::incompleteYear)
+          {
+              data.finalReservoirLevel = area.hydro.finalReservoirLevelRuntimeData.endLevel[year];
+              data.finalReservoirLevelMonth
+                = area.hydro.finalReservoirLevelRuntimeData.endMonthIndex[year];
+          }
+      });
+}
+
 template<enum Data::StudyMode ModeT>
 void HydroManagement::prepareNetDemand(uint numSpace)
 {
@@ -289,6 +322,8 @@ void HydroManagement::operator()(double* randomReservoirLevel,
     memset(pAreas[numSpace], 0, sizeof(PerArea) * study.areas.size());
 
     prepareInflowsScaling(numSpace);
+
+    prepareFinalReservoirLevelData(numSpace, y);
 
     if (parameters.adequacy())
         prepareNetDemand<Data::stdmAdequacy>(numSpace);

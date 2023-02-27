@@ -75,6 +75,8 @@ private:
     //@{
     //! Prepare inflows scaling for each area
     void prepareInflowsScaling(uint numSpace);
+    //! prepare data for Final reservoir level
+    void prepareFinalReservoirLevelData(uint numSpace, uint yearIndex);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);
@@ -135,6 +137,11 @@ public:
         double DLE[dayYearCount];
         //! Daily optimized Generation
         double DOG[dayYearCount];
+
+        //! Final reservoir level
+        double finalReservoirLevel;
+        //! Month to reach final reservoir level (h20_solver month, not real month);
+        uint finalReservoirLevelMonth;
 
     }; // struct PerArea
 
