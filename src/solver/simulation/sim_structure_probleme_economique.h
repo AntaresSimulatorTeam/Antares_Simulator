@@ -39,7 +39,7 @@
 
 class AdequacyPatchRuntimeData;
 
-typedef struct
+struct CORRESPONDANCES_DES_VARIABLES
 {
     int* NumeroDeVariableDeLInterconnexion;
     int* NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion;
@@ -66,9 +66,9 @@ typedef struct
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
-} CORRESPONDANCES_DES_VARIABLES;
+};
 
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES
 {
     int* NumeroDeContrainteDesBilansPays;
     int* NumeroDeContraintePourEviterLesChargesFictives;
@@ -85,13 +85,12 @@ typedef struct
 
     int* NumeroDeContrainteDesNiveauxPays;
 
-} CORRESPONDANCES_DES_CONTRAINTES;
+};
 
-typedef struct
+struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
 {
     int* NumeroDeContrainteDesContraintesCouplantes;
-
-} CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES;
+};
 
 typedef struct
 {
@@ -99,7 +98,7 @@ typedef struct
 
 } CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
 
-typedef struct
+struct VALEURS_DE_NTC_ET_RESISTANCES
 {
     double* ValeurDeNTCOrigineVersExtremite;
     double* ValeurDeNTCExtremiteVersOrigine;
@@ -110,27 +109,27 @@ typedef struct
     double* ValeurDuFluxDown;
 
     double* ResistanceApparente;
-} VALEURS_DE_NTC_ET_RESISTANCES;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE
 {
     double* TransferBoundMarketEdge;
     double* TransferLevelMarketEdge;
-} TRANSFER_BOUND_AND_LEVEL_MARKET_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE
 {
     double* TransferBoundFlexUpEdge;
     double* TransferLevelFlexUpEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_UP_EDGE;
+};
 
-typedef struct
+struct TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE
 {
     double* TransferBoundFlexDownEdge;
     double* TransferLevelFlexDownEdge;
-} TRANSFER_BOUND_AND_LEVEL_FLEX_DOWN_EDGE;
+};
 
-typedef struct
+struct CONTRAINTES_COUPLANTES
 {
     char TypeDeContrainteCouplante;
 
@@ -151,65 +150,65 @@ typedef struct
     int* NumeroDuPalierDispatch;
     int* OffsetTemporelSurLePalierDispatch;
     const char* NomDeLaContrainteCouplante;
-} CONTRAINTES_COUPLANTES;
+};
 
-typedef struct
+struct RESULTATS_CONTRAINTES_COUPLANTES
 {
     double* variablesDuales;
-} RESULTATS_CONTRAINTES_COUPLANTES;
+};
 
-typedef struct
+struct DEMAND_MARKET_POOL
 {
     double* TotalDemandOfMarketPool;
-} DEMAND_MARKET_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_UP_POOL
 {
     double* FosteredDemandOfFlexUpPool;
-} DEMAND_FLEX_UP_POOL;
+};
 
-typedef struct
+struct DEMAND_FLEX_DOWN_POOL
 {
     double* FosteredDemandOfFlexDownPool;
-} DEMAND_FLEX_DOWN_POOL;
+};
 
-typedef struct
+struct BOUND_FLEX_UP_NODE
 {
     double* BoundFlexUpNode;
-} BOUND_FLEX_UP_NODE;
+};
 
-typedef struct
+struct BOUND_FLEX_DOWN_NODE
 {
     double* BoundFlexDownNode;
-} BOUND_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_UP_NODE
 {
     double* LevelFlexUpNode;
-} LEVEL_FLEX_UP_NODE;
+};
 
-typedef struct
+struct LEVEL_FLEX_DOWN_NODE
 {
     double* LevelFlexDownNode;
-} LEVEL_FLEX_DOWN_NODE;
+};
 
-typedef struct
+struct CONSOMMATIONS_ABATTUES
 {
     double* ConsommationAbattueDuPays;
-} CONSOMMATIONS_ABATTUES;
+};
 
-typedef struct
+struct ALL_MUST_RUN_GENERATION
 {
     double* AllMustRunGenerationOfArea;
-} ALL_MUST_RUN_GENERATION;
+};
 
-typedef struct
+struct SOLDE_MOYEN_DES_ECHANGES
 {
     double* SoldeMoyenDuPays;
 
-} SOLDE_MOYEN_DES_ECHANGES;
+};
 
-typedef struct
+struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 {
     double* PuissanceDisponibleDuPalierThermique;
 
@@ -229,9 +228,9 @@ typedef struct
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-} PDISP_ET_COUTS_HORAIRES_PAR_PALIER;
+};
 
-typedef struct
+struct PALIERS_THERMIQUES
 {
     int NombreDePaliersThermiques;
 
@@ -250,9 +249,9 @@ typedef struct
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
-} PALIERS_THERMIQUES;
+};
 
-typedef struct
+struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 {
     double* MaxEnergieHydrauParIntervalleOptimise;
 
@@ -302,7 +301,7 @@ typedef struct
                                  100, should be made dynamic)*/
     double* InflowForTimeInterval; /*  Energy input to the reservoir, used to in the bounding
                                       constraint on final level*/
-} ENERGIES_ET_PUISSANCES_HYDRAULIQUES;
+};
 
 class computeTimeStepLevel
 {
@@ -383,13 +382,13 @@ public:
     }
 };
 
-typedef struct
+struct RESERVE_JMOINS1
 {
     double* ReserveHoraireJMoins1 = nullptr;
     double* ReserveHoraireJMoins1Ref = nullptr;
-} RESERVE_JMOINS1;
+};
 
-typedef struct
+struct PRODUCTION_THERMIQUE_OPTIMALE
 {
     double* ProductionThermiqueDuPalier;
 
@@ -403,9 +402,9 @@ typedef struct
 
     double* NombreDeGroupesQuiTombentEnPanneDuPalier;
 
-} PRODUCTION_THERMIQUE_OPTIMALE;
+};
 
-typedef struct
+struct RESULTATS_HORAIRES
 {
     double* ValeursHorairesDeDefaillancePositive;
     double* ValeursHorairesDENS;                  // adq patch domestic unsupplied energy
@@ -434,9 +433,9 @@ typedef struct
 
     double* CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
-} RESULTATS_HORAIRES;
+};
 
-typedef struct
+struct COUTS_DE_TRANSPORT
 {
     char IntercoGereeAvecDesCouts;
     char IntercoGereeAvecLoopFlow;
@@ -446,17 +445,17 @@ typedef struct
     double* CoutDeTransportOrigineVersExtremiteRef;
     double* CoutDeTransportExtremiteVersOrigineRef;
 
-} COUTS_DE_TRANSPORT;
+};
 
-typedef struct
+struct VARIABLES_DUALES_INTERCONNEXIONS
 {
     double* VariableDualeParInterconnexion = nullptr;
-} VARIABLES_DUALES_INTERCONNEXIONS;
+};
 
-typedef struct
+struct COUTS_MARGINAUX_ZONES_DE_RESERVE
 {
     double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
-} COUTS_MARGINAUX_ZONES_DE_RESERVE;
+};
 
 struct AdequacyPatchParameters
 {

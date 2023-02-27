@@ -30,7 +30,7 @@
 #include "../config.h"
 #include <antares/study/study.h>
 
-class PROBLEME_HEBDO;
+struct PROBLEME_HEBDO;
 
 void SIM_AllocationTableaux(void);
 
