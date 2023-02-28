@@ -34,16 +34,16 @@ namespace Antares::Data
 class ThermalClusterReader
 {
 public:
-
 ThermalClusterReader();
-
 bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
-std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
+private:
+  std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
+  template<class Type>
+  void addCallback(std::string&& key, Type ThermalCluster::*value_ptr);
 
-
-//TODO delete
-bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
+  //TODO delete
+  bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
 }; //class ThermalClusterReader
 

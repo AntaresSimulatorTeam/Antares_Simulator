@@ -33,6 +33,14 @@
 namespace Antares::Data
 {
 
+template<class Type>
+void ThermalClusterReader::addCallback(std::string&& key, Type ThermalCluster::*value_ptr)
+{
+    auto cb = [value_ptr](ThermalCluster& c, const IniFile::Property& p)
+              { return c.*value_ptr = p.value.to<Type>();};
+    callbackMap.emplace(key, cb);
+}
+
 ThermalClusterReader::ThermalClusterReader()
 {
     for (auto const& [key, val] : Pollutant::namesToEnum)
@@ -42,8 +50,10 @@ ThermalClusterReader::ThermalClusterReader()
         });
     }
 
-    callbackMap.emplace("annuityinvestment", [](ThermalCluster& c, const IniFile::Property& p)
-            { return c.annuityInvestment = p.value.to<uint>(); });
+    addCallback("annuityinvestment", &ThermalCluster::annuityInvestment);
+
+    // callbackMap.emplace("annuityinvestment", [](ThermalCluster& c, const IniFile::Property& p)
+    //         { return c.annuityInvestment = p.value.to<uint>(); });
 }
 
 bool ThermalClusterReader::loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
