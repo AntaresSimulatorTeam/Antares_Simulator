@@ -210,28 +210,6 @@ void HourlyCSRProblem::setProblemCost()
 void HourlyCSRProblem::solveProblem(uint week, int year)
 {
     ADQ_PATCH_CSR(problemeAResoudre_, *this, adqPatchParams_, week, year);
-
-    // For a further enhancement
-    /*
-    auto interiorPointProblem = buildInteriorPointProblem(problemeAResoudre_);
-
-    double costPriorToCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem);
-
-    PI_Quamin(interiorPointProblem.get()); // resolution
-    if (interiorPointProblem->ExistenceDUneSolution == OUI_PI)
-    {
-        setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem);
-        storeOrDisregardInteriorPointResults(
-            ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
-        return true;
-    }
-    else
-    {
-        handleInteriorPointError(*interiorPointProblem, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
-        return false;
-    }
-    */
 }
 
 void HourlyCSRProblem::run(uint week, uint year)

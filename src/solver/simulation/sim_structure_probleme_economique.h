@@ -576,9 +576,6 @@ struct PROBLEME_HEBDO
     OptimizationStatistics optimizationStatistics[2];
 
     /* Adequacy Patch */
-    // gp adq : to be removed
-    // std::shared_ptr<AdequacyPatchParameters> adqPatchParams;
-
     std::shared_ptr<AdequacyPatchRuntimeData> adequacyPatchRuntimeData;
 
     /* Hydro management */
