@@ -105,11 +105,11 @@ bool Economy::simulationBegin()
 
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study.parameters.adqPatchParams.enabled,
+                                                    study.parameters.adqPatchParams,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace);
             postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatchParams.enabled,
+                interfacePostProcessList::create(study.parameters.adqPatchParams,
                                                  pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,

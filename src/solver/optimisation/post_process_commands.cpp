@@ -185,10 +185,14 @@ void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 // --------------------------------------
 //  Curtailment sharing for adq patch
 // --------------------------------------
-CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(PROBLEME_HEBDO* problemeHebdo,
+CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(AdqPatchParams& adqPatchParams,
+                                                                   PROBLEME_HEBDO* problemeHebdo,
                                                                    AreaList& areas,
                                                                    unsigned int thread_number) :
- basePostProcessCommand(problemeHebdo), area_list_(areas), thread_number_(thread_number)
+    basePostProcessCommand(problemeHebdo),
+    adqPatchParams_(adqPatchParams),
+    area_list_(areas), 
+    thread_number_(thread_number)
 {
 }
 
@@ -201,7 +205,7 @@ void CurtailmentSharingPostProcessCmd::execute(const optRuntimeData& opt_runtime
     logs.info() << "[adq-patch] Year:" << year + 1 << " Week:" << week + 1
                 << ".Total LMR violation:" << totalLmrViolation;
     const std::set<int> hoursRequiringCurtailmentSharing = getHoursRequiringCurtailmentSharing();
-    HourlyCSRProblem hourlyCsrProblem(problemeHebdo_);
+    HourlyCSRProblem hourlyCsrProblem(adqPatchParams_, problemeHebdo_);
     for (int hourInWeek : hoursRequiringCurtailmentSharing)
     {
         logs.info() << "[adq-patch] CSR triggered for Year:" << year + 1
@@ -222,7 +226,10 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
             for (uint hour = 0; hour < nbHoursInWeek; hour++)
             {
                 const auto [netPositionInit, densNew, totalNodeBalance]
-                  = calculateAreaFlowBalance(problemeHebdo_, Area, hour);
+                    = calculateAreaFlowBalance(problemeHebdo_, 
+                                               adqPatchParams_.localMatching.setToZeroOutsideInsideLinks, 
+                                               Area,
+                                               hour);
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
@@ -237,8 +244,11 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                   = problemeHebdo_->ResultatsHoraires[Area]
                       ->ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
-                totalLmrViolation
-                  += LmrViolationAreaHour(problemeHebdo_, totalNodeBalance, Area, hour);
+                totalLmrViolation += LmrViolationAreaHour(
+                            problemeHebdo_, 
+                            totalNodeBalance, 
+                            adqPatchParams_.curtailmentSharing.thresholdDisplayViolations,
+                            Area, hour);
             }
         }
     }
@@ -254,7 +264,7 @@ std::set<int> CurtailmentSharingPostProcessCmd::getHoursRequiringCurtailmentShar
 std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentSharing(
   const std::vector<double>& sumENS) const
 {
-    const double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
+    const double threshold = adqPatchParams_.curtailmentSharing.thresholdRun;
     std::set<int> triggerCsrSet;
     for (uint i = 0; i < nbHoursInWeek; ++i)
     {

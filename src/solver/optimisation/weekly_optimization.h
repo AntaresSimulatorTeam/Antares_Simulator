@@ -35,7 +35,7 @@ namespace Antares::Solver::Optimization
 class DefaultWeeklyOptimization : public WeeklyOptimization
 {
 public:
-    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, uint numSpace);
+    explicit DefaultWeeklyOptimization(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams&, uint numSpace);
     ~DefaultWeeklyOptimization() override = default;
     void solve(uint, int) override;
 };

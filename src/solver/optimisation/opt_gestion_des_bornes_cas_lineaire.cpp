@@ -101,6 +101,7 @@ double OPT_SommeDesPminThermiques(PROBLEME_HEBDO* problemeHebdo, int Pays, int P
 }
 
 void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
+                                  AdqPatchParams& adqPatchParams,
                                   const int PremierPdtDeLIntervalle,
                                   const int DernierPdtDeLIntervalle,
                                   const int optimizationNumber)
@@ -149,9 +150,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
 
             // adq patch: update ENS <= DENS in 2nd run
-            if (problemeHebdo->adqPatchParams
-                && problemeHebdo->adqPatchParams->AdequacyFirstStep == false
-                && problemeHebdo->adequacyPatchRuntimeData->areaMode[Pays]
+            if (adqPatchParams.enabled &&
+                ! problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep &&
+                problemeHebdo->adequacyPatchRuntimeData->areaMode[Pays]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 Xmax[var] = std::min(
                   Xmax[var], problemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
@@ -167,6 +168,7 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
 }
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
+                                                            AdqPatchParams& adqPatchParams,
                                                             const int PremierPdtDeLIntervalle,
                                                             const int DernierPdtDeLIntervalle,
                                                             const int optimizationNumber)
@@ -220,7 +222,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, Interco, problemeHebdo);
+            AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, Interco, problemeHebdo, adqPatchParams);
 
             if (Math::Infinite(Xmax[var]) == 1)
             {
@@ -433,8 +435,11 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
         }
     }
 
-    setBoundsForUnsuppliedEnergy(
-      problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+    setBoundsForUnsuppliedEnergy(problemeHebdo, 
+                                 adqPatchParams, 
+                                 PremierPdtDeLIntervalle, 
+                                 DernierPdtDeLIntervalle, 
+                                 optimizationNumber);
 
     for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
     {

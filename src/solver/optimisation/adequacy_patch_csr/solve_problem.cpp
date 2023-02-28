@@ -120,14 +120,14 @@ void storeInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResou
 
 void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                                           const HourlyCSRProblem& hourlyCsrProblem,
+                                          const AdqPatchParams& adqPatchParams,
                                           uint weekNb,
                                           int yearNb,
                                           double costPriorToCsr,
                                           double costAfterCsr)
 {
     const int hoursInWeek = 168;
-    const bool checkCost
-      = hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue;
+    const bool checkCost = adqPatchParams.curtailmentSharing.checkCsrCostFunction;
     double deltaCost = costAfterCsr - costPriorToCsr;
 
     if (checkCost)
@@ -146,14 +146,15 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
           << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
-double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
-                                     const HourlyCSRProblem& hourlyCsrProblem)
+double calculateCSRcost(const PROBLEME_POINT_INTERIEUR& Probleme,
+                        const HourlyCSRProblem& hourlyCsrProblem,
+                        const AdqPatchParams& adqPatchParams)
 {
-    logs.debug() << "calculateCsrCostFunctionValue! ";
+    logs.debug() << "calculate CSR cost : ";
     double cost = 0.0;
-    if (!hourlyCsrProblem.problemeHebdo_->adqPatchParams->CheckCsrCostFunctionValue)
+    if (!adqPatchParams.curtailmentSharing.checkCsrCostFunction)
     {
-        logs.debug() << "CheckCsrCostFunctionValue = FALSE";
+        logs.debug() << "CSR Cost is FALSE";
         return cost;
     }
 
@@ -171,7 +172,7 @@ double calculateCsrCostFunctionValue(const PROBLEME_POINT_INTERIEUR& Probleme,
 
         auto itLink = hourlyCsrProblem.linkInsideAdqPatch.find(i);
         if ((itLink == hourlyCsrProblem.linkInsideAdqPatch.end())
-                || hourlyCsrProblem.problemeHebdo_->adqPatchParams->IncludeHurdleCostCsr
+                || adqPatchParams.curtailmentSharing.includeHurdleCost
                 || !itLink->second.check())
             continue;
 
@@ -256,23 +257,29 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 
 bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
+                   AdqPatchParams& adqPatchParams,
                    uint weekNb,
                    int yearNb)
 {
-    auto Probleme = buildInteriorPointProblem(ProblemeAResoudre);
-    double costPriorToCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
-    PI_Quamin(Probleme.get()); // resolution
-    if (Probleme->ExistenceDUneSolution == OUI_PI)
+    auto interiorPointProblem = buildInteriorPointProblem(ProblemeAResoudre);
+    double costPriorToCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+    PI_Quamin(interiorPointProblem.get()); // resolution
+    if (interiorPointProblem->ExistenceDUneSolution == OUI_PI)
     {
         setToZeroIfBelowThreshold(ProblemeAResoudre, hourlyCsrProblem);
-        double costAfterCsr = calculateCsrCostFunctionValue(*Probleme, hourlyCsrProblem);
-        storeOrDisregardInteriorPointResults(
-          ProblemeAResoudre, hourlyCsrProblem, weekNb, yearNb, costPriorToCsr, costAfterCsr);
+        double costAfterCsr = calculateCSRcost(*interiorPointProblem, hourlyCsrProblem, adqPatchParams);
+        storeOrDisregardInteriorPointResults(ProblemeAResoudre, 
+                                             hourlyCsrProblem,
+                                             adqPatchParams,
+                                             weekNb,
+                                             yearNb,
+                                             costPriorToCsr,
+                                             costAfterCsr);
         return true;
     }
     else
     {
-        handleInteriorPointError(*Probleme, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
+        handleInteriorPointError(*interiorPointProblem, hourlyCsrProblem.triggeredHour, weekNb, yearNb);
         return false;
     }
 }

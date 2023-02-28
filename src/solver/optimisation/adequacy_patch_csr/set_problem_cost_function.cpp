@@ -37,17 +37,19 @@
 
 namespace
 {
-double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, int hour, int area)
+
+using namespace Antares::Data::AdequacyPatch;
+
+double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatchPTO priceTakingOrder, int hour, int area)
 {
     double priceTakingOrders = 0.0; // PTO
-    if (problemeHebdo->adqPatchParams->PriceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    if (priceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
     {
         priceTakingOrders
           = problemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
             + problemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
     }
-    else if (problemeHebdo->adqPatchParams->PriceTakingOrder
-             == Data::AdequacyPatch::AdqPatchPTO::isDens)
+    else if (priceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isDens)
     {
         priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
     }
@@ -80,8 +82,10 @@ void HourlyCSRProblem::setQuadraticCost()
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
             if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
             {
-                problemeAResoudre_.CoutQuadratique[var]
-                  = calculateQuadraticCost(problemeHebdo_, triggeredHour, area);
+                problemeAResoudre_.CoutQuadratique[var] = calculateQuadraticCost(problemeHebdo_, 
+                                                                                 adqPatchParams_.curtailmentSharing.priceTakingOrder, 
+                                                                                 triggeredHour, 
+                                                                                 area);
                 logs.debug() << var << ". Quad C = " << problemeAResoudre_.CoutQuadratique[var];
             }
         }

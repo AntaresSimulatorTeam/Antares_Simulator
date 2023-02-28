@@ -5,7 +5,8 @@
 namespace Antares::Solver::Simulation
 {
 
-AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
+AdqPatchPostProcessList::AdqPatchPostProcessList(AdqPatchParams& adqPatchParams,
+                                                 PROBLEME_HEBDO* problemeHebdo,
                                                  uint thread_number,
                                                  AreaList& areas,
                                                  SheddingPolicy sheddingPolicy,
@@ -19,6 +20,7 @@ AdqPatchPostProcessList::AdqPatchPostProcessList(PROBLEME_HEBDO* problemeHebdo,
         areas));
     // Here a post process particular to adq patch
     post_process_list.push_back(std::make_unique<CurtailmentSharingPostProcessCmd>(
+        adqPatchParams,
         problemeHebdo_,
         areas,
         thread_number_));

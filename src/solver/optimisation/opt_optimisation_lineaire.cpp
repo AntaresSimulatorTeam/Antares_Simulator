@@ -46,7 +46,7 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
+bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams, uint numSpace)
 {
     int PdtHebdo;
     int PremierPdtDeLIntervalle;
@@ -88,8 +88,11 @@ OptimisationHebdo:
         PremierPdtDeLIntervalle = PdtHebdo;
         DernierPdtDeLIntervalle = PdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo, 
+                                                               adqPatchParams,
+                                                               PremierPdtDeLIntervalle, 
+                                                               DernierPdtDeLIntervalle, 
+                                                               optimizationNumber);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
                                                         PremierPdtDeLIntervalle,
