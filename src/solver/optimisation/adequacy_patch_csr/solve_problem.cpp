@@ -142,7 +142,7 @@ void storeOrDisregardInteriorPointResults(const PROBLEME_ANTARES_A_RESOUDRE& Pro
     else if (checkCost && deltaCost >= 0.0)
         logs.warning()
           << "[adq-patch] CSR optimization is providing solution with greater costs, optimum "
-             "solution is set as LMR . year: "
+             "solution is set as Normal Optimization . year: "
           << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hourlyCsrProblem.triggeredHour + 1;
 }
 
@@ -246,7 +246,7 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 {
     const int hoursInWeek = 168;
     logs.warning()
-      << "No further optimization for CSR is possible, optimum solution is set as LMR . year: "
+      << "No further optimization for CSR is possible, optimum solution is set as Normal Optimization . year: "
       << yearNb + 1 << ". hour: " << weekNb * hoursInWeek + hour + 1;
 
 #ifndef NDEBUG
