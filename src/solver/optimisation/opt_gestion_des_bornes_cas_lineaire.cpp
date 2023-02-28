@@ -149,12 +149,14 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
 
             // adq patch: update ENS <= DENS in 2nd run
-            if (problemeHebdo->adqPatchParams
-                && problemeHebdo->adqPatchParams->AdequacyFirstStep == false
-                && problemeHebdo->adequacyPatchRuntimeData->areaMode[Pays]
-                     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-                Xmax[var] = std::min(
-                  Xmax[var], problemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+            // if (problemeHebdo->adqPatchParams
+            //     && problemeHebdo->adqPatchParams->AdequacyFirstStep == false
+            //     && problemeHebdo->adequacyPatchRuntimeData->areaMode[Pays]
+            //          == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+            //     Xmax[var] = std::min(
+            //       Xmax[var], problemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDENS[PdtHebdo]);
+
+            // no need to adjust Xmax -> simulate ENS <= DENS in 2nd run when AdequacyFirstStep == false
 
             problemeHebdo->ResultatsHoraires[Pays]->ValeursHorairesDeDefaillancePositive[PdtHebdo]
               = 0.0;
@@ -220,7 +222,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
             CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
 
-            AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, Interco, problemeHebdo);
+            AdequacyPatch::setNTCbounds(Xmax[var], Xmin[var], ValeursDeNTC, Interco, problemeHebdo); // since AdequacyFirstStep is always false bounds are set properly !!
 
             if (Math::Infinite(Xmax[var]) == 1)
             {
