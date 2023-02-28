@@ -58,8 +58,26 @@ const char* Pollutant::getPollutantNameChar(int index)
     return pollutantNames.at(PollutantList(index)).c_str();
 }
 
+const std::map<std::string, enum Pollutant::PollutantList> Pollutant::namesToEnum =
+{
+    {"co2", CO2},
+    {"nh3", NH3},
+    {"so2", SO2},
+    {"nox", NOX},
+    {"pm2_5", PM2_5},
+    {"pm5", PM5},
+    {"pm10", PM10},
+    {"nmvoc", NMVOC},
+    {"op1", OP1},
+    {"op2", OP2},
+    {"op3", OP3},
+    {"op4", OP4},
+    {"op5", OP5}
+};
+
 void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
 {
+    //TODO use for auto : Map to save factors
     s->add("co2", emissionFactors[CO2]);
     s->add("nh3", emissionFactors[NH3]);
     s->add("so2", emissionFactors[SO2]);

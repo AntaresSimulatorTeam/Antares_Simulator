@@ -1,4 +1,5 @@
 #include "cluster_list.h"
+#include "cluster_load.h"
 #include "cluster.h"
 #include "../../study.h"
 
@@ -386,6 +387,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
     if (section.firstProperty)
     {
+        ThermalClusterReader thermalClusterReader;
         // Browse all properties
         for (auto* property = section.firstProperty; property; property = property->next)
         {
@@ -395,7 +397,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (!ThermalCluster::loadFromProperty(cluster, property))
+            if (!thermalClusterReader.loadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->key << "`: The property is unknown and ignored";

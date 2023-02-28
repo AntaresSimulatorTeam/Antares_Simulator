@@ -24,50 +24,27 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 
-#include <array>
-#include <map>
-
-#include <antares/inifile.h>
+#include "../../../inifile.h"
+#include "cluster.h"
 
 namespace Antares::Data
 {
 
-class Pollutant
+class ThermalClusterReader
 {
 public:
-    enum PollutantList
-    {
-        CO2 = 0,
-        NH3,
-        SO2,
-        NOX,
-        PM2_5,
-        PM5,
-        PM10,
-        NMVOC,
-        OP1,
-        OP2,
-        OP3,
-        OP4,
-        OP5,
-        POLLUTANT_MAX
-    };
 
-    static const std::map<enum PollutantList, const std::string> pollutantNames;
-    static const std::string getPollutantName(int index);
-    static const char* getPollutantNameChar(int index);
+ThermalClusterReader();
 
-    static const std::map<std::string, enum PollutantList> namesToEnum;
+bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
-    std::array<double, POLLUTANT_MAX> emissionFactors;
+std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
 
-    void saveEmissionsFactor(IniFile::Section* s) const;
 
-}; //class Pollutant
+//TODO delete
+bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
+
+}; //class ThermalClusterReader
 
 } //namespace Antares::Data
-
-#endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__ */
