@@ -135,35 +135,37 @@ void setNTCbounds(double& Xmax,
     Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
-    // set for adq patch first step
-    if (problemeHebdo->adqPatchParams && problemeHebdo->adqPatchParams->AdequacyFirstStep)
-    {
-        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, Interco);
+    // first step is never going to come to this point as True but just to be sure we can skip this
 
-        switch (ntcToZeroStatusForAdqPatch)
-        {
-        case NtcSetToZeroStatus_AdqPatchStep1::setToZero:
-        {
-            Xmax = 0.;
-            Xmin = 0.;
-            break;
-        }
-        case NtcSetToZeroStatus_AdqPatchStep1::setOriginExtremityToZero:
-        {
-            Xmax = 0.;
-            Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
-            break;
-        }
-        case NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero:
-        {
-            Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-            Xmin = 0.;
-            break;
-        }
-        default:
-            return;
-        }
-    }
+    // set for adq patch first step
+    // if (problemeHebdo->adqPatchParams && problemeHebdo->adqPatchParams->AdequacyFirstStep)
+    // {
+    //     ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, Interco);
+
+    //     switch (ntcToZeroStatusForAdqPatch)
+    //     {
+    //     case NtcSetToZeroStatus_AdqPatchStep1::setToZero:
+    //     {
+    //         Xmax = 0.;
+    //         Xmin = 0.;
+    //         break;
+    //     }
+    //     case NtcSetToZeroStatus_AdqPatchStep1::setOriginExtremityToZero:
+    //     {
+    //         Xmax = 0.;
+    //         Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+    //         break;
+    //     }
+    //     case NtcSetToZeroStatus_AdqPatchStep1::setExtremityOriginToZero:
+    //     {
+    //         Xmax = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
+    //         Xmin = 0.;
+    //         break;
+    //     }
+    //     default:
+    //         return;
+    //     }
+    // }
 }
 
 } // namespace Antares::Data::AdequacyPatch
