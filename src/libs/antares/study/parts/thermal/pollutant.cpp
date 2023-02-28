@@ -30,7 +30,7 @@
 namespace Antares::Data
 {
 
-const std::map<enum Pollutant::PollutantList, std::string> Pollutant::pollutantNames =
+const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::pollutantNames =
 {
     {CO2, "CO2 EMIS."},
     {NH3, "NH3 EMIS."},

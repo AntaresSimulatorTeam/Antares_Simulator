@@ -102,7 +102,6 @@ namespace Data
 {
 Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  Cluster(parent),
- emissions(),
  groupID(thermalDispatchGrpOther1),
  mustrun(false),
  mustrunOrigin(false),
@@ -746,9 +745,9 @@ bool ThermalCluster::loadFromProperty(ThermalCluster& cluster, const IniFile::Pr
     if (p->key == "dailyminimumcapacity")
     {
         double d = p->value.to<double>();
-        if (not Math::Zero(d) and cluster.minUpTime < 24)
+        if (!Math::Zero(d) && cluster.minUpTime < 24)
             cluster.minUpTime = 24;
-        if (not Math::Zero(d) and cluster.minDownTime < 24)
+        if (!Math::Zero(d) && cluster.minDownTime < 24)
             cluster.minDownTime = 24;
         cluster.minStablePower = Math::Max(cluster.minStablePower, d);
         return true; // ignored since 3.7
@@ -864,9 +863,9 @@ bool ThermalCluster::loadFromProperty(ThermalCluster& cluster, const IniFile::Pr
     if (p->key == "weeklyminimumcapacity")
     {
         double d = p->value.to<double>();
-        if (not Math::Zero(d) and cluster.minUpTime < 168)
+        if (!Math::Zero(d) && cluster.minUpTime < 168)
             cluster.minUpTime = 168;
-        if (not Math::Zero(d) and cluster.minDownTime < 168)
+        if (!Math::Zero(d) && cluster.minDownTime < 168)
             cluster.minDownTime = 168;
         cluster.minStablePower = Math::Max(cluster.minStablePower, d);
         return true; // ignored since 3.7

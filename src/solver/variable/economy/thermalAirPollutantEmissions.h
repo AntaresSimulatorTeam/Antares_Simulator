@@ -30,8 +30,6 @@
 #include "../variable.h"
 #include "../../../libs/antares/study/parts/thermal/pollutant.h"
 
-using namespace Antares::Data;
-
 namespace Antares::Solver::Variable::Economy
 {
 struct VCardThermalAirPollutantEmissions
@@ -97,8 +95,8 @@ struct VCardThermalAirPollutantEmissions
     {
         static const char* Caption(const unsigned int indx)
         {
-            if (indx < Pollutant::POLLUTANT_MAX)
-                return Pollutant::getPollutantNameChar(indx);
+            if (indx < Antares::Data::Pollutant::POLLUTANT_MAX)
+                return Antares::Data::Pollutant::getPollutantNameChar(indx);
 
             return "<unknown>";
         }

@@ -56,7 +56,7 @@ public:
         POLLUTANT_MAX
     };
 
-    static const std::map<enum PollutantList, std::string> pollutantNames;
+    static const std::map<enum PollutantList, const std::string> pollutantNames;
     static const std::string getPollutantName(int index);
     static const char* getPollutantNameChar(int index);
 
