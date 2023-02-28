@@ -49,7 +49,7 @@ double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, int hour, int
     else if (problemeHebdo->adqPatchParams->PriceTakingOrder
              == Data::AdequacyPatch::AdqPatchPTO::isDens)
     {
-        priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
+        priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour]; // densNew value taken! OK!
     }
 
     if (priceTakingOrders <= 0.0)
