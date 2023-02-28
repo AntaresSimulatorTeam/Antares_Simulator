@@ -45,27 +45,33 @@ AdequacyPatchOptimization::AdequacyPatchOptimization(PROBLEME_HEBDO* problemeHeb
 }
 void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
 {
-    problemeHebdo_->adqPatchParams->AdequacyFirstStep = true;
-    OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
+    // problemeHebdo_->adqPatchParams->AdequacyFirstStep = true;
+    // OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
+
+    // never set AdequacyFirstStep to True and skip the islanding optimization
     problemeHebdo_->adqPatchParams->AdequacyFirstStep = false;
 
     for (int pays = 0; pays < problemeHebdo_->NombreDePays; ++pays)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
-            == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
-                   problemeHebdo_->NombreDePasDeTemps * sizeof(double));
-        else
+        // if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
+        //     == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
+        //     memcpy(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
+        //            problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+        //            problemeHebdo_->NombreDePasDeTemps * sizeof(double));
+        // else
             memset(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
                    0,
                    problemeHebdo_->NombreDePasDeTemps * sizeof(double));
     }
 
+    // no need to copy results/column ENS - > DENS,  just set all DENS to zero
+
     // TODO check if we need to cut SIM_RenseignementProblemeHebdo and just pick out the
     // part that we need
-    ::SIM_RenseignementProblemeHebdo(*problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
-    OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_);
+    // ::SIM_RenseignementProblemeHebdo(*problemeHebdo_, weekInTheYear, thread_number_, hourInTheYear);
+    // no need to refresh anything now
+    // do normal optimization
+    OPT_OptimisationHebdomadaire(problemeHebdo_, thread_number_); // thread_number_is const and is = 0 
 }
 
 } // namespace Antares::Solver::Optimization
