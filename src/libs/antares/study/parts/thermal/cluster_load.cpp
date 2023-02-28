@@ -51,9 +51,12 @@ ThermalClusterReader::ThermalClusterReader()
     }
 
     addCallback("annuityinvestment", &ThermalCluster::annuityInvestment);
-
-    // callbackMap.emplace("annuityinvestment", [](ThermalCluster& c, const IniFile::Property& p)
-    //         { return c.annuityInvestment = p.value.to<uint>(); });
+    addCallback("must-run", &ThermalCluster::mustrun);
+    // must cast: enabled is a member of class Cluster (base class of ThermalCluster)
+    addCallback("enabled", static_cast<bool ThermalCluster::*>(&Cluster::enabled));
+    addCallback("fixed-cost", &ThermalCluster::fixedCost);
+    // must cast: tsGenBehavior is an enum class (uint)
+    addCallback("gen-ts", static_cast<uint ThermalCluster::*>(&ThermalCluster::tsGenBehavior));
 }
 
 bool ThermalClusterReader::loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
@@ -89,10 +92,6 @@ bool ThermalClusterReader::legacyLoadFromProperty(ThermalCluster& cluster, const
         cluster.minStablePower = std::max(cluster.minStablePower, d);
         return true; // ignored since 3.7
     }
-    if (p->key == "enabled")
-        return p->value.to<bool>(cluster.enabled);
-    if (p->key == "fixed-cost")
-        return p->value.to<double>(cluster.fixedCost);
     if (p->key == "flexibility")
     {
         // The flexibility is now ignored since v3.5
@@ -106,10 +105,6 @@ bool ThermalClusterReader::legacyLoadFromProperty(ThermalCluster& cluster, const
     {
         cluster.setGroup(p->value);
         return true;
-    }
-    if (p->key == "gen-ts")
-    {
-        return p->value.to(cluster.tsGenBehavior);
     }
     if (p->key == "hourlyminimumcapacity")
     {
@@ -125,9 +120,6 @@ bool ThermalClusterReader::legacyLoadFromProperty(ThermalCluster& cluster, const
         return p->value.to<double>(cluster.marketBidCost);
     if (p->key == "marginal-cost")
         return p->value.to<double>(cluster.marginalCost);
-    if (p->key == "must-run")
-        // mustrunOrigin will be initialized later, after LoadFromSection
-        return p->value.to<bool>(cluster.mustrun);
     if (p->key == "min-stable-power")
         return p->value.to<double>(cluster.minStablePower);
 

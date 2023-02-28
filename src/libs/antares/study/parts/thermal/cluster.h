@@ -59,7 +59,7 @@ enum ThermalModulation
     thermalModulationMax
 };
 
-enum class LocalTSGenerationBehavior
+enum class LocalTSGenerationBehavior : uint
 {
     useGlobalParameter = 0,
     forceGen,
