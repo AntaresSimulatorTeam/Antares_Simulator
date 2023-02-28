@@ -32,19 +32,19 @@ namespace Antares::Data
 
 const std::map<enum Pollutant::PollutantList, std::string> Pollutant::pollutantNames =
 {
-    {CO2, "CO2"},
-    {NH3, "NH3"},
-    {SO2, "SO2"},
-    {NOX, "NOX"},
-    {PM2_5, "PM2_5"},
-    {PM5, "PM5"},
-    {PM10, "PM10"},
-    {NMVOC, "NMVOC"},
-    {OP1, "OP1"},
-    {OP2, "OP2"},
-    {OP3,"OP3"},
-    {OP4,"OP4"},
-    {OP5,"OP5"},
+    {CO2, "CO2 EMIS."},
+    {NH3, "NH3 EMIS."},
+    {SO2, "SO2 EMIS."},
+    {NOX, "NOX EMIS."},
+    {PM2_5, "PM2_5 EMIS."},
+    {PM5, "PM5 EMIS."},
+    {PM10, "PM10 EMIS."},
+    {NMVOC, "NMVOC EMIS."},
+    {OP1, "OP1 EMIS."},
+    {OP2, "OP2 EMIS."},
+    {OP3, "OP3 EMIS."},
+    {OP4, "OP4 EMIS."},
+    {OP5, "OP5 EMIS."},
     {POLLUTANT_MAX, "POLLUTANT_MAX"}
 };
 
