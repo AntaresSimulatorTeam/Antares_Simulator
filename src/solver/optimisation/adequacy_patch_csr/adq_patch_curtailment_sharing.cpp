@@ -102,7 +102,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     }
 
     double ensInit
-      = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+      = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour]; // this is still calculated properly!! From ENS value from the first and only optimization before CSR hourly run
     if (includeFlowsOutsideAdqPatchToDensNew)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
