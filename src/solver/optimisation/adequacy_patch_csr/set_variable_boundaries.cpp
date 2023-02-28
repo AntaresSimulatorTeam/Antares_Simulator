@@ -62,7 +62,7 @@ void HourlyCSRProblem::setBoundsOnENS()
                 + csrSolverRelaxation;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
-                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour];
+                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour]; // upper bound for ENS variable is still calculated DENS_new
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
                                     ->ValeursHorairesDeDefaillancePositive[triggeredHour]);
