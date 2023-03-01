@@ -42,7 +42,7 @@ bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
 
 
-//TODO delete
+
 bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
 }; //class ThermalClusterReader

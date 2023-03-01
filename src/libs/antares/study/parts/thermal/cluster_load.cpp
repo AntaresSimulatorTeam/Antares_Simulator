@@ -43,7 +43,94 @@ ThermalClusterReader::ThermalClusterReader()
     }
 
     callbackMap.emplace("annuityinvestment", [](ThermalCluster& c, const IniFile::Property& p)
-            { return c.annuityInvestment = p.value.to<uint>(); });
+            { return p.value.to<uint>(c.annuityInvestment); });
+
+    callbackMap.emplace("dailyminimumcapacity", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.minStablePower); });
+
+    callbackMap.emplace("enabled", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<bool>(c.enabled); });
+
+    callbackMap.emplace("fixed-cost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.fixedCost); });
+
+    callbackMap.emplace("flexibility", [](ThermalCluster& c, const IniFile::Property& p)
+            { (void)c; (void)p; return true; }); // ignored since 3.5
+
+    callbackMap.emplace("groupmincount", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<uint>(c.groupMinCount); });
+
+    callbackMap.emplace("groupmaxcount", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<uint>(c.groupMaxCount); });
+
+    callbackMap.emplace("group", [](ThermalCluster& c, const IniFile::Property& p)
+            { c.setGroup(p.value); return true; });
+
+    callbackMap.emplace("gen-ts", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to(c.tsGenBehavior); });
+
+    callbackMap.emplace("hourlyminimumcapacity", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.minStablePower); });
+
+    callbackMap.emplace("law.planned", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to(c.plannedLaw); });
+    callbackMap.emplace("law.forced", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to(c.forcedLaw); });
+
+    callbackMap.emplace("market-bid-cost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.marketBidCost); });
+
+    callbackMap.emplace("marginal-cost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.marginalCost); });
+
+    callbackMap.emplace("must-run", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<bool>(c.mustrun); });
+
+    callbackMap.emplace("min-stable-power", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.minStablePower); });
+
+    callbackMap.emplace("min-up-time", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<uint>(c.minUpTime); });
+    callbackMap.emplace("min-down-time", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<uint>(c.minDownTime); });
+    // for compatibility < 5.0
+    callbackMap.emplace("min-updown-time", [](ThermalCluster& c, const IniFile::Property& p)
+            { p.value.to<uint>(c.minUpTime);  return p.value.to<uint>(c.minDownTime); });
+
+    callbackMap.emplace("name", [](ThermalCluster& c, const IniFile::Property& p)
+            { (void)c; (void)p; return true; }); //silently ignore it
+
+    callbackMap.emplace("nominalcapacity", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.nominalCapacity); });
+
+    // for compatibility <3.5
+    callbackMap.emplace("operatingcost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.marketBidCost); });
+
+    callbackMap.emplace("spread-cost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.spreadCost); });
+
+    callbackMap.emplace("spinning", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.spinning); });
+
+    callbackMap.emplace("startup-cost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.startupCost); });
+
+    callbackMap.emplace("stddeviationannualcost", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.spreadCost); });
+
+    callbackMap.emplace("unitcount", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<uint>(c.unitCount); });
+
+    callbackMap.emplace("volatility.planned", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to(c.plannedVolatility); });
+
+    callbackMap.emplace("volatility.forced", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to(c.forcedVolatility); });
+
+    callbackMap.emplace("weeklyminimumcapacity", [](ThermalCluster& c, const IniFile::Property& p)
+            { return p.value.to<double>(c.minStablePower); });
+
 }
 
 bool ThermalClusterReader::loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
