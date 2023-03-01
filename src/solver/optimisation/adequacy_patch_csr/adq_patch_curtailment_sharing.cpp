@@ -30,7 +30,6 @@
 #include "csr_quadratic_problem.h"
 #include "count_constraints_variables.h"
 #include "../simulation/adequacy_patch_runtime_data.h"
-// #include "csr_interior_point.h"
 
 #include <cmath>
 #include "../study/area/scratchpad.h"

@@ -33,19 +33,25 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
 
     problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
     problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
+    problem.adequacyPatchRuntimeData->AdequacyFirstStep = true;
 
     AdqPatchParams adqPatchParams;
     adqPatchParams.localMatching.setToZeroOutsideOutsideLinks = SetNTCOutsideToOutsideToZero;
     adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
 
     VALEURS_DE_NTC_ET_RESISTANCES ValeursDeNTC;
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = &origineExtremite;
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = &extremiteOrigine;
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = new double[1];
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = new double[1];
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[0] = origineExtremite;
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[0] = extremiteOrigine;
 
-    double Xmin;
-    double Xmax;
+    double Xmin(0.);
+    double Xmax(0.);
 
     setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem, adqPatchParams);
+
+    delete[] ValeursDeNTC.ValeurDeNTCOrigineVersExtremite;
+    delete[] ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine;
 
     return std::make_pair(Xmin, Xmax);
 }
