@@ -30,7 +30,7 @@
 namespace Antares::Data
 {
 
-const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::pollutantNames =
+const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::pollutantNamesOutputVariables =
 {
     {CO2, "CO2 EMIS."},
     {NH3, "NH3 EMIS."},
@@ -44,18 +44,12 @@ const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::poll
     {OP2, "OP2 EMIS."},
     {OP3, "OP3 EMIS."},
     {OP4, "OP4 EMIS."},
-    {OP5, "OP5 EMIS."},
-    {POLLUTANT_MAX, "POLLUTANT_MAX"}
+    {OP5, "OP5 EMIS."}
 };
 
-const std::string Pollutant::getPollutantName(int index)
+const std::string& Pollutant::getPollutantName(int index)
 {
-    return pollutantNames.at(PollutantList(index));
-}
-
-const char* Pollutant::getPollutantNameChar(int index)
-{
-    return pollutantNames.at(PollutantList(index)).c_str();
+    return pollutantNamesOutputVariables.at(PollutantList(index));
 }
 
 const std::map<std::string, enum Pollutant::PollutantList> Pollutant::namesToEnum =
@@ -74,23 +68,5 @@ const std::map<std::string, enum Pollutant::PollutantList> Pollutant::namesToEnu
     {"op4", OP4},
     {"op5", OP5}
 };
-
-void Pollutant::saveEmissionsFactor(IniFile::Section* s) const
-{
-    //TODO use for auto : Map to save factors
-    s->add("co2", emissionFactors[CO2]);
-    s->add("nh3", emissionFactors[NH3]);
-    s->add("so2", emissionFactors[SO2]);
-    s->add("nox", emissionFactors[NOX]);
-    s->add("pm2_5", emissionFactors[PM2_5]);
-    s->add("pm5", emissionFactors[PM5]);
-    s->add("pm10", emissionFactors[PM10]);
-    s->add("nmvoc", emissionFactors[NMVOC]);
-    s->add("op1", emissionFactors[OP1]);
-    s->add("op2", emissionFactors[OP2]);
-    s->add("op3", emissionFactors[OP3]);
-    s->add("op4", emissionFactors[OP4]);
-    s->add("op5", emissionFactors[OP5]);
-}
 
 } //namespace Antares::Data

@@ -37,15 +37,13 @@ public:
 
 ThermalClusterReader();
 
-bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
-
-void checkAndFixIntegrity(ThermalCluster& cluster);
-
 std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
 
+bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
+void checkAndFixIntegrity(ThermalCluster& cluster) const;
 
-bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
+bool legacyLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p) const;
 
 }; //class ThermalClusterReader
 

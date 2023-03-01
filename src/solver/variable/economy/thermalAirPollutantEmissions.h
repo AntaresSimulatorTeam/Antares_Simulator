@@ -27,8 +27,8 @@
 #ifndef __SOLVER_VARIABLE_ECONOMY_thermalAirPollutantEmissions_H__
 #define __SOLVER_VARIABLE_ECONOMY_thermalAirPollutantEmissions_H__
 
+#include <antares/study.h>
 #include "../variable.h"
-#include "../../../libs/antares/study/parts/thermal/pollutant.h"
 
 namespace Antares::Solver::Variable::Economy
 {
@@ -96,7 +96,7 @@ struct VCardThermalAirPollutantEmissions
         static const char* Caption(const unsigned int indx)
         {
             if (indx < Antares::Data::Pollutant::POLLUTANT_MAX)
-                return Antares::Data::Pollutant::getPollutantNameChar(indx);
+                return Antares::Data::Pollutant::getPollutantName(indx).c_str();
 
             return "<unknown>";
         }

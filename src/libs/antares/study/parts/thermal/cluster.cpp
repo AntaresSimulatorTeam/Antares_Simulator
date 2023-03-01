@@ -575,7 +575,7 @@ bool Data::ThermalCluster::integrityCheck()
         {
             logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                 << ": The " << Pollutant::getPollutantName(i)
-                << " pollutant factor must be positive";
+                << " pollutant factor must be >= 0";
         }
 
     }

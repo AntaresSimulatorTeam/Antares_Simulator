@@ -56,15 +56,12 @@ public:
         POLLUTANT_MAX
     };
 
-    static const std::map<enum PollutantList, const std::string> pollutantNames;
-    static const std::string getPollutantName(int index);
-    static const char* getPollutantNameChar(int index);
+    static const std::map<enum PollutantList, const std::string> pollutantNamesOutputVariables;
+    static const std::string& getPollutantName(int index);
 
     static const std::map<std::string, enum PollutantList> namesToEnum;
 
     std::array<double, POLLUTANT_MAX> emissionFactors;
-
-    void saveEmissionsFactor(IniFile::Section* s) const;
 
 }; //class Pollutant
 
