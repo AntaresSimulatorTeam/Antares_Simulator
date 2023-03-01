@@ -57,12 +57,12 @@ void HourlyCSRProblem::setBoundsOnENS()
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
 
             problemeAResoudre_.Xmin[var] = -csrSolverRelaxation;
-            problemeAResoudre_.Xmax[var]
+            problemeAResoudre_.Xmax[var] // upper bound for ENS variable is still calculated DENS_new
               = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDENS[triggeredHour]
                 + csrSolverRelaxation;
 
             problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
-                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour]; // upper bound for ENS variable is still calculated DENS_new
+                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour];
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
                                     ->ValeursHorairesDeDefaillancePositive[triggeredHour]);
