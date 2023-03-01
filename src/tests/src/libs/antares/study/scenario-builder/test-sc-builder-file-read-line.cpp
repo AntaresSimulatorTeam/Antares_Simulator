@@ -315,7 +315,7 @@ BOOST_AUTO_TEST_CASE(on_area1_and_on_year_17__hydro_level_0_123_is_chosen__readi
 	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_1->index), level.to<double>());
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_1->index][yearNumber.to<uint>()], level.to<double>());
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_1->index][yearNumber.to<uint>()], level.to<double>());
 }
 
 BOOST_AUTO_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_lowered_to_1__reading_OK)
@@ -328,7 +328,7 @@ BOOST_AUTO_TEST_CASE(on_area2_and_on_year_9__hydro_level_1_5_is_chosen_level_low
 	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_2->index), 1.);
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_2->index][yearNumber.to<uint>()], 1.);
 }
 
 BOOST_AUTO_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__level_raised_to_0__reading_OK)
@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE(on_area3_and_on_year_5__hydro_level_neg_3_5_is_chosen__leve
 	BOOST_CHECK_EQUAL(my_rule.hydroLevels.get_value(yearNumber.to<uint>(), area_3->index), 0.);
 
 	BOOST_CHECK(my_rule.apply());
-	BOOST_CHECK_EQUAL(study->scenarioHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
+	BOOST_CHECK_EQUAL(study->scenarioInitialHydroLevels[area_3->index][yearNumber.to<uint>()], 0.);
 }
 
 // ======================

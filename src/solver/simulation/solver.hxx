@@ -1300,7 +1300,7 @@ void ISimulation<Impl>::computeRandomNumbers(randomNumbers& randomForYears,
             // Possibly update the intial level from scenario builder
             if (study.parameters.useCustomScenario)
             {
-                double levelFromScenarioBuilder = study.scenarioHydroLevels[areaIndex][y];
+                double levelFromScenarioBuilder = study.scenarioInitialHydroLevels[areaIndex][y];
                 if (levelFromScenarioBuilder >= 0.)
                     randomLevel = levelFromScenarioBuilder;
             }

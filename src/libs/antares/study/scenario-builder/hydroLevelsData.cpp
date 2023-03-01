@@ -85,7 +85,7 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
 
 bool hydroLevelsData::apply(Study& study)
 {
-    study.scenarioHydroLevels.copyFrom(pHydroLevelsRules);
+    study.scenarioInitialHydroLevels.copyFrom(pHydroLevelsRules);
     return true;
 }
 

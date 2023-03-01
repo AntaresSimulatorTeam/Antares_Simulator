@@ -47,7 +47,7 @@ void FinalReservoirLevelPreChecks(Data::Study& study)
               int tsIndex = data.timeseriesNumbers[0][yearIndex];
               auto& inflowsmatrix = area.hydro.series->storage;
               auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-              double initialReservoirLevel = study.scenarioHydroLevels[area.index][yearIndex];
+              double initialReservoirLevel = study.scenarioInitialHydroLevels[area.index][yearIndex];
               double finalReservoirLevel = study.scenarioFinalHydroLevels[area.index][yearIndex];
               double deltaReservoirLevel = 0.0;
               int simEndRealMonth = 0;

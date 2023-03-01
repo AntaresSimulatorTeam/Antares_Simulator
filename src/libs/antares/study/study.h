@@ -675,7 +675,7 @@ public:
     ScenarioBuilder::Sets* scenarioRules;
     //@}
 
-    Matrix<double> scenarioHydroLevels;
+    Matrix<double> scenarioInitialHydroLevels;
     // Hydro Final Levels
     Matrix<double> scenarioFinalHydroLevels;
     /*!
