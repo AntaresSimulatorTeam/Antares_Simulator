@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_FINAL_LEVELS_H__
-#define __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_FINAL_LEVELS_H__
+#pragma once
 
 #include "scBuilderDataInterface.h"
 
@@ -113,5 +112,3 @@ inline double hydroFinalLevelsData::get_value(uint x, uint y) const
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-
-#endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_HYDRO_FINAL_LEVELS_H__
