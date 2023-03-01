@@ -39,6 +39,8 @@ ThermalClusterReader();
 
 bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
 
+void checkAndFixIntegrity(ThermalCluster& cluster);
+
 std::map<std::string, std::function<bool(ThermalCluster&, const IniFile::Property&)>> callbackMap;
 
 

@@ -403,6 +403,7 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << property->key << "`: The property is unknown and ignored";
             }
         }
+        thermalClusterReader.checkAndFixIntegrity(cluster);
         // update the minUpDownTime
         cluster.minUpDownTime = Math::Max(cluster.minUpTime, cluster.minDownTime);
     }

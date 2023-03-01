@@ -133,6 +133,19 @@ ThermalClusterReader::ThermalClusterReader()
 
 }
 
+void ThermalClusterReader::checkAndFixIntegrity(ThermalCluster& cluster)
+{
+    if (cluster.minUpTime < 1)
+        cluster.minUpTime = 1;
+    if (cluster.minUpTime > 168)
+        cluster.minUpTime = 168;
+
+    if (cluster.minDownTime < 1)
+        cluster.minDownTime = 1;
+    if (cluster.minDownTime > 168)
+        cluster.minDownTime = 168;
+}
+
 bool ThermalClusterReader::loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
 {
     if (p->key.empty())
