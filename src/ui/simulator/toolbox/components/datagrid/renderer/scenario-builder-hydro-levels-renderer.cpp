@@ -50,10 +50,10 @@ bool hydroLevelsScBuilderRenderer::cellValue(int x, int y, const Yuni::String& v
     {
         if ((uint)y < study->areas.size())
         {
-            assert((uint)y < pRules->hydroLevels.width());
-            assert((uint)x < pRules->hydroLevels.height());
+            assert((uint)y < pRules->hydroInitialLevels.width());
+            assert((uint)x < pRules->hydroInitialLevels.height());
             double val = fromStringToHydroLevel(value, 100.) / 100.;
-            pRules->hydroLevels.set_value(x, y, val);
+            pRules->hydroInitialLevels.set_value(x, y, val);
             return true;
         }
     }
@@ -66,9 +66,9 @@ double hydroLevelsScBuilderRenderer::cellNumericValue(int x, int y) const
     {
         if ((uint)y < study->areas.size())
         {
-            assert((uint)y < pRules->hydroLevels.width());
-            assert((uint)x < pRules->hydroLevels.height());
-            return pRules->hydroLevels.get_value(x, y) * 100.;
+            assert((uint)y < pRules->hydroInitialLevels.width());
+            assert((uint)x < pRules->hydroInitialLevels.height());
+            return pRules->hydroInitialLevels.get_value(x, y) * 100.;
         }
     }
     return 0.;

@@ -119,7 +119,7 @@ public:
     std::vector<renewableTSNumberData> renewable;
 
     //! hydro initial levels
-    hydroLevelsData hydroLevels;
+    hydroLevelsData hydroInitialLevels;
     //! hydro final levels
     hydroFinalLevelsData hydroFinalLevels;
 

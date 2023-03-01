@@ -64,7 +64,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             linksNTC[i].saveToINIFile(study_, file);
         }
         // hydro levels
-        hydroLevels.saveToINIFile(study_, file);
+        hydroInitialLevels.saveToINIFile(study_, file);
         hydroFinalLevels.saveToINIFile(study_, file);
     }
     file << '\n';
@@ -100,7 +100,7 @@ bool Rules::reset()
         renewable[i].reset(study_);
     }
 
-    hydroLevels.reset(study_);
+    hydroInitialLevels.reset(study_);
     hydroFinalLevels.reset(study_);
 
     // links NTC
@@ -266,7 +266,7 @@ bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String valu
         return false;
 
     double val = fromStringToHydroLevel(value, 1.);
-    hydroLevels.set(area->index, year, val);
+    hydroInitialLevels.set(area->index, year, val);
     return true;
 }
 
@@ -367,7 +367,7 @@ bool Rules::apply()
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
         }
-        returned_status = hydroLevels.apply(study_) && returned_status;
+        returned_status = hydroInitialLevels.apply(study_) && returned_status;
         returned_status = hydroFinalLevels.apply(study_) && returned_status;
     }
     else
