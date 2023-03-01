@@ -134,7 +134,7 @@ private:
     bool readWind(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydro(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
+    bool readInitialHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readFinalHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
 

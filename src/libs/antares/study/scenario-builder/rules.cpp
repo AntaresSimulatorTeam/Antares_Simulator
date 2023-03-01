@@ -256,7 +256,7 @@ bool Rules::readSolar(const AreaName::Vector& splitKey, String value, bool updat
     return true;
 }
 
-bool Rules::readHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
+bool Rules::readInitialHydroLevels(const AreaName::Vector& splitKey, String value, bool updaterMode)
 {
     const uint year = splitKey[2].to<uint>();
     const AreaName& areaname = splitKey[1];
@@ -344,7 +344,7 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     else if (kind_of_scenario == "s")
         return readSolar(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hl")
-        return readHydroLevels(splitKey, value, updaterMode);
+        return readInitialHydroLevels(splitKey, value, updaterMode);
     else if (kind_of_scenario == "hfl")
         return readFinalHydroLevels(splitKey, value, updaterMode);
     else if (kind_of_scenario == "ntc")
