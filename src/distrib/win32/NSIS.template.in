@@ -64,7 +64,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME} ${PRODUCT_A
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Antares_Simulator is a trademark of RTE"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "? ${PRODUCT_PUBLISHER}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© ${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 VIProductVersion "${CMAKE_VERSION}.0"
@@ -252,16 +252,16 @@ LangString LngDesktopLink ${LANG_ENGLISH} "Desktop Shortcut"
 ;LangString LngDesktopLink ${LANG_FRENCH}  "Raccourci sur le bureau"
 
 LangString LngResInstallDesktopLink ${LANG_ENGLISH} "Creating a Desktop Shortcut..."
-;LangString LngResInstallDesktopLink ${LANG_FRENCH}  "Cr?ation d'un Raccourci sur le bureau..."
+;LangString LngResInstallDesktopLink ${LANG_FRENCH}  "Création d'un Raccourci sur le bureau..."
 
 LangString LngResInstallMenuLink ${LANG_ENGLISH} "Creating a Menu Shortcut..."
-;LangString LngResInstallMenuLink ${LANG_FRENCH}  "Cr?ation d'un Raccourci dans le menu..."
+;LangString LngResInstallMenuLink ${LANG_FRENCH}  "Création d'un Raccourci dans le menu..."
 
 
 
 
 LangString LngInstallFull ${LANG_ENGLISH}  "Full (Recommended)"
-;LangString LngInstallFull ${LANG_FRENCH}   "Complet (Recommand?)"
+;LangString LngInstallFull ${LANG_FRENCH}   "Complet (Recommandé)"
 
 LangString LngInstallLite ${LANG_ENGLISH}  "Lite"
 ;LangString LngInstallLite ${LANG_FRENCH}   "Minimum"
