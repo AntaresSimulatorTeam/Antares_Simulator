@@ -135,39 +135,35 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoutDeDefaillanceEnReserve[i] = area.thermal.unsuppliedEnergyCost;
 
         problem.DefaillanceNegativeUtiliserPMinThermique[i]
-          = ((anoOtherDispatchPower & area.nodalOptimization) != 0) ? true : false;
+          = (anoOtherDispatchPower & area.nodalOptimization) != 0;
         problem.DefaillanceNegativeUtiliserHydro[i]
-          = ((anoDispatchHydroPower & area.nodalOptimization) != 0) ? true : false;
+          = (anoDispatchHydroPower & area.nodalOptimization) != 0;
         problem.DefaillanceNegativeUtiliserConsoAbattue[i]
-          = ((anoNonDispatchPower & area.nodalOptimization) != 0) ? true : false;
+          = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable
-          = (area.scratchpad[numSpace]->hydroHasMod ? true : false);
+          = area.scratchpad[numSpace]->hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
-          = ((area.hydro.reservoirManagement && area.scratchpad[numSpace]->pumpHasMod
+          = area.hydro.reservoirManagement && area.scratchpad[numSpace]->pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
-              && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable)
-               ? true
-               : false);
+              && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
 
         problem.CaracteristiquesHydrauliques[i]->PumpingRatio = area.hydro.pumpingEfficiency;
+
         problem.CaracteristiquesHydrauliques[i]->SansHeuristique
-          = ((area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget) ? true
-                                                                                : false);
+          = area.hydro.reservoirManagement && !area.hydro.useHeuristicTarget;
+
         problem.CaracteristiquesHydrauliques[i]->TurbinageEntreBornes
-          = ((area.hydro.reservoirManagement
-              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway))
-               ? true
-               : false);
+          = area.hydro.reservoirManagement
+              && (!area.hydro.useHeuristicTarget || area.hydro.useLeeway);
 
         problem.CaracteristiquesHydrauliques[i]->SuiviNiveauHoraire
-          = ((area.hydro.reservoirManagement
+          = area.hydro.reservoirManagement
               && (problem.OptimisationAuPasHebdomadaire == true)
               && (!area.hydro.useHeuristicTarget
-                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable))
-               ? true
-               : false);
+                  || problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable);
+
         problem.CaracteristiquesHydrauliques[i]->DirectLevelAccess = false;
         problem.CaracteristiquesHydrauliques[i]->AccurateWaterValue = false;
         if (problem.WaterValueAccurate && area.hydro.useWaterValue)
