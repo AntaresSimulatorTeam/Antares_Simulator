@@ -61,7 +61,7 @@ public:
 
     static const std::map<std::string, enum PollutantList> namesToEnum;
 
-    std::array<double, POLLUTANT_MAX> emissionFactors;
+    std::array<double, POLLUTANT_MAX> emissionFactors{0};
 
 }; //class Pollutant
 

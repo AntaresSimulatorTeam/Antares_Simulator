@@ -385,9 +385,9 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "dailyminimumcapacity")
     {
         double d = p->value.to<double>();
-        if (d && cluster.minUpTime < 24)
+        if (cluster.minUpTime < 24)
             cluster.minUpTime = 24;
-        if (d && cluster.minDownTime < 24)
+        if (cluster.minDownTime < 24)
             cluster.minDownTime = 24;
         cluster.minStablePower = std::max(cluster.minStablePower, d);
         return true; // ignored since 3.7
@@ -503,9 +503,9 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "weeklyminimumcapacity")
     {
         double d = p->value.to<double>();
-        if (d && cluster.minUpTime < 168)
+        if (cluster.minUpTime < 168)
             cluster.minUpTime = 168;
-        if (d && cluster.minDownTime < 168)
+        if (cluster.minDownTime < 168)
             cluster.minDownTime = 168;
         cluster.minStablePower = std::max(cluster.minStablePower, d);
         return true; // ignored since 3.7
