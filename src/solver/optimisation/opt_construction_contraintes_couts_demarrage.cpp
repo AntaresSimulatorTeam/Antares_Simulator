@@ -325,62 +325,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
         }
     }
 
-#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
-    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
-    {
-        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
-          = problemeHebdo->PaliersThermiquesDuPays[pays];
-
-        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
-        {
-            const int palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
-
-            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-            {
-                CorrespondanceCntNativesCntOptim
-                  = problemeHebdo->CorrespondanceCntNativesCntOptim[pdt];
-                CorrespondanceCntNativesCntOptim
-                  ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne[palier]
-                  = -1;
-
-                int nombreDeTermes = 0;
-                int var = 0;
-                if (!Simulation)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
-                              [palier];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-                else
-                    nbTermesContraintesPourLesCoutsDeDemarrage++;
-
-                if (!Simulation)
-                {
-                    if (nombreDeTermes > 0)
-                    {
-                        CorrespondanceCntNativesCntOptim
-                          ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-                            [palier]
-                          = ProblemeAResoudre->NombreDeContraintes;
-
-                        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
-                    }
-                }
-                else
-                    ProblemeAResoudre->NombreDeContraintes += 1;
-            }
-        }
-    }
-#endif
-
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays

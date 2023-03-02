@@ -172,7 +172,7 @@ bool Adequacy::year(Progression::Task& progression,
             *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? true : false;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);

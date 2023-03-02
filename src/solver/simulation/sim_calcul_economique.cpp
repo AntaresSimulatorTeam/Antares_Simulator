@@ -49,7 +49,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     auto& parameters = study.parameters;
 
-    problem.Expansion = parameters.expansion ? true : false;
+    problem.Expansion = parameters.expansion;
     problem.firstWeekOfSimulation = false;
 
     problem.hydroHotStart
@@ -81,9 +81,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     }
 
     problem.WaterValueAccurate
-      = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP)
-          ? true
-          : false;
+      = (study.parameters.hydroPricing.hpMode == Antares::Data::HydroPricingMode::hpMILP);
 
     SIM_AllocationProblemeHebdo(problem, NombreDePasDeTemps);
 
@@ -102,12 +100,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.exportMPSOnError = Data::exportMPS(parameters.include.unfeasibleProblemBehavior);
 
     problem.OptimisationAvecCoutsDeDemarrage
-      = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP)
-          ? true
-          : false;
+      = (study.parameters.unitCommitment.ucMode == Antares::Data::UnitCommitmentMode::ucMILP);
 
     problem.OptimisationAuPasHebdomadaire
-      = (parameters.simplexOptimizationRange == Data::sorWeek) ? true : false;
+      = (parameters.simplexOptimizationRange == Data::sorWeek);
 
     switch (parameters.power.fluctuations)
     {

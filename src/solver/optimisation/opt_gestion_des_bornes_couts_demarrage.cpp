@@ -112,9 +112,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                   = CorrespondanceVarNativesVarOptim
                       ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 Xmin[var] = 0;
-#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
-                Xmax[var] = LINFINI_ANTARES;
-#else
                 int t1 = pdtHebdo;
                 int t1moins1 = t1 - 1;
                 if (t1moins1 < 0)
@@ -127,7 +124,6 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                     Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
                 }
-#endif
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
                                         ->ProductionThermique[pdtHebdo]
                                         ->NombreDeGroupesQuiTombentEnPanneDuPalier[index]);

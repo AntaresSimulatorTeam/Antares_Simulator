@@ -90,13 +90,8 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
                 CorrespondanceVarNativesVarOptim
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
                   = nombreDeVariables;
-#if !VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES
-                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
-#else
                 ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-#endif
                 nombreDeVariables++;
             }
         }
