@@ -1,5 +1,4 @@
 #include "cluster_list.h"
-#include "cluster_load.h"
 #include "cluster.h"
 #include "../../study.h"
 
@@ -376,6 +375,150 @@ YString ThermalClusterList::typeID() const
     return "thermal";
 }
 
+static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFile::Property* p)
+{
+    if (p->key.empty())
+        return false;
+
+    if (p->key == "annuityinvestment")
+        return p->value.to<uint>(cluster.annuityInvestment);
+    if (p->key == "dailyminimumcapacity")
+    {
+        double d = p->value.to<double>();
+        if (d && cluster.minUpTime < 24)
+            cluster.minUpTime = 24;
+        if (d && cluster.minDownTime < 24)
+            cluster.minDownTime = 24;
+        cluster.minStablePower = std::max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
+    }
+    if (p->key == "enabled")
+        return p->value.to<bool>(cluster.enabled);
+    if (p->key == "fixed-cost")
+        return p->value.to<double>(cluster.fixedCost);
+    if (p->key == "flexibility")
+    {
+        // The flexibility is now ignored since v3.5
+        return true;
+    }
+    if (p->key == "groupmincount")
+        return p->value.to<uint>(cluster.groupMinCount);
+    if (p->key == "groupmaxcount")
+        return p->value.to<uint>(cluster.groupMaxCount);
+    if (p->key == "group")
+    {
+        cluster.setGroup(p->value);
+        return true;
+    }
+    if (p->key == "gen-ts")
+    {
+        return p->value.to(cluster.tsGenBehavior);
+    }
+    if (p->key == "hourlyminimumcapacity")
+    {
+        double d = p->value.to<double>();
+        cluster.minStablePower = std::max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
+    }
+    if (p->key == "law.planned")
+        return p->value.to(cluster.plannedLaw);
+    if (p->key == "law.forced")
+        return p->value.to(cluster.forcedLaw);
+    if (p->key == "market-bid-cost")
+        return p->value.to<double>(cluster.marketBidCost);
+    if (p->key == "marginal-cost")
+        return p->value.to<double>(cluster.marginalCost);
+    if (p->key == "must-run")
+        // mustrunOrigin will be initialized later, after LoadFromSection
+        return p->value.to<bool>(cluster.mustrun);
+    if (p->key == "min-stable-power")
+        return p->value.to<double>(cluster.minStablePower);
+
+    if (p->key == "min-up-time")
+    {
+        if (p->value.to<uint>(cluster.minUpTime))
+        {
+            if (cluster.minUpTime < 1)
+                cluster.minUpTime = 1;
+            if (cluster.minUpTime > 168)
+                cluster.minUpTime = 168;
+            return true;
+        }
+        return false;
+    }
+    if (p->key == "min-down-time")
+    {
+        if (p->value.to<uint>(cluster.minDownTime))
+        {
+            if (cluster.minDownTime < 1)
+                cluster.minDownTime = 1;
+            if (cluster.minDownTime > 168)
+                cluster.minDownTime = 168;
+            return true;
+        }
+        return false;
+    }
+    // for compatibility < 5.0
+    if (p->key == "min-updown-time")
+    {
+        uint val;
+        p->value.to<uint>(val);
+        if (val)
+        {
+            if (val < 1)
+                val = 1;
+            if (val > 168)
+                val = 168;
+            cluster.minUpTime = val;
+            cluster.minDownTime = val;
+            return true;
+        }
+        return false;
+    }
+    if (p->key == "name")
+        return true; // silently ignore it
+    if (p->key == "nominalcapacity")
+        return p->value.to<double>(cluster.nominalCapacity);
+
+    // for compatibility <3.5
+    if (p->key == "operatingcost")
+        return p->value.to<double>(cluster.marketBidCost);
+
+    if (p->key == "spread-cost")
+        return p->value.to<double>(cluster.spreadCost);
+    if (p->key == "spinning")
+        return p->value.to<double>(cluster.spinning);
+    if (p->key == "startup-cost")
+        return p->value.to<double>(cluster.startupCost);
+    // for compatibility <3.5
+    if (p->key == "stddeviationannualcost")
+        return p->value.to<double>(cluster.spreadCost);
+
+    if (p->key == "unitcount")
+        return p->value.to<uint>(cluster.unitCount);
+    if (p->key == "volatility.planned")
+        return p->value.to(cluster.plannedVolatility);
+    if (p->key == "volatility.forced")
+        return p->value.to(cluster.forcedVolatility);
+    if (p->key == "weeklyminimumcapacity")
+    {
+        double d = p->value.to<double>();
+        if (d && cluster.minUpTime < 168)
+            cluster.minUpTime = 168;
+        if (d && cluster.minDownTime < 168)
+            cluster.minDownTime = 168;
+        cluster.minStablePower = std::max(cluster.minStablePower, d);
+        return true; // ignored since 3.7
+    }
+
+    //pollutant
+    if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
+        return p->value.to<double> (cluster.emissions.emissionFactors[it->second]);
+
+    // The property is unknown
+    return false;
+}
+
 bool ThermalClusterLoadFromSection(const AnyString& filename,
                                    ThermalCluster& cluster,
                                    const IniFile::Section& section)
@@ -387,7 +530,6 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
 
     if (section.firstProperty)
     {
-        ThermalClusterReader thermalClusterReader;
         // Browse all properties
         for (auto* property = section.firstProperty; property; property = property->next)
         {
@@ -397,13 +539,12 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
                                << "`: Invalid key/value";
                 continue;
             }
-            if (!thermalClusterReader.loadFromProperty(cluster, property))
+            if (!ThermalClusterLoadFromProperty(cluster, property))
             {
                 logs.warning() << '`' << filename << "`: `" << section.name << "`/`"
                                << property->key << "`: The property is unknown and ignored";
             }
         }
-        thermalClusterReader.checkAndFixIntegrity(cluster);
         // update the minUpDownTime
         cluster.minUpDownTime = Math::Max(cluster.minUpTime, cluster.minDownTime);
     }

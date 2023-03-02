@@ -215,8 +215,6 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.cpp
     study/parts/thermal/cluster_list.h
     study/parts/thermal/cluster_list.cpp
-    study/parts/thermal/cluster_load.cpp
-    study/parts/thermal/cluster_load.h
 	study/parts/thermal/pollutant.h
 	study/parts/thermal/pollutant.cpp
 	)
