@@ -33,7 +33,7 @@ namespace Antares
 {
 namespace Solver
 {
-void FinalReservoirLevelPreChecks(Data::Study& study);
+void FinalReservoirLevel(Data::Study& study);
 } // namespace Solver
 } // namespace Antares
 
