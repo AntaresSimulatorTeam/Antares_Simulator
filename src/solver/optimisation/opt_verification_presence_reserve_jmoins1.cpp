@@ -38,7 +38,7 @@
 
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)
 {
-    problemeHebdo->YaDeLaReserveJmoins1 = NON_ANTARES;
+    problemeHebdo->YaDeLaReserveJmoins1 = false;
     if (!RESERVE_J_MOINS_1)
         return;
 
@@ -51,7 +51,7 @@ void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO* problemeHebdo)
         {
             if (fabs(ReserveHoraireJMoins1Ref[pdt]) > ZERO_RESERVE_J_MOINS1)
             {
-                problemeHebdo->YaDeLaReserveJmoins1 = OUI_ANTARES;
+                problemeHebdo->YaDeLaReserveJmoins1 = true;
                 return;
             }
         }

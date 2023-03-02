@@ -77,29 +77,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
             {
                 const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim
                   = problemeHebdo->CorrespondanceCntNativesCntOptim[pdtJour];
-                int cnt;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-                cnt = CorrespondanceCntNativesCntOptim
-                        ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne
-                          [palier];
-                if (cnt >= 0)
-                {
-                    int t1 = pdtHebdo;
-                    int t1moins1 = t1 - 1;
-                    if (t1moins1 < 0)
-                        t1moins1 = NombreDePasDeTempsPourUneOptimisation + t1moins1;
-                    if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                          - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-                        > 0)
-                    {
-                        SecondMembre[cnt] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                                            - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-                    }
-                    AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = NULL;
-                }
-#endif
-
-                cnt = CorrespondanceCntNativesCntOptim
+                int cnt = CorrespondanceCntNativesCntOptim
                         ->NumeroDeContrainteDesContraintesDeDureeMinDArret[palier];
                 if (cnt >= 0)
                 {

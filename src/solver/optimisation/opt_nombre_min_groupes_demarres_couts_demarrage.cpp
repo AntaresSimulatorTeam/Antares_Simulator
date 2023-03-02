@@ -63,7 +63,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBL
 
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         return;
 
     int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
@@ -407,12 +407,7 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         CoutLineaire[NombreDeVariables] = 0;
         Xsolution[NombreDeVariables] = 0;
         Xmin[NombreDeVariables] = 0;
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-        Xmax[NombreDeVariables] = LINFINI_ANTARES;
-        TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
-#else
         TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-#endif
         NombreDeVariables++;
 
         NumeroDeVariableDeMPlus[pdt] = NombreDeVariables;
@@ -487,35 +482,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
         SecondMembre[NombreDeContraintes] = 0;
         NombreDeContraintes++;
 
-#if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-        int t1 = pdt;
-        t1moins1 = t1 - 1;
-        if (t1moins1 < 0)
-            t1moins1 = NombreDePasDeTemps + t1moins1;
-        NombreDeTermes = 0;
-        IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;
-
-        CoefficientsDeLaMatriceDesContraintes[NbTermesMatrice] = 1;
-        IndicesColonnes[NbTermesMatrice] = NumeroDeVariableDeMMoinsMoins[pdt];
-        NombreDeTermes++;
-        NbTermesMatrice++;
-
-        NombreDeTermesDesLignes[NombreDeContraintes] = NombreDeTermes;
-        Sens[NombreDeContraintes] = '<';
-        if (NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-              - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1]
-            > 0)
-        {
-            SecondMembre[NombreDeContraintes]
-              = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
-                - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
-        }
-        else
-        {
-            SecondMembre[NombreDeContraintes] = 0;
-        }
-        NombreDeContraintes++;
-#else
         int var = NumeroDeVariableDeMMoinsMoins[pdt];
         int t1 = pdt;
         t1moins1 = t1 - 1;
@@ -529,7 +495,6 @@ void OPT_PbLineairePourAjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(
             Xmax[var] = NombreMaxDeGroupesEnMarcheDuPalierThermique[t1moins1]
                         - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
         }
-#endif
 
         NombreDeTermes = 0;
         IndicesDebutDeLigne[NombreDeContraintes] = NbTermesMatrice;

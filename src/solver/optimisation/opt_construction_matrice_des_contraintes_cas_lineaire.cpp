@@ -284,7 +284,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
                 int nombreDeTermes = 0;
                 var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
@@ -667,30 +667,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        char presenceHydro
+        bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
-        char TurbEntreBornes
+        bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
-        char presencePompage
+        bool presencePompage
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
-        if (presenceHydro == OUI_ANTARES && TurbEntreBornes == NON_ANTARES)
+
+        int nombreDeTermes = 0;
+        if (presenceHydro && !TurbEntreBornes)
         {
-            int nombreDeTermes = 0;
-            if (presencePompage == NON_ANTARES)
-            {
-                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
-                {
-                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
-                            ->NumeroDeVariablesDeLaProdHyd[pays];
-                    if (var >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = var;
-                        nombreDeTermes++;
-                    }
-                }
-            }
-            if (presencePompage == OUI_ANTARES)
+            if (presencePompage)
             {
                 for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
                 {
@@ -714,6 +701,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     }
                 }
             }
+            else
+            {
+                for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
+                {
+                    var = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt]
+                            ->NumeroDeVariablesDeLaProdHyd[pays];
+                    if (var >= 0)
+                    {
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = var;
+                        nombreDeTermes++;
+                    }
+                }
+            }
 
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
@@ -729,8 +730,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable
-                != OUI_ANTARES)
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -785,8 +785,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     {
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable
-                != OUI_ANTARES)
+            if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -837,14 +836,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        const char presenceHydro
+        const bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
-        const char presencePompage
+        const bool presencePompage
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
-        const char TurbEntreBornes
+        const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
-        if (presenceHydro == OUI_ANTARES
-            && (TurbEntreBornes == OUI_ANTARES || presencePompage == OUI_ANTARES))
+        if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -868,10 +866,9 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         else
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
 
-        if (presenceHydro == OUI_ANTARES
-            && (TurbEntreBornes == OUI_ANTARES
-                || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable
-                     == OUI_ANTARES))
+        if (presenceHydro
+            && (TurbEntreBornes
+            || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -898,8 +895,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable
-            == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
@@ -933,8 +929,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire
-                == OUI_ANTARES)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
             {
                 int nombreDeTermes = 0;
 
@@ -1001,8 +996,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue == OUI_ANTARES
-            && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
+            && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
         {
             int nombreDeTermes = 0;
@@ -1028,7 +1023,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
         }
-        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
         /*  expression constraint : - StockFinal +sum (stocklayers) = 0*/
         {
             int nombreDeTermes = 0;
@@ -1059,11 +1054,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         }
     }
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        char simulation = NON_ANTARES;
         OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                simulation);
+                                                                                false);
     }
 
     // Export structure

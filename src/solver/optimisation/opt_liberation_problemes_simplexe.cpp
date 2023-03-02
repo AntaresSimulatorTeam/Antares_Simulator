@@ -48,7 +48,7 @@ using namespace Antares;
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
 {
     int NombreDePasDeTempsPourUneOptimisation;
-    if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+    if (!problemeHebdo->OptimisationAuPasHebdomadaire)
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
     else
         NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
@@ -62,7 +62,7 @@ void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
     const auto& study = *Data::Study::Current::Get();
     bool ortoolsUsed = study.parameters.ortoolsUsed;
 
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {

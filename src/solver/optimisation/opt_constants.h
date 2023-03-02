@@ -5,7 +5,7 @@
 constexpr char PREMIERE_OPTIMISATION = 1;
 constexpr char DEUXIEME_OPTIMISATION = 2;
 
-constexpr char RESERVE_J_MOINS_1 = OUI_ANTARES;
+constexpr bool RESERVE_J_MOINS_1 = true;
 
 constexpr char CONTRAINTE_HORAIRE = 1;
 constexpr char CONTRAINTE_JOURNALIERE = 2;
@@ -20,5 +20,3 @@ constexpr char EGOISTE = 2;
 
 constexpr char ANTARES_SIMPLEXE = 1;
 constexpr char ANTARES_PNE = 2;
-
-constexpr char VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES = OUI_ANTARES;

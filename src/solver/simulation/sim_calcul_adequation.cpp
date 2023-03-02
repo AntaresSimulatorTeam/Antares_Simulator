@@ -320,23 +320,23 @@ void SIM_CalculFlotHoraireAdequation()
 {
     auto& study = *Data::Study::Current::Get();
 
-    ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau = NON_ANTARES;
-    ProblemeHoraireAdequation.DefaillanceEuropeenneAvecReseau = NON_ANTARES;
+    ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau = false;
+    ProblemeHoraireAdequation.DefaillanceEuropeenneAvecReseau = false;
 
     for (uint i = 0; i < study.areas.size(); i++)
     {
         const DONNEES_ADEQUATION& dataAdequacy = *(ProblemeHoraireAdequation.DonneesParPays[i]);
 
         auto& Pt = *ProblemeHoraireAdequation.ResultatsParPays[i];
-        Pt.DefaillanceHorsReseau = NON_ANTARES;
-        Pt.DefaillanceAvecReseau = NON_ANTARES;
+        Pt.DefaillanceHorsReseau = false;
+        Pt.DefaillanceAvecReseau = false;
         Pt.MargeHorsReseau = dataAdequacy.PuissanceThermiqueCumulee - dataAdequacy.Consommation;
         Pt.Offre = 0.;
         if (Pt.MargeHorsReseau < 0.)
         {
             Pt.Offre = ProblemeHoraireAdequation.ResultatsParPays[i]->MargeHorsReseau;
-            ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau = OUI_ANTARES;
-            Pt.DefaillanceHorsReseau = OUI_ANTARES;
+            ProblemeHoraireAdequation.DefaillanceEuropeenneHorsReseau = true;
+            Pt.DefaillanceHorsReseau = true;
         }
         if (Pt.MargeHorsReseau > dataAdequacy.Reserve)
         {
@@ -352,8 +352,8 @@ void SIM_CalculFlotHoraireAdequation()
             auto& Pt = *ProblemeHoraireAdequation.ResultatsParPays[i];
             if (Pt.MargeAvecReseau < 0.)
             {
-                ProblemeHoraireAdequation.DefaillanceEuropeenneAvecReseau = OUI_ANTARES;
-                Pt.DefaillanceAvecReseau = OUI_ANTARES;
+                ProblemeHoraireAdequation.DefaillanceEuropeenneAvecReseau = true;
+                Pt.DefaillanceAvecReseau = true;
             }
         }
     }

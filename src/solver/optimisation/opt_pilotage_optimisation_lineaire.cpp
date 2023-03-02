@@ -69,7 +69,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpa
             OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
         }
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
@@ -82,7 +82,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpa
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }

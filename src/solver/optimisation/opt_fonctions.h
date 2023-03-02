@@ -100,9 +100,9 @@ void OPT_EcrireResultatFonctionObjectiveAuFormatTXT(double,
 
 /*------------------------------*/
 
-void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, char);
+void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*, bool);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
-                                                                                   char);
+                                                                                   bool);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HEBDO*,
                                                                             const int,
                                                                             const int);
