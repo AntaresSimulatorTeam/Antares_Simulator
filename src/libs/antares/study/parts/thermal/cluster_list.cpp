@@ -513,7 +513,7 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     //pollutant
     if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
-        return p->value.to<double> (cluster.emissions.emissionFactors[it->second]);
+        return p->value.to<double> (cluster.emissions.factors[it->second]);
 
     // The property is unknown
     return false;
@@ -754,7 +754,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
 
             //pollutant factor
             for (auto const& [key, val] : Pollutant::namesToEnum)
-                s->add(key, c.emissions.emissionFactors[val]);
+                s->add(key, c.emissions.factors[val]);
 
 
             buffer.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro" << SEP

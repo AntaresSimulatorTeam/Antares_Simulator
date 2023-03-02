@@ -30,8 +30,6 @@
 #include <array>
 #include <map>
 
-#include <antares/inifile.h>
-
 namespace Antares::Data
 {
 
@@ -61,7 +59,7 @@ public:
 
     static const std::map<std::string, enum PollutantList> namesToEnum;
 
-    std::array<double, POLLUTANT_MAX> emissionFactors{0};
+    std::array<double, POLLUTANT_MAX> factors{0};
 
 }; //class Pollutant
 

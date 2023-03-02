@@ -468,7 +468,7 @@ void Data::ThermalCluster::reset()
     spinning = 0.;
 
     //pollutant emissions array
-    emissions.emissionFactors.fill(0);
+    emissions.factors.fill(0);
     // volatility
     forcedVolatility = 0.;
     plannedVolatility = 0.;
@@ -570,7 +570,7 @@ bool Data::ThermalCluster::integrityCheck()
     //emissions
     for (auto i = 0; i < Pollutant::POLLUTANT_MAX; i++)
     {
-        if (emissions.emissionFactors[i] < 0)
+        if (emissions.factors[i] < 0)
         {
             logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
                 << ": The " << Pollutant::getPollutantName(i)

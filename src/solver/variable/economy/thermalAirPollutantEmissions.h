@@ -248,7 +248,7 @@ public:
         for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
         {
             pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                += state.thermalCluster->emissions.emissionFactors[i]
+                += state.thermalCluster->emissions.factors[i]
                     * state.thermalClusterProduction;
         }
 

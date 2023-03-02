@@ -768,7 +768,7 @@ struct PClusterCO2
     using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
-        return cluster->emissions.emissionFactors[0]; //cluster->co2
+        return cluster->emissions.factors[0]; //cluster->co2
     }
     static wxString ConvertToString(const Type v)
     {

@@ -705,13 +705,13 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->emissions.emissionFactors[0] = 0.;
+                (*i)->emissions.factors[0] = 0.;
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
-                (*i)->emissions.emissionFactors[0] = d;
+                (*i)->emissions.factors[0] = d;
         }
         return true;
     }
