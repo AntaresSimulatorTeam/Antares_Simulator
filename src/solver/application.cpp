@@ -151,7 +151,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
             {
                 const auto& cluster = *(area.thermal.clusters[l]);
                 auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto PminDUnGroupeDuPalierThermique
+                auto pminDUnGroupeDuPalierThermique
                   = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
                       ? cluster.nominalCapacityWithSpinning
                       : cluster.minStablePower;
@@ -163,7 +163,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
                 {
                     for (uint x = 0; x != cluster.series->series.width; ++x)
                     {
-                        auto rightpart = PminDUnGroupeDuPalierThermique
+                        auto rightpart = pminDUnGroupeDuPalierThermique
                                          * ceil(cluster.series->series.entry[x][y]
                                                 / PmaxDUnGroupeDuPalierThermique);
                         condition = rightpart > cluster.series->series.entry[x][y];

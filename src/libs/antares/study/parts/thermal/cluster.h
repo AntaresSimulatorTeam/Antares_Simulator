@@ -369,7 +369,7 @@ public:
     ** \brief The minimum power of a group of the cluster
     **
     ** \warning This variable is only valid when used from the solver
-    ** \Field PminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
+    ** \Field pminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
     */
     double* pminOfAGroup;
 

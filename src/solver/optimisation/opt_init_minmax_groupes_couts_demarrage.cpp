@@ -35,60 +35,46 @@
 
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Index;
-    int PdtHebdo;
-    int NombreDePasDeTempsProblemeHebdo;
-
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
-    double TailleUnitaireDUnGroupeDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
-    int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
-    int* NombreMinDeGroupesEnMarcheDuPalierThermique;
-    double* PuissanceDisponibleDuPalierThermiqueRef_SV;
-
     if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == NON_ANTARES)
         return;
 
-    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTemps;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
+          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            PuissanceDisponibleDuPalierThermiqueRef_SV
-              = PuissanceDisponibleEtCout[Index]->PuissanceDisponibleDuPalierThermiqueRef_SV;
-            PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[Index]->PuissanceMinDuPalierThermique_SV;
-            NombreMaxDeGroupesEnMarcheDuPalierThermique
-              = PuissanceDisponibleEtCout[Index]->NombreMaxDeGroupesEnMarcheDuPalierThermique;
-            NombreMinDeGroupesEnMarcheDuPalierThermique
-              = PuissanceDisponibleEtCout[Index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
+            const double* PuissanceDisponibleDuPalierThermiqueRef_SV
+              = PuissanceDisponibleEtCout[index]->PuissanceDisponibleDuPalierThermiqueRef_SV;
+            const double* PuissanceMinDuPalierThermique_SV
+              = PuissanceDisponibleEtCout[index]->PuissanceMinDuPalierThermique_SV;
+            int* NombreMaxDeGroupesEnMarcheDuPalierThermique
+              = PuissanceDisponibleEtCout[index]->NombreMaxDeGroupesEnMarcheDuPalierThermique;
+            int* NombreMinDeGroupesEnMarcheDuPalierThermique
+              = PuissanceDisponibleEtCout[index]->NombreMinDeGroupesEnMarcheDuPalierThermique;
 
-            TailleUnitaireDUnGroupeDuPalierThermique
-              = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[Index];
+            double TailleUnitaireDUnGroupeDuPalierThermique
+              = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[index];
 
-            for (PdtHebdo = 0; PdtHebdo < NombreDePasDeTempsProblemeHebdo; PdtHebdo++)
+            for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
             {
                 if (TailleUnitaireDUnGroupeDuPalierThermique != 0)
                 {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef_SV[PdtHebdo]
+                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+                      = (int)ceil(PuissanceDisponibleDuPalierThermiqueRef_SV[pdtHebdo]
                                   / TailleUnitaireDUnGroupeDuPalierThermique);
 
-                    NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo]
-                      = (int)ceil(PuissanceMinDuPalierThermique_SV[PdtHebdo]
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo]
+                      = (int)ceil(PuissanceMinDuPalierThermique_SV[pdtHebdo]
                                   / TailleUnitaireDUnGroupeDuPalierThermique);
                 }
                 else
                 {
-                    NombreMaxDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = 0;
-
-                    NombreMinDeGroupesEnMarcheDuPalierThermique[PdtHebdo] = 0;
+                    NombreMaxDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = 0;
+                    NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo] = 0;
                 }
             }
         }

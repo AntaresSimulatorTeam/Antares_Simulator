@@ -39,31 +39,24 @@
 
 void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Palier;
-    int Pdt;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
-    double* PuissanceMinDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
-    int NombreDePasDeTempsProblemeHebdo;
+    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
 
-    NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-        PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
+          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+        for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
         {
-            PuissanceMinDuPalierThermique
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique;
-            PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique_SV;
+            const double* PuissanceMinDuPalierThermique
+              = PuissanceDisponibleEtCout[palier]->PuissanceMinDuPalierThermique;
+            double* PuissanceMinDuPalierThermique_SV
+              = PuissanceDisponibleEtCout[palier]->PuissanceMinDuPalierThermique_SV;
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsProblemeHebdo; Pdt++)
+            for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
             {
-                PuissanceMinDuPalierThermique_SV[Pdt] = PuissanceMinDuPalierThermique[Pdt];
+                PuissanceMinDuPalierThermique_SV[pdt] = PuissanceMinDuPalierThermique[pdt];
             }
         }
     }

@@ -40,78 +40,69 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarra
   PROBLEME_HEBDO* problemeHebdo,
   char Simulation)
 {
-    int Pays;
-    int Pdt;
-    int Palier;
-    int NombreDeVariables;
-    int Index;
-    int NombreDePasDeTempsPourUneOptimisation;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    int nombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int nombreDeVariables = ProblemeAResoudre->NombreDeVariables;
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-    NombreDeVariables = ProblemeAResoudre->NombreDeVariables;
-
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+        for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
-            Palier
-              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+            const int palier
+              = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+            for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 if (Simulation == OUI_ANTARES)
                 {
-                    NombreDeVariables += 4;
+                    nombreDeVariables += 4;
                     continue;
                 }
-                CorrespondanceVarNativesVarOptim
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+                CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier]
+                  = nombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
-                NombreDeVariables++;
+                nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier]
-                  = NombreDeVariables;
+                  ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier]
+                  = nombreDeVariables;
 
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                NombreDeVariables++;
+                nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier]
+                  = nombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
-                NombreDeVariables++;
+                nombreDeVariables++;
 
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier]
-                  = NombreDeVariables;
+                  ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier]
+                  = nombreDeVariables;
 #if VARIABLES_MMOINS_MOINS_BORNEES_DES_2_COTES != OUI_ANTARES
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_INFERIEUREMENT;
 #else
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                ProblemeAResoudre->TypeDeVariable[nombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
 #endif
-                NombreDeVariables++;
+                nombreDeVariables++;
             }
         }
     }
 
-    ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
+    ProblemeAResoudre->NombreDeVariables = nombreDeVariables;
 
     return;
 }

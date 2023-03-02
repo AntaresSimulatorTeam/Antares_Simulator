@@ -69,10 +69,10 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
                          int,
                          const int,
                          std::shared_ptr<OptPeriodStringGenerator>);
-void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO*);
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
 bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
-void OPT_RestaurerLesDonnees(PROBLEME_HEBDO*, const int);
+void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
 /*------------------------------*/
 
 void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO*);
@@ -90,7 +90,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
                                                  int);
 void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre);
 void OPT_AllocDuProblemeAOptimiser(PROBLEME_HEBDO*);
-void OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*, int*);
+int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*);
 void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*);
 void OPT_LiberationMemoireDuProblemeAOptimiser(PROBLEME_HEBDO*);
 
@@ -111,6 +111,6 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaireCoutsDeDemarrage(PROBLEME_HE
 void OPT_DecompteDesVariablesEtDesContraintesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO*);
 void OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(PROBLEME_HEBDO*);
-double OPT_SommeDesPminThermiques(PROBLEME_HEBDO*, int, int);
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO*, int, int);
 
 #endif /* __SOLVER_OPTIMISATION_FUNCTIONS_H__ */
