@@ -760,6 +760,10 @@ protected:
     bool internalLoadSets();
     //@}
 
+    bool internalLoadIni(const YString& path, const StudyLoadOptions& options);
+
+    void parameterFiller(const StudyLoadOptions& options);
+
     //! \name Misc
     //@{
     //! Reset the input extension according the study version
