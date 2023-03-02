@@ -13,10 +13,10 @@ File  ${ANTARES_SRC_DIR}\..\INSTALL.md
 File  ${ANTARES_SRC_DIR}\..\README.md
 
 ${SetOutPath} "$INSTDIR\Sources\docs"
-File /r  ${ANTARES_SRC_DIR}\..\docs\*.*
+File /nonfatal /r  ${ANTARES_SRC_DIR}\..\docs\*.*
 
 ${SetOutPath} "$INSTDIR\Sources\resources"
-File /r  ${ANTARES_SRC_DIR}\..\resources\*.*
+File /nonfatal /r  ${ANTARES_SRC_DIR}\..\resources\*.*
 
 ; TODO For now build_deps source are not provided
 
