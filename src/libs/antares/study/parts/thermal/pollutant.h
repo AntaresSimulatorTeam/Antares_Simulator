@@ -37,7 +37,7 @@ namespace Antares::Data
 class Pollutant
 {
 public:
-    enum PollutantList
+    enum PollutantEnum
     {
         CO2 = 0,
         NH3,
@@ -55,10 +55,10 @@ public:
         POLLUTANT_MAX
     };
 
-    static const std::map<enum PollutantList, const std::string> pollutantNamesOutputVariables;
+    static const std::map<enum PollutantEnum, const std::string> pollutantNamesOutputVariables;
     static const std::string& getPollutantName(int index);
 
-    static const std::map<std::string, enum PollutantList> namesToEnum;
+    static const std::map<std::string, enum PollutantEnum> namesToEnum;
 
     std::array<double, POLLUTANT_MAX> factors{0};
 

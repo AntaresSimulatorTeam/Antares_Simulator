@@ -30,7 +30,7 @@
 namespace Antares::Data
 {
 
-const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::pollutantNamesOutputVariables =
+const std::map<enum Pollutant::PollutantEnum, const std::string> Pollutant::pollutantNamesOutputVariables =
 {
     {CO2, "CO2 EMIS."},
     {NH3, "NH3 EMIS."},
@@ -49,10 +49,10 @@ const std::map<enum Pollutant::PollutantList, const std::string> Pollutant::poll
 
 const std::string& Pollutant::getPollutantName(int index)
 {
-    return pollutantNamesOutputVariables.at(PollutantList(index));
+    return pollutantNamesOutputVariables.at(PollutantEnum(index));
 }
 
-const std::map<std::string, enum Pollutant::PollutantList> Pollutant::namesToEnum =
+const std::map<std::string, enum Pollutant::PollutantEnum> Pollutant::namesToEnum =
 {
     {"co2", CO2},
     {"nh3", NH3},
