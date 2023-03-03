@@ -705,13 +705,13 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->co2 = 0.;
+                (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = 0.;
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
-                (*i)->co2 = d;
+                (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = d;
         }
         return true;
     }
