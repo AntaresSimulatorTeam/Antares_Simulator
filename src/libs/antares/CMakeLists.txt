@@ -37,8 +37,6 @@ set(SRC_STUDY_SCENARIO_BUILDER
 	study/scenario-builder/TSnumberData.cpp
 	study/scenario-builder/hydroLevelsData.h
 	study/scenario-builder/hydroLevelsData.cpp
-	study/scenario-builder/hydroFinalLevelsData.h
-	study/scenario-builder/hydroFinalLevelsData.cpp
 	study/scenario-builder/rules.h
 	study/scenario-builder/rules.hxx
 	study/scenario-builder/rules.cpp

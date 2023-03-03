@@ -32,7 +32,6 @@
 #include "../fwd.h"
 #include "TSnumberData.h"
 #include "hydroLevelsData.h"
-#include "hydroFinalLevelsData.h"
 #include <map>
 #include <memory>
 
@@ -121,7 +120,7 @@ public:
     //! hydro initial levels
     hydroLevelsData hydroInitialLevels;
     //! hydro final levels
-    hydroFinalLevelsData hydroFinalLevels;
+    hydroLevelsData hydroFinalLevels;
 
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;

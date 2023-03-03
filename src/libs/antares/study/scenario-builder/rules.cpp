@@ -64,8 +64,8 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
             linksNTC[i].saveToINIFile(study_, file);
         }
         // hydro levels
-        hydroInitialLevels.saveToINIFile(study_, file);
-        hydroFinalLevels.saveToINIFile(study_, file);
+        hydroInitialLevels.saveToINIFileHydroLevel(study_, file, "hl,");
+        hydroFinalLevels.saveToINIFileHydroLevel(study_, file, "hfl,");
     }
     file << '\n';
 }
@@ -367,8 +367,8 @@ bool Rules::apply()
             returned_status = renewable[i].apply(study_) && returned_status;
             returned_status = linksNTC[i].apply(study_) && returned_status;
         }
-        returned_status = hydroInitialLevels.apply(study_) && returned_status;
-        returned_status = hydroFinalLevels.apply(study_) && returned_status;
+        returned_status = hydroInitialLevels.applyHydroLevels(study_.scenarioInitialHydroLevels) && returned_status;
+        returned_status = hydroFinalLevels.applyHydroLevels(study_.scenarioFinalHydroLevels) && returned_status;
     }
     else
         returned_status = false;

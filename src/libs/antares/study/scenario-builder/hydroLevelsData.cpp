@@ -48,9 +48,15 @@ bool hydroLevelsData::reset(const Study& study)
 
 void hydroLevelsData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
 {
+}
+
+void hydroLevelsData::saveToINIFileHydroLevel(const Study& study,
+                                              Yuni::IO::File::Stream& file,
+                                              std::string addToPrefix) const
+{
     // Prefix
     CString<512, false> prefix;
-    prefix += "hl,";
+    prefix += addToPrefix;
 
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
@@ -86,6 +92,12 @@ void hydroLevelsData::set_value(uint x, uint y, double value)
 bool hydroLevelsData::apply(Study& study)
 {
     study.scenarioInitialHydroLevels.copyFrom(pHydroLevelsRules);
+    return true;
+}
+
+bool hydroLevelsData::applyHydroLevels(Matrix<double>& scenarioHydroLevels)
+{
+    scenarioHydroLevels.copyFrom(pHydroLevelsRules);
     return true;
 }
 
