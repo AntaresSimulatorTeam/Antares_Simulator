@@ -122,29 +122,9 @@ void Study::parameterFiller(const StudyLoadOptions& options)
         }
     }
 
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
-
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
-        maxNbYearsInParallel = 1;
-
-    // End logical core --------
-
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
-
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) and ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) and ret;
-    // Sets of areas & links
-    ret = internalLoadSets() and ret;
+    // This settings can only be enabled from the solver
+    // Prepare the output for the study
+    prepareOutput(); // will abort early if not usedByTheSolver
 
     // Scenario Rules sets, only available since v3.6
     // After two consecutive load, some scenario builder data
