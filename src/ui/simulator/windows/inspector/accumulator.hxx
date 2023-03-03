@@ -153,16 +153,12 @@ struct PStudyMode
     }
     static wxString ConvertToString(const Type v)
     {
-        // NOTE stdmAdequacyDraft: should never happen since it could not be
-        //  selected
         switch (v)
         {
         case Data::stdmEconomy:
             return wxT("Economy");
         case Data::stdmAdequacy:
             return wxT("Adequacy");
-        case Data::stdmAdequacyDraft:
-            return wxT("Draft");
         case Data::stdmExpansion:
             return wxT("Expansion");
         case Data::stdmUnknown:

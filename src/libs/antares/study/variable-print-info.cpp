@@ -204,8 +204,7 @@ bool AllVariablesPrintInfo::searchIncrementally_getPrintStatus(std::string var_n
         }
     }
 
-    // This is the case where we have an adequacy-draft variable :
-    // in the case of other study modes, we never get here.
+    // We never never get here in economy or adequacy.
     resetInfoIterator();
     return true;
 }
@@ -223,7 +222,7 @@ bool AllVariablesPrintInfo::isPrinted(std::string var_name) const
         }
     }
 
-    // This point is not supposed to be reached (except in draft mode),
+    // This point is not supposed to be reached in economy or adequacy,
     // because the searched variables should be found.
     return true;
 }
