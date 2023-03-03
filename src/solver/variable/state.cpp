@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -88,7 +88,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             {
                 thermalClusterPMinOfAGroup
                   = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                      ->PminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
+                      ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
                 thermalClusterPMinOfTheCluster
                   = problemeHebdo->PaliersThermiquesDuPays[area->index]
                       ->PuissanceDisponibleEtCout[thermalCluster->index]

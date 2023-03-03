@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -107,7 +107,7 @@ wxString ThermalClusterSummarySingleArea::cellValue(int x, int y) const
     case 8:
         return DoubleToWxString(cluster->spinning);
     case 9:
-        return DoubleToWxString(cluster->co2);
+        return DoubleToWxString(cluster->emissions.factors[Antares::Data::Pollutant::CO2]);
     case 10:
         return DoubleToWxString(Math::Round(cluster->marginalCost, 3));
     case 11:
@@ -150,7 +150,7 @@ double ThermalClusterSummarySingleArea::cellNumericValue(int x, int y) const
     case 8:
         return cluster->spinning;
     case 9:
-        return cluster->co2;
+        return cluster->emissions.factors[Antares::Data::Pollutant::CO2];
     case 10:
         return cluster->marginalCost;
     case 11:
@@ -204,7 +204,7 @@ bool ThermalClusterSummarySingleArea::cellValue(int x, int y, const String& v)
         case 8:
             return Update<double, NoCheck, RefeshInspector>(cluster->spinning, v);
         case 9:
-            return Update<double, NoCheck, RefeshInspector>(cluster->co2, v);
+            return Update<double, NoCheck, RefeshInspector>(cluster->emissions.factors[Antares::Data::Pollutant::CO2], v);
         case 10:
             return Update<double, NoCheck, RefeshInspector>(cluster->marginalCost, v);
         case 11:

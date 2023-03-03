@@ -253,12 +253,12 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatchParams.enabled, pParameters->mode);
 
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatchParams.enabled, pStudy->areas);
+    checkAdqPatchIncludeHurdleCost(pParameters->adqPatchParams.enabled,
                                    pParameters->include.hurdleCosts,
-                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
+                                   pParameters->adqPatchParams.curtailmentSharing.includeHurdleCost);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,58 +34,52 @@
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Interco;
-    int Pays;
-    int var;
-    int NombreDeTermes;
-    double* Pi;
-    int* Colonne;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-
-    Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
+    auto Pi = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
+    auto Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
     ProblemeAResoudre->NombreDeContraintes = 0;
     ProblemeAResoudre->NombreDeTermesDansLaMatriceDesContraintes = 0;
-    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    const CORRESPONDANCES_DES_VARIABLES* correspondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays - 1; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
-        NombreDeTermes = 0;
+        int nombreDeTermes = 0;
 
-        Interco = problemeHebdo->IndexDebutIntercoOrigine[Pays];
-        while (Interco >= 0)
+        int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
+        while (interco >= 0)
         {
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (var >= 0)
+            if (int var
+                = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                var >= 0)
             {
-                Pi[NombreDeTermes] = 1.0;
-                Colonne[NombreDeTermes] = var;
-                NombreDeTermes++;
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
             }
-            Interco = problemeHebdo->IndexSuivantIntercoOrigine[Interco];
+            interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
         }
-        Interco = problemeHebdo->IndexDebutIntercoExtremite[Pays];
-        while (Interco >= 0)
+        interco = problemeHebdo->IndexDebutIntercoExtremite[pays];
+        while (interco >= 0)
         {
-            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-            if (var >= 0)
+            if (int var
+                = correspondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+                var >= 0)
             {
-                Pi[NombreDeTermes] = -1.0;
-                Colonne[NombreDeTermes] = var;
-                NombreDeTermes++;
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
             }
-            Interco = problemeHebdo->IndexSuivantIntercoExtremite[Interco];
+            interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
         }
 
-        problemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays]
+        problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays]
           = ProblemeAResoudre->NombreDeContraintes;
 
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-          ProblemeAResoudre, Pi, Colonne, NombreDeTermes, '=');
+          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
     }
 
     MemFree(Pi);

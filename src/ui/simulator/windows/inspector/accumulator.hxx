@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -375,7 +375,7 @@ struct PStudyHorizon
     using Type = String;
     static Type Value(const Data::Study::Ptr& study)
     {
-        return !(!study) ? study->parameters.horizon : nullptr;
+        return !(!study) ? study->parameters.horizon : Type();
     }
     static wxString ConvertToString(const Type v)
     {
@@ -768,7 +768,7 @@ struct PClusterCO2
     using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
-        return cluster->co2;
+        return cluster->emissions.factors[Antares::Data::Pollutant::CO2];
     }
     static wxString ConvertToString(const Type v)
     {

@@ -117,7 +117,6 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/bc.memory-estimation.cpp
 
 		# Variables for Economy
-		variable/economy/co2.h
 		variable/economy/max-mrg.h
 		variable/economy/max-mrg.cpp
 		variable/economy/price.h
@@ -139,6 +138,7 @@ set(SRC_VARIABLE_ECONOMY
 		variable/economy/dtgMarginAfterCsr.h
 		variable/economy/spilledEnergy.h
 		variable/economy/dispatchableGeneration.h
+		variable/economy/thermalAirPollutantEmissions.h
 		variable/economy/productionByDispatchablePlant.h
         variable/economy/productionByRenewablePlant.h
 		variable/economy/npCostByDispatchablePlant.h

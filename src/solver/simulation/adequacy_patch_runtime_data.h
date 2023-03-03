@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,7 +25,28 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "mps_define.h"
+#pragma once
+#include <antares/study/fwd.h>
+#include <antares/study/study.h>
+#include <vector>
+#include <set>
 
-/*! Global instance of a MPS problem */
-PROBLEME_MPS Mps;
+class AdequacyPatchRuntimeData
+{
+private:
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+    std::vector<std::set<int>> csrTriggeredHoursPerArea_;
+
+public:
+    explicit AdequacyPatchRuntimeData() = default;
+    AdequacyPatchRuntimeData(const Antares::Data::AreaList& areas,
+                             const std::vector<Antares::Data::AreaLink*>& links);
+
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
+    std::vector<double> hurdleCostCoefficients;
+
+    bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
+    void addCSRTriggeredAtAreaHour(int area, int hour);
+};

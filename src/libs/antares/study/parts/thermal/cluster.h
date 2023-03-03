@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -34,6 +34,7 @@
 #include "prepro.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
+#include "pollutant.h"
 #include <set>
 #include <map>
 #include <memory>
@@ -98,6 +99,8 @@ public:
         groupMax
     };
 
+    Pollutant emissions;
+
     //! Set of thermal clusters
     using Set = std::set<ThermalCluster*, CompareClusterName>;
     //! Set of thermal clusters (pointer)
@@ -105,14 +108,12 @@ public:
     //! Vector of thermal clusters
     using Vector = std::vector<Data::ThermalCluster*>;
 
-public:
     /*!
     ** \brief Get the group name string
     ** \return A valid CString
     */
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
-public:
     explicit ThermalCluster(Data::Area* parent);
     explicit ThermalCluster(Data::Area* parent, uint nbParallelYears);
 
@@ -212,7 +213,6 @@ public:
     // Only applies if time-series are ready-made
     void checkAndCorrectAvailability();
 
-public:
     /*!
     ** \brief The group ID
     **
@@ -261,9 +261,6 @@ public:
 
     //! Spinning (%)
     double spinning;
-
-    //! CO2  / MWh
-    double co2;
 
     //! Forced Volatility
     double forcedVolatility;
@@ -373,7 +370,7 @@ public:
     ** \brief The minimum power of a group of the cluster
     **
     ** \warning This variable is only valid when used from the solver
-    ** \Field PminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
+    ** \Field pminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
     */
     double* pminOfAGroup;
 

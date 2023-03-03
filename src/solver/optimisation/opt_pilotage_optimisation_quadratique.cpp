@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,35 +41,33 @@ extern "C"
 
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    int PdtHebdo;
-
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(problemeHebdo);
 
         OPT_ConstruireLaMatriceDesContraintesDuProblemeQuadratique(problemeHebdo);
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     bool result = true;
     if (problemeHebdo->NombreDInterconnexions > 0)
     {
-        for (PdtHebdo = 0; PdtHebdo < problemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+        for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
 #ifdef dbgInfos
             printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",
-                   PdtHebdo);
+                   pdtHebdo);
 #endif
 
-            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLeSecondMembreDuProblemeQuadratique(problemeHebdo, pdtHebdo);
 
-            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, PdtHebdo);
+            OPT_InitialiserLesCoutsQuadratiques(problemeHebdo, pdtHebdo);
 
             result
-              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, PdtHebdo) && result;
+              = OPT_AppelDuSolveurQuadratique(problemeHebdo->ProblemeAResoudre, pdtHebdo) && result;
         }
     }
 

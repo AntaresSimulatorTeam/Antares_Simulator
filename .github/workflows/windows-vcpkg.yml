@@ -12,15 +12,9 @@ on:
       - doc/*
 
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -47,12 +41,6 @@ jobs:
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
-
-    - name: Download userguide
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -159,6 +147,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run tests for adequacy patch (CSR)
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ matrix.test-platform }}
+
     - name: Run tests about infinity on BCs RHS
       uses: ./.github/workflows/run-tests
       with:
@@ -196,6 +191,13 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
+    - name: Upload NSIS log on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: NSISError.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: .zip creation
       run: |
            cd _build
@@ -210,10 +212,3 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.zip
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-after-failure
-        path: ${{ github.workspace }}/_build

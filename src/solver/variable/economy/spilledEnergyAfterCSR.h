@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -235,12 +235,6 @@ public:
 
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourEnd(State& state, unsigned int hourInTheYear)
-    {
-        // Next variable
-        NextType::hourEnd(state, hourInTheYear);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

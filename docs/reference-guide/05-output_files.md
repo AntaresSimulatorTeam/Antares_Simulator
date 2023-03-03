@@ -82,6 +82,7 @@ The area files that belong to the « values » class display **122** fields corr
 | OP.COST | Operating cost = Proportional costs + Non- proportional costs |
 | MRG. PRICE | LMP : overall economic effect of a local 1MW load increase |
 | CO2 EMIS. | Amount of CO2 emitted by all dispatchable thermal plants |
+| NH3 EMIS. | Other pollutans than CO2: NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5 EMIS. |
 | BALANCE | Overall Import/export balance of the area (positive value : export) |
 | ROW BAL | Import/export with areas outside the modeled system (positive value: import) [^12] |
 | PSP | User-defined settings for pumping and subsequent generating |
@@ -119,11 +120,13 @@ The area files that belong to the « values » class display **122** fields corr
 | UNSP. ENRG | Unsupplied energy: adequacy indicator (Expected Energy Not Served–EENS) |
 | SPIL. ENRG | Spilled energy (energy produced that cannot be used and has to be wasted) |
 | LOLD | Loss of load duration: adequacy indicator (length of shortfalls) |
-| LOLP | Loss of Load probability: adequacy indicator (probability of shortfalls) |
+| LOLP | Loss of Load probability: adequacy indicator (probability of at least one hour of shortfall within the considered period, without normalization by the duration of the considered period) |
 | AVL. DTG | Available dispatchable thermal generation (sum of av. power over all plants) |
 | DTG. MRG | Disp. Ther. Gen. (AVL DTG – sum of all dispatched thermal generation) |
 | MAX. MRG | Maximum margin: operational margin obtained if the hydro storage energy of the week were used to maximise margins instead of minimizing costs |
-| DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^DENS] |
+| DENS | Domestic Energy Not Supplied: the difference between the local production capabilities of an area and its local load[^adqp] |
+| LMR. VIOL | Local Matching Rule Violation after the Antares Simulation as defined by the adequacy patch[^adqp] |
+| SPIL. ENRG. CSR | Spilled Energy after the Curtailment Sharing Rule step of the dequacy patch[^adqp] |
 | NP COST | Non-proportional costs of the dispatchable plants (start-up and fixed costs) |
 | NODU | Number of Dispatched Units [^13] |
 | Profit | Net profit of the cluster in euros ((MRG. PRICE - marginal cost of the cluster) * (dispatchable production of the cluster)[^15]  |
@@ -207,7 +210,7 @@ Files « with network » and « without network » present the expectations and 
 | variables | description |
 |-----------|-------------|
 |LOLD | Overall length of time for which there were shortfalls (Loss of Load Duration) <br/> (note: the commonly used LOLE index is equivalent to LOLD expectation )|
-|LOLP | Loss of Load Probability |
+|LOLP | Loss of Load Probability (probability of at least one hour of shortfall within the considered period) |
 |EENS | Energy Not Supplied |
 |MARG | Margin = available generation – (load + primary reserve) <br/> When MARG &gt; 0, MARG is a security margin <br/> When MARG &lt; 0, MARG is a curtailment depth |
 
@@ -245,7 +248,7 @@ Alike Input data, output results can be filtered so as to include only items tha
 
 [^13]: NODU and NP Cost do not appear in "Adequacy" results since these variables are irrelevant in that context
 
-[^DENS]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](14-adequacy-patch.md))
+[^adqp]: Please note that this output variable is only available in the economy mode, when the adequacy patch is activated (see [Adequacy Patch](14-adequacy-patch.md))
 
 [^14]: This description applies to both « MC synthesis » files and "Year-by-Year" files, with some simplifications in the latter case
 
