@@ -13,9 +13,9 @@ add_subdirectory(variable)
 add_subdirectory(hydro)
 add_subdirectory(simulation)
 add_subdirectory(ts-generator)
+add_subdirectory(aleatoire)
 include("cmake/solver.cmake")
 include("cmake/main.cmake")
-include("cmake/randomness.cmake")
 add_subdirectory(constraints-builder)
 
 #
