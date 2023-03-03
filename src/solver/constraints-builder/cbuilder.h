@@ -354,6 +354,10 @@ public:
 
     bool update();
 
+    bool updateLinks();
+
+    bool updateLinkLoopFlow(linkInfo* linkInfo, uint hour);
+
     void setCalendarStart(int start)
     {
         calendarStart = start;

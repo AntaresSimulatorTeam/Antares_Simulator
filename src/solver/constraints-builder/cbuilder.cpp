@@ -80,15 +80,60 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::update()
+bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, uint hour)
 {
-    buildAreaToLinkInfosMap();
-    // Keep only enabled AC lines, remove disabled or DC lines
-    Vector enabledACLines;
-    pMesh.clear();
+    Data::AreaLink* link = linkInfo->ptr;
 
-    // Update impedances from study file and compute impedance changes
+    for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
+    {
+        if ((-1.0 * link->indirectCapacities[tsIndex][hour]
+                    > link->parameters[Data::fhlLoopFlow][hour])
+                || (link->directCapacities[tsIndex][hour]
+                    < link->parameters[Data::fhlLoopFlow][hour]))
+        {
+            logs.error() << "Error on loop flow to NTC comparison validity at hour "
+                << hour + 1 << " for line " << linkInfo->getName();
+            return false;
+        }
+    }
+    if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
+    {
+        double sum = 0.0;
+        for (auto lnk : areaToLinks[link->from])
+        {
+            sum += link->from == lnk->ptr->from
+                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+        }
 
+        if (sum != 0.0)
+        {
+            logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
+                << " on node " << link->from->id;
+            return false;
+        }
+
+        sum = 0.0;
+        for (auto lnk : areaToLinks[link->with])
+        {
+            sum += link->with == lnk->ptr->from
+                ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
+                : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
+        }
+
+        if (sum != 0.0)
+        {
+            logs.error() << "Error on loop flow sum validity (!= 0) at hour " << hour + 1
+                << " on node " << link->with->id;
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool CBuilder::updateLinks()
+{
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
         auto linkInfo = *linkInfoIt;
@@ -116,53 +161,8 @@ bool CBuilder::update()
                 impedances.insert(link->parameters[columnImpedance][x]);
             }
 
-            if (includeLoopFlow) // check validity of loopflow against NTC
-            {
-                for (uint tsIndex = 0; tsIndex < link->indirectCapacities.width; ++tsIndex)
-                {
-                    if ((-1.0 * link->indirectCapacities[tsIndex][hour]
-                         > link->parameters[Data::fhlLoopFlow][hour])
-                        || (link->directCapacities[tsIndex][hour]
-                            < link->parameters[Data::fhlLoopFlow][hour]))
-                    {
-                        logs.error() << "Error on loop flow to NTC comparison validity at hour "
-                                     << x << " for line " << linkInfo->getName();
-                        return false;
-                    }
-                }
-                if (checkNodalLoopFlow) // check validity of loop flow values (sum = 0 at node)
-                {
-                    double sum = 0.0;
-                    for (auto lnk : areaToLinks[link->from])
-                    {
-                        sum += link->from == lnk->ptr->from
-                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
-                    }
-
-                    if (sum != 0.0)
-                    {
-                        logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << link->from->id;
-                        return false;
-                    }
-
-                    sum = 0.0;
-                    for (auto lnk : areaToLinks[link->with])
-                    {
-                        sum += link->with == lnk->ptr->from
-                                 ? -1 * lnk->ptr->parameters[Data::fhlLoopFlow][hour]
-                                 : lnk->ptr->parameters[Data::fhlLoopFlow][hour];
-                    }
-
-                    if (sum != 0.0)
-                    {
-                        logs.error() << "Error on loop flow sum validity (!= 0) at hour " << x
-                                     << " on node " << link->with->id;
-                        return false;
-                    }
-                }
-            }
+            if (includeLoopFlow && !updateLinkLoopFlow(linkInfo, hour)) // check validity of loopflow against NTC
+                return false;
 
             if (includePhaseShift) // check validity of phase-shift
             {
@@ -202,6 +202,20 @@ bool CBuilder::update()
 
         linkInfo->weight = linkInfo->getWeightWithImpedance();
     }
+    return true;
+
+}
+
+bool CBuilder::update()
+{
+    buildAreaToLinkInfosMap();
+    // Keep only enabled AC lines, remove disabled or DC lines
+    Vector enabledACLines;
+    pMesh.clear();
+
+    // Update impedances from study file and compute impedance changes
+    if(!updateLinks())
+        return false;
 
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
     {
