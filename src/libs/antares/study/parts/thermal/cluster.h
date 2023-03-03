@@ -210,11 +210,6 @@ public:
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
     /*!
-    ** \brief Load properties from files
-    */
-    static bool loadFromProperty(ThermalCluster& cluster, const IniFile::Property* p);
-
-    /*!
     ** \brief The group ID
     **
     ** This value is computed from the field 'group' in 'group()
