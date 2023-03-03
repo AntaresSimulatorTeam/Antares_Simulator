@@ -27,6 +27,7 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 
+#include <string>
 #include <array>
 #include <map>
 
