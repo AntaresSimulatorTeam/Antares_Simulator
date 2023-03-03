@@ -33,7 +33,11 @@ namespace Antares
 {
 namespace Solver
 {
-void FinalReservoirLevel(Data::Study& study);
+void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
+                         const Matrix<double>& scenarioFinalHydroLevels,
+                         const Date::Calendar& calendar,
+                         const Data::Parameters& parameters,
+                         const Data::AreaList& areas);
 } // namespace Solver
 } // namespace Antares
 

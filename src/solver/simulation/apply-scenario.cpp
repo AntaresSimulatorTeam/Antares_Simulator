@@ -56,9 +56,13 @@ void ApplyCustomScenario(Data::Study& study)
 
     study.scenarioRulesDestroy();
     logs.info();
-    
+
     // final reservoir level functions and pre-checks
-    FinalReservoirLevel(study);
+    FinalReservoirLevel(study.scenarioInitialHydroLevels,
+                        study.scenarioFinalHydroLevels,
+                        study.calendar,
+                        study.parameters,
+                        study.areas);
 }
 
 } // namespace Antares::Solver

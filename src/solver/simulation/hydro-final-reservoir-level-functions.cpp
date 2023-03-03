@@ -33,35 +33,35 @@ namespace Antares
 namespace Solver
 {
 void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           Data::Study& study,
+                           const Date::Calendar& calendar,
+                           const Data::Parameters& parameters,
                            uint year)
 {
-    finLevData.simEndDay = study.parameters.simulationDays.end;
-    finLevData.simEndMonth = study.calendar.days[finLevData.simEndDay].month;
-    finLevData.simEndMonth_FirstDay = study.calendar.months[finLevData.simEndMonth].daysYear.first;
-    finLevData.simEndMonth_LastDay = study.calendar.months[finLevData.simEndMonth].daysYear.end;
+    finLevData.simEndDay = parameters.simulationDays.end;
+    finLevData.simEndMonth = calendar.days[finLevData.simEndDay].month;
+    finLevData.simEndMonth_FirstDay = calendar.months[finLevData.simEndMonth].daysYear.first;
+    finLevData.simEndMonth_LastDay = calendar.months[finLevData.simEndMonth].daysYear.end;
     finLevData.yearIndex = year;
 }
 
 void initializePerAreaData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                           Data::Study& study,
+                           const Matrix<double>& scenarioInitialHydroLevels,
+                           const Matrix<double>& scenarioFinalHydroLevels,
                            Data::Area& area)
 {
-    finLevData.initialReservoirLevel
-      = study.scenarioInitialHydroLevels[area.index][finLevData.yearIndex];
-    finLevData.finalReservoirLevel
-      = study.scenarioFinalHydroLevels[area.index][finLevData.yearIndex];
+    finLevData.initialReservoirLevel = scenarioInitialHydroLevels[area.index][finLevData.yearIndex];
+    finLevData.finalReservoirLevel = scenarioFinalHydroLevels[area.index][finLevData.yearIndex];
     finLevData.deltaReservoirLevel
       = finLevData.initialReservoirLevel - finLevData.finalReservoirLevel;
 }
 
 void initializePreCheckData(Data::FinalReservoirLevelRuntimeData& finLevData,
-                            Data::Study& study,
+                            const Date::Calendar& calendar,
                             Data::Area& area)
 {
     finLevData.initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate; // month [0-11]
     finLevData.initReservoirLvlDay
-      = study.calendar.months[finLevData.initReservoirLvlMonth].daysYear.first;
+      = calendar.months[finLevData.initReservoirLvlMonth].daysYear.first;
     finLevData.reservoirCapacity = area.hydro.reservoirCapacity;
 }
 
@@ -75,31 +75,36 @@ void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData,
       = area.hydro.reservoirLevel[Data::PartHydro::maximum][simEndDayReal - 1];
 }
 
-void FinalReservoirLevel(Data::Study& study)
+void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
+                         const Matrix<double>& scenarioFinalHydroLevels,
+                         const Date::Calendar& calendar,
+                         const Data::Parameters& parameters,
+                         const Data::AreaList& areas)
 {
     bool preChecksPasses = true;
-    for (uint yearIndex = 0; yearIndex != study.scenarioFinalHydroLevels.height; ++yearIndex)
+    for (uint yearIndex = 0; yearIndex != scenarioFinalHydroLevels.height; ++yearIndex)
     {
-        study.areas.each(
+        areas.each(
           [&](Data::Area& area)
           {
               auto& finLevData = area.hydro.finalReservoirLevelRuntimeData;
               finLevData.fillEmpty();
-              initializeGeneralData(finLevData, study, yearIndex);
-              initializePerAreaData(finLevData, study, area);
+              initializeGeneralData(finLevData, calendar, parameters, yearIndex);
+              initializePerAreaData(
+                finLevData, scenarioInitialHydroLevels, scenarioFinalHydroLevels, area);
 
               if (area.hydro.reservoirManagement && !area.hydro.useWaterValue
                   && !isnan(finLevData.finalReservoirLevel)
                   && !isnan(finLevData.initialReservoirLevel))
               {
-                  initializePreCheckData(finLevData, study, area);
+                  initializePreCheckData(finLevData, calendar, area);
                   finLevData.assignEndLevelAndDelta();
 
                   // determine simEnd month and FinalReservoirLevelMode
                   int simEndRealMonth = finLevData.selectMode();
 
                   // log if the final reservoir level will be reached on some other day
-                  uint simEndDayReal = study.calendar.months[simEndRealMonth].daysYear.first;
+                  uint simEndDayReal = calendar.months[simEndRealMonth].daysYear.first;
                   if (simEndDayReal == 0)
                       simEndDayReal = DAYS_PER_YEAR;
                   finLevData.logSimEndDayChange(simEndDayReal, area.name);
