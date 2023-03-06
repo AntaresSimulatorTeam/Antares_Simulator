@@ -133,6 +133,7 @@ public:
     void setAllPrintStatusesTo(bool b);
     void reverseAll();
 
+    unsigned int numberOfEnabledVariables();
     std::vector<std::string> namesOfEnabledVariables();
     std::vector<std::string> namesOfDisabledVariables();
 

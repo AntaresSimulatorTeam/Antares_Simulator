@@ -188,6 +188,13 @@ void AllVariablesPrintInfo::reverseAll()
 
 }
 
+unsigned int AllVariablesPrintInfo::numberOfEnabledVariables()
+{
+    return std::count_if(allVarsPrintInfo.begin(), 
+                         allVarsPrintInfo.end(), 
+                         [](auto& p) {return p.second.isPrinted(); });
+}
+
 std::vector<std::string> AllVariablesPrintInfo::namesOfVariablesWithPrintStatus(bool printStatus)
 {
     std::vector<std::string> vector_to_return;

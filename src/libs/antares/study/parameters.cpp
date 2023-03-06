@@ -1874,7 +1874,7 @@ void Parameters::saveToINI(IniFile& ini) const
     // Variable selection
     {
         uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint nb_selected_vars = (uint)variablesPrintInfo.namesOfEnabledVariables().size();
+        uint nb_selected_vars = (uint)variablesPrintInfo.numberOfEnabledVariables();
 
         if (nb_selected_vars != nb_tot_vars)
         {

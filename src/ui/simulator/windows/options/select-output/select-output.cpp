@@ -220,7 +220,7 @@ void SelectOutput::updateCaption()
 
     if (d.thematicTrimming)
     {
-        uint nbPrintedVars = d.variablesPrintInfo.namesOfEnabledVariables().size();
+        uint nbPrintedVars = d.variablesPrintInfo.numberOfEnabledVariables();
         if (nbPrintedVars < 2)
             pStatus->SetLabel(wxString()
                               << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variable  "));
