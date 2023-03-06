@@ -40,14 +40,12 @@ namespace Antares::Data::ShortTermStorage {
   class Properties {
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
-    // Number of units, >= 1
-    unsigned int unitCount;
     // Injection nominal capacity, >= 0
     double injectionCapacity;
     // Withdrawal nominal capacity, >= 0
     double withdrawalCapacity;
     // Reservoir capacity in MWh, >= 0
-    double reservoirCapacity;
+    double capacity;
     // Efficiency factor between 0 and 1
     double efficiencyFactor;
     // Cycle duration, 1 <= cycleDuration <= 168
