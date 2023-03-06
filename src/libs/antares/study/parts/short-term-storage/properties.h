@@ -46,6 +46,8 @@ namespace Antares::Data::ShortTermStorage {
     double withdrawalCapacity;
     // Reservoir capacity in MWh, >= 0
     double capacity;
+    // Initial level, <= capacity
+    double initialLevel;
     // Efficiency factor between 0 and 1
     double efficiencyFactor;
     // Cycle duration, 1 <= cycleDuration <= 168
