@@ -30,12 +30,10 @@
 
 #include "../optimisation/opt_structure_probleme_a_resoudre.h"
 #include "../utils/optimization_statistics.h"
-#include <memory>
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
-#include "sim_constants.h"
+#include <vector>
 #include <memory>
-#include <yuni/core/math.h>
 
 class AdequacyPatchRuntimeData;
 
