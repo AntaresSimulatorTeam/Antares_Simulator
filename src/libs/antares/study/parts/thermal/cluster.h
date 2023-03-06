@@ -266,7 +266,7 @@ public:
     double spinning;
 
     //! Efficiency (%)
-    double efficiency;
+    double fuelEfficiency;
 
     //! Forced Volatility
     double forcedVolatility;

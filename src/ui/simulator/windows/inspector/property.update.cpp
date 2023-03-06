@@ -721,14 +721,14 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->efficiency = 100.0;
+                (*i)->fuelEfficiency = 100.0;
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
             {
-                (*i)->efficiency = d;
+                (*i)->fuelEfficiency = d;
                 (*i)->calculationOfMarketBidPerHourAndMarginalCostPerHour();
             } // update
         }
