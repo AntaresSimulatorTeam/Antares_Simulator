@@ -471,8 +471,8 @@ struct AdequacyPatchParameters
 
 struct PROBLEME_HEBDO
 {
-    uint weekInTheYear = 0;
-    uint year = 0;
+    unsigned int weekInTheYear = 0;
+    unsigned int year = 0;
 
     /* Business problem */
     bool OptimisationAuPasHebdomadaire = false;
