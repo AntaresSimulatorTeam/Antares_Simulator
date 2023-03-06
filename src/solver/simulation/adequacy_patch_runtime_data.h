@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,32 +25,28 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include "../application.h"
-#include "../simulation/solver.h"
-#include "../simulation/adequacy-draft.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#pragma once
+#include <antares/study/fwd.h>
+#include <antares/study/study.h>
+#include <vector>
+#include <set>
 
-namespace Antares
+class AdequacyPatchRuntimeData
 {
-namespace Solver
-{
-void Application::runSimulationInAdequacyDraftMode()
-{
-    // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
-    simulation.checkWriter();
-    simulation.run();
+private:
+    using adqPatchParamsMode = Antares::Data::AdequacyPatch::AdequacyPatchMode;
+    std::vector<std::set<int>> csrTriggeredHoursPerArea_;
 
-    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
-    {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
-    }
-}
+public:
+    explicit AdequacyPatchRuntimeData() = default;
+    AdequacyPatchRuntimeData(const Antares::Data::AreaList& areas,
+                             const std::vector<Antares::Data::AreaLink*>& links);
 
-} // namespace Solver
-} // namespace Antares
+    std::vector<adqPatchParamsMode> areaMode;
+    std::vector<adqPatchParamsMode> originAreaMode;
+    std::vector<adqPatchParamsMode> extremityAreaMode;
+    std::vector<double> hurdleCostCoefficients;
+
+    bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
+    void addCSRTriggeredAtAreaHour(int area, int hour);
+};

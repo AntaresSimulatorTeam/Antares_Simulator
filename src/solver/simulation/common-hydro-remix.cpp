@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -215,13 +215,6 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            uint numSpace,
                            uint hourInYear)
 {
-    // gp : useless ==> we remove it
-    // assert(nbHour == 168 && "endHour seems invalid");
-    // (void)nbHour;
-    
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
     if (sheddingPolicy == Data::shpShavePeaks)
     {
         bool result = true;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,9 +41,6 @@ void computingHydroLevels(const Data::AreaList& areas,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
     areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;

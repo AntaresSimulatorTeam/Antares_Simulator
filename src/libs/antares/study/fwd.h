@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -103,8 +103,6 @@ enum StudyError
 enum StudyMode
 {
     stdmUnknown = -1,
-    //! Adequation
-    stdmAdequacyDraft = 0,
     //! Economic
     stdmEconomy,
     //! Adequacy (subset of the economy mode)
@@ -574,51 +572,6 @@ class Sets;
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
-
-namespace Antares::Data::AdequacyPatch
-{
-/*!
-** \brief Types of Adequacy patch mode
-*/
-enum AdequacyPatchMode
-{
-    //! Virtual area in adq patch
-    virtualArea = 0,
-    //! Physical Area outside the adq-patch
-    physicalAreaOutsideAdqPatch = 1,
-    //! Physical Area inside the adq-patch
-    physicalAreaInsideAdqPatch = 2
-}; // enum AdequacyPatchMode
-
-/*!
-** \brief Setting Link Capacity (NTC) for Adequacy patch first step
-*/
-enum class NtcSetToZeroStatus_AdqPatchStep1
-{
-    //! Leave NTC local values
-    leaveLocalValues = 0,
-    //! Set NTC to zero
-    setToZero,
-    //! set only origine->extremity NTC to zero
-    setOriginExtremityToZero,
-    //! set only extremity->origine NTC to zero
-    setExtremityOriginToZero
-
-}; // enum NTC
-
-/*!
-** \brief Types of Price Taking Order (PTO) for Adequacy Patch
-*/
-enum class AdqPatchPTO
-{
-    //! PTO is DENS
-    isDens = 0,
-    //! PTO is Load
-    isLoad
-
-}; // enum AdqPatchPTO
-
-} // namespace Antares::Data::AdequacyPatch
 
 namespace Benchmarking
 {

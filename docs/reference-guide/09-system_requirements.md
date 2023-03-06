@@ -22,7 +22,7 @@ The amount of RAM required for a simulation depends on:
 
 - The size of the power system modeled (number of Areas, Links, Thermal clusters, etc.)
 - The number of ready-made Time-Series and that of Time-Series to be generated at runtime
-- The simulation mode (draft, adequacy, economy with "fast" or "accurate" unit commitment)
+- The simulation mode (adequacy, economy with "fast" or "accurate" unit commitment)
 - The execution mode (default or parallel)
 
 At any moment, the amount of RAM resources required for a simulation is accessible through the Tools/resources monitor menu.
@@ -38,14 +38,13 @@ To benefit from multi-threading, the simulation must be run in the following con
 - In the "run" window, the option "parallel" must be selected
   [^21]
 - The simulation mode must be either "Adequacy" or "Economy"
-  [^22]
 
 When the "parallel" solver option is used, each Monte-Carlo year is dispatched as an individual process on the available CPU cores. <br/>
 The number of such individual processes depends on the characteristics of the local hardware and on the value given to the study-dependent " **simulation cores**" advanced parameter. This parameter can take five different values (Minimum, Low, Medium, High, Maximum). The number of independent processes resulting from the combination (local hardware + study settings) is given in the following table, which shows the CPU allowances granted in the different configurations.
 
 **<ins>Simulation Cores:</ins>**
 
-| _Machine_ <br/> _Size [^23]_ | _Minimum_ | _Low_ | _Medium_ | _Large_ | _Maximum_ |
+| _Machine_ <br/> _Size [^22]_ | _Minimum_ | _Low_ | _Medium_ | _Large_ | _Maximum_ |
 |:---:|:---:|:---:|:---:|:---:|:---:|
 | _1_ | 1 | 1 | 1 | 1 | 1 |
 | _2_ | 1 | 1 | 1 | 2 | 2 |
@@ -70,7 +69,7 @@ simulation cores: **nn** reduced to **pp**
 - Refresh status : **No**
 - Refresh status : **Yes**, refresh span = **Ki \* (CPU allowance)** , with **Ki &gt;= 1**
 
-Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the **smallest** bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation [^24]). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation).
+Examples of reduction from an initial allowance of 12 cores are given hereafter. The reduced allowance is the size of the **smallest** bundle of parallel years between two consecutive "refresh" (it indicates the slowest point of the simulation [^23]). Note that RAM requirements displayed in the resources monitor are, contrariwise, assessed on the basis on the **largest** bundle of parallel years encountered in the simulation).
 
 ![Reduced_Allowance](Reduced_Allowance.png)
 
@@ -79,12 +78,10 @@ The Table indicates either the refresh status (No) or the refresh span (the asso
 
 [^21]: Options « default » do not perform multi-threaded optimizations
 
-[^22]: The « draft » mode is not multi-threaded
+[^22]: This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](03-commands.md))
 
-[^23]: This hardware characteristic, independent from Antares general parameters and from study parameters, can be checked with the Resources monitor tool ([Commands](03-commands.md))
+[^23]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
 
-[^24]: When the number of MC years to run is smaller than the allowance, the parallel run includes all of these years in a single bundle and there is no "reduced allowance" message
-
-[^26]:
+[^24]:
     The smallest bundle in this case is the ninth (year number 97 to year number 100).The first 8 bundles involve 12 MC years each.
 
