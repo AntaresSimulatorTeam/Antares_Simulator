@@ -140,7 +140,7 @@ public:
         uint columnImpedance = (uint)Antares::Data::fhlImpedances;
 
         std::vector<double> impedances;
-        Data::AreaLink* previousLine;
+        Data::AreaLink* previousLine = linkList[0]->ptr;
         double currentLineSign;
         for (auto line = linkList.begin(); line != linkList.end(); line++)
         {
@@ -356,9 +356,9 @@ public:
 
     bool updateLinks();
 
-    bool updateLinkLoopFlow(linkInfo* linkInfo, uint hour);
+    bool updateLinkLoopFlow(linkInfo* linkInfo, size_t hour);
 
-    bool updateLinkPhaseShift(linkInfo* linkInfo, uint hour) const;
+    bool updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
 
     void setCalendarStart(int start)
     {

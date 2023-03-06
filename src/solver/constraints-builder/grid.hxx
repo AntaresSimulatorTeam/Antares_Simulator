@@ -217,9 +217,9 @@ bool Grid<NodeT>::buildMesh()
         getDuplicatedGrid(polarisedDuplicate);
         VectorEdgeP v = getEdgeVectorFromIncidence(incidenceMatrix[i]);
         VectorEdgeP Ci;
-        //! vecteur contenant les sommets adjacents aux arêtes Ei
+        //! vecteur contenant les sommets adjacents aux ar?tes Ei
         VectorNodeP adjacentNodes;
-        // retrait des arêtes (u,v) qui sont dan Ei et remplacement dans le graphe duliqué
+        // retrait des ar?tes (u,v) qui sont dan Ei et remplacement dans le graphe duliqu?
         // par(u+,v-) et (u-,v+)
         for (uint j = 0; j < v.size(); j++)
         {
@@ -253,7 +253,7 @@ bool Grid<NodeT>::buildMesh()
         //! extraction du chemin sur deux niveaux
         v = polarisedDuplicate.twoLevelPath(adjacentNodes);
 
-        //! définition du cycle correspondant dans le graph d'origine (non signé)
+        //! d?finition du cycle correspondant dans le graph d'origine (non sign?)
         Ci.clear();
         std::vector<int> edgeIndices;
         for (typename VectorEdgeP::iterator e = v.begin(); e != v.end(); e++)
@@ -273,7 +273,7 @@ bool Grid<NodeT>::buildMesh()
         pMesh.push_back(Ci);
         EdgeIncidence I = getIncidenceVector(Ci);
         meshIndexMatrix.push_back(edgeIndices);
-        // remplacement par la différence symétrique des des jeux d'arêtes
+        // remplacement par la diff?rence sym?trique des des jeux d'ar?tes
         for (uint j = i + 1; j < linksToBeAdded.size(); j++)
         {
             if (incidenceInnerProduct(I, incidenceMatrix[j]) == 1)
@@ -406,7 +406,8 @@ typename Grid<NodeT>::VectorEdgeP Grid<NodeT>::findShortestPath(NodeP node1, Nod
     std::map<NodeP, double> dist;
     std::map<NodeP, NodeP> prev;
 
-    bool checkNode1(0), checkNode2(0);
+    //decorate to avoid warnings at compile
+    [[maybe_unused]] bool checkNode1(false), checkNode2(false);
     VectorNodeP nodes = pNodesList;
 
     for (auto i = nodes.begin(); i != nodes.end(); i++)

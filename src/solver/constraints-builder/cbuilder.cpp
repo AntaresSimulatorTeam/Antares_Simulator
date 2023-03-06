@@ -80,7 +80,7 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, uint hour)
+bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, size_t hour)
 {
     Data::AreaLink* link = linkInfo->ptr;
 
@@ -132,7 +132,7 @@ bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, uint hour)
     return true;
 }
 
-bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, uint hour) const
+bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     Data::AreaLink* link = linkInfo->ptr;
     if (link->parameters[Data::fhlPShiftMinus][hour]
@@ -171,13 +171,11 @@ bool CBuilder::updateLinks()
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
-        uint hour;
-        for (uint x = 1; x < HOURS_PER_YEAR; x++)
+        for (size_t hour; hour < HOURS_PER_YEAR - 1; hour++)
         {
-            hour = x - 1;
-            if (link->parameters[columnImpedance][x] != link->parameters[columnImpedance][hour])
+            if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
             {
-                impedances.insert(link->parameters[columnImpedance][x]);
+                impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
 
             if (includeLoopFlow && !updateLinkLoopFlow(linkInfo, hour)) // check validity of loopflow against NTC
