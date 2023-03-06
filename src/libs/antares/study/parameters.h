@@ -74,8 +74,6 @@ public:
     bool economy() const;
     //! Get if the simulation is in adequacy mode
     bool adequacy() const;
-    //! Get if the simulation is in adequacy-draft mode
-    bool adequacyDraft() const;
     //@}
 
     /*!
@@ -373,8 +371,6 @@ public:
 
     //! Improve units startup
     bool improveUnitsStartup;
-    //! Block size used by the adequacy algorithm
-    uint adequacyBlockSize;
 
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;

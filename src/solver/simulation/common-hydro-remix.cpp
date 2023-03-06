@@ -215,13 +215,6 @@ void RemixHydroForAllAreas(const Data::AreaList& areas,
                            uint numSpace,
                            uint hourInYear)
 {
-    // gp : useless ==> we remove it
-    // assert(nbHour == 168 && "endHour seems invalid");
-    // (void)nbHour;
-    
-    // gp : we do not care : will be removed very soon
-    // assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
     if (sheddingPolicy == Data::shpShavePeaks)
     {
         bool result = true;

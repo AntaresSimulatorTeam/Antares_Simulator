@@ -84,11 +84,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        switch (fileLevel)
-        {
-        case Category::mc:
-            break;
-        case Category::id:
+        if (fileLevel & Category::id)
         {
             switch (precision)
             {
@@ -109,9 +105,8 @@ protected:
                 InternalExportIndices<1, VCardT>(report, &minmax.annual, fileLevel);
                 break;
             }
-            break;
         }
-        default:
+        else
         {
             switch (precision)
             {
@@ -132,7 +127,6 @@ protected:
                 InternalExportValues<1, VCardT>(report, &minmax.annual);
                 break;
             }
-        }
         }
         // Next
         NextType::template buildSurveyReport<S, VCardT>(

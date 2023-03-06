@@ -2,10 +2,8 @@
 # Simulation
 #
 set(SRC_SIMULATION
-		sim_algorithme_de_flot.cpp
 		sim_alloc_probleme_hebdo.cpp
 		sim_allocation_tableaux.cpp
-		sim_calcul_adequation.cpp
 		sim_calcul_economique.cpp
 		sim_extern_variables_globales.h
 		sim_structure_donnees.h
@@ -32,8 +30,6 @@ set(SRC_SIMULATION
 		common-eco-adq.cpp
 		common-hydro-remix.cpp
 		common-hydro-levels.cpp
-		adequacy-draft.h
-		adequacy-draft.cpp
 		adequacy.h
 		adequacy.cpp
 		economy.h
