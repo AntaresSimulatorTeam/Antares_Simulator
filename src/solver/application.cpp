@@ -119,23 +119,25 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
 void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
 {
     bool error = false;
-    for (uint i = 0; i < areas.size(); ++i)
+    for (uint areaIndex  = 0; areaIndex < areas.size(); ++areaIndex )
     {
-        const auto& area = *(areas.byIndex[i]);
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
+        const auto& area = *(areas.byIndex[areaIndex]);
+        for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
         {
             const auto& cluster = *(area.thermal.clusters[j]);
             bool setCostManual = cluster.costgeneration == Antares::Data::setManually;
+            if(setCostManual)
+                return;
             uint fuelCostWidth = cluster.prepro->fuelcost.width;
             uint co2CostWidth = cluster.prepro->co2cost.width;
             uint tsWidth = cluster.series->series.width;
-            if (fuelCostWidth != 1 && fuelCostWidth != tsWidth && !setCostManual)
+            if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
                                << ". Fuel Cost column mismatch";
                 error = true;
             }
-            if (co2CostWidth != 1 && co2CostWidth != tsWidth && !setCostManual)
+            if (co2CostWidth != 1 && co2CostWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()
                                << ". CO2 Cost column mismatch";

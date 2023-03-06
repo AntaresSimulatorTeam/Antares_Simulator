@@ -338,7 +338,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     }
                     else
                     {
-                        std::array<double, HOURS_PER_YEAR> marginalCostPerHour
+                        const auto& marginalCostPerHour
                           = cluster->marginalCostPerHourTs[0];
                         for (uint h = 0; h != cluster->modulation.height; ++h)
                             prodCost[h] = marginalCostPerHour[h] * modulation[h];

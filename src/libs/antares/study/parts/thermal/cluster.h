@@ -214,6 +214,7 @@ public:
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
+    double getOperatingCost(uint tsIndex, uint hourInTheYear) const;
 
     /*!
     ** \brief The group ID

@@ -496,20 +496,20 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
         // multiple TS
         uint fuelCostWidth = prepro->fuelcost.width;
         uint co2CostWidth = prepro->co2cost.width;
-        uint tsCount = Math::Max(fuelCostWidth, co2CostWidth);
+        uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
         // if fuel and co2 cost have only one TS -> exit here
         if (tsCount == 1)
             return;
         
         // if fuel or co2 cost have more than one TS -> continue    
+        marketBidCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
+        marginalCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
+        productionCostTs.resize(tsCount, tmp);// add blank array with 8760-zeros
         for (uint tsIndex = 2; tsIndex <= tsCount; ++tsIndex)
         {
             uint tsIndexFuel = Math::Min(fuelCostWidth, tsIndex);
             uint tsIndexCo2 = Math::Min(co2CostWidth, tsIndex);
-            marketBidCostPerHourTs.push_back(tmp); // add blank array with 8760-zeros
-            marginalCostPerHourTs.push_back(tmp);  // add blank array with 8760-zeros
-            productionCostTs.push_back(tmp);  // add blank array with 8760-zeros
             for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
             {
                 marketBidCostPerHourTs[tsIndex - 1][hour]
@@ -866,6 +866,18 @@ bool ThermalCluster::doWeGenerateTS(bool globalTSgeneration) const
 unsigned int ThermalCluster::precision() const
 {
     return 0;
+}
+
+double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
+{
+    double thermalClusterOperatingCost (0.0);
+    if (costgeneration == Data::setManually)
+        thermalClusterOperatingCost = productionCost[hourInTheYear];
+    else
+        thermalClusterOperatingCost
+            = productionCostTs[Math::Min(
+                serieIndex, productionCostTs.size() - 1)][hourInTheYear];
+    return thermalClusterOperatingCost;
 }
 
 } // namespace Data
