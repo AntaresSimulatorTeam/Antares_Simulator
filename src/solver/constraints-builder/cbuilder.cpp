@@ -132,7 +132,7 @@ bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, uint hour)
     return true;
 }
 
-bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, uint hour)
+bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, uint hour) const
 {
     Data::AreaLink* link = linkInfo->ptr;
     if (link->parameters[Data::fhlPShiftMinus][hour]

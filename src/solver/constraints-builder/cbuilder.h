@@ -358,7 +358,7 @@ public:
 
     bool updateLinkLoopFlow(linkInfo* linkInfo, uint hour);
 
-    bool updateLinkPhaseShift(linkInfo* linkInfo, uint hour);
+    bool updateLinkPhaseShift(linkInfo* linkInfo, uint hour) const;
 
     void setCalendarStart(int start)
     {
