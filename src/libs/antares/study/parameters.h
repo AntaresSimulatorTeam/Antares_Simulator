@@ -487,8 +487,6 @@ public:
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
-    //! Asset type
-    LinkType linkType;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}

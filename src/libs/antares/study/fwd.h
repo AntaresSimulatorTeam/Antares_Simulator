@@ -204,18 +204,6 @@ enum StyleType
 std::string styleToString(const StyleType& style);
 
 /*!
-** \brief Link Type mode
-*/
-enum LinkType
-{
-    //! Link Type defined locally
-    ltLocal = 0,
-    //! Link Type AC
-    ltAC,
-
-}; // enum LinkType
-
-/*!
 ** \brief Types of timeSeries
 **
 ** These values are mainly used for mask bits

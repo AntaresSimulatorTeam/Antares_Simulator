@@ -629,20 +629,6 @@ static bool SGDIntLoadFamily_Optimization(Parameters& d,
         return result;
     }
 
-    if (key == "link-type")
-    {
-        CString<64, false> v = value;
-        v.trim();
-        v.toLower();
-        if (value == "local")
-            d.linkType = ltLocal;
-        else if (value == "ac")
-            d.linkType = ltAC;
-        else
-            d.linkType = ltLocal;
-        return true;
-    }
-
     if (key == "simplex-range")
     {
         d.simplexOptimizationRange = (!value.ifind("day")) ? sorDay : sorWeek;
@@ -994,6 +980,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
         return true;
 
     if (key == "day-ahead-reserve-management") // ignored since 8.4
+        return true;
+
+    if (key == "link-type") // ignored since 8.5.2
         return true;
 
     // deprecated
@@ -1664,15 +1653,7 @@ void Parameters::saveToINI(IniFile& ini) const
         // Optimization preferences
         section->add("transmission-capacities",
                      GlobalTransmissionCapacitiesToString(transmissionCapacities));
-        switch (linkType)
-        {
-        case ltLocal:
-            section->add("link-type", "local");
-            break;
-        case ltAC:
-            section->add("link-type", "ac");
-            break;
-        }
+
         section->add("include-constraints", include.constraints);
         section->add("include-hurdlecosts", include.hurdleCosts);
         section->add("include-tc-minstablepower", include.thermal.minStablePower);
