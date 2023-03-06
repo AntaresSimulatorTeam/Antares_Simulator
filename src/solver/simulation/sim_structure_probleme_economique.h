@@ -151,6 +151,35 @@ typedef struct
     const char* NomDeLaContrainteCouplante;
 } CONTRAINTES_COUPLANTES;
 
+namespace ShortTermStorage
+{
+struct SINGLE_OBJECT_INPUT
+{
+    double capacity;
+    double injectionCapacity;
+    double withdrawalCapacity;
+    double efficiency;
+};
+
+struct AREA_INPUT
+{
+    std::vector<SINGLE_OBJECT_INPUT> storages; // index is local
+};
+// problemeHebdo->ShortTermStorage[area_idx].storages[ststor_idx].capacity;
+
+struct RESULTS
+{
+    // Index is the number of the STS in the area
+    std::vector<double> level;      // MWh
+    std::vector<double> production; // MWh
+    std::vector<double> withdrawal; // MWh
+};
+} // namespace ShortTermStorage
+
+// TODO remove
+// double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
+//                               ->ShortTermStorage[pdtHebdo].level[index]);
+
 typedef struct
 {
     double* variablesDuales;
@@ -432,6 +461,8 @@ typedef struct
 
     double* CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
+
+    std::vector<ShortTermStorage::RESULTS> ShortTermStorage;
 } RESULTATS_HORAIRES;
 
 typedef struct
@@ -512,6 +543,8 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
+    std::vector<AREA_INPUT> ShortTermStorage;
+
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
     bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
