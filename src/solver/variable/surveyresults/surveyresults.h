@@ -158,7 +158,7 @@ private:
                            const PrecisionT& precision,
                            const bool isNotApplicable);
 
-    void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
+    void writeDateToFileDescriptor(uint row, int precisionLevel);
 
 }; // class SurveyResults
 

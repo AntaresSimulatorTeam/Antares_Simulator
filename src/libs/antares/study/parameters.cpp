@@ -175,11 +175,6 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
         mode = stdmAdequacy;
         return true;
     }
-    if (text == "draft" || text == "adequacy-draft")
-    {
-        mode = stdmAdequacyDraft;
-        return true;
-    }
     // Expansion
     if (text == "expansion")
     {
@@ -197,8 +192,6 @@ const char* StudyModeToCString(StudyMode mode)
         return "Economy";
     case stdmAdequacy:
         return "Adequacy";
-    case stdmAdequacyDraft:
-        return "draft";
     case stdmMax:
     case stdmExpansion:
     case stdmUnknown:
@@ -321,8 +314,6 @@ void Parameters::reset()
 
     // Misc
     improveUnitsStartup = false;
-    // Adequacy block size (adequacy-draft)
-    adequacyBlockSize = 100;
 
     include.constraints = true;
     include.hurdleCosts = true;
@@ -761,8 +752,6 @@ static bool SGDIntLoadFamily_AdvancedParameters(Parameters& d,
                                                 const String&,
                                                 uint)
 {
-    if (key == "adequacy-block-size" || key == "adequacy_blocksize")
-        return value.to<uint>(d.adequacyBlockSize);
     if (key == "accuracy-on-correlation")
         return ConvertCStrToListTimeSeries(value, d.timeSeriesAccuracyOnCorrelation);
     return false;
@@ -985,6 +974,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "link-type") // ignored since 8.5.2
         return true;
 
+    if (key == "adequacy-block-size") // ignored since 8.5
+        return true;
+
     // deprecated
     if (key == "thresholdmin")
         return true; // value.to<int>(d.thresholdMinimum);
@@ -1187,15 +1179,6 @@ void Parameters::fixGenRefreshForNTC()
 
 void Parameters::fixBadValues()
 {
-    // Adequacy block size
-    if (adequacyBlockSize < 100 || adequacyBlockSize > 100000)
-    {
-        adequacyBlockSize = 100;
-        logs.warning() << "The block size for the adequacy algorithm is invalid (100 <= blocksize "
-                          "<= 100000). Reset to "
-                       << adequacyBlockSize << '.';
-    }
-
     if (derated)
     {
         // Force the number of years to 1
@@ -1213,12 +1196,6 @@ void Parameters::fixBadValues()
             logs.error() << "The number of MC years is too high (>" << (uint)maximumMCYears << ")";
             nbYears = maximumMCYears;
         }
-    }
-
-    if (mode == stdmAdequacyDraft)
-    {
-        simulationDays.first = 0;
-        simulationDays.end = 365;
     }
 
     if (!nbTimeSeriesLoad)
@@ -1306,13 +1283,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         break;
     case sorUnknown:
         break;
-    }
-
-    if (mode == stdmAdequacyDraft)
-    {
-        yearByYear = false;
-        userPlaylist = false;
-        thematicTrimming = false;
     }
 
     if (derated && userPlaylist)
@@ -1431,12 +1401,6 @@ void Parameters::prepareForSimulation(const StudyLoadOptions& options)
         // The year-by-year mode might have been requested from the command line
         if (options.forceYearByYear)
             yearByYear = true;
-        break;
-    }
-    case stdmAdequacyDraft:
-    {
-        // The mode year-by-year can not be enabled in adequacy
-        yearByYear = false;
         break;
     }
     case stdmUnknown:
@@ -1696,8 +1660,6 @@ void Parameters::saveToINI(IniFile& ini) const
         // Accuracy on correlation
         ParametersSaveTimeSeries(
           section, "accuracy-on-correlation", timeSeriesAccuracyOnCorrelation);
-        // Adequacy Block size (adequacy draft)
-        section->add("adequacy-block-size", adequacyBlockSize);
     }
 
     // User's playlist

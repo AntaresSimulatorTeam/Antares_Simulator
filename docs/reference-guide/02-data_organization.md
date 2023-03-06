@@ -30,7 +30,7 @@ As already stated, all of these data may be reviewed, updated, deleted through t
 are described in Sections 3 and 4.
 
 Once the input data is ready for calculation purposes, an Antares session may start and involve any or all of
-the following steps: historical time-series analysis, stochastic times-series generation, (draft) adequacy simulation,
+the following steps: historical time-series analysis, stochastic times-series generation,
 (full) adequacy simulation and economic simulation.
 
 The results of the session are stored within the output section of the study folder.

@@ -103,15 +103,8 @@ protected:
     {
         if (!(fileLevel & Category::id))
         {
-            if (0 != (fileLevel & Category::mc))
+            switch (precision)
             {
-                // Do nothing
-                // InternalExportValuesMC<1, VCardT, Precision>(report, avgdata.year);
-            }
-            else
-            {
-                switch (precision)
-                {
                 case Category::hourly:
                     InternalExportValues<maxHoursInAYear, VCardT, Category::hourly>(
                       report, Memory::RawPointer(avgdata.hourly));
@@ -131,7 +124,6 @@ protected:
                 case Category::annual:
                     InternalExportValues<1, VCardT, Category::annual>(report, avgdata.year);
                     break;
-                }
             }
         }
         // Next

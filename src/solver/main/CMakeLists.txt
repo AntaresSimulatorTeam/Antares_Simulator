@@ -1,7 +1,4 @@
-
-
 set(SRC_SOLVER_MAIN_ECONOMY        economy.cpp)
-set(SRC_SOLVER_MAIN_ADEQUACY_DRAFT adequacy-draft.cpp)
 set(SRC_SOLVER_MAIN_ADEQUACY       adequacy.cpp)
 
 #if(MSVC)
@@ -10,9 +7,6 @@ set(SRC_SOLVER_MAIN_ADEQUACY       adequacy.cpp)
 #endif(MSVC)
 
 
-
-add_library(libantares-solver-main-adequacy-draft  ${SRC_SOLVER_MAIN_ADEQUACY_DRAFT})
-target_link_libraries(libantares-solver-main-adequacy-draft PRIVATE libantares-core)
 
 add_library(libantares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
 target_link_libraries(libantares-solver-main-adequacy PRIVATE libantares-core)

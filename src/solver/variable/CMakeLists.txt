@@ -46,7 +46,6 @@ set(SRC_VARIABLE_STORAGE
 		storage/averagedata.h
 		storage/averagedata.cpp
 		storage/stdDeviation.h
-		storage/and.h
 		storage/fwd.h
 		)
 source_group("variable\\storage" FILES ${SRC_VARIABLE_STORAGE})
@@ -67,32 +66,6 @@ set(SRC_VARIABLE_COMMON
 		commons/links/links.hxx.inc.hxx
 		)
 source_group("variable\\common" FILES ${SRC_VARIABLE_COMMON})
-
-
-set(SRC_VARIABLE_ADEQUACY_DRAFT
-		adequacy-draft/all.h
-		adequacy-draft/area.cpp
-		adequacy-draft/area.memory-estimation.cpp
-
-		# Variables for Adequacy
-		adequacy-draft/lold_is.h
-		adequacy-draft/lold_cn.h
-		adequacy-draft/lold_is_system.h
-		adequacy-draft/lold_cn_system.h
-		adequacy-draft/ens_is.h
-		adequacy-draft/ens_cn.h
-		adequacy-draft/ens_is_system.h
-		adequacy-draft/ens_cn_system.h
-		adequacy-draft/lolp_is.h
-		adequacy-draft/lolp_cn.h
-		adequacy-draft/lolp_is_system.h
-		adequacy-draft/lolp_cn_system.h
-		adequacy-draft/minmarg_is.h
-		adequacy-draft/minmarg_cn.h
-		adequacy-draft/maxdepth_is.h
-		adequacy-draft/maxdepth_cn.h
-		)
-source_group("variable\\adequacy-draft" FILES ${SRC_VARIABLE_ADEQUACY_DRAFT})
 
 set(SRC_VARIABLE_ADEQUACY
 		adequacy/all.h
@@ -175,7 +148,6 @@ add_library(libantares-solver-variable
 		${SRC_VARIABLE}
 		${SRC_VARIABLE_COMMON}
 		${SRC_VARIABLE_STORAGE}
-		${SRC_VARIABLE_ADEQUACY_DRAFT}
 		${SRC_VARIABLE_ADEQUACY}
 		${SRC_VARIABLE_ECONOMY}  )
 
@@ -184,11 +156,9 @@ target_link_libraries(libantares-solver-variable PRIVATE libantares-core)
 
 
 add_library(libantares-solver-variable-info
-		adequacy-draft/all.h
 		adequacy/all.h
 		economy/all.h
 		economy/area.memory-estimation.cpp
-		adequacy-draft/area.memory-estimation.cpp
 		adequacy/area.memory-estimation.cpp
 		economy/bc.memory-estimation.cpp
 		adequacy/bc.memory-estimation.cpp
