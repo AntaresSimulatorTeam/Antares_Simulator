@@ -132,6 +132,25 @@ bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, uint hour)
     return true;
 }
 
+bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, uint hour)
+{
+    Data::AreaLink* link = linkInfo->ptr;
+    if (link->parameters[Data::fhlPShiftMinus][hour]
+            != link->parameters[Data::fhlPShiftPlus][hour])
+    {
+        linkInfo->hasPShiftsEqual = false;
+    }
+
+    if (link->parameters[Data::fhlPShiftMinus][hour]
+            > link->parameters[Data::fhlPShiftPlus][hour])
+    {
+        logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
+            << " for line " << linkInfo->getName();
+        return false;
+    }
+    return true;
+}
+
 bool CBuilder::updateLinks()
 {
     for (auto linkInfoIt = pLink.begin(); linkInfoIt != pLink.end(); linkInfoIt++)
@@ -164,22 +183,8 @@ bool CBuilder::updateLinks()
             if (includeLoopFlow && !updateLinkLoopFlow(linkInfo, hour)) // check validity of loopflow against NTC
                 return false;
 
-            if (includePhaseShift) // check validity of phase-shift
-            {
-                if (link->parameters[Data::fhlPShiftMinus][hour]
-                    != link->parameters[Data::fhlPShiftPlus][hour])
-                {
-                    linkInfo->hasPShiftsEqual = false;
-                }
-
-                if (link->parameters[Data::fhlPShiftMinus][hour]
-                    > link->parameters[Data::fhlPShiftPlus][hour])
-                {
-                    logs.error() << "Error on phase shift calendar validity at hour " << x
-                                 << " for line " << linkInfo->getName();
-                    return false;
-                }
-            }
+            if (includePhaseShift && !updateLinkPhaseShift(linkInfo, hour)) // check validity of phase-shift
+                return false;
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();
