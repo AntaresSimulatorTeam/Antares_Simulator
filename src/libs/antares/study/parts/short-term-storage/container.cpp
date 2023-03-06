@@ -26,15 +26,13 @@
 */
 
 #include "container.h"
-#include <algorithm>
 
 namespace Antares::Data::ShortTermStorage
 {
 bool Container::validate() const
 {
-    return std::all_of(storages.begin(), storages.end(), [](const std::pair<std::string, Unit>& p) {
-        return p.second.validate();
-    });
+    // TODO
+    return false;
 }
 bool Container::createUnitsFromIniFile(const std::string& path)
 {
