@@ -64,6 +64,9 @@ typedef struct
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
+    int* ShortTermStorageInjectionVariable;
+    int* ShortTermStorageWithdrawalVariable;
+    int* ShortTermStorageLevelVariable;
 } CORRESPONDANCES_DES_VARIABLES;
 
 typedef struct
@@ -83,6 +86,7 @@ typedef struct
 
     int* NumeroDeContrainteDesNiveauxPays;
 
+    int* ShortTermStorageLevelConstraint;
 } CORRESPONDANCES_DES_CONTRAINTES;
 
 typedef struct
