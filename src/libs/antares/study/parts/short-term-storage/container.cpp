@@ -25,23 +25,54 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+
 #include "container.h"
+
+#define SEP IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {
+
+
+
 bool Container::validate() const
 {
     // TODO
     return false;
 }
+
 bool Container::createUnitsFromIniFile(const std::string& path)
 {
-    // TODO
-    return false;
+    const std::string pathIni = path +  SEP + "list.ini";
+
+    IniFile ini;
+    if (!ini.open(path))
+        return false;
+
+    for (auto* section = ini.firstSection; section; section = section->next)
+    {
+        if (!ContainerLoadFromSection(pathIni, *section))
+            continue;
+    }
+    return true;
 }
+
 bool Container::loadSeriesFromFolder(const std::string& folder)
 {
     // TODO
     return false;
 }
+
+bool Container::loadFromSection(const std::string& pathIni, const IniFile::Section& section)
+{
+    if (section.name.empty())
+        return false;
+
+    Unit unit;
+    unit.loadFromFolder(pathIni);
+    storages.insert({ section.name, unit });
+    return true;
+
+}
+
 } // namespace Antares::Data::ShortTermStorage

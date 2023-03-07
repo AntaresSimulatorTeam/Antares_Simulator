@@ -28,6 +28,9 @@
 #pragma once
 #include <string>
 #include <map>
+
+#include <antares/study.h>
+
 #include "unit.h"
 
 namespace Antares::Data::ShortTermStorage
@@ -38,6 +41,7 @@ public:
     bool validate() const;
     // 1. Read list.ini
     bool createUnitsFromIniFile(const std::string& path);
+    bool loadFromSection(const std::string& pathIni, const IniFile::Section& section);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 
