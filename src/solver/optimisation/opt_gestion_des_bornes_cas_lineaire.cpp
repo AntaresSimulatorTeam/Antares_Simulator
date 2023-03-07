@@ -164,7 +164,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     double* Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
     double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     // TODO
-    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+    double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
@@ -173,6 +173,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
+            int areaWideIndex = 0;
             for (const auto& storage : problemeHebdo->ShortTermStorage[areaIndex].storages)
             {
                 const int globalIndex = storage.globalIndex;
@@ -181,18 +182,23 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      ->ShortTermStorageInjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
+                AddressForVars[varInjection] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].injection[areaWideIndex]);
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim
                                       ->ShortTermStorageWithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
+                AddressForVars[varWithdrawal] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].withdrawal[areaWideIndex]);
 
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
                 Xmin[varLevel] = 0.;
                 Xmax[varLevel] = storage.capacity;
+                AddressForVars[varLevel] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].level[areaWideIndex]);
+
+                areaWideIndex++;
             }
         }
     }
