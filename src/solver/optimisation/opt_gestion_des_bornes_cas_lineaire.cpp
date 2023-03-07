@@ -157,6 +157,47 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
     }
 }
 
+static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
+                                         const int PremierPdtDeLIntervalle,
+                                         const int DernierPdtDeLIntervalle)
+{
+    double* Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
+    double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
+    // TODO
+    double** AdresseOuPlacerLaValeurDesVariablesOptimisees
+      = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdtJour++)
+    {
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+        for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
+        {
+            for (const auto& storage : problemeHebdo->ShortTermStorage[areaIndex].storages)
+            {
+                const int globalIndex = storage.globalIndex;
+                // 1. Injection
+                int varInjection = CorrespondanceVarNativesVarOptim
+                                     ->ShortTermStorageInjectionVariable[globalIndex];
+                Xmin[varInjection] = 0.;
+                Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
+
+                // 2. Withdrwal
+                int varWithdrawal = CorrespondanceVarNativesVarOptim
+                                      ->ShortTermStorageWithdrawalVariable[globalIndex];
+                Xmin[varWithdrawal] = 0.;
+                Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
+
+                // 3. Levels
+                int varLevel
+                  = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
+                Xmin[varLevel] = 0.;
+                Xmax[varLevel] = storage.capacity;
+            }
+        }
+    }
+}
+
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                             const int PremierPdtDeLIntervalle,
                                                             const int DernierPdtDeLIntervalle,
@@ -405,6 +446,8 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO* prob
 
     setBoundsForUnsuppliedEnergy(
       problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+
+    setBoundsForShortTermStorage(problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
