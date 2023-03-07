@@ -24,9 +24,6 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <math.h>
-#include <sstream>
-
 #include "opt_structure_probleme_a_resoudre.h"
 #include "opt_export_structure.h"
 
