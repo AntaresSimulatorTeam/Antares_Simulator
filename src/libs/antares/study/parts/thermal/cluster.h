@@ -214,7 +214,10 @@ public:
     //@}
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
+
     double getOperatingCost(uint tsIndex, uint hourInTheYear) const;
+    double getMarginalCost(uint tsIndex, uint hourInTheYear) const;
+    double getMarketBidCost(uint tsIndex, uint hourInTheYear) const;
 
     /*!
     ** \brief The group ID

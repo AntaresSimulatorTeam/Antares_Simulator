@@ -299,23 +299,12 @@ public:
         uint hourInTheYear = state.hourInTheYear;
 
         // Thermal cluster profit
-        uint tsIndex
-          = Yuni::Math::Min(state.timeseriesIndex->ThermiqueParPalier[cluster->areaWideIndex],
-                            cluster->marginalCostPerHourTs.size() - 1);
-        if (cluster->costgeneration == Data::setManually)
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-            = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-                * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->marginalCost
-                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
-        else
-        {
-            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-            = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-                * (-areaMarginalCosts[hourInTheWeek]
-                   - cluster->marginalCostPerHourTs[tsIndex][hourInTheYear]
-                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
-        }
+        uint tsIndex = state.timeseriesIndex->ThermiqueParPalier[cluster->areaWideIndex];
+        pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+            * (-areaMarginalCosts[hourInTheWeek]
+               - cluster->getMarginalCost(tsIndex, hourInTheYear)
+                   * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
     }

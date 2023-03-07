@@ -863,5 +863,30 @@ double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) con
     return thermalClusterOperatingCost;
 }
 
+double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) const
+{
+    double marginalCostPerHour(0.0);
+    if (costgeneration == Data::setManually)
+        marginalCostPerHour = marginalCost;
+    else
+        marginalCostPerHour = marginalCostPerHourTs[Math::Min(
+          serieIndex, marginalCostPerHourTs.size() - 1)][hourInTheYear];
+    /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
+     only 1TS. Then - > In order to save memory marginalCostPerHourTs vector has only one array
+     inside -> that is used for all (e.g.10) TS*/
+    return marginalCostPerHour;
+}
+
+double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) const
+{
+    double marketBidCostPerHour(0.0);
+    if (costgeneration == Data::setManually)
+        marketBidCostPerHour = marketBidCost;
+    else
+        marketBidCostPerHour = marketBidCostPerHourTs[Math::Min(
+          serieIndex, marketBidCostPerHourTs.size() - 1)][hourInTheYear];
+    return marketBidCostPerHour;
+}
+
 } // namespace Data
 } // namespace Antares
