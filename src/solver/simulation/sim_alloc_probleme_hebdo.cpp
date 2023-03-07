@@ -113,6 +113,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
+    problem.ShortTermStorage.resize(nbPays);
+
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
     {
@@ -573,17 +575,18 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               ->NombreDeGroupesQuiTombentEnPanneDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
-
+        // Short term storage results
         problem.ResultatsHoraires[k]->ShortTermStorage.resize(nbShortTermStorage);
-        for (int index = 0; index < nbShortTermStorage; index++)
+        for (unsigned int index = 0; index < nbShortTermStorage; index++)
         {
-            auto& storage = storagesForArea[index];
             problem.ResultatsHoraires[k]->ShortTermStorage[index].injection.resize(
               NombreDePasDeTemps);
             problem.ResultatsHoraires[k]->ShortTermStorage[index].withdrawal.resize(
               NombreDePasDeTemps);
             problem.ResultatsHoraires[k]->ShortTermStorage[index].level.resize(NombreDePasDeTemps);
         }
+        // Short term storage input
+        problem.ShortTermStorage[k].storages.resize(nbShortTermStorage);
     }
 
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
@@ -832,6 +835,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
+
+        problem.ShortTermStorage.std::vector<::ShortTermStorage::AREA_INPUT>::~vector();
+
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations);
