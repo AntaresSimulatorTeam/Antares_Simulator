@@ -32,14 +32,19 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-  class Container {
-  public:
+class Container
+{
+public:
     bool validate() const;
     // 1. Read list.ini
     bool createUnitsFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
-  private:
-    std::map<std::string, Unit> storages;
-  };
-}
+
+    std::vector<Unit> storagesByIndex;
+    // TODO[FOM] : fill this map with the address from storagesByIndex
+    // Do it after storagesByIndex is complete, to avoid dangling pointers
+    // caused by memory realloc.
+    std::map<std::string, Unit*> storagesById;
+};
+} // namespace Antares::Data::ShortTermStorage
