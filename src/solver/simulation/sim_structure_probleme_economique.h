@@ -545,7 +545,7 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
-    std::vector<AREA_INPUT> ShortTermStorage;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
