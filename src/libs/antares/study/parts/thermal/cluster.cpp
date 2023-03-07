@@ -473,40 +473,14 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
     }
     else // costgeneration == Data::useCostTimeseries
     {
-        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
-        {
-            marketBidCostPerHourTs[0][hour] = prepro->fuelcost[0][hour] * 360.0 / fuelEfficiency
-                                              + co2 * prepro->co2cost[0][hour] + variableomcost;
-            marginalCostPerHourTs[0][hour] = marketBidCostPerHourTs[0][hour];
-            if (modulation.width > 0) // we should update production cost when modulation is ready
-            {
-                productionCostTs[0][hour]
-                  = marginalCostPerHourTs[0][hour] * modulation[Data::thermalModulationCost][hour];
-            }
-        }
-
-        // calculate marketBidCost and marginalBidCost as average of the first column
-        marketBidCost
-          = std::accumulate(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), 0)
-            / HOURS_PER_YEAR;
-        marginalCost
-          = std::accumulate(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), 0)
-            / HOURS_PER_YEAR;
-
-        // multiple TS
         uint fuelCostWidth = prepro->fuelcost.width;
         uint co2CostWidth = prepro->co2cost.width;
         uint tsCount = std::max(fuelCostWidth, co2CostWidth);
-
-        // if fuel and co2 cost have only one TS -> exit here
-        if (tsCount == 1)
-            return;
-        
-        // if fuel or co2 cost have more than one TS -> continue    
+           
         marketBidCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
         marginalCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
         productionCostTs.resize(tsCount, tmp);// add blank array with 8760-zeros
-        for (uint tsIndex = 2; tsIndex <= tsCount; ++tsIndex)
+        for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
         {
             uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
             uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
@@ -524,6 +498,15 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
                 }
             }
         }
+
+        // calculate marketBidCost and marginalBidCost as average of the first column
+        marketBidCost
+          = std::accumulate(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), 0)
+            / HOURS_PER_YEAR;
+        marginalCost
+          = std::accumulate(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), 0)
+            / HOURS_PER_YEAR;
+
         return;
     }
 }
