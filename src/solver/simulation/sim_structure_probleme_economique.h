@@ -159,6 +159,8 @@ struct SINGLE_OBJECT_INPUT
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
+
+    int globalIndex;
 };
 
 struct AREA_INPUT
