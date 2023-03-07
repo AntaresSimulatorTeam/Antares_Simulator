@@ -171,7 +171,7 @@ bool CBuilder::updateLinks()
         // Can probably be improved (below) !!!
         linkInfo->nImpedanceChanges = 0;
         linkInfo->avgImpedance = link->parameters[columnImpedance][0];
-        for (size_t hour; hour < HOURS_PER_YEAR - 1; hour++)
+        for (size_t hour = 0; hour < HOURS_PER_YEAR - 1; hour++)
         {
             if (link->parameters[columnImpedance][hour + 1] != link->parameters[columnImpedance][hour])
             {

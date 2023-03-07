@@ -141,7 +141,7 @@ public:
 
         std::vector<double> impedances;
         Data::AreaLink* previousLine = linkList[0]->ptr;
-        double currentLineSign;
+        double currentLineSign = 1;
         for (auto line = linkList.begin(); line != linkList.end(); line++)
         {
             if ((*line)->nImpedanceChanges > 0
