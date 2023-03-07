@@ -113,6 +113,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
+    problem.ShortTermStorage.resize(nbPays);
+
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
     {
@@ -369,8 +371,10 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     for (k = 0; k < (int)nbPays; k++)
     {
-        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
 
+        const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
+        const uint nbShortTermStorage = storagesForArea.size();
         problem.PaliersThermiquesDuPays[k]
           = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));
         problem.CaracteristiquesHydrauliques[k] = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES*)MemAlloc(
@@ -571,6 +575,18 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               ->NombreDeGroupesQuiTombentEnPanneDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
+        // Short term storage results
+        problem.ResultatsHoraires[k]->ShortTermStorage.resize(nbShortTermStorage);
+        for (unsigned int index = 0; index < nbShortTermStorage; index++)
+        {
+            problem.ResultatsHoraires[k]->ShortTermStorage[index].injection.resize(
+              NombreDePasDeTemps);
+            problem.ResultatsHoraires[k]->ShortTermStorage[index].withdrawal.resize(
+              NombreDePasDeTemps);
+            problem.ResultatsHoraires[k]->ShortTermStorage[index].level.resize(NombreDePasDeTemps);
+        }
+        // Short term storage input
+        problem.ShortTermStorage[k].storages.resize(nbShortTermStorage);
     }
 
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
@@ -819,6 +835,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
+
+        problem.ShortTermStorage.std::vector<::ShortTermStorage::AREA_INPUT>::~vector();
+
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations);
@@ -840,6 +859,14 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k]->valeurH2oHoraire);
         MemFree(problem.ResultatsHoraires[k]->debordementsHoraires);
         MemFree(problem.ResultatsHoraires[k]->CoutsMarginauxHoraires);
+
+        // That's what you get for mixing C & C++ !
+        // Calling the destructor for object problem.ResultatsHoraires[k]->ShortTermStorage will
+        // call the destructor for all sub-objects. Unlike in C, there is nothing else to do to
+        // avoid memory leaks.
+        problem.ResultatsHoraires[k]
+          ->ShortTermStorage.std::vector<::ShortTermStorage::RESULTS>::~vector();
+
         for (int j = 0; j < problem.NombreDePasDeTemps; j++)
         {
             MemFree(
