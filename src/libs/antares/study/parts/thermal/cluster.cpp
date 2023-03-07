@@ -464,7 +464,7 @@ void Data::ThermalCluster::calculationOfSpinning()
 
 void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 {
-    if (costgeneration == Data::setManually || !prepro || fuelEfficiency <= 0.0)
+    if (costgeneration == Data::setManually || !prepro)
     {
         std::fill(
           marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), marketBidCost);
@@ -508,8 +508,8 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
         productionCostTs.resize(tsCount, tmp);// add blank array with 8760-zeros
         for (uint tsIndex = 2; tsIndex <= tsCount; ++tsIndex)
         {
-            uint tsIndexFuel = Math::Min(fuelCostWidth, tsIndex);
-            uint tsIndexCo2 = Math::Min(co2CostWidth, tsIndex);
+            uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
+            uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
             for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
             {
                 marketBidCostPerHourTs[tsIndex - 1][hour]

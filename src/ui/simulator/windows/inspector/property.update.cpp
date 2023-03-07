@@ -718,7 +718,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     if (name == "cluster.efficiency")
     {
         const double d = value.GetDouble();
-        if (d < 0.)
+        if (d <= 0.)
         {
             for (; i != end; ++i)
                 (*i)->fuelEfficiency = 100.0;
