@@ -95,13 +95,13 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 CorrespondanceVarNativesVarOptim->ShortTermStorageInjectionVariable[globalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
                 // 2. Withdrawal
                 CorrespondanceVarNativesVarOptim->ShortTermStorageWithdrawalVariable[globalIndex]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_INFERIEUREMENT;
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
                 // 3. Level
                 CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex]
