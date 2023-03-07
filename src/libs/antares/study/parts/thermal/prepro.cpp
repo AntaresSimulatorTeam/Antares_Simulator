@@ -67,9 +67,9 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
         String buffer;
         buffer.clear() << folder << SEP << "data.txt";
         ret = data.saveToCSVFile(buffer, /*decimal*/ 6) and ret;
-        buffer.clear() << folder << SEP << "fuelcost.txt";
+        buffer.clear() << folder << SEP << "fuelCost.txt";
         ret = fuelcost.saveToCSVFile(buffer) and ret;
-        buffer.clear() << folder << SEP << "co2cost.txt";
+        buffer.clear() << folder << SEP << "CO2Cost.txt";
         ret = co2cost.saveToCSVFile(buffer) and ret;
         return ret;
     }
@@ -163,7 +163,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                                        &study.dataBuffer)
                   and ret;
 
-            buffer.clear() << folder << SEP << "fuelcost.txt";
+            buffer.clear() << folder << SEP << "fuelCost.txt";
             if (IO::File::Exists(buffer))
             {
                 ret = fuelcost.loadFromCSVFile(buffer,
@@ -176,7 +176,7 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
                     fuelcost.averageTimeseries();
             }
             
-            buffer.clear() << folder << SEP << "co2cost.txt";
+            buffer.clear() << folder << SEP << "CO2Cost.txt";
             if(IO::File::Exists(buffer))
             {
                 ret = co2cost.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, 

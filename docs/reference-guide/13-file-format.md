@@ -8,7 +8,7 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 * `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
 
-For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/co2cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**.
+For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**.
 
 For each thermal cluster, existing `Time-Series` tab changed name to `Availability [MW]` and moved all the way to the right.\
 For each thermal cluster, tabs `Fuel Cost [€/GJ]` and `CO2 Cost [€/ton]` added.
