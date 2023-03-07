@@ -70,6 +70,35 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
     }
 }
 
+static void shortTermStorage(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+                             const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+                             int& nombreDeTermes,
+                             double* Pi,
+                             int* Colonne)
+{
+    for (const auto& storage : shortTermStorageInput.storages)
+    {
+        const int globalIndex = storage.globalIndex;
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim.ShortTermStorageInjectionVariable[globalIndex];
+            varInjection >= 0)
+        {
+            Pi[nombreDeTermes] = 1.0;
+            Colonne[nombreDeTermes] = varInjection;
+            nombreDeTermes++;
+        }
+
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim.ShortTermStorageWithdrawalVariable[globalIndex];
+            varWithdrawal >= 0)
+        {
+            Pi[nombreDeTermes] = -1.0;
+            Colonne[nombreDeTermes] = varWithdrawal;
+            nombreDeTermes++;
+        }
+    }
+}
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
     int var;
@@ -236,6 +265,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Colonne,
                           timeStepInYear,
                           varname);
+
+            shortTermStorage(problemeHebdo->ShortTermStorage[pays],
+                             *CorrespondanceVarNativesVarOptim,
+                             nombreDeTermes,
+                             Pi,
+                             Colonne);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
