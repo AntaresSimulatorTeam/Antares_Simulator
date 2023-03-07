@@ -173,7 +173,7 @@ struct RESULTS
 {
     // Index is the number of the STS in the area
     std::vector<double> level;      // MWh
-    std::vector<double> production; // MWh
+    std::vector<double> injection;  // MWh
     std::vector<double> withdrawal; // MWh
 };
 } // namespace ShortTermStorage
@@ -462,9 +462,9 @@ typedef struct
     double* debordementsHoraires;
 
     double* CoutsMarginauxHoraires;
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
+    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
-    std::vector<ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 } RESULTATS_HORAIRES;
 
 typedef struct
