@@ -236,6 +236,14 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
+        const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
@@ -669,6 +677,10 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                   ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
+
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable);
 
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);
