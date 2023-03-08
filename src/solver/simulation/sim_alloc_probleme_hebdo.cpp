@@ -251,6 +251,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
           = (int*)MemAlloc(nbPays * sizeof(int));
 
+        problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeuxiemeContrainteDeReserveParZone
@@ -697,6 +700,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                   ->NumeroDeContrainteDesContraintesDeDureeMinDArret);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]
                   ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne);
+        MemFree(problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint);
+
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]);
         MemFree(problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion);
         MemFree(problem.VariablesDualesDesContraintesDeNTC[k]);
