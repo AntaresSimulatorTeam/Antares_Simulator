@@ -464,7 +464,7 @@ typedef struct
     double* CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
+    std::vector<::ShortTermStorage::RESULTS>* ShortTermStorage = nullptr;
 } RESULTATS_HORAIRES;
 
 typedef struct
@@ -545,7 +545,7 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
-    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
+    std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
