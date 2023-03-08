@@ -70,11 +70,12 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
     }
 }
 
-static void shortTermStorage(const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
-                             const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
-                             int& nombreDeTermes,
-                             double* Pi,
-                             int* Colonne)
+static void shortTermStorageBalance(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+  int& nombreDeTermes,
+  double* Pi,
+  int* Colonne)
 {
     for (const auto& storage : shortTermStorageInput.storages)
     {
@@ -266,11 +267,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           timeStepInYear,
                           varname);
 
-            shortTermStorage((*problemeHebdo->ShortTermStorage)[pays],
-                             *CorrespondanceVarNativesVarOptim,
-                             nombreDeTermes,
-                             Pi,
-                             Colonne);
+            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
+                                    *CorrespondanceVarNativesVarOptim,
+                                    nombreDeTermes,
+                                    Pi,
+                                    Colonne);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
