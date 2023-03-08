@@ -587,14 +587,16 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
         // Short term storage results
-        problem.ResultatsHoraires[k]->ShortTermStorage = new std::vector<::ShortTermStorage::RESULTS>(nbShortTermStorage);
+        problem.ResultatsHoraires[k]->ShortTermStorage
+          = new std::vector<::ShortTermStorage::RESULTS>(nbShortTermStorage);
         for (unsigned int index = 0; index < nbShortTermStorage; index++)
         {
             (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].injection.resize(
               NombreDePasDeTemps);
             (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].withdrawal.resize(
               NombreDePasDeTemps);
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].level.resize(NombreDePasDeTemps);
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].level.resize(
+              NombreDePasDeTemps);
         }
         // Short term storage input
         (*problem.ShortTermStorage)[k].storages.resize(nbShortTermStorage);
