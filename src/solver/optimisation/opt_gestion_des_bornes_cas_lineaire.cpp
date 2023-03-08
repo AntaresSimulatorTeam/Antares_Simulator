@@ -177,26 +177,27 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
             for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex].storages)
             {
                 const int globalIndex = storage.globalIndex;
+                auto& STSResult = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
                 // 1. Injection
                 int varInjection = CorrespondanceVarNativesVarOptim
                                      ->ShortTermStorageInjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
-                AddressForVars[varInjection] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].injection[areaWideIndex];
+                AddressForVars[varInjection] = &STSResult.injection[areaWideIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim
                                       ->ShortTermStorageWithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
-                AddressForVars[varWithdrawal] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].withdrawal[areaWideIndex];
+                AddressForVars[varWithdrawal] = &STSResult.withdrawal[areaWideIndex];
 
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
                 Xmin[varLevel] = 0.;
                 Xmax[varLevel] = storage.capacity;
-                AddressForVars[varLevel] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].level[areaWideIndex];
+                AddressForVars[varLevel] = &STSResult.level[areaWideIndex];
 
                 areaWideIndex++;
             }
