@@ -323,7 +323,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 for (auto& storage : shortTermStorageInput.storages)
                 {
                     const int globalIndex = storage.globalIndex;
-                    // L[h+1] - L[h] - injection[h] + withdrawal[h] = inflows[h]
+                    // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
                     if (const int varLevel_next = CorrespondanceVarNativesVarOptim_next
                                                     ->ShortTermStorageLevelVariable[globalIndex];
                         varLevel_next >= 0)
@@ -346,7 +346,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                                    ->ShortTermStorageInjectionVariable[globalIndex];
                         varInjection >= 0)
                     {
-                        Pi[nombreDeTermes] = -1.0;
+                        Pi[nombreDeTermes] = -1.0 * storage.efficiency;
                         Colonne[nombreDeTermes] = varInjection;
                         nombreDeTermes++;
                     }
