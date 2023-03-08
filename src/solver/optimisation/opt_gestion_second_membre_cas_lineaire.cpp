@@ -133,6 +133,17 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
+        // TODO[FOM] remove this ugly hack
+        auto study = Data::Study::Current::Get();
+        const uint shortTermStorageCount = study->runtime->shortTermStorageCount;
+        for (uint shortTermStorage = 0; shortTermStorage < shortTermStorageCount; shortTermStorage++)
+        {
+            if (int cnt = CorrespondanceCntNativesCntOptim
+                            ->ShortTermStorageLevelConstraint[shortTermStorage];
+                cnt >= 0)
+                SecondMembre[cnt] = 0; // TODO[FOM] inflows[h]
+        }
+
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];

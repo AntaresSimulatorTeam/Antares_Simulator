@@ -368,7 +368,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
             else
             {
-                // Last time-step
+                for (auto& storage : shortTermStorageInput.storages)
+                {
+                    const int globalIndex = storage.globalIndex;
+                    CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
+                      = -1;
+                }
             }
         }
 
