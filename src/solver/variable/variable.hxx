@@ -559,7 +559,7 @@ struct HourlyResultsForCurrentYear
 };
 
 template<>
-struct HourlyResultsForCurrentYear<1>
+struct HourlyResultsForCurrentYear<Category::singleColumn>
 {
     template<class R>
     static Antares::Memory::Stored<double>::ConstReturnType Get(const R& results, uint)
@@ -569,7 +569,7 @@ struct HourlyResultsForCurrentYear<1>
 };
 
 template<>
-struct HourlyResultsForCurrentYear<0>
+struct HourlyResultsForCurrentYear<Category::noColumn>
 {
     template<class R>
     static Antares::Memory::Stored<double>::ConstReturnType Get(const R&, uint)
@@ -630,7 +630,7 @@ public:
 };
 
 template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<1, VCardT, ChildT>
+class RetrieveVariableListHelper<Category::singleColumn, VCardT, ChildT>
 {
 public:
     template<class PredicateT>
@@ -650,7 +650,7 @@ public:
 };
 
 template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<-1, VCardT, ChildT>
+class RetrieveVariableListHelper<Category::dynamicColumns, VCardT, ChildT>
 {
 public:
     template<class PredicateT>
@@ -706,7 +706,7 @@ namespace // anonymous
 
     // Case : the variable is single
     template<class VCardT>
-    class GetPrintStatusHelper<1, VCardT>
+    class GetPrintStatusHelper<Category::singleColumn, VCardT>
     {
     public:
         static void Do(Data::Study& study, bool* isPrinted)
@@ -719,7 +719,7 @@ namespace // anonymous
 
     // Case : the variable is dynamic
     template<class VCardT>
-    class GetPrintStatusHelper<-1, VCardT>
+    class GetPrintStatusHelper<Category::dynamicColumns, VCardT>
     {
     public:
         static void Do(Data::Study& study, bool* isPrinted)
@@ -766,7 +766,7 @@ namespace // anonymous
 
     // Case : the variable is single
     template<class VCardT>
-    class SupplyMaxNbColumnsHelper<1, VCardT>
+    class SupplyMaxNbColumnsHelper<Category::singleColumn, VCardT>
     {
     public:
         static void Do(Data::Study& study, uint maxNumberColumns)
@@ -777,7 +777,7 @@ namespace // anonymous
 
     // Case : the variable is dynamic
     template<class VCardT>
-    class SupplyMaxNbColumnsHelper<-1, VCardT>
+    class SupplyMaxNbColumnsHelper<Category::dynamicColumns, VCardT>
     {
     public:
         static void Do(Data::Study& study, uint maxNumberColumns)

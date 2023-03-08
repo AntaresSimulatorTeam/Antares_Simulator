@@ -966,23 +966,20 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
 {
     if (key == "selected_vars_reset")
     {
-        bool mode = value.to<bool>();
-        if (mode)
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(true);
-        }
-        else
-        {
-            for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-                d.variablesPrintInfo[i]->enablePrint(false);
-        }
+        bool printAllVariables = value.to<bool>();
+        d.variablesPrintInfo.setAllPrintStatusesTo(printAllVariables);
         return true;
     }
-    if (key == "select_var +")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), true);
-    if (key == "select_var -")
-        return d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), false);
+    if (key == "select_var +" || key == "select_var -")
+    {
+        // Check if the read output variable exists 
+        if (not d.variablesPrintInfo.exists(value.to<std::string>()))
+            return false;
+
+        bool is_var_printed = (key == "select_var +");
+        d.variablesPrintInfo.setPrintStatus(value.to<std::string>(), is_var_printed);
+        return true;
+    }
     return false;
 }
 static bool SGDIntLoadFamily_SeedsMersenneTwister(Parameters& d,
@@ -1876,35 +1873,23 @@ void Parameters::saveToINI(IniFile& ini) const
 
     // Variable selection
     {
-        assert(!variablesPrintInfo.isEmpty());
         uint nb_tot_vars = (uint)variablesPrintInfo.size();
-        uint selected_vars = 0;
+        uint nb_selected_vars = (uint)variablesPrintInfo.numberOfEnabledVariables();
 
-        for (uint i = 0; i != nb_tot_vars; ++i)
-        {
-            if (variablesPrintInfo[i]->isPrinted())
-                ++selected_vars;
-        }
-        if (selected_vars != nb_tot_vars)
+        if (nb_selected_vars != nb_tot_vars)
         {
             // We have something to write !
             auto* section = ini.addSection("variables selection");
-            if (selected_vars <= (nb_tot_vars / 2))
+            if (nb_selected_vars <= (nb_tot_vars / 2))
             {
                 section->add("selected_vars_reset", "false");
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var +", variablesPrintInfo[i]->name());
-                }
+                for (auto& name : variablesPrintInfo.namesOfEnabledVariables())
+                    section->add("select_var +", name);
             }
             else
             {
-                for (uint i = 0; i != nb_tot_vars; ++i)
-                {
-                    if (not variablesPrintInfo[i]->isPrinted())
-                        section->add("select_var -", variablesPrintInfo[i]->name());
-                }
+                for (auto& name : variablesPrintInfo.namesOfDisabledVariables())
+                    section->add("select_var -", name);
             }
         }
     }
@@ -1943,17 +1928,17 @@ bool Parameters::saveToFile(const AnyString& filename) const
 
 void Parameters::RenewableGeneration::addExcludedVariables(std::vector<std::string>& out) const
 {
-    const static std::vector<std::string> ren = {"wind offshore",
-                                                 "wind onshore",
-                                                 "solar concrt.",
-                                                 "solar pv",
-                                                 "solar rooft",
-                                                 "renw. 1",
-                                                 "renw. 2",
-                                                 "renw. 3",
-                                                 "renw. 4"};
+    const static std::vector<std::string> ren = {"WIND OFFSHORE",
+                                                 "WIND ONSHORE",
+                                                 "SOLAR CONCRT.",
+                                                 "SOLAR PV",
+                                                 "SOLAR ROOFT",
+                                                 "RENW. 1",
+                                                 "RENW. 2",
+                                                 "RENW. 3",
+                                                 "RENW. 4"};
 
-    const static std::vector<std::string> agg = {"wind", "solar"};
+    const static std::vector<std::string> agg = {"WIND", "SOLAR"};
 
     switch (rgModelling)
     {
