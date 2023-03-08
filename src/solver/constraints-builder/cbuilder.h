@@ -175,8 +175,7 @@ public:
             sign.push_back(currentLineSign);
             previousLine = (*line)->ptr;
         }
-        State st(impedances, time, pInfinite);
-        states.push_back(st);
+        states.emplace_back(impedances, time, pInfinite);
     }
 
     State& getState(std::vector<double>& impedances)
@@ -188,8 +187,7 @@ public:
 
         if (stIT == states.end())
         {
-            State state(impedances, time, pInfinite);
-            states.push_back(state);
+            states.emplace_back(impedances, time, pInfinite);
             stIT = std::find_if(states.begin(), states.end(), [&impedances](State& s) -> bool {
                 return s.impedances == impedances;
             });
