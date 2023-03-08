@@ -266,7 +266,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           timeStepInYear,
                           varname);
 
-            shortTermStorage(problemeHebdo->ShortTermStorage[pays],
+            shortTermStorage((*problemeHebdo->ShortTermStorage)[pays],
                              *CorrespondanceVarNativesVarOptim,
                              nombreDeTermes,
                              Pi,

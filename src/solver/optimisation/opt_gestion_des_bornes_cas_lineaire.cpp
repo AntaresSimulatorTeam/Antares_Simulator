@@ -174,7 +174,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
             int areaWideIndex = 0;
-            for (const auto& storage : problemeHebdo->ShortTermStorage[areaIndex].storages)
+            for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex].storages)
             {
                 const int globalIndex = storage.globalIndex;
                 // 1. Injection
@@ -182,21 +182,21 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      ->ShortTermStorageInjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
-                AddressForVars[varInjection] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].injection[areaWideIndex]);
+                AddressForVars[varInjection] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].injection[areaWideIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim
                                       ->ShortTermStorageWithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
-                AddressForVars[varWithdrawal] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].withdrawal[areaWideIndex]);
+                AddressForVars[varWithdrawal] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].withdrawal[areaWideIndex];
 
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
                 Xmin[varLevel] = 0.;
                 Xmax[varLevel] = storage.capacity;
-                AddressForVars[varLevel] = &(problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage[pdtHebdo].level[areaWideIndex]);
+                AddressForVars[varLevel] = &(*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo].level[areaWideIndex];
 
                 areaWideIndex++;
             }
