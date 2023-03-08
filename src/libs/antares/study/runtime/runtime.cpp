@@ -107,6 +107,8 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
         r.thermalPlantTotalCountMustRun += area.thermal.mustrunList.size();
+
+        r.shortTermStorageCount += area.shortTermStorage.storagesByIndex.size();
     }
 }
 
@@ -409,6 +411,7 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
+ shortTermStorageCount(0),
  quadraticOptimizationHasFailed(false)
 {
     // Evite les confusions de numeros de TS entre AMC
@@ -446,7 +449,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
-
+    shortTermStorageCount = 0;
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
@@ -507,6 +510,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
+    logs.info() << "     short-term storages: " << shortTermStorageCount;
     logs.info() << "     binding constraints: " << bindingConstraintCount;
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";

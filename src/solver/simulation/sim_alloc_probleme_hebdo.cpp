@@ -113,7 +113,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
-    problem.ShortTermStorage.resize(nbPays);
+    problem.ShortTermStorage = new std::vector<::ShortTermStorage::AREA_INPUT>(nbPays);
 
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
@@ -235,6 +235,14 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.CorrespondanceVarNativesVarOptim[k]
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
+
+        const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = (int*)MemAlloc(nbPays * sizeof(int));
@@ -576,17 +584,17 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
         // Short term storage results
-        problem.ResultatsHoraires[k]->ShortTermStorage.resize(nbShortTermStorage);
+        problem.ResultatsHoraires[k]->ShortTermStorage = new std::vector<::ShortTermStorage::RESULTS>(nbShortTermStorage);
         for (unsigned int index = 0; index < nbShortTermStorage; index++)
         {
-            problem.ResultatsHoraires[k]->ShortTermStorage[index].injection.resize(
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].injection.resize(
               NombreDePasDeTemps);
-            problem.ResultatsHoraires[k]->ShortTermStorage[index].withdrawal.resize(
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].withdrawal.resize(
               NombreDePasDeTemps);
-            problem.ResultatsHoraires[k]->ShortTermStorage[index].level.resize(NombreDePasDeTemps);
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].level.resize(NombreDePasDeTemps);
         }
         // Short term storage input
-        problem.ShortTermStorage[k].storages.resize(nbShortTermStorage);
+        (*problem.ShortTermStorage)[k].storages.resize(nbShortTermStorage);
     }
 
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
@@ -664,6 +672,10 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                   ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique);
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
+
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable);
 
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);
@@ -836,7 +848,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
 
-        problem.ShortTermStorage.std::vector<::ShortTermStorage::AREA_INPUT>::~vector();
+        delete problem.ShortTermStorage;
 
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
@@ -860,12 +872,10 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k]->debordementsHoraires);
         MemFree(problem.ResultatsHoraires[k]->CoutsMarginauxHoraires);
 
-        // That's what you get for mixing C & C++ !
         // Calling the destructor for object problem.ResultatsHoraires[k]->ShortTermStorage will
         // call the destructor for all sub-objects. Unlike in C, there is nothing else to do to
         // avoid memory leaks.
-        problem.ResultatsHoraires[k]
-          ->ShortTermStorage.std::vector<::ShortTermStorage::RESULTS>::~vector();
+        delete problem.ResultatsHoraires[k]->ShortTermStorage;
 
         for (int j = 0; j < problem.NombreDePasDeTemps; j++)
         {

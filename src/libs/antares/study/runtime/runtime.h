@@ -171,6 +171,8 @@ public:
     uint thermalPlantTotalCount;
     uint thermalPlantTotalCountMustRun;
 
+    uint shortTermStorageCount;
+
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 
