@@ -312,6 +312,64 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
+
+            // Short term storage
+            auto& shortTermStorageInput = (*problemeHebdo->ShortTermStorage)[pays];
+            nombreDeTermes = 0;
+            if (int pdt1 = pdt + 1; pdt1 < nombreDePasDeTempsPourUneOptimisation)
+            {
+                auto& CorrespondanceVarNativesVarOptim_next
+                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1];
+                for (auto& storage : shortTermStorageInput.storages)
+                {
+                    const int globalIndex = storage.globalIndex;
+                    // L[h+1] - L[h] - injection[h] + withdrawal[h] = inflows[h]
+                    if (const int varLevel_next = CorrespondanceVarNativesVarOptim_next
+                                                    ->ShortTermStorageLevelVariable[globalIndex];
+                        varLevel_next >= 0)
+                    {
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = varLevel_next;
+                        nombreDeTermes++;
+                    }
+
+                    if (const int varLevel = CorrespondanceVarNativesVarOptim
+                                               ->ShortTermStorageLevelVariable[globalIndex];
+                        varLevel >= 0)
+                    {
+                        Pi[nombreDeTermes] = -1.0;
+                        Colonne[nombreDeTermes] = varLevel;
+                        nombreDeTermes++;
+                    }
+
+                    if (const int varInjection = CorrespondanceVarNativesVarOptim
+                                                   ->ShortTermStorageInjectionVariable[globalIndex];
+                        varInjection >= 0)
+                    {
+                        Pi[nombreDeTermes] = -1.0;
+                        Colonne[nombreDeTermes] = varInjection;
+                        nombreDeTermes++;
+                    }
+
+                    if (const int varWithdrawal
+                        = CorrespondanceVarNativesVarOptim
+                            ->ShortTermStorageWithdrawalVariable[globalIndex];
+                        varWithdrawal >= 0)
+                    {
+                        Pi[nombreDeTermes] = 1.0;
+                        Colonne[nombreDeTermes] = varWithdrawal;
+                        nombreDeTermes++;
+                    }
+                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                      ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+                    CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
+                      = ProblemeAResoudre->NombreDeContraintes;
+                }
+            }
+            else
+            {
+                // Last time-step
+            }
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
