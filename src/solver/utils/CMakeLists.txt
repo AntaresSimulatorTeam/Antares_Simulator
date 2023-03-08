@@ -23,5 +23,6 @@ endif()
 target_link_libraries(utils
         PUBLIC
         ortools::ortools
+        sirius_solver
         libantares-core
         )
