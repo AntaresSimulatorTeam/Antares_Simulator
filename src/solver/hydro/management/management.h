@@ -128,7 +128,8 @@ public:
         double MTG[12];
         //! inflows
         double inflows[12];
-        double mingens[12]; //CR22 mingen
+        //! minimal generation
+        double mingens[12];
 
         //! Net demand, for each day of the year, for each area
         double DLN[dayYearCount];

@@ -77,7 +77,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
           if (TurbineCible[Pdt] > TurbineMin[Pdt])
             Xmin[Var] = TurbineCible[Pdt];
           else
-            Xmin[Var] = TurbineMin[Pdt]; //CR22
+            Xmin[Var] = TurbineMin[Pdt];
         }
         else
         {

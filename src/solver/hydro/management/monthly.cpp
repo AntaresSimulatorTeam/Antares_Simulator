@@ -185,7 +185,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
 
                 problem.TurbineMax[month] = totalInflowsYear;
-                problem.TurbineMin[month] = data.mingens[realmonth]; //CR22 montly mingen
+                problem.TurbineMin[month] = data.mingens[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
                 problem.VolumeMin[month] = minLvl[firstDay];
