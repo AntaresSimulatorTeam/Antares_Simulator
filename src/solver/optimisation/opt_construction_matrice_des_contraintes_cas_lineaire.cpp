@@ -110,13 +110,13 @@ static void shortTermStorageLevels(
   int nombreDePasDeTempsPourUneOptimisation,
   int pdt)
 {
-    int nombreDeTermes = 0;
     const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
     // Cycle over the simulation period
     const int pdt1 = (pdt + 1) % nombreDePasDeTempsPourUneOptimisation;
     const auto& VarOptim_next = CorrespondanceVarNativesVarOptim[pdt1];
     for (auto& storage : shortTermStorageInput.storages)
     {
+        int nombreDeTermes = 0;
         const int globalIndex = storage.globalIndex;
         // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
         if (const int varLevel_next = VarOptim_next->ShortTermStorageLevelVariable[globalIndex];
