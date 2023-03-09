@@ -747,6 +747,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.MatriceDesContraintesCouplantes);
     MemFree(problem.ResultatsContraintesCouplantes);
 
+    delete problem.ShortTermStorage;
+
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
@@ -834,8 +836,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
-
-        delete problem.ShortTermStorage;
 
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
