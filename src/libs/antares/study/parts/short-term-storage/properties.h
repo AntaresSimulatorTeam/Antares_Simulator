@@ -27,18 +27,24 @@
 
 #pragma once
 
+#include <string>
+
+#include "../../../inifile.h"
+
 namespace Antares::Data::ShortTermStorage {
-  enum class Group
-  {
+enum class Group
+{
     PSP_open,
     PSP_closed,
     Pondage,
     Battery,
     Other
-  };
+};
 
-  class Properties {
+class Properties {
+public:
     bool validate() const;
+    bool loadKey(const IniFile::Property* p);
     bool loadFromFolder(const std::string& folder);
     // Injection nominal capacity, >= 0
     double injectionCapacity;
@@ -54,5 +60,7 @@ namespace Antares::Data::ShortTermStorage {
     unsigned int cycleDuration;
     // Used to sort outputs
     Group group;
-  };
+    //cluster name
+    std::string name;
+};
 }

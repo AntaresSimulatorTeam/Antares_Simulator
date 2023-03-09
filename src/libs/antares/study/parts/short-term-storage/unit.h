@@ -37,6 +37,7 @@ class Unit
 public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
+    bool loadFromSection(const IniFile::Section& section);
 
 private:
     Series series;
