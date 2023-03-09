@@ -131,6 +131,10 @@ void Unit::printProperties()
     logs.notice() << "reservoircapacity : " << properties.capacity;
     logs.notice() << "initiallevel : " << properties.initialLevel;
     logs.notice() << "efficiency : " << properties.efficiencyFactor;
+    logs.notice() << "storagecycle : " << properties.cycleDuration;
+    for (auto& i : Properties::stStoragePropertyGroupEnum)
+        if (i.second == properties.group)
+            logs.notice() << "group : " << i.first;
 }
 
 const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
