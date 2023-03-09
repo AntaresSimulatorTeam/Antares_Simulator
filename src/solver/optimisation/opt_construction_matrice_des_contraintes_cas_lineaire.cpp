@@ -100,6 +100,76 @@ static void shortTermStorageBalance(
     }
 }
 
+static void shortTermStorageLevels(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+  CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+  CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim,
+  double* Pi,
+  int* Colonne,
+  int nombreDePasDeTempsPourUneOptimisation,
+  int pdt)
+{
+    int nombreDeTermes = 0;
+    if (int pdt1 = pdt + 1; pdt1 < nombreDePasDeTempsPourUneOptimisation)
+    {
+        auto& CorrespondanceVarNativesVarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
+        auto& CorrespondanceVarNativesVarOptim_next = CorrespondanceVarNativesVarOptim[pdt1];
+        for (auto& storage : shortTermStorageInput.storages)
+        {
+            const int globalIndex = storage.globalIndex;
+            // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+            if (const int varLevel_next
+                = CorrespondanceVarNativesVarOptim_next->ShortTermStorageLevelVariable[globalIndex];
+                varLevel_next >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = varLevel_next;
+                nombreDeTermes++;
+            }
+
+            if (const int varLevel = CorrespondanceVarNativesVarOptim_current
+                                       ->ShortTermStorageLevelVariable[globalIndex];
+                varLevel >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = varLevel;
+                nombreDeTermes++;
+            }
+
+            if (const int varInjection = CorrespondanceVarNativesVarOptim_current
+                                           ->ShortTermStorageInjectionVariable[globalIndex];
+                varInjection >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0 * storage.efficiency;
+                Colonne[nombreDeTermes] = varInjection;
+                nombreDeTermes++;
+            }
+
+            if (const int varWithdrawal = CorrespondanceVarNativesVarOptim_current
+                                            ->ShortTermStorageWithdrawalVariable[globalIndex];
+                varWithdrawal >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = varWithdrawal;
+                nombreDeTermes++;
+            }
+            CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
+              = ProblemeAResoudre->NombreDeContraintes;
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+        }
+    }
+    else
+    {
+        for (auto& storage : shortTermStorageInput.storages)
+        {
+            const int globalIndex = storage.globalIndex;
+            CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex] = -1;
+        }
+    }
+}
+
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
     int var;
@@ -314,67 +384,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
 
             // Short term storage
-            auto& shortTermStorageInput = (*problemeHebdo->ShortTermStorage)[pays];
-            nombreDeTermes = 0;
-            if (int pdt1 = pdt + 1; pdt1 < nombreDePasDeTempsPourUneOptimisation)
-            {
-                auto& CorrespondanceVarNativesVarOptim_next
-                  = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt1];
-                for (auto& storage : shortTermStorageInput.storages)
-                {
-                    const int globalIndex = storage.globalIndex;
-                    // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-                    if (const int varLevel_next = CorrespondanceVarNativesVarOptim_next
-                                                    ->ShortTermStorageLevelVariable[globalIndex];
-                        varLevel_next >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = varLevel_next;
-                        nombreDeTermes++;
-                    }
-
-                    if (const int varLevel = CorrespondanceVarNativesVarOptim
-                                               ->ShortTermStorageLevelVariable[globalIndex];
-                        varLevel >= 0)
-                    {
-                        Pi[nombreDeTermes] = -1.0;
-                        Colonne[nombreDeTermes] = varLevel;
-                        nombreDeTermes++;
-                    }
-
-                    if (const int varInjection = CorrespondanceVarNativesVarOptim
-                                                   ->ShortTermStorageInjectionVariable[globalIndex];
-                        varInjection >= 0)
-                    {
-                        Pi[nombreDeTermes] = -1.0 * storage.efficiency;
-                        Colonne[nombreDeTermes] = varInjection;
-                        nombreDeTermes++;
-                    }
-
-                    if (const int varWithdrawal
-                        = CorrespondanceVarNativesVarOptim
-                            ->ShortTermStorageWithdrawalVariable[globalIndex];
-                        varWithdrawal >= 0)
-                    {
-                        Pi[nombreDeTermes] = 1.0;
-                        Colonne[nombreDeTermes] = varWithdrawal;
-                        nombreDeTermes++;
-                    }
-                    CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
-                      = ProblemeAResoudre->NombreDeContraintes;
-                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                      ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
-                }
-            }
-            else
-            {
-                for (auto& storage : shortTermStorageInput.storages)
-                {
-                    const int globalIndex = storage.globalIndex;
-                    CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
-                      = -1;
-                }
-            }
+            shortTermStorageLevels((*problemeHebdo->ShortTermStorage)[pays],
+                                   ProblemeAResoudre,
+                                   CorrespondanceCntNativesCntOptim,
+                                   problemeHebdo->CorrespondanceVarNativesVarOptim,
+                                   Pi,
+                                   Colonne,
+                                   nombreDePasDeTempsPourUneOptimisation,
+                                   pdt);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
