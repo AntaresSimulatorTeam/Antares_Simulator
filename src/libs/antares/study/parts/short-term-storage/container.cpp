@@ -58,8 +58,11 @@ bool Container::createUnitsFromIniFile(const std::string& path)
         if (!unit.loadFromSection(*section))
             return false;
 
-        storagesByIndex.push_back(unit);
+        storagesById.insert(std::pair<std::string, Unit>(section->name.c_str(), unit));
     }
+
+    for (auto& i : storagesById)
+        storagesByIndex.push_back(&i.second);
 
     return true;
 }

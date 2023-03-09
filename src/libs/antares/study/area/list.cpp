@@ -1300,7 +1300,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             Area& area = *(i->second);
             for (auto unit : area.shortTermStorage.storagesByIndex)
-                unit.printProperties();
+                unit->printProperties();
         }
     }
 
