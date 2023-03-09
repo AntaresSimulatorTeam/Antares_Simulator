@@ -53,6 +53,11 @@ bool Unit::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
+bool Unit::validate()
+{
+    return properties.validate();
+}
+
 void Unit::printProperties()
 {
     logs.notice() << "name : " << properties.name;

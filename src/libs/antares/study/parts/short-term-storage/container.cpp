@@ -35,10 +35,12 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Container::validate() const
+bool Container::validate()
 {
-    // TODO
-    return false;
+    bool ret = true;
+    for (auto& unit : storagesByIndex)
+        ret &= unit->validate();
+    return ret;
 }
 
 
@@ -61,8 +63,8 @@ bool Container::createUnitsFromIniFile(const std::string& path)
         storagesById.insert(std::pair<std::string, Unit>(section->name.c_str(), unit));
     }
 
-    for (auto& i : storagesById)
-        storagesByIndex.push_back(&i.second);
+    for (auto& storage : storagesById)
+        storagesByIndex.push_back(&storage.second);
 
     return true;
 }

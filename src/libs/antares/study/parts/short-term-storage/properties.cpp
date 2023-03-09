@@ -78,4 +78,34 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
+bool Properties::validate()
+{
+    if (efficiencyFactor < 0)
+    {
+        logs.warning() << "efficiency for cluster: " << name << " should be positive";
+        efficiencyFactor = 0;
+    }
+
+    if (efficiencyFactor > 1)
+    {
+        logs.warning() << "efficiency for cluster: " << name << " should be inferior to 1";
+        efficiencyFactor = 1;
+    }
+
+    if (initialLevel < 0)
+    {
+        logs.warning() << "initiallevel for cluster: " << name << " should be positive";
+        initialLevel = 0;
+    }
+
+    if (initialLevel > 1)
+    {
+        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1";
+        initialLevel = 1;
+    }
+    //TODO initialLevel = optim
+
+    return true;
+}
+
 } // namespace Antares::Data::ShortTermStorage

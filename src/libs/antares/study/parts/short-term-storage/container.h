@@ -35,7 +35,7 @@ namespace Antares::Data::ShortTermStorage
 class Container
 {
 public:
-    bool validate() const;
+    bool validate();
     // 1. Read list.ini
     bool createUnitsFromIniFile(const std::string& path);
     // 2. Read ALL series

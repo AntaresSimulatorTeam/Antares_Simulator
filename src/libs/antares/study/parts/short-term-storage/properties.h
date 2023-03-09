@@ -43,11 +43,11 @@ enum class Group
     Other
 };
 
-class Properties {
+class Properties
+{
 public:
-    bool validate() const;
+    bool validate();
     bool loadKey(const IniFile::Property* p);
-    bool loadFromFolder(const std::string& folder);
     // Injection nominal capacity, >= 0
     double injectionCapacity;
     // Withdrawal nominal capacity, >= 0
