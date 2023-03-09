@@ -250,6 +250,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
+            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
+                                    *CorrespondanceVarNativesVarOptim,
+                                    nombreDeTermes,
+                                    Pi,
+                                    Colonne);
+
             CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
@@ -266,12 +272,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Colonne,
                           timeStepInYear,
                           varname);
-
-            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
-                                    *CorrespondanceVarNativesVarOptim,
-                                    nombreDeTermes,
-                                    Pi,
-                                    Colonne);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
             if (var >= 0)
@@ -360,10 +360,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                         Colonne[nombreDeTermes] = varWithdrawal;
                         nombreDeTermes++;
                     }
-                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                      ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                     CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
                       = ProblemeAResoudre->NombreDeContraintes;
+                    OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+                      ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
                 }
             }
             else
