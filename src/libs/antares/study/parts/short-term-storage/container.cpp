@@ -44,26 +44,23 @@ bool Container::validate() const
 
 bool Container::createUnitsFromIniFile(const std::string& path)
 {
-    for (const auto & file : std::filesystem::directory_iterator(path))
+    const std::string pathIni(path + SEP + "list.ini");
+    IniFile ini;
+    if (!ini.open(pathIni))
+        return false;
+
+    if (!ini.firstSection)
+        return true;
+
+    for (auto* section = ini.firstSection; section; section = section->next)
     {
-        const std::string pathIni(file.path().generic_string() + SEP + "list.ini");
-        IniFile ini;
-        if (!ini.open(pathIni))
+        Unit unit;
+        if (!unit.loadFromSection(*section))
             return false;
 
-        if (ini.firstSection)
-            return true;
-
-        for (auto* section = ini.firstSection; section; section = section->next)
-        {
-            Unit unit;
-            if (!unit.loadFromSection(*section))
-                return false;
-
-            storagesByIndex.push_back(unit);
-        }
-
+        storagesByIndex.push_back(unit);
     }
+
     return true;
 }
 
@@ -97,8 +94,53 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "withdrawalnominalcapacity")
         return p->value.to<double>(this->withdrawalCapacity);
 
+    if (p->key == "reservoircapacity")
+        return p->value.to<double>(this->capacity);
+
+    if (p->key == "initiallevel")
+        return p->value.to<double>(this->initialLevel);
+
+    if (p->key == "efficiency")
+        return p->value.to<double>(this->efficiencyFactor);
+
+    if (p->key == "name")
+        return p->value.to<std::string>(this->name);
+
+    if (p->key == "storagecycle")
+        return p->value.to<unsigned int>(this->cycleDuration);
+
+    if (p->key == "group")
+    {
+        if (auto it = Properties::stStoragePropertyGroupEnum.find(p->value.c_str());
+                it !=  Properties::stStoragePropertyGroupEnum.end())
+        {
+            this->group = it->second;
+            return true;
+        }
+        return false;
+    }
+
     return false;
 }
+
+void Unit::printProperties()
+{
+    logs.notice() << "name : " << properties.name;
+    logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
+    logs.notice() << "withdrawalnominalcapacity : " << properties.withdrawalCapacity;
+    logs.notice() << "reservoircapacity : " << properties.capacity;
+    logs.notice() << "initiallevel : " << properties.initialLevel;
+    logs.notice() << "efficiency : " << properties.efficiencyFactor;
+}
+
+const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
+{
+    {"PSP_open", Group::PSP_open},
+    {"PSP_closed", Group::PSP_closed},
+    {"Pondage", Group::Pondage},
+    {"Battery", Group::Battery},
+    {"Other", Group::Other}
+};
 
 
 bool Container::loadSeriesFromFolder(const std::string& folder)

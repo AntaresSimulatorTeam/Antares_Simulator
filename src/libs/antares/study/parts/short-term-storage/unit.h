@@ -39,6 +39,9 @@ public:
     bool loadFromFolder(const std::string& folder);
     bool loadFromSection(const IniFile::Section& section);
 
+    //debug purposes will be removed
+    void printProperties();
+
 private:
     Series series;
     Properties properties;

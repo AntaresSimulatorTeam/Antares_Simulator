@@ -28,10 +28,12 @@
 #pragma once
 
 #include <string>
+#include <map>
 
 #include "../../../inifile.h"
 
-namespace Antares::Data::ShortTermStorage {
+namespace Antares::Data::ShortTermStorage
+{
 enum class Group
 {
     PSP_open,
@@ -62,5 +64,7 @@ public:
     Group group;
     //cluster name
     std::string name;
+
+    static const std::map<std::string, enum Group> stStoragePropertyGroupEnum;
 };
 }
