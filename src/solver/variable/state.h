@@ -27,6 +27,7 @@
 #ifndef __SOLVER_VARIABLE_STATE_H__
 #define __SOLVER_VARIABLE_STATE_H__
 
+#include <vector>
 #include <yuni/yuni.h>
 #include "constants.h"
 #include <antares/study/fwd.h>
@@ -147,8 +148,10 @@ public:
 
     //! The current area
     Data::Area* area;
-    //! The current thermal cluster
+
+    //! The current thermal cluster (used in yearEndBuildForEachThermalCluster functions)
     Data::ThermalCluster* thermalCluster;
+    
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
@@ -169,16 +172,20 @@ public:
     RESULTATS_HORAIRES* hourlyResults;
     //! NTC Values
     VALEURS_DE_NTC_ET_RESISTANCES* ntc;
-    //! Thermal production for the current thermal cluster for the current hour in the year
-    double thermalClusterProduction;
-    //! The operating cost for the current cluster of the current hour (production level*production
+
+    //! Thermal production for thermal clusters for the current hour in the year
+    std::vector<std::vector<double>> thermalClustersProductions;
+
+    //! The operating cost for all clusters at the current hour (production level*production
     //! cost + NP Cost)
-    double thermalClusterOperatingCost;
-    //! Number of groups turned ON by cluster for the current hour in the year with the ucMILP
+    std::vector<std::vector<double>> thermalClustersOperatingCost;
+
+    //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
     //! (accurate) unit commitment mode
-    uint thermalClusterNumberON;
-    //! Minimum power of the cluster for the current hour in the year
-    double thermalClusterPMinOfTheCluster;
+    std::vector<std::vector<uint>>  numberOfUnitsONbyCluster;
+    
+    //! Minimum power of all clusters for the current hour in the year
+    std::vector<std::vector<double>> PMinOfClusters;
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];

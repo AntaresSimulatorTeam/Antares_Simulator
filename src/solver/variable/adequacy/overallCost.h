@@ -275,8 +275,12 @@ public:
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
         // Total OverallCost
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          += state.thermalClusterOperatingCost;
+        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        {
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+                += state.thermalClustersOperatingCost[state.area->index][cluster_index];
+        }
+
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
     }

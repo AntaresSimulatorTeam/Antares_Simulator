@@ -337,18 +337,17 @@ public:
 
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
-        // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
-          .hour[state.hourInTheYear]
-          +=
-          // production for the current thermal dispatchable cluster
-          (state.thermalClusterProduction);
+        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        {
+            auto* thermalCluster = state.area->thermal.clusters[cluster_index];
+            // Production for this hour
+            pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex].hour[state.hourInTheYear]
+                += state.thermalClustersProductions[state.area->index][cluster_index];
 
-        pminOfTheClusterForYear[numSpace][(state.thermalCluster->areaWideIndex * maxHoursInAYear)
-                                          + state.hourInTheYear]
-          =
-            // pmin of the current cluster
-          (state.thermalClusterPMinOfTheCluster);
+            pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
+                                              + state.hourInTheYear]
+                = state.PMinOfClusters[state.area->index][cluster_index];
+        }
 
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);

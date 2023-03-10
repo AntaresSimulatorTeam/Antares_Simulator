@@ -244,12 +244,17 @@ public:
 
     void hourForEachThermalCluster(State& state, unsigned int numSpace)
     {
-        //Multiply every pollutant factor with production
-        for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
         {
-            pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                += state.thermalCluster->emissions.factors[i]
-                    * state.thermalClusterProduction;
+            auto* thermalCluster = state.area->thermal.clusters[cluster_index];
+
+            // Multiply every pollutant factor with production
+            for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+            {
+                pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
+                    += thermalCluster->emissions.factors[i]
+                        * state.thermalClustersProductions[state.area->index][cluster_index];
+            }
         }
 
         // Next item in the list

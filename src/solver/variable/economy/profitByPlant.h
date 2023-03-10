@@ -293,18 +293,21 @@ public:
     {
         // Useful local variables
         double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
-        auto* cluster = state.thermalCluster;
-        double hourlyClusterProduction = state.thermalClusterProduction;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        // Thermal cluster profit
-        pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-            * (-areaMarginalCosts[hourInTheWeek]
-               - cluster->marginalCost
-                   * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
-
+        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        {
+            auto* cluster = state.area->thermal.clusters[cluster_index];
+            double hourlyClusterProduction = state.thermalClustersProductions[state.area->index][cluster_index];
+            // Thermal cluster profit
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+                = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+                  * (-areaMarginalCosts[hourInTheWeek]
+                     - cluster->marginalCost
+                         * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        }
+        
         // Next item in the list
         NextType::hourForEachThermalCluster(state, numSpace);
     }
