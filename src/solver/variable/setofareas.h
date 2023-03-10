@@ -150,7 +150,7 @@ public:
     void hourBegin(unsigned int hourInTheYear);
     void hourForEachArea(State& state);
     void hourForEachLink(State& state);
-    void hourForEachThermalCluster(State& state);
+    void hourForThermalClusters(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);

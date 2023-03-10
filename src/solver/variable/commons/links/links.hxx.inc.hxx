@@ -154,7 +154,7 @@ inline void Links::hourForEachLink(State& state, unsigned int numSpace)
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
 }
 
-inline void Links::hourForEachThermalCluster(State& state, unsigned int numSpace)
+inline void Links::hourForThermalClusters(State& state, unsigned int numSpace)
 {
     // No cluster on links
 }
