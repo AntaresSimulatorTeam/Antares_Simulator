@@ -171,20 +171,12 @@ public:
     VALEURS_DE_NTC_ET_RESISTANCES* ntc;
     //! Thermal production for the current thermal cluster for the current hour in the year
     double thermalClusterProduction;
-    //! Thermal available production for the current thermal cluster for the current hour in the
-    //! year
-    double thermalClusterAvailableProduction;
     //! The operating cost for the current cluster of the current hour (production level*production
     //! cost + NP Cost)
     double thermalClusterOperatingCost;
-    //! The non propostional cost for the current cluster of the current hour (startupCost *
-    //! (newUnitCount - previousUnitCount)) + (fixed cost * newUnitCount) - MBO - 13/05/2014 - #21
-    double thermalClusterNonProportionalCost;
     //! Number of groups turned ON by cluster for the current hour in the year with the ucMILP
     //! (accurate) unit commitment mode
     uint thermalClusterNumberON;
-    //! Minimum power of a group of the cluster for the current hour in the year
-    double thermalClusterPMinOfAGroup;
     //! Minimum power of the cluster for the current hour in the year
     double thermalClusterPMinOfTheCluster;
 
