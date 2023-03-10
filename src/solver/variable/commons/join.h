@@ -268,12 +268,6 @@ public:
         RightType::hourForEachArea(state);
     }
 
-    void hourForEachThermalCluster(State& state)
-    {
-        LeftType::hourForEachThermalCluster(state);
-        RightType::hourForEachThermalCluster(state);
-    }
-
     void hourForEachLink(State& state)
     {
         LeftType::hourForEachLink(state);

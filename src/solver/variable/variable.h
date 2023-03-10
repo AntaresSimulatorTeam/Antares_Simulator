@@ -252,8 +252,6 @@ public:
 
     void hourForEachThermalCluster(State& state, unsigned int numSpace);
 
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace);
-
     //! Event: For a given hour in the year, walking through all links
     // for a given area
     void hourForEachLink(State& state, uint numSpace);

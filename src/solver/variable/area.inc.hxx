@@ -269,13 +269,6 @@ void Areas<NEXTTYPE>::hourForEachLink(State& state, uint numSpace)
 }
 
 template<>
-void Areas<NEXTTYPE>::hourForEachThermalCluster(State& state, uint numSpace)
-{
-    for (uint i = 0; i != pAreaCount; ++i)
-        pAreas[i].hourForEachThermalCluster(state, numSpace);
-}
-
-template<>
 void Areas<NEXTTYPE>::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pAreaCount; ++i)

@@ -159,11 +159,6 @@ inline void Links::hourForEachThermalCluster(State& state, unsigned int numSpace
     // No cluster on links
 }
 
-inline void Links::hourForEachRenewableCluster(State& state, unsigned int numSpace)
-{
-    // No cluster on links
-}
-
 inline void Links::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)

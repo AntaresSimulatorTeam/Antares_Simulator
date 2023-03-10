@@ -165,7 +165,6 @@ public:
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
     void hourForEachThermalCluster(State& state, uint numSpace);
-    void hourForEachRenewableCluster(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
 
