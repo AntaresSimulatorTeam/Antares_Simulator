@@ -254,6 +254,7 @@ RESOLUTION:
         if (ProbSpx != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
+            int it = ProbSpx->Iteration;
         }
     }
     measure.tick();
