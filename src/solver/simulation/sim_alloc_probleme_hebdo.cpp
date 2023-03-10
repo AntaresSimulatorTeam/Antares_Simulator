@@ -371,10 +371,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     for (k = 0; k < (int)nbPays; k++)
     {
-        const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
-
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
-        const uint nbShortTermStorage = storagesForArea.size();
+
         problem.PaliersThermiquesDuPays[k]
           = (PALIERS_THERMIQUES*)MemAlloc(sizeof(PALIERS_THERMIQUES));
         problem.CaracteristiquesHydrauliques[k] = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES*)MemAlloc(
@@ -576,17 +574,18 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
         // Short term storage results
-        problem.ResultatsHoraires[k]->ShortTermStorage = new std::vector<::ShortTermStorage::RESULTS>(nbShortTermStorage);
-        for (unsigned int index = 0; index < nbShortTermStorage; index++)
+        const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
+        const uint nbShortTermStorage = storagesForArea.size();
+        problem.ResultatsHoraires[k]->ShortTermStorage
+          = new std::vector<::ShortTermStorage::RESULTS>(NombreDePasDeTemps);
+        for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].injection.resize(
-              NombreDePasDeTemps);
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].withdrawal.resize(
-              NombreDePasDeTemps);
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[index].level.resize(NombreDePasDeTemps);
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].injection.resize(
+              nbShortTermStorage);
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].withdrawal.resize(
+              nbShortTermStorage);
+            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].level.resize(nbShortTermStorage);
         }
-        // Short term storage input
-        (*problem.ShortTermStorage)[k].storages.resize(nbShortTermStorage);
     }
 
     problem.coutOptimalSolution1 = (double*)MemAlloc(7 * sizeof(double));
@@ -748,6 +747,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.MatriceDesContraintesCouplantes);
     MemFree(problem.ResultatsContraintesCouplantes);
 
+    delete problem.ShortTermStorage;
+
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
@@ -835,8 +836,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
-
-        delete problem.ShortTermStorage;
 
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
         MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
