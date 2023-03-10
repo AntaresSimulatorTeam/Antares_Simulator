@@ -26,12 +26,12 @@
 */
 #include <antares/logs.h>
 
-#include "unit.h"
+#include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Unit::loadFromSection(const IniFile::Section& section)
+bool STstorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
         return false;
@@ -40,12 +40,12 @@ bool Unit::loadFromSection(const IniFile::Section& section)
     {
         if (property->key.empty())
         {
-            logs.warning() << "Loading units: `" << section.name << "`: Invalid key/value";
+            logs.warning() << "Loading clusters: `" << section.name << "`: Invalid key/value";
             continue;
         }
         if (!properties.loadKey(property))
         {
-            logs.warning() << "Loading units: `" << section.name << "`/`"
+            logs.warning() << "Loading clusters: `" << section.name << "`/`"
                 << property->key << "`: The property is unknown and ignored";
         }
     }
@@ -53,12 +53,12 @@ bool Unit::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool Unit::validate()
+bool STstorageCluster::validate()
 {
     return properties.validate();
 }
 
-void Unit::printProperties()
+void STstorageCluster::printProperties()
 {
     logs.notice() << "name : " << properties.name;
     logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
