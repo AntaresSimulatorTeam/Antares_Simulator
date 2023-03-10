@@ -146,15 +146,6 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
 
         } // for each thermal cluster
 
-        // For each renewable cluster
-        for (uint j = 0; j != area.renewable.clusterCount(); ++j)
-        {
-            // Intitializing the state for the current thermal cluster
-            state.initFromRenewableClusterIndex(j, numSpace);
-            // Variables
-            variablesForArea.hourForEachRenewableCluster(state, numSpace);
-        } // for each renewable cluster
-
         // All links
         auto end = area.links.end();
         for (auto i = area.links.begin(); i != end; ++i)

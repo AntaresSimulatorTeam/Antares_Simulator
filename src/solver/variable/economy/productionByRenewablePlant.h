@@ -298,21 +298,18 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
+        {
+            auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
+            uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
+            double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+
+            pValuesForTheCurrentYear[numSpace][renewableCluster->areaWideIndex].hour[state.hourInTheYear]
+                += renewableClusterProduction;
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace)
-    {
-        // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.renewableCluster->areaWideIndex]
-          .hour[state.hourInTheYear]
-          +=
-          // production for the current renewable cluster
-          state.renewableClusterProduction;
-
-        // Next item in the list
-        NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
