@@ -508,19 +508,7 @@ void BindingConstraint::copyOffsets(const Study& study,
 
 bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
 {
-    // Name / ID
-    pName.clear();
-    pID.clear();
-    // No comments
-    pComments.clear();
-    // The type must be `hourly` by default for studies <=3.1, which was the only
-    // type of binding constraints supported.
-    pType = typeUnknown;
-    // The operator is `<` by default, which was the only option for studies <= 3.1
-    pOperator = opUnknown;
-    // Enabled: True by default to automatically allow the use of bindingconstraint
-    // from old studies (<= 3.1)
-    pEnabled = true;
+    clear();
 
     // Reset
     bool ret = true;
@@ -762,6 +750,22 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
     }
 
     return false;
+}
+
+void BindingConstraint::clear() {
+    // Name / ID
+    this->pName.clear();
+    this->pID.clear();
+    // No comments
+    this->pComments.clear();
+    // The type must be `hourly` by default for studies <=3.1, which was the only
+// type of binding constraints supported.
+    this->pType = typeUnknown;
+    // The operator is `<` by default, which was the only option for studies <= 3.1
+    this->pOperator = opUnknown;
+    // Enabled: True by default to automatically allow the use of bindingconstraint
+// from old studies (<= 3.1)
+    this->pEnabled = true;
 }
 
 bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)

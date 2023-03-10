@@ -512,6 +512,7 @@ private:
     //! Comments
     YString pComments;
 
+    void clear();
 }; // class BindingConstraint
 
 class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
