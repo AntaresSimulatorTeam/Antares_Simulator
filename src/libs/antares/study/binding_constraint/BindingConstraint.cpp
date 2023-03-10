@@ -510,9 +510,6 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
 {
     clear();
 
-    // Reset
-    bool ret = true;
-
     // Foreach property in the section...
     for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
     {
@@ -704,7 +701,7 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
     }
 
     // Checking for validity
-    if (!ret or !pName or !pID or pOperator == opUnknown or pType == typeUnknown)
+    if (!pName or !pID or pOperator == opUnknown or pType == typeUnknown)
     {
         // Reporting the error into the logs
         if (!pName)
