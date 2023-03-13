@@ -488,7 +488,7 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
             {
                 marketBidCostPerHourTs[tsIndex - 1][hour]
                   = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
-                    + co2 * prepro->co2cost[tsIndexCo2 - 1][hour] + variableomcost;
+                    + /*co2 */* prepro->co2cost[tsIndexCo2 - 1][hour] + variableomcost;
                 marginalCostPerHourTs[tsIndex - 1][hour]
                   = marketBidCostPerHourTs[tsIndex - 1][hour];
                 if (modulation.width > 0)
