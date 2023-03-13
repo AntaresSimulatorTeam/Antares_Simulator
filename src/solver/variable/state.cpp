@@ -247,20 +247,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     // en mode fast : est pris depuis l'heuristique
 }
 
-void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint /* numSpace */)
-{
-    assert(area);
-    assert(clusterAreaWideIndex < area->renewable.clusterCount());
-
-    // alias to the current renewable cluster
-    renewableCluster = area->renewable.clusters[clusterAreaWideIndex];
-    assert(timeseriesIndex);
-    uint serieIndex = timeseriesIndex->RenouvelableParPalier[clusterAreaWideIndex];
-
-    assert(renewableCluster->series);
-    renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, hourInTheYear);
-}
-
 void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
 {
     uint dur;    // nombre d'heures de fonctionnement d'un groupe au delà duquel un
