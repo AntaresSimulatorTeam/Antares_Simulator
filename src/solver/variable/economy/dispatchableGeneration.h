@@ -269,7 +269,7 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForThermalClusters(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
         for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
         {
@@ -279,7 +279,7 @@ public:
         }
         
         // Next item in the list
-        NextType::hourForThermalClusters(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

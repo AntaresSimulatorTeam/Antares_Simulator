@@ -311,18 +311,18 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state)
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForThermalClusters(State& state)
+inline void IVariable<ChildT, NextT, VCardT>::hourForClusters(State& state)
 {
     // Next item in the list
-    NextType::hourForThermalClusters(state);
+    NextType::hourForClusters(state);
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForThermalClusters(State& state,
+inline void IVariable<ChildT, NextT, VCardT>::hourForClusters(State& state,
                                                                         unsigned int numSpace)
 {
     // Next item in the list
-    NextType::hourForThermalClusters(state, numSpace);
+    NextType::hourForClusters(state, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>

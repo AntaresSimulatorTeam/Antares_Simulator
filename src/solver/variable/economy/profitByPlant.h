@@ -289,7 +289,7 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForThermalClusters(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
         // Useful local variables
         double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
@@ -309,7 +309,7 @@ public:
         }
         
         // Next item in the list
-        NextType::hourForThermalClusters(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
