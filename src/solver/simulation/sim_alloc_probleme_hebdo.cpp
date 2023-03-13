@@ -46,7 +46,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     uint nbPays = study.areas.size();
 
-    uint linkCount = study.runtime->interconnectionsCount();
+    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     problem.DefaillanceNegativeUtiliserPMinThermique = (bool*)MemAlloc(nbPays * sizeof(char));
     problem.DefaillanceNegativeUtiliserHydro = (bool*)MemAlloc(nbPays * sizeof(char));
@@ -236,7 +237,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
-        const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
         problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable

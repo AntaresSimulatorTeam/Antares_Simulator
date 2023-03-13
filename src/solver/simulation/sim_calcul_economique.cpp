@@ -39,6 +39,29 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+static void importShortTermStorages(
+  const AreaList& areas,
+  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+{
+    int STindex = 0;
+    for (uint i = 0; i != areas.size(); i++)
+    {
+        ShortTermStorageOut[i].reserve(areas[i]->shortTermStorage.storagesByIndex.size());
+        for (auto st : areas[i]->shortTermStorage.storagesByIndex)
+        {
+            ::ShortTermStorage::SINGLE_OBJECT_INPUT toInsert;
+            toInsert.capacity = st->properties.capacity;
+            toInsert.efficiency = st->properties.efficiencyFactor;
+            toInsert.injectionCapacity = st->properties.injectionCapacity;
+            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
+            toInsert.globalIndex = STindex;
+            // TODO add missing properties, or use the same struct
+            ShortTermStorageOut[i].push_back(toInsert);
+            STindex++;
+        }
+    }
+}
+
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
@@ -195,6 +218,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         assert(area.hydro.intraDailyModulation >= 1. && "Intra-daily modulation must be >= 1.0");
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
+
+    importShortTermStorages(study.areas, *problem.ShortTermStorage);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {

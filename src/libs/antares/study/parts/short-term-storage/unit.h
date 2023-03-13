@@ -38,7 +38,7 @@ public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
 
-private:
+public:
     Series series;
     Properties properties;
 };
