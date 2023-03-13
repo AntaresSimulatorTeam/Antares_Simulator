@@ -77,7 +77,7 @@ static void shortTermStorageBalance(
   double* Pi,
   int* Colonne)
 {
-    for (const auto& storage : shortTermStorageInput.storages)
+    for (const auto& storage : shortTermStorageInput)
     {
         const int globalIndex = storage.globalIndex;
         if (const int varInjection
@@ -114,7 +114,7 @@ static void shortTermStorageLevels(
     // Cycle over the simulation period
     const int pdt1 = (pdt + 1) % nombreDePasDeTempsPourUneOptimisation;
     const auto& VarOptim_next = CorrespondanceVarNativesVarOptim[pdt1];
-    for (auto& storage : shortTermStorageInput.storages)
+    for (auto& storage : shortTermStorageInput)
     {
         int nombreDeTermes = 0;
         const int globalIndex = storage.globalIndex;

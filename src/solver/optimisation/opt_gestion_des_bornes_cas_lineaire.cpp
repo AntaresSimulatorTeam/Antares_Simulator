@@ -174,7 +174,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
             int areaWideIndex = 0;
-            for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex].storages)
+            for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex])
             {
                 const int globalIndex = storage.globalIndex;
                 auto& STSResult = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];

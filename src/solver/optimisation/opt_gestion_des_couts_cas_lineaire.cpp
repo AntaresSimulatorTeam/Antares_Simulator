@@ -73,7 +73,7 @@ static void shortTermStorageCost(
   const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
   double* linearCost)
 {
-    for (auto& storage : shortTermStorageInput.storages)
+    for (auto& storage : shortTermStorageInput)
     {
         const int globalIndex = storage.globalIndex;
         if (const int varLevel

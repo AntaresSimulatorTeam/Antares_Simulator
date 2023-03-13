@@ -167,11 +167,7 @@ struct SINGLE_OBJECT_INPUT
     int globalIndex;
 };
 
-struct AREA_INPUT
-{
-    std::vector<SINGLE_OBJECT_INPUT> storages; // index is local
-};
-// problemeHebdo->ShortTermStorage[area_idx].storages[ststor_idx].capacity;
+using AREA_INPUT = std::vector<::ShortTermStorage::SINGLE_OBJECT_INPUT>; // index is local
 
 struct RESULTS
 {
@@ -549,6 +545,7 @@ struct PROBLEME_HEBDO
 
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
+    // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
 
     /* Optimization problem */
