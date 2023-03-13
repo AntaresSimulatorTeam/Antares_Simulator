@@ -237,7 +237,7 @@ public:
         NextType::hourForEachLink(state, numSpace);
     }
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
     {
         // Next
         NextType::buildDigest(results, digestLevel, dataLevel);
@@ -251,8 +251,8 @@ public:
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
+                                      Category::File fileLevel,
+                                      Category::Precision precision,
                                       uint) const
     {
         // Initializing external pointer on current variable non applicable status

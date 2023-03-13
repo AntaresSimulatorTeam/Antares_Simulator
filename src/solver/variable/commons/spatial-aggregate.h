@@ -327,7 +327,7 @@ public:
         NextType::template simulationEndSpatialAggregates(allVars, set);
     }
 
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    inline void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
     {
         // Generate the Digest for the local results (districts part)
         if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))
@@ -344,8 +344,8 @@ public:
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
+                                      Category::File fileLevel,
+                                      Category::Precision precision,
                                       uint numSpace) const
     {
         if (VCardType::columnCount != 0 && (VCardType::categoryDataLevel & Category::setOfAreas))

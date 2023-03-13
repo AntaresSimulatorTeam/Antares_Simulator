@@ -145,14 +145,14 @@ public:
     void hourEnd(State& state, uint hourInTheYear);
 
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  uint numSpace) const;
 
     Yuni::uint64 memoryUsage() const;

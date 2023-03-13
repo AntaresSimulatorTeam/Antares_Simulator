@@ -315,7 +315,7 @@ public:
         NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
-    inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    inline void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
     {
         // Ask to build the digest to the next variable
         NextType::buildDigest(results, digestLevel, dataLevel);
@@ -338,8 +338,8 @@ public:
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
+                                      Category::File fileLevel,
+                                      Category::Precision precision,
                                       unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status

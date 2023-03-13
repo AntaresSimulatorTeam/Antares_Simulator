@@ -51,9 +51,16 @@ enum DataLevel
     bindingConstraint = 16,
     //! The maximum available level
     maxDataLevel = 16,
+    //! Used for end of iterations on data levels
+    dataLevelsEnd = 32,
+
     //! All data level
     allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
 };
+
+constexpr inline Category::DataLevel nextDataLevel(Category::DataLevel dataLevel) {
+    return static_cast<Category::DataLevel>(dataLevel * 2);
+}
 
 enum File
 {
@@ -69,9 +76,15 @@ enum File
     bc = 16,
     //! The maximum available value
     maxFileLevel = 16,
+    //! Used for end of iterations on file levels
+    fileLevelsEnd = 32,
     //! All file level
     allFile = va | id | de | de_res | bc,
 };
+
+constexpr inline Category::File nextFileLevel(Category::File fileLevel) {
+    return static_cast<Category::File>(fileLevel * 2);
+}
 
 enum Precision
 {

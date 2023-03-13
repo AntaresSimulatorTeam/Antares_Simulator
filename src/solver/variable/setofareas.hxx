@@ -216,9 +216,9 @@ inline void SetsOfAreas<NextT>::hourEnd(State& state, uint hourInTheYear)
 
 template<class NextT>
 inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision) const
+                                                  Category::DataLevel dataLevel,
+                                                  Category::File fileLevel,
+                                                  Category::Precision precision) const
 {
     int count_int = count;
     bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;
@@ -231,9 +231,9 @@ inline void SetsOfAreas<NextT>::buildSurveyReport(SurveyResults& results,
 
 template<class NextT>
 inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                        int dataLevel,
-                                                        int fileLevel,
-                                                        int precision,
+                                                        Category::DataLevel dataLevel,
+                                                        Category::File fileLevel,
+                                                        Category::Precision precision,
                                                         uint numSpace) const
 {
     int count_int = count;
@@ -246,7 +246,7 @@ inline void SetsOfAreas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void SetsOfAreas<NextT>::buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
 {
     int count_int = count;
     bool setOfAreasDataLevel = dataLevel & Category::setOfAreas;

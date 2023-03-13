@@ -254,9 +254,9 @@ inline Yuni::uint64 List<NextT>::memoryUsage() const
 
 template<class NextT>
 void List<NextT>::buildSurveyReport(SurveyResults& results,
-                                    int dataLevel,
-                                    int fileLevel,
-                                    int precision) const
+                                    Category::DataLevel dataLevel,
+                                    Category::File fileLevel,
+                                    Category::Precision precision) const
 {
     // Reset
     results.data.columnIndex = 0;
@@ -280,9 +280,9 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
 
 template<class NextT>
 void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                          int dataLevel,
-                                          int fileLevel,
-                                          int precision,
+                                          Category::DataLevel dataLevel,
+                                          Category::File fileLevel,
+                                          Category::Precision precision,
                                           unsigned int numSpace) const
 {
     // Reset
@@ -306,7 +306,7 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void List<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void List<NextT>::buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
 {
     // Reset
     results.data.columnIndex = 0;

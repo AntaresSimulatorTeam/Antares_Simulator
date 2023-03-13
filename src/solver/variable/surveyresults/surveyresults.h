@@ -83,7 +83,7 @@ public:
     /*!
     ** \brief Write the data into a file
     */
-    void saveToFile(int dataLevel, int fileLevel, int precisionLevel);
+    void saveToFile(Category::DataLevel dataLevel, Category::File fileLevel, Category::Precision precisionLevel);
 
     /*!
     ** \brief Export informations about the current study

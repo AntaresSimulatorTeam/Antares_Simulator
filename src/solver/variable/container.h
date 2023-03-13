@@ -213,14 +213,14 @@ public:
     ** \brief Ask to all variables to fullfil the report
     */
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  unsigned int numSpace) const;
 
     /*!
@@ -237,7 +237,7 @@ public:
     /*!
     ** \brief Ask to all variables to fullfil the digest
     */
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
+    void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const;
     //@}
 
     //! \name Memory management

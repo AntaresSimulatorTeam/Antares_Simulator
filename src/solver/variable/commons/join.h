@@ -288,9 +288,9 @@ public:
     }
 
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const
     {
         LeftType::buildSurveyReport(results, dataLevel, fileLevel, precision);
         RightType::buildSurveyReport(results, dataLevel, fileLevel, precision);
@@ -298,9 +298,9 @@ public:
     }
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  uint numSpace) const
     {
         LeftType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
@@ -308,7 +308,7 @@ public:
         BindConstType::buildAnnualSurveyReport(results, dataLevel, fileLevel, precision, numSpace);
     }
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+    void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
     {
         // Building the digest
         LeftType ::buildDigest(results, digestLevel, dataLevel);

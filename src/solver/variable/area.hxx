@@ -64,9 +64,9 @@ inline void Areas<NextT>::initializeFromThermalCluster(Data::Study*,
 
 template<class NextT>
 void Areas<NextT>::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+                                     Category::DataLevel dataLevel,
+                                     Category::File fileLevel,
+                                     Category::Precision precision) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::link;
@@ -115,9 +115,9 @@ void Areas<NextT>::buildSurveyReport(SurveyResults& results,
 
 template<class NextT>
 void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
+                                           Category::DataLevel dataLevel,
+                                           Category::File fileLevel,
+                                           Category::Precision precision,
                                            uint numSpace) const
 {
     int count_int = count;
@@ -168,7 +168,7 @@ void Areas<NextT>::buildAnnualSurveyReport(SurveyResults& results,
 }
 
 template<class NextT>
-void Areas<NextT>::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void Areas<NextT>::buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
 {
     int count_int = count;
     if (count_int)

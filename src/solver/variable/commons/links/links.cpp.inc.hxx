@@ -94,7 +94,7 @@ void Links::simulationEnd()
     }
 }
 
-void Links::buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
+void Links::buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const
 {
     int count_int = count;
     bool linkDataLevel = dataLevel & Category::link;

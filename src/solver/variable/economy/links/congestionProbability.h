@@ -327,8 +327,8 @@ public:
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
+                                      Category::File fileLevel,
+                                      Category::Precision precision,
                                       uint numSpace) const
     {
         // The current variable is actually a multiple-variable.

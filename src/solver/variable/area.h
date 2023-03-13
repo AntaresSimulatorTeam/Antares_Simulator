@@ -161,17 +161,17 @@ public:
     void weekEnd(State& state);
 
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  uint numSpace) const;
 
-    void buildDigest(SurveyResults&, int digestLevel, int dataLevel) const;
+    void buildDigest(SurveyResults&, Category::Digest digestLevel, Category::DataLevel dataLevel) const;
 
     void beforeYearByYearExport(uint year, uint numSpace);
 

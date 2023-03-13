@@ -688,7 +688,7 @@ void SurveyResults::exportDigestMatrix(const char* title, std::string& buffer)
     Private::InternalExportDigestLinksMatrix(data.study, title, buffer, data.matrix);
 }
 
-void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
+void SurveyResults::saveToFile(Category::DataLevel dataLevel, Category::File fileLevel, Category::Precision precisionLevel)
 {
     logs.debug() << " :: survey writing `" << data.filename << "`";
 

@@ -93,7 +93,7 @@ struct VCardBindingConstMarginCost
     Marginal cost associated to binding constraints :
     Suppose that the BC is hourly,
     - if binding constraint is not saturated (rhs is not reached) for a given hour, the value is 0;
-    - if binding constraint is saturated (rhs is reached), the value is the total benefit (€/MW) for
+    - if binding constraint is saturated (rhs is reached), the value is the total benefit (ï¿½/MW) for
    the system that would result in increasing the BC's rhs of 1 MW.
 */
 template<class NextT = Container::EndOfList>
@@ -302,10 +302,10 @@ public:
     }
 
     void localBuildAnnualSurveyReport(
-      SurveyResults& results,
-      int fileLevel,
-      int precision /* printed results : hourly, daily, weekly, ...*/,
-      unsigned int numSpace) const
+            SurveyResults& results,
+            Category::File fileLevel,
+            Category::Precision precision /* printed results : hourly, daily, weekly, ...*/,
+            unsigned int numSpace) const
     {
         if (!(precision & associatedBC_->filterYearByYear_))
             return;
@@ -323,9 +323,9 @@ public:
     }
 
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const
     {
         // Building syntheses results
         // ------------------------------

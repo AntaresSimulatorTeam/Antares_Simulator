@@ -170,21 +170,21 @@ public:
     void hourEnd(State& state, uint hourInTheYear);
 
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  uint numSpace) const;
 
     void beforeYearByYearExport(uint year, uint numSpace);
 
     Yuni::uint64 memoryUsage() const;
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
+    void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const;
 
     template<class I>
     static void provideInformations(I& infos);

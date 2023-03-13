@@ -118,7 +118,7 @@ struct BrowseAllVariables<NextT, Category::maxDataLevel, Category::maxFileLevel>
     }
 };
 
-template<bool GlobalT, class NextT, int CDataLevel, int CFile = 1>
+template<bool GlobalT, class NextT, Category::DataLevel CDataLevel, Category::File CFile = Category::va>
 class SurveyReportBuilderFile
 {
 public:
@@ -127,8 +127,6 @@ public:
     {
         //! A non-zero value to write down the results for the simulation
         globalResults = (GlobalT) ? 1 : 0,
-        //! The next level
-        nextFileLevel = CFile * 2,
     };
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace)
@@ -145,6 +143,9 @@ public:
     }
 
 private:
+    //! The next level
+    static const Category::File nextFileLevel = Category::nextFileLevel(CFile);
+
     static void RunGlobalResults(const ListType& list, SurveyResults& results)
     {
         // All hours
@@ -176,8 +177,8 @@ private:
 }; // class SurveyReportBuilderFile
 
 // Specialization for the final state (dummy)
-template<bool GlobalT, class NextT, int N>
-class SurveyReportBuilderFile<GlobalT, NextT, N, 2 * Category::maxFileLevel>
+template<bool GlobalT, class NextT, Category::DataLevel N>
+class SurveyReportBuilderFile<GlobalT, NextT, N, Category::fileLevelsEnd>
 {
 public:
     using ListType = NextT;
@@ -187,16 +188,14 @@ public:
     }
 };
 
-template<bool GlobalT, class NextT, int CDataLevel = 1>
+template<bool GlobalT, class NextT, Category::DataLevel CDataLevel = Category::area>
 class SurveyReportBuilder
 {
 public:
     //! List
     using ListType = NextT;
-    enum
-    {
-        nextDataLevel = CDataLevel * 2,
-    };
+
+    static const Category::DataLevel nextDataLevel = Category::nextDataLevel(CDataLevel);
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace = 9999)
     {
@@ -449,7 +448,7 @@ private:
 }; // class SurveyReportBuilder
 
 template<bool GlobalT, class NextT>
-class SurveyReportBuilder<GlobalT, NextT, 2 * Category::maxDataLevel>
+class SurveyReportBuilder<GlobalT, NextT, Category::dataLevelsEnd>
 {
 public:
     using ListType = NextT;

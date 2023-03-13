@@ -272,17 +272,17 @@ public:
     //! \name User Reports
     //@{
     void buildSurveyReport(SurveyResults& results,
-                           int dataLevel,
-                           int fileLevel,
-                           int precision) const;
+                           Category::DataLevel dataLevel,
+                           Category::File fileLevel,
+                           Category::Precision precision) const;
 
     void buildAnnualSurveyReport(SurveyResults& results,
-                                 int dataLevel,
-                                 int fileLevel,
-                                 int precision,
+                                 Category::DataLevel dataLevel,
+                                 Category::File fileLevel,
+                                 Category::Precision precision,
                                  uint numSpace) const;
 
-    void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const;
+    void buildDigest(SurveyResults& results, Category::Digest digestLevel, Category::DataLevel dataLevel) const;
 
     /*!
     ** \brief Event triggered before exporting a year-by-year survey report

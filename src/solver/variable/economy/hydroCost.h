@@ -259,8 +259,8 @@ public:
     }
 
     void localBuildAnnualSurveyReport(SurveyResults& results,
-                                      int fileLevel,
-                                      int precision,
+                                      Category::File fileLevel,
+                                      Category::Precision precision,
                                       unsigned int numSpace) const
     {
         // Initializing external pointer on current variable non applicable status

@@ -173,9 +173,9 @@ inline void Links::hourEnd(State& state, uint hourInTheYear)
 }
 
 inline void Links::buildSurveyReport(SurveyResults& results,
-                                     int dataLevel,
-                                     int fileLevel,
-                                     int precision) const
+                                     Category::DataLevel dataLevel,
+                                     Category::File fileLevel,
+                                     Category::Precision precision) const
 {
     int count_int = count;
     bool link_dataLevel = (dataLevel & Category::link);
@@ -219,9 +219,9 @@ inline void Links::buildSurveyReport(SurveyResults& results,
 }
 
 inline void Links::buildAnnualSurveyReport(SurveyResults& results,
-                                           int dataLevel,
-                                           int fileLevel,
-                                           int precision,
+                                           Category::DataLevel dataLevel,
+                                           Category::File fileLevel,
+                                           Category::Precision precision,
                                            uint numSpace) const
 {
     int count_int = count;

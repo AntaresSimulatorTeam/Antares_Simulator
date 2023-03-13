@@ -34,9 +34,9 @@ namespace Antares::Solver::Variable
 {
 template<class NextT>
 void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
-                                                  int dataLevel,
-                                                  int fileLevel,
-                                                  int precision) const
+                                                  Category::DataLevel dataLevel,
+                                                  Category::File fileLevel,
+                                                  Category::Precision precision) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)
         return;
@@ -51,9 +51,9 @@ void BindingConstraints<NextT>::buildSurveyReport(SurveyResults& results,
 
 template<class NextT>
 void BindingConstraints<NextT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                        int dataLevel,
-                                                        int fileLevel,
-                                                        int precision,
+                                                        Category::DataLevel dataLevel,
+                                                        Category::File fileLevel,
+                                                        Category::Precision precision,
                                                         uint numSpace) const
 {
     if (bool bcDataLevel = dataLevel & Category::bindingConstraint; !bcDataLevel)

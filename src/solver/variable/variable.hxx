@@ -366,9 +366,9 @@ inline void IVariable<ChildT, NextT, VCardT>::weekEnd(State& state)
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& results,
-                                                                int dataLevel,
-                                                                int fileLevel,
-                                                                int precision) const
+                                                                Category::DataLevel dataLevel,
+                                                                Category::File fileLevel,
+                                                                Category::Precision precision) const
 {
     // Generating value for the area
     // Only if there are some results to export...
@@ -394,9 +394,9 @@ inline void IVariable<ChildT, NextT, VCardT>::buildSurveyReport(SurveyResults& r
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResults& results,
-                                                                      int dataLevel,
-                                                                      int fileLevel,
-                                                                      int precision,
+                                                                      Category::DataLevel dataLevel,
+                                                                      Category::File fileLevel,
+                                                                      Category::Precision precision,
                                                                       uint numSpace) const
 {
     // Generating value for the area
@@ -420,8 +420,8 @@ inline void IVariable<ChildT, NextT, VCardT>::buildAnnualSurveyReport(SurveyResu
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::buildDigest(SurveyResults& results,
-                                                          int digestLevel,
-                                                          int dataLevel) const
+                                                          Category::Digest digestLevel,
+                                                          Category::DataLevel dataLevel) const
 {
     // Generate the Digest for the local results (areas part)
     if (VCardType::columnCount != 0
