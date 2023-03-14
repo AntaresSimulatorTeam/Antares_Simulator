@@ -38,7 +38,9 @@ class output_compare(check_interface):
 
         simulation_files = find_simulation_files(ref_simulation_folder, other_folder)
 
-        check(compare_simulation_files(simulation_files, self.tol), "Results comparison failed")
+        (comparison_ok, output_var_if_failure) = compare_simulation_files(simulation_files, self.tol)
+        error_msg = "Results comparison failed on : %s" % output_var_if_failure
+        check(comparison_ok, error_msg)
 
     def name(self):
         return "output compare"
