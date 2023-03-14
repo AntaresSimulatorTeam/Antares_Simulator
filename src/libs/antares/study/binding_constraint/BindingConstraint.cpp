@@ -1544,5 +1544,9 @@ void BindingConstraint::matrix(const double onevalue)
     pValues.markAsModified();
 }
 
+    std::string BindingConstraint::group() {
+        return std::string();
+    }
+
 } // namespace Data
 } // namespace Antares
