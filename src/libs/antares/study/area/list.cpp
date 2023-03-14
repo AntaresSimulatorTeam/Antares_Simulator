@@ -38,6 +38,8 @@
 #include "../../config.h"
 #include "../filter.h"
 #include "constants.h"
+#include "antares/study/parts/parts.h"
+#include "antares/study/parts/load/prepro.h"
 
 #define SEP IO::Separator
 

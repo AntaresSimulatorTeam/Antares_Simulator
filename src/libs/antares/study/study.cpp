@@ -49,6 +49,7 @@
 #include <yuni/core/system/cpu.h> // For use of Yuni::System::CPU::Count()
 #include <math.h>                 // For use of floor(...) and ceil(...)
 #include <writer_factory.h>
+#include "ui-runtimeinfos.h"
 
 using namespace Yuni;
 

@@ -28,6 +28,7 @@
 #define __ANTARES_LIBS_STUDY_AREAS_HXX__
 
 #include "../../utils.h"
+#include "antares/study/parts/parts.h"
 
 namespace Antares
 {

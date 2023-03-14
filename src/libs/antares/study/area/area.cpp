@@ -36,6 +36,8 @@
 #include "constants.h"
 #include "ui.h"
 #include "scratchpad.h"
+#include "antares/study/parts/parts.h"
+#include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
 
