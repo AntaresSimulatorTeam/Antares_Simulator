@@ -1,6 +1,29 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.6.0
+### Input
+A few changes related to the introduction of short-term storage objects.
+
+* Add directories **input/st-storage/clusters** and **input/st-storage/series**
+* For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
+* This file contains the multiple sections whose name is ignored. Each section contains these properties:
+    * `name` [str]
+    * `efficiency` [double]
+    * `reservoircapacity` [double]
+    * `initiallevel` [double]
+    * `withdrawalnominalcapacity` [double]
+    * `injectionnominalcapacity` [double]
+    * `storagecycle` [double]
+
+* For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**
+    * **PMAX-injection.txt**
+    * **PMAX-withdrawal.txt**
+    * **inflow.txt**
+    * **lower-rule-curve.txt**
+    * **upper-rule-curve.txt**
+All of the above 5 files contain 8760 rows and 1 column.
+
 ## v8.5.2
 ### Input
 In file **settings/generaldata.ini**, in section `optimization`, link-type is now deprecated
