@@ -17,13 +17,13 @@ A few changes related to the introduction of short-term storage objects.
     * `injectionnominalcapacity` [double] &gt; 0
     * `storagecycle` [int] in range 24-168
 
-* For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**
+* For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt**
     * **PMAX-withdrawal.txt**
     * **inflow.txt**
     * **lower-rule-curve.txt**
     * **upper-rule-curve.txt**
-All of the above 5 files contain 8760 rows and 1 column.
+
 ### Output
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`
