@@ -148,8 +148,6 @@ public:
         Yuni::CString<2 * (ant_k_area_name_max_length + 8), false> key;
     };
 
-    std::string group();
-
 public:
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
@@ -218,6 +216,14 @@ public:
     ** \brief Get the comments
     */
     const YString& comments() const;
+
+    //! \name Group
+    //@{
+    /*!
+    ** \brief Get the group
+    */
+    std::string group() const;
+
     /*!
     ** \brief Set the comments
     */
@@ -513,6 +519,8 @@ private:
     bool pEnabled;
     //! Comments
     YString pComments;
+    //! Group
+    std::string group_;
 
     void clear();
 }; // class BindingConstraint
