@@ -27,8 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_WIND_PREPRO_HXX__
 
-#include "../../study.h"
-
 namespace Antares
 {
 namespace Data

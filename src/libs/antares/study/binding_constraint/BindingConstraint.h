@@ -114,7 +114,7 @@ public:
     //! Ordered Set of binding constraints
     using Set = std::set<BindingConstraint*, CompareBindingConstraintName>;
 
-    class EnvForLoading final
+    class   EnvForLoading final
     {
     public:
         explicit EnvForLoading(AreaList& l) : areaList(l)

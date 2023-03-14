@@ -27,7 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 #define __ANTARES_LIBS_STUDY_PARTS_LOAD_CONTAINER_H__
 
-#include "prepro.h"
 #include "series.h"
 #include <yuni/core/noncopyable.h>
 
@@ -37,6 +36,8 @@ namespace Data
 {
 namespace Load
 {
+
+class Prepro;
 class Container final : private Yuni::NonCopyable<Container>
 {
 public:
