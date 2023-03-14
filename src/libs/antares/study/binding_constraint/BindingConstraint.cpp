@@ -557,6 +557,11 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
             pComments = p->value;
             continue;
         }
+        if (p->key == "group")
+        {
+            group_ = p->value.c_str();
+            continue;
+        }
 
         // It may be a link
         // Separate the key
