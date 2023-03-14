@@ -59,6 +59,7 @@
 #include "overflow.h"
 #include "waterValue.h"
 #include "hydroCost.h"
+#include "shortTermStorage.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
@@ -147,6 +148,7 @@ typedef          // Prices
                      <Overflows          // Hydraulic overflows
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
+                        <ShortTermStorage
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <LMRViolations           // LMR Violations
@@ -154,8 +156,9 @@ typedef          // Prices
                             <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                              <LOLD                 // LOLD
                               <LOLP                // LOLP
-                               <AvailableDispatchGen<DispatchableGenMargin<
-                                 DtgMarginCsr // DTG MRG CSR
+                               <AvailableDispatchGen
+                                <DispatchableGenMargin
+                                <DtgMarginCsr // DTG MRG CSR
                                  <Marge<NonProportionalCost<
                                    NonProportionalCostByDispatchablePlant // Startup cost + Fixed
                                                                           // cost per thermal
@@ -166,7 +169,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

@@ -246,6 +246,9 @@ public:
     void hourBegin(uint hourInTheYear);
     //! Event: For a given hour in the year, walking through all areas
     void hourForEachArea(State& state);
+
+    void hourForEachArea(State& state, unsigned int numSpace);
+
     //! Event: For a given hour in the year, walking through all thermal clusters
     // for a given area
     void hourForClusters(State& state);
