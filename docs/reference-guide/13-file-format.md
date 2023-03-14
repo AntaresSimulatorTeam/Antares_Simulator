@@ -1,6 +1,31 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.6.0
+### Input
+A few changes related to the scenarization of RHS for binding constraints.
+
+- For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
+    - **input/bindingconstraints/&lt;id&gt;_lt.txt**
+    - **input/bindingconstraints/&lt;id&gt;_gt.txt**
+    - **input/bindingconstraints/&lt;id&gt;_eq.txt**
+
+    Each of these files must have 8674 rows and N >= 1 columns, the same number for all.
+
+- In file **input/bindingconstraints/bindingconstraints.ini**, add property `group` to every section
+- Binding constraints in the same group must have the same number of RHS columns (3 files described above)
+- In file **settings/scenariobuilder.dat**, add prefix `bc` for every group of binding constraints. The syntax is the following
+```
+bc,<group>,<MC Year> = <TS number>
+```
+This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
+
+- 0 &lt;= MC Year &lt;= generaldata.ini/general.nbyears
+- 1 &lt;=TS number &lt;= number of columns for the group
+
+### Output
+Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
+
 ## v8.5.2
 ### Input
 In file **settings/generaldata.ini**, in section `optimization`, link-type is now deprecated
