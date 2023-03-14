@@ -1544,9 +1544,9 @@ void BindingConstraint::matrix(const double onevalue)
     pValues.markAsModified();
 }
 
-    std::string BindingConstraint::group() {
-        return "dummy_group";
-    }
+std::string BindingConstraint::group() const {
+    return group_;
+}
 
 } // namespace Data
 } // namespace Antares
