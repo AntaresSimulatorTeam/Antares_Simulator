@@ -31,7 +31,8 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
                 << "operator = equal\n"
                 << "filter-year-by-year = annual\n"
                 << "filter-synthesis = hourly\n"
-                << "comments = dummy_comment"
+                << "comments = dummy_comment\n"
+                << "group = dummy_group\n"
                    ;
     constraints.close();
     std::ofstream rhs(working_tmp_dir / "dummy_id.txt");
