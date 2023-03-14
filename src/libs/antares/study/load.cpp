@@ -30,6 +30,8 @@
 #include "../array/correlation.h"
 #include "../inifile/inifile.h"
 #include "scenario-builder/sets.h"
+#include "ui-runtimeinfos.h"
+#include "antares/study/parts/load/prepro.h"
 
 using namespace Yuni;
 using Antares::Constants::nbHoursInAWeek;

@@ -45,12 +45,11 @@
 #include "header.h"
 #include "version.h"
 #include "sets.h"
-#include "ui-runtimeinfos.h"
-#include "../array/correlation.h"
 #include "progression/progression.h"
 #include "load-options.h"
 #include "../date.h"
 #include "layerdata.h"
+#include "antares/array/correlation.h"
 
 #include <memory>
 
@@ -64,6 +63,7 @@ namespace Data
 ** \brief Antares Study
 */
 
+class UIRuntimeInfo;
 class Study final : public Yuni::NonCopyable<Study>, public IObject, public LayerData
 {
 public:

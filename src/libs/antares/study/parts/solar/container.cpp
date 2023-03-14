@@ -28,6 +28,7 @@
 #include <yuni/yuni.h>
 #include "../../study.h"
 #include "container.h"
+#include "antares/study/parts/parts.h"
 
 using namespace Yuni;
 

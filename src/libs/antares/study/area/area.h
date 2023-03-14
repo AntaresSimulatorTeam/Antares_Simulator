@@ -38,6 +38,7 @@
 #include <set>
 #include "links.h"
 #include "ui.h"
+#include "antares/study/parameters/adq-patch-params.h"
 
 namespace Antares
 {
