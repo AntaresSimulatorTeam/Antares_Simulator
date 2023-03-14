@@ -10,7 +10,7 @@ A few changes related to the scenarization of RHS for binding constraints.
     - **input/bindingconstraints/&lt;id&gt;_gt.txt**
     - **input/bindingconstraints/&lt;id&gt;_eq.txt**
 
-    Each of these files must have 8674 rows and N >= 1 columns, the same number for all.
+    Each of these files must have 8674 rows and N >= 1 columns, the same number for the 3 files.
 
 - In file **input/bindingconstraints/bindingconstraints.ini**, add property `group` to every section
 - Binding constraints in the same group must have the same number of RHS columns (3 files described above)
@@ -20,7 +20,7 @@ bc,<group>,<MC Year> = <TS number>
 ```
 This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
 
-- 0 &lt;= MC Year &lt;= generaldata.ini/general.nbyears
+- 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
 ### Output
