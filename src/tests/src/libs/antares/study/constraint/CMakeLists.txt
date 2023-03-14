@@ -17,6 +17,3 @@ endif()
 add_test(NAME test_constraint COMMAND test_constraint)
 
 set_property(TEST test_constraint PROPERTY LABELS unit)
-
-file(COPY bindingconstraints.ini DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-file(COPY dummy_id.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
