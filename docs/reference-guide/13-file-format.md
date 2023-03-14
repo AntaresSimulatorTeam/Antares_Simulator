@@ -9,12 +9,13 @@ A few changes related to the introduction of short-term storage objects.
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
 * This file contains the multiple sections whose name is ignored. Each section contains these properties:
     * `name` [str]
-    * `efficiency` [double]
-    * `reservoircapacity` [double]
-    * `initiallevel` [double]
-    * `withdrawalnominalcapacity` [double]
-    * `injectionnominalcapacity` [double]
-    * `storagecycle` [double]
+    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other_1", ... , "Other_5". Default Other_1
+    * `efficiency` [double] in range 0-1
+    * `reservoircapacity` [double] &gt; 0
+    * `initiallevel` [double] &gt; 0
+    * `withdrawalnominalcapacity` [double] &gt; 0
+    * `injectionnominalcapacity` [double] &gt; 0
+    * `storagecycle` [int] in range 24-168
 
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**
     * **PMAX-injection.txt**
