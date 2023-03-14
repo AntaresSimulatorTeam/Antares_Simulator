@@ -24,6 +24,13 @@ A few changes related to the introduction of short-term storage objects.
     * **lower-rule-curve.txt**
     * **upper-rule-curve.txt**
 All of the above 5 files contain 8760 rows and 1 column.
+### Output
+* For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+    * `ST-<group id>-withdrawal`
+    * `ST-<group id>-injection`
+    * `ST-<group id>-level`
+* For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
+
 
 ## v8.5.2
 ### Input
