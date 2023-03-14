@@ -1545,7 +1545,7 @@ void BindingConstraint::matrix(const double onevalue)
 }
 
     std::string BindingConstraint::group() {
-        return std::string();
+        return "dummy_group";
     }
 
 } // namespace Data
