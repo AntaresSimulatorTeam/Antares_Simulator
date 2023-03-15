@@ -230,7 +230,7 @@ public:
     {
         std::map<Antares::Data::ShortTermStorage::Group, double> sumInjection;
         std::map<Antares::Data::ShortTermStorage::Group, double> sumWithdrawal;
-        for (int idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
+        for (uint idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
         {
             auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
             sumInjection[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[idx];

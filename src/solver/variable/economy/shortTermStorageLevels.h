@@ -219,7 +219,7 @@ public:
     {
         std::map<Antares::Data::ShortTermStorage::Group, double> sumLevels;
         // Next item in the list
-        for (int idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
+        for (uint idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
         {
             auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
             sumLevels[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[idx];
