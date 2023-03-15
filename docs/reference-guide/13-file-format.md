@@ -3,7 +3,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.6.0
 ### Input
-In file **input/thermal/cluster/area/list.ini** add pollutants co2, nh3, nox, pm2\_5, pm5, pm10, nmvoc, op1, op2, op3, op4, op5 emis.
+In file **input/thermal/cluster/area/list.ini** add properties co2, nh3, nox, pm2\_5, pm5, pm10, nmvoc, op1, op2, op3, op4, op5 of type double
 
 ### Output
 In files **economy/mc-all/areas/** add column: CO2 EMIS.
