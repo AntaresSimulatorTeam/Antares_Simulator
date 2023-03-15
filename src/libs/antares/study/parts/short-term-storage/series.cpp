@@ -24,22 +24,21 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#pragma once
-#include <vector>
-#include <string>
+#include <antares/logs.h>
+
+#include "series.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-class Series {
-public:
-    bool validate() const;
-    bool loadFromFolder(const std::string& folder);
 
-private:
-    std::vector<double> maxInjection;
-    std::vector<double> maxWithdrawal;
-    std::vector<double> inflows;
-    std::vector<double> lowerRuleCurve;
-    std::vector<double> upperRuleCurve;
-};
+bool Series::validate() const
+{
+    return true;
 }
+
+bool Series::loadFromFolder(const std::string& folder)
+{
+    return true;
+}
+
+} // namespace Antares::Data::ShortTermStorage
