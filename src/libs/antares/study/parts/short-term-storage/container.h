@@ -37,7 +37,7 @@ class STstorageInput
 public:
     bool validate();
     // 1. Read list.ini
-    bool createSTstorageClustersFromIniFile(const std::string& path);
+    bool createSTstorageClustersFromIniFile(const std::string& path, const std::string& parentId);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 

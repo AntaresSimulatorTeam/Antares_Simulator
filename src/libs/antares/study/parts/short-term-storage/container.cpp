@@ -44,7 +44,8 @@ bool STstorageInput::validate()
 }
 
 
-bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
+bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path,
+        const std::string& parentId)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -59,6 +60,7 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
         STstorageCluster cluster;
         if (!cluster.loadFromSection(*section))
             return false;
+        cluster.parentId = parentId;
 
         storagesById.insert(std::pair<std::string, STstorageCluster>(section->name.c_str(), cluster));
     }
@@ -71,7 +73,25 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
 
 bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 {
-    // TODO
-    return false;
+    if (folder.empty())
+        return false;
+
+    bool ret = true;
+
+    for (auto& cluster : storagesByIndex)
+    {
+        const std::string buffer = folder + SEP + cluster->parentId + SEP + cluster->getName()
+            + SEP + "series.txt";
+        /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
+        cluster->loadSeries(folder);
+    }
+
+    /* if (s.usedByTheSolver && s.parameters.derated) */
+    /*     series->series.averageTimeseries(); */
+
+    /* series->timeseriesNumbers.clear(); */
+
+    return ret;
 }
+
 } // namespace Antares::Data::ShortTermStorage

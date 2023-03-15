@@ -236,6 +236,7 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
     study/parts/short-term-storage/container.cpp
     study/parts/short-term-storage/properties.h
     study/parts/short-term-storage/properties.cpp
+    study/parts/short-term-storage/series.cpp
     study/parts/short-term-storage/series.h
     study/parts/short-term-storage/cluster.h
     study/parts/short-term-storage/cluster.cpp)

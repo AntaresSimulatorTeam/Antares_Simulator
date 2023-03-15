@@ -58,6 +58,16 @@ bool STstorageCluster::validate()
     return properties.validate();
 }
 
+bool STstorageCluster::loadSeries(const std::string& path)
+{
+    return series.loadFromFolder(path);
+}
+
+const std::string STstorageCluster::getName()
+{
+    return properties.name;
+}
+
 void STstorageCluster::printProperties()
 {
     logs.notice() << "name : " << properties.name;
