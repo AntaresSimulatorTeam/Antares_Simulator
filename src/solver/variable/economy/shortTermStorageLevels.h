@@ -217,33 +217,19 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        // Regarding short term levels : for a given group, we need to add levels of clusters that 
-        // belong to that group. So levels should be expressed in MWh, not in per cents of a so called
-        // capacity, wich would not have any sense as clusters of different capacities 
-        // can contribute to a group.
-
-        /*
-            Should eventually be something like :
-        */
-        //for (uint cluster_index = 0; cluster_index != state.area->shortTermStorage.clusterCount(); ++cluster_index)
-        //{
-        //    auto* shortTermStorageCluster = state.area->shortTermStorage[cluster_index];
-        //    int clusterGroup = shortTermStorageCluster->groupID;
-        //    
-        //    double clusterLevel = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->level[cluster_index];
-        //    
-        //    pValuesForTheCurrentYear[numSpace][clusterGroup][state.hourInTheYear] += clusterLevel;
-        //}
-
-        /*
-            In the meantime :
-        */
-        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorageLevels::columnCount; clusterGroupID++)
-        {
-            pValuesForTheCurrentYear[numSpace][clusterGroupID][state.hourInTheYear] = clusterGroupID * 100;
-        }
-        
+        std::map<Antares::Data::ShortTermStorage::Group, double> sumLevels;
         // Next item in the list
+        for (int idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
+        {
+            auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
+            sumLevels[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[idx];
+        }
+        for (auto [groupID, level] : sumLevels)
+        {
+            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
+            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear] = level;
+        }
+
         NextType::hourForClusters(state, numSpace);
     }
 
