@@ -149,7 +149,7 @@ typedef          // Prices
                      <Overflows          // Hydraulic overflows
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
-                        <ShortTermStorage
+                        <ShortTermStorageEnergy
                         <ShortTermStorageLevels
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
@@ -225,6 +225,10 @@ typedef // Prices
                                           WaterValue,
                                           Common::SpatialAggregate<
                                             HydroCost,
+                                            Common::SpatialAggregate <
+                                              ShortTermStorageEnergy,
+                                            Common::SpatialAggregate <
+                                              ShortTermStorageLevels,
                                             Common::SpatialAggregate<
                                               UnsupliedEnergy,
                                               Common::SpatialAggregate<
@@ -264,7 +268,7 @@ typedef // Prices
                                                                                           // -
                                                                                           // refs:
                                                                                           // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint
