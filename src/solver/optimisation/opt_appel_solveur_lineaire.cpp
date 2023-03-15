@@ -307,13 +307,6 @@ RESOLUTION:
         double* pt;
         double CoutOpt = 0.0;
 
-        auto X = ProblemeAResoudre->X;
-        for (int i = 0; i < 168; i++) {
-          auto CVar = problemeHebdo->CorrespondanceVarNativesVarOptim[i];
-          auto& sts = CVar->ShortTermStorage;
-          logs.notice() << i << " lev = " << X[sts.LevelVariable[0]] << " withd = " << X[sts.WithdrawalVariable[0]] << " inj = " << X[sts.InjectionVariable[0]];
-        }
-
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
             CoutOpt += ProblemeAResoudre->CoutLineaire[i] * ProblemeAResoudre->X[i];
