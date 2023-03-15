@@ -160,17 +160,20 @@ typedef struct
 
 namespace ShortTermStorage
 {
-struct SINGLE_OBJECT_INPUT
+struct PROPERTIES
 {
     double capacity;
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
 
+    bool hasInitialLevel;
+    double initialLevel;
+
     int globalIndex;
 };
 
-using AREA_INPUT = std::vector<::ShortTermStorage::SINGLE_OBJECT_INPUT>; // index is local
+using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
 
 struct RESULTS
 {
