@@ -37,7 +37,7 @@ namespace Variable
 namespace Economy
 {
 
-struct VCardShortTermStorage
+struct VCardShortTermStorageEnergy
 {
     //! Caption
     static const char* Caption()
@@ -65,7 +65,7 @@ struct VCardShortTermStorage
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardShortTermStorage VCardForSpatialAggregate;
+    typedef VCardShortTermStorageEnergy VCardForSpatialAggregate;
 
     enum
     {
@@ -132,16 +132,16 @@ struct VCardShortTermStorage
 
 
 template<class NextT = Container::EndOfList>
-class ShortTermStorage
- : public Variable::IVariable<ShortTermStorage<NextT>, NextT, VCardShortTermStorage>
+class ShortTermStorageEnergy
+ : public Variable::IVariable<ShortTermStorageEnergy<NextT>, NextT, VCardShortTermStorageEnergy>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardShortTermStorage VCardType;
+    typedef VCardShortTermStorageEnergy VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ShortTermStorage<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ShortTermStorageEnergy<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -168,7 +168,7 @@ public:
     };
 
 public:
-    ~ShortTermStorage()
+    ~ShortTermStorageEnergy()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -286,7 +286,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class ShortTermStorage
+}; // class ShortTermStorageEnergy
 
 } // namespace Economy
 } // namespace Variable
