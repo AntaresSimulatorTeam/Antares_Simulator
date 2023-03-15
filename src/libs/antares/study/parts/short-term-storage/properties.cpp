@@ -53,7 +53,19 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<double>(this->capacity);
 
     if (p->key == "initiallevel")
-        return p->value.to<double>(this->initialLevel);
+    {
+        if (p->value == "optim")
+            return true;
+
+        double tmp;
+        if (p->value.to<double>(tmp))
+        {
+            this->initialLevel = tmp;
+            return true;
+        }
+        return false;
+
+    }
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -92,16 +104,20 @@ bool Properties::validate()
         efficiencyFactor = 1;
     }
 
-    if (initialLevel < 0)
+    if (initialLevel.has_value())
     {
-        logs.warning() << "initiallevel for cluster: " << name << " should be positive";
-        initialLevel = 0;
-    }
+        if (initialLevel < 0)
+        {
+            logs.warning() << "initiallevel for cluster: " << name << " should be positive";
+            initialLevel = 0;
+        }
 
-    if (initialLevel > 1)
-    {
-        logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1";
-        initialLevel = 1;
+        if (initialLevel > capacity)
+        {
+            logs.warning() << "initiallevel for cluster: " << name <<
+                " should be inferior to reservoir capacity: " << capacity;
+            initialLevel = capacity;
+        }
     }
     //TODO initialLevel = optim
 

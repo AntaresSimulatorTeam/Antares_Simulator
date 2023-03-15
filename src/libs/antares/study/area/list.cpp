@@ -1079,6 +1079,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
     }
 
+    // Short term storage
+    {
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "st-storage" << area.id;
+        area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
+    }
+
+
     // Renewable cluster list
     if (study.header.version >= 810)
     {

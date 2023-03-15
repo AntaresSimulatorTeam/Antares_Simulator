@@ -74,7 +74,10 @@ void STstorageCluster::printProperties()
     logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
     logs.notice() << "withdrawalnominalcapacity : " << properties.withdrawalCapacity;
     logs.notice() << "reservoircapacity : " << properties.capacity;
-    logs.notice() << "initiallevel : " << properties.initialLevel;
+    if (properties.initialLevel.has_value())
+        logs.notice() << "initiallevel : " << *properties.initialLevel;
+    else
+        logs.notice() << "initiallevel : Not initialized";
     logs.notice() << "efficiency : " << properties.efficiencyFactor;
     logs.notice() << "storagecycle : " << properties.cycleDuration;
     for (auto& i : Properties::stStoragePropertyGroupEnum)

@@ -80,7 +80,7 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer = folder + SEP + cluster->parentId + SEP + cluster->getName()
+        const std::string buffer = folder + SEP + cluster->getName()
             + SEP + "series.txt";
         /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
         cluster->loadSeries(folder);
