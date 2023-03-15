@@ -38,6 +38,7 @@ namespace Antares::Data::ShortTermStorage {
   };
 
   class Properties {
+  public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
     // Injection nominal capacity, >= 0
