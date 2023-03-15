@@ -27,6 +27,10 @@
 
 #pragma once
 
+// TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
+// but this problem has nothing to do with PROBLEME_HEBDO
+#include "../simulation/sim_structure_probleme_economique.h"
+
 class HourlyCSRProblem
 {
 private:

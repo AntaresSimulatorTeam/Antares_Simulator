@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -153,7 +153,7 @@ public:
                 // year-by-year
                 if (!u.gatheringInformationsForInput)
                 {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+                    if (u.study.parameters.yearByYear)
                     {
                         for (unsigned int i = 0; i != u.years; ++i)
                             u.takeIntoConsiderationANewTimeserieForDiskOutput(false);

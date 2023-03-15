@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -674,7 +674,6 @@ void Panel::loadDataFromFile()
     case Data::stdmAdequacy:
         filename << output.path << SEP << "adequacy" << SEP;
         break;
-    case Data::stdmAdequacyDraft:
     case Data::stdmExpansion:
     case Data::stdmUnknown:
     case Data::stdmMax:

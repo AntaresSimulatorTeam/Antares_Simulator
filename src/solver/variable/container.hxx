@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -258,10 +258,6 @@ void List<NextT>::buildSurveyReport(SurveyResults& results,
                                     int fileLevel,
                                     int precision) const
 {
-    // We must not do something if mc and !annual
-    if (fileLevel & Category::mc && !(precision & Category::annual))
-        return;
-
     // Reset
     results.data.columnIndex = 0;
 
@@ -289,10 +285,6 @@ void List<NextT>::buildAnnualSurveyReport(SurveyResults& results,
                                           int precision,
                                           unsigned int numSpace) const
 {
-    // We must not do something if mc and !annual
-    if (fileLevel & Category::mc && !(precision & Category::annual))
-        return;
-
     // Reset
     results.data.columnIndex = 0;
 

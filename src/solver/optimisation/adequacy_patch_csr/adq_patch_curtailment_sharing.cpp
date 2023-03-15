@@ -29,6 +29,7 @@
 #include "../opt_fonctions.h"
 #include "csr_quadratic_problem.h"
 #include "count_constraints_variables.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include <cmath>
 #include "../study/area/scratchpad.h"
@@ -42,9 +43,10 @@ double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             int Area,
                             int hour)
 {
-    double ensInit
+    const double ensInit
       = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-    double threshold = problemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+    const double threshold
+      = problemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
 
     problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations
@@ -70,12 +72,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     int Interco = problemeHebdo->IndexDebutIntercoOrigine[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
             netPositionInit -= problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+        else if (problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
@@ -86,12 +88,12 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     Interco = problemeHebdo->IndexDebutIntercoExtremite[Area];
     while (Interco >= 0)
     {
-        if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
             == physicalAreaInsideAdqPatch)
         {
             netPositionInit += problemeHebdo->ValeursDeNTC[hour]->ValeurDuFlux[Interco];
         }
-        else if (problemeHebdo->adequacyPatchRuntimeData.originAreaMode[Interco]
+        else if (problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco]
                  == physicalAreaOutsideAdqPatch)
         {
             flowsNode1toNodeA
@@ -123,11 +125,11 @@ void HourlyCSRProblem::calculateCsrParameters()
 
     for (int Area = 0; Area < problemeHebdo_->NombreDePays; Area++)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[Area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[Area]
             == Antares::Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
-            // set DTG MRG CSR in all areas inside adq-path for all CSR triggered hours to -1.0
-            problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDtgMrgCsr[hour] = -1.0;
+            problemeHebdo_->adequacyPatchRuntimeData->addCSRTriggeredAtAreaHour(Area, hour);
+
             // calculate netPositionInit and the RHS of the AreaBalance constraints
             std::tie(netPositionInit, std::ignore, std::ignore)
               = Antares::Data::AdequacyPatch::calculateAreaFlowBalance(problemeHebdo_, Area, hour);
@@ -170,7 +172,8 @@ void HourlyCSRProblem::buildProblemVariables()
 
 void HourlyCSRProblem::buildProblemConstraintsLHS()
 {
-    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(problemeHebdo_, problemeAResoudre_, *this);
+    Antares::Solver::Optimization::CsrQuadraticProblem csrProb(
+      problemeHebdo_, problemeAResoudre_, *this);
     csrProb.buildConstraintMatrix();
 }
 

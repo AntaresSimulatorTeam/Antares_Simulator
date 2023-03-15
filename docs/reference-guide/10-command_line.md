@@ -14,7 +14,6 @@ _In all cases, arguments " –h" or "–help" can be used to get help_
 |--expansion | Force the simulation in expansion mode |
 |--economy | Force the simulation in economy mode |
 |--adequacy | Force the simulation in adequacy mode |
-|--draft | Force the simulation in adequacy-draft mode |
 |--parallel | Enable the parallel computation of MC years |
 |--force-parallel=VALUE | Override the max number of years computed simultaneously |
 

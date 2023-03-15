@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,23 +37,20 @@
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    int Interco;
-    int NombreDeVariables = 0;
-
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     assert(ProblemeAResoudre != NULL);
 
-    CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+    int nombreDeVariables = 0;
 
-    for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
-          = NombreDeVariables;
-        ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
-        NombreDeVariables++;
+        CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco]
+          = nombreDeVariables;
+        ProblemeAResoudre->TypeDeVariable[nombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
+        nombreDeVariables++;
     }
-    ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
+    ProblemeAResoudre->NombreDeVariables = nombreDeVariables;
 }

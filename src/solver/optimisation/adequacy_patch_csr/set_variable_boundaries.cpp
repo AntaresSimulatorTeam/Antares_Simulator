@@ -29,7 +29,7 @@
 
 #include "../solver/simulation/simulation.h"
 #include "../solver/simulation/sim_structure_donnees.h"
-#include "../solver/simulation/sim_extern_variables_globales.h"
+#include "../simulation/adequacy_patch_runtime_data.h"
 
 #include "../solver/optimisation/opt_fonctions.h"
 
@@ -51,7 +51,7 @@ void HourlyCSRProblem::setBoundsOnENS()
     // variables: ENS for each area inside adq patch
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[area];
@@ -61,9 +61,8 @@ void HourlyCSRProblem::setBoundsOnENS()
               = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDENS[triggeredHour]
                 + csrSolverRelaxation;
 
-            problemeAResoudre_.X[var]
-              = problemeHebdo_->ResultatsHoraires[area]
-                  ->ValeursHorairesDeDefaillancePositive[triggeredHour];
+            problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
+                                          ->ValeursHorairesDeDefaillancePositive[triggeredHour];
 
             AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
                                     ->ValeursHorairesDeDefaillancePositive[triggeredHour]);
@@ -86,7 +85,7 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
     // variables: Spilled Energy for each area inside adq patch
     for (int area = 0; area < problemeHebdo_->NombreDePays; ++area)
     {
-        if (problemeHebdo_->adequacyPatchRuntimeData.areaMode[area]
+        if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[area]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[area];
@@ -94,13 +93,11 @@ void HourlyCSRProblem::setBoundsOnSpilledEnergy()
             problemeAResoudre_.Xmin[var] = -csrSolverRelaxation;
             problemeAResoudre_.Xmax[var] = LINFINI_ANTARES;
 
-            problemeAResoudre_.X[var]
-              = problemeHebdo_->ResultatsHoraires[area]
-                  ->ValeursHorairesDeDefaillanceNegative[triggeredHour];
+            problemeAResoudre_.X[var] = problemeHebdo_->ResultatsHoraires[area]
+                                          ->ValeursHorairesDeDefaillanceNegative[triggeredHour];
 
-            double* AdresseDuResultat
-              = &(problemeHebdo_->ResultatsHoraires[area]
-                    ->ValeursHorairesSpilledEnergyAfterCSR[triggeredHour]);
+            double* AdresseDuResultat = &(problemeHebdo_->ResultatsHoraires[area]
+                                            ->ValeursHorairesSpilledEnergyAfterCSR[triggeredHour]);
 
             problemeAResoudre_.AdresseOuPlacerLaValeurDesVariablesOptimisees[var]
               = AdresseDuResultat;
@@ -118,8 +115,7 @@ void HourlyCSRProblem::setBoundsOnFlows()
       = problemeHebdo_->CorrespondanceVarNativesVarOptim[triggeredHour];
     double* Xmin = problemeAResoudre_.Xmin;
     double* Xmax = problemeAResoudre_.Xmax;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC
-      = problemeHebdo_->ValeursDeNTC[triggeredHour];
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo_->ValeursDeNTC[triggeredHour];
 
     // variables bounds: transmissin flows (flow, direct_direct and flow_indirect). For links
     // between nodes of type 2. Set hourly bounds for links between nodes of type 2, depending on
@@ -127,9 +123,9 @@ void HourlyCSRProblem::setBoundsOnFlows()
     for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; ++Interco)
     {
         // only consider link between 2 and 2
-        if (problemeHebdo_->adequacyPatchRuntimeData.originAreaMode[Interco]
+        if (problemeHebdo_->adequacyPatchRuntimeData->originAreaMode[Interco]
               != Data::AdequacyPatch::physicalAreaInsideAdqPatch
-            || problemeHebdo_->adequacyPatchRuntimeData.extremityAreaMode[Interco]
+            || problemeHebdo_->adequacyPatchRuntimeData->extremityAreaMode[Interco]
                  != Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             continue;

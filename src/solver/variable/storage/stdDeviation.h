@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -135,24 +135,7 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        switch (fileLevel)
-        {
-        case Category::id:
-            break;
-        case Category::mc:
-        {
-            switch (precision)
-            {
-            case Category::hourly:
-                InternalExportValuesMC<S, maxHoursInAYear, VCardT, Category::hourly>(
-                  report, results, stdDeviationHourly);
-                break;
-            default:
-                break;
-            }
-            break;
-        }
-        default:
+        if (!(fileLevel & Category::id))
         {
             switch (precision)
             {
@@ -177,7 +160,6 @@ protected:
                   report, results, &stdDeviationYear);
                 break;
             }
-        }
         }
         // Next
         NextType::template buildSurveyReport<S, VCardT>(

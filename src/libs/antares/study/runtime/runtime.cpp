@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -58,11 +58,6 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         // Precache allocation correlation coefficients
         area.hydro.allocation.prepareForSolver(study.areas);
 
-        // Creating runtime-data for the area
-
-        // alias to the simulation mode
-        auto mode = r.mode;
-
         // Hydro TS Generator: log(expectation) ; log(stddeviation)
         if (area.hydro.prepro)
         {
@@ -97,7 +92,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
         }
 
         // Spinning - Economic Only - If no prepro
-        if (mode != stdmAdequacyDraft && !(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
+        if (!(timeSeriesThermal & r.parameters->timeSeriesToRefresh))
         {
             // Calculation of the spinning
             area.thermal.list.calculationOfSpinning();
@@ -117,9 +112,7 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
 
 static void StudyRuntimeInfosInitializeAreaLinks(Study& study, StudyRuntimeInfos& r)
 {
-    r.interconnectionsCount = study.areas.areaLinkCount();
-    using AreaLinkPointer = AreaLink*;
-    r.areaLink = new AreaLinkPointer[r.interconnectionsCount];
+    r.areaLink.resize(study.areas.areaLinkCount());
 
     uint indx = 0;
 
@@ -198,22 +191,19 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
     else
     {
-        if (stdmAdequacyDraft != study.parameters.mode)
+        // In Economy mode, we must deal with an integral number of weeks
+        // A week : 168 hours
+        if ((b - a + 1) % 168)
         {
-            // In Economy mode, we must deal with an integral number of weeks
-            // A week : 168 hours
-            if ((b - a + 1) % 168)
-            {
-                // We have here too much hours, the interval will be reduced
-                // Log Entry
-                logs.info() << "    Partial week detected. Not allowed in "
-                            << StudyModeToCString(study.parameters.mode);
-                logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                            << (1 + b);
-                // Reducing
-                while (b > a and 0 != ((b - a + 1) % 168))
-                    --b;
-            }
+            // We have here too much hours, the interval will be reduced
+            // Log Entry
+            logs.info() << "    Partial week detected. Not allowed in "
+                << StudyModeToCString(study.parameters.mode);
+            logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
+                << (1 + b);
+            // Reducing
+            while (b > a and 0 != ((b - a + 1) % 168))
+                --b;
         }
     }
 
@@ -305,7 +295,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     // (Example: 1 week: from 0 to 0 and it is valid)
     // As the number of hours has already been normalized to stick to a integral number of
     // weeks, this value must be greater than or equal to 168
-    if (not study.parameters.adequacyDraft() and limits.hour[rangeCount] < 168)
+    if (limits.hour[rangeCount] < 168)
     {
         logs.info();
         logs.fatal() << "At least one week is required to run a simulation.";
@@ -414,8 +404,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbDaysPerYear(0),
  nbMonthsPerYear(0),
  parameters(nullptr),
- interconnectionsCount(0),
- areaLink(nullptr),
  timeseriesNumberYear(nullptr),
  bindingConstraintCount(0),
  bindingConstraint(nullptr),
@@ -516,7 +504,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info();
     logs.info() << "Summary";
     logs.info() << "     areas: " << study.areas.size();
-    logs.info() << "     links: " << interconnectionsCount;
+    logs.info() << "     links: " << interconnectionsCount();
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     binding constraints: " << bindingConstraintCount;
@@ -582,6 +570,11 @@ void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
       = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
+uint StudyRuntimeInfos::interconnectionsCount() const
+{
+    return static_cast<uint>(areaLink.size());
+}
+
 static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& bc)
 {
     return bc.operatorType == '<' || bc.operatorType == '>';
@@ -624,8 +617,7 @@ void StudyRuntimeInfos::initializeThermalClustersInMustRunMode(Study& study) con
     {
         Area& area = *(study.areas.byIndex[a]);
         area.thermal.prepareAreaWideIndexes();
-        if (mode != stdmAdequacyDraft)
-            count += area.thermal.prepareClustersInMustRunMode();
+        count += area.thermal.prepareClustersInMustRunMode();
     }
 
     switch (count)
@@ -708,7 +700,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 
     delete[] timeseriesNumberYear;
-    delete[] areaLink;
     delete[] bindingConstraint;
 }
 
@@ -716,7 +707,7 @@ Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
 {
     if (r)
     {
-        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount
+        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount()
                + sizeof(BindingConstraint*) * r->bindingConstraintCount;
     }
     return 0;

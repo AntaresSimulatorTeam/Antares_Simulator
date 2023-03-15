@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -114,7 +114,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     {
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = ProblemeAResoudre->X[i];
         }
@@ -127,7 +127,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = std::numeric_limits<double>::quiet_NaN();
         }
