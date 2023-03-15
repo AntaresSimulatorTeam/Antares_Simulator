@@ -222,7 +222,7 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
     {
-        const uint nbSTS = (*problemeHebdo->ShortTermStorage)[areaIndex].storages.size();
+        const uint nbSTS = (*problemeHebdo->ShortTermStorage)[areaIndex].size();
         ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
         ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
     }
