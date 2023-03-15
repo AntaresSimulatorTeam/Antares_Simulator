@@ -1,6 +1,14 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.6.0
+### Input
+In file **input/thermal/cluster/area/list.ini** add pollutants co2, nh3, nox, pm2\_5, pm5, pm10, nmvoc, op1, op2, op3, op4, op5 emis.
+
+### Output
+In files **economy/mc-all/areas/** add column: CO2 EMIS.
+One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
+
 ## v8.5.2
 ### Input
 In file **settings/generaldata.ini**, in section `optimization`, link-type is now deprecated
