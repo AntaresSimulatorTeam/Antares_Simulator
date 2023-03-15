@@ -160,6 +160,9 @@ struct PROPERTIES
     double withdrawalCapacity;
     double efficiency;
 
+    bool hasInitialLevel;
+    double initialLevel;
+
     int globalIndex;
 };
 

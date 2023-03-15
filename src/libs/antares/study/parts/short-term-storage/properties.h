@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <optional>
 #pragma once
 
 namespace Antares::Data::ShortTermStorage {
@@ -47,7 +48,7 @@ namespace Antares::Data::ShortTermStorage {
     // Reservoir capacity in MWh, >= 0
     double capacity;
     // Initial level, <= capacity
-    double initialLevel;
+    std::optional<double> initialLevel;
     // Efficiency factor between 0 and 1
     double efficiencyFactor;
     // Cycle duration, 1 <= cycleDuration <= 168
