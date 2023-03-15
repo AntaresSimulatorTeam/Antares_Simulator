@@ -45,8 +45,6 @@ public:
     //debug purposes will be removed
     void printProperties();
 
-    std::string parentId;
-
 private:
     Series series;
     Properties properties;

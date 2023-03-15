@@ -31,7 +31,7 @@
 #include <string>
 #include <map>
 
-#include "../../../inifile.h"
+#include <antares/inifile.h>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -41,7 +41,11 @@ enum class Group
     PSP_closed,
     Pondage,
     Battery,
-    Other
+    Other1,
+    Other2,
+    Other3,
+    Other4,
+    Other5
 };
 
 class Properties

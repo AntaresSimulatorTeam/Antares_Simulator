@@ -38,7 +38,11 @@ const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
     {"PSP_closed", Group::PSP_closed},
     {"Pondage", Group::Pondage},
     {"Battery", Group::Battery},
-    {"Other", Group::Other}
+    {"Other1", Group::Other1},
+    {"Other2", Group::Other2},
+    {"Other3", Group::Other3},
+    {"Other4", Group::Other4},
+    {"Other5", Group::Other5}
 };
 
 bool Properties::loadKey(const IniFile::Property* p)
@@ -119,7 +123,6 @@ bool Properties::validate()
             initialLevel = capacity;
         }
     }
-    //TODO initialLevel = optim
 
     return true;
 }

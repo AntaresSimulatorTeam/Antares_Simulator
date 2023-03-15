@@ -55,7 +55,7 @@ bool STstorageCluster::loadFromSection(const IniFile::Section& section)
 
 bool STstorageCluster::validate()
 {
-    return properties.validate();
+    return properties.validate() && series.validate();
 }
 
 bool STstorageCluster::loadSeries(const std::string& path)

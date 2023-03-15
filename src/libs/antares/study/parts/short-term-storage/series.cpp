@@ -31,6 +31,11 @@
 namespace Antares::Data::ShortTermStorage
 {
 
+bool Series::validate() const
+{
+    return true;
+}
+
 bool Series::loadFromFolder(const std::string& folder)
 {
     return true;

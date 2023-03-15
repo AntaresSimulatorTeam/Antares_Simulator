@@ -1294,22 +1294,17 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         CString<30, false> stStoragePlant;
         stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
 
-        auto end = areas.end();
-        for (auto i = areas.begin(); i != end; ++i)
+        for (auto& [id, area] : areas)
         {
-            Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << stStoragePlant  << area.id;
-            ret = area.shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str(), area.id.c_str()) and ret;
-            area.shortTermStorage.validate();
+            buffer.clear() << pStudy.folderInput << stStoragePlant  << area->id;
+            ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str()) && ret;
+            area->shortTermStorage.validate();
         }
 
         //TODO remove: debug purpose
-        for (auto i = areas.begin(); i != end; ++i)
-        {
-            Area& area = *(i->second);
-            for (auto unit : area.shortTermStorage.storagesByIndex)
+        for (auto& [id, area] : areas)
+            for (auto unit : area->shortTermStorage.storagesByIndex)
                 unit->printProperties();
-        }
     }
 
     // Renewable data, specific to areas
