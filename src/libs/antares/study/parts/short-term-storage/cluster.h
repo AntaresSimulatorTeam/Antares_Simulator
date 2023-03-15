@@ -32,11 +32,14 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class Unit
+class STstorageCluster
 {
 public:
-    bool validate() const;
-    bool loadFromFolder(const std::string& folder);
+    bool validate();
+    bool loadFromSection(const IniFile::Section& section);
+
+    //debug purposes will be removed
+    void printProperties();
 
 public:
     Series series;
