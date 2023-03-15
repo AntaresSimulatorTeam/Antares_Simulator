@@ -228,31 +228,25 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        /*
-            Should eventually be something like :
-        */
-        //for (uint cluster_index = 0; cluster_index != state.area->shortTermStorage.clusterCount(); ++cluster_index)
-        //{
-        //    auto* shortTermStorageCluster = state.area->shortTermStorage[cluster_index];
-        //    int clusterGroup = shortTermStorageCluster->groupID;
-        //    
-        //    // Injection
-        //    // ---------
-        //    double ClusterInjection = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->injection[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup][state.hourInTheYear] += ClusterInjection;
-        //    
-        //    // Withdrawal
-        //    // ----------
-        //    double ClusterWithdrawal = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->withdrawal[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup + 1][state.hourInTheYear] += ClusterWithdrawal;
-        //}
-
-        /*
-            In the meantime :
-        */
-        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorage::columnCount; clusterGroupID++)
+        std::map<Antares::Data::ShortTermStorage::Group, double> sumInjection;
+        std::map<Antares::Data::ShortTermStorage::Group, double> sumWithdrawal;
+        for (int idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
         {
-            pValuesForTheCurrentYear[numSpace][clusterGroupID][state.hourInTheYear] = clusterGroupID * 100;
+            auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
+            sumInjection[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[idx];
+            sumWithdrawal[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[idx];
+        }
+
+        for (auto [groupID, injection] : sumInjection)
+        {
+            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
+            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear] = injection;
+        }
+
+        for (auto [groupID, withdrawal] : sumWithdrawal)
+        {
+            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
+            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear] = withdrawal;
         }
         
         // Next item in the list

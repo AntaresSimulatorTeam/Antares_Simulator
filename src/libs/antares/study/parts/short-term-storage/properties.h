@@ -37,7 +37,23 @@ namespace Antares::Data::ShortTermStorage {
     Other
   };
 
+  // TODO[FOM] Move to properties.cpp
+  inline int groupIndex(Group group)
+  {
+    switch (group)
+    {
+    case Group::PSP_open: return 0;
+    case Group::PSP_closed: return 1;
+    case Group::Pondage: return 2;
+    case Group::Battery: return 3;
+    case Group::Other: return 4;
+    default:
+      return 0;
+    }
+  }
+
   class Properties {
+  public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
     // Injection nominal capacity, >= 0
