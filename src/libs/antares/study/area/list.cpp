@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sys/stat.h>
 #include "../../antares.h"
 #include <yuni/io/file.h>
 #include <yuni/core/string.h>
@@ -1290,21 +1291,29 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "areas.ini";
-
-        CString<30, false> stStoragePlant;
-        stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
-
-        for (auto& [id, area] : areas)
+        struct stat sb;
+        if (!stat(buffer.c_str(), &sb))
         {
-            buffer.clear() << pStudy.folderInput << stStoragePlant  << area->id;
-            ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str()) && ret;
-            area->shortTermStorage.validate();
-        }
+            CString<30, false> stStoragePlant;
+            stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
 
-        //TODO remove: debug purpose
-        for (auto& [id, area] : areas)
-            for (auto unit : area->shortTermStorage.storagesByIndex)
-                unit->printProperties();
+            for (auto& [id, area] : areas)
+            {
+                buffer.clear() << pStudy.folderInput << stStoragePlant  << area->id;
+                ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str())
+                    && ret;
+                area->shortTermStorage.validate();
+            }
+
+            //TODO remove: debug purpose
+            for (auto& [id, area] : areas)
+                for (auto unit : area->shortTermStorage.storagesByIndex)
+                    unit->printProperties();
+        }
+        else
+        {
+            logs.info() << "Short term storage not found, skipping";
+        }
     }
 
     // Renewable data, specific to areas
