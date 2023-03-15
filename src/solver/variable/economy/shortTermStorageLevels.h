@@ -36,13 +36,13 @@ namespace Variable
 {
 namespace Economy
 {
-
-struct VCardShortTermStorage
+   
+struct VCardShortTermStorageLevels
 {
     //! Caption
     static const char* Caption()
     {
-        return "ST storage";
+        return "ST storage levels";
     }
     //! Unit
     static const char* Unit()
@@ -65,7 +65,7 @@ struct VCardShortTermStorage
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardShortTermStorage VCardForSpatialAggregate;
+    typedef VCardShortTermStorageLevels VCardForSpatialAggregate;
 
     enum
     {
@@ -80,7 +80,7 @@ struct VCardShortTermStorage
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 10,
+        columnCount = 5,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -103,26 +103,15 @@ struct VCardShortTermStorage
             switch (indx)
             {
             case 0:
-                return "PSP_open_injection";
+                return "PSP_open_level";
             case 1:
-                return "PSP_open_withdrawal";
+                return "PSP_closed_level";
             case 2:
-                return "PSP_closed_injection";
+                return "Pondage_level";
             case 3:
-                return "PSP_closed_withdrawal";
+                return "Battery_level";
             case 4:
-                return "Pondage_injection";
-            case 5:
-                return "Pondage_withdrawal";
-            case 6:
-                return "Battery_injection";
-            case 7:
-                return "Battery_withdrawal";
-            case 8:
-                return "Other_injection";
-            case 9:
-                return "Other_withdrawal";
-
+                return "Other_level";
             default:
                 return "<unknown>";
             }
@@ -132,16 +121,16 @@ struct VCardShortTermStorage
 
 
 template<class NextT = Container::EndOfList>
-class ShortTermStorage
- : public Variable::IVariable<ShortTermStorage<NextT>, NextT, VCardShortTermStorage>
+class ShortTermStorageLevels
+ : public Variable::IVariable<ShortTermStorageLevels<NextT>, NextT, VCardShortTermStorageLevels>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardShortTermStorage VCardType;
+    typedef VCardShortTermStorageLevels VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ShortTermStorage<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ShortTermStorageLevels<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -168,7 +157,7 @@ public:
     };
 
 public:
-    ~ShortTermStorage()
+    ~ShortTermStorageLevels()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -209,8 +198,8 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        VariableAccessorType::template ComputeStatistics<VCardType>(
-          pValuesForTheCurrentYear[numSpace]);
+        for (unsigned int i = 0; i != VCardType::columnCount; ++i)
+            pValuesForTheCurrentYear[numSpace][i].computeAveragesForCurrentYearFromHourlyResults();
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -228,6 +217,11 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
+        // Regarding short term levels : for a given group, we need to add levels of clusters that 
+        // belong to that group. So levels should be expressed in MWh, not in per cents of a so called
+        // capacity, wich would not have any sense as clusters of different capacities 
+        // can contribute to a group.
+
         /*
             Should eventually be something like :
         */
@@ -236,21 +230,15 @@ public:
         //    auto* shortTermStorageCluster = state.area->shortTermStorage[cluster_index];
         //    int clusterGroup = shortTermStorageCluster->groupID;
         //    
-        //    // Injection
-        //    // ---------
-        //    double ClusterInjection = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->injection[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup][state.hourInTheYear] += ClusterInjection;
+        //    double clusterLevel = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->level[cluster_index];
         //    
-        //    // Withdrawal
-        //    // ----------
-        //    double ClusterWithdrawal = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->withdrawal[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup + 1][state.hourInTheYear] += ClusterWithdrawal;
+        //    pValuesForTheCurrentYear[numSpace][clusterGroup][state.hourInTheYear] += clusterLevel;
         //}
 
         /*
             In the meantime :
         */
-        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorage::columnCount; clusterGroupID++)
+        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorageLevels::columnCount; clusterGroupID++)
         {
             pValuesForTheCurrentYear[numSpace][clusterGroupID][state.hourInTheYear] = clusterGroupID * 100;
         }
@@ -292,7 +280,7 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class ShortTermStorage
+}; // class ShortTermStorageLevels
 
 } // namespace Economy
 } // namespace Variable

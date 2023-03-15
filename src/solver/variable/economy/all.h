@@ -60,6 +60,7 @@
 #include "waterValue.h"
 #include "hydroCost.h"
 #include "shortTermStorage.h"
+#include "shortTermStorageLevels.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
@@ -149,6 +150,7 @@ typedef          // Prices
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
                         <ShortTermStorage
+                        <ShortTermStorageLevels
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <LMRViolations           // LMR Violations
@@ -169,7 +171,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
