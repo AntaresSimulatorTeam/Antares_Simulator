@@ -133,10 +133,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
-        // TODO[FOM] remove this ugly hack
-        auto study = Data::Study::Current::Get();
-        const uint shortTermStorageCount = study->runtime->shortTermStorageCount;
-        for (uint shortTermStorage = 0; shortTermStorage < shortTermStorageCount; shortTermStorage++)
+        for (uint shortTermStorage = 0; shortTermStorage < problemeHebdo->NumberOfShortTermStorage;
+             shortTermStorage++)
         {
             if (int cnt = CorrespondanceCntNativesCntOptim
                             ->ShortTermStorageLevelConstraint[shortTermStorage];

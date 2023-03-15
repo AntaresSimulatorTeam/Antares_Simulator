@@ -116,6 +116,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
 
+    problem.NumberOfShortTermStorage = study.runtime->shortTermStorageCount;
+
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
     problem.ExportMPS = study.parameters.include.exportMPS;
