@@ -54,9 +54,8 @@ static void importShortTermStorages(
             toInsert.efficiency = st->properties.efficiencyFactor;
             toInsert.injectionCapacity = st->properties.injectionCapacity;
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
-
             toInsert.initialLevel = st->properties.initialLevel;
-  
+
             toInsert.globalIndex = STindex;
             // TODO add missing properties, or use the same struct
             ShortTermStorageOut[i].push_back(toInsert);
