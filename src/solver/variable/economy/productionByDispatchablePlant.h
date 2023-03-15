@@ -337,16 +337,16 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        for (uint clusterIndex = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
         {
-            auto* thermalCluster = state.area->thermal.clusters[cluster_index];
+            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
             // Production for this hour
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-                += state.thermalClustersProductions[state.area->index][cluster_index];
+                += state.thermalClustersProductions[state.area->index][clusterIndex];
 
             pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
                                               + state.hourInTheYear]
-                = state.PMinOfClusters[state.area->index][cluster_index];
+                = state.PMinOfClusters[state.area->index][clusterIndex];
         }
 
         // Next item in the list

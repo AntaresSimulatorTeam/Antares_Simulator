@@ -296,10 +296,10 @@ public:
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        for (uint clusterIndex = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
         {
-            auto* cluster = state.area->thermal.clusters[cluster_index];
-            double hourlyClusterProduction = state.thermalClustersProductions[state.area->index][cluster_index];
+            auto* cluster = state.area->thermal.clusters[clusterIndex];
+            double hourlyClusterProduction = state.thermalClustersProductions[state.area->index][clusterIndex];
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
                 = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
