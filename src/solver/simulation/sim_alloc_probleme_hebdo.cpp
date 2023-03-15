@@ -237,11 +237,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.InjectionVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.WithdrawalVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.LevelVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
@@ -675,9 +675,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
 
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageInjectionVariable);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageWithdrawalVariable);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorageLevelVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.InjectionVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.WithdrawalVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.LevelVariable);
 
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);

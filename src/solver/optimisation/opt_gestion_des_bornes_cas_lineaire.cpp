@@ -177,24 +177,25 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
             for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex])
             {
                 const int globalIndex = storage.globalIndex;
-                auto& STSResult = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
+                auto& STSResult
+                  = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
                 // 1. Injection
-                int varInjection = CorrespondanceVarNativesVarOptim
-                                     ->ShortTermStorageInjectionVariable[globalIndex];
+                int varInjection = CorrespondanceVarNativesVarOptim->ShortTermStorage
+                                     .InjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
                 AddressForVars[varInjection] = &STSResult.injection[areaWideIndex];
 
                 // 2. Withdrwal
-                int varWithdrawal = CorrespondanceVarNativesVarOptim
-                                      ->ShortTermStorageWithdrawalVariable[globalIndex];
+                int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage
+                                      .WithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[areaWideIndex];
 
                 // 3. Levels
                 int varLevel
-                  = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
+                  = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
                 Xmin[varLevel] = 0.;
                 Xmax[varLevel] = storage.capacity;
                 AddressForVars[varLevel] = &STSResult.level[areaWideIndex];

@@ -77,21 +77,21 @@ static void shortTermStorageCost(
     {
         const int globalIndex = storage.globalIndex;
         if (const int varLevel
-            = CorrespondanceVarNativesVarOptim->ShortTermStorageLevelVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
             varLevel >= 0)
         {
             linearCost[varLevel] = 0;
         }
 
         if (const int varInjection
-            = CorrespondanceVarNativesVarOptim->ShortTermStorageInjectionVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex];
             varInjection >= 0)
         {
             linearCost[varInjection] = 0;
         }
 
         if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim->ShortTermStorageWithdrawalVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex];
             varWithdrawal >= 0)
         {
             linearCost[varWithdrawal] = 0;

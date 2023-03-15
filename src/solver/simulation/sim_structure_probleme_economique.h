@@ -64,9 +64,12 @@ typedef struct
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
 
-    int* ShortTermStorageInjectionVariable;
-    int* ShortTermStorageWithdrawalVariable;
-    int* ShortTermStorageLevelVariable;
+    struct
+    {
+        int* InjectionVariable;
+        int* WithdrawalVariable;
+        int* LevelVariable;
+    } ShortTermStorage;
 } CORRESPONDANCES_DES_VARIABLES;
 
 typedef struct

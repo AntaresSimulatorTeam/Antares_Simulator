@@ -81,7 +81,7 @@ static void shortTermStorageBalance(
     {
         const int globalIndex = storage.globalIndex;
         if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.ShortTermStorageInjectionVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim.ShortTermStorage.InjectionVariable[globalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -90,7 +90,7 @@ static void shortTermStorageBalance(
         }
 
         if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.ShortTermStorageWithdrawalVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim.ShortTermStorage.WithdrawalVariable[globalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -119,7 +119,7 @@ static void shortTermStorageLevels(
         int nombreDeTermes = 0;
         const int globalIndex = storage.globalIndex;
         // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel_next = VarOptim_next->ShortTermStorageLevelVariable[globalIndex];
+        if (const int varLevel_next = VarOptim_next->ShortTermStorage.LevelVariable[globalIndex];
             varLevel_next >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -127,7 +127,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varLevel = VarOptim_current->ShortTermStorageLevelVariable[globalIndex];
+        if (const int varLevel = VarOptim_current->ShortTermStorage.LevelVariable[globalIndex];
             varLevel >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -136,7 +136,7 @@ static void shortTermStorageLevels(
         }
 
         if (const int varInjection
-            = VarOptim_current->ShortTermStorageInjectionVariable[globalIndex];
+            = VarOptim_current->ShortTermStorage.InjectionVariable[globalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = -1.0 * storage.efficiency;
@@ -145,7 +145,7 @@ static void shortTermStorageLevels(
         }
 
         if (const int varWithdrawal
-            = VarOptim_current->ShortTermStorageWithdrawalVariable[globalIndex];
+            = VarOptim_current->ShortTermStorage.WithdrawalVariable[globalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
