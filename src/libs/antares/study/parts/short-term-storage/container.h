@@ -28,23 +28,23 @@
 #pragma once
 #include <string>
 #include <map>
-#include "cluster.h"
+#include "unit.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-class STstorageInput
+class Container
 {
 public:
-    bool validate();
+    bool validate() const;
     // 1. Read list.ini
-    bool createSTstorageClustersFromIniFile(const std::string& path);
+    bool createUnitsFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 
-    std::vector<STstorageCluster*> storagesByIndex;
+    std::vector<Unit*> storagesByIndex;
     // TODO[FOM] : fill this map with the address from storagesByIndex
     // Do it after storagesByIndex is complete, to avoid dangling pointers
     // caused by memory realloc.
-    std::map<std::string, STstorageCluster> storagesById;
+    std::map<std::string, Unit> storagesById;
 };
 } // namespace Antares::Data::ShortTermStorage

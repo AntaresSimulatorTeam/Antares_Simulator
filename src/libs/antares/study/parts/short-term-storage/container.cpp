@@ -25,51 +25,21 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <antares/logs.h>
-#include <filesystem>
-
 #include "container.h"
-
-#define SEP std::filesystem::path::preferred_separator
 
 namespace Antares::Data::ShortTermStorage
 {
-
-bool STstorageInput::validate()
+bool Container::validate() const
 {
-    bool ret = true;
-    for (auto& cluster : storagesByIndex)
-        ret &= cluster->validate();
-    return ret;
+    // TODO
+    return false;
 }
-
-
-bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
+bool Container::createUnitsFromIniFile(const std::string& path)
 {
-    const std::string pathIni(path + SEP + "list.ini");
-    IniFile ini;
-    if (!ini.open(pathIni))
-        return false;
-
-    if (!ini.firstSection)
-        return true;
-
-    for (auto* section = ini.firstSection; section; section = section->next)
-    {
-        STstorageCluster cluster;
-        if (!cluster.loadFromSection(*section))
-            return false;
-
-        storagesById.insert(std::pair<std::string, STstorageCluster>(section->name.c_str(), cluster));
-    }
-
-    for (auto& storage : storagesById)
-        storagesByIndex.push_back(&storage.second);
-
-    return true;
+    // TODO
+    return false;
 }
-
-bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
+bool Container::loadSeriesFromFolder(const std::string& folder)
 {
     // TODO
     return false;

@@ -1279,32 +1279,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         }
     }
 
-    // Short term storage data, specific to areas
-    {
-        logs.info() << "Loading short term storage clusters...";
-        buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "areas.ini";
-
-        CString<30, false> stStoragePlant;
-        stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
-
-        auto end = areas.end();
-        for (auto i = areas.begin(); i != end; ++i)
-        {
-            Area& area = *(i->second);
-            buffer.clear() << pStudy.folderInput << stStoragePlant  << area.id;
-            ret = area.shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str()) and ret;
-            area.shortTermStorage.validate();
-        }
-
-        //TODO remove: debug purpose
-        for (auto i = areas.begin(); i != end; ++i)
-        {
-            Area& area = *(i->second);
-            for (auto unit : area.shortTermStorage.storagesByIndex)
-                unit->printProperties();
-        }
-    }
-
     // Renewable data, specific to areas
     if (pStudy.header.version >= 810)
     {
