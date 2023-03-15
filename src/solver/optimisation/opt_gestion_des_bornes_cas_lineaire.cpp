@@ -163,7 +163,6 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
 {
     double* Xmin = problemeHebdo->ProblemeAResoudre->Xmin;
     double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
-    // TODO
     double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
@@ -196,8 +195,13 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 // 3. Levels
                 int varLevel
                   = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
-                Xmin[varLevel] = 0.;
-                Xmax[varLevel] = storage.capacity;
+                if (storage.hasInitialLevel && pdtHebdo == PremierPdtDeLIntervalle)
+                {
+                    Xmin[varLevel] = Xmax[varLevel] = storage.initialLevel;
+                } else {
+                    Xmin[varLevel] = 0.;
+                    Xmax[varLevel] = storage.capacity;
+                }
                 AddressForVars[varLevel] = &STSResult.level[areaWideIndex];
 
                 areaWideIndex++;

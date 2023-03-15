@@ -49,11 +49,15 @@ static void importShortTermStorages(
         ShortTermStorageOut[i].reserve(areas[i]->shortTermStorage.storagesByIndex.size());
         for (auto st : areas[i]->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::SINGLE_OBJECT_INPUT toInsert;
+            ::ShortTermStorage::PROPERTIES toInsert;
             toInsert.capacity = st->properties.capacity;
             toInsert.efficiency = st->properties.efficiencyFactor;
             toInsert.injectionCapacity = st->properties.injectionCapacity;
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
+
+            toInsert.hasInitialLevel = st->properties.initialLevel.has_value();
+            toInsert.initialLevel = st->properties.initialLevel.value_or(400.);
+  
             toInsert.globalIndex = STindex;
             // TODO add missing properties, or use the same struct
             ShortTermStorageOut[i].push_back(toInsert);
