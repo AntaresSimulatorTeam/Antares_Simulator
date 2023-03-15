@@ -27,6 +27,7 @@
 
 #include <antares/logs.h>
 #include <filesystem>
+#include <string>
 
 #include "container.h"
 
