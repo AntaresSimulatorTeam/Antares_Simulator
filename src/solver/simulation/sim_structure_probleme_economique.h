@@ -33,6 +33,7 @@
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
 #include <vector>
+#include <optional>
 #include <memory>
 
 class AdequacyPatchRuntimeData;
@@ -160,8 +161,7 @@ struct PROPERTIES
     double withdrawalCapacity;
     double efficiency;
 
-    bool hasInitialLevel;
-    double initialLevel;
+    std::optional<double> initialLevel;
 
     int globalIndex;
 };
