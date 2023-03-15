@@ -55,8 +55,7 @@ static void importShortTermStorages(
             toInsert.injectionCapacity = st->properties.injectionCapacity;
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
 
-            toInsert.hasInitialLevel = st->properties.initialLevel.has_value();
-            toInsert.initialLevel = st->properties.initialLevel.value_or(400.);
+            toInsert.initialLevel = st->properties.initialLevel;
   
             toInsert.globalIndex = STindex;
             // TODO add missing properties, or use the same struct
