@@ -31,7 +31,8 @@
 
 #include "container.h"
 
-#define SEP std::filesystem::path::preferred_separator
+#include <yuni/yuni.h>
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {
