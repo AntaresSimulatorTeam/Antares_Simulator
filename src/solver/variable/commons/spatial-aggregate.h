@@ -288,10 +288,10 @@ public:
         NextType::hourForEachArea(state);
     }
 
-    void hourForEachThermalCluster(State& state)
+    void hourForClusters(State& state)
     {
         // Next item in the list
-        NextType::hourForEachThermalCluster(state);
+        NextType::hourForClusters(state);
     }
 
     template<class V, class SetT>

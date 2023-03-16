@@ -248,11 +248,9 @@ public:
     void hourForEachArea(State& state);
     //! Event: For a given hour in the year, walking through all thermal clusters
     // for a given area
-    void hourForEachThermalCluster(State& state);
+    void hourForClusters(State& state);
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace);
-
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace);
+    void hourForClusters(State& state, unsigned int numSpace);
 
     //! Event: For a given hour in the year, walking through all links
     // for a given area

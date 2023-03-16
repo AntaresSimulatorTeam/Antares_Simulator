@@ -262,17 +262,18 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
+        {
+            auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
+            uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
+            double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+
+            pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
+                += renewableClusterProduction;
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachRenewableCluster(State& state, unsigned int numSpace)
-    {
-        // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.renewableCluster->groupID][state.hourInTheYear]
-          += state.renewableClusterProduction;
-        // Next item in the list
-        NextType::hourForEachRenewableCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

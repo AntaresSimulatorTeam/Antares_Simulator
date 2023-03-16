@@ -272,13 +272,18 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
         // Total OverallCost
-        pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-          += state.thermalClusterOperatingCost;
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
+              += state.thermalClustersOperatingCost[state.area->index][clusterIndex];
+        }
+
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

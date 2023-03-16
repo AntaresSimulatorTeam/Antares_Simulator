@@ -335,23 +335,24 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
-        // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
-          .hour[state.hourInTheYear]
-          +=
-          // production for the current thermal dispatchable cluster
-          (state.thermalClusterProduction);
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            // Production for this hour
+            pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
+              .hour[state.hourInTheYear]
+              += state.thermalClustersProductions[state.area->index][clusterIndex];
 
-        pminOfTheClusterForYear[numSpace][(state.thermalCluster->areaWideIndex * maxHoursInAYear)
-                                          + state.hourInTheYear]
-          =
-            // pmin of the current cluster
-          (state.thermalClusterPMinOfTheCluster);
+            pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
+                                              + state.hourInTheYear]
+              = state.PMinOfClusters[state.area->index][clusterIndex];
+        }
 
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const

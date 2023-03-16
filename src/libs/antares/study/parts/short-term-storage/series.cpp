@@ -24,47 +24,21 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <antares/logs.h>
 
-#include <optional>
-#pragma once
-
-#include <string>
-#include <map>
-
-#include <antares/inifile.h>
+#include "series.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-enum class Group
-{
-    PSP_open,
-    PSP_closed,
-    Pondage,
-    Battery,
-    Other1,
-    Other2,
-    Other3,
-    Other4,
-    Other5
-};
 
-  class Properties {
-  public:
-    bool validate() const;
-    bool loadFromFolder(const std::string& folder);
-    // Injection nominal capacity, >= 0
-    double injectionCapacity;
-    // Withdrawal nominal capacity, >= 0
-    double withdrawalCapacity;
-    // Reservoir capacity in MWh, >= 0
-    double capacity;
-    // Initial level, <= capacity
-    std::optional<double> initialLevel;
-    // Efficiency factor between 0 and 1
-    double efficiencyFactor;
-    // Cycle duration, 1 <= cycleDuration <= 168
-    unsigned int cycleDuration;
-    // Used to sort outputs
-    Group group;
-  };
+bool Series::validate() const
+{
+    return true;
 }
+
+bool Series::loadFromFolder(const std::string& folder)
+{
+    return true;
+}
+
+} // namespace Antares::Data::ShortTermStorage

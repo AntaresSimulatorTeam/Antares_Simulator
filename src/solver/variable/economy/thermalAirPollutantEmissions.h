@@ -107,8 +107,9 @@ struct VCardThermalAirPollutantEmissions
 ** \brief Marginal ThermalAirPollutantEmissions
 */
 template<class NextT = Container::EndOfList>
-class ThermalAirPollutantEmissions
- : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>, NextT, VCardThermalAirPollutantEmissions>
+class ThermalAirPollutantEmissions : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>,
+                                                                NextT,
+                                                                VCardThermalAirPollutantEmissions>
 {
 public:
     //! Type of the next static variable
@@ -242,18 +243,24 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
-        //Multiply every pollutant factor with production
-        for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
         {
-            pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                += state.thermalCluster->emissions.factors[i]
-                    * state.thermalClusterProduction;
+            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+
+            // Multiply every pollutant factor with production
+            for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+            {
+                pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
+                  += thermalCluster->emissions.factors[i]
+                     * state.thermalClustersProductions[state.area->index][clusterIndex];
+            }
         }
 
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
