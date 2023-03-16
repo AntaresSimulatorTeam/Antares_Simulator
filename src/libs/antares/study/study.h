@@ -351,7 +351,7 @@ public:
     ** \tparam TimeSeriesT The time-series set to store
     ** \return True if the operation succeeded (the file have been written), false otherwise
     */
-    template<int TimeSeriesT>
+    template<unsigned int TimeSeriesT>
     void storeTimeSeriesNumbers() const;
     //@}
 

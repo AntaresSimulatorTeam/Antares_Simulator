@@ -117,5 +117,9 @@ void Area::storeTimeseriesNumbersForTransmissionCapacities(Solver::IResultWriter
             link.second->storeTimeseriesNumbers(writer);
     }
 }
+
+void Area::storeTimeseriesNumbersForBindingConstraints(Solver::IResultWriter::Ptr writer) const {
+    genericStoreTimeseriesNumbers(writer, {}, id, "bindingconstraints");
+}
 } // namespace Data
 } // namespace Antares
