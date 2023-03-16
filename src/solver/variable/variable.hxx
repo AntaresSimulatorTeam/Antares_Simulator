@@ -311,6 +311,13 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state)
 }
 
 template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state, unsigned int numSpace)
+{
+    // Next variable
+    NextType::hourForEachArea(state, numSpace);
+}
+
+template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::hourForClusters(State& state)
 {
     // Next item in the list

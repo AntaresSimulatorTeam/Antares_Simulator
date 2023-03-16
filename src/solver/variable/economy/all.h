@@ -59,6 +59,8 @@
 #include "overflow.h"
 #include "waterValue.h"
 #include "hydroCost.h"
+#include "shortTermStorage.h"
+#include "shortTermStorageLevels.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
@@ -147,6 +149,8 @@ typedef          // Prices
                      <Overflows          // Hydraulic overflows
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
+                        <ShortTermStorageEnergy
+                        <ShortTermStorageLevels
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <LMRViolations           // LMR Violations
@@ -154,8 +158,9 @@ typedef          // Prices
                             <SpilledEnergyAfterCSR // SpilledEnergyAfterCSR
                              <LOLD                 // LOLD
                               <LOLP                // LOLP
-                               <AvailableDispatchGen<DispatchableGenMargin<
-                                 DtgMarginCsr // DTG MRG CSR
+                               <AvailableDispatchGen
+                                <DispatchableGenMargin
+                                <DtgMarginCsr // DTG MRG CSR
                                  <Marge<NonProportionalCost<
                                    NonProportionalCostByDispatchablePlant // Startup cost + Fixed
                                                                           // cost per thermal
@@ -166,7 +171,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -220,6 +225,10 @@ typedef // Prices
                                           WaterValue,
                                           Common::SpatialAggregate<
                                             HydroCost,
+                                            Common::SpatialAggregate <
+                                              ShortTermStorageEnergy,
+                                            Common::SpatialAggregate <
+                                              ShortTermStorageLevels,
                                             Common::SpatialAggregate<
                                               UnsupliedEnergy,
                                               Common::SpatialAggregate<
@@ -259,7 +268,7 @@ typedef // Prices
                                                                                           // -
                                                                                           // refs:
                                                                                           // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

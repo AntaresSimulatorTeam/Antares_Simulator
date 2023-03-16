@@ -45,7 +45,6 @@ public:
     //debug purposes will be removed
     void printProperties();
 
-private:
     Series series;
     Properties properties;
 };

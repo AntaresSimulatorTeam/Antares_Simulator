@@ -103,6 +103,8 @@ set(SRC_VARIABLE_ECONOMY
 		economy/overflow.h
 		economy/waterValue.h
 		economy/hydroCost.h
+		economy/shortTermStorage.h
+		economy/shortTermStorageLevels.h
 		economy/unsupliedEnergy.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h

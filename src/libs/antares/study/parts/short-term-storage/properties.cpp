@@ -45,6 +45,25 @@ const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
     {"Other5", Group::Other5}
 };
 
+unsigned int groupIndex(Group group)
+{
+    switch (group)
+    {
+    case Group::PSP_open: return 0;
+    case Group::PSP_closed: return 1;
+    case Group::Pondage: return 2;
+    case Group::Battery: return 3;
+    case Group::Other1: return 4;
+    case Group::Other2: return 5;
+    case Group::Other3: return 6;
+    case Group::Other4: return 7;
+    case Group::Other5: return 8;
+    default:
+      return 0;
+    }
+}
+
+
 bool Properties::loadKey(const IniFile::Property* p)
 {
     if (p->key == "injectionnominalcapacity")

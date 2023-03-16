@@ -48,6 +48,8 @@ enum class Group
     Other5
 };
 
+unsigned int groupIndex(Group group);
+
 class Properties
 {
 public:
