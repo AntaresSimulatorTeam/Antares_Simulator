@@ -30,7 +30,6 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-
 struct VCardShortTermStorageEnergy
 {
     //! Caption
@@ -140,7 +139,6 @@ struct VCardShortTermStorageEnergy
     };
 }; // class VCard
 
-
 template<class NextT = Container::EndOfList>
 class ShortTermStorageEnergy
  : public Variable::IVariable<ShortTermStorageEnergy<NextT>, NextT, VCardShortTermStorageEnergy>
@@ -238,18 +236,22 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size();
+             stsIndex++)
         {
             const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
-            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+            const uint group
+              = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
 
             // Injection
-            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
+            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear]
+              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
 
             // Withdrawal
-            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear] = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
+            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear]
+              = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
         }
-        
+
         // Next item in the list
         NextType::hourForClusters(state, numSpace);
     }

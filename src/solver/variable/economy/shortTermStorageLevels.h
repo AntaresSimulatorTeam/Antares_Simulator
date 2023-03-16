@@ -30,7 +30,6 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-
 struct VCardShortTermStorageLevels
 {
     //! Caption
@@ -120,7 +119,6 @@ struct VCardShortTermStorageLevels
         }
     };
 }; // class VCard
-
 
 template<class NextT = Container::EndOfList>
 class ShortTermStorageLevels
@@ -219,11 +217,14 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size();
+             stsIndex++)
         {
             const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
-            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
-            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
+            const uint group
+              = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear]
+              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
         }
 
         NextType::hourForClusters(state, numSpace);
