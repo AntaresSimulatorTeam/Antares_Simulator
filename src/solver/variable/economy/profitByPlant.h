@@ -289,24 +289,29 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
         // Useful local variables
         double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
-        auto* cluster = state.thermalCluster;
-        double hourlyClusterProduction = state.thermalClusterProduction;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        // Thermal cluster profit
-        pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
-          = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
-            * (-areaMarginalCosts[hourInTheWeek]
-               - cluster->marginalCost
-                   * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            auto* cluster = state.area->thermal.clusters[clusterIndex];
+            double hourlyClusterProduction
+              = state.thermalClustersProductions[state.area->index][clusterIndex];
+            // Thermal cluster profit
+            pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
+              = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])
+                * (-areaMarginalCosts[hourInTheWeek]
+                   - cluster->marginalCost
+                       * cluster->modulation[Data::thermalModulationCost][hourInTheYear]);
+        }
 
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

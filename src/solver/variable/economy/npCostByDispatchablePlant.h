@@ -311,18 +311,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Total Non Proportional cost for this hour
-        // NP = startup cost + fixed cost
-        // pValuesForTheCurrentYear[state.thermalCluster->areaWideIndex].hour[state.hourInTheYear]
-        // += production for the current thermal dispatchable cluster
-        //	(state.thermalClusterNonProportionalCost);
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const

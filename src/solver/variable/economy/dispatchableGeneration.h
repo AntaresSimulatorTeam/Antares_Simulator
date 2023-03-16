@@ -269,13 +269,18 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
+    void hourForClusters(State& state, unsigned int numSpace)
     {
-        // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
-          += state.thermalClusterProduction;
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
+              += state.thermalClustersProductions[state.area->index][clusterIndex];
+        }
+
         // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        NextType::hourForClusters(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

@@ -244,16 +244,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // pValuesForTheCurrentYear.hour[state.hourInTheYear] -=
-        // production for the current thermal dispatchable cluster
-        //	(state.thermalClusterProduction);
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     template<class VCardToFindT>
     inline const double* retrieveHourlyResultsForCurrentYear(unsigned int numSpace) const
     {

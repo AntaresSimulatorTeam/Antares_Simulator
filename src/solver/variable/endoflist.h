@@ -209,12 +209,7 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void hourForEachThermalCluster(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
-    static void hourForEachRenewableCluster(State&, uint numSpace)
+    static void hourForClusters(State&, uint numSpace)
     {
         UNUSED_VARIABLE(numSpace);
     }
