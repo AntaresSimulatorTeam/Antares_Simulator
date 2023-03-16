@@ -476,10 +476,10 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
         uint fuelCostWidth = prepro->fuelcost.width;
         uint co2CostWidth = prepro->co2cost.width;
         uint tsCount = std::max(fuelCostWidth, co2CostWidth);
-           
-        marketBidCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
-        marginalCostPerHourTs.resize(tsCount, tmp);// add blank array with 8760-zeros
-        productionCostTs.resize(tsCount, tmp);// add blank array with 8760-zeros
+
+        marketBidCostPerHourTs.resize(tsCount, tmp); // add blank array with 8760-zeros
+        marginalCostPerHourTs.resize(tsCount, tmp);  // add blank array with 8760-zeros
+        productionCostTs.resize(tsCount, tmp);       // add blank array with 8760-zeros
         for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
         {
             uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
@@ -488,13 +488,15 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
             {
                 marketBidCostPerHourTs[tsIndex - 1][hour]
                   = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
-                    + /*co2 **/ prepro->co2cost[tsIndexCo2 - 1][hour] + variableomcost;
+                    + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2 - 1][hour]
+                    + variableomcost;
                 marginalCostPerHourTs[tsIndex - 1][hour]
                   = marketBidCostPerHourTs[tsIndex - 1][hour];
                 if (modulation.width > 0)
                 {
-                    productionCostTs[tsIndex - 1][hour] = marginalCostPerHourTs[tsIndex - 1][hour]
-                                     * modulation[Data::thermalModulationCost][hour];
+                    productionCostTs[tsIndex - 1][hour]
+                      = marginalCostPerHourTs[tsIndex - 1][hour]
+                        * modulation[Data::thermalModulationCost][hour];
                 }
             }
         }
