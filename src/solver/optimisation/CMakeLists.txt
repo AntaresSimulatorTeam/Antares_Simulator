@@ -18,7 +18,6 @@ set(RTESOLVER_OPT
 		opt_gestion_des_pmin.cpp
 		opt_calcul_des_pmin_MUT_MDT.cpp
 		opt_numero_de_jour_du_pas_de_temps.cpp
-		opt_donnees_pas_de_temps_variable.h
 		opt_construction_variables_optimisees_quadratique.cpp
 		opt_decompte_variables_et_contraintes.cpp
 		opt_construction_matrice_des_contraintes_cas_quadratique.cpp
