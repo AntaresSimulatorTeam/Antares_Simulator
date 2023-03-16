@@ -31,8 +31,10 @@
 #include <map>
 #include <string>
 #include <array>
+#include <filesystem>
 
 #include "timeseries-numbers.h"
+#include "ITimeSeriesWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -950,20 +952,21 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study)
+void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study, Simulation::ITimeSeriesWriter& writer)
 {
     using namespace Antares::Data;
 
     if (study.parameters.storeTimeseriesNumbers)
     {
         fixTSNumbersWhenWidthIsOne(study);
-        study.storeTimeSeriesNumbers<timeSeriesLoad>();
-        study.storeTimeSeriesNumbers<timeSeriesSolar>();
-        study.storeTimeSeriesNumbers<timeSeriesHydro>();
-        study.storeTimeSeriesNumbers<timeSeriesWind>();
-        study.storeTimeSeriesNumbers<timeSeriesThermal>();
-        study.storeTimeSeriesNumbers<timeSeriesRenewable>();
-        study.storeTimeSeriesNumbers<timeSeriesTransmissionCapacities>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesLoad>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesSolar>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesHydro>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesWind>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesThermal>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesRenewable>();
+        study.storeTimeSeriesNumbers<TimeSeries::timeSeriesTransmissionCapacities>();
+        writer.write(study.bindingConstraints);
     }
 }
 

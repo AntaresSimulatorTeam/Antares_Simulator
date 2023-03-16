@@ -206,7 +206,7 @@ std::string styleToString(const StyleType& style);
 **
 ** These values are mainly used for mask bits
 */
-enum TimeSeries
+enum TimeSeries : unsigned int
 {
     //! TimeSeries : Load
     timeSeriesLoad = 1,
@@ -222,6 +222,7 @@ enum TimeSeries
     timeSeriesRenewable = 32,
     //! TimeSeries : Renewable
     timeSeriesTransmissionCapacities = 64,
+    timeSeriesBindingConstraints = 128,
 
     //! The maximum number of time-series that we can encounter
     timeSeriesCount = 7,

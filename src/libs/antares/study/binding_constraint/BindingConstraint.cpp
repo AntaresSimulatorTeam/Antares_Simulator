@@ -874,15 +874,13 @@ bool BindingConstraintsList::loadFromFolder(Study& study,
         }
     }
 
-    auto* e = new BindingConstraint::EnvForLoading(study.areas);
-    auto& env = *e;
+    BindingConstraint::EnvForLoading env(study.areas);
     env.folder = folder;
 
     env.iniFilename << env.folder << SEP << "bindingconstraints.ini";
     IniFile ini;
     if (not ini.open(env.iniFilename))
     {
-        delete e;
         return false;
     }
 

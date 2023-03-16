@@ -677,6 +677,10 @@ public:
     */
     void markAsModified() const;
 
+    [[nodiscard]] const std::map<std::string, Matrix<Yuni::uint32>>& TimeSeries() const {
+        return time_series;
+    }
+
 private:
     bool internalSaveToFolder(BindingConstraint::EnvForSaving& env) const;
 
@@ -684,6 +688,8 @@ private:
     //! All constraints
     BindingConstraint::Vector pList;
 
+public:
+    std::map<std::string, Matrix<Yuni::uint32>> time_series;
 }; // class BindConstList
 
 struct CompareBindingConstraintName final

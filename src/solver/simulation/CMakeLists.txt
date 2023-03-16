@@ -40,7 +40,7 @@ set(SRC_SIMULATION
 		opt_time_writer.cpp
 		adequacy_patch_runtime_data.h
 		adequacy_patch_runtime_data.cpp
-		)
+		ITimeSeriesWriter.h TimeSeriesWriter.cpp TimeSeriesWriter.h)
 source_group("simulation" FILES ${SRC_SIMULATION})
 
 
