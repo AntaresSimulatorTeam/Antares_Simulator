@@ -245,8 +245,8 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; cluster_index != state.area->thermal.clusterCount();
-             ++cluster_index)
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
         {
             auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
 

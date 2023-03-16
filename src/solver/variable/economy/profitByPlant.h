@@ -296,8 +296,8 @@ public:
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
 
-        for (uint clusterIndex = 0; cluster_index != state.area->thermal.clusterCount();
-             ++cluster_index)
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
         {
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
