@@ -36,13 +36,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool STstorageInput::validate() const
 {
-    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(),
-            [](auto& cluster) { return cluster->validate(); });
+    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [](auto& cluster) {
+        return cluster->validate();
+    });
 }
-
 
 bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
 {
@@ -60,7 +59,8 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
         if (!cluster.loadFromSection(*section))
             return false;
 
-        storagesById.insert(std::pair<std::string, STstorageCluster>(section->name.c_str(), cluster));
+        storagesById.insert(
+          std::pair<std::string, STstorageCluster>(section->name.c_str(), cluster));
     }
 
     storagesByIndex.reserve(storagesById.size());
@@ -79,8 +79,7 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer = folder + SEP + cluster->getName()
-            + SEP + "series.txt";
+        const std::string buffer = folder + SEP + cluster->getName() + SEP + "series.txt";
         /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
         cluster->loadSeries(folder);
     }

@@ -24,9 +24,6 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#include <math.h>
-#include <sstream>
-
 #include "opt_structure_probleme_a_resoudre.h"
 #include "opt_export_structure.h"
 
@@ -70,6 +67,95 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         palier);
             }
         }
+    }
+}
+
+static void shortTermStorageBalance(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  const CORRESPONDANCES_DES_VARIABLES& CorrespondanceVarNativesVarOptim,
+  int& nombreDeTermes,
+  double* Pi,
+  int* Colonne)
+{
+    for (const auto& storage : shortTermStorageInput)
+    {
+        const int globalIndex = storage.globalIndex;
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim.ShortTermStorage.InjectionVariable[globalIndex];
+            varInjection >= 0)
+        {
+            Pi[nombreDeTermes] = 1.0;
+            Colonne[nombreDeTermes] = varInjection;
+            nombreDeTermes++;
+        }
+
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim.ShortTermStorage.WithdrawalVariable[globalIndex];
+            varWithdrawal >= 0)
+        {
+            Pi[nombreDeTermes] = -1.0;
+            Colonne[nombreDeTermes] = varWithdrawal;
+            nombreDeTermes++;
+        }
+    }
+}
+
+static void shortTermStorageLevels(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
+  CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+  CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim,
+  double* Pi,
+  int* Colonne,
+  int nombreDePasDeTempsPourUneOptimisation,
+  int pdt)
+{
+    const auto& VarOptim_current = CorrespondanceVarNativesVarOptim[pdt];
+    // Cycle over the simulation period
+    const int pdt1 = (pdt + 1) % nombreDePasDeTempsPourUneOptimisation;
+    const auto& VarOptim_next = CorrespondanceVarNativesVarOptim[pdt1];
+    for (auto& storage : shortTermStorageInput)
+    {
+        int nombreDeTermes = 0;
+        const int globalIndex = storage.globalIndex;
+        // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
+        if (const int varLevel_next = VarOptim_next->ShortTermStorage.LevelVariable[globalIndex];
+            varLevel_next >= 0)
+        {
+            Pi[nombreDeTermes] = 1.0;
+            Colonne[nombreDeTermes] = varLevel_next;
+            nombreDeTermes++;
+        }
+
+        if (const int varLevel = VarOptim_current->ShortTermStorage.LevelVariable[globalIndex];
+            varLevel >= 0)
+        {
+            Pi[nombreDeTermes] = -1.0;
+            Colonne[nombreDeTermes] = varLevel;
+            nombreDeTermes++;
+        }
+
+        if (const int varInjection
+            = VarOptim_current->ShortTermStorage.InjectionVariable[globalIndex];
+            varInjection >= 0)
+        {
+            Pi[nombreDeTermes] = -1.0 * storage.efficiency;
+            Colonne[nombreDeTermes] = varInjection;
+            nombreDeTermes++;
+        }
+
+        if (const int varWithdrawal
+            = VarOptim_current->ShortTermStorage.WithdrawalVariable[globalIndex];
+            varWithdrawal >= 0)
+        {
+            Pi[nombreDeTermes] = 1.0;
+            Colonne[nombreDeTermes] = varWithdrawal;
+            nombreDeTermes++;
+        }
+        CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
+          = ProblemeAResoudre->NombreDeContraintes;
+        OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+          ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
     }
 }
 
@@ -223,6 +309,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
+            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
+                                    *CorrespondanceVarNativesVarOptim,
+                                    nombreDeTermes,
+                                    Pi,
+                                    Colonne);
+
             CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
@@ -279,6 +371,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
+
+            // Short term storage
+            shortTermStorageLevels((*problemeHebdo->ShortTermStorage)[pays],
+                                   ProblemeAResoudre,
+                                   CorrespondanceCntNativesCntOptim,
+                                   problemeHebdo->CorrespondanceVarNativesVarOptim,
+                                   Pi,
+                                   Colonne,
+                                   nombreDePasDeTempsPourUneOptimisation,
+                                   pdt);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)

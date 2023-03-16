@@ -88,6 +88,29 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
+            for (const auto& storage : (*problemeHebdo->ShortTermStorage)[pays])
+            {
+                const int globalIndex = storage.globalIndex;
+                // 1. Injection
+                CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+                // 2. Withdrawal
+                CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+                // 3. Level
+                CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
+                  = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+            }
+
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays]
               = NombreDeVariables;
 

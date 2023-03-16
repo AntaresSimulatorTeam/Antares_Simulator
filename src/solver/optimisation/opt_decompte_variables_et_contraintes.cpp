@@ -222,8 +222,10 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
 
     for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
     {
+        // Level, withdrawal, injection
         const uint nbSTS = (*problemeHebdo->ShortTermStorage)[areaIndex].size();
         ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
+        // Levels equation
         ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
     }
 
