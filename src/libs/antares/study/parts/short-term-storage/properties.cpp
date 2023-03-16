@@ -75,6 +75,15 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "reservoircapacity")
         return p->value.to<double>(this->capacity);
 
+    if (p->key == "efficiency")
+        return p->value.to<double>(this->efficiencyFactor);
+
+    if (p->key == "name")
+        return p->value.to<std::string>(this->name);
+
+    if (p->key == "storagecycle")
+        return p->value.to<unsigned int>(this->cycleDuration);
+
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
@@ -87,17 +96,7 @@ bool Properties::loadKey(const IniFile::Property* p)
             return true;
         }
         return false;
-
     }
-
-    if (p->key == "efficiency")
-        return p->value.to<double>(this->efficiencyFactor);
-
-    if (p->key == "name")
-        return p->value.to<std::string>(this->name);
-
-    if (p->key == "storagecycle")
-        return p->value.to<unsigned int>(this->cycleDuration);
 
     if (p->key == "group")
     {
