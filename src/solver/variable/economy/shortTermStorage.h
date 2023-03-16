@@ -240,7 +240,7 @@ public:
     {
         for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
         {
-            const auto cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
             const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
 
             // Injection
