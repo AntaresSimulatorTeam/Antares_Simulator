@@ -80,7 +80,7 @@ struct VCardShortTermStorageLevels
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 5,
+        columnCount = 9,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -111,7 +111,15 @@ struct VCardShortTermStorageLevels
             case 3:
                 return "Battery_level";
             case 4:
-                return "Other_level";
+                return "Other1_level";
+            case 5:
+                return "Other2_level";
+            case 6:
+                return "Other3_level";
+            case 7:
+                return "Other4_level";
+            case 8:
+                return "Other5_level";
             default:
                 return "<unknown>";
             }
@@ -217,33 +225,13 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        // Regarding short term levels : for a given group, we need to add levels of clusters that 
-        // belong to that group. So levels should be expressed in MWh, not in per cents of a so called
-        // capacity, wich would not have any sense as clusters of different capacities 
-        // can contribute to a group.
-
-        /*
-            Should eventually be something like :
-        */
-        //for (uint cluster_index = 0; cluster_index != state.area->shortTermStorage.clusterCount(); ++cluster_index)
-        //{
-        //    auto* shortTermStorageCluster = state.area->shortTermStorage[cluster_index];
-        //    int clusterGroup = shortTermStorageCluster->groupID;
-        //    
-        //    double clusterLevel = state.hourlyResults->ShortTermStorage[state.hourInTheWeek]->level[cluster_index];
-        //    
-        //    pValuesForTheCurrentYear[numSpace][clusterGroup][state.hourInTheYear] += clusterLevel;
-        //}
-
-        /*
-            In the meantime :
-        */
-        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorageLevels::columnCount; clusterGroupID++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
         {
-            pValuesForTheCurrentYear[numSpace][clusterGroupID][state.hourInTheYear] = clusterGroupID * 100;
+            const auto cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
         }
-        
-        // Next item in the list
+
         NextType::hourForClusters(state, numSpace);
     }
 

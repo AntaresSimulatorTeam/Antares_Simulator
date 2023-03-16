@@ -80,7 +80,7 @@ struct VCardShortTermStorageEnergy
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 10,
+        columnCount = 18,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -119,9 +119,25 @@ struct VCardShortTermStorageEnergy
             case 7:
                 return "Battery_withdrawal";
             case 8:
-                return "Other_injection";
+                return "Other1_injection";
             case 9:
-                return "Other_withdrawal";
+                return "Other1_withdrawal";
+            case 10:
+                return "Other2_injection";
+            case 11:
+                return "Other2_withdrawal";
+            case 12:
+                return "Other3_injection";
+            case 13:
+                return "Other3_withdrawal";
+            case 14:
+                return "Other4_injection";
+            case 15:
+                return "Other4_withdrawal";
+            case 16:
+                return "Other5_injection";
+            case 17:
+                return "Other5_withdrawal";
 
             default:
                 return "<unknown>";
@@ -228,31 +244,16 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        /*
-            Should eventually be something like :
-        */
-        //for (uint cluster_index = 0; cluster_index != state.area->shortTermStorage.clusterCount(); ++cluster_index)
-        //{
-        //    auto* shortTermStorageCluster = state.area->shortTermStorage[cluster_index];
-        //    int clusterGroup = shortTermStorageCluster->groupID;
-        //    
-        //    // Injection
-        //    // ---------
-        //    double ClusterInjection = state.hourlyResults->ShortTermStorageEnergy[state.hourInTheWeek]->injection[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup][state.hourInTheYear] += ClusterInjection;
-        //    
-        //    // Withdrawal
-        //    // ----------
-        //    double ClusterWithdrawal = state.hourlyResults->ShortTermStorageEnergy[state.hourInTheWeek]->withdrawal[cluster_index];
-        //    pValuesForTheCurrentYear[numSpace][2 * clusterGroup + 1][state.hourInTheYear] += ClusterWithdrawal;
-        //}
-
-        /*
-            In the meantime :
-        */
-        for (int clusterGroupID = 0; clusterGroupID < VCardShortTermStorageEnergy::columnCount; clusterGroupID++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
         {
-            pValuesForTheCurrentYear[numSpace][clusterGroupID][state.hourInTheYear] = clusterGroupID * 100;
+            const auto cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+
+            // Injection
+            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
+
+            // Withdrawal
+            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear] = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
         }
         
         // Next item in the list
