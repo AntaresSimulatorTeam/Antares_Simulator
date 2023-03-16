@@ -80,7 +80,7 @@ struct VCardShortTermStorageEnergy
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 10,
+        columnCount = 18,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -119,9 +119,25 @@ struct VCardShortTermStorageEnergy
             case 7:
                 return "Battery_withdrawal";
             case 8:
-                return "Other_injection";
+                return "Other1_injection";
             case 9:
-                return "Other_withdrawal";
+                return "Other1_withdrawal";
+            case 10:
+                return "Other2_injection";
+            case 11:
+                return "Other2_withdrawal";
+            case 12:
+                return "Other3_injection";
+            case 13:
+                return "Other3_withdrawal";
+            case 14:
+                return "Other4_injection";
+            case 15:
+                return "Other4_withdrawal";
+            case 16:
+                return "Other5_injection";
+            case 17:
+                return "Other5_withdrawal";
 
             default:
                 return "<unknown>";

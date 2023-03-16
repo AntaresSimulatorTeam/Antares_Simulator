@@ -80,7 +80,7 @@ struct VCardShortTermStorageLevels
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 5,
+        columnCount = 9,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -111,7 +111,15 @@ struct VCardShortTermStorageLevels
             case 3:
                 return "Battery_level";
             case 4:
-                return "Other_level";
+                return "Other1_level";
+            case 5:
+                return "Other2_level";
+            case 6:
+                return "Other3_level";
+            case 7:
+                return "Other4_level";
+            case 8:
+                return "Other5_level";
             default:
                 return "<unknown>";
             }

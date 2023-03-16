@@ -24,21 +24,21 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <antares/logs.h>
 
-#pragma once
-#include <string>
-#include "properties.h"
 #include "series.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-class Unit
-{
-public:
-    bool validate() const;
-    bool loadFromFolder(const std::string& folder);
 
-    Series series;
-    Properties properties;
-};
+bool Series::validate() const
+{
+    return true;
+}
+
+bool Series::loadFromFolder(const std::string& folder)
+{
+    return true;
+}
+
 } // namespace Antares::Data::ShortTermStorage
