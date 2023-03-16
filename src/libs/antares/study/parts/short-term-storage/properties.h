@@ -67,9 +67,9 @@ public:
     unsigned int cycleDuration;
     // Used to sort outputs
     Group group;
-    //cluster name
+    // cluster name
     std::string name;
 
     static const std::map<std::string, enum Group> stStoragePropertyGroupEnum;
 };
-}
+} // namespace Antares::Data::ShortTermStorage

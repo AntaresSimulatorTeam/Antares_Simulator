@@ -1086,7 +1086,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
     }
 
-
     // Renewable cluster list
     if (study.header.version >= 810)
     {
@@ -1299,13 +1298,13 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
 
             for (auto& [id, area] : areas)
             {
-                buffer.clear() << pStudy.folderInput << stStoragePlant  << area->id;
+                buffer.clear() << pStudy.folderInput << stStoragePlant << area->id;
                 ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str())
-                    && ret;
+                      && ret;
                 area->shortTermStorage.validate();
             }
 
-            //TODO remove: debug purpose
+            // TODO remove: debug purpose
             for (auto& [id, area] : areas)
                 for (auto unit : area->shortTermStorage.storagesByIndex)
                     unit->printProperties();

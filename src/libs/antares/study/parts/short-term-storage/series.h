@@ -30,7 +30,8 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class Series {
+class Series
+{
 public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
@@ -42,4 +43,4 @@ private:
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 };
-}
+} // namespace Antares::Data::ShortTermStorage
