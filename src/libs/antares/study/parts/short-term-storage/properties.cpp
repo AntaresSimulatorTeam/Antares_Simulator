@@ -89,8 +89,7 @@ bool Properties::loadKey(const IniFile::Property* p)
         if (p->value == "optim")
             return true;
 
-        double tmp;
-        if (p->value.to<double>(tmp))
+        if (double tmp; p->value.to<double>(tmp))
         {
             this->initialLevel = tmp;
             return true;

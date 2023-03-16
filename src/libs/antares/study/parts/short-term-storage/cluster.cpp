@@ -63,11 +63,6 @@ bool STstorageCluster::loadSeries(const std::string& path)
     return series.loadFromFolder(path);
 }
 
-const std::string STstorageCluster::getName()
-{
-    return properties.name;
-}
-
 void STstorageCluster::printProperties()
 {
     logs.notice() << "name : " << properties.name;
@@ -80,9 +75,9 @@ void STstorageCluster::printProperties()
         logs.notice() << "initiallevel : Not initialized";
     logs.notice() << "efficiency : " << properties.efficiencyFactor;
     logs.notice() << "storagecycle : " << properties.cycleDuration;
-    for (auto& i : Properties::stStoragePropertyGroupEnum)
-        if (i.second == properties.group)
-            logs.notice() << "group : " << i.first;
+    for (const auto& [key, value] : Properties::stStoragePropertyGroupEnum)
+        if (value  == properties.group)
+            logs.notice() << "group : " << key;
 }
 
 } // namespace Antares::Data::ShortTermStorage

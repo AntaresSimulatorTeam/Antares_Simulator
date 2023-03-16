@@ -154,7 +154,7 @@ inline void Links::hourForEachLink(State& state, unsigned int numSpace)
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
 }
 
-inline void Links::hourForClusters(State& state, unsigned int numSpace)
+inline void Links::hourForClusters(State& state, unsigned int numSpace) const
 {
     UNUSED_VARIABLE(state);
     UNUSED_VARIABLE(numSpace);

@@ -1294,7 +1294,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             CString<30, false> stStoragePlant;
             stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
 
-            for (auto& [id, area] : areas)
+            for (const auto& [id, area] : areas)
             {
                 buffer.clear() << pStudy.folderInput << stStoragePlant << area->id;
                 ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str())
@@ -1303,8 +1303,8 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             }
 
             // TODO remove: debug purpose
-            for (auto& [id, area] : areas)
-                for (auto unit : area->shortTermStorage.storagesByIndex)
+            for (const auto& [id, area] : areas)
+                for (const auto& unit : area->shortTermStorage.storagesByIndex)
                     unit->printProperties();
         }
         else

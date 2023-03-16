@@ -28,15 +28,9 @@
 
 #include "../variable.h"
 
-namespace Antares
+namespace Antares::Solver::Variable::Economy
 {
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
-{
-   
+
 struct VCardShortTermStorageLevels
 {
     //! Caption
@@ -270,7 +264,4 @@ private:
 
 }; // class ShortTermStorageLevels
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Variable::Economy

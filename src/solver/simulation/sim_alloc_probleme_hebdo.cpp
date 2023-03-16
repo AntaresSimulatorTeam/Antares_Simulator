@@ -586,7 +586,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
         // Short term storage results
         const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
-        const uint nbShortTermStorage = storagesForArea.size();
+        const unsigned long nbShortTermStorage = storagesForArea.size();
         problem.ResultatsHoraires[k]->ShortTermStorage
           = new std::vector<::ShortTermStorage::RESULTS>(NombreDePasDeTemps);
         for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)

@@ -42,9 +42,6 @@ public:
     bool loadSeriesFromFolder(const std::string& folder);
 
     std::vector<STstorageCluster*> storagesByIndex;
-    // TODO[FOM] : fill this map with the address from storagesByIndex
-    // Do it after storagesByIndex is complete, to avoid dangling pointers
-    // caused by memory realloc.
     std::map<std::string, STstorageCluster> storagesById;
 };
 } // namespace Antares::Data::ShortTermStorage

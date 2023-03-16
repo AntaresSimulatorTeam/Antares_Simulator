@@ -300,7 +300,7 @@ public:
     {
         for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
         {
-            auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
+            const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
             uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
             double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
 

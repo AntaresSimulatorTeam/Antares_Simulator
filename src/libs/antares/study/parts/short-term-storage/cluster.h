@@ -41,8 +41,6 @@ public:
 
     bool loadSeries(const std::string& path);
 
-    const std::string getName();
-
     //debug purposes will be removed
     void printProperties();
 

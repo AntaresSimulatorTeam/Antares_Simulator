@@ -274,7 +274,7 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
-            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
             pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
               += state.thermalClustersProductions[state.area->index][clusterIndex];
         }
