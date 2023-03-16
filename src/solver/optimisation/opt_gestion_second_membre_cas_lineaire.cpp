@@ -133,7 +133,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
-        for (int shortTermStorage = 0; shortTermStorage < problemeHebdo->NumberOfShortTermStorage;
+        for (int shortTermStorage = 0; shortTermStorage < problemeHebdo->NumberOfShortTermStorages;
              shortTermStorage++)
         {
             if (int cnt = CorrespondanceCntNativesCntOptim

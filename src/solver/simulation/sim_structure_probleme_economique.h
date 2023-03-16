@@ -552,7 +552,7 @@ struct PROBLEME_HEBDO
     PALIERS_THERMIQUES** PaliersThermiquesDuPays = nullptr;
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
 
-    int NumberOfShortTermStorage = 0;
+    int NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
 
