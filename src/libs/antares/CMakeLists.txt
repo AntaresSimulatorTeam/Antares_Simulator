@@ -238,7 +238,7 @@ set(SRC_STUDY_PART_SHORT_TERM_STORAGE
     study/parts/short-term-storage/properties.cpp
     study/parts/short-term-storage/series.cpp
     study/parts/short-term-storage/series.h
-    study/parts/short-term-storage/unit.h
+    study/parts/short-term-storage/cluster.h
     study/parts/short-term-storage/cluster.cpp)
 source_group("study\\part\\short-term-storage" FILES ${SRC_STUDY_PART_SHORT_TERM_SOTRAGE})
 

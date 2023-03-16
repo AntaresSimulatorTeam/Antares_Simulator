@@ -28,7 +28,7 @@
 #pragma once
 #include <string>
 #include <map>
-#include "unit.h"
+#include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -41,10 +41,10 @@ public:
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 
-    std::vector<Unit*> storagesByIndex;
+    std::vector<STstorageCluster*> storagesByIndex;
     // TODO[FOM] : fill this map with the address from storagesByIndex
     // Do it after storagesByIndex is complete, to avoid dangling pointers
     // caused by memory realloc.
-    std::map<std::string, Unit> storagesById;
+    std::map<std::string, STstorageCluster> storagesById;
 };
 } // namespace Antares::Data::ShortTermStorage
