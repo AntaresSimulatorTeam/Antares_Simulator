@@ -25,6 +25,7 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include <sys/stat.h>
 #include "../../antares.h"
 #include <yuni/io/file.h>
 #include <yuni/core/string.h>
@@ -1079,6 +1080,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
     }
 
+    // Short term storage
+    {
+        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "st-storage" << area.id;
+        area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
+    }
+
+
     // Renewable cluster list
     if (study.header.version >= 810)
     {
@@ -1276,6 +1284,35 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) and ret;
             area.thermal.prepareAreaWideIndexes();
+        }
+    }
+
+    // Short term storage data, specific to areas
+    {
+        logs.info() << "Loading short term storage clusters...";
+        buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "areas.ini";
+        struct stat sb;
+        if (!stat(buffer.c_str(), &sb))
+        {
+            CString<30, false> stStoragePlant;
+            stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
+
+            for (auto& [id, area] : areas)
+            {
+                buffer.clear() << pStudy.folderInput << stStoragePlant  << area->id;
+                ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str())
+                    && ret;
+                area->shortTermStorage.validate();
+            }
+
+            //TODO remove: debug purpose
+            for (auto& [id, area] : areas)
+                for (auto unit : area->shortTermStorage.storagesByIndex)
+                    unit->printProperties();
+        }
+        else
+        {
+            logs.info() << "Short term storage not found, skipping";
         }
     }
 

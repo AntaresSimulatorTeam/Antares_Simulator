@@ -107,8 +107,9 @@ struct VCardThermalAirPollutantEmissions
 ** \brief Marginal ThermalAirPollutantEmissions
 */
 template<class NextT = Container::EndOfList>
-class ThermalAirPollutantEmissions
- : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>, NextT, VCardThermalAirPollutantEmissions>
+class ThermalAirPollutantEmissions : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>,
+                                                                NextT,
+                                                                VCardThermalAirPollutantEmissions>
 {
 public:
     //! Type of the next static variable
@@ -244,16 +245,17 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint cluster_index = 0; cluster_index != state.area->thermal.clusterCount(); ++cluster_index)
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
         {
-            auto* thermalCluster = state.area->thermal.clusters[cluster_index];
+            auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
 
             // Multiply every pollutant factor with production
             for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
             {
                 pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                    += thermalCluster->emissions.factors[i]
-                        * state.thermalClustersProductions[state.area->index][cluster_index];
+                  += thermalCluster->emissions.factors[i]
+                     * state.thermalClustersProductions[state.area->index][clusterIndex];
             }
         }
 
