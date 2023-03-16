@@ -55,6 +55,7 @@ State::State(Data::Study& s) :
     resizeThermal(thermalClustersProductions);
     resizeThermal(numberOfUnitsONbyCluster);
     resizeThermal(thermalClustersOperatingCost);
+    resizeThermal(PMinOfClusters);
 }
 
 void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
