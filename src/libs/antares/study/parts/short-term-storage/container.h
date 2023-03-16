@@ -32,12 +32,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class Container
+class STstorageInput
 {
 public:
     bool validate() const;
     // 1. Read list.ini
-    bool createUnitsFromIniFile(const std::string& path);
+    bool createSTstorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 

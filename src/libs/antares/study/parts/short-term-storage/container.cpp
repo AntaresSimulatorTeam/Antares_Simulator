@@ -37,13 +37,14 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool Container::validate() const
+bool STstorageInput::validate() const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(),
             [](auto& cluster) { return cluster->validate(); });
 }
 
-bool Container::createUnitsFromIniFile(const std::string& path)
+
+bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -68,7 +69,8 @@ bool Container::createUnitsFromIniFile(const std::string& path)
 
     return true;
 }
-bool Container::loadSeriesFromFolder(const std::string& folder)
+
+bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 {
     if (folder.empty())
         return false;

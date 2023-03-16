@@ -156,6 +156,8 @@ inline void Links::hourForEachLink(State& state, unsigned int numSpace)
 
 inline void Links::hourForClusters(State& state, unsigned int numSpace)
 {
+    UNUSED_VARIABLE(state);
+    UNUSED_VARIABLE(numSpace);
     // No cluster on links
 }
 

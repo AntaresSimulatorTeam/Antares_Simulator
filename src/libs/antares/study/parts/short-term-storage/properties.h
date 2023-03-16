@@ -48,8 +48,9 @@ enum class Group
     Other5
 };
 
-  class Properties {
-  public:
+class Properties
+{
+public:
     bool validate();
     bool loadKey(const IniFile::Property* p);
     // Injection nominal capacity, >= 0
