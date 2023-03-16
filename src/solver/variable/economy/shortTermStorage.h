@@ -228,25 +228,16 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        std::map<Antares::Data::ShortTermStorage::Group, double> sumInjection;
-        std::map<Antares::Data::ShortTermStorage::Group, double> sumWithdrawal;
-        for (uint idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
         {
-            auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
-            sumInjection[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[idx];
-            sumWithdrawal[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[idx];
-        }
+            const auto cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
 
-        for (auto [groupID, injection] : sumInjection)
-        {
-            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
-            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear] = injection;
-        }
+            // Injection
+            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
 
-        for (auto [groupID, withdrawal] : sumWithdrawal)
-        {
-            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
-            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear] = withdrawal;
+            // Withdrawal
+            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear] = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
         }
         
         // Next item in the list

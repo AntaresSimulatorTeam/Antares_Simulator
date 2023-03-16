@@ -217,17 +217,11 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        std::map<Antares::Data::ShortTermStorage::Group, double> sumLevels;
-        // Next item in the list
-        for (uint idx = 0; idx < state.area->shortTermStorage.storagesByIndex.size(); idx++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size(); stsIndex++)
         {
-            auto cluster = state.area->shortTermStorage.storagesByIndex[idx];
-            sumLevels[cluster->properties.group] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[idx];
-        }
-        for (auto [groupID, level] : sumLevels)
-        {
-            int group = Antares::Data::ShortTermStorage::groupIndex(groupID);
-            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear] = level;
+            const auto cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const uint group = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+            pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear] += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
         }
 
         NextType::hourForClusters(state, numSpace);

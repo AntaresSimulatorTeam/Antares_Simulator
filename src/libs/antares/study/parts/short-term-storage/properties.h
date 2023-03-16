@@ -38,7 +38,7 @@ namespace Antares::Data::ShortTermStorage {
   };
 
   // TODO[FOM] Move to properties.cpp
-  inline int groupIndex(Group group)
+  inline unsigned int groupIndex(Group group)
   {
     switch (group)
     {
