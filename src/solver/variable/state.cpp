@@ -46,21 +46,15 @@ State::State(Data::Study& s) :
  averageOptimizationTime1(0.),
  averageOptimizationTime2(0.)
 {
-    thermalClustersProductions.resize(s.areas.size());
-    for (int area_index = 0; area_index < s.areas.size(); area_index++)
-        thermalClustersProductions[area_index].resize(s.areas[area_index]->thermal.clusterCount());
+    auto resizeThermal = [&s](auto& container) {
+                           container.resize(s.areas.size());
+                           for (uint areaIndex = 0; areaIndex < s.areas.size(); areaIndex++)
+                               container[areaIndex].resize(s.areas[areaIndex]->thermal.clusterCount());
+                  };
 
-    PMinOfClusters.resize(s.areas.size());
-    for (int area_index = 0; area_index < s.areas.size(); area_index++)
-        PMinOfClusters[area_index].resize(s.areas[area_index]->thermal.clusterCount());
-
-    numberOfUnitsONbyCluster.resize(s.areas.size());
-    for (int area_index = 0; area_index < s.areas.size(); area_index++)
-        numberOfUnitsONbyCluster[area_index].resize(s.areas[area_index]->thermal.clusterCount());
-
-    thermalClustersOperatingCost.resize(s.areas.size());
-    for (int area_index = 0; area_index < s.areas.size(); area_index++)
-        thermalClustersOperatingCost[area_index].resize(s.areas[area_index]->thermal.clusterCount());
+    resizeThermal(thermalClustersProductions);
+    resizeThermal(numberOfUnitsONbyCluster);
+    resizeThermal(thermalClustersOperatingCost);
 }
 
 void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
