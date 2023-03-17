@@ -125,12 +125,12 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
 
                   // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
                   // yearly_inflows
-                  if (!finLevData.preCheckOne(totalInflows, area.name))
+                  if (!finLevData.preCheckYearlyInflow(totalInflows, area.name))
                       preChecksPasses = false;
 
                   // pre-check 2 -> final reservoir level set by the user is within the
                   // rule curves for the final day
-                  if (!finLevData.preCheckTwo(area.name))
+                  if (!finLevData.preCheckRuleCurves(area.name))
                       preChecksPasses = false;
               }
           });

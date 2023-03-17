@@ -174,7 +174,7 @@ public:
         return totalYearInflows;
     }
 
-    bool preCheckOne(double totalYearInflows, AreaName name)
+    bool preCheckYearlyInflow(double totalYearInflows, AreaName name)
     {
         if ((-deltaReservoirLevel) * reservoirCapacity
             > totalYearInflows) // ROR time-series in MW (power), SP time-series in MWh
@@ -189,7 +189,7 @@ public:
         return true;
     }
 
-    bool preCheckTwo(AreaName name)
+    bool preCheckRuleCurves(AreaName name)
     {
         if (finalReservoirLevel < lowLevelLastDay || finalReservoirLevel > highLevelLastDay)
         {
