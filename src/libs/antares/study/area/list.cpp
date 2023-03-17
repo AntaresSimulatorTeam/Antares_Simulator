@@ -1081,7 +1081,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Short term storage
     {
-        buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "st-storage" << area.id;
+        logs.notice() << "Loading series for st storage";
+        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << area.id;
         area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
     }
 

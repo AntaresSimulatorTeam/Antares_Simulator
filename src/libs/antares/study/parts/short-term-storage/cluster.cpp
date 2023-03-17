@@ -25,8 +25,11 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 #include <antares/logs.h>
+#include <yuni/io/file.h>
 
 #include "cluster.h"
+
+#define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -58,9 +61,9 @@ bool STstorageCluster::validate()
     return properties.validate() && series.validate();
 }
 
-bool STstorageCluster::loadSeries(const std::string& path)
+bool STstorageCluster::loadSeries(const std::string& folder)
 {
-    return series.loadFromFolder(path);
+    return series.loadFromFolder(folder);
 }
 
 void STstorageCluster::printProperties()

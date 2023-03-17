@@ -35,6 +35,8 @@ class Series
 public:
     bool validate() const;
     bool loadFromFolder(const std::string& folder);
+    bool loadFile(const std::string& folder, const std::string filename);
+    std::vector<double> *getVectorWithName(const std::string& name);
 
 private:
     std::vector<double> maxInjection;

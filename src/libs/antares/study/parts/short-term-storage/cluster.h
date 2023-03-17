@@ -39,7 +39,7 @@ public:
     bool validate();
     bool loadFromSection(const IniFile::Section& section);
 
-    bool loadSeries(const std::string& path);
+    bool loadSeries(const std::string& folder);
 
     //debug purposes will be removed
     void printProperties();

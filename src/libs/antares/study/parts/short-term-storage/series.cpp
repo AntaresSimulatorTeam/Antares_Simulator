@@ -24,9 +24,12 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+
 #include <antares/logs.h>
+#include <fstream>
 
 #include "series.h"
+
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -38,7 +41,57 @@ bool Series::validate() const
 
 bool Series::loadFromFolder(const std::string& folder)
 {
+    logs.notice() << "series::loadfromfolder";
+    bool ret = true;
+    ret = loadFile(folder, "PMAX-injection.txt") && ret;
+    return ret;
+}
+
+bool Series::loadFile(const std::string& folder, const std::string filename)
+{
+    std::string path(folder + filename);
+
+    std::ifstream file;
+    file.open(path);
+
+    logs.notice() << path;
+
+    if ((file.rdstate() & std::ifstream::failbit ) != 0)
+        return false;
+
+    logs.notice() << "File OK";
+
+    std::vector<double> vect = *getVectorWithName(filename);
+    vect.resize(8760);
+
+    std::string line;
+    try
+    {
+        size_t count = 0;
+        while (getline(file, line))
+        {
+            double d = std::stod(line);
+            vect.push_back(d);
+            logs.notice() << count++ << " : " << d;
+        }
+    }
+    catch (const std::exception&)
+    {
+        logs.error() << "Failed reading file: " << path;
+        return false;
+    }
+
     return true;
+}
+
+//TODO replace this function with a map
+std::vector<double> *Series::getVectorWithName(const std::string& name)
+{
+    if (name == "PMAX-injection.txt")
+        return &maxInjection;
+
+    logs.error() << "Filename: " << name << " not found for series";
+    return nullptr;
 }
 
 } // namespace Antares::Data::ShortTermStorage

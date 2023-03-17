@@ -26,12 +26,12 @@
 */
 
 #include <antares/logs.h>
+#include <yuni/io/file.h>
 #include <filesystem>
 #include <string>
 
 #include "container.h"
 
-#include <yuni/yuni.h>
 #define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
@@ -78,9 +78,9 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer = folder + SEP + cluster->properties.name + SEP + "series.txt";
+        const std::string buffer(folder + SEP + cluster->properties.name + SEP);
         /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
-        cluster->loadSeries(folder);
+        cluster->loadSeries(buffer);
     }
 
     /* if (s.usedByTheSolver && s.parameters.derated) */
