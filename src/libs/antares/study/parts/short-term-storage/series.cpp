@@ -34,6 +34,17 @@
 namespace Antares::Data::ShortTermStorage
 {
 
+/* Series::Series() */
+/* { */
+/*     logs.notice() << "constructor begins"; */
+/*     seriesNameMap.try_emplace("PMAX-injection.txt", &maxInjection); */
+/*     seriesNameMap.try_emplace("PMAX-withdrawal.txt", &maxWithdrawal); */
+/*     seriesNameMap.try_emplace("inflow.txt", &inflows); */
+/*     seriesNameMap.try_emplace("lower-rule-curve.txt", &lowerRuleCurve); */
+/*     seriesNameMap.try_emplace("upper-rule-curve.txt.txt", &upperRuleCurve); */
+/*     logs.notice() << "constructor end"; */
+/* } */
+
 bool Series::validate() const
 {
     return true;
@@ -41,13 +52,18 @@ bool Series::validate() const
 
 bool Series::loadFromFolder(const std::string& folder)
 {
-    logs.notice() << "series::loadfromfolder";
     bool ret = true;
-    ret = loadFile(folder, "PMAX-injection.txt") && ret;
+    /* for (auto& [name, vect]: seriesNameMap) */
+    /*     ret = loadFile(folder, name, *vect) && ret; */
+    ret = ret && loadFile(folder, "PMAX-injection.txt", *getVectorWithName("PMAX-injection.txt"));
+    ret = ret && loadFile(folder, "PMAX-withdrawal.txt", *getVectorWithName("PMAX-withdrawal.txt"));
+    ret = ret && loadFile(folder, "inflow.txt", *getVectorWithName("inflow.txt"));
+    ret = ret && loadFile(folder, "lower-rule-curve.txt", *getVectorWithName("lower-rule-curve.txt"));
+    ret = ret && loadFile(folder, "upper-rule-curve.txt", *getVectorWithName("upper-rule-curve.txt"));
     return ret;
 }
 
-bool Series::loadFile(const std::string& folder, const std::string filename)
+bool Series::loadFile(const std::string& folder, const std::string filename, std::vector<double>& vect)
 {
     std::string path(folder + filename);
 
@@ -61,18 +77,15 @@ bool Series::loadFile(const std::string& folder, const std::string filename)
 
     logs.notice() << "File OK";
 
-    std::vector<double> vect = *getVectorWithName(filename);
-    vect.resize(8760);
+    vect.reserve(8760);
 
     std::string line;
     try
     {
-        size_t count = 0;
         while (getline(file, line))
         {
             double d = std::stod(line);
             vect.push_back(d);
-            logs.notice() << count++ << " : " << d;
         }
     }
     catch (const std::exception&)
@@ -89,6 +102,14 @@ std::vector<double> *Series::getVectorWithName(const std::string& name)
 {
     if (name == "PMAX-injection.txt")
         return &maxInjection;
+    if (name == "PMAX-withdrawal.txt")
+        return &maxWithdrawal;
+    if (name == "inflow.txt")
+        return &inflows;
+    if (name == "lower-rule-curve.txt")
+        return &lowerRuleCurve;
+    if (name == "upper-rule-curve.txt")
+        return &upperRuleCurve;
 
     logs.error() << "Filename: " << name << " not found for series";
     return nullptr;

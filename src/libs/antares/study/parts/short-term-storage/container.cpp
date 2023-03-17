@@ -58,7 +58,7 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
         STstorageCluster cluster;
         if (!cluster.loadFromSection(*section))
             return false;
-
+        logs.notice() << section->name.c_str();
         storagesById.try_emplace(section->name.c_str(), cluster);
     }
 
@@ -80,7 +80,7 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
     {
         const std::string buffer(folder + SEP + cluster->properties.name + SEP);
         /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
-        cluster->loadSeries(buffer);
+        ret = cluster->loadSeries(buffer) && ret;
     }
 
     /* if (s.usedByTheSolver && s.parameters.derated) */

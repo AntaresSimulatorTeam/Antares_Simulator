@@ -1082,7 +1082,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     // Short term storage
     {
         logs.notice() << "Loading series for st storage";
-        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << area.id;
+        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
+            << SEP << area.id;
         area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
     }
 
@@ -1092,6 +1093,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
+    if (!ret)
+        logs.error() << "Error while loading sts series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);

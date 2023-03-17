@@ -27,18 +27,27 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <map>
 
 namespace Antares::Data::ShortTermStorage
 {
 class Series
 {
 public:
+    /* Series(); */
     bool validate() const;
+
+    //load all series files with folder path
     bool loadFromFolder(const std::string& folder);
-    bool loadFile(const std::string& folder, const std::string filename);
+
     std::vector<double> *getVectorWithName(const std::string& name);
 
-private:
+public:
+
+    //load individual series files
+    bool loadFile(const std::string& folder, const std::string filename, std::vector<double>& vect);
+    /* std::map<std::string, std::vector<double>*> seriesNameMap; */
+
     std::vector<double> maxInjection;
     std::vector<double> maxWithdrawal;
     std::vector<double> inflows;

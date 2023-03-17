@@ -63,7 +63,13 @@ bool STstorageCluster::validate()
 
 bool STstorageCluster::loadSeries(const std::string& folder)
 {
-    return series.loadFromFolder(folder);
+    /* return series.loadFromFolder(folder); */
+    bool ret = series.loadFromFolder(folder);
+
+    size_t count = 0;
+    for (double d : series.inflows)
+        logs.notice() << count++ << " : " << d;
+    return ret;
 }
 
 void STstorageCluster::printProperties()
