@@ -36,14 +36,14 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STstorageInput::validate() const
+bool STStorageInput::validate() const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [](auto& cluster) {
         return cluster->validate();
     });
 }
 
-bool STstorageInput::createSTStorageClustersFromIniFile(const std::string& path)
+bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -69,7 +69,7 @@ bool STstorageInput::createSTStorageClustersFromIniFile(const std::string& path)
     return true;
 }
 
-bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
+bool STStorageInput::loadSeriesFromFolder(const std::string& folder)
 {
     if (folder.empty())
         return false;
@@ -79,14 +79,8 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
     for (auto& cluster : storagesByIndex)
     {
         const std::string buffer(folder + SEP + cluster->properties.name + SEP);
-        /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
         ret = cluster->loadSeries(buffer) && ret;
     }
-
-    /* if (s.usedByTheSolver && s.parameters.derated) */
-    /*     series->series.averageTimeseries(); */
-
-    /* series->timeseriesNumbers.clear(); */
 
     return ret;
 }

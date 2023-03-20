@@ -26,6 +26,7 @@
 */
 
 #include <antares/logs.h>
+#include <stdexcept>
 
 #include "properties.h"
 
@@ -59,7 +60,7 @@ unsigned int groupIndex(Group group)
     case Group::Other4: return 7;
     case Group::Other5: return 8;
     default:
-      return 0;
+        throw std::invalid_argument("Group not recognized");
     }
 }
 

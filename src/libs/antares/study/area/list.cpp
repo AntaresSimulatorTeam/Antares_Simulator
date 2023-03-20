@@ -1305,11 +1305,6 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
                       && ret;
                 area->shortTermStorage.validate();
             }
-
-            // TODO remove: debug purpose
-            for (const auto& [id, area] : areas)
-                for (const auto& unit : area->shortTermStorage.storagesByIndex)
-                    unit->printProperties();
         }
         else
         {

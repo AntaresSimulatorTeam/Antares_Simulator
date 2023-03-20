@@ -63,30 +63,7 @@ bool STStorageCluster::validate()
 
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    /* return series.loadFromFolder(folder); */
-    bool ret = series.loadFromFolder(folder);
-
-    size_t count = 0;
-    for (double d : series.inflows)
-        logs.notice() << count++ << " : " << d;
-    return ret;
-}
-
-void STStorageCluster::printProperties()
-{
-    logs.notice() << "name : " << properties.name;
-    logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
-    logs.notice() << "withdrawalnominalcapacity : " << properties.withdrawalCapacity;
-    logs.notice() << "reservoircapacity : " << properties.capacity;
-    if (properties.initialLevel.has_value())
-        logs.notice() << "initiallevel : " << *properties.initialLevel;
-    else
-        logs.notice() << "initiallevel : Not initialized";
-    logs.notice() << "efficiency : " << properties.efficiencyFactor;
-    logs.notice() << "storagecycle : " << properties.cycleDuration;
-    for (const auto& [key, value] : Properties::ST_STORAGE_PROPERTY_GROUP_ENUM)
-        if (value  == properties.group)
-            logs.notice() << "group : " << key;
+    return series.loadFromFolder(folder);
 }
 
 } // namespace Antares::Data::ShortTermStorage

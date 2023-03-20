@@ -41,9 +41,6 @@ public:
 
     bool loadSeries(const std::string& folder);
 
-    //debug purposes will be removed
-    void printProperties();
-
     Series series;
     Properties properties;
 };

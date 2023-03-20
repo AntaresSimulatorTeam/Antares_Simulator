@@ -32,7 +32,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class STstorageInput
+class STStorageInput
 {
 public:
     bool validate() const;
