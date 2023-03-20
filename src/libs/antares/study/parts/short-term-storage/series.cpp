@@ -65,7 +65,7 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool Series::loadFile(const std::string& folder, const std::string filename, std::vector<double>& vect)
+bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect)
 {
     std::string path(folder + filename);
 
@@ -100,7 +100,7 @@ bool Series::loadFile(const std::string& folder, const std::string filename, std
 }
 
 //TODO replace this function with a map
-std::vector<double> *Series::getVectorWithName(const std::string& name)
+std::vector<double>* Series::getVectorWithName(const std::string& name)
 {
     if (name == "PMAX-injection.txt")
         return &maxInjection;
