@@ -105,10 +105,10 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes);
-    char PremierPassage = OUI_ANTARES;
+    bool PremierPassage = true;
 
-    PROBLEME_SPX* ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
-    MPSolver* solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
     bool ortoolsUsed = study->parameters.ortoolsUsed;
@@ -126,7 +126,7 @@ RESOLUTION:
     }
     else
     {
-        if (problemeHebdo->ReinitOptimisation == OUI_ANTARES)
+        if (problemeHebdo->ReinitOptimisation)
         {
             if (ortoolsUsed && solver != nullptr)
             {
@@ -200,10 +200,7 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    if (PremierPassage == NON_ANTARES)
-        Probleme.FaireDuScaling = NON_SPX;
-    if (PremierPassage == OUI_ANTARES)
-        Probleme.FaireDuScaling = OUI_SPX;
+    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -220,10 +217,7 @@ RESOLUTION:
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
 
 #ifndef NDEBUG
-    if (PremierPassage == OUI_ANTARES)
-        Probleme.AffichageDesTraces = NON_SPX;
-    else
-        Probleme.AffichageDesTraces = OUI_SPX;
+    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
 #else
     Probleme.AffichageDesTraces = NON_SPX;
 #endif
@@ -235,7 +229,12 @@ RESOLUTION:
         solver = ORTOOLS_ConvertIfNeeded(&Probleme, solver);
     }
     const std::string filename = createMPSfilename(optPeriodStringGenerator, optimizationNumber);
-    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS, problemeHebdo->exportMPSOnError, optimizationNumber, &Probleme, ortoolsUsed, solver);
+    mpsWriterFactory mps_writer_factory(problemeHebdo->ExportMPS,
+                                        problemeHebdo->exportMPSOnError,
+                                        optimizationNumber,
+                                        &Probleme,
+                                        ortoolsUsed,
+                                        solver);
     auto mps_writer = mps_writer_factory.create();
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
@@ -262,7 +261,7 @@ RESOLUTION:
     optimizationStatistics->addSolveTime(solveTime);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
-    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage == OUI_ANTARES)
+    if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
     {
         if (ProblemeAResoudre->ExistenceDUneSolution != SPX_ERREUR_INTERNE)
         {
@@ -284,7 +283,7 @@ RESOLUTION:
             }
             ProbSpx = nullptr;
             solver = nullptr;
-            PremierPassage = NON_ANTARES;
+            PremierPassage = false;
             goto RESOLUTION;
         }
 
@@ -300,12 +299,12 @@ RESOLUTION:
 
     if (ProblemeAResoudre->ExistenceDUneSolution == OUI_SPX)
     {
-        if (PremierPassage == NON_ANTARES)
+        if (!PremierPassage)
         {
             logs.info() << " Solver: Safe resolution succeeded";
         }
 
-        double *pt;
+        double* pt;
         double CoutOpt = 0.0;
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
@@ -341,7 +340,7 @@ RESOLUTION:
 
     else
     {
-        if (PremierPassage == NON_ANTARES)
+        if (!PremierPassage)
         {
             logs.info() << " Solver: Safe resolution failed";
         }

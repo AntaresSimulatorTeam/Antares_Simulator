@@ -153,16 +153,12 @@ struct PStudyMode
     }
     static wxString ConvertToString(const Type v)
     {
-        // NOTE stdmAdequacyDraft: should never happen since it could not be
-        //  selected
         switch (v)
         {
         case Data::stdmEconomy:
             return wxT("Economy");
         case Data::stdmAdequacy:
             return wxT("Adequacy");
-        case Data::stdmAdequacyDraft:
-            return wxT("Draft");
         case Data::stdmExpansion:
             return wxT("Expansion");
         case Data::stdmUnknown:
@@ -375,7 +371,7 @@ struct PStudyHorizon
     using Type = String;
     static Type Value(const Data::Study::Ptr& study)
     {
-        return !(!study) ? study->parameters.horizon : nullptr;
+        return !(!study) ? study->parameters.horizon : Type();
     }
     static wxString ConvertToString(const Type v)
     {
@@ -768,7 +764,7 @@ struct PClusterCO2
     using Type = double;
     static Type Value(const Data::ThermalCluster* cluster)
     {
-        return cluster->co2;
+        return cluster->emissions.factors[Antares::Data::Pollutant::CO2];
     }
     static wxString ConvertToString(const Type v)
     {

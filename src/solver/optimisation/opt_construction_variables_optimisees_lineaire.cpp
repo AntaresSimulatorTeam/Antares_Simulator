@@ -37,47 +37,35 @@
 
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Interco;
-    int Pays;
-    int Pdt;
-    int Palier;
-    int NombreDeVariables;
-    int Index;
-    char Simulation;
-    int NombreDePasDeTempsPourUneOptimisation;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    COUTS_DE_TRANSPORT* CoutDeTransport;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    int NombreDePasDeTempsPourUneOptimisation
+      = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+    int NombreDeVariables = 0;
 
-    NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-
-    NombreDeVariables = 0;
-
-    for (Pdt = 0; Pdt < NombreDePasDeTempsPourUneOptimisation; Pdt++)
+    for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
-        CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[Pdt];
+        CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
-        for (Interco = 0; Interco < problemeHebdo->NombreDInterconnexions; Interco++)
+        for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco]
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco]
               = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             NombreDeVariables++;
 
-            CoutDeTransport = problemeHebdo->CoutDeTransport[Interco];
-            if (CoutDeTransport->IntercoGereeAvecDesCouts == OUI_ANTARES)
+            const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
+            if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco]
+                  ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[interco]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
                 CorrespondanceVarNativesVarOptim
-                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco]
+                  ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[interco]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -85,61 +73,60 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             }
         }
 
-        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
-            for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
+            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {
-                Palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
-                CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[Palier]
+                const int palier
+                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
+                CorrespondanceVarNativesVarOptim->NumeroDeVariableDuPalierThermique[palier]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
             }
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[Pays]
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays]
               = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
             NombreDeVariables++;
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[Pays]
+            CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays]
               = NombreDeVariables;
 
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_INFERIEUREMENT;
             NombreDeVariables++;
         }
 
-        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable
-                == OUI_ANTARES)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[Pays]
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
             }
             else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[Pays] = -1;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays] = -1;
 
-            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[Pays] = -1;
-            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[Pays] = -1;
+            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays] = -1;
+            CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays] = -1;
             if (problemeHebdo->TypeDeLissageHydraulique
                 == LISSAGE_HYDRAULIQUE_SUR_SOMME_DES_VARIATIONS)
             {
-                if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable
-                    == OUI_ANTARES)
+                if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 {
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[Pays]
+                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays]
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
                     NombreDeVariables++;
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[Pays]
+                    CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays]
                       = NombreDeVariables;
                     ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                       = VARIABLE_BORNEE_INFERIEUREMENT;
@@ -147,52 +134,44 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 }
             }
             else if (problemeHebdo->TypeDeLissageHydraulique
-                     == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX)
+                       == LISSAGE_HYDRAULIQUE_SUR_VARIATION_MAX
+                     && problemeHebdo->CaracteristiquesHydrauliques[pays]
+                          ->PresenceDHydrauliqueModulable
+                     && pdt == 0)
             {
-                if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDHydrauliqueModulable
-                    == OUI_ANTARES)
-                {
-                    if (Pdt == 0)
-                    {
-                        CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariablesVariationHydALaBaisse[Pays]
-                          = NombreDeVariables;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaBaisse[pays]
+                  = NombreDeVariables;
 
-                        ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                          = VARIABLE_BORNEE_DES_DEUX_COTES;
-                        NombreDeVariables++;
-                        CorrespondanceVarNativesVarOptim
-                          ->NumeroDeVariablesVariationHydALaHausse[Pays]
-                          = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesVariationHydALaHausse[pays]
+                  = NombreDeVariables;
 
-                        ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                          = VARIABLE_BORNEE_DES_DEUX_COTES;
-                        NombreDeVariables++;
-                    }
-                }
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                NombreDeVariables++;
             }
 
-            if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->PresenceDePompageModulable
-                == OUI_ANTARES)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[Pays]
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
             }
             else
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[Pays] = -1;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays] = -1;
 
-            if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->SuiviNiveauHoraire
-                == OUI_ANTARES)
+            if (problemeHebdo->CaracteristiquesHydrauliques[pays]->SuiviNiveauHoraire)
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays]
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays]
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays]
                   = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
@@ -200,23 +179,23 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             }
             else
             {
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[Pays] = -1;
-                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[Pays] = -1;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeNiveau[pays] = -1;
+                CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeDebordement[pays] = -1;
             }
         }
     }
 
-    for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        if (problemeHebdo->CaracteristiquesHydrauliques[Pays]->AccurateWaterValue == OUI_ANTARES)
+        if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue)
         {
-            problemeHebdo->NumeroDeVariableStockFinal[Pays] = NombreDeVariables;
+            problemeHebdo->NumeroDeVariableStockFinal[pays] = NombreDeVariables;
             ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_NON_BORNEE;
             NombreDeVariables++;
 
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
-                problemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][nblayer] = NombreDeVariables;
+                problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] = NombreDeVariables;
                 ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
@@ -224,21 +203,20 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
         }
         else
         {
-            problemeHebdo->NumeroDeVariableStockFinal[Pays] = -1;
+            problemeHebdo->NumeroDeVariableStockFinal[pays] = -1;
             for (uint nblayer = 0; nblayer < 100; nblayer++)
             {
-                problemeHebdo->NumeroDeVariableDeTrancheDeStock[Pays][nblayer] = -1;
+                problemeHebdo->NumeroDeVariableDeTrancheDeStock[pays][nblayer] = -1;
             }
         }
     }
 
     ProblemeAResoudre->NombreDeVariables = NombreDeVariables;
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
-        Simulation = NON_ANTARES;
         OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaireCoutsDeDemarrage(problemeHebdo,
-                                                                                      Simulation);
+                                                                                      false);
     }
 
     return;

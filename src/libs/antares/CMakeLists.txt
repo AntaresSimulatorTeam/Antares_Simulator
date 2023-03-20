@@ -215,6 +215,8 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/cluster.cpp
     study/parts/thermal/cluster_list.h
     study/parts/thermal/cluster_list.cpp
+	study/parts/thermal/pollutant.h
+	study/parts/thermal/pollutant.cpp
 	)
 source_group("study\\part\\thermal" FILES ${SRC_STUDY_PART_THERMAL})
 
@@ -265,6 +267,8 @@ set(SRC_STUDY_PARAMETERS
 	study/parameters.h
 	study/parameters.hxx
 	study/parameters.cpp
+	study/parameters/adq-patch-params.h
+	study/parameters/adq-patch-params.cpp
 	study/UnfeasibleProblemBehavior.cpp
     # TODO JMK : should be in a target_include_directories : but need to remove all .h from all SRC
     study/UnfeasibleProblemBehavior.hpp

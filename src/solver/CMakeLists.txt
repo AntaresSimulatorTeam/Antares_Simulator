@@ -7,17 +7,18 @@ if(MSVC)
 endif(MSVC)
 
 
-include("cmake/infeasible-problem-analysis.cmake")
-include("cmake/writer.cmake")
-include("cmake/solver.cmake")
-include("cmake/hydro.cmake")
-include("cmake/main.cmake")
-include("cmake/variable.cmake")
-include("cmake/randomness.cmake")
-include("cmake/simulation.cmake")
-include("cmake/ts-generator.cmake")
-include("cmake/constraints-builder.cmake")
-include("cmake/log-sink.cmake")
+add_subdirectory(infeasible-problem-analysis)
+add_subdirectory(writer)
+add_subdirectory(variable)
+add_subdirectory(hydro)
+add_subdirectory(simulation)
+add_subdirectory(ts-generator)
+add_subdirectory(aleatoire)
+add_subdirectory(utils)
+add_subdirectory(optimisation)
+add_subdirectory(main)
+add_subdirectory(constraints-builder)
+add_subdirectory(log-sink)
 #
 # Resource file for Windows
 #
@@ -81,7 +82,6 @@ set(ANTARES_SOLVER_LIBS
 
 set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libantares-solver-main-economy
-	libantares-solver-main-adequacy-draft
 	libantares-solver-main-adequacy
 	libantares-solver-hydro
 	libantares-solver-aleatoire
@@ -96,6 +96,11 @@ target_link_libraries(antares-solver
 		PRIVATE
 			${ANTARES_SOLVER_LIBS}
 		)
+
+target_include_directories(antares-solver
+		PRIVATE
+			${CMAKE_SOURCE_DIR}/solver
+)
 
 import_std_libs(antares-solver)
 executable_strip(antares-solver)

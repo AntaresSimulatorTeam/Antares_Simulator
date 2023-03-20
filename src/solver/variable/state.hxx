@@ -87,11 +87,6 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
         hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
-    case Data::stdmAdequacyDraft:
-    {
-        hourlyAdequacyResults = ProblemeHoraireAdequation.ResultatsParPays[areaIndex];
-        break;
-    }
     case Data::stdmUnknown:
         break;
     case Data::stdmExpansion:

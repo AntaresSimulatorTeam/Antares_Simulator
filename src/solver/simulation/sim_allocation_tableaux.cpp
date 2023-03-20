@@ -145,18 +145,14 @@ void SIM_AllocationTableaux()
             intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
     }
 
-    if (not study.parameters.adequacyDraft())
-    {
-        AllocateResultsForEconomicMode();
-    }
+    AllocateResultsForEconomicMode();
 }
 
 void SIM_DesallocationTableaux()
 {
-    auto studyptr = Data::Study::Current::Get();
-    if (!(!studyptr))
+    if (Data::Study::Current::Valid())
     {
-        auto& study = *studyptr;
+        const auto& study = *Data::Study::Current::Get();
         for (uint i = 0; i < study.areas.size(); ++i)
             MemFree(DonneesParPays[i]);
 
@@ -198,8 +194,5 @@ void SIM_DesallocationTableaux()
     MemFree(DonneesParPays);
     DonneesParPays = NULL;
 
-    if (not studyptr->parameters.adequacyDraft())
-    {
-        DeallocateResultsForEconomicMode();
-    }
+    DeallocateResultsForEconomicMode();
 }

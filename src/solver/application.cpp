@@ -151,7 +151,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
             {
                 const auto& cluster = *(area.thermal.clusters[l]);
                 auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto PminDUnGroupeDuPalierThermique
+                auto pminDUnGroupeDuPalierThermique
                   = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
                       ? cluster.nominalCapacityWithSpinning
                       : cluster.minStablePower;
@@ -163,7 +163,7 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
                 {
                     for (uint x = 0; x != cluster.series->series.width; ++x)
                     {
-                        auto rightpart = PminDUnGroupeDuPalierThermique
+                        auto rightpart = pminDUnGroupeDuPalierThermique
                                          * ceil(cluster.series->series.entry[x][y]
                                                 / PmaxDUnGroupeDuPalierThermique);
                         condition = rightpart > cluster.series->series.entry[x][y];
@@ -299,12 +299,12 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatch.enabled, pParameters->mode);
+    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatchParams.enabled, pParameters->mode);
 
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatch.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatch.enabled,
+    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatchParams.enabled, pStudy->areas);
+    checkAdqPatchIncludeHurdleCost(pParameters->adqPatchParams.enabled,
                                    pParameters->include.hurdleCosts,
-                                   pParameters->adqPatch.curtailmentSharing.includeHurdleCost);
+                                   pParameters->adqPatchParams.curtailmentSharing.includeHurdleCost);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -384,9 +384,6 @@ void Application::execute()
             break;
         case Data::stdmAdequacy:
             runSimulationInAdequacyMode();
-            break;
-        case Data::stdmAdequacyDraft:
-            runSimulationInAdequacyDraftMode();
             break;
         default:
             break;
