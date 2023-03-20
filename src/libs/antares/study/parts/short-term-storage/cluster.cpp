@@ -34,7 +34,7 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-bool STstorageCluster::loadFromSection(const IniFile::Section& section)
+bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
         return false;
@@ -56,12 +56,12 @@ bool STstorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool STstorageCluster::validate()
+bool STStorageCluster::validate()
 {
     return properties.validate() && series.validate();
 }
 
-bool STstorageCluster::loadSeries(const std::string& folder)
+bool STStorageCluster::loadSeries(const std::string& folder)
 {
     /* return series.loadFromFolder(folder); */
     bool ret = series.loadFromFolder(folder);
@@ -72,7 +72,7 @@ bool STstorageCluster::loadSeries(const std::string& folder)
     return ret;
 }
 
-void STstorageCluster::printProperties()
+void STStorageCluster::printProperties()
 {
     logs.notice() << "name : " << properties.name;
     logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
@@ -84,7 +84,7 @@ void STstorageCluster::printProperties()
         logs.notice() << "initiallevel : Not initialized";
     logs.notice() << "efficiency : " << properties.efficiencyFactor;
     logs.notice() << "storagecycle : " << properties.cycleDuration;
-    for (const auto& [key, value] : Properties::stStoragePropertyGroupEnum)
+    for (const auto& [key, value] : Properties::ST_STORAGE_PROPERTY_GROUP_ENUM)
         if (value  == properties.group)
             logs.notice() << "group : " << key;
 }

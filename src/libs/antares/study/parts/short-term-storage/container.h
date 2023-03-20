@@ -37,11 +37,11 @@ class STstorageInput
 public:
     bool validate() const;
     // 1. Read list.ini
-    bool createSTstorageClustersFromIniFile(const std::string& path);
+    bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder);
 
-    std::vector<STstorageCluster*> storagesByIndex;
-    std::map<std::string, STstorageCluster> storagesById;
+    std::vector<STStorageCluster*> storagesByIndex;
+    std::map<std::string, STStorageCluster> storagesById;
 };
 } // namespace Antares::Data::ShortTermStorage

@@ -43,7 +43,7 @@ bool STstorageInput::validate() const
     });
 }
 
-bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
+bool STstorageInput::createSTStorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -55,7 +55,7 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
 
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        STstorageCluster cluster;
+        STStorageCluster cluster;
         if (!cluster.loadFromSection(*section))
             return false;
         logs.notice() << section->name.c_str();

@@ -32,7 +32,7 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
+const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM =
 {
     {"PSP_open", Group::PSP_open},
     {"PSP_closed", Group::PSP_closed},
@@ -99,8 +99,8 @@ bool Properties::loadKey(const IniFile::Property* p)
 
     if (p->key == "group")
     {
-        if (auto it = Properties::stStoragePropertyGroupEnum.find(p->value.c_str());
-                it !=  Properties::stStoragePropertyGroupEnum.end())
+        if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(p->value.c_str());
+                it !=  Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
         {
             this->group = it->second;
             return true;

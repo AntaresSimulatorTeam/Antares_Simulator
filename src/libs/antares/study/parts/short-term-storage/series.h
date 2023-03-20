@@ -44,7 +44,7 @@ public:
 public:
 
     //load individual series files
-    bool loadFile(const std::string& folder, const std::string filename, std::vector<double>& vect);
+    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>* vect);
 
     std::vector<double>* getVectorWithName(const std::string& name);
 

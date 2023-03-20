@@ -57,7 +57,7 @@ bool Series::loadFromFolder(const std::string& folder)
         "lower-rule-curve.txt", "upper-rule-curve.txt" };
 
     for (auto& file : fileNames)
-        ret = ret && loadFile(folder, file, *getVectorWithName(file));
+        ret = ret && loadFile(folder, file, getVectorWithName(file));
 
     /* for (auto& [name, vect]: seriesNameMap) */
     /*     ret = loadFile(folder, name, *vect) && ret; */
@@ -65,7 +65,7 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect)
+bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>* vect)
 {
     std::string path(folder + filename);
 
@@ -79,7 +79,7 @@ bool Series::loadFile(const std::string& folder, const std::string& filename, st
 
     logs.notice() << "File OK";
 
-    vect.reserve(8760);
+    vect->reserve(8760);
 
     std::string line;
     try
@@ -87,7 +87,7 @@ bool Series::loadFile(const std::string& folder, const std::string& filename, st
         while (getline(file, line))
         {
             double d = std::stod(line);
-            vect.push_back(d);
+            vect->push_back(d);
         }
     }
     catch (const std::exception&)

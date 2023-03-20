@@ -33,7 +33,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class STstorageCluster
+class STStorageCluster
 {
 public:
     bool validate();

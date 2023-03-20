@@ -24,10 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <optional>
 #pragma once
 
+#include <optional>
 #include <string>
 #include <map>
 
@@ -72,6 +71,6 @@ public:
     // cluster name
     std::string name;
 
-    static const std::map<std::string, enum Group> stStoragePropertyGroupEnum;
+    static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 };
 } // namespace Antares::Data::ShortTermStorage

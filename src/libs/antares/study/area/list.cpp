@@ -1301,7 +1301,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             for (const auto& [id, area] : areas)
             {
                 buffer.clear() << pStudy.folderInput << stStoragePlant << area->id;
-                ret = area->shortTermStorage.createSTstorageClustersFromIniFile(buffer.c_str())
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
                       && ret;
                 area->shortTermStorage.validate();
             }
