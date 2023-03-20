@@ -54,6 +54,24 @@ public:
     }
 };
 
+template<>
+class IntoCString<std::string_view> final
+{
+public:
+    enum
+    {
+        valid = 1,
+        converted = 0,
+        zeroTerminated = 0,
+    };
+
+public:
+    static const char* Perform(std::string_view v)
+    {
+        return v.data();
+    }
+};
+
 template<uint ChunkSizeT, bool ExpandableT>
 class IntoCString<Yuni::CString<ChunkSizeT, ExpandableT>> final
 {

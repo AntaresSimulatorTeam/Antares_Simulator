@@ -26,6 +26,7 @@
 */
 
 #include <antares/logs.h>
+#include <string_view>
 #include "log_sink.h"
 
 namespace Antares::Solver
@@ -38,10 +39,12 @@ void LogSink::send(LogSeverity severity,
                    const char* message,
                    size_t message_len)
 {
-    // message *is not* '\0'-terminated
-    // We could use std::string_view to avoid copies,
-    // but Yuni::Logs::Logger doesn't support them at the moment.
-    const std::string msg(message, message_len);
+    /* NOTES
+     1. Our logger handles filenames, timestamps, etc. We don't need those.
+     2. Message *is not* '\0'-terminated, we must use it's length.
+        Also, we use std::string_view to avoid copies
+    */
+    const std::string_view msg(message, message_len);
     switch (severity)
     {
     case google::GLOG_INFO:

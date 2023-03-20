@@ -12,6 +12,7 @@
 #include "../../traits/length.h"
 #include "integer.h"
 #include <stdio.h>
+#include <string_view>
 #include <cassert>
 
 #ifdef YUNI_OS_MSVC
@@ -140,6 +141,17 @@ public:
     {
         if (N > 0 and rhs)
             string.append(rhs, N - ((rhs[N - 1] == wchar_t()) ? 1 : 0));
+    }
+};
+
+// std::string_view
+template<class CStringT>
+class Append<CStringT, std::string_view> final
+{
+public:
+    static void Perform(CStringT& string, std::string_view rhs)
+    {
+        string.append(rhs, rhs.length());
     }
 };
 
@@ -272,7 +284,7 @@ public:
     }
 };
 
-// std::vector<>
+// std::list<>
 template<class CStringT, class T>
 class Append<CStringT, std::list<T>> final
 {
@@ -293,7 +305,6 @@ public:
         s += ']';
     }
 };
-
 } // namespace CString
 } // namespace Extension
 } // namespace Yuni
