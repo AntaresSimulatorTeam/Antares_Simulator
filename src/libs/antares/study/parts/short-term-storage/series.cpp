@@ -53,13 +53,15 @@ bool Series::validate() const
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
+    std::string fileNames[5] = { "PMAX-injection.txt", "PMAX-withdrawal.txt", "inflow.txt",
+        "lower-rule-curve.txt", "upper-rule-curve.txt" };
+
+    for (auto& file : fileNames)
+        ret = ret && loadFile(folder, file, *getVectorWithName(file));
+
     /* for (auto& [name, vect]: seriesNameMap) */
     /*     ret = loadFile(folder, name, *vect) && ret; */
-    ret = ret && loadFile(folder, "PMAX-injection.txt", *getVectorWithName("PMAX-injection.txt"));
-    ret = ret && loadFile(folder, "PMAX-withdrawal.txt", *getVectorWithName("PMAX-withdrawal.txt"));
-    ret = ret && loadFile(folder, "inflow.txt", *getVectorWithName("inflow.txt"));
-    ret = ret && loadFile(folder, "lower-rule-curve.txt", *getVectorWithName("lower-rule-curve.txt"));
-    ret = ret && loadFile(folder, "upper-rule-curve.txt", *getVectorWithName("upper-rule-curve.txt"));
+
     return ret;
 }
 

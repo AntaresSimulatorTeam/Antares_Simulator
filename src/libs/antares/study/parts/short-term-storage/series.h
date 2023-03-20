@@ -40,12 +40,14 @@ public:
     //load all series files with folder path
     bool loadFromFolder(const std::string& folder);
 
-    std::vector<double> *getVectorWithName(const std::string& name);
-
+//TODO private
 public:
 
     //load individual series files
     bool loadFile(const std::string& folder, const std::string filename, std::vector<double>& vect);
+
+    std::vector<double>* getVectorWithName(const std::string& name);
+
     /* std::map<std::string, std::vector<double>*> seriesNameMap; */
 
     std::vector<double> maxInjection;
