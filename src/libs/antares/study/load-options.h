@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -106,7 +106,6 @@ public:
     bool forceExpansion = false;
     bool forceEconomy = false;
     bool forceAdequacy = false;
-    bool forceAdequacyDraft = false;
 
     YString studyFolder;
     YString simulationName;

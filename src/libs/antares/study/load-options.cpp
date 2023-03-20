@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -68,7 +68,7 @@ void StudyLoadOptions::checkForceSimulationMode()
 {
     const uint number_of_enabled_force_options
       = static_cast<uint>(forceExpansion) + static_cast<uint>(forceEconomy)
-        + static_cast<uint>(forceAdequacy) + static_cast<uint>(forceAdequacyDraft);
+        + static_cast<uint>(forceAdequacy);
 
     if (number_of_enabled_force_options > 1)
     {
@@ -80,8 +80,6 @@ void StudyLoadOptions::checkForceSimulationMode()
         forceMode = stdmEconomy;
     else if (forceAdequacy)
         forceMode = stdmAdequacy;
-    else if (forceAdequacyDraft)
-        forceMode = stdmAdequacyDraft;
 }
 } // namespace Data
 } // namespace Antares

@@ -138,7 +138,7 @@ File structures are detailed in [Output Files](05-output_files.md).
 
 ## Run
 
-- **Monte Carlo Simulation** Runs either an economy simulation, an adequacy simulation, or a "draft" simulation,
+- **Monte Carlo Simulation** Runs either an economy simulation or an adequacy simulation
 depending on the values of the parameters set in the "simulation" active window (see [Simulation window](04-active_windows.md#simulation)).
 If hardware resources and simulation settings allow it, simulations benefit from full multi-threading
 (see [System requirements](09-system_requirements.md))

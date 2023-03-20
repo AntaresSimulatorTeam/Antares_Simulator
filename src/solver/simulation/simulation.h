@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -56,15 +56,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
 
-void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, uint numSpace);
-
 void SIM_CalculFlotHoraireAdequation(void);
 
 void SIM_InitialisationProblemeHoraireAdequation(void);
 
 void SIM_AllocationProblemeHoraireAdequation(void);
-
-void SIM_AlgorithmeDeFlot(void);
 
 void SIM_InitialisationChainagePourAdequation(void);
 

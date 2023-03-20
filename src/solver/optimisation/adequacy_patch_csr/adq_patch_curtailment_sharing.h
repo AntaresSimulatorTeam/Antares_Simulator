@@ -31,13 +31,6 @@
 
 namespace Antares::Data::AdequacyPatch
 {
-//! A default threshold value for initiate curtailment sharing rule
-const double defaultThresholdToRunCurtailmentSharing = 0.0;
-//! A default threshold value for display local matching rule violations
-const double defaultThresholdDisplayLocalMatchingRuleViolations = 0.0;
-//! CSR variables relaxation threshold
-const int defaultValueThresholdVarBoundsRelaxation = 3;
-
 
 /*!
  * Calculates curtailment sharing rule parameters netPositionInit, densNew and totalNodeBalance per

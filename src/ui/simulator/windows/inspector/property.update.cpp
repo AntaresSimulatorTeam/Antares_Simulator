@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -705,13 +705,13 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
         if (d < 0.)
         {
             for (; i != end; ++i)
-                (*i)->co2 = 0.;
+                (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = 0.;
             pFrame.delayApply();
         }
         else
         {
             for (; i != end; ++i)
-                (*i)->co2 = d;
+                (*i)->emissions.factors[Antares::Data::Pollutant::CO2] = d;
         }
         return true;
     }
@@ -1109,22 +1109,12 @@ bool InspectorGrid::onPropertyChanging_S(wxPGProperty*,
             mode = Data::stdmEconomy;
         else if (s == "adequacy" || s == "1")
             mode = Data::stdmAdequacy;
-        else if (s == "draft" || s == "2")
-            mode = Data::stdmAdequacyDraft;
         else
             mode = Data::stdmEconomy;
 
         for (; i != end; ++i)
         {
             (*i)->parameters.mode = mode;
-            // For adequacy-draft mode, forcing the time interval to the whole year
-            if (mode == Data::stdmAdequacyDraft)
-            {
-                auto& parameters = (*i)->parameters;
-                parameters.simulationDays.first = 0;
-                parameters.simulationDays.end = 365;
-                pFrame.delayApply();
-            }
             OnStudySimulationSettingsChanged();
         }
         return true;

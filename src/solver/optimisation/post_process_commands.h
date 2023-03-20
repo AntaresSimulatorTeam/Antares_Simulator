@@ -100,7 +100,7 @@ public:
 private:
     double calculateDensNewAndTotalLmrViolation();
     std::vector<double> calculateENSoverAllAreasForEachHour() const;
-    std::set<int> identifyHoursForCurtailmentSharing(std::vector<double> sumENS) const;
+    std::set<int> identifyHoursForCurtailmentSharing(const std::vector<double>& sumENS) const;
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 
     const AreaList& area_list_;

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -759,6 +759,10 @@ protected:
     //! Load all set of areas and links
     bool internalLoadSets();
     //@}
+
+    bool internalLoadIni(const YString& path, const StudyLoadOptions& options);
+
+    void parameterFiller(const StudyLoadOptions& options);
 
     //! \name Misc
     //@{

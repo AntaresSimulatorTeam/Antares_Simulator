@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -172,7 +172,7 @@ bool Adequacy::year(Progression::Task& progression,
             *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);

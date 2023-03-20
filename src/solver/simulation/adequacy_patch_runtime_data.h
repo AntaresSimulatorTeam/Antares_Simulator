@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -45,6 +45,7 @@ public:
     std::vector<adqPatchParamsMode> areaMode;
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
+    std::vector<double> hurdleCostCoefficients;
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);

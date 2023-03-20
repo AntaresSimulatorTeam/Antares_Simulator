@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -158,7 +158,7 @@ private:
                            const PrecisionT& precision,
                            const bool isNotApplicable);
 
-    void writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel);
+    void writeDateToFileDescriptor(uint row, int precisionLevel);
 
 }; // class SurveyResults
 

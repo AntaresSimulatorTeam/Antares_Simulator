@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -907,11 +907,6 @@ bool BindConstList::loadFromFolder(Study& study,
 
     if (study.usedByTheSolver)
     {
-        if (study.parameters.mode == stdmAdequacyDraft)
-        {
-            logs.info() << "  The constraints shall be ignored in adequacy-draft";
-            return true;
-        }
         if (options.ignoreConstraints)
         {
             logs.info() << "  The constraints have been disabled by the user";
@@ -1259,8 +1254,6 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
 
 void BindConstList::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
-    if (u.mode == stdmAdequacyDraft)
-        return;
     // Disabled by the optimization preferences
     if (!u.study.parameters.include.constraints)
         return;

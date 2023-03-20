@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -44,62 +44,53 @@ void OPT_InitialiserLesCoutsLineaireCoutsDeDemarrage(PROBLEME_HEBDO* problemeHeb
                                                      const int PremierPdtDeLIntervalle,
                                                      const int DernierPdtDeLIntervalle)
 {
-    int PdtJour;
-    int Pays;
-    int Palier;
-    int var;
-    int Index;
-    int PdtHebdo;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    double* CoutLineaire;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    double* CoutLineaire = ProblemeAResoudre->CoutLineaire;
 
-    ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
-    CoutLineaire = ProblemeAResoudre->CoutLineaire;
-
-    for (PdtHebdo = PremierPdtDeLIntervalle, PdtJour = 0; PdtHebdo < DernierPdtDeLIntervalle;
-         PdtHebdo++, PdtJour++)
+    for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdtJour++)
     {
-        CorrespondanceVarNativesVarOptim = problemeHebdo->CorrespondanceVarNativesVarOptim[PdtJour];
+        const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
 
-        for (Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+        for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
         {
-            PaliersThermiquesDuPays = problemeHebdo->PaliersThermiquesDuPays[Pays];
+            const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+              = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-            for (Index = 0; Index < PaliersThermiquesDuPays->NombreDePaliersThermiques; Index++)
+            for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
             {
-                Palier
-                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[Index];
+                const int palier
+                  = PaliersThermiquesDuPays->NumeroDuPalierDansLEnsembleDesPaliersThermiques[index];
 
-                var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[Palier];
+                int var = CorrespondanceVarNativesVarOptim
+                            ->NumeroDeVariableDuNombreDeGroupesEnMarcheDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[Index];
+                      = PaliersThermiquesDuPays->CoutFixeDeMarcheDUnGroupeDuPalierThermique[index];
                 }
 
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[Palier];
+                        ->NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[Index];
+                      = PaliersThermiquesDuPays->CoutDArretDUnGroupeDuPalierThermique[index];
                 }
 
                 var
                   = CorrespondanceVarNativesVarOptim
-                      ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[Palier];
+                      ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                     CoutLineaire[var] = 0;
 
                 var = CorrespondanceVarNativesVarOptim
-                        ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[Palier];
+                        ->NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique[palier];
                 if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
                 {
                     CoutLineaire[var]
-                      = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[Index];
+                      = PaliersThermiquesDuPays->CoutDeDemarrageDUnGroupeDuPalierThermique[index];
                 }
             }
         }

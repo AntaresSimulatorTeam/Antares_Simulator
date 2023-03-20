@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -153,7 +153,7 @@ static void ExportGridInfosAreas(const Data::Study& study,
             outThermal << cluster.minUpTime << '\t';
             outThermal << cluster.minDownTime << '\t';
             outThermal << cluster.spinning << '\t';
-            outThermal << cluster.co2 << '\t';
+            outThermal << cluster.emissions.factors[Antares::Data::Pollutant::CO2] << '\t';
             outThermal << cluster.marginalCost << '\t';
             outThermal << cluster.fixedCost << '\t';
             outThermal << cluster.startupCost << '\t';
@@ -212,11 +212,6 @@ void SurveyResultsData::initialize(uint maxVariables)
         //::MatrixFill(&matrix, std::numeric_limits<double>::quiet_NaN());
         break;
     }
-    case Data::stdmAdequacyDraft:
-    {
-        matrix.resize(maxVariables, study.runtime->rangeLimits.year[Data::rangeCount]);
-        break;
-    }
     case Data::stdmUnknown:
     case Data::stdmExpansion:
     case Data::stdmMax:
@@ -241,7 +236,6 @@ namespace Solver
 namespace Variable
 {
 static inline uint GetRangeLimit(const Data::Study& study,
-                                 int fileLevel,
                                  int precisionLevel,
                                  int index)
 {
@@ -257,18 +251,14 @@ static inline uint GetRangeLimit(const Data::Study& study,
     case Category::monthly:
         return study.runtime->rangeLimits.month[index];
     case Category::annual:
-    {
-        if (fileLevel & Category::mc)
-            return study.runtime->rangeLimits.year[index];
         return 0;
-    }
     default:
         return 0;
     }
 }
 
 // inline : only used in this cpp file
-inline void SurveyResults::writeDateToFileDescriptor(uint row, int fileLevel, int precisionLevel)
+inline void SurveyResults::writeDateToFileDescriptor(uint row, int precisionLevel)
 {
     auto& out = data.fileBuffer;
     auto& calendar = data.study.calendarOutput; // data.study.calendar;
@@ -328,13 +318,8 @@ inline void SurveyResults::writeDateToFileDescriptor(uint row, int fileLevel, in
         break;
     }
     case Category::annual:
-    {
-        if (fileLevel & Category::mc)
-            out << '\t' << row;
-        else
-            out.append("\tAnnual", 7);
+        out.append("\tAnnual", 7);
         break;
-    }
     default:
         out << '\t' << row;
         break;
@@ -712,9 +697,9 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
     data.fileBuffer.reserve(2 * 1024 * 1024);
 
     // How many rows have we got ?
-    const uint heightBegin = GetRangeLimit(data.study, fileLevel, precisionLevel, Data::rangeBegin);
+    const uint heightBegin = GetRangeLimit(data.study, precisionLevel, Data::rangeBegin);
     // (+1 for condition stop)
-    const uint heightEnd = GetRangeLimit(data.study, fileLevel, precisionLevel, Data::rangeEnd) + 1;
+    const uint heightEnd = GetRangeLimit(data.study, precisionLevel, Data::rangeEnd) + 1;
 
     // Big header
     if (data.area)
@@ -769,52 +754,27 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
         assert(not precision[x].empty() && "invalid precision");
 #endif
 
-    if (fileLevel & Category::mc)
+    // Each row
+    for (uint y = heightBegin; y < heightEnd; ++y)
     {
-        // Each row
-        for (uint y = heightBegin; y < heightEnd; ++y)
-        {
-            // Asserts
-            assert(y < data.matrix.height);
+        // Asserts
+        assert(y < maxHoursInAYear);
+        // Index
+        writeDateToFileDescriptor(y + 1, precisionLevel);
 
-            // Index
-            writeDateToFileDescriptor(y + 1, fileLevel, precisionLevel);
+        // Each column
+        assert(data.columnIndex <= maxVariables);
 
-            // Each column
-            assert(data.columnIndex <= data.matrix.width);
+        for (uint x = 0; x != data.columnIndex; ++x)
+            AppendDoubleValue(error,
+                    values[x][y],
+                    data.fileBuffer,
+                    conversionBuffer,
+                    precision[x],
+                    nonApplicableStatus[x]);
 
-            for (uint x = 0; x != data.columnIndex; ++x)
-                AppendDoubleValue(
-                  error, data.matrix[x][y], data.fileBuffer, conversionBuffer, precision[x], false);
-
-            // End of line
-            data.fileBuffer += '\n';
-        }
-    }
-    else
-    {
-        // Each row
-        for (uint y = heightBegin; y < heightEnd; ++y)
-        {
-            // Asserts
-            assert(y < maxHoursInAYear);
-            // Index
-            writeDateToFileDescriptor(y + 1, fileLevel, precisionLevel);
-
-            // Each column
-            assert(data.columnIndex <= maxVariables);
-
-            for (uint x = 0; x != data.columnIndex; ++x)
-                AppendDoubleValue(error,
-                                  values[x][y],
-                                  data.fileBuffer,
-                                  conversionBuffer,
-                                  precision[x],
-                                  nonApplicableStatus[x]);
-
-            // End of line
-            data.fileBuffer += '\n';
-        }
+        // End of line
+        data.fileBuffer += '\n';
     }
 
     // mc-ind & mc-all
@@ -824,7 +784,7 @@ void SurveyResults::saveToFile(int dataLevel, int fileLevel, int precisionLevel)
 void SurveyResults::EstimateMemoryUsage(uint maxVars, Data::StudyMemoryUsage& u)
 {
     if (u.study.parameters.synthesis
-        || (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft))
+        || (u.study.parameters.yearByYear))
     {
         // TODO : We may have more thermal cluster for an area than the max total of vars
         //   So we should take into consideration the maximum total of thermal clusters for

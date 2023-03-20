@@ -252,9 +252,9 @@ std::set<int> CurtailmentSharingPostProcessCmd::getHoursRequiringCurtailmentShar
 }
 
 std::set<int> CurtailmentSharingPostProcessCmd::identifyHoursForCurtailmentSharing(
-  std::vector<double> sumENS) const
+  const std::vector<double>& sumENS) const
 {
-    double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
+    const double threshold = problemeHebdo_->adqPatchParams->ThresholdRunCurtailmentSharingRule;
     std::set<int> triggerCsrSet;
     for (uint i = 0; i < nbHoursInWeek; ++i)
     {

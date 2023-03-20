@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -105,11 +105,11 @@ bool Economy::simulationBegin()
 
             weeklyOptProblems_[numSpace] =
                 Antares::Solver::Optimization::WeeklyOptimization::create(
-                                                    study.parameters.adqPatch.enabled,
+                                                    study.parameters.adqPatchParams.enabled,
                                                     pProblemesHebdo[numSpace],
                                                     numSpace);
             postProcessesList_[numSpace] =
-                interfacePostProcessList::create(study.parameters.adqPatch.enabled,
+                interfacePostProcessList::create(study.parameters.adqPatchParams.enabled,
                                                  pProblemesHebdo[numSpace],
                                                  numSpace,
                                                  study.areas,
@@ -165,7 +165,7 @@ bool Economy::year(Progression::Task& progression,
           *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         try

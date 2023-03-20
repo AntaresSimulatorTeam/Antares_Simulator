@@ -43,9 +43,10 @@ double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             int Area,
                             int hour)
 {
-    double ensInit
+    const double ensInit
       = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
-    double threshold = problemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
+    const double threshold
+      = problemeHebdo->adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations;
 
     problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations

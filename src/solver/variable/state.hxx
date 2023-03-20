@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -85,11 +85,6 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     case Data::stdmAdequacy:
     {
         hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
-        break;
-    }
-    case Data::stdmAdequacyDraft:
-    {
-        hourlyAdequacyResults = ProblemeHoraireAdequation.ResultatsParPays[areaIndex];
         break;
     }
     case Data::stdmUnknown:
