@@ -330,7 +330,7 @@ public:
             const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
               .hour[state.hourInTheYear]
-              = state.numberOfUnitsONbyCluster[state.area->index][clusterIndex];
+              = state.thermal.numberOfUnitsONbyCluster[clusterIndex];
         }
 
         // Next item in the list

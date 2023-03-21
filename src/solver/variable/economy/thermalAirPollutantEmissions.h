@@ -255,7 +255,7 @@ public:
             {
                 pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
                   += thermalCluster->emissions.factors[i]
-                     * state.thermalClustersProductions[state.area->index][clusterIndex];
+                     * state.thermal.thermalClustersProductions[clusterIndex];
             }
         }
 

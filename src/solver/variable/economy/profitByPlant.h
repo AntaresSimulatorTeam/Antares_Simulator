@@ -300,8 +300,7 @@ public:
              ++clusterIndex)
         {
             auto* cluster = state.area->thermal.clusters[clusterIndex];
-            double hourlyClusterProduction
-              = state.thermalClustersProductions[state.area->index][clusterIndex];
+            double hourlyClusterProduction = state.thermal.thermalClustersProductions[clusterIndex];
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])

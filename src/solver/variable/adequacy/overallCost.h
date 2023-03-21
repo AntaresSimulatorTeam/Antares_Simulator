@@ -279,7 +279,7 @@ public:
              ++clusterIndex)
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += state.thermalClustersOperatingCost[state.area->index][clusterIndex];
+              += state.thermal.thermalClustersOperatingCost[clusterIndex];
         }
 
         // Next item in the list

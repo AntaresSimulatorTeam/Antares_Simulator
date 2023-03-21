@@ -276,7 +276,7 @@ public:
         {
             const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
             pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
-              += state.thermalClustersProductions[state.area->index][clusterIndex];
+              += state.thermal.thermalClustersProductions[clusterIndex];
         }
 
         // Next item in the list

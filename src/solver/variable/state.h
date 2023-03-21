@@ -37,23 +37,37 @@
 
 namespace Antares::Solver::Variable
 {
+class ThermalState
+{
+public:
+    void initializeFromArea(const Data::Area& area)
+    {
+        const auto count = area.thermal.clusterCount();
+        thermalClustersProductions.resize(count);
+        numberOfUnitsONbyCluster.resize(count);
+        thermalClustersOperatingCost.resize(count);
+        PMinOfClusters.resize(count);
+    }
+
+    //! Thermal production for thermal clusters for the current hour in the year
+    std::vector<double> thermalClustersProductions;
+
+    //! The operating cost for all clusters at the current hour (production level*production
+    //! cost + NP Cost)
+    std::vector<double> thermalClustersOperatingCost;
+
+    //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
+    //! (accurate) unit commitment mode
+    std::vector<uint> numberOfUnitsONbyCluster;
+
+    //! Minimum power of all clusters for the current hour in the year
+    std::vector<double> PMinOfClusters;
+};
+
 class State
 {
 public:
-    //! \name Constructor
-    //@{
-    /*!
-    ** \brief Default constructor
-    */
     explicit State(Data::Study& s);
-    //@}
-    //! \name Destructor
-    //@{
-    /*!
-    ** \brief Default Destructor
-    */
-    //	~State();
-    //@}
 
     /*!
     ** \brief Initialize some variables according an area index
@@ -141,7 +155,7 @@ public:
 
     //! The current thermal cluster (used in yearEndBuildForEachThermalCluster functions)
     Data::ThermalCluster* thermalCluster;
-    
+
     //! The current renewable cluster
     Data::RenewableCluster* renewableCluster;
     //! The Scratchpad for the current area
@@ -163,19 +177,7 @@ public:
     //! NTC Values
     VALEURS_DE_NTC_ET_RESISTANCES* ntc;
 
-    //! Thermal production for thermal clusters for the current hour in the year
-    std::vector<std::vector<double>> thermalClustersProductions;
-
-    //! The operating cost for all clusters at the current hour (production level*production
-    //! cost + NP Cost)
-    std::vector<std::vector<double>> thermalClustersOperatingCost;
-
-    //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
-    //! (accurate) unit commitment mode
-    std::vector<std::vector<uint>>  numberOfUnitsONbyCluster;
-    
-    //! Minimum power of all clusters for the current hour in the year
-    std::vector<std::vector<double>> PMinOfClusters;
+    ThermalState thermal;
 
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];

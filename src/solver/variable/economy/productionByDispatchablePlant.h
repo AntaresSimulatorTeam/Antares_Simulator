@@ -344,11 +344,11 @@ public:
             // Production for this hour
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
               .hour[state.hourInTheYear]
-              += state.thermalClustersProductions[state.area->index][clusterIndex];
+              += state.thermal.thermalClustersProductions[clusterIndex];
 
             pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
                                               + state.hourInTheYear]
-              = state.PMinOfClusters[state.area->index][clusterIndex];
+              = state.thermal.PMinOfClusters[clusterIndex];
         }
 
         // Next item in the list
