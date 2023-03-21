@@ -270,8 +270,6 @@ public:
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
 
         // Thermal costs
-
-        // Total OverallCost
         for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
