@@ -10,6 +10,7 @@ class OptimizationStatistics
 private:
     std::atomic<long long> totalSolveTime;
     std::atomic<unsigned int> nbSolve;
+    std::atomic<long long> totalIterations;
 
     std::atomic<long long> totalUpdateTime;
     std::atomic<unsigned int> nbUpdate;
@@ -19,6 +20,7 @@ public:
     {
         totalSolveTime = 0;
         nbSolve = 0;
+        totalIterations = 0;
         totalUpdateTime = 0;
         nbUpdate = 0;
     }
@@ -42,25 +44,11 @@ public:
         nbUpdate++;
     }
 
-    void addSolveTime(long long solveTime)
+    void addSolveData(long long solveTime, long long iterations)
     {
         totalSolveTime += solveTime;
+        totalIterations += iterations;
         nbSolve++;
-    }
-
-    unsigned int getNbUpdate() const
-    {
-        return nbUpdate;
-    }
-
-    long long getTotalSolveTime() const
-    {
-        return totalSolveTime;
-    }
-
-    long long getTotalUpdateTime() const
-    {
-        return totalUpdateTime;
     }
 
     double getAverageUpdateTime() const
@@ -75,6 +63,13 @@ public:
         if (nbSolve == 0)
             return 0.0;
         return ((double)totalSolveTime) / nbSolve;
+    }
+
+    double getAverageIterations() const
+    {
+        if (nbSolve == 0)
+            return 0.0;
+        return ((double)totalIterations) / nbSolve;
     }
 
     std::string toString() const

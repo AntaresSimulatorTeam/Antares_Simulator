@@ -135,26 +135,28 @@ public:
     annualCostsStatistics() :
      systemCostFilename("annualSystemCost.txt"),
      criterionsCostsFilename("checkIntegrity.txt"),
-     optimizationTimeFilename("timeStatistics.txt")
+     optimizationTimeFilename("timeStatistics.txt"),
+     simplexIterationsFilename("simplexIterations.txt"),
+     mCosts({&systemCost,
+             &criterionCost1,
+             &criterionCost2,
+             &optimizationTime1,
+             &optimizationTime2,
+             &simplexIterations1,
+             &simplexIterations2})
     {
     }
 
     void setNbPerformedYears(uint n)
     {
-        systemCost.setNbPerformedYears(n);
-        criterionCost1.setNbPerformedYears(n);
-        criterionCost2.setNbPerformedYears(n);
-        optimizationTime1.setNbPerformedYears(n);
-        optimizationTime2.setNbPerformedYears(n);
+      for (auto cost : mCosts)
+          cost->setNbPerformedYears(n);
     };
 
     void endStandardDeviations()
     {
-        systemCost.endStandardDeviation();
-        criterionCost1.endStandardDeviation();
-        criterionCost2.endStandardDeviation();
-        optimizationTime1.endStandardDeviation();
-        optimizationTime2.endStandardDeviation();
+      for (auto cost : mCosts)
+          cost->endStandardDeviation();
     };
 
     void writeToOutput(IResultWriter::Ptr writer)
@@ -165,6 +167,7 @@ public:
         writeSystemCostToOutput(writer);
         writeCriterionCostsToOutput(writer);
         writeOptimizationTimeToOutput(writer);
+        writeSimplexIterationsToOutput(writer);
     }
 
     std::string to_scientific(const double d)
@@ -234,6 +237,24 @@ private:
         writer->addEntryFromBuffer(optimizationTimeFilename, buffer);
     }
 
+    void writeSimplexIterationsToOutput(IResultWriter::Ptr writer)
+    {
+        Yuni::Clob buffer;
+        buffer << "First optimization :\n";
+        buffer << "EXP : " << simplexIterations1.costAverage << "\n";
+        buffer << "STD : " << simplexIterations1.costStdDeviation << "\n";
+        buffer << "MIN : " << simplexIterations1.costMin << "\n";
+        buffer << "MAX : " << simplexIterations1.costMax << "\n";
+
+        buffer << "Second optimization :\n";
+        buffer << "EXP : " << simplexIterations2.costAverage << "\n";
+        buffer << "STD : " << simplexIterations2.costStdDeviation << "\n";
+        buffer << "MIN : " << simplexIterations2.costMin << "\n";
+        buffer << "MAX : " << simplexIterations2.costMax << "\n";
+
+        writer->addEntryFromBuffer(simplexIterationsFilename, buffer);
+    }
+
 public:
     // Costs
     costStatistics systemCost;
@@ -241,11 +262,14 @@ public:
     costStatistics criterionCost2;
     costStatistics optimizationTime1;
     costStatistics optimizationTime2;
-
+    costStatistics simplexIterations1;
+    costStatistics simplexIterations2;
 private:
     const std::string systemCostFilename;
     const std::string criterionsCostsFilename;
     const std::string optimizationTimeFilename;
+    const std::string simplexIterationsFilename;
+    const std::vector<costStatistics*> mCosts;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 

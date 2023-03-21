@@ -241,6 +241,9 @@ public:
     double averageOptimizationTime1;
     // Average time spent in second optimization over the year (ms)
     double averageOptimizationTime2;
+    // Average number of iterations over the year (no unit)
+    double averageIterations1;
+    double averageIterations2;
     // -----------------------------------------------------------------
 }; // class State
 

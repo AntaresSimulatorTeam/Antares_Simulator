@@ -1453,13 +1453,21 @@ void ISimulation<Impl>::computeAnnualCostsStatistics(
         {
             // Get space number associated to the performed year
             uint numSpace = set_it->performedYearToSpace[y];
+            // Annualized cost (after "thermal smoothing" post-process)
             pAnnualCostsStatistics.systemCost.addCost(state[numSpace].annualSystemCost);
+            // Criterion value
             pAnnualCostsStatistics.criterionCost1.addCost(state[numSpace].optimalSolutionCost1);
             pAnnualCostsStatistics.criterionCost2.addCost(state[numSpace].optimalSolutionCost2);
+            // Solve time
             pAnnualCostsStatistics.optimizationTime1.addCost(
               state[numSpace].averageOptimizationTime1);
             pAnnualCostsStatistics.optimizationTime2.addCost(
               state[numSpace].averageOptimizationTime2);
+            // Simplex iterations
+            pAnnualCostsStatistics.simplexIterations1.addCost(
+              state[numSpace].averageIterations1);
+            pAnnualCostsStatistics.simplexIterations2.addCost(
+              state[numSpace].averageIterations2);
         }
     }
 }

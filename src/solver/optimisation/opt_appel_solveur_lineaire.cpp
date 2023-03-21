@@ -239,10 +239,12 @@ RESOLUTION:
     mps_writer->runIfNeeded(study->resultWriter, filename);
 
     TimeMeasurement measure;
+    int64_t iterations = 0;
     if (ortoolsUsed)
     {
         const bool keepBasis = (optimizationNumber == PREMIERE_OPTIMISATION);
         solver = ORTOOLS_Simplexe(&Probleme, solver, keepBasis);
+        iterations = solver->iterations();
         if (solver != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)solver;
@@ -254,12 +256,12 @@ RESOLUTION:
         if (ProbSpx != nullptr)
         {
             ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle] = (void*)ProbSpx;
-            int it = ProbSpx->Iteration;
+            iterations = ProbSpx->Iteration;
         }
     }
     measure.tick();
     long long solveTime = measure.duration_ms();
-    optimizationStatistics->addSolveTime(solveTime);
+    optimizationStatistics->addSolveData(solveTime, iterations);
 
     ProblemeAResoudre->ExistenceDUneSolution = Probleme.ExistenceDUneSolution;
     if (ProblemeAResoudre->ExistenceDUneSolution != OUI_SPX && PremierPassage)
