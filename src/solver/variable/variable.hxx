@@ -318,13 +318,6 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state, unsi
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForClusters(State& state, unsigned int numSpace)
-{
-    // Next item in the list
-    NextType::hourForClusters(state, numSpace);
-}
-
-template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::yearEndBuildForEachThermalCluster(
   State& state,
   unsigned int year,

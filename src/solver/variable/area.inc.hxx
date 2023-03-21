@@ -132,10 +132,6 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         // Initializing the state for the current area
         state.initFromAreaIndex(area.index, numSpace);
 
-        // Variables
-        auto& variablesForArea = pAreas[area.index];
-        variablesForArea.hourForEachArea(state, numSpace);
-
         // For each thermal cluster
         for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
@@ -143,7 +139,9 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
             state.initFromThermalClusterIndex(j, numSpace);
         }
 
-        variablesForArea.hourForClusters(state, numSpace);
+        // Variables
+        auto& variablesForArea = pAreas[area.index];
+        variablesForArea.hourForEachArea(state, numSpace);
 
         // All links
         auto end = area.links.end();

@@ -209,11 +209,6 @@ public:
         UNUSED_VARIABLE(numSpace);
     }
 
-    static void hourForClusters(State&, uint numSpace)
-    {
-        UNUSED_VARIABLE(numSpace);
-    }
-
     static void hourEnd(State&, unsigned int)
     {
     }

@@ -251,30 +251,26 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
         // Total UnsupliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
           // Current Hydro Storage generation
           (state.hourlyResults->ValeursHorairesDeDefaillancePositive[state.hourInTheWeek]
-           * state.area->thermal.unsuppliedEnergyCost)
+           * area->thermal.unsuppliedEnergyCost)
           + ((state.hourlyResults->ValeursHorairesDeDefaillanceNegative[state.hourInTheWeek]
-              + state.resSpilled.entry[state.area->index][state.hourInTheWeek])
-             * state.area->thermal.spilledEnergyCost);
+              + state.resSpilled.entry[area->index][state.hourInTheWeek])
+             * area->thermal.spilledEnergyCost);
 
         // Hydro costs : water value and pumping
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]
           += state.problemeHebdo->CaracteristiquesHydrauliques[state.area->index]
                ->WeeklyWaterValueStateRegular
              * (state.hourlyResults->TurbinageHoraire[state.hourInTheWeek]
-                - state.area->hydro.pumpingEfficiency
+                - area->hydro.pumpingEfficiency
                     * state.hourlyResults->PompageHoraire[state.hourInTheWeek]);
 
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
+        // Thermal costs
 
-    void hourForClusters(State& state, unsigned int numSpace)
-    {
-        auto area = state.area;
         // Total OverallCost
         for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
         {
@@ -282,8 +278,8 @@ public:
               += state.thermal[area->index].thermalClustersOperatingCost[clusterIndex];
         }
 
-        // Next item in the list
-        NextType::hourForClusters(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
