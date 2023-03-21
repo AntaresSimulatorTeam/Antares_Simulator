@@ -69,7 +69,7 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
     return true;
 }
 
-bool STStorageInput::loadSeriesFromFolder(const std::string& folder)
+bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 {
     if (folder.empty())
         return false;

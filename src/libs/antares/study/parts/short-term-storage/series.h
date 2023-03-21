@@ -46,8 +46,7 @@ public:
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 
-    //load individual series files
-    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect, unsigned int size);
+    bool loadVector(const std::string& path, std::vector<double>& vect);
 
    };
 } // namespace Antares::Data::ShortTermStorage

@@ -39,7 +39,7 @@ public:
     // 1. Read list.ini
     bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
-    bool loadSeriesFromFolder(const std::string& folder);
+    bool loadSeriesFromFolder(const std::string& folder) const;
 
     std::vector<STStorageCluster*> storagesByIndex;
     std::map<std::string, STStorageCluster> storagesById;

@@ -24,8 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
+#include <yuni/io/file.h>
 #include <antares/logs.h>
+#include <antares/array/array1d.h>
 #include <fstream>
 
 #include "series.h"
@@ -50,51 +51,25 @@ bool Series::validate() const
 
 bool Series::loadFromFolder(const std::string& folder)
 {
-    bool ret = true;
+    bool ret = true; //Array1DLoadFromFile return 0 for success
 
-    ret = loadFile(folder, "PMAX-injection.txt", maxInjection, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder, "PMAX-withdrawal.txt", maxWithdrawal, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder, "inflow.txt", inflows, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder, "lower-rule-curve.txt", lowerRuleCurve, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder, "upper-rule-curve.txt", upperRuleCurve, VECTOR_SERIES_SIZE) && ret;
+    ret = !loadVector(folder + "PMAX-injection.txt", maxInjection) && ret;
+    ret = !loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawal) && ret;
+    ret = !loadVector(folder + "inflow.txt", inflows) && ret;
+    ret = !loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = !loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
 
     return ret;
 }
 
-bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect, unsigned int size)
+bool Series::loadVector(const std::string& path, std::vector<double>& vect)
 {
-    std::string path(folder + filename);
-    logs.debug() << "Loading file " << path;
+    if (!Yuni::IO::Directory::Exists(path))
+        return true;
 
-    vect.reserve(size);
+    vect.resize(VECTOR_SERIES_SIZE);
+    return Array1DLoadFromFile(path.c_str() , &vect[0], VECTOR_SERIES_SIZE);
 
-    std::ifstream file;
-    file.open(path);
-
-    if (!file)
-    {
-        logs.debug() << "File not found: " << path;
-        return false;
-    }
-
-    std::string line;
-    try
-    {
-        unsigned int count = 0;
-        while (getline(file, line) && count < size)
-        {
-            double d = std::stod(line);
-            vect.push_back(d);
-            count++;
-        }
-    }
-    catch (const std::exception&)
-    {
-        logs.error() << "Failed reading file: " << path;
-        return false;
-    }
-
-    return true;
 }
 
 } // namespace Antares::Data::ShortTermStorage
