@@ -40,7 +40,7 @@ namespace Antares::Solver::Variable
 class ThermalState
 {
 public:
-    ThermalState(const Data::AreaList& areas);
+    explicit ThermalState(const Data::AreaList& areas);
 
     class StateForAnArea
     {
