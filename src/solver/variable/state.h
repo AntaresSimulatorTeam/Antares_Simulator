@@ -40,14 +40,7 @@ namespace Antares::Solver::Variable
 class ThermalState
 {
 public:
-    void initializeFromArea(const Data::Area& area)
-    {
-        const auto count = area.thermal.clusterCount();
-        thermalClustersProductions.resize(count);
-        numberOfUnitsONbyCluster.resize(count);
-        thermalClustersOperatingCost.resize(count);
-        PMinOfClusters.resize(count);
-    }
+    void initializeFromArea(const Data::Area& area);
 
     //! Thermal production for thermal clusters for the current hour in the year
     std::vector<double> thermalClustersProductions;

@@ -33,6 +33,15 @@ using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
+void ThermalState::initializeFromArea(const Data::Area& area)
+{
+    const auto count = area.thermal.clusterCount();
+    thermalClustersProductions.resize(count);
+    numberOfUnitsONbyCluster.resize(count);
+    thermalClustersOperatingCost.resize(count);
+    PMinOfClusters.resize(count);
+}
+
 State::State(Data::Study& s) :
  hourInTheSimulation(0u),
  dispatchableMargin(nullptr),
