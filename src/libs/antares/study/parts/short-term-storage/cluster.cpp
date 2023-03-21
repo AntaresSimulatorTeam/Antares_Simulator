@@ -61,13 +61,13 @@ bool STStorageCluster::fillDefaultSeries()
     if (series.maxInjection.empty())
         series.maxInjection.resize(VECTOR_SERIES_SIZE, properties.injectionCapacity);
     if (series.maxWithdrawal.empty())
-        std::fill(series.maxWithdrawal.begin(), series.maxWithdrawal.end(), properties.withdrawalCapacity);
+        series.maxWithdrawal.resize(VECTOR_SERIES_SIZE, properties.withdrawalCapacity);
     if (series.inflows.empty())
-        std::fill(series.inflows.begin(), series.inflows.end(), 0);
+        series.inflows.resize(VECTOR_SERIES_SIZE, 0);
     if (series.lowerRuleCurve.empty())
-        std::fill(series.lowerRuleCurve.begin(), series.lowerRuleCurve.end(), 0);
+        series.lowerRuleCurve.resize(VECTOR_SERIES_SIZE, 0);
     if (series.upperRuleCurve.empty())
-        std::fill(series.upperRuleCurve.begin(), series.upperRuleCurve.end(), 1);
+        series.upperRuleCurve.resize(VECTOR_SERIES_SIZE, 1);
 
     return true;
 }

@@ -64,6 +64,7 @@ bool Series::loadFromFolder(const std::string& folder)
 bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect)
 {
     std::string path(folder + filename);
+    logs.debug() << "Loading file " << path;
 
     vect.reserve(VECTOR_SERIES_SIZE);
 
