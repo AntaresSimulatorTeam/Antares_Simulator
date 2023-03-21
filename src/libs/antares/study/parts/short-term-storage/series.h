@@ -29,6 +29,8 @@
 #include <string>
 #include <map>
 
+#define VECTOR_SERIES_SIZE 8760
+
 namespace Antares::Data::ShortTermStorage
 {
 class Series
@@ -39,15 +41,16 @@ public:
     //load all series files with folder path
     bool loadFromFolder(const std::string& folder);
 
-private:
-
-    //load individual series files
-    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect);
-
     std::vector<double> maxInjection;
     std::vector<double> maxWithdrawal;
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
-};
+
+private:
+
+    //load individual series files
+    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect);
+
+   };
 } // namespace Antares::Data::ShortTermStorage

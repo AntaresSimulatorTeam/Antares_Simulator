@@ -56,6 +56,22 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
+bool STStorageCluster::fillDefaultSeries()
+{
+    if (series.maxInjection.empty())
+        series.maxInjection.resize(VECTOR_SERIES_SIZE, properties.injectionCapacity);
+    if (series.maxWithdrawal.empty())
+        std::fill(series.maxWithdrawal.begin(), series.maxWithdrawal.end(), properties.withdrawalCapacity);
+    if (series.inflows.empty())
+        std::fill(series.inflows.begin(), series.inflows.end(), 0);
+    if (series.lowerRuleCurve.empty())
+        std::fill(series.lowerRuleCurve.begin(), series.lowerRuleCurve.end(), 0);
+    if (series.upperRuleCurve.empty())
+        std::fill(series.upperRuleCurve.begin(), series.upperRuleCurve.end(), 1);
+
+    return true;
+}
+
 bool STStorageCluster::validate()
 {
     return properties.validate() && series.validate();
@@ -63,7 +79,9 @@ bool STStorageCluster::validate()
 
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    return series.loadFromFolder(folder);
+    bool ret = series.loadFromFolder(folder);
+    ret = fillDefaultSeries() && ret; //fill series if no file series
+    return ret;
 }
 
 } // namespace Antares::Data::ShortTermStorage

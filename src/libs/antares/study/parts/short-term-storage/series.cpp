@@ -35,6 +35,16 @@ namespace Antares::Data::ShortTermStorage
 
 bool Series::validate() const
 {
+    logs.notice() << "maxWithdrawal" << maxWithdrawal.size();
+    if (maxInjection.size() != VECTOR_SERIES_SIZE ||
+        maxWithdrawal.size() != VECTOR_SERIES_SIZE ||
+        inflows.size() != VECTOR_SERIES_SIZE ||
+        lowerRuleCurve.size() != VECTOR_SERIES_SIZE ||
+        upperRuleCurve.size() != VECTOR_SERIES_SIZE)
+    {
+        logs.warning() << "Size of series for short term storage is wrong";
+        return false;
+    }
     return true;
 }
 
@@ -55,13 +65,13 @@ bool Series::loadFile(const std::string& folder, const std::string& filename, st
 {
     std::string path(folder + filename);
 
+    vect.reserve(VECTOR_SERIES_SIZE);
+
     std::ifstream file;
     file.open(path);
 
     if ((file.rdstate() & std::ifstream::failbit ) != 0)
         return false;
-
-    vect.reserve(8760);
 
     std::string line;
     try

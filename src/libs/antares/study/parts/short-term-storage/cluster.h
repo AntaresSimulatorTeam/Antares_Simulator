@@ -41,6 +41,8 @@ public:
 
     bool loadSeries(const std::string& folder);
 
+    bool fillDefaultSeries();
+
     Series series;
     Properties properties;
 };
