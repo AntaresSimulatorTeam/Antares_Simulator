@@ -274,12 +274,12 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
         // Total OverallCost
-        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
-             ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += state.thermal.thermalClustersOperatingCost[clusterIndex];
+              += state.thermal[area->index].thermalClustersOperatingCost[clusterIndex];
         }
 
         // Next item in the list

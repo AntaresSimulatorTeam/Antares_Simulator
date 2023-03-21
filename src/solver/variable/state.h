@@ -40,21 +40,31 @@ namespace Antares::Solver::Variable
 class ThermalState
 {
 public:
-    void initializeFromArea(const Data::Area& area);
+    ThermalState(const Data::AreaList& areas);
 
-    //! Thermal production for thermal clusters for the current hour in the year
-    std::vector<double> thermalClustersProductions;
+    class StateForAnArea
+    {
+    public:
+        void initializeFromArea(const Data::Area& area);
+        //! Thermal production for thermal clusters for the current hour in the year
+        std::vector<double> thermalClustersProductions;
 
-    //! The operating cost for all clusters at the current hour (production level*production
-    //! cost + NP Cost)
-    std::vector<double> thermalClustersOperatingCost;
+        //! The operating cost for all clusters at the current hour (production level*production
+        //! cost + NP Cost)
+        std::vector<double> thermalClustersOperatingCost;
 
-    //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
-    //! (accurate) unit commitment mode
-    std::vector<uint> numberOfUnitsONbyCluster;
+        //! Number of units turned ON by cluster for the current hour in the year with the ucMILP
+        //! (accurate) unit commitment mode
+        std::vector<uint> numberOfUnitsONbyCluster;
 
-    //! Minimum power of all clusters for the current hour in the year
-    std::vector<double> PMinOfClusters;
+        //! Minimum power of all clusters for the current hour in the year
+        std::vector<double> PMinOfClusters;
+    };
+
+    StateForAnArea& operator[](size_t index);
+
+private:
+    std::vector<StateForAnArea> thermal;
 };
 
 class State
@@ -170,8 +180,6 @@ public:
     //! NTC Values
     VALEURS_DE_NTC_ET_RESISTANCES* ntc;
 
-    ThermalState thermal;
-
     //! Thermal production for the current thermal cluster for the whole year
     double thermalClusterProductionForYear[Variable::maxHoursInAYear];
     //! Number of unit dispatched for all clusters for the whole year for ucHeruistic (fast) or
@@ -202,6 +210,8 @@ public:
     Data::UnitCommitmentMode unitCommitmentMode;
     //! Reference to the original study
     Data::Study& study;
+    // Thermal data, used to compute overall cost, etc.
+    ThermalState thermal;
     //! Index of the state in the state vector
     unsigned int numSpace;
     /*!

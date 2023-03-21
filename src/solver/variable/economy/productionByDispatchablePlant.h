@@ -337,18 +337,19 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
-            const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
             // Production for this hour
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
               .hour[state.hourInTheYear]
-              += state.thermal.thermalClustersProductions[clusterIndex];
+              += state.thermal[area->index].thermalClustersProductions[clusterIndex];
 
             pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
                                               + state.hourInTheYear]
-              = state.thermal.PMinOfClusters[clusterIndex];
+              = state.thermal[area->index].PMinOfClusters[clusterIndex];
         }
 
         // Next item in the list

@@ -33,7 +33,22 @@ using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
-void ThermalState::initializeFromArea(const Data::Area& area)
+ThermalState::ThermalState(const Data::AreaList& areas)
+{
+    thermal.resize(areas.size());
+    for (const auto& [id, area] : areas)
+    {
+        assert(area);
+        thermal[area->index].initializeFromArea(*area);
+    }
+}
+
+ThermalState::StateForAnArea& ThermalState::operator[](size_t index)
+{
+    return thermal[index];
+}
+
+void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
 {
     const auto count = area.thermal.clusterCount();
     thermalClustersProductions.resize(count);
@@ -48,6 +63,7 @@ State::State(Data::Study& s) :
  studyMode(s.parameters.mode),
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
+ thermal(s.areas),
  simplexHasBeenRan(true),
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
@@ -65,7 +81,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
 
     // alias to the current thermal cluster
     Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
-
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
       = thermalCluster->series->series[serieIndex][hourInTheYear];
@@ -82,11 +97,11 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         assert(timeseriesIndex != NULL);
         assert(hourInTheYear < thermalCluster->series->series.height);
 
-        thermal.thermalClustersProductions[clusterAreaWideIndex]
+        thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = thermalClusterAvailableProduction;
 
-        thermal.PMinOfClusters[clusterAreaWideIndex] = 0.;
-        thermal.numberOfUnitsONbyCluster[clusterAreaWideIndex]
+        thermal[area->index].PMinOfClusters[clusterAreaWideIndex] = 0.;
+        thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
           = 0; // will be calculated during the smoothing
     }
     else
@@ -98,7 +113,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             thermalClusterPMinOfAGroup
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
                   ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
-            thermal.PMinOfClusters[clusterAreaWideIndex]
+            thermal[area->index].PMinOfClusters[clusterAreaWideIndex]
               = problemeHebdo->PaliersThermiquesDuPays[area->index]
                   ->PuissanceDisponibleEtCout[thermalCluster->index]
                   ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
@@ -107,20 +122,20 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         else
         {
             // Adequacy
-            thermal.PMinOfClusters[clusterAreaWideIndex] = 0.;
+            thermal[area->index].PMinOfClusters[clusterAreaWideIndex] = 0.;
         }
 
-        thermal.thermalClustersProductions[clusterAreaWideIndex]
+        thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = hourlyResults->ProductionThermique[hourInTheWeek]
               ->ProductionThermiqueDuPalier[thermalCluster->index];
 
         if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
-            thermal.numberOfUnitsONbyCluster[clusterAreaWideIndex]
+            thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
               = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
                                     ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
         else
             // Economy Fast or Adequacy -- will be calculated during the smoothing
-            thermal.numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
+            thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
     }
 
     // The operating cost, for a single cluster of a single area
@@ -163,10 +178,10 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
 
-    if (thermal.thermalClustersProductions[clusterAreaWideIndex] > 0.)
+    if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
-        double p = thermal.thermalClustersProductions[clusterAreaWideIndex];
+        double p = thermal[area->index].thermalClustersProductions[clusterAreaWideIndex];
         // alias to the previous number of started units
         uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
 
@@ -201,18 +216,18 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
         assert(thermalCluster->productionCost != NULL && "invalid production cost");
-        thermal.thermalClustersOperatingCost[clusterAreaWideIndex]
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
           = (p * thermalCluster->productionCost[hourInTheYear]);
 
         // Startup cost
         if (newUnitCount > previousUnitCount && hourInTheSimulation != 0u)
         {
-            thermal.thermalClustersOperatingCost[clusterAreaWideIndex]
+            thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
               += thermalCluster->startupCost * (newUnitCount - previousUnitCount);
         }
 
         // Fixed price
-        thermal.thermalClustersOperatingCost[clusterAreaWideIndex]
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
           += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
@@ -221,7 +236,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     }
     else
     {
-        thermal.thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
         thermalCluster->unitCountLastHour[numSpace] = 0u;
         thermalCluster->productionLastHour[numSpace] = 0.;
     }

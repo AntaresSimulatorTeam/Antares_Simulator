@@ -136,10 +136,6 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         auto& variablesForArea = pAreas[area.index];
         variablesForArea.hourForEachArea(state, numSpace);
 
-        // TODO[FOM] We don't want to resize vectors for each hour & each area
-        // state.thermal[area.index] => resize vectors once
-        state.thermal.initializeFromArea(area);
-
         // For each thermal cluster
         for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
