@@ -52,35 +52,40 @@ bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
 
-    ret = loadFile(folder, "PMAX-injection.txt", maxInjection) && ret;
-    ret = loadFile(folder, "PMAX-withdrawal.txt", maxWithdrawal) && ret;
-    ret = loadFile(folder, "inflow.txt", inflows) && ret;
-    ret = loadFile(folder, "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadFile(folder, "upper-rule-curve.txt", upperRuleCurve) && ret;
+    ret = loadFile(folder, "PMAX-injection.txt", maxInjection, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder, "PMAX-withdrawal.txt", maxWithdrawal, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder, "inflow.txt", inflows, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder, "lower-rule-curve.txt", lowerRuleCurve, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder, "upper-rule-curve.txt", upperRuleCurve, VECTOR_SERIES_SIZE) && ret;
 
     return ret;
 }
 
-bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect)
+bool Series::loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect, unsigned int size)
 {
     std::string path(folder + filename);
     logs.debug() << "Loading file " << path;
 
-    vect.reserve(VECTOR_SERIES_SIZE);
+    vect.reserve(size);
 
     std::ifstream file;
     file.open(path);
 
-    if ((file.rdstate() & std::ifstream::failbit ) != 0)
+    if (!file)
+    {
+        logs.debug() << "File not found: " << path;
         return false;
+    }
 
     std::string line;
     try
     {
-        while (getline(file, line))
+        unsigned int count = 0;
+        while (getline(file, line) && count < size)
         {
             double d = std::stod(line);
             vect.push_back(d);
+            count++;
         }
     }
     catch (const std::exception&)

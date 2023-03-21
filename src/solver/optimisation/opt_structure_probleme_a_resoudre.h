@@ -111,7 +111,6 @@ typedef struct
     std::vector<std::string> NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
-//TODO [VP] are those vector really used ?
 public:
     std::vector<int> StatutDesVariables;
     std::vector<int> StatutDesContraintes;

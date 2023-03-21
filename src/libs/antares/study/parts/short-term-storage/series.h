@@ -27,7 +27,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <map>
 
 #define VECTOR_SERIES_SIZE 8760
 
@@ -47,10 +46,8 @@ public:
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
 
-private:
-
     //load individual series files
-    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect);
+    bool loadFile(const std::string& folder, const std::string& filename, std::vector<double>& vect, unsigned int size);
 
    };
 } // namespace Antares::Data::ShortTermStorage
