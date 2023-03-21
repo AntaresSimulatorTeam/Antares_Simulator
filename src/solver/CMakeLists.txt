@@ -18,7 +18,6 @@ add_subdirectory(utils)
 add_subdirectory(optimisation)
 add_subdirectory(main)
 add_subdirectory(constraints-builder)
-add_subdirectory(log-sink)
 #
 # Resource file for Windows
 #
@@ -89,8 +88,7 @@ set(ANTARES_SOLVER_LIBS  ${ANTARES_SOLVER_LIBS}
 	libantares-solver-simulation
 	libantares-solver-ts-generator
 	libmodel_antares
-	libantares-core
-    libantares-log-sink)
+	libantares-core)
 
 target_link_libraries(antares-solver
 		PRIVATE

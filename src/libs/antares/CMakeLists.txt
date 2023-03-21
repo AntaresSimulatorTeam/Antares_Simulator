@@ -299,6 +299,8 @@ set(SRC_LOGS
 	logs/logs.cpp
 	logs/cleaner.h
 	logs/cleaner.cpp
+    logs/sink.h
+    logs/sink.cpp
 	)
 source_group("misc\\logs" FILES ${SRC_LOGS})
 
@@ -568,5 +570,6 @@ target_link_libraries(libantares-core
 		libantares-core-calendar
 		libantares-solver-variable-info
         result_writer
+        ortools::ortools
 	)
 

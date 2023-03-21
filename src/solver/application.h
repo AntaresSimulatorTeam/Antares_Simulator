@@ -4,7 +4,7 @@
 #include <antares/study.h>
 #include <antares/study/load-options.h>
 #include <antares/benchmarking.h>
-#include <log_sink.h>
+#include <antares/logs/sink.h>
 #include "simulation/simulation.h"
 
 #include <i_writer.h>

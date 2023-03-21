@@ -9,7 +9,7 @@ set(SRC_SOLVER_MAIN_ADEQUACY       adequacy.cpp)
 
 
 add_library(libantares-solver-main-adequacy  ${SRC_SOLVER_MAIN_ADEQUACY})
-target_link_libraries(libantares-solver-main-adequacy PRIVATE libantares-core libantares-log-sink)
+target_link_libraries(libantares-solver-main-adequacy PRIVATE libantares-core)
 
 add_library(libantares-solver-main-economy   ${SRC_SOLVER_MAIN_ECONOMY})
-target_link_libraries(libantares-solver-main-economy PRIVATE libantares-core libantares-log-sink)
+target_link_libraries(libantares-solver-main-economy PRIVATE libantares-core)

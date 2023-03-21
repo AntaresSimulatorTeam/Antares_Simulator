@@ -25,9 +25,10 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
+#include "sink.h"
+
 #include <antares/logs.h>
 #include <string_view>
-#include "log_sink.h"
 
 namespace Antares::Solver
 {
