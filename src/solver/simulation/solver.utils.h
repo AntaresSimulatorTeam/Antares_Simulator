@@ -133,10 +133,6 @@ class annualCostsStatistics
 {
 public:
     annualCostsStatistics() :
-     systemCostFilename("annualSystemCost.txt"),
-     criterionsCostsFilename("checkIntegrity.txt"),
-     optimizationTimeFilename("timeStatistics.txt"),
-     simplexIterationsFilename("simplexIterations.txt"),
      mCosts({&systemCost,
              &criterionCost1,
              &criterionCost2,
@@ -265,10 +261,10 @@ public:
     costStatistics simplexIterations1;
     costStatistics simplexIterations2;
 private:
-    const std::string systemCostFilename;
-    const std::string criterionsCostsFilename;
-    const std::string optimizationTimeFilename;
-    const std::string simplexIterationsFilename;
+    inline static const std::string systemCostFilename = "annualSystemCost.txt";
+    inline static const std::string criterionsCostsFilename = "checkIntegrity.txt";
+    inline static const std::string optimizationTimeFilename = "timeStatistics.txt";
+    inline static const std::string simplexIterationsFilename = "simplexIterations.txt";
     const std::vector<costStatistics*> mCosts;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
