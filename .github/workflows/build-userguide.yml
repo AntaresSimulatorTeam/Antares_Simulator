@@ -48,6 +48,6 @@ jobs:
     - name: user guide upload
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.artifact_name }}
+        name: pdf-doc
         path: ${{ steps.create-user-guide.outputs.pdf-path }}
 
