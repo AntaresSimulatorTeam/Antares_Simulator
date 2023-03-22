@@ -1,11 +1,17 @@
 name: Build Userguide pdf
 
 on:
-  workflow_call:
-    inputs:
-      artifact_name:
-        required: true
-        type: string
+  release:
+    types: [created]
+  push:
+    branches:
+      - develop
+      - feature/*
+      - features/*
+      - fix/*
+      - issue-*
+      - release/*
+      - doc/*
 
 jobs:
 

@@ -20,7 +20,6 @@ env:
 
 jobs:
 
-
   build:
     name: Build
     env:
@@ -58,19 +57,6 @@ jobs:
             wget -q -O ortools.zip ${{ env.URL_ORTOOLS }}
             unzip -q ortools.zip
             rm ortools.zip
-
-    - name: doc_generation
-      if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/') }}
-      uses: ./.github/workflows/build-userguide.yml
-      with:
-        artifact_name: pdf-doc
-
-    - name: Download userguide
-      if: ${{ env.IS_RELEASE == 'true' || contains(github.ref_name, 'doc/') }}
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
 
     - name: Configure
       run: |
