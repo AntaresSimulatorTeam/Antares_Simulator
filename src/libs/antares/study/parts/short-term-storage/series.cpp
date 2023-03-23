@@ -36,7 +36,6 @@ namespace Antares::Data::ShortTermStorage
 
 bool Series::validate() const
 {
-    logs.notice() << "maxWithdrawal" << maxWithdrawal.size();
     if (maxInjection.size() != VECTOR_SERIES_SIZE ||
         maxWithdrawal.size() != VECTOR_SERIES_SIZE ||
         inflows.size() != VECTOR_SERIES_SIZE ||
@@ -51,25 +50,24 @@ bool Series::validate() const
 
 bool Series::loadFromFolder(const std::string& folder)
 {
-    bool ret = true; //Array1DLoadFromFile return 0 for success
+    bool ret = true;
 
-    ret = !loadVector(folder + "PMAX-injection.txt", maxInjection) && ret;
-    ret = !loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawal) && ret;
-    ret = !loadVector(folder + "inflow.txt", inflows) && ret;
-    ret = !loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = !loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
+    ret = loadVector(folder + "PMAX-injection.txt", maxInjection) && ret;
+    ret = loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawal) && ret;
+    ret = loadVector(folder + "inflow.txt", inflows) && ret;
+    ret = loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
 
     return ret;
 }
 
 bool Series::loadVector(const std::string& path, std::vector<double>& vect)
 {
-    if (!Yuni::IO::Directory::Exists(path))
+    if (!Yuni::IO::File::Exists(path))
         return true;
 
     vect.resize(VECTOR_SERIES_SIZE);
     return Array1DLoadFromFile(path.c_str() , &vect[0], VECTOR_SERIES_SIZE);
-
 }
 
 } // namespace Antares::Data::ShortTermStorage

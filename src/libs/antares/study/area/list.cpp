@@ -1081,11 +1081,13 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Short term storage
     {
-        logs.notice() << "Loading series for st storage";
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
-        area.shortTermStorage.loadSeriesFromFolder(buffer.c_str());
-        area.shortTermStorage.validate();
+        logs.debug() << "Loading series for st storage " << buffer;
+        ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
+        ret = area.shortTermStorage.validate() && ret;
+        for (double d : area.shortTermStorage.storagesById["base"].series.inflows)
+            logs.notice() << d;
     }
 
     // Renewable cluster list
