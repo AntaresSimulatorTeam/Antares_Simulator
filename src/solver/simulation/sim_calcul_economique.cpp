@@ -57,6 +57,9 @@ static void importShortTermStorages(
             toInsert.initialLevel = st->properties.initialLevel;
 
             toInsert.globalIndex = STindex;
+
+            // Shallow copy of TS
+            toInsert.inflows = st->series.inflows.data();
             // TODO add missing properties, or use the same struct
             ShortTermStorageOut[i].push_back(toInsert);
             STindex++;

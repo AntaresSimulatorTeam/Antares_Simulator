@@ -170,6 +170,9 @@ struct PROPERTIES
 
     std::optional<double> initialLevel;
 
+    // TODO[FOM] move to better place
+    const double* inflows;
+  
     int globalIndex;
 };
 
