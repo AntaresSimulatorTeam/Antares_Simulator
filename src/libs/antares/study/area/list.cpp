@@ -1086,8 +1086,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate() && ret;
-        for (double d : area.shortTermStorage.storagesById["base"].series.inflows)
-            logs.notice() << d;
     }
 
     // Renewable cluster list
