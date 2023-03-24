@@ -67,7 +67,7 @@ public:
     // Cycle duration, 1 <= cycleDuration <= 168
     unsigned int cycleDuration;
     // Used to sort outputs
-    Group group;
+    Group group = Group::Other1;
     // cluster name
     std::string name;
 

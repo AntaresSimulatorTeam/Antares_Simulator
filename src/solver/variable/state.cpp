@@ -64,10 +64,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     assert(area);
     assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
-    // The non propostional cost for the current cluster of the current hour (startupCost *
-    // (newUnitCount - previousUnitCount)) + (fixed cost * newUnitCount) - MBO - 13/05/2014 - #21
-    double thermalClusterNonProportionalCost = 0.;
-
     // alias to the current thermal cluster
     Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
 
@@ -214,14 +210,11 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         {
             thermalClustersOperatingCost[area->index][clusterAreaWideIndex]
               += thermalCluster->startupCost * (newUnitCount - previousUnitCount);
-            thermalClusterNonProportionalCost
-              = thermalCluster->startupCost * (newUnitCount - previousUnitCount);
         }
 
         // Fixed price
         thermalClustersOperatingCost[area->index][clusterAreaWideIndex]
           += thermalCluster->fixedCost * newUnitCount;
-        thermalClusterNonProportionalCost += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
         thermalCluster->unitCountLastHour[numSpace] = newUnitCount;
@@ -230,7 +223,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     else
     {
         thermalClustersOperatingCost[area->index][clusterAreaWideIndex] = 0.;
-        thermalClusterNonProportionalCost = 0.;
         thermalCluster->unitCountLastHour[numSpace] = 0u;
         thermalCluster->productionLastHour[numSpace] = 0.;
     }

@@ -1296,7 +1296,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
-        if (IO::Directory::Exists(buffer.c_str()))
+        if (IO::Directory::Exists(buffer))
         {
             CString<30, false> stStoragePlant;
             stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
