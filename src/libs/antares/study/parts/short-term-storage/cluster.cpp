@@ -24,14 +24,16 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <antares/utils.h>
 #include <antares/logs.h>
+#include <yuni/core/string.h>
+#include <yuni/io/file.h>
 
 #include "cluster.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-
-bool STstorageCluster::loadFromSection(const IniFile::Section& section)
+bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
         return false;
@@ -45,39 +47,31 @@ bool STstorageCluster::loadFromSection(const IniFile::Section& section)
         }
         if (!properties.loadKey(property))
         {
-            logs.warning() << "Loading clusters: `" << section.name << "`/`"
-                << property->key << "`: The property is unknown and ignored";
+            logs.warning() << "Loading clusters: `" << section.name << "`/`" << property->key
+                           << "`: The property is unknown and ignored";
         }
     }
+
+    if (properties.name.empty())
+        return false;
+
+    Yuni::CString<50, false> tmp;
+    TransformNameIntoID(properties.name, tmp);
+    id = tmp.to<std::string>();
 
     return true;
 }
 
-bool STstorageCluster::validate()
+bool STStorageCluster::validate()
 {
     return properties.validate() && series.validate();
 }
 
-bool STstorageCluster::loadSeries(const std::string& path)
+bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    return series.loadFromFolder(path);
-}
-
-void STstorageCluster::printProperties()
-{
-    logs.notice() << "name : " << properties.name;
-    logs.notice() << "injectionnominalcapacity : " << properties.injectionCapacity;
-    logs.notice() << "withdrawalnominalcapacity : " << properties.withdrawalCapacity;
-    logs.notice() << "reservoircapacity : " << properties.capacity;
-    if (properties.initialLevel.has_value())
-        logs.notice() << "initiallevel : " << *properties.initialLevel;
-    else
-        logs.notice() << "initiallevel : Not initialized";
-    logs.notice() << "efficiency : " << properties.efficiencyFactor;
-    logs.notice() << "storagecycle : " << properties.cycleDuration;
-    for (const auto& [key, value] : Properties::stStoragePropertyGroupEnum)
-        if (value  == properties.group)
-            logs.notice() << "group : " << key;
+    bool ret = series.loadFromFolder(folder);
+    series.fillDefaultSeriesIfEmpty(); // fill series if no file series
+    return ret;
 }
 
 } // namespace Antares::Data::ShortTermStorage

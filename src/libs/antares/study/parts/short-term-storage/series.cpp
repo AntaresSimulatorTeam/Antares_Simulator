@@ -24,21 +24,63 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <yuni/io/file.h>
 #include <antares/logs.h>
+#include <antares/array/array1d.h>
 
 #include "series.h"
 
+#define VECTOR_SERIES_SIZE 8760
+
 namespace Antares::Data::ShortTermStorage
 {
-
 bool Series::validate() const
 {
+    if (maxInjectionModulation.size() != VECTOR_SERIES_SIZE
+        || maxWithdrawalModulation.size() != VECTOR_SERIES_SIZE
+        || inflows.size() != VECTOR_SERIES_SIZE || lowerRuleCurve.size() != VECTOR_SERIES_SIZE
+        || upperRuleCurve.size() != VECTOR_SERIES_SIZE)
+    {
+        logs.warning() << "Size of series for short term storage is wrong";
+        return false;
+    }
     return true;
 }
 
 bool Series::loadFromFolder(const std::string& folder)
 {
-    return true;
+    bool ret = true;
+#define SEP Yuni::IO::Separator
+    ret = loadVector(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadVector(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = loadVector(folder + SEP + "inflows.txt", inflows) && ret;
+    ret = loadVector(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadVector(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+#undef SEP
+    return ret;
+}
+
+bool Series::loadVector(const std::string& path, std::vector<double>& vect)
+{
+    if (!Yuni::IO::File::Exists(path))
+        return true;
+
+    vect.resize(VECTOR_SERIES_SIZE);
+    return Array1DLoadFromFile(path.c_str(), vect.data(), VECTOR_SERIES_SIZE);
+}
+
+void Series::fillDefaultSeriesIfEmpty()
+{
+    auto fillIfEmpty = [](std::vector<double>& v, double value) {
+        if (v.empty())
+            v.resize(VECTOR_SERIES_SIZE, value);
+    };
+
+    fillIfEmpty(maxInjectionModulation, 1.0);
+    fillIfEmpty(maxWithdrawalModulation, 1.0);
+    fillIfEmpty(inflows, 0.0);
+    fillIfEmpty(lowerRuleCurve, 0.0);
+    fillIfEmpty(upperRuleCurve, 1.0);
 }
 
 } // namespace Antares::Data::ShortTermStorage

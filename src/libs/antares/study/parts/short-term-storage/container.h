@@ -32,16 +32,16 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-class STstorageInput
+class STStorageInput
 {
 public:
     bool validate() const;
     // 1. Read list.ini
-    bool createSTstorageClustersFromIniFile(const std::string& path);
+    bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
-    bool loadSeriesFromFolder(const std::string& folder);
+    bool loadSeriesFromFolder(const std::string& folder) const;
 
-    std::vector<STstorageCluster*> storagesByIndex;
-    std::map<std::string, STstorageCluster> storagesById;
+    std::vector<STStorageCluster*> storagesByIndex;
+    std::map<std::string, STStorageCluster> storagesById;
 };
 } // namespace Antares::Data::ShortTermStorage

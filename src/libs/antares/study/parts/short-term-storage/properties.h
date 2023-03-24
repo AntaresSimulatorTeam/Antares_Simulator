@@ -24,10 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-
-#include <optional>
 #pragma once
 
+#include <optional>
 #include <string>
 #include <map>
 
@@ -55,16 +54,16 @@ class Properties
 public:
     bool validate();
     bool loadKey(const IniFile::Property* p);
-    // Injection nominal capacity, >= 0
-    double injectionCapacity;
-    // Withdrawal nominal capacity, >= 0
-    double withdrawalCapacity;
-    // Reservoir capacity in MWh, >= 0
-    double capacity;
+    // Not optional   Injection nominal capacity, >= 0
+    std::optional<double> injectionCapacity;
+    // Not optional   Withdrawal nominal capacity, >= 0
+    std::optional<double> withdrawalCapacity;
+    // Not optional   Reservoir capacity in MWh, >= 0
+    std::optional<double> capacity;
     // Initial level, <= capacity
     std::optional<double> initialLevel;
     // Efficiency factor between 0 and 1
-    double efficiencyFactor;
+    double efficiencyFactor = 1;
     // Cycle duration, 1 <= cycleDuration <= 168
     unsigned int cycleDuration;
     // Used to sort outputs
@@ -72,6 +71,6 @@ public:
     // cluster name
     std::string name;
 
-    static const std::map<std::string, enum Group> stStoragePropertyGroupEnum;
+    static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 };
 } // namespace Antares::Data::ShortTermStorage
