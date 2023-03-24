@@ -64,17 +64,45 @@ unsigned int groupIndex(Group group)
     }
 }
 
-
 bool Properties::loadKey(const IniFile::Property* p)
 {
+    /* auto valueForOptional = [&](const IniFile::Property* p, std::optional<double> &o) { */
+    /*     if (double tmp; p->value.to<double>(tmp)) */
+    /*     { */
+    /*         o = tmp; */
+    /*         return true; */
+    /*     } */
+    /*     return false; */
+    /* }; */
     if (p->key == "injectionnominalcapacity")
-        return p->value.to<double>(this->injectionCapacity);
+    {
+        if (double tmp; p->value.to<double>(tmp))
+        {
+            this->injectionCapacity = tmp;
+            return true;
+        }
+        return false;
+    }
 
     if (p->key == "withdrawalnominalcapacity")
-        return p->value.to<double>(this->withdrawalCapacity);
+    {
+        if (double tmp; p->value.to<double>(tmp))
+        {
+            this->withdrawalCapacity = tmp;
+            return true;
+        }
+        return false;
+    }
 
     if (p->key == "reservoircapacity")
-        return p->value.to<double>(this->capacity);
+    {
+        if (double tmp; p->value.to<double>(tmp))
+        {
+            this->capacity = tmp;
+            return true;
+        }
+        return false;
+    }
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -101,7 +129,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     if (p->key == "group")
     {
         if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(p->value.c_str());
-                it !=  Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
+                it != Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
         {
             this->group = it->second;
             return true;
@@ -114,6 +142,26 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::validate()
 {
+    if (!injectionCapacity.has_value() || injectionCapacity < 0)
+    {
+        logs.error() << "Property injectionnominalcapacity not provided or negative, needed "
+            << "for short term storage";
+        return false;
+    }
+    if (!withdrawalCapacity.has_value() || withdrawalCapacity < 0)
+    {
+        logs.error() << "Property withdrawalnominalcapacity not provided or negative, needed "
+            << "for short term storage";
+        return false;
+    }
+    if (!capacity.has_value() || capacity < 0)
+    {
+        logs.error() << "Property reservoircapacity not provided or negative, needed "
+            << "for short term storage";
+        return false;
+    }
+
+
     if (efficiencyFactor < 0)
     {
         logs.warning() << "efficiency for cluster: " << name << " should be positive";
@@ -137,7 +185,7 @@ bool Properties::validate()
         if (initialLevel > capacity)
         {
             logs.warning() << "initiallevel for cluster: " << name <<
-                " should be inferior to reservoir capacity: " << capacity;
+                " should be inferior to reservoir capacity: " << *capacity;
             initialLevel = capacity;
         }
     }
