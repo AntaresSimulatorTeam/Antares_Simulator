@@ -53,15 +53,15 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
     if (!ini.firstSection)
         return true;
 
+    logs.debug() << "  :: loading `" << pathIni << "`";
+
     for (auto* section = ini.firstSection; section; section = section->next)
     {
         STStorageCluster cluster;
         if (!cluster.loadFromSection(*section))
             return false;
 
-        std::string s = section->name.c_str();
-        logs.notice() << s;
-        storagesById.try_emplace(section->name.c_str(), cluster);
+        storagesById.try_emplace(cluster.properties.name, cluster);
     }
 
     storagesByIndex.reserve(storagesById.size());

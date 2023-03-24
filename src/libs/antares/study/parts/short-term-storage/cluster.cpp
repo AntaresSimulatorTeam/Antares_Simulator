@@ -31,8 +31,6 @@
 
 #include "cluster.h"
 
-#define SEP Yuni::IO::Separator
-
 namespace Antares::Data::ShortTermStorage
 {
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
@@ -71,7 +69,7 @@ bool STStorageCluster::validate()
 
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    bool ret = series.loadFromFolder(folder + SEP);
+    bool ret = series.loadFromFolder(folder);
     series.fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
 }

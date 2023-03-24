@@ -53,10 +53,10 @@ static void importShortTermStorages(
             toInsert.globalIndex = STindex;
 
             // Properties
-            toInsert.capacity = st->properties.capacity;
+            toInsert.capacity = st->properties.capacity.value();
             toInsert.efficiency = st->properties.efficiencyFactor;
-            toInsert.injectionCapacity = st->properties.injectionCapacity;
-            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
+            toInsert.injectionCapacity = st->properties.injectionCapacity.value();
+            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
 
             // Series - Inflows
