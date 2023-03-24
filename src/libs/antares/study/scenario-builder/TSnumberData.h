@@ -314,6 +314,46 @@ inline CString<512, false> ntcTSNumberData::get_prefix() const
     return "ntc,";
 }
 
+// =================================
+// Transmission capacities ...
+// =================================
+
+class BindingConstraintsTSNumberData : public TSNumberData
+{
+public:
+    BindingConstraintsTSNumberData() = default;
+    virtual ~BindingConstraintsTSNumberData() = default;
+
+    bool reset(const Study& study) override;
+    void saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const override;
+
+    void setData(const std::string& group_name, unsigned year, unsigned value);
+    unsigned get(const std::string& group_name, unsigned year) const;
+    bool apply(Study& study) override;
+    CString<512, false> get_prefix() const override;
+    unsigned get_tsGenCount(const Study& study) const override;
+private:
+    std::map<std::pair<std::string, unsigned>, unsigned > rules_;
+};
+
+inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_name, const unsigned year) const
+{
+    auto it = rules_.find({group_name, year});
+    if (it == rules_.end()) {
+        return 0;
+    }
+    return it->second;
+}
+
+inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const
+{
+    return "bc,";
+}
+
+inline unsigned BindingConstraintsTSNumberData::get_tsGenCount(const Study& /*study*/) const {
+    return 0;
+}
+
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares

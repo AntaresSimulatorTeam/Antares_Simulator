@@ -66,6 +66,7 @@ void Rules::saveToINIFile(Yuni::IO::File::Stream& file) const
         // hydro levels
         hydroLevels.saveToINIFile(study_, file);
     }
+    binding_constraints.saveToINIFile(study_, file);
     file << '\n';
 }
 
