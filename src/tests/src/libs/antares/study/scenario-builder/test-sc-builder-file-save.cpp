@@ -472,6 +472,7 @@ BOOST_AUTO_TEST_CASE(
     my_rule->linksNTC[area_1->index].setDataForLink(link_13, 19, 8);
     my_rule->linksNTC[area_2->index].setDataForLink(link_23, 2, 4);
     my_rule->hydroLevels.set(area_1->index, 5, 8);
+    my_rule->binding_constraints.setData("group3", 10, 6);
 
     saveScenarioBuilder();
 
@@ -489,6 +490,7 @@ BOOST_AUTO_TEST_CASE(
     referenceFile.append("t,area 3,5,th-cluster-31 = 13");
     referenceFile.append("r,area 3,5,rn-cluster-32 = 13");
     referenceFile.append("hl,area 1,5 = 8");
+    referenceFile.append("bc,group3,10=6");
     referenceFile.write();
 
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
