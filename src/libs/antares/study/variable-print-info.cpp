@@ -263,7 +263,7 @@ void AllVariablesPrintInfo::countSelectedAreaVars()
         std::count_if(allVarsPrintInfo.begin(),
                       allVarsPrintInfo.end(),
                       [](auto& p) {return p.second.isPrinted() &&
-                                          p.second.hasDataLevel(Category::area); });
+                                          p.second.isPrintedOnDataLevel(Category::area); });
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
@@ -272,7 +272,7 @@ void AllVariablesPrintInfo::countSelectedLinkVars()
         std::count_if(allVarsPrintInfo.begin(),
                       allVarsPrintInfo.end(),
                       [](auto& p) {return p.second.isPrinted() &&
-                                          p.second.hasDataLevel(Category::link);  });
+                                          p.second.isPrintedOnDataLevel(Category::link);  });
 }
 
 

@@ -55,8 +55,6 @@ public:
     uint getMaxColumnsCount();
     void setMaxColumns(uint maxColumnsNumber);
 
-    bool hasDataLevel(uint dataLevel) const { return dataLevel_ == dataLevel; };
-    bool hasFileLevel(uint fileLevel) const { return fileLevel_ == fileLevel; };
     bool isPrintedOnDataLevel(uint dataLevel) const { return dataLevel_ & dataLevel; };
     bool isPrintedOnFileLevel(uint fileLevel) const { return fileLevel_ & fileLevel; };
 
