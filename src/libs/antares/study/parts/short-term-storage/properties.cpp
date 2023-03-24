@@ -66,43 +66,23 @@ unsigned int groupIndex(Group group)
 
 bool Properties::loadKey(const IniFile::Property* p)
 {
-    /* auto valueForOptional = [&](const IniFile::Property* p, std::optional<double> &o) { */
-    /*     if (double tmp; p->value.to<double>(tmp)) */
-    /*     { */
-    /*         o = tmp; */
-    /*         return true; */
-    /*     } */
-    /*     return false; */
-    /* }; */
-    if (p->key == "injectionnominalcapacity")
-    {
+    auto valueForOptional = [](const IniFile::Property* p, std::optional<double> &o) {
         if (double tmp; p->value.to<double>(tmp))
         {
-            this->injectionCapacity = tmp;
+            o = tmp;
             return true;
         }
         return false;
-    }
+    };
+
+    if (p->key == "injectionnominalcapacity")
+        return valueForOptional(p, this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-    {
-        if (double tmp; p->value.to<double>(tmp))
-        {
-            this->withdrawalCapacity = tmp;
-            return true;
-        }
-        return false;
-    }
+        return valueForOptional(p, this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-    {
-        if (double tmp; p->value.to<double>(tmp))
-        {
-            this->capacity = tmp;
-            return true;
-        }
-        return false;
-    }
+        return valueForOptional(p, this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -118,12 +98,7 @@ bool Properties::loadKey(const IniFile::Property* p)
         if (p->value == "optim")
             return true;
 
-        if (double tmp; p->value.to<double>(tmp))
-        {
-            this->initialLevel = tmp;
-            return true;
-        }
-        return false;
+        return valueForOptional(p, this->initialLevel);
     }
 
     if (p->key == "group")
@@ -204,8 +179,8 @@ bool Properties::validate()
 
         if (initialLevel > capacity)
         {
-            logs.warning() << "initiallevel for cluster: " << name
-                           << " should be inferior to reservoir capacity: " << *capacity;
+            logs.warning() << "initiallevel for cluster: " << name <<
+                " should be inferior to reservoir capacity: " << capacity.value();
             initialLevel = capacity;
         }
     }
