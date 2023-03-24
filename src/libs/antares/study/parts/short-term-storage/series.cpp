@@ -27,7 +27,6 @@
 #include <yuni/io/file.h>
 #include <antares/logs.h>
 #include <antares/array/array1d.h>
-#include <fstream>
 
 #include "series.h"
 
