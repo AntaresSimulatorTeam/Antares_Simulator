@@ -50,18 +50,28 @@ static void importShortTermStorages(
         for (auto st : areas[i]->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES toInsert;
+            toInsert.globalIndex = STindex;
+
+            // Properties
             toInsert.capacity = st->properties.capacity;
             toInsert.efficiency = st->properties.efficiencyFactor;
             toInsert.injectionCapacity = st->properties.injectionCapacity;
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
             toInsert.initialLevel = st->properties.initialLevel;
 
-            toInsert.globalIndex = STindex;
-
-            // Shallow copy of TS
+            // Series - Inflows
             toInsert.inflows = st->series.inflows.data();
+
+            // Series - Withdrawal / injection modulation
+            toInsert.withdrawalModulation = st->series.maxWithdrawalModulation.data();
+            toInsert.injectionModulation = st->series.maxInjectionModulation.data();
+
+            // Series - Rule curves
+            toInsert.lowerRuleCurve = st->series.lowerRuleCurve.data();
+            toInsert.upperRuleCurve = st->series.upperRuleCurve.data();
+
             // TODO add missing properties, or use the same struct
-            ShortTermStorageOut[i].push_back(toInsert);
+            ShortTermStorageOut[i].push_back(std::move(toInsert));
             STindex++;
         }
     }

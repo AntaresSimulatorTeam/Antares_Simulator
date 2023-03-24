@@ -172,7 +172,10 @@ struct PROPERTIES
 
     // TODO[FOM] move to better place
     const double* inflows;
-  
+    const double* withdrawalModulation;
+    const double* injectionModulation;
+    const double* lowerRuleCurve;
+    const double* upperRuleCurve;
     int globalIndex;
 };
 
