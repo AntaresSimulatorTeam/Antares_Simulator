@@ -142,35 +142,55 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::validate()
 {
-    if (!injectionCapacity.has_value() || injectionCapacity < 0)
-    {
-        logs.error() << "Property injectionnominalcapacity not provided or negative, needed "
-            << "for short term storage";
-        return false;
-    }
-    if (!withdrawalCapacity.has_value() || withdrawalCapacity < 0)
-    {
-        logs.error() << "Property withdrawalnominalcapacity not provided or negative, needed "
-            << "for short term storage";
-        return false;
-    }
-    if (!capacity.has_value() || capacity < 0)
-    {
-        logs.error() << "Property reservoircapacity not provided or negative, needed "
-            << "for short term storage";
-        return false;
-    }
+    auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label) {
+        if (!prop.has_value())
+        {
+            logs.error() << "Property " << label << " is mandatory for short term storage "
+                         << this->name;
+            return false;
+        }
+        return true;
+    };
 
+    if (!checkMandatory(injectionCapacity, "injectionnominalcapacity"))
+        return false;
+
+    if (!checkMandatory(withdrawalCapacity, "withdrawalnominalcapacity"))
+        return false;
+
+    if (!checkMandatory(capacity, "reservoircapacity"))
+        return false;
+
+    if (injectionCapacity < 0)
+    {
+        logs.error() << "Property injectionnominalcapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
+    if (withdrawalCapacity < 0)
+    {
+        logs.error() << "Property withdrawalnominalcapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
+    if (capacity < 0)
+    {
+        logs.error() << "Property reservoircapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
 
     if (efficiencyFactor < 0)
     {
-        logs.warning() << "efficiency for cluster: " << name << " should be positive";
+        logs.warning() << "Property efficiency must be >= 0 "
+                       << "for short term storage " << name;
         efficiencyFactor = 0;
     }
 
     if (efficiencyFactor > 1)
     {
-        logs.warning() << "efficiency for cluster: " << name << " should be inferior to 1";
+        logs.warning() << "Property efficiency must be <= 1 "
+                       << "for short term storage " << name;
         efficiencyFactor = 1;
     }
 
@@ -184,8 +204,8 @@ bool Properties::validate()
 
         if (initialLevel > capacity)
         {
-            logs.warning() << "initiallevel for cluster: " << name <<
-                " should be inferior to reservoir capacity: " << *capacity;
+            logs.warning() << "initiallevel for cluster: " << name
+                           << " should be inferior to reservoir capacity: " << *capacity;
             initialLevel = capacity;
         }
     }
