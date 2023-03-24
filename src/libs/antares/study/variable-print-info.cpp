@@ -100,8 +100,8 @@ void AllVariablesPrintInfo::add(std::string name, VariablePrintInfo v)
     std::string upperCaseName = to_uppercase(name);
     if (not exists(upperCaseName))
     {
-        index_to_name[(unsigned int)allVarsPrintInfo.size()] = upperCaseName;
-        allVarsPrintInfo.insert(std::pair<std::string, VariablePrintInfo>(upperCaseName, v));
+        index_to_name.try_emplace((unsigned int)allVarsPrintInfo.size(), upperCaseName);
+        allVarsPrintInfo.try_emplace(upperCaseName, v);
     }
 }
 
@@ -143,6 +143,7 @@ void AllVariablesPrintInfo::setMaxColumns(std::string varname, uint maxColumnsNu
     allVarsPrintInfo.at(to_uppercase(varname)).setMaxColumns(maxColumnsNumber);
 }
 
+[[deprecated("Only needed by the GUI, to be removed")]]
 std::string AllVariablesPrintInfo::name_of(unsigned int index) const
 {
     return index_to_name.at(index);
@@ -242,8 +243,8 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
             for (auto& [name, variable] : allVarsPrintInfo)
             {
                 if (variable.isPrinted() &&
-                    variable.getFileLevel() & CFileLevel &&
-                    variable.getDataLevel() & CDataLevel)
+                    variable.isPrintedOnFileLevel(CFileLevel) &&
+                    variable.isPrintedOnDataLevel(CDataLevel))
                 {
                     // For the current output variable, we retrieve the max number
                     // of columns it takes in a sysnthesis report. 
@@ -258,20 +259,20 @@ void AllVariablesPrintInfo::computeMaxColumnsCountInReports()
 
 void AllVariablesPrintInfo::countSelectedAreaVars()
 {
-    for (auto& [name, variable] : allVarsPrintInfo)
-    {
-        if (variable.isPrinted() && variable.getDataLevel() == Category::area)
-            numberSelectedAreaVariables++;
-    }
+    numberSelectedAreaVariables =
+        std::count_if(allVarsPrintInfo.begin(),
+                      allVarsPrintInfo.end(),
+                      [](auto& p) {return p.second.isPrinted() &&
+                                          p.second.hasDataLevel(Category::area); });
 }
 
 void AllVariablesPrintInfo::countSelectedLinkVars()
 {
-    for (auto& [name, variable] : allVarsPrintInfo)
-    {
-        if (variable.isPrinted() && variable.getDataLevel() == Category::link)
-            numberSelectedLinkVariables++;
-    }
+    numberSelectedLinkVariables =
+        std::count_if(allVarsPrintInfo.begin(),
+                      allVarsPrintInfo.end(),
+                      [](auto& p) {return p.second.isPrinted() &&
+                                          p.second.hasDataLevel(Category::link);  });
 }
 
 

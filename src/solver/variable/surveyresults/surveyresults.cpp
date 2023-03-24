@@ -489,7 +489,6 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-// TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
 SurveyResults::SurveyResults(const Data::Study& s,
                              const String& o,
                              IResultWriter::Ptr writer) :
