@@ -78,7 +78,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);
-    fillIfEmpty(inflows, 1.0);
+    fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
 }
