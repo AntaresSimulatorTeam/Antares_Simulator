@@ -54,7 +54,7 @@ bool Series::loadFromFolder(const std::string& folder)
 
     ret = loadVector(folder + "PMAX-injection.txt", maxInjectionModulation) && ret;
     ret = loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadVector(folder + "inflow.txt", inflows) && ret;
+    ret = loadVector(folder + "inflows.txt", inflows) && ret;
     ret = loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
 
