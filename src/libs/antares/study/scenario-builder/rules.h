@@ -123,6 +123,8 @@ public:
     // Links NTC
     std::vector<ntcTSNumberData> linksNTC;
 
+    BindingConstraintsTSNumberData binding_constraints;
+
 private:
     // Member methods
     bool readThermalCluster(const AreaName::Vector& instrs, String value, bool updaterMode);
