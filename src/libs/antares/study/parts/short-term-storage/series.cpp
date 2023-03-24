@@ -35,14 +35,12 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool Series::validate() const
 {
-    if (maxInjectionModulation.size() != VECTOR_SERIES_SIZE ||
-        maxWithdrawalModulation.size() != VECTOR_SERIES_SIZE ||
-        inflows.size() != VECTOR_SERIES_SIZE ||
-        lowerRuleCurve.size() != VECTOR_SERIES_SIZE ||
-        upperRuleCurve.size() != VECTOR_SERIES_SIZE)
+    if (maxInjectionModulation.size() != VECTOR_SERIES_SIZE
+        || maxWithdrawalModulation.size() != VECTOR_SERIES_SIZE
+        || inflows.size() != VECTOR_SERIES_SIZE || lowerRuleCurve.size() != VECTOR_SERIES_SIZE
+        || upperRuleCurve.size() != VECTOR_SERIES_SIZE)
     {
         logs.warning() << "Size of series for short term storage is wrong";
         return false;
@@ -69,17 +67,15 @@ bool Series::loadVector(const std::string& path, std::vector<double>& vect)
         return true;
 
     vect.resize(VECTOR_SERIES_SIZE);
-    return Array1DLoadFromFile(path.c_str() , &vect[0], VECTOR_SERIES_SIZE);
+    return Array1DLoadFromFile(path.c_str(), &vect[0], VECTOR_SERIES_SIZE);
 }
 
 void Series::fillDefaultSeriesIfEmpty()
 {
-    auto fillIfEmpty = [](std::vector<double> & v,
-                          double value)
-                          {
-                              if (v.empty())
-                                  v.resize(VECTOR_SERIES_SIZE, value);
-                          };
+    auto fillIfEmpty = [](std::vector<double>& v, double value) {
+        if (v.empty())
+            v.resize(VECTOR_SERIES_SIZE, value);
+    };
 
     fillIfEmpty(maxInjectionModulation, 1.0);
     fillIfEmpty(maxWithdrawalModulation, 1.0);

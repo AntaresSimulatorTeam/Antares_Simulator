@@ -35,7 +35,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -50,8 +49,8 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
         }
         if (!properties.loadKey(property))
         {
-            logs.warning() << "Loading clusters: `" << section.name << "`/`"
-                << property->key << "`: The property is unknown and ignored";
+            logs.warning() << "Loading clusters: `" << section.name << "`/`" << property->key
+                           << "`: The property is unknown and ignored";
         }
     }
 
@@ -73,7 +72,7 @@ bool STStorageCluster::validate()
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
     bool ret = series.loadFromFolder(folder + SEP);
-    series.fillDefaultSeriesIfEmpty(); //fill series if no file series
+    series.fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
 }
 

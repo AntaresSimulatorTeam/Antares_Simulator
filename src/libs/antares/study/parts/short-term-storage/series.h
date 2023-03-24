@@ -35,7 +35,7 @@ class Series
 public:
     bool validate() const;
 
-    //load all series files with folder path
+    // load all series files with folder path
     bool loadFromFolder(const std::string& folder);
     void fillDefaultSeriesIfEmpty();
 
@@ -47,6 +47,5 @@ public:
 
 private:
     bool loadVector(const std::string& path, std::vector<double>& vect);
-
 };
 } // namespace Antares::Data::ShortTermStorage
