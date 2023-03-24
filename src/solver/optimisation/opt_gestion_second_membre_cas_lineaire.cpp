@@ -43,6 +43,25 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+static void shortTermStorageLevelsRHS(
+  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+  int numberOfAreas,
+  double* SecondMembre,
+  const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+  int pdtJour)
+{
+    for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
+    {
+        for (auto& storage : shortTermStorageInput[areaIndex])
+        {
+            const int globalIndex = storage.globalIndex;
+            const int cnt
+              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex];
+            SecondMembre[cnt] = storage.inflows[pdtJour];
+        }
+    }
+}
+
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHebdo,
                                                      int PremierPdtDeLIntervalle,
                                                      int DernierPdtDeLIntervalle,
@@ -133,14 +152,11 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
-        for (int shortTermStorage = 0; shortTermStorage < problemeHebdo->NumberOfShortTermStorages;
-             shortTermStorage++)
-        {
-            if (int cnt = CorrespondanceCntNativesCntOptim
-                            ->ShortTermStorageLevelConstraint[shortTermStorage];
-                cnt >= 0)
-                SecondMembre[cnt] = 0; // TODO[FOM] inflows[h]
-        }
+        shortTermStorageLevelsRHS(*problemeHebdo->ShortTermStorage,
+                                  problemeHebdo->NombreDePays,
+                                  ProblemeAResoudre->SecondMembre,
+                                  CorrespondanceCntNativesCntOptim,
+                                  pdtJour);
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {

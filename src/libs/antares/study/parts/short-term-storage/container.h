@@ -40,6 +40,8 @@ public:
     bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
+    // Number of ST storages
+    std::size_t count() const;
 
     std::vector<STStorageCluster*> storagesByIndex;
     std::map<std::string, STStorageCluster> storagesById;
