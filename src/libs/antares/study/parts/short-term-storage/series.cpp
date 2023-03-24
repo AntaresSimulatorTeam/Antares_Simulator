@@ -51,13 +51,13 @@ bool Series::validate() const
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
-
-    ret = loadVector(folder + "PMAX-injection.txt", maxInjectionModulation) && ret;
-    ret = loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadVector(folder + "inflows.txt", inflows) && ret;
-    ret = loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
-
+#define SEP Yuni::IO::Separator
+    ret = loadVector(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadVector(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = loadVector(folder + SEP + "inflows.txt", inflows) && ret;
+    ret = loadVector(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadVector(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+#undef SEP
     return ret;
 }
 
@@ -67,7 +67,7 @@ bool Series::loadVector(const std::string& path, std::vector<double>& vect)
         return true;
 
     vect.resize(VECTOR_SERIES_SIZE);
-    return Array1DLoadFromFile(path.c_str(), &vect[0], VECTOR_SERIES_SIZE);
+    return Array1DLoadFromFile(path.c_str(), vect.data(), VECTOR_SERIES_SIZE);
 }
 
 void Series::fillDefaultSeriesIfEmpty()
