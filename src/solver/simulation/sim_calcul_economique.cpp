@@ -46,10 +46,10 @@ static void importShortTermStorages(
     int STindex = 0;
     for (uint i = 0; i != areas.size(); i++)
     {
-        ShortTermStorageOut[i].reserve(areas[i]->shortTermStorage.storagesByIndex.size());
+        ShortTermStorageOut[i].resize(areas[i]->shortTermStorage.storagesByIndex.size());
         for (auto st : areas[i]->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES toInsert;
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[i][STindex];
             toInsert.globalIndex = STindex;
 
             // Properties
@@ -71,7 +71,6 @@ static void importShortTermStorages(
             toInsert.upperRuleCurve = st->series.upperRuleCurve.data();
 
             // TODO add missing properties, or use the same struct
-            ShortTermStorageOut[i].push_back(std::move(toInsert));
             STindex++;
         }
     }
