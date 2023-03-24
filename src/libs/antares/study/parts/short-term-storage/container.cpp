@@ -59,6 +59,8 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
         if (!cluster.loadFromSection(*section))
             return false;
 
+        std::string s = section->name.c_str();
+        logs.notice() << s;
         storagesById.try_emplace(section->name.c_str(), cluster);
     }
 
@@ -78,7 +80,7 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer(folder + SEP + cluster->properties.name + SEP);
+        const std::string buffer(folder + SEP + cluster->id);
         ret = cluster->loadSeries(buffer) && ret;
     }
 

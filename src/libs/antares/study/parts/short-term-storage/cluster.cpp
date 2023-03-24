@@ -24,7 +24,9 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#include <antares/utils.h>
 #include <antares/logs.h>
+#include <yuni/core/string.h>
 #include <yuni/io/file.h>
 
 #include "cluster.h"
@@ -53,6 +55,15 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
         }
     }
 
+    if (properties.name.empty())
+        return false;
+
+    logs.notice() << "before yuni";
+    Yuni::CString<50, false> tmp;
+    TransformNameIntoID(properties.name, tmp);
+    id = tmp.c_str();
+    logs.notice() << "after yuni";
+
     return true;
 }
 
@@ -79,7 +90,7 @@ bool STStorageCluster::validate()
 
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    bool ret = series.loadFromFolder(folder);
+    bool ret = series.loadFromFolder(folder + SEP);
     ret = fillDefaultSeries() && ret; //fill series if no file series
     return ret;
 }

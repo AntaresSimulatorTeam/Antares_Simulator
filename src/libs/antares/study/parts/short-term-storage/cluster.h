@@ -43,6 +43,8 @@ public:
 
     bool fillDefaultSeries();
 
+    std::string id;
+
     Series series;
     Properties properties;
 };
