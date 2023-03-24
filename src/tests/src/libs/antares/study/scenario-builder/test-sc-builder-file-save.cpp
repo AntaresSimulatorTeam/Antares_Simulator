@@ -433,6 +433,27 @@ BOOST_AUTO_TEST_CASE(
     BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
 }
 
+BOOST_AUTO_TEST_CASE(
+    BC__TS_number_for_many_years__generated_and_ref_sc_buider_files_are_identical
+        ) {
+
+    my_rule->binding_constraints.setData("group1", 5, 13);
+    my_rule->binding_constraints.setData("group2", 42, 1);
+    my_rule->binding_constraints.setData("group3", 5, 43);
+    my_rule->binding_constraints.setData("group3", 10, 6);
+
+    saveScenarioBuilder();
+    // Build reference scenario builder file
+    referenceFile.append("[my rule name]");
+    referenceFile.append("bc,group1,5=13");
+    referenceFile.append("bc,group2,42=1");
+    referenceFile.append("bc,group3,5=43");
+    referenceFile.append("bc,group3,10=6");
+
+    referenceFile.write();
+    BOOST_CHECK(files_identical(path_to_generated_file, referenceFile.path()));
+}
+
 // ================================
 // Tests on All assets together
 // ================================

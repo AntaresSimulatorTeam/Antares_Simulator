@@ -721,6 +721,14 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
         if (pOperator == opUnknown)
             logs.error() << env.iniFilename << ": in [" << env.section->name
                          << "]: Invalid operator [less,greater,equal,both]";
+        if (group_.empty()) {
+            if (env.version >= version860) {
+                logs.error() << env.iniFilename << ": in [" << env.section->name
+                             << "]: Missing binding constraint group";
+            } else {
+                group_ = std::string() + name().c_str() + "_" + id().c_str();
+            }
+        }
 
         // Invalid binding constraint
         return false;
@@ -874,7 +882,7 @@ bool BindingConstraintsList::loadFromFolder(Study& study,
         }
     }
 
-    BindingConstraint::EnvForLoading env(study.areas);
+    BindingConstraint::EnvForLoading env(study.areas, study.header.version);
     env.folder = folder;
 
     env.iniFilename << env.folder << SEP << "bindingconstraints.ini";

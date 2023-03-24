@@ -32,18 +32,9 @@
 #include "../study.h"
 #include "../../mersenne-twister/mersenne-twister.h"
 
-namespace Antares
+namespace Antares::Data
 {
-/*
-namespace Solver
-{
-namespace Variable
-{
-                class State;
-}
-}*/
-namespace Data
-{
+
 enum RangeLimitsIndex
 {
     rangeBegin = 0,
@@ -60,7 +51,6 @@ public:
     */
     void checkIntegrity() const;
 
-public:
     //! Hours
     uint hour[rangeMax];
     //! Day
@@ -213,8 +203,7 @@ Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r);
 
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "runtime.hxx"
 
