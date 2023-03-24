@@ -58,27 +58,9 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     if (properties.name.empty())
         return false;
 
-    logs.notice() << "before yuni";
     Yuni::CString<50, false> tmp;
     TransformNameIntoID(properties.name, tmp);
-    id = tmp.c_str();
-    logs.notice() << "after yuni";
-
-    return true;
-}
-
-bool STStorageCluster::fillDefaultSeries()
-{
-    if (series.maxInjection.empty())
-        series.maxInjection.resize(VECTOR_SERIES_SIZE, properties.injectionCapacity);
-    if (series.maxWithdrawal.empty())
-        series.maxWithdrawal.resize(VECTOR_SERIES_SIZE, properties.withdrawalCapacity);
-    if (series.inflows.empty())
-        series.inflows.resize(VECTOR_SERIES_SIZE, 0);
-    if (series.lowerRuleCurve.empty())
-        series.lowerRuleCurve.resize(VECTOR_SERIES_SIZE, 0);
-    if (series.upperRuleCurve.empty())
-        series.upperRuleCurve.resize(VECTOR_SERIES_SIZE, 1);
+    id = tmp.to<std::string>();
 
     return true;
 }
@@ -91,7 +73,7 @@ bool STStorageCluster::validate()
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
     bool ret = series.loadFromFolder(folder + SEP);
-    ret = fillDefaultSeries() && ret; //fill series if no file series
+    series.fillDefaultSeriesIfEmpty(); //fill series if no file series
     return ret;
 }
 

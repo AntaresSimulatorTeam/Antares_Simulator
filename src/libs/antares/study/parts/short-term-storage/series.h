@@ -28,8 +28,6 @@
 #include <vector>
 #include <string>
 
-#define VECTOR_SERIES_SIZE 8760
-
 namespace Antares::Data::ShortTermStorage
 {
 class Series
@@ -39,9 +37,10 @@ public:
 
     //load all series files with folder path
     bool loadFromFolder(const std::string& folder);
+    void fillDefaultSeriesIfEmpty();
 
-    std::vector<double> maxInjection;
-    std::vector<double> maxWithdrawal;
+    std::vector<double> maxInjectionModulation;
+    std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;

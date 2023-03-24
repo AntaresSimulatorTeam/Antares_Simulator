@@ -31,13 +31,15 @@
 
 #include "series.h"
 
+#define VECTOR_SERIES_SIZE 8760
+
 namespace Antares::Data::ShortTermStorage
 {
 
 bool Series::validate() const
 {
-    if (maxInjection.size() != VECTOR_SERIES_SIZE ||
-        maxWithdrawal.size() != VECTOR_SERIES_SIZE ||
+    if (maxInjectionModulation.size() != VECTOR_SERIES_SIZE ||
+        maxWithdrawalModulation.size() != VECTOR_SERIES_SIZE ||
         inflows.size() != VECTOR_SERIES_SIZE ||
         lowerRuleCurve.size() != VECTOR_SERIES_SIZE ||
         upperRuleCurve.size() != VECTOR_SERIES_SIZE)
@@ -52,8 +54,8 @@ bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
 
-    ret = loadVector(folder + "PMAX-injection.txt", maxInjection) && ret;
-    ret = loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawal) && ret;
+    ret = loadVector(folder + "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadVector(folder + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
     ret = loadVector(folder + "inflow.txt", inflows) && ret;
     ret = loadVector(folder + "lower-rule-curve.txt", lowerRuleCurve) && ret;
     ret = loadVector(folder + "upper-rule-curve.txt", upperRuleCurve) && ret;
@@ -68,6 +70,22 @@ bool Series::loadVector(const std::string& path, std::vector<double>& vect)
 
     vect.resize(VECTOR_SERIES_SIZE);
     return Array1DLoadFromFile(path.c_str() , &vect[0], VECTOR_SERIES_SIZE);
+}
+
+void Series::fillDefaultSeriesIfEmpty()
+{
+    auto fillIfEmpty = [](std::vector<double> & v,
+                          double value)
+                          {
+                              if (v.empty())
+                                  v.resize(VECTOR_SERIES_SIZE, value);
+                          };
+
+    fillIfEmpty(maxInjectionModulation, 1.0);
+    fillIfEmpty(maxWithdrawalModulation, 1.0);
+    fillIfEmpty(inflows, 1.0);
+    fillIfEmpty(lowerRuleCurve, 0.0);
+    fillIfEmpty(upperRuleCurve, 1.0);
 }
 
 } // namespace Antares::Data::ShortTermStorage
