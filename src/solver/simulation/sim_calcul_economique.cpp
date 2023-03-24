@@ -46,8 +46,7 @@ static void importShortTermStorages(
     int STindex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[areaIndex].resize(
-          areas[areaIndex]->shortTermStorage.storagesByIndex.size());
+        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];

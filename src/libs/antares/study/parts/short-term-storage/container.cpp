@@ -87,4 +87,8 @@ bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
     return ret;
 }
 
+std::size_t STStorageInput::count() const
+{
+    return storagesByIndex.size();
+}
 } // namespace Antares::Data::ShortTermStorage
