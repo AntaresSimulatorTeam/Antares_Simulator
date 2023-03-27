@@ -200,7 +200,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
     std::string folder = getFolder();
 
     createFileSeries(1.0, 100);
-
+    //TODO VP modify loadArray1d
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
@@ -249,8 +249,6 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
     BOOST_CHECK(container.storagesByIndex[0]->properties.validate());
-
-    /* std::cout << container.storagesByIndex[0]->properties.name << std::endl; */
 
     removeIniFile();
 }
