@@ -170,12 +170,11 @@ struct PROPERTIES
 
     std::optional<double> initialLevel;
 
-    // TODO[FOM] move to better place
-    const double* inflows;
-    const double* withdrawalModulation;
-    const double* injectionModulation;
-    const double* lowerRuleCurve;
-    const double* upperRuleCurve;
+    std::vector<double> inflows;
+    std::vector<double> withdrawalModulation;
+    std::vector<double> injectionModulation;
+    std::vector<double> lowerRuleCurve;
+    std::vector<double> upperRuleCurve;
     int globalIndex;
 };
 
