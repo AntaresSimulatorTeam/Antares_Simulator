@@ -30,6 +30,6 @@ endif()
 # Storing short-term-storage-input under the folder Unit-tests in the IDE
 set_target_properties(short-term-storage-input PROPERTIES FOLDER Unit-tests/short-term-storage-input)
 
-add_test(NAME short-term-storage-input COMMAND test-short-term-storage-input)
+add_test(NAME short-term-storage-input COMMAND short-term-storage-input)
 
 set_property(TEST short-term-storage-input PROPERTY LABELS unit)

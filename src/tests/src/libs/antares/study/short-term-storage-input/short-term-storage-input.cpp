@@ -70,7 +70,7 @@ void createIniFile()
     outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
 
     outfile << "[area]" << std::endl;
-    outfile << "name = peak" << std::endl;
+    outfile << "name = area" << std::endl;
     outfile << "group = PSP_open" << std::endl;
     outfile << "injectionnominalcapacity = 870.000000" << std::endl;
     outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
@@ -80,6 +80,13 @@ void createIniFile()
     outfile << "initiallevel = 0.50000" << std::endl;
 
     outfile.close();
+}
+
+void removeIniFile()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+    std::filesystem::remove(folder + SEP + "list.ini");
 }
 
 // =================
@@ -208,6 +215,21 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
     BOOST_CHECK(cluster.series.validate());
 
     removeFileSeries();
+}
+
+BOOST_AUTO_TEST_CASE(check_container_properties_load)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createIniFile();
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(container.storagesByIndex[0]->properties.validate());
+
+    /* std::cout << container.storagesByIndex[0]->properties.name << std::endl; */
+
+    removeIniFile();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
