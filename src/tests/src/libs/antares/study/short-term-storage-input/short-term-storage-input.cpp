@@ -16,6 +16,11 @@
 using namespace std;
 using namespace Antares::Data;
 
+std::string getFolder()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    return tmpDir;
+}
 
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
 {
@@ -39,8 +44,7 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
 
 void createFileSeries(double value, unsigned int size)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createIndividualFileSeries(folder + SEP + "PMAX-injection.txt", value, size);
     createIndividualFileSeries(folder + SEP + "PMAX-withdrawal.txt", value, size);
@@ -51,8 +55,7 @@ void createFileSeries(double value, unsigned int size)
 
 void removeFileSeries()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
     std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
@@ -63,8 +66,7 @@ void removeFileSeries()
 
 void createIniFile()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     std::ofstream outfile;
     outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -84,8 +86,7 @@ void createIniFile()
 
 void createIniFileWrongValue()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     std::ofstream outfile;
     outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -105,8 +106,7 @@ void createIniFileWrongValue()
 
 void createEmptyIniFile()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     std::ofstream outfile;
     outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
@@ -116,8 +116,7 @@ void createEmptyIniFile()
 
 void removeIniFile()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
     std::filesystem::remove(folder + SEP + "list.ini");
 }
 
@@ -162,8 +161,7 @@ BOOST_AUTO_TEST_CASE(check_vector_sizes)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createFileSeries(1.0, 8760);
 
@@ -175,8 +173,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createFileSeries(-247.0, 8760);
 
@@ -188,8 +185,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createFileSeries(1.0, 9000);
 
@@ -201,8 +197,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createFileSeries(1.0, 100);
 
@@ -214,8 +209,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_empty)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(!series.validate());
@@ -229,8 +223,7 @@ BOOST_AUTO_TEST_CASE(check_series_vector_fill)
 
 BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series.validate());
@@ -238,8 +231,7 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
 
 BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createFileSeries(1829.21384, 8760);
 
@@ -251,8 +243,7 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
 
 BOOST_AUTO_TEST_CASE(check_container_properties_load)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createIniFile();
 
@@ -266,8 +257,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
 
 BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createIniFileWrongValue();
 
@@ -279,8 +269,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
 
 BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    std::string folder = tmpDir;
+    std::string folder = getFolder();
 
     createEmptyIniFile();
 
