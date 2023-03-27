@@ -280,6 +280,8 @@ void ISimulation<Impl>::run()
 
     // Initialize all data
     ImplementationType::variables.initializeFromStudy(study);
+    // Computing the max number columns a report of any kind can contain.
+    study.parameters.variablesPrintInfo.computeMaxColumnsCountInReports();
 
     logs.info() << "Allocating resources...";
 
