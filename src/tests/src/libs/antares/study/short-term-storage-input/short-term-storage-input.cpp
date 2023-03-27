@@ -51,6 +51,18 @@ void createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", value, size);
 }
 
+void removeFileSeries()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
+    std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
+    std::filesystem::remove(folder + SEP + "inflows.txt");
+    std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
+    std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+}
+
 // =================
 // The fixture
 // =================
@@ -95,6 +107,21 @@ BOOST_AUTO_TEST_CASE(check_folder_loading)
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
+
+    removeFileSeries();
+}
+
+BOOST_AUTO_TEST_CASE(check_folder_loading_negative_value)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createFileSeries(-247.0, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_folder_loading_too_big)
@@ -105,6 +132,36 @@ BOOST_AUTO_TEST_CASE(check_folder_loading_too_big)
     createFileSeries(1.0, 9000);
 
     BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    removeFileSeries();
+}
+
+BOOST_AUTO_TEST_CASE(check_folder_loading_too_small)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createFileSeries(1.0, 100);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    removeFileSeries();
+}
+
+BOOST_AUTO_TEST_CASE(check_folder_loading_empty)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(!series.validate());
+}
+
+BOOST_AUTO_TEST_CASE(check_vector_fill)
+{
+    series.fillDefaultSeriesIfEmpty();
     BOOST_CHECK(series.validate());
 }
 
