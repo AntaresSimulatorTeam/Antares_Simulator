@@ -46,7 +46,7 @@ struct VCardSTstorageInjectionByCluster
     //! Unit
     static const char* Unit()
     {
-        return "MWh";
+        return "P-injection - MWh";
     }
 
     //! The short description of the variable

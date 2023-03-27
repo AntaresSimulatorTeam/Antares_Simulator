@@ -240,6 +240,7 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
         break;
     case de_sts:
         out += "details-STstorage";
+        break;
     default:
         out += NULL;
     }
