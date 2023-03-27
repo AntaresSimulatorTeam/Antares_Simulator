@@ -173,12 +173,6 @@ public:
         delete[] pValuesForTheCurrentYear;
     }
 
-    void initializeFromStudy(Data::Study& study)
-    {
-        // Next
-        NextType::initializeFromStudy(study);
-    }
-
     void initializeFromArea(Data::Study* study, Data::Area* area)
     {
         // Get the number of years in parallel
@@ -216,6 +210,11 @@ public:
         }
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return nbClusters_ * ResultsType::count;
     }
 
     void yearBegin(unsigned int year, unsigned int numSpace)
