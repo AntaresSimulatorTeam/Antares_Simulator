@@ -53,7 +53,10 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     }
 
     if (properties.name.empty())
+    {
+        logs.warning() << "Missing name for short-term storage " << section.name;
         return false;
+    }
 
     Yuni::CString<50, false> tmp;
     TransformNameIntoID(properties.name, tmp);

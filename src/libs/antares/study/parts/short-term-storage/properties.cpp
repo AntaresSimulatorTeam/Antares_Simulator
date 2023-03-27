@@ -72,7 +72,7 @@ unsigned int groupIndex(Group group)
 
 bool Properties::loadKey(const IniFile::Property* p)
 {
-    auto valueForOptional = [p](std::optional<double>& opt) {
+    auto valueForOptional = [p](auto& opt) {
         if (double tmp; p->value.to<double>(tmp))
         {
             opt = tmp;
@@ -97,7 +97,7 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "storagecycle")
-        return p->value.to<unsigned int>(this->cycleDuration);
+        return valueForOptional(this->storagecycle);
 
     if (p->key == "initiallevel")
     {
@@ -123,7 +123,7 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::validate()
 {
-    auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label) {
+    auto checkMandatory = [this](const auto& prop, const std::string& label) {
         if (!prop.has_value())
         {
             logs.error() << "Property " << label << " is mandatory for short term storage "
@@ -142,18 +142,23 @@ bool Properties::validate()
     if (!checkMandatory(capacity, "reservoircapacity"))
         return false;
 
+    if (!checkMandatory(storagecycle, "storagecycle"))
+        return false;
+
     if (injectionCapacity < 0)
     {
         logs.error() << "Property injectionnominalcapacity must be >= 0 "
                      << "for short term storage " << name;
         return false;
     }
+
     if (withdrawalCapacity < 0)
     {
         logs.error() << "Property withdrawalnominalcapacity must be >= 0 "
                      << "for short term storage " << name;
         return false;
     }
+
     if (capacity < 0)
     {
         logs.error() << "Property reservoircapacity must be >= 0 "
@@ -189,6 +194,12 @@ bool Properties::validate()
                            << " should be inferior to reservoir capacity: " << capacity.value();
             initialLevel = capacity;
         }
+    }
+
+    if (storagecycle.value() > 168 || storagecycle.value() < 1)
+    {
+        logs.warning() << "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
+        storagecycle = 168;
     }
 
     return true;

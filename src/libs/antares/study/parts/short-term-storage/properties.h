@@ -64,8 +64,8 @@ public:
     std::optional<double> initialLevel;
     // Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
-    // Cycle duration, 1 <= cycleDuration <= 168
-    unsigned int cycleDuration;
+    // Cycle duration, 1 <= storagecycle <= 168
+    std::optional<unsigned int> storagecycle;
     // Used to sort outputs
     Group group = Group::Other1;
     // cluster name

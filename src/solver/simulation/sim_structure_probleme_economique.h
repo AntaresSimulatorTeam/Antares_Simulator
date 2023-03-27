@@ -167,8 +167,9 @@ struct PROPERTIES
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
-
     std::optional<double> initialLevel;
+
+    int storagecycle;
 
     // TODO[FOM] move to better place
     const double* inflows;

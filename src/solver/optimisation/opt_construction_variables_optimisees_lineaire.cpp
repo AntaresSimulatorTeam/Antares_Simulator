@@ -43,6 +43,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
       = problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
     int NombreDeVariables = 0;
 
+    auto CorrespondanceVarNativesVarOptim_init = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
     for (int pdt = 0; pdt < NombreDePasDeTempsPourUneOptimisation; pdt++)
     {
         CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
@@ -104,11 +105,22 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                   = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
                 // 3. Level
-                CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
-                NombreDeVariables++;
+                if (pdt == 0 || (pdt % storage.storagecycle != 0))
+                {
+                    // Create new variable
+                    CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
+                      = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
+                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    NombreDeVariables++;
+                }
+                else
+                {
+                    // Re-use initial level variable
+                    CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
+                      = CorrespondanceVarNativesVarOptim_init->ShortTermStorage
+                          .LevelVariable[globalIndex];
+                }
             }
 
             CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays]

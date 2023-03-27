@@ -58,6 +58,7 @@ static void importShortTermStorages(
             toInsert.injectionCapacity = st->properties.injectionCapacity.value();
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
+            toInsert.storagecycle = st->properties.storagecycle.value();
 
             // Series - Inflows
             toInsert.inflows = st->series.inflows.data();
