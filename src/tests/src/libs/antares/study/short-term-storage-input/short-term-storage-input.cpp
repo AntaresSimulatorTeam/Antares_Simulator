@@ -32,9 +32,7 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
 
     for (unsigned int i = 0; i < size; i++)
-    {
         outfile << value << std::endl;
-    }
 
     outfile.close();
 }
@@ -63,6 +61,27 @@ void removeFileSeries()
     std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
 }
 
+void createIniFile()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    outfile << "[area]" << std::endl;
+    outfile << "name = peak" << std::endl;
+    outfile << "group = PSP_open" << std::endl;
+    outfile << "injectionnominalcapacity = 870.000000" << std::endl;
+    outfile << "withdrawalnominalcapacity = 900.000000" << std::endl;
+    outfile << "reservoircapacity = 31200.000000" << std::endl;
+    outfile << "efficiency = 0.75" << std::endl;
+    outfile << "storagecycle = 50" << std::endl;
+    outfile << "initiallevel = 0.50000" << std::endl;
+
+    outfile.close();
+}
+
 // =================
 // The fixture
 // =================
@@ -74,11 +93,15 @@ struct Fixture
     Fixture& operator= (const Fixture && f) = delete;
     Fixture()
     {
+        cluster.series = series;
+        cluster.properties = properties;
     }
 
     ~Fixture() = default;
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
+    ShortTermStorage::STStorageCluster cluster;
+    ShortTermStorage::STStorageInput container;
 
 };
 
@@ -98,7 +121,7 @@ BOOST_AUTO_TEST_CASE(check_vector_sizes)
     BOOST_CHECK(series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_folder_loading)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading)
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
     std::string folder = tmpDir;
@@ -111,7 +134,7 @@ BOOST_AUTO_TEST_CASE(check_folder_loading)
     removeFileSeries();
 }
 
-BOOST_AUTO_TEST_CASE(check_folder_loading_negative_value)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
     std::string folder = tmpDir;
@@ -124,7 +147,7 @@ BOOST_AUTO_TEST_CASE(check_folder_loading_negative_value)
     removeFileSeries();
 }
 
-BOOST_AUTO_TEST_CASE(check_folder_loading_too_big)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
     std::string folder = tmpDir;
@@ -137,7 +160,7 @@ BOOST_AUTO_TEST_CASE(check_folder_loading_too_big)
     removeFileSeries();
 }
 
-BOOST_AUTO_TEST_CASE(check_folder_loading_too_small)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
     std::string folder = tmpDir;
@@ -150,7 +173,7 @@ BOOST_AUTO_TEST_CASE(check_folder_loading_too_small)
     removeFileSeries();
 }
 
-BOOST_AUTO_TEST_CASE(check_folder_loading_empty)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_empty)
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
     std::string folder = tmpDir;
@@ -159,10 +182,32 @@ BOOST_AUTO_TEST_CASE(check_folder_loading_empty)
     BOOST_CHECK(!series.validate());
 }
 
-BOOST_AUTO_TEST_CASE(check_vector_fill)
+BOOST_AUTO_TEST_CASE(check_series_vector_fill)
 {
     series.fillDefaultSeriesIfEmpty();
     BOOST_CHECK(series.validate());
+}
+
+BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    BOOST_CHECK(cluster.loadSeries(folder));
+    BOOST_CHECK(cluster.series.validate());
+}
+
+BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createFileSeries(1829.21384, 8760);
+
+    BOOST_CHECK(cluster.loadSeries(folder));
+    BOOST_CHECK(cluster.series.validate());
+
+    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_SUITE_END()
