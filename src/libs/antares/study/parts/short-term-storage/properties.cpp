@@ -121,7 +121,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-bool Properties::validate()
+bool Properties::validate(int simplexe)
 {
     auto checkMandatory = [this](const auto& prop, const std::string& label) {
         if (!prop.has_value())
@@ -196,10 +196,29 @@ bool Properties::validate()
         }
     }
 
-    if (storagecycle.value() > 168 || storagecycle.value() < 1)
+    if (simplexe == 1)
     {
-        logs.warning() << "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
-        storagecycle = 168;
+        if (storagecycle.value() > 24 || storagecycle.value() < 1)
+        {
+            logs.warning() << "simplexe optimzation range set to day: "
+            "storagecycle for cluster: " << name << " should be <= 24 and >= 1";
+            storagecycle = 24;
+        }
+    }
+    else if (simplexe == 2)
+    {
+
+        if (storagecycle.value() > 168 || storagecycle.value() < 1)
+        {
+            logs.warning() << "simplexe optimzation range set to week: "
+            "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
+            storagecycle = 24;
+        }
+    }
+    else
+    {
+        logs.warning() << "Simplexe optimzation range value not recnognized";
+        return false;
     }
 
     return true;

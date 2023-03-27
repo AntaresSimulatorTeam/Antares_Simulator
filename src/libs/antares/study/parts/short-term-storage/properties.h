@@ -52,7 +52,7 @@ unsigned int groupIndex(Group group);
 class Properties
 {
 public:
-    bool validate();
+    bool validate(int simplexe);
     bool loadKey(const IniFile::Property* p);
     // Not optional   Injection nominal capacity, >= 0
     std::optional<double> injectionCapacity;

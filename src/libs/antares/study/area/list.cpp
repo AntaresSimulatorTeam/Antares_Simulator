@@ -1085,7 +1085,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             << SEP << area.id;
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
-        ret = area.shortTermStorage.validate() && ret;
+        ret = area.shortTermStorage.validate(study.parameters.simplexOptimizationRange) && ret;
     }
 
     // Renewable cluster list
