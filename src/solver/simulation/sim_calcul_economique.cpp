@@ -59,16 +59,7 @@ static void importShortTermStorages(
             toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
 
-            // Series - Inflows
-            toInsert.inflows = std::move(st->series.inflows);
-
-            // Series - Withdrawal / injection modulation
-            toInsert.withdrawalModulation = std::move(st->series.maxWithdrawalModulation);
-            toInsert.injectionModulation = std::move(st->series.maxInjectionModulation);
-
-            // Series - Rule curves
-            toInsert.lowerRuleCurve = std::move(st->series.lowerRuleCurve);
-            toInsert.upperRuleCurve = std::move(st->series.upperRuleCurve);
+            toInsert.series = st->series;
 
             // TODO add missing properties, or use the same struct
             STindex++;

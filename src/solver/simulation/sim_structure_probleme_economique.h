@@ -167,14 +167,10 @@ struct PROPERTIES
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
-
     std::optional<double> initialLevel;
 
-    std::vector<double> inflows;
-    std::vector<double> withdrawalModulation;
-    std::vector<double> injectionModulation;
-    std::vector<double> lowerRuleCurve;
-    std::vector<double> upperRuleCurve;
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+
     int globalIndex;
 };
 
