@@ -236,8 +236,7 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.storagesByIndex.size();
-             stsIndex++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
             const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
             const uint group

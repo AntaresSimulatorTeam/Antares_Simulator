@@ -182,14 +182,16 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 int varInjection = CorrespondanceVarNativesVarOptim->ShortTermStorage
                                      .InjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
-                Xmax[varInjection] = storage.injectionCapacity; // TODO[FOM] use TS
+                Xmax[varInjection]
+                  = storage.injectionCapacity * storage.injectionModulation[pdtHebdo];
                 AddressForVars[varInjection] = &STSResult.injection[areaWideIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage
                                       .WithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
-                Xmax[varWithdrawal] = storage.withdrawalCapacity; // TODO[FOM] use TS
+                Xmax[varWithdrawal]
+                  = storage.withdrawalCapacity * storage.withdrawalModulation[pdtHebdo];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[areaWideIndex];
 
                 // 3. Levels
@@ -198,9 +200,11 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 if (pdtHebdo == PremierPdtDeLIntervalle && storage.initialLevel.has_value())
                 {
                     Xmin[varLevel] = Xmax[varLevel] = storage.initialLevel.value();
-                } else {
-                    Xmin[varLevel] = 0.;
-                    Xmax[varLevel] = storage.capacity;
+                }
+                else
+                {
+                    Xmin[varLevel] = storage.capacity * storage.lowerRuleCurve[pdtHebdo];
+                    Xmax[varLevel] = storage.capacity * storage.upperRuleCurve[pdtHebdo];
                 }
                 AddressForVars[varLevel] = &STSResult.level[areaWideIndex];
 
