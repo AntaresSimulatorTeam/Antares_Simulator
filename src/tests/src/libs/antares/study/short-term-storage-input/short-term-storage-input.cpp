@@ -82,6 +82,38 @@ void createIniFile()
     outfile.close();
 }
 
+void createIniFileWrongValue()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    outfile << "[area]" << std::endl;
+    outfile << "name = area" << std::endl;
+    outfile << "group = abcde" << std::endl;
+    outfile << "injectionnominalcapacity = -870.000000" << std::endl;
+    outfile << "withdrawalnominalcapacity = -900.000000" << std::endl;
+    outfile << "reservoircapacity = -31200.000000" << std::endl;
+    outfile << "efficiency = 4" << std::endl;
+    outfile << "storagecycle = 50" << std::endl;
+    outfile << "initiallevel = -0.50000" << std::endl;
+
+    outfile.close();
+}
+
+void createEmptyIniFile()
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    std::ofstream outfile;
+    outfile.open(folder + SEP + "list.ini", std::ofstream::out | std::ofstream::trunc);
+
+    outfile.close();
+}
+
 void removeIniFile()
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
@@ -228,6 +260,31 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
     BOOST_CHECK(container.storagesByIndex[0]->properties.validate());
 
     /* std::cout << container.storagesByIndex[0]->properties.name << std::endl; */
+
+    removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createIniFileWrongValue();
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
+    BOOST_CHECK(!container.storagesByIndex[0]->properties.validate());
+
+    removeIniFile();
+}
+
+BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
+{
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    std::string folder = tmpDir;
+
+    createEmptyIniFile();
+
+    BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
 
     removeIniFile();
 }
