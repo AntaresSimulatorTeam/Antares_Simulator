@@ -200,8 +200,8 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
     std::string folder = getFolder();
 
     createFileSeries(1.0, 100);
-    //TODO VP modify loadArray1d
-    BOOST_CHECK(series.loadFromFolder(folder));
+
+    BOOST_CHECK(!series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
     removeFileSeries();
