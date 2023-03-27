@@ -84,6 +84,9 @@
 // By RES plant
 #include "productionByRenewablePlant.h"
 
+// By short term storage cluster
+#include "STStorageInjectionByCluster.h"
+
 // Output variables associated to links
 #include "links/flowLinear.h"
 #include "links/flowLinearAbs.h"
@@ -151,6 +154,7 @@ typedef          // Prices
                        <HydroCost        // Hydro costs
                         <ShortTermStorageEnergy
                         <ShortTermStorageLevels
+                        <STstorageInjectionByCluster
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <LMRViolations           // LMR Violations
@@ -171,7 +175,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!

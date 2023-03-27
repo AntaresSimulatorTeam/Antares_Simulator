@@ -67,10 +67,12 @@ enum File
     de_res = 8,
     //! Detailed values regarding binding constraints
     bc = 16,
+    //! Detailed values regarding short term storage
+    de_sts = 32,
     //! The maximum available value
-    maxFileLevel = 16,
+    maxFileLevel = 32,
     //! All file level
-    allFile = va | id | de | de_res | bc,
+    allFile = va | id | de | de_res | bc | de_sts,
 };
 
 enum Precision
@@ -208,6 +210,9 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
     case bc:
         out += "bc";
         break;
+    case de_sts:
+        out += "sts";
+        break;
     default:
         out += NULL;
     }
@@ -233,6 +238,8 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
     case bc:
         out += "binding-constraints";
         break;
+    case de_sts:
+        out += "details-STstorage";
     default:
         out += NULL;
     }
