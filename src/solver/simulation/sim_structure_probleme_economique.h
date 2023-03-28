@@ -167,8 +167,9 @@ struct PROPERTIES
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
-
     std::optional<double> initialLevel;
+
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
     int globalIndex;
 };

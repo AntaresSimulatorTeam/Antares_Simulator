@@ -26,24 +26,24 @@
 */
 
 #include <antares/logs.h>
+#include <yuni/io/file.h>
 #include <filesystem>
 #include <string>
 
 #include "container.h"
 
-#include <yuni/yuni.h>
 #define SEP Yuni::IO::Separator
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STstorageInput::validate() const
+bool STStorageInput::validate() const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [](auto& cluster) {
         return cluster->validate();
     });
 }
 
-bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
+bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
     IniFile ini;
@@ -53,13 +53,15 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
     if (!ini.firstSection)
         return true;
 
+    logs.debug() << "  :: loading `" << pathIni << "`";
+
     for (auto* section = ini.firstSection; section; section = section->next)
     {
-        STstorageCluster cluster;
+        STStorageCluster cluster;
         if (!cluster.loadFromSection(*section))
             return false;
 
-        storagesById.try_emplace(section->name.c_str(), cluster);
+        storagesById.try_emplace(cluster.properties.name, cluster);
     }
 
     storagesByIndex.reserve(storagesById.size());
@@ -69,7 +71,7 @@ bool STstorageInput::createSTstorageClustersFromIniFile(const std::string& path)
     return true;
 }
 
-bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
+bool STStorageInput::loadSeriesFromFolder(const std::string& folder) const
 {
     if (folder.empty())
         return false;
@@ -78,17 +80,15 @@ bool STstorageInput::loadSeriesFromFolder(const std::string& folder)
 
     for (auto& cluster : storagesByIndex)
     {
-        const std::string buffer = folder + SEP + cluster->properties.name + SEP + "series.txt";
-        /* ret = series->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &s.dataBuffer) && ret; */
-        cluster->loadSeries(folder);
+        const std::string buffer(folder + SEP + cluster->id);
+        ret = cluster->loadSeries(buffer) && ret;
     }
-
-    /* if (s.usedByTheSolver && s.parameters.derated) */
-    /*     series->series.averageTimeseries(); */
-
-    /* series->timeseriesNumbers.clear(); */
 
     return ret;
 }
 
+std::size_t STStorageInput::count() const
+{
+    return storagesByIndex.size();
+}
 } // namespace Antares::Data::ShortTermStorage

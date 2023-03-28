@@ -34,13 +34,18 @@ class Series
 {
 public:
     bool validate() const;
-    bool loadFromFolder(const std::string& folder);
 
-private:
-    std::vector<double> maxInjection;
-    std::vector<double> maxWithdrawal;
+    // load all series files with folder path
+    bool loadFromFolder(const std::string& folder);
+    void fillDefaultSeriesIfEmpty();
+
+    std::vector<double> maxInjectionModulation;
+    std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
+
+private:
+    bool loadVector(const std::string& path, std::vector<double>& vect);
 };
 } // namespace Antares::Data::ShortTermStorage

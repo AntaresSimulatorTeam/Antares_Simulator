@@ -218,8 +218,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto area = state.area;
-        for (uint stsIndex = 0; stsIndex < area->shortTermStorage.storagesByIndex.size();
-             stsIndex++)
+        for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
             const auto* cluster = area->shortTermStorage.storagesByIndex[stsIndex];
             const uint group

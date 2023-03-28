@@ -44,21 +44,24 @@ static void importShortTermStorages(
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
     int STindex = 0;
-    for (uint i = 0; i != areas.size(); i++)
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
-        ShortTermStorageOut[i].reserve(areas[i]->shortTermStorage.storagesByIndex.size());
-        for (auto st : areas[i]->shortTermStorage.storagesByIndex)
+        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES toInsert;
-            toInsert.capacity = st->properties.capacity;
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];
+            toInsert.globalIndex = STindex;
+
+            // Properties
+            toInsert.capacity = st->properties.capacity.value();
             toInsert.efficiency = st->properties.efficiencyFactor;
-            toInsert.injectionCapacity = st->properties.injectionCapacity;
-            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity;
+            toInsert.injectionCapacity = st->properties.injectionCapacity.value();
+            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
 
-            toInsert.globalIndex = STindex;
+            toInsert.series = st->series;
+
             // TODO add missing properties, or use the same struct
-            ShortTermStorageOut[i].push_back(toInsert);
             STindex++;
         }
     }

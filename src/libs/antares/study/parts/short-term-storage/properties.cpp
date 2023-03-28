@@ -26,54 +26,69 @@
 */
 
 #include <antares/logs.h>
+#include <stdexcept>
 
 #include "properties.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-
-const std::map<std::string, enum Group> Properties::stStoragePropertyGroupEnum =
-{
-    {"PSP_open", Group::PSP_open},
-    {"PSP_closed", Group::PSP_closed},
-    {"Pondage", Group::Pondage},
-    {"Battery", Group::Battery},
-    {"Other1", Group::Other1},
-    {"Other2", Group::Other2},
-    {"Other3", Group::Other3},
-    {"Other4", Group::Other4},
-    {"Other5", Group::Other5}
-};
+const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
+  = {{"PSP_open", Group::PSP_open},
+     {"PSP_closed", Group::PSP_closed},
+     {"Pondage", Group::Pondage},
+     {"Battery", Group::Battery},
+     {"Other1", Group::Other1},
+     {"Other2", Group::Other2},
+     {"Other3", Group::Other3},
+     {"Other4", Group::Other4},
+     {"Other5", Group::Other5}};
 
 unsigned int groupIndex(Group group)
 {
     switch (group)
     {
-    case Group::PSP_open: return 0;
-    case Group::PSP_closed: return 1;
-    case Group::Pondage: return 2;
-    case Group::Battery: return 3;
-    case Group::Other1: return 4;
-    case Group::Other2: return 5;
-    case Group::Other3: return 6;
-    case Group::Other4: return 7;
-    case Group::Other5: return 8;
+    case Group::PSP_open:
+        return 0;
+    case Group::PSP_closed:
+        return 1;
+    case Group::Pondage:
+        return 2;
+    case Group::Battery:
+        return 3;
+    case Group::Other1:
+        return 4;
+    case Group::Other2:
+        return 5;
+    case Group::Other3:
+        return 6;
+    case Group::Other4:
+        return 7;
+    case Group::Other5:
+        return 8;
     default:
-      return 0;
+        throw std::invalid_argument("Group not recognized");
     }
 }
 
-
 bool Properties::loadKey(const IniFile::Property* p)
 {
+    auto valueForOptional = [p](std::optional<double>& opt) {
+        if (double tmp; p->value.to<double>(tmp))
+        {
+            opt = tmp;
+            return true;
+        }
+        return false;
+    };
+
     if (p->key == "injectionnominalcapacity")
-        return p->value.to<double>(this->injectionCapacity);
+        return valueForOptional(this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return p->value.to<double>(this->withdrawalCapacity);
+        return valueForOptional(this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return p->value.to<double>(this->capacity);
+        return valueForOptional(this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -89,18 +104,13 @@ bool Properties::loadKey(const IniFile::Property* p)
         if (p->value == "optim")
             return true;
 
-        if (double tmp; p->value.to<double>(tmp))
-        {
-            this->initialLevel = tmp;
-            return true;
-        }
-        return false;
+        return valueForOptional(this->initialLevel);
     }
 
     if (p->key == "group")
     {
-        if (auto it = Properties::stStoragePropertyGroupEnum.find(p->value.c_str());
-                it !=  Properties::stStoragePropertyGroupEnum.end())
+        if (auto it = Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.find(p->value.c_str());
+            it != Properties::ST_STORAGE_PROPERTY_GROUP_ENUM.end())
         {
             this->group = it->second;
             return true;
@@ -113,15 +123,55 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::validate()
 {
+    auto checkMandatory = [this](const std::optional<double>& prop, const std::string& label) {
+        if (!prop.has_value())
+        {
+            logs.error() << "Property " << label << " is mandatory for short term storage "
+                         << this->name;
+            return false;
+        }
+        return true;
+    };
+
+    if (!checkMandatory(injectionCapacity, "injectionnominalcapacity"))
+        return false;
+
+    if (!checkMandatory(withdrawalCapacity, "withdrawalnominalcapacity"))
+        return false;
+
+    if (!checkMandatory(capacity, "reservoircapacity"))
+        return false;
+
+    if (injectionCapacity < 0)
+    {
+        logs.error() << "Property injectionnominalcapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
+    if (withdrawalCapacity < 0)
+    {
+        logs.error() << "Property withdrawalnominalcapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
+    if (capacity < 0)
+    {
+        logs.error() << "Property reservoircapacity must be >= 0 "
+                     << "for short term storage " << name;
+        return false;
+    }
+
     if (efficiencyFactor < 0)
     {
-        logs.warning() << "efficiency for cluster: " << name << " should be positive";
+        logs.warning() << "Property efficiency must be >= 0 "
+                       << "for short term storage " << name;
         efficiencyFactor = 0;
     }
 
     if (efficiencyFactor > 1)
     {
-        logs.warning() << "efficiency for cluster: " << name << " should be inferior to 1";
+        logs.warning() << "Property efficiency must be <= 1 "
+                       << "for short term storage " << name;
         efficiencyFactor = 1;
     }
 
@@ -135,8 +185,8 @@ bool Properties::validate()
 
         if (initialLevel > capacity)
         {
-            logs.warning() << "initiallevel for cluster: " << name <<
-                " should be inferior to reservoir capacity: " << capacity;
+            logs.warning() << "initiallevel for cluster: " << name
+                           << " should be inferior to reservoir capacity: " << capacity.value();
             initialLevel = capacity;
         }
     }

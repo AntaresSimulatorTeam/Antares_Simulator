@@ -27,24 +27,25 @@
 
 #pragma once
 #include <string>
+#include <memory>
 #include <antares/inifile.h>
 #include "properties.h"
 #include "series.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-class STstorageCluster
+class STStorageCluster
 {
 public:
+    STStorageCluster();
     bool validate();
     bool loadFromSection(const IniFile::Section& section);
 
-    bool loadSeries(const std::string& path);
+    bool loadSeries(const std::string& folder);
 
-    //debug purposes will be removed
-    void printProperties();
+    std::string id;
 
-    Series series;
+    std::shared_ptr<Series> series;
     Properties properties;
 };
 } // namespace Antares::Data::ShortTermStorage
