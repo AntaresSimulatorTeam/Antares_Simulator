@@ -43,9 +43,9 @@ ThermalState::ThermalState(const Data::AreaList& areas)
     }
 }
 
-ThermalState::StateForAnArea& ThermalState::operator[](size_t index)
+ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
 {
-    return thermal[index];
+    return thermal[areaIndex];
 }
 
 void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)

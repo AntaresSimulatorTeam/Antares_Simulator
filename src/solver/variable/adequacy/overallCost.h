@@ -252,6 +252,7 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto area = state.area;
+        auto& thermal = state.thermal;
         // Total UnsupliedEnergy emissions
         pValuesForTheCurrentYear[numSpace][state.hourInTheYear] +=
           // Current Hydro Storage generation
@@ -273,7 +274,7 @@ public:
         for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
         {
             pValuesForTheCurrentYear[numSpace][state.hourInTheYear]
-              += state.thermal[area->index].thermalClustersOperatingCost[clusterIndex];
+              += thermal[area->index].thermalClustersOperatingCost[clusterIndex];
         }
 
         // Next variable

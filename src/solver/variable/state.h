@@ -61,7 +61,7 @@ public:
         std::vector<double> PMinOfClusters;
     };
 
-    StateForAnArea& operator[](size_t index);
+    StateForAnArea& operator[](size_t areaIndex);
 
 private:
     std::vector<StateForAnArea> thermal;

@@ -292,6 +292,7 @@ public:
     {
         // Useful local variables
         auto area = state.area;
+        auto& thermal = state.thermal;
         double* areaMarginalCosts = state.hourlyResults->CoutsMarginauxHoraires;
         uint hourInTheWeek = state.hourInTheWeek;
         uint hourInTheYear = state.hourInTheYear;
@@ -301,7 +302,7 @@ public:
         {
             auto* cluster = state.area->thermal.clusters[clusterIndex];
             double hourlyClusterProduction
-              = state.thermal[area->index].thermalClustersProductions[clusterIndex];
+              = thermal[area->index].thermalClustersProductions[clusterIndex];
             // Thermal cluster profit
             pValuesForTheCurrentYear[numSpace][cluster->areaWideIndex].hour[hourInTheYear]
               = (hourlyClusterProduction - cluster->PthetaInf[hourInTheYear])

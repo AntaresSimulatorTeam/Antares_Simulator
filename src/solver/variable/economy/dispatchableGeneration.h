@@ -266,12 +266,13 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         auto area = state.area;
+        auto& thermal = state.thermal;
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
             const auto* thermalCluster = area->thermal.clusters[clusterIndex];
             pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
-              += state.thermal[area->index].thermalClustersProductions[clusterIndex];
+              += thermal[area->index].thermalClustersProductions[clusterIndex];
         }
 
         // Next variable

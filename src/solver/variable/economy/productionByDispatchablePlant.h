@@ -336,7 +336,8 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        auto area = state.area;
+        auto& area = state.area;
+        auto& thermal = state.thermal;
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
@@ -344,11 +345,11 @@ public:
             // Production for this hour
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
               .hour[state.hourInTheYear]
-              += state.thermal[area->index].thermalClustersProductions[clusterIndex];
+              += thermal[area->index].thermalClustersProductions[clusterIndex];
 
             pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
                                               + state.hourInTheYear]
-              = state.thermal[area->index].PMinOfClusters[clusterIndex];
+              = thermal[area->index].PMinOfClusters[clusterIndex];
         }
 
         // Next variable
