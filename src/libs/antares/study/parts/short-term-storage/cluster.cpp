@@ -65,9 +65,9 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool STStorageCluster::validate(int simplexe)
+bool STStorageCluster::validate(int simplex)
 {
-    return properties.validate(simplexe) && series.validate();
+    return properties.validate(simplex) && series.validate();
 }
 
 bool STStorageCluster::loadSeries(const std::string& folder)

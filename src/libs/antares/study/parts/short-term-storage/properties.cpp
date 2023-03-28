@@ -121,7 +121,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-bool Properties::validate(int simplexe)
+bool Properties::validate(int simplex)
 {
     auto checkMandatory = [this](const auto& prop, const std::string& label) {
         if (!prop.has_value())
@@ -191,33 +191,35 @@ bool Properties::validate(int simplexe)
         if (initialLevel > capacity)
         {
             logs.warning() << "initiallevel for cluster: " << name
-                           << " should be inferior to reservoir capacity: " << capacity.value();
+                << " should be inferior to reservoir capacity: " << capacity.value();
             initialLevel = capacity;
         }
     }
 
-    if (simplexe == 1)
+    if (simplex == 1)
     {
         if (storagecycle.value() > 24 || storagecycle.value() < 1)
         {
-            logs.warning() << "simplexe optimzation range set to day: "
-            "storagecycle for cluster: " << name << " should be <= 24 and >= 1";
+            logs.warning() << "simplex optimization range set to day: "
+                "storagecycle for cluster: " << name << " should be <= 24 and >= 1";
+            logs.info() << "cycle duration set to 24";
             storagecycle = 24;
         }
     }
-    else if (simplexe == 2)
+    else if (simplex == 2)
     {
 
         if (storagecycle.value() > 168 || storagecycle.value() < 1)
         {
-            logs.warning() << "simplexe optimzation range set to week: "
-            "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
+            logs.warning() << "simplex optimization range set to week: "
+                "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
+            logs.info() << "cycle duration set to 24";
             storagecycle = 24;
         }
     }
     else
     {
-        logs.warning() << "Simplexe optimzation range value not recnognized";
+        logs.warning() << "Simplex optimization range value not recognized";
         return false;
     }
 
