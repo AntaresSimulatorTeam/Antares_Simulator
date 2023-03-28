@@ -33,6 +33,10 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+STStorageCluster::STStorageCluster() : series(std::make_shared<Series>())
+{
+}
+
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -72,8 +76,8 @@ bool STStorageCluster::validate(Antares::Data::SimplexOptimization simplex)
 
 bool STStorageCluster::loadSeries(const std::string& folder)
 {
-    bool ret = series.loadFromFolder(folder);
-    series.fillDefaultSeriesIfEmpty(); // fill series if no file series
+    bool ret = series->loadFromFolder(folder);
+    series->fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
 }
 

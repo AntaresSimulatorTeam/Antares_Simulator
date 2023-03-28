@@ -57,7 +57,7 @@ static void shortTermStorageLevelsRHS(
             const int globalIndex = storage.globalIndex;
             const int cnt
               = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex];
-            SecondMembre[cnt] = storage.inflows[pdtJour];
+            SecondMembre[cnt] = storage.series->inflows[pdtJour];
         }
     }
 }

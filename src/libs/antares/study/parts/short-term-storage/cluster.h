@@ -27,6 +27,7 @@
 
 #pragma once
 #include <string>
+#include <memory>
 #include <antares/inifile.h>
 #include "properties.h"
 #include "series.h"
@@ -37,13 +38,15 @@ class STStorageCluster
 {
 public:
     bool validate(Antares::Data::SimplexOptimization simplex);
+    STStorageCluster();
+    bool validate();
     bool loadFromSection(const IniFile::Section& section);
 
     bool loadSeries(const std::string& folder);
 
     std::string id;
 
-    Series series;
+    std::shared_ptr<Series> series;
     Properties properties;
 };
 } // namespace Antares::Data::ShortTermStorage
