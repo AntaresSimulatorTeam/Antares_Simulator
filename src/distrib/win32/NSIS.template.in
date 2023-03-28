@@ -64,7 +64,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "${PRODUCT_NAME} ${PRODUCT_A
 VIAddVersionKey /LANG=${LANG_ENGLISH} "Comments" ""
 VIAddVersionKey /LANG=${LANG_ENGLISH} "CompanyName" "${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalTrademarks" "Antares_Simulator is a trademark of RTE"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "? ${PRODUCT_PUBLISHER}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "© ${PRODUCT_PUBLISHER}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${PRODUCT_VERSION}"
 VIProductVersion "${CMAKE_VERSION}.0"
@@ -213,7 +213,7 @@ InstType "$(LngInstallLite)"
 
 
 LangString LngWelcome ${LANG_ENGLISH} "Welcome to the Antares_Simulator ${PRODUCT_VERSION} Setup Wizard"
-;LangString LngWelcome ${LANG_FRENCH} "Bienvenue ? l'assistant d'installation d'Antares ${PRODUCT_VERSION}"
+;LangString LngWelcome ${LANG_FRENCH} "Bienvenue dans l'assistant d'installation d'Antares ${PRODUCT_VERSION}"
 
 LangString LngWelcomeT ${LANG_ENGLISH} "This wizard will guide you through the installation of Antares_Simulator ${PRODUCT_VERSION}.$\r$\n$\r$\n$_CLICK"
 ;LangString LngWelcomeT ${LANG_FRENCH} "Cet assistant va vous guider au court de l'installation d'Antares ${PRODUCT_VERSION}.$\r$\n$\r$\n$_CLICK"
@@ -252,16 +252,16 @@ LangString LngDesktopLink ${LANG_ENGLISH} "Desktop Shortcut"
 ;LangString LngDesktopLink ${LANG_FRENCH}  "Raccourci sur le bureau"
 
 LangString LngResInstallDesktopLink ${LANG_ENGLISH} "Creating a Desktop Shortcut..."
-;LangString LngResInstallDesktopLink ${LANG_FRENCH}  "Cr?ation d'un Raccourci sur le bureau..."
+;LangString LngResInstallDesktopLink ${LANG_FRENCH}  "Création d'un Raccourci sur le bureau..."
 
 LangString LngResInstallMenuLink ${LANG_ENGLISH} "Creating a Menu Shortcut..."
-;LangString LngResInstallMenuLink ${LANG_FRENCH}  "Cr?ation d'un Raccourci dans le menu..."
+;LangString LngResInstallMenuLink ${LANG_FRENCH}  "Création d'un Raccourci dans le menu..."
 
 
 
 
 LangString LngInstallFull ${LANG_ENGLISH}  "Full (Recommended)"
-;LangString LngInstallFull ${LANG_FRENCH}   "Complet (Recommand?)"
+;LangString LngInstallFull ${LANG_FRENCH}   "Complet (Recommandé)"
 
 LangString LngInstallLite ${LANG_ENGLISH}  "Lite"
 ;LangString LngInstallLite ${LANG_FRENCH}   "Minimum"
@@ -333,7 +333,13 @@ ${MementoSection} "$(LngCoreFiles)" SecCore
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.png"
 	${File} "${ANTARES_BUILD_DIR}\ui\simulator\resources\images\misc" "*.gif"
 	${SetOutPath} "$INSTDIR\Resources\Help"
+	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "system-map-editor-reference-guide.pdf"
+	${FileOptionnal} "${ANTARES_BUILD_DIR}\ui\simulator\resources\help\"   "antares-examples-library.pdf"
 	
+	${SetOutPath} "$INSTDIR\Documentation"
+	CreateShortCut "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
+	CreateShortCut "$INSTDIR\\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
+
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares" "Antares Study ${CMAKE_SIMPLE_VERSION}"
 	${registerExtension} "$INSTDIR\bin\${ANTARES_BIN}" ".antares-output" "Antares Study Results ${CMAKE_SIMPLE_VERSION}"
 
@@ -386,8 +392,14 @@ ${MementoSection} "Menu Shortcuts" SecMenuShortcuts
 	SectionIn 1 2
 
 	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}"
+	CreateDirectory "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation"
 	${SetOutPath} "$INSTDIR\"
 	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk" "$INSTDIR\bin\${ANTARES_BIN}" "" "$INSTDIR\Resources\Icons\study.ico"
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-reference-guide.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk" "$INSTDIR\Resources\Help\data-organizer-troubleshooting.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\System Map Editor reference guide (PDF).lnk" "$INSTDIR\Resources\Help\system-map-editor-reference-guide.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk" "$INSTDIR\Resources\Help\antares-examples-library.pdf" "" ""
+	CreateShortCut "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Software License Agreement (PDF).lnk" "$INSTDIR\Resources\Help\software-license-agreement.pdf" "" ""
 ${Mementosectionend}
 
 
@@ -536,14 +548,27 @@ section Uninstall
 	delete "$INSTDIR\bin\${ANTARES_BIN}"
 	delete "$INSTDIR\antares-${CMAKE_SIMPLE_VERSION}-ui-simulator.lnk"
 	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Antares Simulator ${PRODUCT_VERSION}.lnk"
+	delete "$INSTDIR\Documentation\Data Organizer reference guide (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer reference guide (PDF).lnk"
+	delete "$INSTDIR\Documentation\Data Organizer troubleshooting (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Data Organizer troubleshooting (PDF).lnk"
+	delete "$INSTDIR\Documentation\System Map Editor reference guide (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\System Map Editor reference guide (PDF).lnk"
+	delete "$INSTDIR\Documentation\Examples library (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Examples library (PDF).lnk"
+	delete "$INSTDIR\Documentation\Software License Agreement (PDF).lnk"
+	delete "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation\Software License Agreement (PDF).lnk"
+	delete "$INSTDIR\Documentation\Flexnet License Administration (PDF).lnk"
 	
 	delete "$DESKTOP\Antares ${CMAKE_VERSION}.lnk"
 
+	rmdir "$INSTDIR\Documentation"
 	rmdir "$INSTDIR\Resources\Examples"
 	rmdir "$INSTDIR\Resources"
 	rmdir "$INSTDIR\bin"
 	rmdir "$INSTDIR"
 
+	rmdir "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}\Documentation"
 	rmdir "$SMPROGRAMS\RTE Antares ${PRODUCT_VERSION}"
 
 	# removing keys from the registry
