@@ -60,7 +60,6 @@
 #include "waterValue.h"
 #include "hydroCost.h"
 #include "shortTermStorage.h"
-#include "shortTermStorageLevels.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
@@ -152,8 +151,7 @@ typedef          // Prices
                      <Overflows          // Hydraulic overflows
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
-                        <ShortTermStorageEnergy
-                        <ShortTermStorageLevels
+                        <ShortTermStorageByGroup
                         <STstorageInjectionByCluster
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
@@ -175,7 +173,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -230,9 +228,7 @@ typedef // Prices
                                           Common::SpatialAggregate<
                                             HydroCost,
                                             Common::SpatialAggregate <
-                                              ShortTermStorageEnergy,
-                                            Common::SpatialAggregate <
-                                              ShortTermStorageLevels,
+                                              ShortTermStorageByGroup,
                                             Common::SpatialAggregate<
                                               UnsupliedEnergy,
                                               Common::SpatialAggregate<
@@ -272,7 +268,7 @@ typedef // Prices
                                                                                           // -
                                                                                           // refs:
                                                                                           // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

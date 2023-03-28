@@ -28,20 +28,14 @@
 
 #include "../variable.h"
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Variable
-{
-namespace Economy
+namespace Antares::Solver::Variable::Economy
 {
 struct VCardSTstorageInjectionByCluster
 {
     //! Caption
     static const char* Caption()
     {
-        return "ST storage injection by plant";
+        return "STS inj by plant";
     }
     //! Unit
     static const char* Unit()
@@ -340,7 +334,4 @@ private:
 
 }; // class STstorageInjectionByCluster
 
-} // namespace Economy
-} // namespace Variable
-} // namespace Solver
-} // namespace Antares
+} // End namespace Antares::Solver::Variable::Economy

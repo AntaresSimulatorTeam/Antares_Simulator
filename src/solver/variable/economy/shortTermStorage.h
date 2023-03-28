@@ -30,7 +30,7 @@
 
 namespace Antares::Solver::Variable::Economy
 {
-struct VCardShortTermStorageEnergy
+struct VCardShortTermStorage
 {
     //! Caption
     static const char* Caption()
@@ -58,7 +58,7 @@ struct VCardShortTermStorageEnergy
       ResultsType;
 
     //! The VCard to look for for calculating spatial aggregates
-    typedef VCardShortTermStorageEnergy VCardForSpatialAggregate;
+    typedef VCardShortTermStorage VCardForSpatialAggregate;
 
     enum
     {
@@ -73,7 +73,7 @@ struct VCardShortTermStorageEnergy
         //! Decimal precision
         decimal = 0,
         //! Number of columns used by the variable (One ResultsType per column)
-        columnCount = 18,
+        columnCount = 27,
         //! The Spatial aggregation
         spatialAggregate = Category::spatialAggregateSum,
         spatialAggregateMode = Category::spatialAggregateEachYear,
@@ -100,37 +100,55 @@ struct VCardShortTermStorageEnergy
             case 1:
                 return "PSP_open_withdrawal";
             case 2:
-                return "PSP_closed_injection";
+                return "PSP_open_level";
             case 3:
-                return "PSP_closed_withdrawal";
+                return "PSP_closed_injection";
             case 4:
-                return "Pondage_injection";
+                return "PSP_closed_withdrawal";
             case 5:
-                return "Pondage_withdrawal";
+                return "PSP_closed_level";
             case 6:
-                return "Battery_injection";
+                return "Pondage_injection";
             case 7:
-                return "Battery_withdrawal";
+                return "Pondage_withdrawal";
             case 8:
-                return "Other1_injection";
+                return "Pondage_level";
             case 9:
-                return "Other1_withdrawal";
+                return "Battery_injection";
             case 10:
-                return "Other2_injection";
+                return "Battery_withdrawal";
             case 11:
-                return "Other2_withdrawal";
+                return "Battery_level";
             case 12:
-                return "Other3_injection";
+                return "Other1_injection";
             case 13:
-                return "Other3_withdrawal";
+                return "Other1_withdrawal";
             case 14:
-                return "Other4_injection";
+                return "Other1_level";
             case 15:
-                return "Other4_withdrawal";
+                return "Other2_injection";
             case 16:
-                return "Other5_injection";
+                return "Other2_withdrawal";
             case 17:
+                return "Other2_level";
+            case 18:
+                return "Other3_injection";
+            case 19:
+                return "Other3_withdrawal";
+            case 20:
+                return "Other3_level";
+            case 21:
+                return "Other4_injection";
+            case 22:
+                return "Other4_withdrawal";
+            case 23:
+                return "Other4_level";
+            case 24:
+                return "Other5_injection";
+            case 25:
                 return "Other5_withdrawal";
+            case 26:
+                return "Other5_level";
 
             default:
                 return "<unknown>";
@@ -140,16 +158,16 @@ struct VCardShortTermStorageEnergy
 }; // class VCard
 
 template<class NextT = Container::EndOfList>
-class ShortTermStorageEnergy
- : public Variable::IVariable<ShortTermStorageEnergy<NextT>, NextT, VCardShortTermStorageEnergy>
+class ShortTermStorageByGroup
+ : public Variable::IVariable<ShortTermStorageByGroup<NextT>, NextT, VCardShortTermStorage>
 {
 public:
     //! Type of the next static variable
     typedef NextT NextType;
     //! VCard
-    typedef VCardShortTermStorageEnergy VCardType;
+    typedef VCardShortTermStorage VCardType;
     //! Ancestor
-    typedef Variable::IVariable<ShortTermStorageEnergy<NextT>, NextT, VCardType> AncestorType;
+    typedef Variable::IVariable<ShortTermStorageByGroup<NextT>, NextT, VCardType> AncestorType;
 
     //! List of expected results
     typedef typename VCardType::ResultsType ResultsType;
@@ -176,7 +194,7 @@ public:
     };
 
 public:
-    ~ShortTermStorageEnergy()
+    ~ShortTermStorageByGroup()
     {
         delete[] pValuesForTheCurrentYear;
     }
@@ -217,8 +235,24 @@ public:
 
     void yearEnd(unsigned int year, unsigned int numSpace)
     {
-        VariableAccessorType::template ComputeStatistics<VCardType>(
-          pValuesForTheCurrentYear[numSpace]);
+        // Here we perform time-aggregations :
+        // ---------------------------------
+        // for a given MC year, from hourly results we compute daily, weekly, monthly and annual 
+        // results by aggregation operations (averages or sums).
+        // Caution : 
+        //  - level results are stored in columns of which indices satisfy : col_index % 3 == 1.
+        //    They are time-aggregated by means of averages
+        //  - injection and withdrawal results are stored in columns of which indices 
+        //    satisfy : col_index % 3 != 1.
+        //    They are time-aggregated by means of sums.
+
+        for (unsigned int col_index = 0; col_index != VCardType::columnCount; ++col_index)
+        {
+            if (col_index % 3 == 1)
+                pValuesForTheCurrentYear[numSpace][col_index].computeAveragesForCurrentYearFromHourlyResults();
+            else
+                pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
+        }
 
         // Next variable
         NextType::yearEnd(year, numSpace);
@@ -227,28 +261,44 @@ public:
     void computeSummary(std::map<unsigned int, unsigned int>& numSpaceToYear,
                         unsigned int nbYearsForCurrentSummary)
     {
+        // Here we compute synthesis : 
+        //  for each interval of any time period results (hourly, daily, weekly, ...),
+        //  we compute the average over all MC years :
+        //  For instance :
+        //      - we compute the average of the results of the first hour over all MC years
+        //      - or we compute the average of the results of the n-th day over all MC years
         for (unsigned int numSpace = 0; numSpace < nbYearsForCurrentSummary; ++numSpace)
-            VariableAccessorType::ComputeSummary(
-              pValuesForTheCurrentYear[numSpace], AncestorType::pResults, numSpaceToYear[numSpace]);
+        {
+            VariableAccessorType::ComputeSummary(pValuesForTheCurrentYear[numSpace],
+                                                 AncestorType::pResults,
+                                                 numSpaceToYear[numSpace]);
+        }
+
         // Next variable
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
+        using namespace Antares::Data::ShortTermStorage;
         for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
             const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
-            const uint group
-              = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
+            const uint group = groupIndex(cluster->properties.group);
 
             // Injection
-            pValuesForTheCurrentYear[numSpace][2 * group][state.hourInTheYear]
+            pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]
               += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
 
             // Withdrawal
-            pValuesForTheCurrentYear[numSpace][2 * group + 1][state.hourInTheYear]
-              = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
+            pValuesForTheCurrentYear[numSpace][3 * group + 1][state.hourInTheYear]
+              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
+
+            // Levels
+            double capacity = cluster->properties.capacity.value();
+            pValuesForTheCurrentYear[numSpace][3 * group + 2][state.hourInTheYear]
+              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex]
+                 * capacity;
         }
 
         // Next item in the list
@@ -288,6 +338,6 @@ private:
     typename VCardType::IntermediateValuesType pValuesForTheCurrentYear;
     unsigned int pNbYearsParallel;
 
-}; // class ShortTermStorageEnergy
+}; // class ShortTermStorageByGroup
 
 } // namespace Antares::Solver::Variable::Economy
