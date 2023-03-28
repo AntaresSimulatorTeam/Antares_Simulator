@@ -167,15 +167,10 @@ struct PROPERTIES
     double injectionCapacity;
     double withdrawalCapacity;
     double efficiency;
-
     std::optional<double> initialLevel;
 
-    // TODO[FOM] move to better place
-    const double* inflows;
-    const double* withdrawalModulation;
-    const double* injectionModulation;
-    const double* lowerRuleCurve;
-    const double* upperRuleCurve;
+    std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
+
     int globalIndex;
 };
 
