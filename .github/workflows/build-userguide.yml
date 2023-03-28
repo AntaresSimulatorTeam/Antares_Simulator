@@ -49,6 +49,12 @@ jobs:
         mv antaressimulatoruserguide.pdf $PDF_NAME
         echo "PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME" >> $GITHUB_ENV
 
+    - name: user guide upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: pdf-reference-guide
+        path: ${{env.PDF_PATH}}
+
     - name: Upload user guide as release asset
       if: ${{ env.IS_RELEASE == 'true' }}
       uses: alexellis/upload-assets@0.4.0
