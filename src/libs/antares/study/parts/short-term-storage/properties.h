@@ -30,6 +30,7 @@
 #include <string>
 #include <map>
 
+#include <antares/study/parameters.h>
 #include <antares/inifile.h>
 
 namespace Antares::Data::ShortTermStorage
@@ -52,7 +53,7 @@ unsigned int groupIndex(Group group);
 class Properties
 {
 public:
-    bool validate(int simplex);
+    bool validate(Antares::Data::SimplexOptimization simplex);
     bool loadKey(const IniFile::Property* p);
     // Not optional   Injection nominal capacity, >= 0
     std::optional<double> injectionCapacity;

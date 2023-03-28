@@ -36,7 +36,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STStorageInput::validate(int simplex) const
+bool STStorageInput::validate(Antares::Data::SimplexOptimization simplex) const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(), [&simplex](auto& cluster) {
         return cluster->validate(simplex);

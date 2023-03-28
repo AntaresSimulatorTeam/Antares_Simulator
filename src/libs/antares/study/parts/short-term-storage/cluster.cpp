@@ -65,7 +65,7 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
     return true;
 }
 
-bool STStorageCluster::validate(int simplex)
+bool STStorageCluster::validate(Antares::Data::SimplexOptimization simplex)
 {
     return properties.validate(simplex) && series.validate();
 }
