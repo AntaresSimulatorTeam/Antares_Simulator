@@ -5,6 +5,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
+#include <random>
 #include <fstream>
 
 #include <study.h>
@@ -42,6 +43,20 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
     outfile.close();
 }
 
+void createIndividualFileSeries(const std::string& path, unsigned int size)
+{
+    std::default_random_engine rnd{std::random_device{}()};
+    std::uniform_real_distribution<double> dist(0, 1);
+
+    std::ofstream outfile;
+    outfile.open(path, std::ofstream::out | std::ofstream::trunc);
+
+    for (unsigned int i = 0; i < size; i++)
+        outfile << dist(rnd) << std::endl;
+
+    outfile.close();
+}
+
 void createFileSeries(double value, unsigned int size)
 {
     std::string folder = getFolder();
@@ -51,6 +66,17 @@ void createFileSeries(double value, unsigned int size)
     createIndividualFileSeries(folder + SEP + "inflows.txt", value, size);
     createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", value, size);
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", value, size);
+}
+
+void createFileSeries(unsigned int size)
+{
+    std::string folder = getFolder();
+
+    createIndividualFileSeries(folder + SEP + "PMAX-injection.txt", size);
+    createIndividualFileSeries(folder + SEP + "PMAX-withdrawal.txt", size);
+    createIndividualFileSeries(folder + SEP + "inflows.txt", size);
+    createIndividualFileSeries(folder + SEP + "lower-rule-curve.txt", size);
+    createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
 }
 
 void removeFileSeries()
@@ -169,6 +195,18 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
     BOOST_CHECK(series.validate());
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
         && series.upperRuleCurve[1343] == 1);
+
+    removeFileSeries();
+}
+
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_random_value)
+{
+    std::string folder = getFolder();
+
+    createFileSeries(8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
 
     removeFileSeries();
 }
