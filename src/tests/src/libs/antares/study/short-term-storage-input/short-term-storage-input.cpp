@@ -34,8 +34,7 @@ void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned 
 
 void createIndividualFileSeries(const std::string& path, double value, unsigned int size)
 {
-    std::ofstream outfile;
-    outfile.open(path, std::ofstream::out | std::ofstream::trunc);
+    std::ofstream outfile(path);
 
     for (unsigned int i = 0; i < size; i++)
         outfile << value << std::endl;
