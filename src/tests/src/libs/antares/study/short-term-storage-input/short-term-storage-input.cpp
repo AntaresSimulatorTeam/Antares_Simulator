@@ -156,8 +156,6 @@ struct Fixture
     Fixture& operator= (const Fixture && f) = delete;
     Fixture()
     {
-        cluster.series = series;
-        cluster.properties = properties;
     }
 
     ~Fixture() = default;
@@ -265,7 +263,7 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
     std::string folder = getFolder();
 
     BOOST_CHECK(cluster.loadSeries(folder));
-    BOOST_CHECK(cluster.series.validate());
+    BOOST_CHECK(cluster.series->validate());
 }
 
 BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
@@ -275,10 +273,10 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
     createFileSeries(0.5, 8760);
 
     BOOST_CHECK(cluster.loadSeries(folder));
-    BOOST_CHECK(cluster.series.validate());
-    BOOST_CHECK(cluster.series.maxWithdrawalModulation[0] == 0.5
-        && cluster.series.inflows[2756] == 0.5
-        && cluster.series.lowerRuleCurve[6392] == 0.5);
+    BOOST_CHECK(cluster.series->validate());
+    BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
+        && cluster.series->inflows[2756] == 0.5
+        && cluster.series->lowerRuleCurve[6392] == 0.5);
 
 
     removeFileSeries();
