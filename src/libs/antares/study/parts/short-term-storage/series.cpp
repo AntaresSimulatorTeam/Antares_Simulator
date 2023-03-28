@@ -44,6 +44,25 @@ bool Series::validate() const
         logs.warning() << "Size of series for short term storage is wrong";
         return false;
     }
+
+    auto checkVectPositive = [](std::vector<double> v) {
+        return std::count_if(v.begin(), v.end(), [](double d){ return d >= 0.0; });
+    };
+    if (!checkVectPositive(maxInjectionModulation) || !checkVectPositive(maxWithdrawalModulation))
+    {
+        logs.warning() << "Values for PMAX series should be positive";
+        return false;
+    }
+
+    auto checkVectBetween = [](std::vector<double> v) {
+        return std::count_if(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); });
+    };
+    if (!checkVectBetween(lowerRuleCurve) || !checkVectBetween(upperRuleCurve))
+    {
+        logs.warning() << "Values for rule curve series should be between 0 and 1";
+        return false;
+    }
+
     return true;
 }
 

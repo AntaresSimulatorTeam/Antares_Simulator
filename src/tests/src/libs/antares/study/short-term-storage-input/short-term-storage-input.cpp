@@ -19,7 +19,7 @@ using namespace Antares::Data;
 std::string getFolder()
 {
     std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    return tmpDir;
+    return tmpDir.string();
 }
 
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
@@ -178,7 +178,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
     createFileSeries(-247.0, 8760);
 
     BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(!series.validate());
 
     removeFileSeries();
 }
@@ -233,7 +233,7 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
 {
     std::string folder = getFolder();
 
-    createFileSeries(1829.21384, 8760);
+    createFileSeries(0.5, 8760);
 
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series.validate());
