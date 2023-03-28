@@ -104,7 +104,9 @@ set(SRC_VARIABLE_ECONOMY
 		economy/waterValue.h
 		economy/hydroCost.h
 		economy/shortTermStorage.h
-		economy/shortTermStorageLevels.h
+		economy/STStorageInjectionByCluster.h
+		economy/STStorageWithdrawalByCluster.h
+		economy/STStorageLevelsByCluster.h
 		economy/unsupliedEnergy.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
