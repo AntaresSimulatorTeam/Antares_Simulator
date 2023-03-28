@@ -489,53 +489,19 @@ static inline void WriteIndexHeaderToFileDescriptor(int precisionLevel,
     s += '\n';
 }
 
-uint initializeMaxVariables(uint maxVars, const Data::StudyRuntimeInfos* runtime)
-{
-    if (!runtime)
-        return maxVars;
-
-    // Adding new files / variables ? Change the values below to avoid maxVariables being too small
-
-    // TODO: count those variables at compile time / runtime
-    // using e.g VCardT::categoryDataLevel
-    const uint nbVariablesPerDetailThermalCluster = 4;
-    /*
-      - Production
-      - NODU,
-      - NP Costs
-      - Net profit
-    */
-    const uint nbVariablesPerDetailRenewableCluster = 1; // Production
-
-    // Max number of columns taken by an inequality binding constraint in a report
-    // (= output file). Here, this max is 4, and occurs in binding
-    // constraint synythesis reports.
-    const uint maxNbVariablesPerInequalityBindingConstraint = 4;
-
-    const auto max = [](uint a, uint b, uint c, uint d) { return std::max({a, b, c, d}); };
-
-    return max(maxVars,
-               static_cast<uint>(nbVariablesPerDetailThermalCluster
-                                 * runtime->maxThermalClustersForSingleArea),
-               static_cast<uint>(nbVariablesPerDetailRenewableCluster
-                                 * runtime->maxRenewableClustersForSingleArea),
-               maxNbVariablesPerInequalityBindingConstraint
-                 * runtime->getNumberOfInequalityBindingConstraints());
-}
-
-// TOFIX - MBO 02/06/2014 nombre de colonnes fonction du nombre de variables
-SurveyResults::SurveyResults(uint maxVars,
-                             const Data::Study& s,
+SurveyResults::SurveyResults(const Data::Study& s,
                              const String& o,
                              IResultWriter::Ptr writer) :
  data(s, o),
- maxVariables(initializeMaxVariables(maxVars, s.runtime)),
  yearByYearResults(false),
  isCurrentVarNA(nullptr),
  isPrinted(nullptr),
  pResultWriter(writer)
-{
+{    
     variableCaption.reserve(10);
+
+    maxVariables = s.parameters.variablesPrintInfo.getTotalMaxColumnsCount();
+    logs.debug() << "  (for " << maxVariables << " columns)";
 
     data.initialize(maxVariables);
     // logs.debug() << "  :: survey results: allocating "
