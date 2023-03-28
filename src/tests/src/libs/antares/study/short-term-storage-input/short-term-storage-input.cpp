@@ -167,6 +167,8 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
+    BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
+        && series.upperRuleCurve[1343] == 1);
 
     removeFileSeries();
 }
@@ -237,6 +239,10 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
 
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series.validate());
+    BOOST_CHECK(cluster.series.maxWithdrawalModulation[0] == 0.5
+        && cluster.series.inflows[2756] == 0.5
+        && cluster.series.lowerRuleCurve[6392] == 0.5);
+
 
     removeFileSeries();
 }
