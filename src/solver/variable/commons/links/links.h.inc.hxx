@@ -165,7 +165,7 @@ public:
     void hourBegin(uint hourInTheYear);
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
-    void hourForClusters(State& state, uint numSpace) const;
+    void hourForClusters(const State& state, uint numSpace) const;
 
     void hourEnd(State& state, uint hourInTheYear);
 
