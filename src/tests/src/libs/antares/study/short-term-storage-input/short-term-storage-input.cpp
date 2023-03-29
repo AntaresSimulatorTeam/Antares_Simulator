@@ -193,6 +193,17 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
         && series.upperRuleCurve[1343] == 1);
 
+    std::ifstream infile(folder + SEP + "inflows.txt");
+    if (!infile.is_open())
+        std::cout << "File not oppened";
+
+    std::string line;
+    int count = 0;
+    while (std::getline(infile, line))
+    {
+        std::cout << count++ << " : " << line << std::endl;
+    }
+    infile.close();
     removeFileSeries();
 }
 
