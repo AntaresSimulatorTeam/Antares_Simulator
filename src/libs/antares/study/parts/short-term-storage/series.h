@@ -46,6 +46,6 @@ public:
     std::vector<double> upperRuleCurve;
 
 private:
-    bool loadVector(const std::string& path, std::vector<double>& vect);
+    bool loadVector(const std::string& path, std::vector<double>& vect) const;
 };
 } // namespace Antares::Data::ShortTermStorage
