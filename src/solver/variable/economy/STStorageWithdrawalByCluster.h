@@ -132,7 +132,7 @@ public:
     {
         if (u.area)
         {
-            for (unsigned int i = 0; i != u.area->shortTermStorage.storagesByIndex.size(); ++i)
+            for (unsigned int i = 0; i != u.area->shortTermStorage.count(); ++i)
             {
                 Solver::Variable::IntermediateValues::EstimateMemoryUsage(u);
                 ResultsType::EstimateMemoryUsage(u);
@@ -174,7 +174,7 @@ public:
         pValuesForTheCurrentYear = new VCardType::IntermediateValuesBaseType[pNbYearsParallel];
 
         // Get the area
-        nbClusters_ = area->shortTermStorage.storagesByIndex.size();
+        nbClusters_ = area->shortTermStorage.count();
         if (nbClusters_)
         {
             AncestorType::pResults.resize(nbClusters_);
@@ -264,7 +264,7 @@ public:
 
     void hourForClusters(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.storagesByIndex.size();
+        for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
             ++clusterIndex)
         {
             // ST storage withdrawal for the current cluster and this hour
