@@ -19,8 +19,14 @@ using namespace Antares::Data;
 
 std::string getFolder()
 {
-    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-    return tmpDir.string();
+    std::string ret = "";
+    try
+    {
+        std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+        ret = tmpDir.string();
+    }
+    catch (const std::exception&) {}
+    return ret;
 }
 
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)

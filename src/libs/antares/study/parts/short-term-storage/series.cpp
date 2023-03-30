@@ -94,10 +94,10 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
         return true;
     }
 
+    unsigned int lineCount = 0;
     std::string line;
     try
     {
-        unsigned int lineCount = 0;
         while (getline(file, line) && lineCount < HOURS_PER_YEAR)
         {
             double d = std::stod(line);
@@ -118,13 +118,13 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     catch (const std::invalid_argument& ex)
     {
         logs.error() << "Failed reading file: " << path << " conversion to double failed at line "
-            << line;
+            << lineCount + 1 << "  value: " << line;
         return false;
     }
     catch (const std::out_of_range& ex)
     {
         logs.error() << "Failed reading file: " << path << " value is out of bounds at line "
-            << line;
+            << lineCount + 1 << "  value: " << line;
         return false;
     }
     return true;
