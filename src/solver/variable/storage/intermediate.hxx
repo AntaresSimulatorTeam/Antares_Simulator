@@ -74,15 +74,8 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
 {
     if (!(fileLevel & Category::id))
     {
-        if (fileLevel & Category::mc)
+        switch (precision)
         {
-            // Do nothing
-            // internalExportAnnualValuesMC<1, VCardT>(report, avgdata.year);
-        }
-        else
-        {
-            switch (precision)
-            {
             case Category::hourly:
                 internalExportAnnualValues<maxHoursInAYear, VCardT>(report, hour, false);
                 break;
@@ -98,7 +91,6 @@ inline void IntermediateValues::buildAnnualSurveyReport(SurveyResults& report,
             case Category::annual:
                 internalExportAnnualValues<1, VCardT>(report, &year, true);
                 break;
-            }
         }
     }
 }

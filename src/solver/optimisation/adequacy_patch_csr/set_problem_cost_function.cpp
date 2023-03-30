@@ -106,7 +106,7 @@ void HourlyCSRProblem::setLinearCost()
     //  => quadratic cost: 0
     //  => linear cost: hurdle_cost_direct or hurdle_cost_indirect
     // these members of objective functions are considered only if IntercoGereeAvecDesCouts =
-    // OUI_ANTARES (use hurdle cost option is true). otherwise these members are zero.
+    // true (use hurdle cost option is true). otherwise these members are zero.
 
     for (int Interco = 0; Interco < problemeHebdo_->NombreDInterconnexions; Interco++)
     {
@@ -132,7 +132,7 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutOrigineVersExtremiteDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+            if (!TransportCost->IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]
@@ -144,7 +144,7 @@ void HourlyCSRProblem::setLinearCost()
                 ->NumeroDeVariableCoutExtremiteVersOrigineDeLInterconnexion[Interco];
         if (var >= 0 && var < problemeAResoudre_.NombreDeVariables)
         {
-            if (TransportCost->IntercoGereeAvecDesCouts == NON_ANTARES)
+            if (!TransportCost->IntercoGereeAvecDesCouts)
                 problemeAResoudre_.CoutLineaire[var] = 0;
             else
                 problemeAResoudre_.CoutLineaire[var]

@@ -44,8 +44,7 @@ inline Links::Links()
 
 inline void Links::initializeFromStudy(Data::Study& study)
 {
-    // Do nothing but resetting the pointer on print info collection
-    study.parameters.variablesPrintInfo.resetInfoIterator();
+    // Do nothing
 }
 
 inline void Links::initializeFromAreaLink(Data::Study*, Data::AreaLink*)
@@ -68,6 +67,12 @@ inline void Links::getPrintStatusFromStudy(Data::Study& study)
 {
     for (uint i = 0; i != pLinkCount; ++i)
         pLinks[i].getPrintStatusFromStudy(study);
+}
+
+inline void Links::supplyMaxNumberOfColumns(Data::Study& study)
+{
+    for (uint i = 0; i != pLinkCount; ++i)
+        pLinks[i].supplyMaxNumberOfColumns(study);
 }
 
 inline void Links::yearBegin(uint year, unsigned int numSpace)
@@ -320,7 +325,7 @@ inline void Links::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
         // year-by-year
         if (!u.gatheringInformationsForInput)
         {
-            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            if (u.study.parameters.yearByYear)
             {
                 for (uint i = 0; i != u.years; ++i)
                     u.overheadDiskSpaceForSingleAreaOrLink();

@@ -55,7 +55,7 @@ inline void IVariable<ChildT, NextT, VCardT>::EstimateMemoryUsage(Data::StudyMem
         // Year-by-year
         if (!u.gatheringInformationsForInput)
         {
-            if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+            if (u.study.parameters.yearByYear)
             {
                 for (uint i = 0; i != u.years; ++i)
                     u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
@@ -152,63 +152,7 @@ inline void IVariable<ChildT, NextT, VCardT>::broadcastNonApplicability(bool app
     NextType::broadcastNonApplicability(applyNonApplicable);
 }
 
-// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current
-// VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
-namespace // anonymous
-{
-// Case : the variable is multiple
-template<int ColumnT, class VCardT>
-class GetPrintStatusHelper
-{
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
-    {
-        for (uint i = 0; i != VCardT::columnCount; ++i)
-        {
-            // Shifting inside the variables print info collection until reaching the print info
-            // associated with the current name, and then getting its print status.
-            isPrinted[i] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-              VCardT::Multiple::Caption(i));
-        }
-    }
-};
 
-// Case : the variable is single
-template<class VCardT>
-class GetPrintStatusHelper<1, VCardT>
-{
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
-    {
-        // Shifting inside the variables print info collection until reaching the print info
-        // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-          VCardT::Caption());
-    }
-};
-
-// Case : the variable is dynamic
-template<class VCardT>
-class GetPrintStatusHelper<-1, VCardT>
-{
-public:
-    static void Do(Data::Study& study, bool* isPrinted)
-    {
-        // Shifting inside the variables print info collection until reaching the print info
-        // associated with the current name, and then getting its print status.
-        isPrinted[0] = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus(
-          VCardT::Caption());
-    }
-};
-} // namespace
-
-template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Study& study)
-{
-    GetPrintStatusHelper<VCardType::columnCount, VCardType>::Do(study, isPrinted);
-    // Go to the next variable
-    NextType::getPrintStatusFromStudy(study);
-}
 
 template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::simulationBegin()
@@ -221,6 +165,11 @@ template<class ChildT, class NextT, class VCardT>
 inline void IVariable<ChildT, NextT, VCardT>::simulationEnd()
 {
     NextType::simulationEnd();
+}
+template<class ChildT, class NextT, class VCardT>
+uint IVariable<ChildT, NextT, VCardT>::getMaxNumberColumns() const
+{
+    return VCardT::ResultsType::count;
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -610,7 +559,7 @@ struct HourlyResultsForCurrentYear
 };
 
 template<>
-struct HourlyResultsForCurrentYear<1>
+struct HourlyResultsForCurrentYear<Category::singleColumn>
 {
     template<class R>
     static Antares::Memory::Stored<double>::ConstReturnType Get(const R& results, uint)
@@ -620,7 +569,7 @@ struct HourlyResultsForCurrentYear<1>
 };
 
 template<>
-struct HourlyResultsForCurrentYear<0>
+struct HourlyResultsForCurrentYear<Category::noColumn>
 {
     template<class R>
     static Antares::Memory::Stored<double>::ConstReturnType Get(const R&, uint)
@@ -646,6 +595,11 @@ inline const typename Storage<VCardT>::ResultsType& IVariable<ChildT, NextT, VCa
     return pResults;
 }
 
+
+// ===================================================================
+// Each output variable gets registered in the print info collector
+// ===================================================================
+
 // class RetrieveVariableListHelper goes with function RetrieveVariableList(...).
 // This class is used to make a different Do(...) treatment depending on current
 // VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
@@ -669,7 +623,6 @@ public:
         for (int i = 0; i < VCardT::columnCount; ++i)
         {
             printInfoCollector.add(VCardT::Multiple::Caption(i),
-                                   VCardT::ResultsType::count,
                                    VCardT::categoryDataLevel,
                                    VCardT::categoryFileLevel);
         }
@@ -677,7 +630,7 @@ public:
 };
 
 template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<1, VCardT, ChildT>
+class RetrieveVariableListHelper<Category::singleColumn, VCardT, ChildT>
 {
 public:
     template<class PredicateT>
@@ -691,14 +644,13 @@ public:
     static void Do(Data::variablePrintInfoCollector& printInfoCollector)
     {
         printInfoCollector.add(VCardT::Caption(),
-                               VCardT::ResultsType::count,
                                VCardT::categoryDataLevel,
                                VCardT::categoryFileLevel);
     }
 };
 
 template<class VCardT, class ChildT>
-class RetrieveVariableListHelper<-1, VCardT, ChildT>
+class RetrieveVariableListHelper<Category::dynamicColumns, VCardT, ChildT>
 {
 public:
     template<class PredicateT>
@@ -711,7 +663,6 @@ public:
     static void Do(Data::variablePrintInfoCollector& printInfoCollector)
     {
         printInfoCollector.add(VCardT::Caption(),
-                               VCardT::ResultsType::count,
                                VCardT::categoryDataLevel,
                                VCardT::categoryFileLevel);
     }
@@ -726,6 +677,123 @@ void IVariable<ChildT, NextT, VCardT>::RetrieveVariableList(PredicateT& predicat
     RetrieveVariableListHelper<VCardType::columnCount, VCardType, ChildT>::Do(predicate);
     // Go to the next variable
     NextType::RetrieveVariableList(predicate);
+}
+
+
+// ============================================================================= 
+// Each output variable gets its print status from the study parameters
+// =============================================================================
+
+// The class GetPrintStatusHelper is used to make a different Do(...) treatment depending on current
+// VCardType::columnCount. Recall that a variable can be single, dynamic or multiple.
+namespace // anonymous
+{
+    // Case : the variable is multiple
+    template<int ColumnT, class VCardT>
+    class GetPrintStatusHelper
+    {
+    public:
+        static void Do(Data::Study& study, bool* isPrinted)
+        {
+            for (uint i = 0; i != VCardT::columnCount; ++i)
+            {
+                // Shifting inside the variables print info collection until reaching the print info
+                // associated with the current name, and then getting its print status.
+                isPrinted[i] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Multiple::Caption(i));
+            }
+        }
+    };
+
+    // Case : the variable is single
+    template<class VCardT>
+    class GetPrintStatusHelper<Category::singleColumn, VCardT>
+    {
+    public:
+        static void Do(Data::Study& study, bool* isPrinted)
+        {
+            // Shifting inside the variables print info collection until reaching the print info
+            // associated with the current name, and then getting its print status.
+            isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
+        }
+    };
+
+    // Case : the variable is dynamic
+    template<class VCardT>
+    class GetPrintStatusHelper<Category::dynamicColumns, VCardT>
+    {
+    public:
+        static void Do(Data::Study& study, bool* isPrinted)
+        {
+            // Shifting inside the variables print info collection until reaching the print info
+            // associated with the current name, and then getting its print status.
+            isPrinted[0] = study.parameters.variablesPrintInfo.isPrinted(VCardT::Caption());
+        }
+    };
+} // namespace
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::getPrintStatusFromStudy(Data::Study& study)
+{
+    GetPrintStatusHelper<VCardType::columnCount, VCardType>::Do(study, isPrinted);
+    // Go to the next variable
+    NextType::getPrintStatusFromStudy(study);
+}
+
+
+
+// =======================================================================
+// Each output variable supplies the maximum number of columns it takes 
+// in an ouptut report to the variable print info instance
+// =======================================================================
+
+// The class SupplyMaxNbColumnsHelper is used to make a different Do(...) treatment depending on current
+// VCardType::columnCount : recall that a variable can be single, dynamic or multiple.
+namespace // anonymous
+{
+    // Case : the variable is multiple
+    template<int ColumnT, class VCardT>
+    class SupplyMaxNbColumnsHelper
+    {
+    public:
+        static void Do(Data::Study& study, uint maxNumberColumns)
+        {
+            for (uint i = 0; i != VCardT::columnCount; ++i)
+            {
+                study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Multiple::Caption(i), maxNumberColumns);
+            }
+        }
+    };
+
+    // Case : the variable is single
+    template<class VCardT>
+    class SupplyMaxNbColumnsHelper<Category::singleColumn, VCardT>
+    {
+    public:
+        static void Do(Data::Study& study, uint maxNumberColumns)
+        {
+            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
+        }
+    };
+
+    // Case : the variable is dynamic
+    template<class VCardT>
+    class SupplyMaxNbColumnsHelper<Category::dynamicColumns, VCardT>
+    {
+    public:
+        static void Do(Data::Study& study, uint maxNumberColumns)
+        {
+            study.parameters.variablesPrintInfo.setMaxColumns(VCardT::Caption(), maxNumberColumns);
+        }
+    };
+} // namespace
+
+template<class ChildT, class NextT, class VCardT>
+inline void IVariable<ChildT, NextT, VCardT>::supplyMaxNumberOfColumns(Data::Study& study)
+{
+    uint max_columns = static_cast<const ChildT*>(this)->getMaxNumberColumns();
+    SupplyMaxNbColumnsHelper<VCardType::columnCount, VCardType>::Do(study, max_columns);
+    // Go to the next variable
+    NextType::supplyMaxNumberOfColumns(study);
 }
 
 } // namespace Variable

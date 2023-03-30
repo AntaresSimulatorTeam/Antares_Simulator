@@ -38,13 +38,13 @@
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams, uint numSpace)
 {
-    if (problemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
         if (problemeHebdo->TypeDOptimisation == OPTIMISATION_LINEAIRE)
         {
-            for (int Pays = 0; Pays < problemeHebdo->NombreDePays; Pays++)
+            for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
             {
-                problemeHebdo->CoutDeDefaillanceEnReserve[Pays] = 1.e+6;
+                problemeHebdo->CoutDeDefaillanceEnReserve[pays] = 1.e+6;
             }
 
             problemeHebdo->NombreDePasDeTempsRef = problemeHebdo->NombreDePasDeTemps;
@@ -53,7 +53,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
             problemeHebdo->NombreDeJours = (int)(problemeHebdo->NombreDePasDeTemps
                                                  / problemeHebdo->NombreDePasDeTempsDUneJournee);
 
-            if (problemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
+            if (!problemeHebdo->OptimisationAuPasHebdomadaire)
             {
                 problemeHebdo->NombreDePasDeTempsPourUneOptimisation
                   = problemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -69,7 +69,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
             OPT_ChainagesDesIntercoPartantDUnNoeud(problemeHebdo);
         }
 
-        problemeHebdo->LeProblemeADejaEteInstancie = OUI_ANTARES;
+        problemeHebdo->LeProblemeADejaEteInstancie = true;
     }
 
     OPT_VerifierPresenceReserveJmoins1(problemeHebdo);
@@ -82,7 +82,7 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchPar
 
     OPT_MaxDesPmaxHydrauliques(problemeHebdo);
 
-    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage == OUI_ANTARES)
+    if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
     {
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }

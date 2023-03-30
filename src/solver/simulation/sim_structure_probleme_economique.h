@@ -245,7 +245,7 @@ struct PALIERS_THERMIQUES
     double* CoutDeDemarrageDUnGroupeDuPalierThermique;
     double* CoutDArretDUnGroupeDuPalierThermique;
     double* CoutFixeDeMarcheDUnGroupeDuPalierThermique;
-    double* PminDUnGroupeDuPalierThermique;
+    double* pminDUnGroupeDuPalierThermique;
     double* PmaxDUnGroupeDuPalierThermique;
     int* DureeMinimaleDeMarcheDUnGroupeDuPalierThermique;
     int* DureeMinimaleDArretDUnGroupeDuPalierThermique;
@@ -270,8 +270,8 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double* MaxEnergiePompageParIntervalleOptimise;
     double* ContrainteDePmaxPompageHoraire;
 
-    char PresenceDePompageModulable;
-    char PresenceDHydrauliqueModulable;
+    bool PresenceDePompageModulable;
+    bool PresenceDHydrauliqueModulable;
 
     double PenalisationDeLaVariationDeProductionHydrauliqueSurSommeDesVariations;
     double PenalisationDeLaVariationDeProductionHydrauliqueSurVariationMax;
@@ -280,9 +280,9 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double WeeklyWaterValueStateUp;
     double WeeklyWaterValueStateDown;
 
-    char TurbinageEntreBornes;
-    char SansHeuristique;
-    char SuiviNiveauHoraire;
+    bool TurbinageEntreBornes;
+    bool SansHeuristique;
+    bool SuiviNiveauHoraire;
 
     double* NiveauHoraireSup;
     double* NiveauHoraireInf;
@@ -294,8 +294,8 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
 
     double WeeklyGeneratingModulation;
     double WeeklyPumpingModulation;
-    char DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
-    char AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
+    bool DirectLevelAccess; /*  determines the type of constraints bearing on the final stok level*/
+    bool AccurateWaterValue;     /*  determines the type of modelling used for water budget*/
     double LevelForTimeInterval; /*  value computed by the simulator in water-value based modes*/
     double* WaterLayerValues; /*  reference costs for the last time step (caution : dimension set to
                                  100, should be made dynamic)*/
@@ -437,8 +437,8 @@ struct RESULTATS_HORAIRES
 
 struct COUTS_DE_TRANSPORT
 {
-    char IntercoGereeAvecDesCouts;
-    char IntercoGereeAvecLoopFlow;
+    bool IntercoGereeAvecDesCouts;
+    bool IntercoGereeAvecLoopFlow;
     double* CoutDeTransportOrigineVersExtremite;
     double* CoutDeTransportExtremiteVersOrigine;
 
@@ -464,10 +464,10 @@ struct PROBLEME_HEBDO
     uint year = 0;
 
     /* Business problem */
-    char OptimisationAuPasHebdomadaire = NON_ANTARES;
+    bool OptimisationAuPasHebdomadaire = false;
     char TypeDeLissageHydraulique = PAS_DE_LISSAGE_HYDRAULIQUE;
-    char WaterValueAccurate = NON_ANTARES;
-    char OptimisationAvecCoutsDeDemarrage = NON_ANTARES;
+    bool WaterValueAccurate = false;
+    bool OptimisationAvecCoutsDeDemarrage = false;
     int NombreDePays = 0;
     const char** NomsDesPays = nullptr;
     int NombreDePaliersThermiques = 0;
@@ -503,9 +503,9 @@ struct PROBLEME_HEBDO
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
-    char* DefaillanceNegativeUtiliserPMinThermique = nullptr;
-    char* DefaillanceNegativeUtiliserHydro = nullptr;
-    char* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
+    bool* DefaillanceNegativeUtiliserPMinThermique = nullptr;
+    bool* DefaillanceNegativeUtiliserHydro = nullptr;
+    bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
     char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
@@ -524,7 +524,7 @@ struct PROBLEME_HEBDO
     bool ExportStructure = false;
 
     unsigned int HeureDansLAnnee = 0;
-    char LeProblemeADejaEteInstancie = 0;
+    bool LeProblemeADejaEteInstancie = false;
     bool firstWeekOfSimulation = false;
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
@@ -539,7 +539,7 @@ struct PROBLEME_HEBDO
     int* IndexDebutIntercoExtremite = nullptr;
     int* IndexSuivantIntercoExtremite = nullptr;
 
-    char Expansion = NON_ANTARES;
+    bool Expansion = false;
 
     int* NumeroDeContrainteEnergieHydraulique = nullptr;
     int* NumeroDeContrainteMinEnergieHydraulique = nullptr;
@@ -554,7 +554,7 @@ struct PROBLEME_HEBDO
     int* NumeroDeVariableStockFinal = nullptr;
     int** NumeroDeVariableDeTrancheDeStock = nullptr;
 
-    char YaDeLaReserveJmoins1 = NON_ANTARES;
+    bool YaDeLaReserveJmoins1 = false;
 
     double* previousYearFinalLevels = nullptr;
     ALL_MUST_RUN_GENERATION** AllMustRunGeneration = nullptr;

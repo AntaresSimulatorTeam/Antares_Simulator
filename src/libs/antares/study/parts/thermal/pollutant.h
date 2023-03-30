@@ -24,33 +24,46 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
+#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__
 
-#include "../application.h"
-#include "../simulation/solver.h"
-#include "../simulation/adequacy-draft.h"
-#include <antares/benchmarking.h>
-#include <antares/logs.h>
+#include <string>
+#include <array>
+#include <map>
 
-namespace Antares
+namespace Antares::Data
 {
-namespace Solver
-{
-void Application::runSimulationInAdequacyDraftMode()
-{
-    // Type of the simulation
-    typedef Solver::Simulation::ISimulation<Solver::Simulation::AdequacyDraft> SimulationType;
-    SimulationType simulation(*pStudy, pSettings, &pDurationCollector);
-    simulation.checkWriter();
-    simulation.run();
 
-    if (!(pSettings.noOutput || pSettings.tsGeneratorsOnly))
+class Pollutant
+{
+public:
+    enum PollutantEnum
     {
-        Benchmarking::Timer timer;
-        simulation.writeResults(/*synthesis:*/ true);
-        timer.stop();
-        pDurationCollector.addDuration("synthesis_export", timer.get_duration());
-    }
-}
+        CO2 = 0,
+        NH3,
+        SO2,
+        NOX,
+        PM2_5,
+        PM5,
+        PM10,
+        NMVOC,
+        OP1,
+        OP2,
+        OP3,
+        OP4,
+        OP5,
+        POLLUTANT_MAX
+    };
 
-} // namespace Solver
-} // namespace Antares
+    static const std::map<enum PollutantEnum, const std::string> pollutantNamesOutputVariables;
+    static const std::string& getPollutantName(int index);
+
+    static const std::map<std::string, enum PollutantEnum> namesToEnum;
+
+    std::array<double, POLLUTANT_MAX> factors{0};
+
+}; //class Pollutant
+
+} //namespace Antares::Data
+
+#endif /* __ANTARES_LIBS_STUDY_PARTS_THERMAL_POLLUTANT_H__ */

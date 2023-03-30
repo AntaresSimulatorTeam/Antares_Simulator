@@ -114,7 +114,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
     {
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = ProblemeAResoudre->X[i];
         }
@@ -127,7 +127,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudr
 
         for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
         {
-            double *pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
+            double* pt = ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i];
             if (pt)
                 *pt = std::numeric_limits<double>::quiet_NaN();
         }

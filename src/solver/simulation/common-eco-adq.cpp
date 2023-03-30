@@ -196,7 +196,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
     const bool flowQuadEnabled
-      = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+      = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 
@@ -229,7 +229,7 @@ void ComputeFlowQuad(Data::Study& study,
         logs.info() << "Post-processing... (quadratic optimisation)";
 
         problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
-        problem.LeProblemeADejaEteInstancie = NON_ANTARES;
+        problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);

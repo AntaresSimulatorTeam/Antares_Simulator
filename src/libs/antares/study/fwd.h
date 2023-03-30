@@ -103,8 +103,6 @@ enum StudyError
 enum StudyMode
 {
     stdmUnknown = -1,
-    //! Adequation
-    stdmAdequacyDraft = 0,
     //! Economic
     stdmEconomy,
     //! Adequacy (subset of the economy mode)
@@ -202,18 +200,6 @@ enum StyleType
 }; // enum StyleType
 
 std::string styleToString(const StyleType& style);
-
-/*!
-** \brief Link Type mode
-*/
-enum LinkType
-{
-    //! Link Type defined locally
-    ltLocal = 0,
-    //! Link Type AC
-    ltAC,
-
-}; // enum LinkType
 
 /*!
 ** \brief Types of timeSeries

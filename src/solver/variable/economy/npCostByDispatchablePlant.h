@@ -154,7 +154,7 @@ public:
                 // year-by-year
                 if (!u.gatheringInformationsForInput)
                 {
-                    if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
+                    if (u.study.parameters.yearByYear)
                     {
                         for (unsigned int i = 0; i != u.years; ++i)
                             u.takeIntoConsiderationANewTimeserieForDiskOutput(false);
@@ -218,6 +218,11 @@ public:
 
         // Next
         NextType::initializeFromArea(study, area);
+    }
+
+    uint getMaxNumberColumns() const
+    {
+        return pSize * ResultsType::count;
     }
 
     void initializeFromLink(Data::Study* study, Data::AreaLink* link)

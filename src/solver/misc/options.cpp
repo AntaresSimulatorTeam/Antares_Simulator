@@ -89,9 +89,6 @@ std::unique_ptr<GetOpt::Parser> CreateParser(Settings& settings,
     // --adequacy
     parser->addFlag(
       options.forceAdequacy, ' ', "adequacy", "Force the simulation in adequacy mode");
-    // --draft
-    parser->addFlag(
-      options.forceAdequacyDraft, ' ', "draft", "Force the simulation in adequacy-draft mode");
     // --parallel
     parser->addFlag(
       options.enableParallel, ' ', "parallel", "Enable the parallel computation of MC years");
