@@ -39,7 +39,7 @@ wxString SelectVariables::columnCaption(int) const
 
 wxString SelectVariables::rowCaption(int rowIndx) const
 {
-    return wxString(wxT(" ")) << study->parameters.variablesPrintInfo[rowIndx]->name() << wxT("  ");
+    return wxString(wxT(" ")) << study->parameters.variablesPrintInfo.name_of(rowIndx) << wxT("  ");
 }
 
 bool SelectVariables::cellValue(int, int var, const Yuni::String& value)
@@ -50,8 +50,7 @@ bool SelectVariables::cellValue(int, int var, const Yuni::String& value)
         s.trim();
         s.toLower();
         bool v = s.to<bool>() || s == "active" || s == "enabled";
-        assert(!study->parameters.variablesPrintInfo.isEmpty());
-        study->parameters.variablesPrintInfo[var]->enablePrint(v);
+        study->parameters.variablesPrintInfo.setPrintStatus(var, v);
         onTriggerUpdate();
         Dispatcher::GUI::Refresh(pControl);
         return true;
@@ -63,8 +62,7 @@ double SelectVariables::cellNumericValue(int, int var) const
 {
     if (!(!study) && (uint)var < study->parameters.variablesPrintInfo.size())
     {
-        assert(!study->parameters.variablesPrintInfo.isEmpty());
-        return study->parameters.variablesPrintInfo[var]->isPrinted();
+        return study->parameters.variablesPrintInfo[var].isPrinted();
     }
     return 0.;
 }
@@ -73,8 +71,7 @@ wxString SelectVariables::cellValue(int, int var) const
 {
     if (!(!study) && static_cast<uint>(var) < study->parameters.variablesPrintInfo.size())
     {
-        assert(!study->parameters.variablesPrintInfo.isEmpty());
-        return study->parameters.variablesPrintInfo[var]->isPrinted() ? wxT("Active") : wxT("skip");
+        return study->parameters.variablesPrintInfo[var].isPrinted() ? wxT("Active") : wxT("skip");
     }
     return wxEmptyString;
 }
@@ -83,8 +80,7 @@ IRenderer::CellStyle SelectVariables::cellStyle(int, int var) const
 {
     if (!(!study) && (uint)var < study->parameters.variablesPrintInfo.size())
     {
-        assert(!study->parameters.variablesPrintInfo.isEmpty());
-        return !study->parameters.variablesPrintInfo[var]->isPrinted()
+        return !study->parameters.variablesPrintInfo[var].isPrinted()
                  ? IRenderer::cellStyleConstraintNoWeight
                  : IRenderer::cellStyleConstraintWeight;
     }

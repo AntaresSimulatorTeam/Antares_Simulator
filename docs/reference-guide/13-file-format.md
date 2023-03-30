@@ -1,24 +1,22 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+
 ## v8.6.0
 ### Input
+In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
+
 For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;/list.ini**, under existing sections **&lt;cluster&gt;**, following properties added: 
 
 * `costgeneration` [string] can take values `useCostTimeseries` or be excluded from the section if `Set manually` is selected (default behavior).
 * `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
 
-For each thermal cluster, new files added **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**.
+For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**.
 
-For each thermal cluster, existing `Time-Series` tab changed name to `Availability [MW]` and moved all the way to the right.\
-For each thermal cluster, tabs `Fuel Cost [€/GJ]` and `CO2 Cost [€/ton]` added.
+### Output
+In files **economy/mc-all/areas/** add column: CO2 EMIS.
+One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
 
-For each thermal cluster, under existing `Common` tab, under `Operating parameters`, following properties added:
-* `Efficiency (%)` [float] default value 100.
-
-For each thermal cluster, under existing `Common` tab, under `Operating costs`, following properties added:
-* `Cost generation` [string] can take values `Set manually` (default value) or `Use cost timeseries`.
-* `Variable O&M cost (€/Mwh)` [float] default value 0.
 ## v8.5.2
 ### Input
 In file **settings/generaldata.ini**, in section `optimization`, link-type is now deprecated

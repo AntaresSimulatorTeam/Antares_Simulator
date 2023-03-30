@@ -187,12 +187,6 @@ static void optimisationAllocateProblem(PROBLEME_HEBDO* problemeHebdo, const int
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : " << NbTermes;
     logs.info();
 
-    if ((uint)NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
-    {
-        logs.fatal() << "Optimisation problem too large to be allocated.";
-        AntaresSolverEmergencyShutdown();
-    }
-
     OPT_AllocateFromNumberOfVariableConstraints(problemeHebdo->ProblemeAResoudre, NbTermes);
 
     int NbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
@@ -227,12 +221,6 @@ void OPT_AugmenterLaTailleDeLaMatriceDesContraintes(PROBLEME_ANTARES_A_RESOUDRE*
     logs.info() << " Expected Number of Non-zero terms in Problem Matrix : increased to : "
                 << NbTermes;
     logs.info();
-
-    if (NbTermes > (std::numeric_limits<std::size_t>::max() / 8) - 1)
-    {
-        logs.fatal() << "Optimisation problem too large to be allocated.";
-        AntaresSolverEmergencyShutdown();
-    }
 
     ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes = (double*)MemRealloc(
       ProblemeAResoudre->CoefficientsDeLaMatriceDesContraintes, NbTermes * sizeof(double));
