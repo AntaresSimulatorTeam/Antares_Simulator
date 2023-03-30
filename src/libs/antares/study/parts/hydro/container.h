@@ -39,22 +39,14 @@ namespace Antares::Data
  */
 class FinalReservoirLevelRuntimeData
 {
-private:
-    using finalResLevelMode = Antares::Data::FinalReservoirLevelMode;
-
 public:
     // FInal reservoir level runtime data
     std::vector<bool> includeFinalReservoirLevel;
-    std::vector<finalResLevelMode> finResLevelMode;
     std::vector<double> endLevel;
     std::vector<double> deltaLevel;
-    std::vector<uint> endMonthIndex;
 
     // Simulation Data
     uint simEndDay;
-    uint simEndMonth;
-    uint simEndMonth_FirstDay;
-    uint simEndMonth_LastDay;
 
     // simulation year
     uint yearIndex;
@@ -64,20 +56,17 @@ public:
     double finalReservoirLevel;
     double deltaReservoirLevel;
     double reservoirCapacity;
-    int initReservoirLvlMonth;
-    int initReservoirLvlDay;
     double lowLevelLastDay;
     double highLevelLastDay;
+    int initReservoirLvlMonth;
 
     // methods:
 
     void fillEmpty()
     {
         includeFinalReservoirLevel.push_back(false);
-        finResLevelMode.push_back(completeYear);
-        deltaLevel.push_back(0.);
         endLevel.push_back(0.);
-        endMonthIndex.push_back(0);
+        deltaLevel.push_back(0.);
     }
 
     void assignEndLevelAndDelta()
@@ -87,91 +76,24 @@ public:
         deltaLevel.at(yearIndex) = deltaReservoirLevel;
     }
 
-    int selectMode()
-    {
-        int simEndRealMonth = 0;
-        // Mode-1
-        if (initReservoirLvlDay == 0 && simEndDay == DAYS_PER_YEAR)
-        {
-            finResLevelMode.at(yearIndex) = completeYear;
-            return simEndRealMonth;
-        }
-        // Mode-2
-        else if (initReservoirLvlDay != 0 && simEndDay == DAYS_PER_YEAR)
-        {
-            finResLevelMode.at(yearIndex) = incompleteYear;
-            return simEndRealMonth;
-        }
-        // Mode-3/4
-        else
-        {
-            // select month in which to reach final reservoir level (1st day of the selected month)
-            simEndRealMonth
-              = (simEndDay - simEndMonth_FirstDay) <= (simEndMonth_LastDay - simEndDay)
-                  ? simEndMonth
-                  : simEndMonth + 1;
-            finResLevelMode.at(yearIndex) = incompleteYear;
-
-            if (simEndRealMonth == 12 && initReservoirLvlDay == 0)
-            {
-                simEndRealMonth = 0;
-                finResLevelMode.at(yearIndex) = completeYear;
-            }
-            // E.g. End Date = 21.Dec && InitReservoirLevelDate = 1.Jan ->
-            // - > go back to first case
-            else if (simEndRealMonth == 12 && initReservoirLvlDay != 0)
-                simEndRealMonth = 0;
-            // End Date = 21.Dec && InitReservoirLevelDate = 1.Mar
-            // Reach FinalReservoirLevel at 1.Jan
-            else if (simEndRealMonth == initReservoirLvlMonth && simEndDay >= initReservoirLvlDay)
-                simEndRealMonth = (simEndRealMonth + 1) % 12;
-            // E.g. End Date = 10.Jan && InitReservoirLevelDate = 1.Jan ->
-            // we need to move FinalReservoirLevel to 1.Feb.
-            // Cannot do both init and final on the same day
-            else if (simEndRealMonth == initReservoirLvlMonth && simEndDay < initReservoirLvlDay)
-                simEndRealMonth = (simEndRealMonth - 1) % 12;
-            // E.g. End Date = 25.Nov && InitReservoirLevelDate = 1.Dec ->
-            // we need to move FinalReservoirLevel to 1.Nov.
-            // Cannot do both init and final on the same day
-
-            return simEndRealMonth;
-        }
-    }
-
-    void logSimEndDayChange(int simEndDayReal, AreaName name)
-    {
-        if (simEndDay != simEndDayReal)
-        {
-            logs.info() << "Year: " << yearIndex + 1 << ". Area: " << name
-                        << ". Final reservoir level will be reached on day: " << simEndDayReal;
-        }
-    }
-
-    void shiftMonths(int simEndRealMonth)
-    {
-        int h20_solver_sim_end_month = (simEndRealMonth - initReservoirLvlMonth) >= 0
-                                         ? simEndRealMonth - initReservoirLvlMonth
-                                         : simEndRealMonth - initReservoirLvlMonth + 12;
-        endMonthIndex.at(yearIndex) = h20_solver_sim_end_month;
-    }
-
-    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows,
-                                 uint simEndDayReal)
+    double calculateTotalInflows(Antares::Memory::Stored<double>::Type& srcinflows)
     {
         double totalYearInflows = 0.0;
-        if (initReservoirLvlDay <= simEndDayReal)
-        {
-            for (uint day = initReservoirLvlDay; day < simEndDayReal; ++day)
-                totalYearInflows += srcinflows[day];
-        }
-        else
-        {
-            for (uint day = initReservoirLvlDay; day < DAYS_PER_YEAR; ++day)
-                totalYearInflows += srcinflows[day];
-            for (uint day = 0; day < simEndDayReal; ++day)
-                totalYearInflows += srcinflows[day];
-        }
+        for (uint day = 0; day < DAYS_PER_YEAR; ++day)
+            totalYearInflows += srcinflows[day];
         return totalYearInflows;
+    }
+
+    bool preCheckStartAndEndSim(AreaName name)
+    {
+        if (simEndDay == DAYS_PER_YEAR && initReservoirLvlMonth == 0)
+            return true;
+        {
+            logs.error() << "Year: " << yearIndex + 1 << ". Area: " << name
+                         << ". Simulation must end on day 365 and reservoir level must be "
+                            "initiated in January";
+            return false;
+        }
     }
 
     bool preCheckYearlyInflow(double totalYearInflows, AreaName name)

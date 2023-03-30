@@ -138,11 +138,6 @@ public:
         //! Daily optimized Generation
         double DOG[dayYearCount];
 
-        //! Final reservoir level
-        double finalReservoirLevel;
-        //! Month to reach final reservoir level (h20_solver month, not real month);
-        uint finalReservoirLevelMonth;
-
     }; // struct PerArea
 
     //! Temporary data per area

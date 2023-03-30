@@ -38,9 +38,6 @@ void initializeGeneralData(Data::FinalReservoirLevelRuntimeData& finLevData,
                            uint year)
 {
     finLevData.simEndDay = parameters.simulationDays.end;
-    finLevData.simEndMonth = calendar.days[finLevData.simEndDay].month;
-    finLevData.simEndMonth_FirstDay = calendar.months[finLevData.simEndMonth].daysYear.first;
-    finLevData.simEndMonth_LastDay = calendar.months[finLevData.simEndMonth].daysYear.end;
     finLevData.yearIndex = year;
 }
 
@@ -60,19 +57,15 @@ void initializePreCheckData(Data::FinalReservoirLevelRuntimeData& finLevData,
                             Data::Area& area)
 {
     finLevData.initReservoirLvlMonth = area.hydro.initializeReservoirLevelDate; // month [0-11]
-    finLevData.initReservoirLvlDay
-      = calendar.months[finLevData.initReservoirLvlMonth].daysYear.first;
     finLevData.reservoirCapacity = area.hydro.reservoirCapacity;
 }
 
-void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData,
-                            uint simEndDayReal,
-                            Data::Area& area)
+void ruleCurveForSimEndReal(Data::FinalReservoirLevelRuntimeData& finLevData, Data::Area& area)
 {
     finLevData.lowLevelLastDay
-      = area.hydro.reservoirLevel[Data::PartHydro::minimum][simEndDayReal - 1];
+      = area.hydro.reservoirLevel[Data::PartHydro::minimum][DAYS_PER_YEAR - 1];
     finLevData.highLevelLastDay
-      = area.hydro.reservoirLevel[Data::PartHydro::maximum][simEndDayReal - 1];
+      = area.hydro.reservoirLevel[Data::PartHydro::maximum][DAYS_PER_YEAR - 1];
 }
 
 void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
@@ -100,20 +93,13 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                   initializePreCheckData(finLevData, calendar, area);
                   finLevData.assignEndLevelAndDelta();
 
-                  // determine simEnd month and FinalReservoirLevelMode
-                  int simEndRealMonth = finLevData.selectMode();
-
-                  // log if the final reservoir level will be reached on some other day
-                  uint simEndDayReal = calendar.months[simEndRealMonth].daysYear.first;
-                  if (simEndDayReal == 0)
-                      simEndDayReal = DAYS_PER_YEAR;
-                  finLevData.logSimEndDayChange(simEndDayReal, area.name);
-
-                  // Now convert to h20-solver-month if initialization is not done in January
-                  finLevData.shiftMonths(simEndRealMonth);
+                  // pre-check 0 -> simulation must end on day 365 and reservoir level must be
+                  // initiated in January
+                  if (!finLevData.preCheckStartAndEndSim(area.name))
+                      preChecksPasses = false;
 
                   // rule curve values for simEndDayReal
-                  ruleCurveForSimEndReal(finLevData, simEndDayReal, area);
+                  ruleCurveForSimEndReal(finLevData, area);
 
                   // calculate (partial)yearly inflows
                   const Data::DataSeriesHydro& data = *area.hydro.series;
@@ -121,7 +107,7 @@ void FinalReservoirLevel(const Matrix<double>& scenarioInitialHydroLevels,
                   auto& inflowsmatrix = area.hydro.series->storage;
                   auto& srcinflows
                     = inflowsmatrix[tsHydroIndex < inflowsmatrix.width ? tsHydroIndex : 0];
-                  double totalInflows = finLevData.calculateTotalInflows(srcinflows, simEndDayReal);
+                  double totalInflows = finLevData.calculateTotalInflows(srcinflows);
 
                   // pre-check 1 -> reservoir_levelDay_365 – reservoir_levelDay_1 ≤
                   // yearly_inflows
