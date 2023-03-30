@@ -84,12 +84,8 @@ public:
     */
     void resetToDefault();
 
-public:
     //! XCast
     Data::XCast xcast;
-
-private:
-    bool internalLoadFormatBefore33(Study& study, const AnyString& folder);
 
 }; // Prepro
 

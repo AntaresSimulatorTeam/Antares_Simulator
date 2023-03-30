@@ -93,7 +93,6 @@ public:
 
 private:
     bool internalLoadFromFolder(Study& study, const char* folder, uint length);
-    bool internalLoadFormatBefore33(Study& study, const YString& folder);
 
 }; // Prepro
 

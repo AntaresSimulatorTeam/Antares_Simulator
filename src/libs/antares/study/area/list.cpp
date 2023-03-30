@@ -545,15 +545,6 @@ bool AreaList::loadListFromFile(const AnyString& filename)
         if (name.empty())
             continue;
 
-        if (pStudy.header.version < 390)
-        {
-            // before 390, all double-spaces from ids were suppressed
-            String rename;
-            TransformNameIntoNameBefore390(name, rename);
-            name = rename;
-            name.replace("  ", " ");
-        }
-
         lname.clear();
         TransformNameIntoID(name, lname);
         if (lname.empty())
