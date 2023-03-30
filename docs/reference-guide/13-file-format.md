@@ -2,9 +2,6 @@
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v8.6.0
 ### Input
-Under `Configure/MC Scenario Builder` existing section `Hydro Levels` changed name to `Hydro Initial Levels`\
-Under `Configure/MC Scenario Builder` new section added `Hydro Final Levels`
-
 In the existing file **settings/scenariobuilder.dat**, under **&lt;ruleset&gt;** section following properties added (if final reservoir level specified, different from `init`):
 * **hfl,&lt;area&gt;,&lt;year&gt; = &lt;hfl-value&gt;**
 
