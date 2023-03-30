@@ -5,12 +5,9 @@
 #include <boost/test/included/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
-#include <random>
 #include <fstream>
 
-#include <study.h>
-
-#include "series.h"
+#include "container.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -50,14 +47,14 @@ void createIndividualFileSeries(const std::string& path, double value, unsigned 
 
 void createIndividualFileSeries(const std::string& path, unsigned int size)
 {
-    std::default_random_engine rnd{std::random_device{}()};
-    std::uniform_real_distribution<double> dist(0, 1);
-
     std::ofstream outfile;
     outfile.open(path, std::ofstream::out | std::ofstream::trunc);
 
     for (unsigned int i = 0; i < size; i++)
-        outfile << dist(rnd) << std::endl;
+    {
+        double value = i * 0.0001;
+        outfile << value << std::endl;
+    }
 
     outfile.close();
 }
@@ -195,7 +192,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
         && series.upperRuleCurve[1343] == 1);
 }
 
-BOOST_AUTO_TEST_CASE(check_series_folder_loading_random_value)
+BOOST_AUTO_TEST_CASE(check_series_folder_loading_different_values)
 {
     createFileSeries(8760);
 
