@@ -465,52 +465,56 @@ void Data::ThermalCluster::calculationOfSpinning()
 void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 {
     if (costgeneration == Data::setManually || !prepro)
-    {
-        std::fill(
-          marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), marketBidCost);
-        std::fill(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), marginalCost);
-        return;
-    }
+        costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
     else // costgeneration == Data::useCostTimeseries
-    {
-        uint fuelCostWidth = prepro->fuelcost.width;
-        uint co2CostWidth = prepro->co2cost.width;
-        uint tsCount = std::max(fuelCostWidth, co2CostWidth);
+        costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+}
 
-        marketBidCostPerHourTs.resize(tsCount, tmp); // add blank array with 8760-zeros
-        marginalCostPerHourTs.resize(tsCount, tmp);  // add blank array with 8760-zeros
-        productionCostTs.resize(tsCount, tmp);       // add blank array with 8760-zeros
-        for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
+void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPerHour()
+{
+    std::fill(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), marketBidCost);
+    std::fill(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), marginalCost);
+    return;
+}
+
+void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour()
+{
+    uint fuelCostWidth = prepro->fuelcost.width;
+    uint co2CostWidth = prepro->co2cost.width;
+    uint tsCount = std::max(fuelCostWidth, co2CostWidth);
+
+    marketBidCostPerHourTs.resize(tsCount, tmp); // add blank array with 8760-zeros
+    marginalCostPerHourTs.resize(tsCount, tmp);  // add blank array with 8760-zeros
+    productionCostTs.resize(tsCount, tmp);       // add blank array with 8760-zeros
+    for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
+    {
+        uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
+        uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
+        for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
-            uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
-            for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+            marketBidCostPerHourTs[tsIndex - 1][hour]
+              = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
+                + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2 - 1][hour]
+                + variableomcost;
+            marginalCostPerHourTs[tsIndex - 1][hour] = marketBidCostPerHourTs[tsIndex - 1][hour];
+            if (modulation.width > 0)
             {
-                marketBidCostPerHourTs[tsIndex - 1][hour]
-                  = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
-                    + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2 - 1][hour]
-                    + variableomcost;
-                marginalCostPerHourTs[tsIndex - 1][hour]
-                  = marketBidCostPerHourTs[tsIndex - 1][hour];
-                if (modulation.width > 0)
-                {
-                    productionCostTs[tsIndex - 1][hour]
-                      = marginalCostPerHourTs[tsIndex - 1][hour]
-                        * modulation[Data::thermalModulationCost][hour];
-                }
+                productionCostTs[tsIndex - 1][hour]
+                  = marginalCostPerHourTs[tsIndex - 1][hour]
+                    * modulation[Data::thermalModulationCost][hour];
             }
         }
-
-        // calculate marketBidCost and marginalBidCost as average of the first column
-        marketBidCost
-          = std::accumulate(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), 0)
-            / HOURS_PER_YEAR;
-        marginalCost
-          = std::accumulate(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), 0)
-            / HOURS_PER_YEAR;
-
-        return;
     }
+
+    // calculate marketBidCost and marginalBidCost as average of the first column
+    marketBidCost
+      = std::accumulate(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), 0)
+        / HOURS_PER_YEAR;
+    marginalCost
+      = std::accumulate(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), 0)
+        / HOURS_PER_YEAR;
+
+    return;
 }
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()

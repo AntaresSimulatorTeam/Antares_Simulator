@@ -155,7 +155,21 @@ public:
     ** The formula is : TS[i,j] = TS[i,j] * (1 - Spinning / 100)
     */
     void calculationOfSpinning();
+
+    //! \name MarketBid and Marginal Costs
+    //@{
+    /*!
+    ** \brief Calculation of market bid and marginals costs per hour
+    **
+    ** Market bid and marginal costs are set manually.
+    ** Or if time series are used the formula is:
+    ** Marginal_Cost[€/MWh] = Market_Bid_Cost[€/MWh] = (Fuel_Cost[€/GJ] * 3.6 * 100 / Efficiency[%])
+    *+ CO2_emission_factor[tons/MWh] * C02_cost[€/tons] + Variable_O&M_cost[€/MWh]
+    */
     void calculationOfMarketBidPerHourAndMarginalCostPerHour();
+    void costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
+    void costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+
     /*!
     ** \brief Calculation of spinning (reverse)
     **
