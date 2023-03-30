@@ -250,7 +250,7 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
     createFileSeries(1.0, 100);
 
     BOOST_CHECK(!series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
+    BOOST_CHECK(!series.validate());
 
     removeFileSeries();
 }

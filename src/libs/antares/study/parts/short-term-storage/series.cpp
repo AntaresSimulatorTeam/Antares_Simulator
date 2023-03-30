@@ -28,6 +28,8 @@
 #include <antares/logs.h>
 #include <antares/array/array1d.h>
 
+#include <fstream>
+
 #include "series.h"
 
 #define VECTOR_SERIES_SIZE 8760
@@ -66,18 +68,68 @@ bool Series::validate() const
     return true;
 }
 
+/* bool Series::loadFromFolder(const std::string& folder) */
+/* { */
+/*     bool ret = true; */
+/* #define SEP Yuni::IO::Separator */
+/*     ret = loadVector(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret; */
+/*     ret = loadVector(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret; */
+/*     ret = loadVector(folder + SEP + "inflows.txt", inflows) && ret; */
+/*     ret = loadVector(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret; */
+/*     ret = loadVector(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret; */
+/* #undef SEP */
+/*     return ret; */
+/* } */
+
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
 #define SEP Yuni::IO::Separator
-    ret = loadVector(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
-    ret = loadVector(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
-    ret = loadVector(folder + SEP + "inflows.txt", inflows) && ret;
-    ret = loadVector(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
-    ret = loadVector(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
+    ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder + SEP + "inflows.txt", inflows, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve, VECTOR_SERIES_SIZE) && ret;
 #undef SEP
     return ret;
 }
+
+bool Series::loadFile(const std::string& path, std::vector<double>& vect, unsigned int size)
+{
+    logs.debug() << "Loading file " << path;
+
+    vect.reserve(size);
+
+    std::ifstream file;
+    file.open(path);
+
+    if (!file)
+    {
+        logs.debug() << "File not found: " << path;
+        return true;
+    }
+
+    std::string line;
+    try
+    {
+        unsigned int count = 0;
+        while (getline(file, line) && count < size)
+        {
+            double d = std::stod(line);
+            vect.push_back(d);
+            count++;
+        }
+        if (count < size)
+            return false;
+    }
+    catch (const std::exception&)
+    {
+        logs.error() << "Failed reading file: " << path;
+        return false;
+    }
+    return true;
+}
+
 
 bool Series::loadVector(const std::string& path, std::vector<double>& vect)
 {
