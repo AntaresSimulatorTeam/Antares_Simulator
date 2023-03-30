@@ -4,14 +4,10 @@ on:
   release:
     types: [created]
 
-env:
-  GITHUB_TOKEN: ${{ github.token }}
-
 jobs:
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -28,11 +24,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
-    - name: Get release
-      id: get_release
-      uses: bruceadams/get-release@v1.3.2
-
 
     - name: Pre-requisites
       shell: cmd
