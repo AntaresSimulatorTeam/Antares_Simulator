@@ -40,7 +40,7 @@ namespace Economy
 struct VCardPrice
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "MRG. PRICE";
     }

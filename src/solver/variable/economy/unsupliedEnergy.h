@@ -40,7 +40,7 @@ namespace Economy
 struct VCardUnsupliedEnergy
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "UNSP. ENRG";
     }

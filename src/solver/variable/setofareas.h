@@ -39,7 +39,7 @@ namespace Variable
 struct VCardAllSetsOfAreas
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Sets of Areas";
     }

@@ -33,7 +33,7 @@ namespace Antares::Solver::Variable::Economy
 struct VCardSTstorageWithdrawalByCluster
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "STS withdrawal by plant";
     }

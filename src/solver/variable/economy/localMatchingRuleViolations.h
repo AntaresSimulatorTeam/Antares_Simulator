@@ -34,7 +34,7 @@ namespace Antares::Solver::Variable::Economy
 struct VCardLMRViolations
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "LMR VIOL.";
     }

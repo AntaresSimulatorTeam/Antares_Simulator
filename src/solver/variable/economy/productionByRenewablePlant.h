@@ -40,7 +40,7 @@ namespace Economy
 struct VCardProductionByRenewablePlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "RES generation by plant";
     }

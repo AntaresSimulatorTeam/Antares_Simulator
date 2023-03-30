@@ -41,7 +41,7 @@ namespace Economy
 struct VCardDispatchableGenMargin
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "DTG MRG";
     }

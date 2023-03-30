@@ -40,7 +40,7 @@ namespace Economy
 struct VCardLoopFlow
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "LOOP FLOW";
     }

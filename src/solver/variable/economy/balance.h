@@ -41,7 +41,7 @@ namespace Economy
 struct VCardBalance
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "BALANCE";
     }

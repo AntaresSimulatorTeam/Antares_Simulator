@@ -40,7 +40,7 @@ namespace Economy
 struct VCardNonProportionalCostByDispatchablePlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NP Cost by plant";
     }

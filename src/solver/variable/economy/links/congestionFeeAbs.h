@@ -40,7 +40,7 @@ namespace Economy
 struct VCardCongestionFeeAbs
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. FEE (ABS.)";
     }

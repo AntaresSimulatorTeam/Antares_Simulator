@@ -40,7 +40,7 @@ namespace Economy
 struct VCardFlowLinear
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "FLOW LIN.";
     }

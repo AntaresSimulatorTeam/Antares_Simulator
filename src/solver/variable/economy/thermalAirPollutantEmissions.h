@@ -35,7 +35,7 @@ namespace Antares::Solver::Variable::Economy
 struct VCardThermalAirPollutantEmissions
 {
     //! Caption not used: several columns
-    static const char* Caption()
+    static std::string Caption()
     {
         return "";
     }
@@ -93,7 +93,7 @@ struct VCardThermalAirPollutantEmissions
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
             if (indx < Antares::Data::Pollutant::POLLUTANT_MAX)
                 return Antares::Data::Pollutant::getPollutantName(indx).c_str();

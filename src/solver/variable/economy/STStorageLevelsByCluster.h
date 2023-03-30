@@ -33,7 +33,7 @@ namespace Antares::Solver::Variable::Economy
 struct VCardSTstorageLevelsByCluster
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "STS lvl by plant";
     }

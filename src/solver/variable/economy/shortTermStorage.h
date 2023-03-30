@@ -27,13 +27,14 @@
 #pragma once
 
 #include "../variable.h"
+#include "antares/study/parts/short-term-storage/STStorageOutputCaptions.h"
 
 namespace Antares::Solver::Variable::Economy
 {
 struct VCardShortTermStorage
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "ST storage";
     }
@@ -91,68 +92,9 @@ struct VCardShortTermStorage
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
-            switch (indx)
-            {
-            case 0:
-                return "PSP_open_injection";
-            case 1:
-                return "PSP_open_withdrawal";
-            case 2:
-                return "PSP_open_level";
-            case 3:
-                return "PSP_closed_injection";
-            case 4:
-                return "PSP_closed_withdrawal";
-            case 5:
-                return "PSP_closed_level";
-            case 6:
-                return "Pondage_injection";
-            case 7:
-                return "Pondage_withdrawal";
-            case 8:
-                return "Pondage_level";
-            case 9:
-                return "Battery_injection";
-            case 10:
-                return "Battery_withdrawal";
-            case 11:
-                return "Battery_level";
-            case 12:
-                return "Other1_injection";
-            case 13:
-                return "Other1_withdrawal";
-            case 14:
-                return "Other1_level";
-            case 15:
-                return "Other2_injection";
-            case 16:
-                return "Other2_withdrawal";
-            case 17:
-                return "Other2_level";
-            case 18:
-                return "Other3_injection";
-            case 19:
-                return "Other3_withdrawal";
-            case 20:
-                return "Other3_level";
-            case 21:
-                return "Other4_injection";
-            case 22:
-                return "Other4_withdrawal";
-            case 23:
-                return "Other4_level";
-            case 24:
-                return "Other5_injection";
-            case 25:
-                return "Other5_withdrawal";
-            case 26:
-                return "Other5_level";
-
-            default:
-                return "<unknown>";
-            }
+            return Antares::Data::ShortTermStorage::getVariableCaptionFromColumnIndex(indx);
         }
     };
 }; // class VCard
