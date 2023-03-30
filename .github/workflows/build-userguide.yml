@@ -1,11 +1,15 @@
 name: Build Userguide pdf
 
 on:
-  workflow_call:
-    inputs:
-      artifact_name:
-        required: true
-        type: string
+  release:
+    types: [created]
+  push:
+    branches:
+      - release/*
+      - doc/*
+
+env:
+  IS_RELEASE: ${{ github.event_name == 'release' && github.event.action == 'created' }}
 
 jobs:
 
@@ -35,13 +39,26 @@ jobs:
            sudo apt-get update --fix-missing
            sudo apt-get install latexmk texlive-latex-recommended texlive-formats-extra
 
-    - id: create-user-guide
-      name: user guide pdf creation
-      uses: ./.github/workflows/generate-userguide-pdf
+
+    - name: Generate PDF for user-guide
+      shell: bash
+      run: |
+        PDF_NAME=antares-general-reference-guide.pdf
+        cd docs/pdf-doc-generation-with-sphinx
+        bash create_pdf_doc.sh $PDF_NAME
+        echo "PDF_PATH=docs/pdf-doc-generation-with-sphinx/$PDF_NAME" >> $GITHUB_ENV
+        echo "PDF_PATH_ASSET= [\"docs/pdf-doc-generation-with-sphinx/$PDF_NAME\"]" >> $GITHUB_ENV
 
     - name: user guide upload
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ inputs.artifact_name }}
-        path: ${{ steps.create-user-guide.outputs.pdf-path }}
+        name: pdf-reference-guide
+        path: ${{ env.PDF_PATH }}
 
+    - name: Upload user guide as release asset
+      if: ${{ env.IS_RELEASE == 'true' }}
+      uses: alexellis/upload-assets@0.4.0
+      env:
+          GITHUB_TOKEN: ${{ github.token }}
+      with:
+          asset_paths: ${{ env.PDF_PATH_ASSET }}
