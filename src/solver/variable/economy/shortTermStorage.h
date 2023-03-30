@@ -237,10 +237,8 @@ public:
               += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
 
             // Levels
-            double capacity = cluster->properties.capacity.value();
             pValuesForTheCurrentYear[numSpace][3 * group + 2][state.hourInTheYear]
-              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex]
-                 * capacity;
+              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
         }
 
         // Next item in the list

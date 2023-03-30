@@ -267,13 +267,9 @@ public:
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
             ++clusterIndex)
         {
-            const auto* cluster = state.area->shortTermStorage.storagesByIndex[clusterIndex];
-            double capacity = cluster->properties.capacity.value();
-
             // ST storage levels for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-                = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[clusterIndex]
-                  * capacity;
+                = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[clusterIndex];
         }
 
         // Next item in the list
