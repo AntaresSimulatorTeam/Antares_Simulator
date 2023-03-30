@@ -78,17 +78,6 @@ void createFileSeries(unsigned int size)
     createIndividualFileSeries(folder + SEP + "upper-rule-curve.txt", size);
 }
 
-void removeFileSeries()
-{
-    std::string folder = getFolder();
-
-    std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
-    std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
-    std::filesystem::remove(folder + SEP + "inflows.txt");
-    std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
-    std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
-}
-
 void createIniFile()
 {
     std::string folder = getFolder();
@@ -155,13 +144,23 @@ struct Fixture
     Fixture & operator= (const Fixture & f) = delete;
     Fixture& operator= (const Fixture && f) = delete;
     Fixture() = default;
-    ~Fixture() = default;
+    ~Fixture()
+    {
+        std::string folder = getFolder();
+
+        std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
+        std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
+        std::filesystem::remove(folder + SEP + "inflows.txt");
+        std::filesystem::remove(folder + SEP + "lower-rule-curve.txt");
+        std::filesystem::remove(folder + SEP + "upper-rule-curve.txt");
+    }
+
+    std::string folder = getFolder();
 
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;
-
 };
 
 
@@ -182,70 +181,48 @@ BOOST_AUTO_TEST_CASE(check_vector_sizes)
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading)
 {
-    std::string folder = getFolder();
-
     createFileSeries(1.0, 8760);
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
         && series.upperRuleCurve[1343] == 1);
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_random_value)
 {
-    std::string folder = getFolder();
-
     createFileSeries(8760);
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_negative_value)
 {
-    std::string folder = getFolder();
-
     createFileSeries(-247.0, 8760);
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(!series.validate());
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_big)
 {
-    std::string folder = getFolder();
-
     createFileSeries(1.0, 9000);
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_too_small)
 {
-    std::string folder = getFolder();
-
     createFileSeries(1.0, 100);
 
     BOOST_CHECK(!series.loadFromFolder(folder));
     BOOST_CHECK(!series.validate());
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_series_folder_loading_empty)
 {
-    std::string folder = getFolder();
-
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(!series.validate());
 }
@@ -258,16 +235,12 @@ BOOST_AUTO_TEST_CASE(check_series_vector_fill)
 
 BOOST_AUTO_TEST_CASE(check_cluster_series_vector_fill)
 {
-    std::string folder = getFolder();
-
     BOOST_CHECK(cluster.loadSeries(folder));
     BOOST_CHECK(cluster.series->validate());
 }
 
 BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
 {
-    std::string folder = getFolder();
-
     createFileSeries(0.5, 8760);
 
     BOOST_CHECK(cluster.loadSeries(folder));
@@ -275,14 +248,10 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
         && cluster.series->inflows[2756] == 0.5
         && cluster.series->lowerRuleCurve[6392] == 0.5);
-
-    removeFileSeries();
 }
 
 BOOST_AUTO_TEST_CASE(check_container_properties_load)
 {
-    std::string folder = getFolder();
-
     createIniFile();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
@@ -293,8 +262,6 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
 
 BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
 {
-    std::string folder = getFolder();
-
     createIniFileWrongValue();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
@@ -305,8 +272,6 @@ BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
 
 BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
 {
-    std::string folder = getFolder();
-
     createEmptyIniFile();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));

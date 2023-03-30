@@ -105,7 +105,10 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
             lineCount++;
         }
         if (lineCount < HOURS_PER_YEAR)
+        {
+            logs.warning() << "File too small: " << path;
             return false;
+        }
     }
     catch (const std::ios_base::failure& ex)
     {
