@@ -94,7 +94,7 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool Series::loadFile(const std::string& path, std::vector<double>& vect, unsigned int size)
+bool loadFile(const std::string& path, std::vector<double>& vect, unsigned int size)
 {
     logs.debug() << "Loading file " << path;
 
@@ -131,7 +131,7 @@ bool Series::loadFile(const std::string& path, std::vector<double>& vect, unsign
 }
 
 
-bool Series::loadVector(const std::string& path, std::vector<double>& vect)
+bool loadVector(const std::string& path, std::vector<double>& vect)
 {
     if (!Yuni::IO::File::Exists(path))
         return true;
