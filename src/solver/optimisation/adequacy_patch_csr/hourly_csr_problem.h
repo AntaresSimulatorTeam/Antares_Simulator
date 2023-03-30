@@ -30,7 +30,7 @@
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
 #include "../simulation/sim_structure_probleme_economique.h"
-#include "antares/study/parameters/adq-patch-params.h"
+#include <antares/study/parameters/adq-patch-params.h>
 
 class HourlyCSRProblem
 {
@@ -67,7 +67,7 @@ private:
 
 private:
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
-    AdqPatchParams& adqPatchParams_;
+    const AdqPatchParams& adqPatchParams_;
 
 public:
     void run(uint week, uint year);

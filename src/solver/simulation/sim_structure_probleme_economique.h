@@ -457,21 +457,7 @@ struct COUTS_MARGINAUX_ZONES_DE_RESERVE
     double* CoutsMarginauxHorairesDeLaReserveParZone = nullptr;
 };
 
-// gp adq : to be removed
-/*
-struct AdequacyPatchParameters
-{
-    // bool AdequacyFirstStep;
-    bool SetNTCOutsideToInsideToZero;
-    bool SetNTCOutsideToOutsideToZero;
-    bool IncludeHurdleCostCsr;
-    bool CheckCsrCostFunctionValue;
-    Antares::Data::AdequacyPatch::AdqPatchPTO PriceTakingOrder;
-    double ThresholdRunCurtailmentSharingRule;
-    // double ThresholdDisplayLocalMatchingRuleViolations;
-    // double ThresholdCSRVarBoundsRelaxation;
-};
-*/
+
 struct PROBLEME_HEBDO
 {
     uint weekInTheYear = 0;

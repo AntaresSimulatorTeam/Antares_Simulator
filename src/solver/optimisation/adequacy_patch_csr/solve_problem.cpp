@@ -257,7 +257,7 @@ void handleInteriorPointError(const PROBLEME_POINT_INTERIEUR& Probleme,
 
 bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE& ProblemeAResoudre,
                    HourlyCSRProblem& hourlyCsrProblem,
-                   AdqPatchParams& adqPatchParams,
+                   const AdqPatchParams& adqPatchParams,
                    uint weekNb,
                    int yearNb)
 {

@@ -61,7 +61,7 @@ bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
 
 
 using namespace Antares::Data::AdequacyPatch;
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&, HourlyCSRProblem&, AdqPatchParams&, uint week, int year);
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&, HourlyCSRProblem&, const AdqPatchParams&, uint week, int year);
 
 bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&, uint);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
