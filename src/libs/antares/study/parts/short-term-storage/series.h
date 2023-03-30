@@ -44,7 +44,6 @@ public:
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
-
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect, unsigned int size);
