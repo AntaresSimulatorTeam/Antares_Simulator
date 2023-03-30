@@ -58,7 +58,7 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool Series::loadVector(const std::string& path, std::vector<double>& vect)
+bool Series::loadVector(const std::string& path, std::vector<double>& vect) const
 {
     if (!Yuni::IO::File::Exists(path))
         return true;
