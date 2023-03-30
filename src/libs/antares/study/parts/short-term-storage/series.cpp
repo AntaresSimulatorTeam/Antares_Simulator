@@ -45,8 +45,8 @@ bool Series::validate() const
         return false;
     }
 
-    auto checkVectPositive = [](std::vector<double> v) {
-        return std::count_if(v.begin(), v.end(), [](double d){ return d >= 0.0; });
+    auto checkVectPositive = [](const std::vector<double>& v) {
+        return std::all_of(v.begin(), v.end(), [](double d){ return d >= 0.0; });
     };
     if (!checkVectPositive(maxInjectionModulation) || !checkVectPositive(maxWithdrawalModulation))
     {
@@ -54,8 +54,8 @@ bool Series::validate() const
         return false;
     }
 
-    auto checkVectBetween = [](std::vector<double> v) {
-        return std::count_if(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); });
+    auto checkVectBetween = [](const std::vector<double>& v) {
+        return std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); });
     };
     if (!checkVectBetween(lowerRuleCurve) || !checkVectBetween(upperRuleCurve))
     {
@@ -97,19 +97,31 @@ bool loadFile(const std::string& path, std::vector<double>& vect)
     std::string line;
     try
     {
-        unsigned int count = 0;
-        while (getline(file, line) && count < HOURS_PER_YEAR)
+        unsigned int lineCount = 0;
+        while (getline(file, line) && lineCount < HOURS_PER_YEAR)
         {
             double d = std::stod(line);
             vect.push_back(d);
-            count++;
+            lineCount++;
         }
-        if (count < HOURS_PER_YEAR)
+        if (lineCount < HOURS_PER_YEAR)
             return false;
     }
-    catch (const std::exception&)
+    catch (const std::ios_base::failure& ex)
     {
-        logs.error() << "Failed reading file: " << path;
+        logs.error() << "Failed reading file: " << path << " (I/O error)";
+        return false;
+    }
+    catch (const std::invalid_argument& ex)
+    {
+        logs.error() << "Failed reading file: " << path << " conversion to double failed at line "
+            << line;
+        return false;
+    }
+    catch (const std::out_of_range& ex)
+    {
+        logs.error() << "Failed reading file: " << path << " value is out of bounds at line "
+            << line;
         return false;
     }
     return true;

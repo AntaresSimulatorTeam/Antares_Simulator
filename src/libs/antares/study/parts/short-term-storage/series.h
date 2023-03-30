@@ -47,6 +47,5 @@ public:
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
-bool loadVector(const std::string& path, std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage
