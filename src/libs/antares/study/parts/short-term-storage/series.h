@@ -46,7 +46,7 @@ public:
     std::vector<double> upperRuleCurve;
 };
 
-bool loadFile(const std::string& folder, std::vector<double>& vect, unsigned int size);
+bool loadFile(const std::string& folder, std::vector<double>& vect);
 bool loadVector(const std::string& path, std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage

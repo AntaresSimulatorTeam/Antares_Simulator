@@ -83,20 +83,20 @@ bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
 #define SEP Yuni::IO::Separator
-    ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder + SEP + "inflows.txt", inflows, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve, VECTOR_SERIES_SIZE) && ret;
-    ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve, VECTOR_SERIES_SIZE) && ret;
+    ret = loadFile(folder + SEP + "PMAX-injection.txt", maxInjectionModulation) && ret;
+    ret = loadFile(folder + SEP + "PMAX-withdrawal.txt", maxWithdrawalModulation) && ret;
+    ret = loadFile(folder + SEP + "inflows.txt", inflows) && ret;
+    ret = loadFile(folder + SEP + "lower-rule-curve.txt", lowerRuleCurve) && ret;
+    ret = loadFile(folder + SEP + "upper-rule-curve.txt", upperRuleCurve) && ret;
 #undef SEP
     return ret;
 }
 
-bool loadFile(const std::string& path, std::vector<double>& vect, unsigned int size)
+bool loadFile(const std::string& path, std::vector<double>& vect)
 {
     logs.debug() << "Loading file " << path;
 
-    vect.reserve(size);
+    vect.reserve(HOURS_PER_YEAR);
 
     std::ifstream file;
     file.open(path);
@@ -111,13 +111,13 @@ bool loadFile(const std::string& path, std::vector<double>& vect, unsigned int s
     try
     {
         unsigned int count = 0;
-        while (getline(file, line) && count < size)
+        while (getline(file, line) && count < HOURS_PER_YEAR)
         {
             double d = std::stod(line);
             vect.push_back(d);
             count++;
         }
-        if (count < size)
+        if (count < HOURS_PER_YEAR)
             return false;
     }
     catch (const std::exception&)
