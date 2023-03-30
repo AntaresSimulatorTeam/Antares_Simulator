@@ -154,11 +154,9 @@ struct Fixture
     Fixture(const Fixture && f) = delete;
     Fixture & operator= (const Fixture & f) = delete;
     Fixture& operator= (const Fixture && f) = delete;
-    Fixture()
-    {
-    }
-
+    Fixture() = default;
     ~Fixture() = default;
+
     ShortTermStorage::Series series;
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
@@ -193,17 +191,6 @@ BOOST_AUTO_TEST_CASE(check_series_folder_loading)
     BOOST_CHECK(series.inflows[0] == 1 && series.maxInjectionModulation[8759] == 1
         && series.upperRuleCurve[1343] == 1);
 
-    std::ifstream infile(folder + SEP + "inflows.txt");
-    if (!infile.is_open())
-        std::cout << "File not oppened";
-
-    std::string line;
-    int count = 0;
-    while (std::getline(infile, line))
-    {
-        std::cout << count++ << " : " << line << std::endl;
-    }
-    infile.close();
     removeFileSeries();
 }
 
@@ -288,7 +275,6 @@ BOOST_AUTO_TEST_CASE(check_cluster_series_load_vector)
     BOOST_CHECK(cluster.series->maxWithdrawalModulation[0] == 0.5
         && cluster.series->inflows[2756] == 0.5
         && cluster.series->lowerRuleCurve[6392] == 0.5);
-
 
     removeFileSeries();
 }
