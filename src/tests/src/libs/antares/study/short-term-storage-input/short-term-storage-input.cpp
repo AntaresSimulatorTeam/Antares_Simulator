@@ -16,14 +16,8 @@ using namespace Antares::Data;
 
 std::string getFolder()
 {
-    std::string ret = "";
-    try
-    {
-        std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
-        ret = tmpDir.string();
-    }
-    catch (const std::exception&) {}
-    return ret;
+    std::filesystem::path tmpDir = std::filesystem::temp_directory_path();
+    return tmpDir.string();
 }
 
 void resizeFillVectors(ShortTermStorage::Series& series, double value, unsigned int size)
@@ -149,8 +143,6 @@ struct Fixture
     Fixture() = default;
     ~Fixture()
     {
-        std::string folder = getFolder();
-
         std::filesystem::remove(folder + SEP + "PMAX-injection.txt");
         std::filesystem::remove(folder + SEP + "PMAX-withdrawal.txt");
         std::filesystem::remove(folder + SEP + "inflows.txt");
