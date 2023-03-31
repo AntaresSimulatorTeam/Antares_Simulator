@@ -793,44 +793,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     bool ret = true;
 
     // DSM, Reserves, D-1
-    if (study.header.version < 320)
-    {
-        area.reserves.reset(fhrMax, HOURS_PER_YEAR, true);
-
-        // We should allocate on the heap to avoid stack overflow (Windows)
-        double* tmp = new double[HOURS_PER_YEAR];
-
-        // DSM
-        buffer.clear() << study.folderInput << SEP << "reserves-dsm" << SEP << area.id << SEP
-                       << "dsm." << study.inputExtension;
-        ret = Array1DLoadFromFile(buffer.c_str(), tmp, HOURS_PER_YEAR) and ret;
-        area.reserves.pasteToColumn(fhrDSM, tmp);
-
-        // Strategic Reserves
-        buffer.clear() << study.folderInput << SEP << "reserves-dsm" << SEP << area.id << SEP
-                       << "reserves." << study.inputExtension;
-        ret = Array1DLoadFromFile(buffer.c_str(), tmp, HOURS_PER_YEAR) and ret;
-        buffer.clear() << "Reserves: `" << area.id << '`';
-        Array1DCheckPositiveValues(buffer.c_str(), tmp, HOURS_PER_YEAR);
-        area.reserves.pasteToColumn(fhrStrategicReserve, tmp);
-
-        // Primary reserves
-        buffer.clear() << study.folderInput << SEP << "reserves-dsm" << SEP << area.id << SEP
-                       << "primaryreserves." << study.inputExtension;
-        ret = Array1DLoadFromFile(buffer.c_str(), tmp, HOURS_PER_YEAR) and ret;
-        buffer.clear() << "Primary Reserves: `" << area.id << '`';
-        Array1DCheckPositiveValues(buffer.c_str(), tmp, HOURS_PER_YEAR);
-        area.reserves.pasteToColumn(fhrPrimaryReserve, tmp);
-
-        // Release
-        delete[] tmp;
-    }
-    else
-    {
-        buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
-        ret = area.reserves.loadFromCSVFile(buffer, fhrMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-              and ret;
-    }
+    buffer.clear() << study.folderInput << SEP << "reserves" << SEP << area.id << ".txt";
+    ret = area.reserves.loadFromCSVFile(buffer, fhrMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+          and ret;
 
     // Optimzation preferences
     if (study.usedByTheSolver)
@@ -844,80 +809,11 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Fatal hors hydro - Misc Gen.
-    if (study.header.version <= 320)
-    {
-        area.solar.series->series.resize(1, HOURS_PER_YEAR);
-        area.miscGen.reset(fhhMax, HOURS_PER_YEAR, true);
+    buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
+                   << ".txt";
+    ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
+          and ret;
 
-        buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << area.id << SEP
-                       << "fatalhorshydro." << study.inputExtension;
-        if (study.header.version < 210)
-        {
-            Matrix<double> m;
-            bool r = m.loadFromCSVFile(buffer,
-                                       5,
-                                       8760 /* hardcoded in this version */,
-                                       Matrix<>::optFixedSize | Matrix<>::optImmediate);
-            ret = r and ret;
-            if (r)
-            {
-                // Make the data available, if not already done
-                m.forceReload(true);
-                // Copy
-                (void)memcpy(area.miscGen[fhhBioMass], m[0], (size_t)(8760 * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhCHP], m[2], (size_t)(8760 * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhOther], m[3], (size_t)(8760 * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhRowBalance], m[4], (size_t)(8760 * sizeof(double)));
-
-                (void)memcpy(
-                  area.solar.series->series[0], m[1], (size_t)(m.height * sizeof(double)));
-                // Keep the user posted
-                LogCompatibility(
-                  "'%s': Misc Gen.: The data have been converted (changes from v2.1)",
-                  area.id.c_str());
-            }
-        }
-        else
-        {
-            Matrix<double> m;
-            // CHP, Solar, BioMass, BioGaz, Waste, GeoThermal, Other, PSP, RowBalance
-            bool r = m.loadFromCSVFile(buffer, 9, HOURS_PER_YEAR, Matrix<>::optFixedSize) and ret;
-            ret = r and ret;
-            if (r)
-            {
-                // Make the data available, if not already done
-                m.forceReload(true);
-
-                (void)memcpy(area.miscGen[fhhCHP], m[0], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhBioMass], m[2], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhBioGaz], m[3], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhWaste], m[4], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(
-                  area.miscGen[fhhGeoThermal], m[5], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhOther], m[6], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(area.miscGen[fhhPSP], m[7], (size_t)(m.height * sizeof(double)));
-                (void)memcpy(
-                  area.miscGen[fhhRowBalance], m[8], (size_t)(m.height * sizeof(double)));
-
-                (void)memcpy(
-                  area.solar.series->series[0], m[1], (size_t)(m.height * sizeof(double)));
-                // Keep the user posted
-                LogCompatibility(
-                  "'%s': Misc Gen.: The data have been converted (changes from v3.3)",
-                  area.id.c_str());
-            }
-        }
-        area.miscGen.markAsModified();
-        area.solar.series->series.markAsModified();
-    }
-    else
-    {
-        // >= 330
-        buffer.clear() << study.folderInput << SEP << "misc-gen" << SEP << "miscgen-" << area.id
-                       << ".txt";
-        ret = area.miscGen.loadFromCSVFile(buffer, fhhMax, HOURS_PER_YEAR, Matrix<>::optFixedSize)
-              and ret;
-    }
     // Check misc gen
     {
         buffer.clear() << "Misc Gen: `" << area.id << '`';
@@ -929,10 +825,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Links
     {
-        if (study.header.version < 350)
-            buffer.clear() << study.folderInput << SEP << "interconnections" << SEP << area.id;
-        else
-            buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
+        buffer.clear() << study.folderInput << SEP << "links" << SEP << area.id;
         ret = AreaLinksLoadFromFolder(study, list, &area, buffer) and ret;
         ++options.progressTicks;
         options.pushProgressLogs();
@@ -979,13 +872,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         }
         if (area.solar.series and (!options.loadOnlyNeeded or !area.solar.prepro)) // Series
         {
-            if (study.header.version >= 330)
-            {
-                buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
-                ret
-                  = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
-                    and ret;
-            }
+            buffer.clear() << study.folderInput << SEP << "solar" << SEP << "series";
+            ret = DataSeriesSolarLoadFromFolder(study, area.solar.series, area.id, buffer.c_str())
+                and ret;
         }
 
         ++options.progressTicks;
@@ -1042,29 +931,6 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "thermal" << SEP << "series";
         ret = area.thermal.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
 
-        if (study.header.version < 390)
-        {
-            // we must use an intermediate list since the original one will be
-            // altered by the rename
-            std::vector<Data::ThermalCluster*> list;
-            area.thermal.list.each(
-              [&](Data::ThermalCluster& cluster) { list.push_back(&cluster); });
-
-            foreach (auto* cluster, list)
-            {
-                // We may have some strange name/id in older studies
-                // force full reloading
-                cluster->forceReload(true);
-                // marking the thermal plant as modified
-                cluster->markAsModified();
-
-                // applying the new naming convention
-                String newname;
-                BeautifyName(newname, cluster->name());
-                study.clusterRename(cluster, newname);
-            }
-        }
-
         // In adequacy mode, all thermal clusters must be in 'mustrun' mode
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
@@ -1081,109 +947,70 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     readAdqPatchMode(study, area, buffer);
 
     // Nodal Optimization
-    if (study.header.version >= 330)
+    buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
+                   << "optimization.ini";
+    IniFile ini;
+    if (ini.open(buffer))
     {
-        buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
-                       << "optimization.ini";
-        IniFile ini;
-        if (ini.open(buffer))
-        {
-            ini.each([&](const IniFile::Section& section) {
-                for (auto* p = section.firstProperty; p; p = p->next)
+        ini.each([&](const IniFile::Section& section) {
+            for (auto* p = section.firstProperty; p; p = p->next)
+            {
+                bool value = p->value.to<bool>();
+                CString<30, false> tmp;
+                tmp = p->key;
+                tmp.toLower();
+                if (tmp == "non-dispatchable-power")
                 {
-                    bool value = p->value.to<bool>();
-                    CString<30, false> tmp;
-                    tmp = p->key;
-                    tmp.toLower();
-                    if (tmp == "non-dispatchable-power")
-                    {
-                        if (value)
-                            area.nodalOptimization |= anoNonDispatchPower;
-                        continue;
-                    }
-                    if (tmp == "dispatchable-hydro-power")
-                    {
-                        if (value)
-                            area.nodalOptimization |= anoDispatchHydroPower;
-                        continue;
-                    }
-                    if (tmp == "other-dispatchable-power")
-                    {
-                        if (value)
-                            area.nodalOptimization |= anoOtherDispatchPower;
-                        continue;
-                    }
-                    if (tmp == "filter-synthesis")
-                    {
-                        area.filterSynthesis = stringIntoDatePrecision(p->value);
-                        continue;
-                    }
-                    if (tmp == "filter-year-by-year")
-                    {
-                        area.filterYearByYear = stringIntoDatePrecision(p->value);
-                        continue;
-                    }
-                    if (tmp == "spread-unsupplied-energy-cost")
-                    {
-                        if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
-                        {
-                            area.spreadUnsuppliedEnergyCost = 0.;
-                            logs.warning()
-                              << area.name << ": invalid spread for unsupplied energy cost";
-                        }
-                        continue;
-                    }
-                    if (tmp == "spread-spilled-energy-cost")
-                    {
-                        if (!p->value.to<double>(area.spreadSpilledEnergyCost))
-                        {
-                            area.spreadSpilledEnergyCost = 0.;
-                            logs.warning()
-                              << area.name << ": invalid spread for spilled energy cost";
-                        }
-                        continue;
-                    }
-
-                    logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+                    if (value)
+                        area.nodalOptimization |= anoNonDispatchPower;
+                    continue;
                 }
-            });
-        }
-    }
-    else
-    {
-        // Enable all features at once
-        area.nodalOptimization = anoAll;
-    }
+                if (tmp == "dispatchable-hydro-power")
+                {
+                    if (value)
+                        area.nodalOptimization |= anoDispatchHydroPower;
+                    continue;
+                }
+                if (tmp == "other-dispatchable-power")
+                {
+                    if (value)
+                        area.nodalOptimization |= anoOtherDispatchPower;
+                    continue;
+                }
+                if (tmp == "filter-synthesis")
+                {
+                    area.filterSynthesis = stringIntoDatePrecision(p->value);
+                    continue;
+                }
+                if (tmp == "filter-year-by-year")
+                {
+                    area.filterYearByYear = stringIntoDatePrecision(p->value);
+                    continue;
+                }
+                if (tmp == "spread-unsupplied-energy-cost")
+                {
+                    if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
+                    {
+                        area.spreadUnsuppliedEnergyCost = 0.;
+                        logs.warning()
+                          << area.name << ": invalid spread for unsupplied energy cost";
+                    }
+                    continue;
+                }
+                if (tmp == "spread-spilled-energy-cost")
+                {
+                    if (!p->value.to<double>(area.spreadSpilledEnergyCost))
+                    {
+                        area.spreadSpilledEnergyCost = 0.;
+                        logs.warning()
+                          << area.name << ": invalid spread for spilled energy cost";
+                    }
+                    continue;
+                }
 
-    if (study.header.version < 380)
-    {
-        // For studies older than 3.8, we have to readjust the spread for both
-        // the unsupplied and spilled energy cost
-        // Note : this code must be executed after that thermal clusters are
-        // loaded
-        area.spreadSpilledEnergyCost = 1e-6 * area.thermal.spilledEnergyCost;
-        area.spreadUnsuppliedEnergyCost = 1e-6 * area.thermal.unsuppliedEnergyCost;
-    }
-
-    // MBO 15/04/2014
-    // limits to spreads
-    if (study.header.version < 450)
-    {
-        if (area.spreadSpilledEnergyCost < 5.e-3)
-            area.spreadSpilledEnergyCost = 0.;
-        else
-        {
-            if (area.spreadSpilledEnergyCost > 5.e4)
-                area.spreadSpilledEnergyCost = 5.e4;
-        }
-
-        if (area.spreadUnsuppliedEnergyCost < 5.e-3)
-            area.spreadUnsuppliedEnergyCost = 0.;
-        else
-        {
-            if (area.spreadUnsuppliedEnergyCost > 5.e4)
-                area.spreadUnsuppliedEnergyCost = 5.e4;
-        }
+                logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+            }
+        });
     }
 
     return ret;
@@ -1255,10 +1082,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         // ensureDataIsInitialized is called
         // in order to allocate data with all thermal clusters.
         CString<30, false> thermalPlant;
-        if (pStudy.header.version < 350)
-            thermalPlant << SEP << "thermal" << SEP << "aggregates" << SEP;
-        else
-            thermalPlant << SEP << "thermal" << SEP << "clusters" << SEP;
+        thermalPlant << SEP << "thermal" << SEP << "clusters" << SEP;
 
         auto end = areas.end();
         for (auto i = areas.begin(); i != end; ++i)
