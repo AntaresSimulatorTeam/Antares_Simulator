@@ -923,46 +923,12 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "custom-ts-numbers")
         return value.to<bool>(d.useCustomScenario);
 
-    if (key == "dayofthe1stjanuary") // before 4.3 - see january.1st
-        return Date::StringToDayOfTheWeek(d.dayOfThe1stJanuary, value);
-
     if (key == "filtering" && version < 710)
         return value.to<bool>(d.geographicTrimming);
-
-    if (version <= 310 && key == "storetimeseriesnumbers")
-        return value.to<bool>(d.storeTimeseriesNumbers);
 
     // Custom set
     if (key == "customset")
         return true; // value ignored
-
-    if (key == "finalhour") // ignored since v4.3
-        return true;        // value.to<uint>(d.finalHour);
-
-    if (key == "startyear") // ignored from 3.5.3155
-        return true;
-
-    if (key == "starttime")
-        return true; // ignored since 4.3 // return value.to<uint>(d.startTime);
-
-    // deprecated
-    if (key == "seed_virtualcost" || key == "seed_misc")
-        return true; // ignored since 3.8
-
-    if (key == "spillage_bound") // ignored sinve v3.3
-        return true;
-
-    if (key == "spillage_cost") // ignored since v3.3
-        return true;
-
-    if (key == "shedding-strategy-local") // ignored since 4.0
-        return true;
-
-    if (key == "shedding-strategy-global") // ignored since 4.0
-        return true;
-
-    if (key == "shedding-strategy") // Was never used
-        return true;
 
     if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
@@ -1072,13 +1038,6 @@ bool Parameters::loadFromINI(const IniFile& ini, uint version, const StudyLoadOp
         {
             yearsWeight.resize(nbYears, 1.f);
         }
-    }
-
-    if (version < 400)
-    {
-        // resetting shedding strategies
-        power.fluctuations = lssFreeModulations;
-        shedding.policy = shpShavePeaks;
     }
 
     // Simulation mode

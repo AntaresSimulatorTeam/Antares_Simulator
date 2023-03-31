@@ -355,7 +355,7 @@ Version VersionIntToVersion(uint version)
         return versionUnknown;
     }
 #ifndef NDEBUG
-    if (version > 100 and version <= (uint)versionLatest)
+    if (version <= (uint)versionLatest)
     {
         assert(false and "missing switch entry");
     }
