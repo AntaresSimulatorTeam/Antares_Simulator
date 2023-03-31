@@ -5,7 +5,7 @@
 namespace Antares::Solver::Simulation
 {
 
-AdqPatchPostProcessList::AdqPatchPostProcessList(AdqPatchParams& adqPatchParams,
+AdqPatchPostProcessList::AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                                                  PROBLEME_HEBDO* problemeHebdo,
                                                  uint thread_number,
                                                  AreaList& areas,

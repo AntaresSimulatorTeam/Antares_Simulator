@@ -92,7 +92,7 @@ class CurtailmentSharingPostProcessCmd : public basePostProcessCommand
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 public:
-    CurtailmentSharingPostProcessCmd(AdqPatchParams& adqPatchParams,
+    CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                      PROBLEME_HEBDO* problemeHebdo,
                                      AreaList& areas,
                                      unsigned int thread_number);
@@ -106,7 +106,7 @@ private:
     std::set<int> getHoursRequiringCurtailmentSharing() const;
 
     const AreaList& area_list_;
-    AdqPatchParams& adqPatchParams_;
+    const AdqPatchParams& adqPatchParams_;
     unsigned int thread_number_ = 0;
 };
 

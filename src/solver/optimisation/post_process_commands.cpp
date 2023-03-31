@@ -185,7 +185,7 @@ void HydroLevelsFinalUpdatePostProcessCmd::execute(const optRuntimeData&)
 // --------------------------------------
 //  Curtailment sharing for adq patch
 // --------------------------------------
-CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(AdqPatchParams& adqPatchParams,
+CurtailmentSharingPostProcessCmd::CurtailmentSharingPostProcessCmd(const AdqPatchParams& adqPatchParams,
                                                                    PROBLEME_HEBDO* problemeHebdo,
                                                                    AreaList& areas,
                                                                    unsigned int thread_number) :

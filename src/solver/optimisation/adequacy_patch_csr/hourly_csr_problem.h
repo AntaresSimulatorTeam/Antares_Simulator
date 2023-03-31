@@ -78,7 +78,7 @@ public:
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
 
-    explicit HourlyCSRProblem(AdqPatchParams& adqPatchParams,PROBLEME_HEBDO* p) :
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,PROBLEME_HEBDO* p) :
         adqPatchParams_(adqPatchParams),
         problemeHebdo_(p)
     {

@@ -11,7 +11,7 @@ class AdqPatchPostProcessList : public interfacePostProcessList
 {
     using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
 public:
-    AdqPatchPostProcessList(AdqPatchParams& adqPatchParams,
+    AdqPatchPostProcessList(const AdqPatchParams& adqPatchParams,
                             PROBLEME_HEBDO* problemeHebdo,
                             uint thread_number,
                             AreaList& areas,
