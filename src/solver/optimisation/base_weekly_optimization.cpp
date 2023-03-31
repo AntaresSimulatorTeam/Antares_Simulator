@@ -30,6 +30,8 @@
 #include "weekly_optimization.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
+using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
 namespace Antares::Solver::Optimization
 {
 WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,

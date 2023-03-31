@@ -42,14 +42,15 @@ using namespace Antares::Data::AdequacyPatch;
 
 double calculateQuadraticCost(const PROBLEME_HEBDO* problemeHebdo, const AdqPatchPTO priceTakingOrder, int hour, int area)
 {
+    using namespace Data::AdequacyPatch;
     double priceTakingOrders = 0.0; // PTO
-    if (priceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isLoad)
+    if (priceTakingOrder == AdqPatchPTO::isLoad)
     {
         priceTakingOrders
           = problemeHebdo->ConsommationsAbattues[hour]->ConsommationAbattueDuPays[area]
             + problemeHebdo->AllMustRunGeneration[hour]->AllMustRunGenerationOfArea[area];
     }
-    else if (priceTakingOrder == Data::AdequacyPatch::AdqPatchPTO::isDens)
+    else // AdqPatchPTO::isDens
     {
         priceTakingOrders = problemeHebdo->ResultatsHoraires[area]->ValeursHorairesDENS[hour];
     }

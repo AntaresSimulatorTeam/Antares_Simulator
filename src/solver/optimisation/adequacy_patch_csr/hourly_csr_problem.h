@@ -83,7 +83,7 @@ public:
         problemeHebdo_(p)
     {
         double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-        belowThisThresholdSetToZero = temp < 0.1 ? temp : 0.1;
+        belowThisThresholdSetToZero = std::min(temp, 0.1);
 
         allocateProblem();
     }
