@@ -33,6 +33,7 @@
 #include <yuni/core/math.h>
 #include <limits>
 #include <antares/study/parts/hydro/container.h>
+#include <numeric>
 
 using namespace Yuni;
 
@@ -110,6 +111,9 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
 
         auto& data = pAreas[numSpace][z];
 
+        double totalYearMingen = 0.0;
+        double totalYearInflows = 0.0;
+
         for (uint month = 0; month != 12; ++month)
         {
             uint realmonth = calendar.months[month].realmonth;
@@ -123,82 +127,63 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
             for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
                 totalMonthInflows += srcinflows[d];
 
+            double totalMonthMingen = std::accumulate(
+              srcmingen + firstDayOfMonth * 24, srcmingen + firstDayOfNextMonth * 24, 0.);
+
+            totalYearInflows += totalMonthInflows;
+            totalYearMingen += totalMonthMingen;
+
             if (not(area.hydro.reservoirCapacity < 1e-4))
             {
                 if (area.hydro.reservoirManagement)
                 {
                     data.inflows[realmonth] = totalMonthInflows / (area.hydro.reservoirCapacity);
                     assert(!Math::NaN(data.inflows[month]) && "nan value detect in inflows");
-                }
-                else
-                    data.inflows[realmonth] = totalMonthInflows;
-            }
-            else
-            {
-                data.inflows[realmonth] = totalMonthInflows;
-            }
 
-            //CR22: Monthly minimum generation <= Monthly inflows for each month
-            double totalMonthMingen = 0.0;
-            for (uint d = firstDayOfMonth; d != firstDayOfNextMonth; ++d)
-            {
-                for (uint h = 0; h < 24; ++h)
-                {
-                    totalMonthMingen += srcmingen[d*24 + h];
-                }          
-            }
-
-            //CR22: set montly mingen, used later for h2o_m
-            if (not(area.hydro.reservoirCapacity < 1e-4))
-            {
-                if (area.hydro.reservoirManagement)
-                {
+                    // Set monthly mingen, used later for h2o_m
                     data.mingens[realmonth] = totalMonthMingen / (area.hydro.reservoirCapacity);
                     assert(!Math::NaN(data.mingens[month]) && "nan value detect in mingen");
                 }
                 else
+                {
+                    data.inflows[realmonth] = totalMonthInflows;
                     data.mingens[realmonth] = totalMonthMingen;
+                }
             }
             else
             {
+                data.inflows[realmonth] = totalMonthInflows;
                 data.mingens[realmonth] = totalMonthMingen;
-            }                  
+            }
 
-            if (area.hydro.followLoadModulations and not area.hydro.reservoirManagement)
+            // Monthly minimum generation <= Monthly inflows for each month
+            if (area.hydro.followLoadModulations && !area.hydro.reservoirManagement)
             {
-                if(totalMonthMingen > totalMonthInflows)
+                if (totalMonthMingen > totalMonthInflows)
                 {
-                    logs.error() << "In Area "<< area.name << " the minimum generation of "
-                    << totalMonthMingen << " MW in month " << month + 1 << " of TS-" << tsIndex + 1<< " is incompatible with the inflows of "
-                    << totalMonthInflows << " MW.";
+                    logs.error() << "In Area " << area.name << " the minimum generation of "
+                                 << totalMonthMingen << " MW in month " << month + 1 << " of TS-"
+                                 << tsIndex + 1 << " is incompatible with the inflows of "
+                                 << totalMonthInflows << " MW.";
                 }
             }
         }
 
-        if (area.hydro.followLoadModulations and area.hydro.reservoirManagement)
+        if (area.hydro.followLoadModulations && area.hydro.reservoirManagement)
         {
-            //CR22: Yearly minimum generation <= Yearly inflows for each year 
-            double totalYearMingen = 0.0;
-            double totalYearInflows = 0.0;
-            for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
+            // Yearly minimum generation <= Yearly inflows
+            if (totalYearMingen > totalYearInflows)
             {
-                totalYearMingen += srcmingen[hour];
-            }
-            for (uint day = 0; day < DAYS_PER_YEAR; ++day)
-            {
-                totalYearInflows += srcinflows[day];
-            }
-            if(totalYearMingen > totalYearInflows)
-            {
-                logs.error() << "In Area "<< area.name << " the minimum generation of "
-                << totalYearMingen << " MW of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
-                << totalYearInflows << " MW.";
+                logs.error() << "In Area " << area.name << " the minimum generation of "
+                             << totalYearMingen << " MW of TS-" << tsIndex + 1
+                             << " is incompatible with the inflows of " << totalYearInflows
+                             << " MW.";
             }
         }
 
-        if (not area.hydro.followLoadModulations)
+        if (!area.hydro.followLoadModulations)
         {
-            //CR22: Weekly minimum generation <= Weekly inflows for each week 
+            // Weekly minimum generation <= Weekly inflows for each week 
             for (uint week = 0; week < 53; ++week)
             {
                 double totalWeekMingen = 0.0;
