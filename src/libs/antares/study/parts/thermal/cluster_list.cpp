@@ -339,7 +339,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
                     else
                     {
                         const auto& marginalCostPerHour
-                          = cluster->marginalCostPerHourTs[0];
+                          = cluster->thermalEconomicTimeSeries[0].marginalCostPerHourTs;
                         for (uint h = 0; h != cluster->modulation.height; ++h)
                             prodCost[h] = marginalCostPerHour[h] * modulation[h];
                     }

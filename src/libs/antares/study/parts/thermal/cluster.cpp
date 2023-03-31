@@ -43,7 +43,6 @@ using namespace Antares;
 #define THERMALAGGREGATELIST_INITIAL_CAPACITY 10
 
 #define SEP IO::Separator
-const std::array<double, HOURS_PER_YEAR> tmp = {0.};
 
 namespace Yuni
 {
@@ -147,9 +146,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
- productionCostTs(1, tmp),
- marketBidCostPerHourTs(1, tmp),
- marginalCostPerHourTs(1, tmp),
+ thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -196,9 +193,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
- productionCostTs(1, tmp),
- marketBidCostPerHourTs(1, tmp),
- marginalCostPerHourTs(1, tmp),
+ thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
@@ -289,9 +284,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     fixedCost = cluster.fixedCost;
     startupCost = cluster.startupCost;
     marketBidCost = cluster.marketBidCost;
-    productionCostTs = cluster.productionCostTs;
-    marketBidCostPerHourTs = cluster.marginalCostPerHourTs;
-    marginalCostPerHourTs = cluster.marginalCostPerHourTs;
+    // assignment “=” operator can be used to copy-paste vector by value
+    thermalEconomicTimeSeries = cluster.thermalEconomicTimeSeries;
 
     // group {min,max}
     groupMinCount = cluster.groupMinCount;
@@ -472,8 +466,12 @@ void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 
 void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPerHour()
 {
-    std::fill(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), marketBidCost);
-    std::fill(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), marginalCost);
+    std::fill(thermalEconomicTimeSeries[0].marketBidCostPerHourTs.begin(),
+              thermalEconomicTimeSeries[0].marketBidCostPerHourTs.end(),
+              marketBidCost);
+    std::fill(thermalEconomicTimeSeries[0].marginalCostPerHourTs.begin(),
+              thermalEconomicTimeSeries[0].marginalCostPerHourTs.end(),
+              marginalCost);
     return;
 }
 
@@ -483,36 +481,37 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
     uint co2CostWidth = prepro->co2cost.width;
     uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
-    marketBidCostPerHourTs.resize(tsCount, tmp); // add blank array with 8760-zeros
-    marginalCostPerHourTs.resize(tsCount, tmp);  // add blank array with 8760-zeros
-    productionCostTs.resize(tsCount, tmp);       // add blank array with 8760-zeros
+    thermalEconomicTimeSeries.resize(tsCount, ThermalEconomicTimeSeries());
     for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
     {
         uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
         uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            marketBidCostPerHourTs[tsIndex - 1][hour]
+            thermalEconomicTimeSeries[tsIndex - 1].marketBidCostPerHourTs[hour]
               = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
                 + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2 - 1][hour]
                 + variableomcost;
-            marginalCostPerHourTs[tsIndex - 1][hour] = marketBidCostPerHourTs[tsIndex - 1][hour];
+            thermalEconomicTimeSeries[tsIndex - 1].marginalCostPerHourTs[hour]
+              = thermalEconomicTimeSeries[tsIndex - 1].marketBidCostPerHourTs[hour];
             if (modulation.width > 0)
             {
-                productionCostTs[tsIndex - 1][hour]
-                  = marginalCostPerHourTs[tsIndex - 1][hour]
+                thermalEconomicTimeSeries[tsIndex - 1].productionCostTs[hour]
+                  = thermalEconomicTimeSeries[tsIndex - 1].marginalCostPerHourTs[hour]
                     * modulation[Data::thermalModulationCost][hour];
             }
         }
     }
 
     // calculate marketBidCost and marginalBidCost as average of the first column
-    marketBidCost
-      = std::accumulate(marketBidCostPerHourTs[0].begin(), marketBidCostPerHourTs[0].end(), 0)
-        / HOURS_PER_YEAR;
-    marginalCost
-      = std::accumulate(marginalCostPerHourTs[0].begin(), marginalCostPerHourTs[0].end(), 0)
-        / HOURS_PER_YEAR;
+    marketBidCost = std::accumulate(thermalEconomicTimeSeries[0].marketBidCostPerHourTs.begin(),
+                                    thermalEconomicTimeSeries[0].marketBidCostPerHourTs.end(),
+                                    0)
+                    / HOURS_PER_YEAR;
+    marginalCost = std::accumulate(thermalEconomicTimeSeries[0].marginalCostPerHourTs.begin(),
+                                   thermalEconomicTimeSeries[0].marginalCostPerHourTs.end(),
+                                   0)
+                   / HOURS_PER_YEAR;
 
     return;
 }
@@ -548,8 +547,6 @@ void Data::ThermalCluster::reset()
     // solver
     if (productionCost)
         (void)::memset(productionCost, 0, HOURS_PER_YEAR * sizeof(double));
-    if (!productionCostTs.empty())
-        productionCostTs.clear();
 
     Cluster::reset();
 
@@ -585,12 +582,7 @@ void Data::ThermalCluster::reset()
     startupCost = 0.;
     marketBidCost = 0.;
     variableomcost = 0.;
-    productionCostTs.clear();
-    marketBidCostPerHourTs.clear();
-    marginalCostPerHourTs.clear();
-    marketBidCostPerHourTs.push_back(tmp);
-    marginalCostPerHourTs.push_back(tmp);
-    productionCostTs.push_back(tmp);
+    thermalEconomicTimeSeries.resize(1, ThermalEconomicTimeSeries());
     // group{min,max}
     groupMinCount = 0;
     groupMaxCount = 0;
@@ -859,13 +851,13 @@ unsigned int ThermalCluster::precision() const
 
 double ThermalCluster::getOperatingCost(uint serieIndex, uint hourInTheYear) const
 {
-    double thermalClusterOperatingCost (0.0);
+    double thermalClusterOperatingCost(0.0);
     if (costgeneration == Data::setManually)
         thermalClusterOperatingCost = productionCost[hourInTheYear];
     else
         thermalClusterOperatingCost
-            = productionCostTs[Math::Min(
-                serieIndex, productionCostTs.size() - 1)][hourInTheYear];
+          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
+              .productionCostTs[hourInTheYear];
     return thermalClusterOperatingCost;
 }
 
@@ -875,8 +867,9 @@ double ThermalCluster::getMarginalCost(uint serieIndex, uint hourInTheYear) cons
     if (costgeneration == Data::setManually)
         marginalCostPerHour = marginalCost;
     else
-        marginalCostPerHour = marginalCostPerHourTs[Math::Min(
-          serieIndex, marginalCostPerHourTs.size() - 1)][hourInTheYear];
+        marginalCostPerHour
+          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
+              .marginalCostPerHourTs[hourInTheYear];
     /* Math::Min is necessary in case Availability has e.g 10 TS and both FuelCost & Co2Cost have
      only 1TS. Then - > In order to save memory marginalCostPerHourTs vector has only one array
      inside -> that is used for all (e.g.10) TS*/
@@ -889,8 +882,9 @@ double ThermalCluster::getMarketBidCost(uint serieIndex, uint hourInTheYear) con
     if (costgeneration == Data::setManually)
         marketBidCostPerHour = marketBidCost;
     else
-        marketBidCostPerHour = marketBidCostPerHourTs[Math::Min(
-          serieIndex, marketBidCostPerHourTs.size() - 1)][hourInTheYear];
+        marketBidCostPerHour
+          = thermalEconomicTimeSeries[Math::Min(serieIndex, thermalEconomicTimeSeries.size() - 1)]
+              .marketBidCostPerHourTs[hourInTheYear];
     return marketBidCostPerHour;
 }
 
