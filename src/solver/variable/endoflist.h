@@ -95,7 +95,6 @@ public:
 
     static void initializeFromStudy(Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
     }
 
     static void initializeFromArea(Data::Study*, Data::Area*)
@@ -114,7 +113,10 @@ public:
 
     void getPrintStatusFromStudy(Data::Study& study)
     {
-        study.parameters.variablesPrintInfo.resetInfoIterator();
+    }
+
+    void supplyMaxNumberOfColumns(Data::Study& study)
+    {
     }
 
     static void simulationBegin()

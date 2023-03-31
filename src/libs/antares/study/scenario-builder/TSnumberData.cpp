@@ -515,8 +515,7 @@ bool renewableTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
-    uint clusterCount
-      = (study.usedByTheSolver) ? (pArea->renewable.list.size()) : pArea->renewable.list.size();
+    const uint clusterCount = pArea->renewable.list.size();
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;
