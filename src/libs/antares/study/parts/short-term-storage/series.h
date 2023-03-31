@@ -44,8 +44,8 @@ public:
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
-
-private:
-    bool loadVector(const std::string& path, std::vector<double>& vect) const;
 };
+
+bool loadFile(const std::string& folder, std::vector<double>& vect);
+
 } // namespace Antares::Data::ShortTermStorage
