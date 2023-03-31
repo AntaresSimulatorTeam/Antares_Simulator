@@ -87,102 +87,6 @@ AreaLink::~AreaLink()
 {
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study)
-{
-    String buffer;
-    bool ret = true;
-
-    // gp : refactor this part : avoid code duplication
-    parameters.resize(fhlMax, HOURS_PER_YEAR);
-    parameters.zero();
-    if (parameters.jit)
-    {
-        parameters.jit->options |= Matrix<>::optFixedSize;
-        parameters.markAsModified();
-    }
-
-    directCapacities.resize(1, HOURS_PER_YEAR);
-    directCapacities.zero();
-    if (directCapacities.jit)
-    {
-        directCapacities.jit->options |= Matrix<>::optFixedSize;
-        directCapacities.markAsModified();
-    }
-
-    indirectCapacities.resize(1, HOURS_PER_YEAR);
-    indirectCapacities.zero();
-    if (indirectCapacities.jit)
-    {
-        indirectCapacities.jit->options |= Matrix<>::optFixedSize;
-        indirectCapacities.markAsModified();
-    }
-
-    uint loadOptions = Matrix<>::optFixedSize | Matrix<>::optImmediate;
-    // NTC direct
-    buffer.clear() << folder << SEP << with->id << SEP << "direct." << study.inputExtension;
-    ret = directCapacities.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
-    directCapacities.markAsModified();
-
-    // NTC indirect
-    buffer.clear() << folder << SEP << with->id << SEP << "indirect." << study.inputExtension;
-    ret = indirectCapacities.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
-    indirectCapacities.markAsModified();
-
-    // Impedances
-    buffer.clear() << folder << SEP << with->id << SEP << "impedances." << study.inputExtension;
-    Matrix<double> tmp;
-    ret = tmp.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, loadOptions) && ret;
-    parameters.pasteToColumn(fhlImpedances, tmp[0]);
-    parameters.markAsModified();
-
-    return ret;
-}
-
-bool AreaLink::linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder)
-{
-    String buffer;
-    bool ret = true;
-
-    bool enabledModeIsChanged = false;
-    if (JIT::enabled)
-    {
-        JIT::enabled = false; // Allowing to read the area's daily max power
-        enabledModeIsChanged = true;
-    }
-
-    // Resize link's data container
-    parameters.resize(fhlMax, HOURS_PER_YEAR);
-    directCapacities.resize(1, HOURS_PER_YEAR);
-    indirectCapacities.resize(1, HOURS_PER_YEAR);
-
-    // Initialize link's data container
-    parameters.zero();
-    directCapacities.zero();
-    indirectCapacities.zero();
-
-    // Load link's data
-    buffer.clear() << folder << SEP << with->id << ".txt";
-    Matrix<> tmpMatrix;
-    ret = tmpMatrix.loadFromCSVFile(
-            buffer, 5, HOURS_PER_YEAR, Matrix<>::optFixedSize | Matrix<>::optImmediate)
-          && ret;
-
-    // Store data into link's data container
-    for (int h = 0; h < HOURS_PER_YEAR; h++)
-    {
-        directCapacities[0][h] = tmpMatrix[0][h];
-        indirectCapacities[0][h] = tmpMatrix[1][h];
-        parameters[fhlImpedances][h] = tmpMatrix[2][h];
-        parameters[fhlHurdlesCostDirect][h] = tmpMatrix[3][h];
-        parameters[fhlHurdlesCostIndirect][h] = tmpMatrix[4][h];
-    }
-
-    if (enabledModeIsChanged)
-        JIT::enabled = true; // Back to the previous loading mode.
-
-    return ret;
-}
-
 bool AreaLink::linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder)
 {
     String buffer;
@@ -274,16 +178,10 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
 
 bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
 {
-    if (study.header.version < 320)
-        return linkLoadTimeSeries_for_version_under_320(folder, study);
-    else if (study.header.version < 630)
-        return linkLoadTimeSeries_for_version_from_320_to_630(folder);
-    else if (study.header.version < 820)
+    if (study.header.version < 820)
         return linkLoadTimeSeries_for_version_from_630_to_810(folder);
     else
-    {
         return linkLoadTimeSeries_for_version_820_and_later(folder);
-    }
 }
 
 void AreaLink::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const
@@ -518,12 +416,7 @@ static bool AreaLinksInternalLoadFromProperty(Study& study,
         link.filterYearByYear = stringIntoDatePrecision(value);
         return true;
     }
-    if (study.header.version < 330)
-    {
-        // In releases prior 3.3, some useless fields were saved/loaded
-        // (only required by the expansion mode)
-        return (key == "thresholdmin") || (key == "thresholdmax") || (key == "investment");
-    }
+
     return false;
 }
 
@@ -554,10 +447,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
 
     /* Initialize */
     String buffer;
-    if (study.header.version < 320)
-        buffer << folder << SEP << "ntc.ini";
-    else
-        buffer << folder << SEP << "properties.ini";
+    buffer << folder << SEP << "properties.ini";
 
     IniFile ini;
     if (!ini.open(buffer))
@@ -679,59 +569,6 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             value = p->value;
             if (!AreaLinksInternalLoadFromProperty(study, link, key, value))
                 logs.warning() << '`' << p->key << "`: Unknown property";
-        }
-
-        if (study.header.version < 400)
-        {
-            // Before 3.9, it was possible to set hurdle costs below
-            // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL which is a mistake (see virtual costs).
-            // Starting from 3.9, the UI does not longer allow values below
-            // LINK_MINIMAL_HURDLE_COSTS_NOT_NULL but we have to normalize the hurdle costs for
-            // older studies. We can not directly use 0 it will bring too much damage to the results
-            link.parameters.forceReload(true);
-            auto& hurdleCostsD = link.parameters[Data::fhlHurdlesCostDirect];
-            auto& hurdleCostsI = link.parameters[Data::fhlHurdlesCostIndirect];
-            bool rounding = false;
-
-            for (uint h = 0; h != link.parameters.height; ++h)
-            {
-                if (Math::Abs(hurdleCostsD[h]) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
-                {
-                    if (Math::Abs(hurdleCostsD[h]) < 1e-22)
-                        hurdleCostsD[h] = 0.;
-                    else
-                    {
-                        hurdleCostsD[h] = (hurdleCostsD[h] > 0.)
-                                            ? +LINK_MINIMAL_HURDLE_COSTS_NOT_NULL
-                                            : -LINK_MINIMAL_HURDLE_COSTS_NOT_NULL;
-                        rounding = true;
-                    }
-                }
-                if (Math::Abs(hurdleCostsI[h]) < LINK_MINIMAL_HURDLE_COSTS_NOT_NULL)
-                {
-                    if (Math::Abs(hurdleCostsI[h]) < 1e-22)
-                        hurdleCostsI[h] = 0.;
-                    else
-                    {
-                        hurdleCostsI[h] = (hurdleCostsI[h] > 0)
-                                            ? +LINK_MINIMAL_HURDLE_COSTS_NOT_NULL
-                                            : -LINK_MINIMAL_HURDLE_COSTS_NOT_NULL;
-                        rounding = true;
-                    }
-                }
-            }
-            link.parameters.markAsModified();
-
-            if (rounding)
-            {
-                CString<16, false> roundValue(LINK_MINIMAL_HURDLE_COSTS_NOT_NULL);
-                roundValue.trimRight('0');
-                if (roundValue.last() == '.')
-                    roundValue.removeLast();
-                logs.warning() << "link " << link.from->id << " / " << link.with->id
-                               << ": hurdle costs < " << LINK_MINIMAL_HURDLE_COSTS_NOT_NULL
-                               << " (but not null) have been rounding to " << roundValue;
-            }
         }
 
         // From the solver only
