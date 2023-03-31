@@ -144,20 +144,7 @@ bool StringToStudyMode(StudyMode& mode, CString<20, false> text)
     if (!text)
         return false;
     if (text.size() == 1)
-    {
-        // Compatibility with v2.x
-        if ('0' == text[0])
-        {
-            mode = stdmAdequacy;
-            return true;
-        }
-        if ('1' == text[0])
-        {
-            mode = stdmEconomy;
-            return true;
-        }
         return false;
-    }
 
     // Converting into lowercase
     text.toLower();
@@ -929,6 +916,9 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     // Custom set
     if (key == "customset")
         return true; // value ignored
+
+    if (key == "shedding-strategy") // Was never used
+        return true;
 
     if (key == "day-ahead-reserve-management") // ignored since 8.4
         return true;
