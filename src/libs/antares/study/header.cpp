@@ -165,19 +165,16 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 200 || version == 2)
+    if (version > static_cast<uint>(Data::versionLatest))
     {
-        if (version > static_cast<uint>(Data::versionLatest))
+        if (warnings)
         {
-            if (warnings)
-            {
-                logs.error() << "Header: This version is not supported (version found:" << version
-                             << ", expected: <=" << static_cast<uint>(Data::versionLatest) << ')';
-            }
-            return false;
+            logs.error() << "Header: This version is not supported (version found:" << version
+                         << ", expected: <=" << static_cast<uint>(Data::versionLatest) << ')';
         }
-        return true;
+        return false;
     }
+    return true;
 
     if (warnings)
         logs.error() << "Study header: Invalid format";
