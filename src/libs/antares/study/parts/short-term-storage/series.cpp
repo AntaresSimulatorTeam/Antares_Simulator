@@ -26,20 +26,18 @@
 */
 #include <yuni/io/file.h>
 #include <antares/logs.h>
+#include <antares/constants.h>
 #include <antares/array/array1d.h>
 
 #include "series.h"
-
-#define VECTOR_SERIES_SIZE 8760
 
 namespace Antares::Data::ShortTermStorage
 {
 bool Series::validate() const
 {
-    if (maxInjectionModulation.size() != VECTOR_SERIES_SIZE
-        || maxWithdrawalModulation.size() != VECTOR_SERIES_SIZE
-        || inflows.size() != VECTOR_SERIES_SIZE || lowerRuleCurve.size() != VECTOR_SERIES_SIZE
-        || upperRuleCurve.size() != VECTOR_SERIES_SIZE)
+    if (maxInjectionModulation.size() != HOURS_PER_YEAR
+        || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
+        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
     {
         logs.warning() << "Size of series for short term storage is wrong";
         return false;
@@ -60,20 +58,20 @@ bool Series::loadFromFolder(const std::string& folder)
     return ret;
 }
 
-bool Series::loadVector(const std::string& path, std::vector<double>& vect)
+bool Series::loadVector(const std::string& path, std::vector<double>& vect) const
 {
     if (!Yuni::IO::File::Exists(path))
         return true;
 
-    vect.resize(VECTOR_SERIES_SIZE);
-    return Array1DLoadFromFile(path.c_str(), vect.data(), VECTOR_SERIES_SIZE);
+    vect.resize(HOURS_PER_YEAR);
+    return Array1DLoadFromFile(path.c_str(), vect.data(), HOURS_PER_YEAR);
 }
 
 void Series::fillDefaultSeriesIfEmpty()
 {
     auto fillIfEmpty = [](std::vector<double>& v, double value) {
         if (v.empty())
-            v.resize(VECTOR_SERIES_SIZE, value);
+            v.resize(HOURS_PER_YEAR, value);
     };
 
     fillIfEmpty(maxInjectionModulation, 1.0);

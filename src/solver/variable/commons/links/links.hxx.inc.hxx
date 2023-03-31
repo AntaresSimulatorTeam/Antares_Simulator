@@ -42,7 +42,7 @@ inline Links::Links()
     // Do nothing
 }
 
-inline void Links::initializeFromStudy(Data::Study& study)
+inline void Links::initializeFromStudy([[maybe_unused]]  Data::Study& study)
 {
     // Do nothing
 }

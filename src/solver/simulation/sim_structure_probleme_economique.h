@@ -185,10 +185,6 @@ struct RESULTS
 };
 } // namespace ShortTermStorage
 
-// TODO remove
-// double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-//                               ->ShortTermStorage[pdtHebdo].level[index]);
-
 typedef struct
 {
     double* variablesDuales;
