@@ -117,7 +117,7 @@ public:
     class EnvForLoading final
     {
     public:
-        EnvForLoading(AreaList& l, uint v) : areaList(l), version(v)
+        EnvForLoading(AreaList& l) : areaList(l)
         {
         }
         //! INI file
@@ -131,8 +131,6 @@ public:
 
         //! List of areas
         AreaList& areaList;
-        //! Study version
-        uint version;
     };
 
     class EnvForSaving final

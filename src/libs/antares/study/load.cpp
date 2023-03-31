@@ -171,9 +171,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // Initialize all internal paths
     relocate(path);
 
-    // Compatibility - The extension according the study version
-    inputExtensionCompatibility();
-
     // Reserving enough space in buffer to avoid several calls to realloc
     this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
     this->bufferLoadingTS.reserve(2096);
@@ -212,47 +209,24 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     return ret;
 }
 
-void Study::inputExtensionCompatibility()
-{
-    // The extension to use according the version
-    if (header.version < 310)
-    {
-        // Since v3.1, all extensions have been changed into .txt in the input folder.
-        inputExtension = "csv";
-        // In order to properly save the study from the interface, the Just-In-Time
-        // mecanism must be temporary disabled
-        JIT::enabled = 0;
-    }
-    else
-        inputExtension = "txt";
-}
-
 bool Study::internalLoadCorrelationMatrices(const StudyLoadOptions& options)
 {
-    if ((uint)header.version > (uint)version320)
-    {
-        // Load
-        if (!options.loadOnlyNeeded or timeSeriesLoad & parameters.timeSeriesToRefresh
+    // Load
+    if (!options.loadOnlyNeeded or timeSeriesLoad & parameters.timeSeriesToRefresh
             || timeSeriesLoad & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproLoadCorrelation.loadFromFile(*this, buffer);
-        }
-
-        // Solar
-        if (!options.loadOnlyNeeded or timeSeriesSolar & parameters.timeSeriesToRefresh
-            || timeSeriesSolar & parameters.timeSeriesToGenerate)
-        {
-            buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
-                           << "correlation.ini";
-            preproSolarCorrelation.loadFromFile(*this, buffer);
-        }
-    }
-    else
     {
-        preproLoadCorrelation.reset(*this);
-        preproSolarCorrelation.reset(*this);
+        buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproLoadCorrelation.loadFromFile(*this, buffer);
+    }
+
+    // Solar
+    if (!options.loadOnlyNeeded or timeSeriesSolar & parameters.timeSeriesToRefresh
+            || timeSeriesSolar & parameters.timeSeriesToGenerate)
+    {
+        buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP
+            << "correlation.ini";
+        preproSolarCorrelation.loadFromFile(*this, buffer);
     }
 
     // Wind
