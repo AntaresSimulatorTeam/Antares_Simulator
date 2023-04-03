@@ -307,8 +307,6 @@ static bool AreaLinksInternalLoadFromProperty(AreaLink& link,
 {
     if (key == "hurdles-cost")
         return value.to<bool>(link.useHurdlesCost);
-    if (key == "loop-flow-fee") // backward compatibility with version 6.5.1
-        return value.to<bool>(link.useLoopFlow);
     if (key == "loop-flow")
         return value.to<bool>(link.useLoopFlow);
     if (key == "use-phase-shifter")
