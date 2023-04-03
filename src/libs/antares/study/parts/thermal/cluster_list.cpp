@@ -207,25 +207,12 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "annuityinvestment")
         return p->value.to<uint>(cluster.annuityInvestment);
-    if (p->key == "dailyminimumcapacity")
-    {
-        double d = p->value.to<double>();
-        if (cluster.minUpTime < 24)
-            cluster.minUpTime = 24;
-        if (cluster.minDownTime < 24)
-            cluster.minDownTime = 24;
-        cluster.minStablePower = std::max(cluster.minStablePower, d);
-        return true; // ignored since 3.7
-    }
+
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
     if (p->key == "fixed-cost")
         return p->value.to<double>(cluster.fixedCost);
-    if (p->key == "flexibility")
-    {
-        // The flexibility is now ignored since v3.5
-        return true;
-    }
+
     if (p->key == "groupmincount")
         return p->value.to<uint>(cluster.groupMinCount);
     if (p->key == "groupmaxcount")
@@ -238,12 +225,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
     if (p->key == "gen-ts")
     {
         return p->value.to(cluster.tsGenBehavior);
-    }
-    if (p->key == "hourlyminimumcapacity")
-    {
-        double d = p->value.to<double>();
-        cluster.minStablePower = std::max(cluster.minStablePower, d);
-        return true; // ignored since 3.7
     }
     if (p->key == "law.planned")
         return p->value.to(cluster.plannedLaw);
@@ -283,31 +264,10 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         }
         return false;
     }
-    // for compatibility < 5.0
-    if (p->key == "min-updown-time")
-    {
-        uint val;
-        p->value.to<uint>(val);
-        if (val)
-        {
-            if (val < 1)
-                val = 1;
-            if (val > 168)
-                val = 168;
-            cluster.minUpTime = val;
-            cluster.minDownTime = val;
-            return true;
-        }
-        return false;
-    }
     if (p->key == "name")
         return true; // silently ignore it
     if (p->key == "nominalcapacity")
         return p->value.to<double>(cluster.nominalCapacity);
-
-    // for compatibility <3.5
-    if (p->key == "operatingcost")
-        return p->value.to<double>(cluster.marketBidCost);
 
     if (p->key == "spread-cost")
         return p->value.to<double>(cluster.spreadCost);
@@ -315,9 +275,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to<double>(cluster.spinning);
     if (p->key == "startup-cost")
         return p->value.to<double>(cluster.startupCost);
-    // for compatibility <3.5
-    if (p->key == "stddeviationannualcost")
-        return p->value.to<double>(cluster.spreadCost);
 
     if (p->key == "unitcount")
         return p->value.to<uint>(cluster.unitCount);
@@ -325,16 +282,6 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to(cluster.plannedVolatility);
     if (p->key == "volatility.forced")
         return p->value.to(cluster.forcedVolatility);
-    if (p->key == "weeklyminimumcapacity")
-    {
-        double d = p->value.to<double>();
-        if (cluster.minUpTime < 168)
-            cluster.minUpTime = 168;
-        if (cluster.minDownTime < 168)
-            cluster.minDownTime = 168;
-        cluster.minStablePower = std::max(cluster.minStablePower, d);
-        return true; // ignored since 3.7
-    }
 
     //pollutant
     if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
