@@ -301,7 +301,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-static bool AreaLinksInternalLoadFromProperty(AreaLink& link,
+bool AreaLinksInternalLoadFromProperty(AreaLink& link,
                                               const String& key,
                                               const String& value)
 {
