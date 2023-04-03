@@ -1456,7 +1456,7 @@ void AreaListDeleteLinkFromAreaPtr(AreaList* list, const Area* a)
 bool AreaList::forceReload(bool reload) const
 {
     bool ret = true;
-    each([&](Data::Area& area) { ret = area.forceReload(reload) && ret; });
+    each([&ret, &reload](const Data::Area& area) { ret = area.forceReload(reload) && ret; });
     return ret;
 }
 
