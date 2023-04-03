@@ -50,9 +50,9 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+bool Prepro::loadFromFolder(const AnyString& folder)
 {
-    return xcast.loadFromFolder(study, folder);
+    return xcast.loadFromFolder(folder);
 }
 
 bool Prepro::saveToFolder(const AnyString& folder) const

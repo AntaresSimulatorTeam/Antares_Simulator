@@ -390,13 +390,13 @@ bool Study::reloadXCastData()
 
         // Load
         buffer.clear() << folderInput << SEP << "load" << SEP << "prepro" << SEP << area.id;
-        ret = area.load.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.load.prepro->loadFromFolder(buffer) and ret;
         // Solar
         buffer.clear() << folderInput << SEP << "solar" << SEP << "prepro" << SEP << area.id;
-        ret = area.solar.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.solar.prepro->loadFromFolder(buffer) and ret;
         // Wind
         buffer.clear() << folderInput << SEP << "wind" << SEP << "prepro" << SEP << area.id;
-        ret = area.wind.prepro->loadFromFolder(*this, buffer) and ret;
+        ret = area.wind.prepro->loadFromFolder(buffer) and ret;
     });
     return ret;
 }

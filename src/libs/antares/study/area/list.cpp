@@ -848,7 +848,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             // if changes are required, please update reloadXCastData()
             buffer.clear() << study.folderInput << SEP << "load" << SEP << "prepro" << SEP
                            << area.id;
-            ret = area.load.prepro->loadFromFolder(study, buffer) and ret;
+            ret = area.load.prepro->loadFromFolder(buffer) and ret;
         }
         if (area.load.series and (!options.loadOnlyNeeded or !area.load.prepro)) // Series
         {
@@ -868,7 +868,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             // if changes are required, please update reloadXCastData()
             buffer.clear() << study.folderInput << SEP << "solar" << SEP << "prepro" << SEP
                            << area.id;
-            ret = area.solar.prepro->loadFromFolder(study, buffer) and ret;
+            ret = area.solar.prepro->loadFromFolder(buffer) and ret;
         }
         if (area.solar.series and (!options.loadOnlyNeeded or !area.solar.prepro)) // Series
         {
@@ -911,7 +911,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             // if changes are required, please update reloadXCastData()
             buffer.clear() << study.folderInput << SEP << "wind" << SEP << "prepro" << SEP
                            << area.id;
-            ret = area.wind.prepro->loadFromFolder(study, buffer) and ret;
+            ret = area.wind.prepro->loadFromFolder(buffer) and ret;
         }
         if (area.wind.series and (!options.loadOnlyNeeded or !area.wind.prepro)) // Series
         {

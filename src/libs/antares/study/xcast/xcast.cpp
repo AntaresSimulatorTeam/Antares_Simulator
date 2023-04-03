@@ -40,21 +40,6 @@ namespace Antares
 {
 namespace Data
 {
-static void XCastNormalizeMuStrictlyLessThan24(Matrix<float>& data)
-{
-    data.forceReload(true); // load data if needed
-    bool modified = false;
-    for (uint i = 0; i != data.height; ++i)
-    {
-        if (data[XCast::dataCoeffMu][i] > 23.f)
-        {
-            data[XCast::dataCoeffMu][i] = 23.f;
-            modified = true;
-        }
-    }
-    if (modified)
-        data.markAsModified();
-}
 
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
 {
@@ -184,7 +169,7 @@ void XCast::resetToDefaultValues()
     useTranslation = tsTranslationNone;
 }
 
-bool XCast::loadFromFolder(Study& study, const AnyString& folder)
+bool XCast::loadFromFolder(const AnyString& folder)
 {
     // reset
     distribution = dtBeta;
