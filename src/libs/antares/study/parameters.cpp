@@ -929,6 +929,10 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "adequacy-block-size") // ignored since 8.5
         return true;
 
+    // deprecated but needed for testing old studies
+    if (key == "include-split-exported-mps")
+        return true;
+
     return false;
 }
 
