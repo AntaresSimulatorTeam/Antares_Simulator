@@ -75,4 +75,9 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
     return ret;
 }
 
+bool STStorageCluster::validateInitialLevel()
+{
+    return true;
+}
+
 } // namespace Antares::Data::ShortTermStorage

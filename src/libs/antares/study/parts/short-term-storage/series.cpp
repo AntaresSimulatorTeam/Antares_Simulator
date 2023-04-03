@@ -45,18 +45,16 @@ bool Series::validate() const
         return false;
     }
 
-    auto checkVectPositive = [](const std::vector<double>& v) {
-        return std::all_of(v.begin(), v.end(), [](double d){ return d >= 0.0; });
-    };
-    if (!checkVectPositive(maxInjectionModulation) || !checkVectPositive(maxWithdrawalModulation))
-    {
-        logs.warning() << "Values for PMAX series should be positive";
-        return false;
-    }
-
     auto checkVectBetween = [](const std::vector<double>& v) {
         return std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); });
     };
+
+    if (!checkVectBetween(maxInjectionModulation) || !checkVectBetween(maxWithdrawalModulation))
+    {
+        logs.warning() << "Values for PMAX series should be between 0 and 1";
+        return false;
+    }
+
     if (!checkVectBetween(lowerRuleCurve) || !checkVectBetween(upperRuleCurve))
     {
         logs.warning() << "Values for rule curve series should be between 0 and 1";
