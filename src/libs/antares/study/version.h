@@ -85,7 +85,7 @@ enum
 ** \param checkFor1x True to check for an old 1.x study
 ** \return The version of the study. `VersionUnknown` of not found
 */
-Version StudyTryToFindTheVersion(const AnyString& folder, bool checkFor1x = true);
+Version StudyTryToFindTheVersion(const AnyString& folder);
 
 /*!
 ** \brief Get the human readable version of the version of a study

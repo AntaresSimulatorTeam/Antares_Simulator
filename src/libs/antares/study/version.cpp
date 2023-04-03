@@ -180,7 +180,7 @@ Version VersionIntToVersion(uint version)
     return versionUnknown;
 }
 
-Version StudyTryToFindTheVersion(const AnyString& folder, bool checkFor1x)
+Version StudyTryToFindTheVersion(const AnyString& folder)
 {
     if (folder.empty()) // trivial check
         return versionUnknown;
