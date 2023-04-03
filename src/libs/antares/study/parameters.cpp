@@ -929,13 +929,6 @@ static bool SGDIntLoadFamily_Legacy(Parameters& d,
     if (key == "adequacy-block-size") // ignored since 8.5
         return true;
 
-    // deprecated
-    if (key == "thresholdmin")
-        return true; // value.to<int>(d.thresholdMinimum);
-    if (key == "thresholdmax")
-        return true; // value.to<int>(d.thresholdMaximum);
-    if (key == "include-split-exported-mps")
-        return true;
     return false;
 }
 
