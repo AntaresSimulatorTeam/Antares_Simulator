@@ -117,7 +117,7 @@ public:
     class EnvForLoading final
     {
     public:
-        EnvForLoading(AreaList& l) : areaList(l)
+        explicit EnvForLoading(AreaList& l) : areaList(l)
         {
         }
         //! INI file

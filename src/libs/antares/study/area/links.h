@@ -72,7 +72,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(Study& study, const AnyString& folder);
+    bool loadTimeSeries(const Study& study, const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 

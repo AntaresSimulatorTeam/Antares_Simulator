@@ -950,68 +950,68 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     buffer.clear() << study.folderInput << SEP << "areas" << SEP << area.id << SEP
                    << "optimization.ini";
     IniFile ini;
-    if (ini.open(buffer))
-    {
-        ini.each([&](const IniFile::Section& section) {
-            for (auto* p = section.firstProperty; p; p = p->next)
-            {
-                bool value = p->value.to<bool>();
-                CString<30, false> tmp;
-                tmp = p->key;
-                tmp.toLower();
-                if (tmp == "non-dispatchable-power")
-                {
-                    if (value)
-                        area.nodalOptimization |= anoNonDispatchPower;
-                    continue;
-                }
-                if (tmp == "dispatchable-hydro-power")
-                {
-                    if (value)
-                        area.nodalOptimization |= anoDispatchHydroPower;
-                    continue;
-                }
-                if (tmp == "other-dispatchable-power")
-                {
-                    if (value)
-                        area.nodalOptimization |= anoOtherDispatchPower;
-                    continue;
-                }
-                if (tmp == "filter-synthesis")
-                {
-                    area.filterSynthesis = stringIntoDatePrecision(p->value);
-                    continue;
-                }
-                if (tmp == "filter-year-by-year")
-                {
-                    area.filterYearByYear = stringIntoDatePrecision(p->value);
-                    continue;
-                }
-                if (tmp == "spread-unsupplied-energy-cost")
-                {
-                    if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
-                    {
-                        area.spreadUnsuppliedEnergyCost = 0.;
-                        logs.warning()
-                          << area.name << ": invalid spread for unsupplied energy cost";
-                    }
-                    continue;
-                }
-                if (tmp == "spread-spilled-energy-cost")
-                {
-                    if (!p->value.to<double>(area.spreadSpilledEnergyCost))
-                    {
-                        area.spreadSpilledEnergyCost = 0.;
-                        logs.warning()
-                          << area.name << ": invalid spread for spilled energy cost";
-                    }
-                    continue;
-                }
+    if (!ini.open(buffer))
+        return ret;
 
-                logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+    ini.each([&](const IniFile::Section& section) {
+        for (auto* p = section.firstProperty; p; p = p->next)
+        {
+            bool value = p->value.to<bool>();
+            CString<30, false> tmp;
+            tmp = p->key;
+            tmp.toLower();
+            if (tmp == "non-dispatchable-power")
+            {
+                if (value)
+                    area.nodalOptimization |= anoNonDispatchPower;
+                continue;
             }
-        });
-    }
+            if (tmp == "dispatchable-hydro-power")
+            {
+                if (value)
+                    area.nodalOptimization |= anoDispatchHydroPower;
+                continue;
+            }
+            if (tmp == "other-dispatchable-power")
+            {
+                if (value)
+                    area.nodalOptimization |= anoOtherDispatchPower;
+                continue;
+            }
+            if (tmp == "filter-synthesis")
+            {
+                area.filterSynthesis = stringIntoDatePrecision(p->value);
+                continue;
+            }
+            if (tmp == "filter-year-by-year")
+            {
+                area.filterYearByYear = stringIntoDatePrecision(p->value);
+                continue;
+            }
+            if (tmp == "spread-unsupplied-energy-cost")
+            {
+                if (!p->value.to<double>(area.spreadUnsuppliedEnergyCost))
+                {
+                    area.spreadUnsuppliedEnergyCost = 0.;
+                    logs.warning()
+                      << area.name << ": invalid spread for unsupplied energy cost";
+                }
+                continue;
+            }
+            if (tmp == "spread-spilled-energy-cost")
+            {
+                if (!p->value.to<double>(area.spreadSpilledEnergyCost))
+                {
+                    area.spreadSpilledEnergyCost = 0.;
+                    logs.warning()
+                      << area.name << ": invalid spread for spilled energy cost";
+                }
+                continue;
+            }
+
+            logs.warning() << buffer << ": Unknown property '" << p->key << "'";
+        }
+    });
 
     return ret;
 }

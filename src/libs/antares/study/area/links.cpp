@@ -176,7 +176,7 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
     }
 }
 
-bool AreaLink::loadTimeSeries(Study& study, const AnyString& folder)
+bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 {
     if (study.header.version < 820)
         return linkLoadTimeSeries_for_version_from_630_to_810(folder);
@@ -301,8 +301,7 @@ AreaLink* AreaAddLinkBetweenAreas(Area* area, Area* with, bool warning)
 
 namespace // anonymous
 {
-static bool AreaLinksInternalLoadFromProperty(Study& study,
-                                              AreaLink& link,
+static bool AreaLinksInternalLoadFromProperty(AreaLink& link,
                                               const String& key,
                                               const String& value)
 {
@@ -567,7 +566,7 @@ bool AreaLinksLoadFromFolder(Study& study, AreaList* l, Area* area, const AnyStr
             key = p->key;
             key.toLower();
             value = p->value;
-            if (!AreaLinksInternalLoadFromProperty(study, link, key, value))
+            if (!AreaLinksInternalLoadFromProperty(link, key, value))
                 logs.warning() << '`' << p->key << "`: Unknown property";
         }
 
