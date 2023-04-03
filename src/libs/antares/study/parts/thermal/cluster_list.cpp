@@ -54,10 +54,6 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 #define SEP IO::Separator
 
-static bool ThermalClusterLoadCouplingSection(const AnyString& filename,
-                                              ThermalClusterList& list,
-                                              const IniFile::Section* s);
-
 static bool ThermalClusterLoadFromSection(const AnyString& filename,
                                           ThermalCluster& cluster,
                                           const IniFile::Section& section);
@@ -86,17 +82,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     {
         if (section->name.empty())
             continue;
-
-        if (section->name == "~_-_coupling_-_~")
-        {
-            ThermalClusterLoadCouplingSection(study.buffer, *this, section);
-
-            // ignoring all other sections
-            section = section->next;
-            for (; section; section = section->next)
-                logs.warning() << "Ignoring the section " << section->name;
-            break;
-        }
 
         auto cluster = std::make_shared<ThermalCluster>(area, study.maxNbYearsInParallel);
 
@@ -322,56 +307,6 @@ bool ThermalClusterLoadFromSection(const AnyString& filename,
     return true;
 }
 
-bool ThermalClusterLoadCouplingSection(const AnyString& filename,
-                                       ThermalClusterList& list,
-                                       const IniFile::Section* s)
-{
-    if (s->firstProperty)
-    {
-        ClusterName from;
-        ClusterName with;
-        ThermalCluster* clusterFrom;
-        ThermalCluster* clusterWith;
-
-        // Browse all properties
-        for (const IniFile::Property* p = s->firstProperty; p; p = p->next)
-        {
-            from = p->key;
-            with = p->value;
-            if (not from or !with)
-            {
-                logs.warning() << '`' << filename << "`: `" << s->name << "`: Invalid key/value";
-                continue;
-            }
-            from.toLower();
-            with.toLower();
-            clusterFrom = list.find(from);
-            if (not clusterFrom)
-            {
-                logs.error() << filename << ": impossible to find the cluster '" << from << "'";
-                continue;
-            }
-            clusterWith = list.find(with);
-            if (not clusterWith)
-            {
-                logs.error() << filename << ": impossible to find the cluster '" << with << "'";
-                continue;
-            }
-
-            if (clusterFrom->coupling.end() != clusterFrom->coupling.find(clusterWith))
-                // already referenced
-                continue;
-
-            // Adding the reference in both clusters
-            clusterFrom->coupling.insert(clusterWith);
-            clusterWith->coupling.insert(clusterFrom);
-            logs.info() << "  cluster coupling : " << clusterFrom->name() << " <-> "
-                        << clusterWith->name();
-        }
-    }
-    return true;
-}
-
 void ThermalClusterList::calculationOfSpinning()
 {
     each([&](ThermalCluster& cluster) { cluster.calculationOfSpinning(); });
@@ -400,18 +335,6 @@ bool ThermalClusterList::remove(const ClusterName& id)
     cluster.erase(i);
     // Invalidating the parent area
     c->parentArea->forceReload();
-
-    // Remove all cluster coupling
-    if (not c->coupling.empty())
-    {
-        auto end = c->coupling.end();
-        for (auto j = c->coupling.begin(); j != end; ++j)
-        {
-            auto* link = *j;
-            link->parentArea->forceReload();
-            link->coupling.erase(c.get());
-        }
-    }
 
     // Rebuilding the index
     rebuildIndex();
@@ -442,17 +365,12 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
     {
         Clob buffer;
         bool ret = true;
-        bool hasCoupling = false;
 
         // Allocate the inifile structure
         IniFile ini;
 
         // Browse all clusters
         each([&](const Data::ThermalCluster& c) {
-            // Coupling
-            if (not c.coupling.empty())
-                hasCoupling = true;
-
             // Adding a section to the inifile
             IniFile::Section* s = ini.addSection(c.name());
 
@@ -540,18 +458,6 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             else
                 ret = 0;
         });
-
-        if (hasCoupling)
-        {
-            IniFile::Section* s = ini.addSection("~_-_coupling_-_~");
-            each([&](const Data::ThermalCluster& c) {
-                if (c.coupling.empty())
-                    return;
-                auto send = c.coupling.end();
-                for (auto j = c.coupling.begin(); j != send; ++j)
-                    s->add(c.id(), (*j)->id());
-            });
-        }
 
         // Write the ini file
         buffer.clear() << folder << SEP << "list.ini";
