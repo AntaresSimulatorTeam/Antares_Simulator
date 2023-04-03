@@ -72,127 +72,126 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
     // Open the ini file
     study.buffer.clear() << folder << SEP << "list.ini";
     IniFile ini;
-    if (ini.open(study.buffer))
+    if (!ini.open(study.buffer))
+        return false;
+
+    bool ret = true;
+
+    if (!ini.firstSection)
+        return ret;
+
+    String modulationFile;
+
+    for (auto* section = ini.firstSection; section; section = section->next)
     {
-        bool ret = true;
+        if (section->name.empty())
+            continue;
 
-        if (ini.firstSection)
+        if (section->name == "~_-_coupling_-_~")
         {
-            String modulationFile;
+            ThermalClusterLoadCouplingSection(study.buffer, *this, section);
 
-            for (auto* section = ini.firstSection; section; section = section->next)
-            {
-                if (section->name.empty())
-                    continue;
-
-                if (section->name == "~_-_coupling_-_~")
-                {
-                    ThermalClusterLoadCouplingSection(study.buffer, *this, section);
-
-                    // ignoring all other sections
-                    section = section->next;
-                    for (; section; section = section->next)
-                        logs.warning() << "Ignoring the section " << section->name;
-                    break;
-                }
-
-                auto cluster = std::make_shared<ThermalCluster>(area, study.maxNbYearsInParallel);
-
-                // Load data of a thermal cluster from a ini file section
-                if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
-                {
-                    continue;
-                }
-
-                // Keeping the current value of 'mustrun' somewhere else
-                cluster->mustrunOrigin = cluster->mustrun;
-
-                // MBO 15/04/2014
-                // new rounding scheme starting version 450
-                // if abs(value) < 1.e-3 => 0 ; if abs(value) > 5.e-4 => 5.e-4
-                // applies to
-                //	- Market Bid cost
-                //	- Marginal cost
-                //	- Spread cost
-                //	- Fixed cost
-                //	- Startup cost
-                // MBO 23/12/2015
-                // v5.0 format
-                // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
-
-                // Modulation
-                modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
-                                       << SEP << cluster->parentArea->id << SEP << cluster->id()
-                                       << SEP << "modulation." << study.inputExtension;
-
-
-                enum
-                {
-                    options = Matrix<>::optFixedSize,
-                };
-                bool r = cluster->modulation.loadFromCSVFile(
-                        modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
-                if (not r and study.usedByTheSolver)
-                {
-                    cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
-                    cluster->modulation.fill(1.);
-                    cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
-                }
-                ret = ret and r;
-
-                // Special operations when not ran from the interface (aka solver)
-                if (study.usedByTheSolver)
-                {
-                    if (not cluster->productionCost)
-                        cluster->productionCost = new double[HOURS_PER_YEAR];
-
-                    // alias to the production cost
-                    double* prodCost = cluster->productionCost;
-                    // alias to the marginal cost
-                    double marginalCost = cluster->marginalCost;
-                    // Production cost
-                    auto& modulation = cluster->modulation[thermalModulationCost];
-                    for (uint h = 0; h != cluster->modulation.height; ++h)
-                        prodCost[h] = marginalCost * modulation[h];
-
-                    if (not study.parameters.include.thermal.minStablePower)
-                        cluster->minStablePower = 0.;
-                    if (not study.parameters.include.thermal.minUPTime)
-                    {
-                        cluster->minUpDownTime = 1;
-                        cluster->minUpTime = 1;
-                        cluster->minDownTime = 1;
-                    }
-                    else
-                        cluster->minUpDownTime
-                          = Math::Max(cluster->minUpTime, cluster->minDownTime);
-
-                    if (not study.parameters.include.reserve.spinning)
-                        cluster->spinning = 0;
-
-                    cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
-                }
-
-                // Check the data integrity of the cluster
-                cluster->integrityCheck();
-
-                // adding the thermal cluster
-                auto added = add(cluster);
-                if (not added)
-                {
-                    // This error should never happen
-                    logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
-                                 << "'";
-                    continue;
-                }
-                // keeping track of the cluster
-                mapping[cluster->id()] = added;
-            }
+            // ignoring all other sections
+            section = section->next;
+            for (; section; section = section->next)
+                logs.warning() << "Ignoring the section " << section->name;
+            break;
         }
 
-        return ret;
+        auto cluster = std::make_shared<ThermalCluster>(area, study.maxNbYearsInParallel);
+
+        // Load data of a thermal cluster from a ini file section
+        if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
+        {
+            continue;
+        }
+
+        // Keeping the current value of 'mustrun' somewhere else
+        cluster->mustrunOrigin = cluster->mustrun;
+
+        // MBO 15/04/2014
+        // new rounding scheme starting version 450
+        // if abs(value) < 1.e-3 => 0 ; if abs(value) > 5.e-4 => 5.e-4
+        // applies to
+        //	- Market Bid cost
+        //	- Marginal cost
+        //	- Spread cost
+        //	- Fixed cost
+        //	- Startup cost
+        // MBO 23/12/2015
+        // v5.0 format
+        // allow startup cost between [-5 000 000 ;-5 000 000] (was [-50 000;50 000])
+
+        // Modulation
+        modulationFile.clear() << folder << SEP << ".." << SEP << ".." << SEP << "prepro"
+                               << SEP << cluster->parentArea->id << SEP << cluster->id()
+                               << SEP << "modulation." << study.inputExtension;
+
+
+        enum
+        {
+            options = Matrix<>::optFixedSize,
+        };
+        bool r = cluster->modulation.loadFromCSVFile(
+                modulationFile, thermalModulationMax, HOURS_PER_YEAR, options);
+        if (not r and study.usedByTheSolver)
+        {
+            cluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
+            cluster->modulation.fill(1.);
+            cluster->modulation.fillColumn(thermalMinGenModulation, 0.);
+        }
+        ret = ret and r;
+
+        // Special operations when not ran from the interface (aka solver)
+        if (study.usedByTheSolver)
+        {
+            if (not cluster->productionCost)
+                cluster->productionCost = new double[HOURS_PER_YEAR];
+
+            // alias to the production cost
+            double* prodCost = cluster->productionCost;
+            // alias to the marginal cost
+            double marginalCost = cluster->marginalCost;
+            // Production cost
+            auto& modulation = cluster->modulation[thermalModulationCost];
+            for (uint h = 0; h != cluster->modulation.height; ++h)
+                prodCost[h] = marginalCost * modulation[h];
+
+            if (not study.parameters.include.thermal.minStablePower)
+                cluster->minStablePower = 0.;
+            if (not study.parameters.include.thermal.minUPTime)
+            {
+                cluster->minUpDownTime = 1;
+                cluster->minUpTime = 1;
+                cluster->minDownTime = 1;
+            }
+            else
+                cluster->minUpDownTime
+                  = Math::Max(cluster->minUpTime, cluster->minDownTime);
+
+            if (not study.parameters.include.reserve.spinning)
+                cluster->spinning = 0;
+
+            cluster->nominalCapacityWithSpinning = cluster->nominalCapacity;
+        }
+
+        // Check the data integrity of the cluster
+        cluster->integrityCheck();
+
+        // adding the thermal cluster
+        auto added = add(cluster);
+        if (not added)
+        {
+            // This error should never happen
+            logs.error() << "Impossible to add the thermal cluster '" << cluster->name()
+                         << "'";
+            continue;
+        }
+        // keeping track of the cluster
+        mapping[cluster->id()] = added;
     }
-    return false;
+
+    return ret;
 }
 
 YString ThermalClusterList::typeID() const
