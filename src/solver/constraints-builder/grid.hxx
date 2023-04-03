@@ -219,7 +219,7 @@ bool Grid<NodeT>::buildMesh()
         VectorEdgeP Ci;
         //! vecteur contenant les sommets adjacents aux arêtes Ei
         VectorNodeP adjacentNodes;
-        // retrait des arêtes (u,v) qui sont dan Ei et remplacement dans le graphe duliqué
+        // retrait des arêtes (u,v) qui sont dans Ei et remplacement dans le graphe dupliqué
         // par(u+,v-) et (u-,v+)
         for (uint j = 0; j < v.size(); j++)
         {

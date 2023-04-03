@@ -80,7 +80,7 @@ uint Antares::CBuilder::cycleCount(linkInfo* lnkI)
     return n;
 }
 
-bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, size_t hour)
+bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 {
     Data::AreaLink* link = linkInfo->ptr;
 
@@ -132,14 +132,9 @@ bool CBuilder::updateLinkLoopFlow(linkInfo* linkInfo, size_t hour)
     return true;
 }
 
-bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
     Data::AreaLink* link = linkInfo->ptr;
-    if (link->parameters[Data::fhlPShiftMinus][hour]
-            != link->parameters[Data::fhlPShiftPlus][hour])
-    {
-        linkInfo->hasPShiftsEqual = false;
-    }
 
     if (link->parameters[Data::fhlPShiftMinus][hour]
             > link->parameters[Data::fhlPShiftPlus][hour])
@@ -149,6 +144,18 @@ bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
         return false;
     }
     return true;
+}
+
+bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+{
+    Data::AreaLink* link = linkInfo->ptr;
+    if (link->parameters[Data::fhlPShiftMinus][hour]
+            != link->parameters[Data::fhlPShiftPlus][hour])
+    {
+        linkInfo->hasPShiftsEqual = false;
+    }
+
+    return checkLinkPhaseShift(linkInfo, hour);
 }
 
 bool CBuilder::updateLinks()
@@ -178,7 +185,8 @@ bool CBuilder::updateLinks()
                 impedances.insert(link->parameters[columnImpedance][hour + 1]);
             }
 
-            if (includeLoopFlow && !updateLinkLoopFlow(linkInfo, hour)) // check validity of loopflow against NTC
+            // check validity of loopflow against NTC
+            if (includeLoopFlow && !checkValidityOfNodalLoopFlow(linkInfo, hour))
                 return false;
 
             if (includePhaseShift && !updateLinkPhaseShift(linkInfo, hour)) // check validity of phase-shift
