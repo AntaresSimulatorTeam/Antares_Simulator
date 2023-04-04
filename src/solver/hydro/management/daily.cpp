@@ -381,22 +381,7 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             for (uint day = firstDay; day != endDay; ++day)
             {
                 problem.TurbineMax[dayMonth] = maxP[day] * maxE[day];
-                double dailyMingen = 0.0;
-                for (uint h = 0; h < 24; ++h)
-                {
-                    dailyMingen += srcmingen[day * 24 + h];
-
-                    if (srcmingen[day * 24 + h] > maxP[day])
-                    {
-                        logs.error()
-                          << "Year : " << y + 1 << " - hydro: " << area.name
-                          << " [hourly] minimum generation of " << srcmingen[day * 24 + h]
-                          << " MW in timestep " << day * 24 + h + 1 << " of TS-" << tsIndex + 1
-                          << " is incompatible with the maximum generation of " << maxP[day]
-                          << " MW.";
-                    }
-                }
-                problem.TurbineMin[dayMonth] = dailyMingen;
+                problem.TurbineMin[dayMonth] = data.dailyMinGen[day];
                 problem.TurbineCible[dayMonth] = dailyTargetGen[day];
                 dayMonth++;
             }
@@ -474,13 +459,8 @@ inline void HydroManagement::prepareDailyOptimalGenerations(Solver::Variable::St
             uint dayMonth = 0;
             for (uint day = firstDay; day != endDay; ++day)
             {
-                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;
-                double dailyMingen = 0.0;
-                for (uint h = 0; h < 24; ++h)
-                {
-                    dailyMingen += srcmingen[day*24 + h];
-                }          
-                problem.TurbineMin[dayMonth] = dailyMingen / reservoirCapacity;
+                problem.TurbineMax[dayMonth] = maxP[day] * maxE[day] / reservoirCapacity;       
+                problem.TurbineMin[dayMonth] = data.dailyMinGen[day] / reservoirCapacity;
 
                 problem.TurbineCible[dayMonth]
                   = (dailyTargetGen[day] + wasteFromPreviousMonth / daysPerMonth)

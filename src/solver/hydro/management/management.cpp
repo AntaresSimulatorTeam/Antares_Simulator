@@ -195,6 +195,19 @@ void HydroManagement::minGenerationScaling(uint numSpace)
               {
                   data.mingens[realmonth] = totalMonthMingen;
               }
+
+              // Set daily mingen, used later for h2o_d
+              uint simulationMonth = study.calendar.mapping.months[realmonth];
+              auto daysPerMonth = study.calendar.months[simulationMonth].days;
+              uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+              uint endDay = firstDay + daysPerMonth;
+
+              for (uint day = firstDay; day != endDay; ++day)
+              {
+                  data.dailyMinGen[day]
+                    = std::accumulate(srcmingen + day * 24, srcmingen + day * 24 + 24, 0.);
+                    logs.debug() << "day: " << day << " .dailyMinGen: " << data.dailyMinGen[day];
+              }
           }
           data.totalYearMingen = totalYearMingen;
       });
@@ -275,6 +288,38 @@ void HydroManagement::checkMinGeneration(uint numSpace)
                         << "In Area " << area.name << " the minimum generation of "
                         << totalWeekMingen << " MW in week " << week + 1 << " of TS-" << tsIndex + 1
                         << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
+                  }
+              }
+          }
+
+          // Hourly minimum generation <= hourly inflows for each hour
+          auto const& maxPower = area.hydro.maxPower;
+          auto const& maxP = maxPower[Data::PartHydro::genMaxP];
+
+          if (!area.hydro.reservoirManagement)
+          {
+              for (uint month = 0; month != 12; ++month)
+              {
+                  uint realmonth = calendar.months[month].realmonth;
+                  uint simulationMonth = study.calendar.mapping.months[realmonth];
+                  auto daysPerMonth = study.calendar.months[simulationMonth].days;
+                  uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+                  uint endDay = firstDay + daysPerMonth;
+
+                  for (uint day = firstDay; day != endDay; ++day)
+                  {
+                      for (uint h = 0; h < 24; ++h)
+                      {
+                          if (srcmingen[day * 24 + h] > maxP[day])
+                          {
+                              logs.error()
+                                << "In area: " << area.name << " [hourly] minimum generation of "
+                                << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
+                                << " of TS-" << tsIndex + 1
+                                << " is incompatible with the maximum generation of " << maxP[day]
+                                << " MW.";
+                          }
+                      }
                   }
               }
           }

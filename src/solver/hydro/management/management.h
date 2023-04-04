@@ -132,7 +132,7 @@ public:
         double MTG[12];
         //! inflows
         double inflows[12];
-        //! minimal generation
+        //! monthly minimal generation
         double mingens[12];
 
         //! Net demand, for each day of the year, for each area
@@ -141,11 +141,17 @@ public:
         double DLE[dayYearCount];
         //! Daily optimized Generation
         double DOG[dayYearCount];
+        //! daily minimal generation
+        double dailyMinGen[dayYearCount];
 
-        //! Data for minGen<->inflows preChecks
+        // Data for minGen<->inflows preChecks
+        //! monthly total mingen
         double totalMonthMingen[12];
+        //! monthly total inflows
         double totalMonthInflows[12];
+        //! yearly total mingen
         double totalYearMingen;
+        //! yearly total inflows
         double totalYearInflows;
 
     }; // struct PerArea
