@@ -171,12 +171,9 @@ Version VersionIntToVersion(uint version)
     case versionUnknown:
         return versionUnknown;
     }
-#ifndef NDEBUG
-    if (version <= (uint)versionLatest)
-    {
-        assert(false and "missing switch entry");
-    }
-#endif
+    logs.error() << "Version not found";
+    logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
+        << " if it's the case";
     return versionUnknown;
 }
 
