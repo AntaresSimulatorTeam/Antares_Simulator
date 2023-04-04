@@ -336,28 +336,24 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForClusters(State& state, unsigned int numSpace)
-    {
+        auto& area = state.area;
+        auto& thermal = state.thermal;
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
-            const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
             // Production for this hour
             pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
               .hour[state.hourInTheYear]
-              += state.thermalClustersProductions[state.area->index][clusterIndex];
+              += thermal[area->index].thermalClustersProductions[clusterIndex];
 
             pminOfTheClusterForYear[numSpace][(thermalCluster->areaWideIndex * maxHoursInAYear)
                                               + state.hourInTheYear]
-              = state.PMinOfClusters[state.area->index][clusterIndex];
+              = thermal[area->index].PMinOfClusters[clusterIndex];
         }
 
-        // Next item in the list
-        NextType::hourForClusters(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const

@@ -159,13 +159,6 @@ inline void Links::hourForEachLink(State& state, unsigned int numSpace)
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
 }
 
-inline void Links::hourForClusters(const State& state, unsigned int numSpace) const
-{
-    UNUSED_VARIABLE(state);
-    UNUSED_VARIABLE(numSpace);
-    // No cluster on links
-}
-
 inline void Links::hourEnd(State& state, uint hourInTheYear)
 {
     for (uint i = 0; i != pLinkCount; ++i)

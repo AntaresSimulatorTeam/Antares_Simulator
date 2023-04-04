@@ -234,7 +234,7 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourForClusters(State& state, unsigned int numSpace)
+    void hourForEachArea(State& state, unsigned int numSpace)
     {
         for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
@@ -252,7 +252,7 @@ public:
         }
 
         // Next item in the list
-        NextType::hourForClusters(state, numSpace);
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
