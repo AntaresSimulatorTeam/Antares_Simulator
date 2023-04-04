@@ -75,6 +75,10 @@ private:
     //@{
     //! Prepare inflows scaling for each area
     void prepareInflowsScaling(uint numSpace);
+    //! Prepare minimum generation scaling for each area
+    void minGenerationScaling(uint numSpace);
+    //! check minimum generation is lower than available inflows
+    void checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area
     template<enum Data::StudyMode ModeT>
     void prepareNetDemand(uint numSpace);
@@ -137,6 +141,12 @@ public:
         double DLE[dayYearCount];
         //! Daily optimized Generation
         double DOG[dayYearCount];
+
+        //! Data for minGen<->inflows preChecks
+        double totalMonthMingen[12];
+        double totalMonthInflows[12];
+        double totalYearMingen;
+        double totalYearInflows;
 
     }; // struct PerArea
 
