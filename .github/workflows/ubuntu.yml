@@ -102,15 +102,19 @@ jobs:
            -DCMAKE_BUILD_TYPE=release \
            -DBUILD_TESTING=ON \
            -DBUILD_not_system=OFF \
+           -DBUILD_BOOST=ON \
            -DCMAKE_PREFIX_PATH=${{ env.ORTOOLS_DIR }}/install \
 
-    - name: Build
+    - name: Build (clang)
+      if: startsWith(matrix.compiler, 'clang')
       run: |
-           if [ "${{ matrix.compiler }}" == "clang" ]; then
              export CC=/usr/bin/clang
              export CXX=/usr/bin/clang++
-           fi
-           cmake --build _build --config release -j2
+             cmake --build _build --config release -j2
+
+    - name: Build (GCC)
+      if: startsWith(matrix.compiler, 'gcc')
+      run: cmake --build _build --config release -j2
 
     - name: Run unfeasibility-related tests
       if: ${{ env.IS_PUSH == 'true' }}
