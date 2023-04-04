@@ -235,11 +235,13 @@ jobs:
            rm -rf install
 
     - name: Installer archive upload push
+      if: startsWith(matrix.compiler, 'gcc')
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.tar.gz
 
     - name: Installer deb upload push
+      if: startsWith(matrix.compiler, 'gcc')
       uses: actions/upload-artifact@v3
       with:
         path: _build/*.deb
@@ -250,12 +252,12 @@ jobs:
     runs-on: ${{needs.build.outputs.os}}
     steps:
     - name: Download all artifacts
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' && startsWith(matrix.compiler, 'gcc') }}
       uses: actions/download-artifact@v3
 
 
     - name: Publish assets
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_RELEASE == 'true' }} && startsWith(matrix.compiler, 'gcc') }}
       uses: alexellis/upload-assets@0.4.0
       env:
           GITHUB_TOKEN: ${{ github.token }}
