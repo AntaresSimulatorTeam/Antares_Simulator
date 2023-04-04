@@ -206,7 +206,6 @@ void HydroManagement::minGenerationScaling(uint numSpace)
               {
                   data.dailyMinGen[day]
                     = std::accumulate(srcmingen + day * 24, srcmingen + day * 24 + 24, 0.);
-                    logs.debug() << "day: " << day << " .dailyMinGen: " << data.dailyMinGen[day];
               }
           }
           data.totalYearMingen = totalYearMingen;
