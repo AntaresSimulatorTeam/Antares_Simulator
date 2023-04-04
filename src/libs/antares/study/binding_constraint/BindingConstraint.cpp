@@ -1559,5 +1559,10 @@ std::string BindingConstraint::group() const {
     return group_;
 }
 
+void BindingConstraint::group(std::string group_name) {
+    group_ = group_name;
+    markAsModified();
+}
+
 } // namespace Data
 } // namespace Antares
