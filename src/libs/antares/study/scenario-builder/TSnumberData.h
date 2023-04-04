@@ -333,16 +333,16 @@ public:
     CString<512, false> get_prefix() const override;
     unsigned get_tsGenCount(const Study& study) const override;
 private:
-    std::map<std::pair<std::string, unsigned>, unsigned > rules_;
+    std::map<std::string, MatrixType> rules_;
 };
 
 inline unsigned BindingConstraintsTSNumberData::get(const std::string& group_name, const unsigned year) const
 {
-    auto it = rules_.find({group_name, year});
+    auto it = rules_.find(group_name);
     if (it == rules_.end()) {
         return 0;
     }
-    return it->second;
+    return it->second[0][year];
 }
 
 inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const

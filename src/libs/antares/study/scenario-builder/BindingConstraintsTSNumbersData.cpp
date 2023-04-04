@@ -37,7 +37,17 @@ namespace Antares::Data::ScenarioBuilder
 {
 bool BindingConstraintsTSNumberData::reset(const Study& study)
 {
+    const uint nbYears = study.parameters.nbYears;
+    std::set<std::string> group_names;
+    std::for_each(study.bindingConstraints.begin(), study.bindingConstraints.end(), [&group_names](const auto& bc) {
+        group_names.insert(bc->group());
+    });
     rules_.clear();
+    std::for_each(group_names.begin(), group_names.end(), [&](const auto& group_name) {
+        MatrixType& ts_numbers = rules_[group_name];
+        ts_numbers.resize(1, nbYears);
+        ts_numbers.fillColumn(0, 0);
+    });
     return true;
 }
 
@@ -47,20 +57,19 @@ void BindingConstraintsTSNumberData::saveToINIFile(const Study& study, Yuni::IO:
     std::ostringstream value_into_string;
     value_into_string << std::setprecision(4);
 
-    for (const auto& [group_name_and_year, value]: rules_) {
-        const auto& [group_name, year] = group_name_and_year;
-        file << get_prefix() << group_name << "," << year << "=" << value << "\n";
+    for (const auto& [group_name, ts_numbers]: rules_) {
+        for (unsigned year = 0; year < ts_numbers.height; ++year) {
+            auto value = ts_numbers[0][year];
+            if (value != 0) {
+                file << get_prefix() << group_name << "," << year << "=" << value << "\n";
+            }
+        }
     }
 }
 
 void BindingConstraintsTSNumberData::setData(const std::string& group_name, const uint year, uint value) {
-    rules_[{group_name, year}] = value;
-}
-
-bool BindingConstraintsTSNumberData::apply(Study& study)
-{
-    //TODO
-    return true;
+    auto& group_ts_numbers = rules_[group_name];
+    group_ts_numbers[0][year] = value;
 }
 
 } // namespace Antares

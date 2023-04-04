@@ -225,6 +225,7 @@ public:
     ** \brief Get the group
     */
     std::string group() const;
+    void group(std::string group_name);
 
     /*!
     ** \brief Set the comments
