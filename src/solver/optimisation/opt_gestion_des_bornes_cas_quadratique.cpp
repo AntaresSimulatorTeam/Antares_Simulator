@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -42,55 +42,49 @@
 
 using namespace Yuni;
 
-void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo,
+void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo,
                                                                int PdtHebdo)
 {
-    int Interco;
-    int Var;
-    double* AdresseDuResultat;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    for (int i = 0; i < ProblemeAResoudre->NombreDeVariables; i++)
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[i] = nullptr;
 
-    for (Var = 0; Var < ProblemeAResoudre->NombreDeVariables; Var++)
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = NULL;
+    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
 
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeNTC = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
-
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        ProblemeAResoudre->Xmax[Var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[Interco];
-        ProblemeAResoudre->Xmin[Var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+        ProblemeAResoudre->Xmax[var] = ValeursDeNTC->ValeurDeNTCOrigineVersExtremite[interco];
+        ProblemeAResoudre->Xmin[var] = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[interco]);
 
-        if (ProblemeAResoudre->Xmax[Var] - ProblemeAResoudre->Xmin[Var]
+        if (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]
             < ZERO_POUR_LES_VARIABLES_FIXES)
         {
-            ProblemeAResoudre->X[Var]
-              = 0.5 * (ProblemeAResoudre->Xmax[Var] - ProblemeAResoudre->Xmin[Var]);
-            ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_FIXE;
+            ProblemeAResoudre->X[var]
+              = 0.5 * (ProblemeAResoudre->Xmax[var] - ProblemeAResoudre->Xmin[var]);
+            ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_FIXE;
         }
         else
         {
-            if (Math::Infinite(ProblemeAResoudre->Xmax[Var]) == 1)
+            if (Math::Infinite(ProblemeAResoudre->Xmax[var]) == 1)
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_NON_BORNEE;
+                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_NON_BORNEE;
                 else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_INFERIEUREMENT;
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_INFERIEUREMENT;
             }
             else
             {
-                if (Math::Infinite(ProblemeAResoudre->Xmin[Var]) == -1)
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_SUPERIEUREMENT;
+                if (Math::Infinite(ProblemeAResoudre->Xmin[var]) == -1)
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_SUPERIEUREMENT;
                 else
-                    ProblemeAResoudre->TypeDeVariable[Var] = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    ProblemeAResoudre->TypeDeVariable[var] = VARIABLE_BORNEE_DES_DEUX_COTES;
             }
         }
-        AdresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[Interco]);
-        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = AdresseDuResultat;
+        double* adresseDuResultat = &(ValeursDeNTC->ValeurDuFlux[interco]);
+        ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
     }
 }

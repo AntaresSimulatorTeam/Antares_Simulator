@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -147,42 +147,30 @@ public:
 private:
     static void RunGlobalResults(const ListType& list, SurveyResults& results)
     {
-        if (not(CFile & Category::mc))
-        {
-            // All hours
-            list.buildSurveyReport(results, CDataLevel, CFile, Category::hourly);
-            // All days
-            list.buildSurveyReport(results, CDataLevel, CFile, Category::daily);
-            // All weeks
-            list.buildSurveyReport(results, CDataLevel, CFile, Category::weekly);
-            // All months
-            list.buildSurveyReport(results, CDataLevel, CFile, Category::monthly);
-        }
-        // Performed in any cases
-        {
-            // All years
-            list.buildSurveyReport(results, CDataLevel, CFile, Category::annual);
-        }
+        // All hours
+        list.buildSurveyReport(results, CDataLevel, CFile, Category::hourly);
+        // All days
+        list.buildSurveyReport(results, CDataLevel, CFile, Category::daily);
+        // All weeks
+        list.buildSurveyReport(results, CDataLevel, CFile, Category::weekly);
+        // All months
+        list.buildSurveyReport(results, CDataLevel, CFile, Category::monthly);
+        // All years
+        list.buildSurveyReport(results, CDataLevel, CFile, Category::annual);
     }
 
     static void RunAnnual(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
-        if (not(CFile & Category::mc))
-        {
-            // All hours
-            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::hourly, numSpace);
-            // All days
-            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::daily, numSpace);
-            // All weeks
-            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::weekly, numSpace);
-            // All months
-            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::monthly, numSpace);
-        }
-        // Performed in any cases
-        {
-            // All years
-            list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::annual, numSpace);
-        }
+        // All hours
+        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::hourly, numSpace);
+        // All days
+        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::daily, numSpace);
+        // All weeks
+        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::weekly, numSpace);
+        // All months
+        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::monthly, numSpace);
+        // All years
+        list.buildAnnualSurveyReport(results, CDataLevel, CFile, Category::annual, numSpace);
     }
 
 }; // class SurveyReportBuilderFile
@@ -212,10 +200,6 @@ public:
 
     static void Run(const ListType& list, SurveyResults& results, unsigned int numSpace = 9999)
     {
-        // Standard - Not related to anything
-        if (CDataLevel & Category::standard)
-            RunStandard(list, results, numSpace);
-
         // Area - Thermal clusters - Links
         if (CDataLevel & Category::area || CDataLevel & Category::link
             || CDataLevel & Category::thermalAggregate)
@@ -249,25 +233,22 @@ public:
         list.buildDigest(results, Category::digestAllYears, Category::setOfAreas);
         results.exportDigestAllYears(digestBuffer);
 
-        if (results.data.study.parameters.mode != Data::stdmAdequacyDraft)
+        // Digest: Flow linear (only if selected by user)
+        if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
         {
-            // Digest: Flow linear (only if selected by user)
-            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW LIN."))
-            {
-                logs.debug() << " . Digest, flow linear";
-                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                list.buildDigest(results, Category::digestFlowLinear, Category::area);
-                results.exportDigestMatrix("Links (FLOW LIN.)", digestBuffer);
-            }
+            logs.debug() << " . Digest, flow linear";
+            results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+            list.buildDigest(results, Category::digestFlowLinear, Category::area);
+            results.exportDigestMatrix("Links (FLOW LIN.)", digestBuffer);
+        }
 
-            // Digest: Flow Quad (only if selected by user)
-            if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
-            {
-                logs.debug() << " . Digest, flow quad";
-                results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
-                list.buildDigest(results, Category::digestFlowQuad, Category::area);
-                results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
-            }
+        // Digest: Flow Quad (only if selected by user)
+        if (results.data.study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD."))
+        {
+            logs.debug() << " . Digest, flow quad";
+            results.data.matrix.fill(std::numeric_limits<double>::quiet_NaN());
+            list.buildDigest(results, Category::digestFlowQuad, Category::area);
+            results.exportDigestMatrix("Links (FLOW QUAD.)", digestBuffer);
         }
         // THIS FILE IS DEPRECATED !!!
         YString digestFileName;
@@ -276,21 +257,6 @@ public:
     }
 
 private:
-    static void RunStandard(const ListType& list, SurveyResults& results, unsigned int numSpace)
-    {
-        using namespace Yuni;
-
-        if (results.data.study.parameters.mode == Data::stdmAdequacyDraft)
-        {
-            // All values not related to anything
-            results.data.output.clear();
-            results.data.output << results.data.originalOutput << SEP << "areas" << SEP
-                                << "whole system";
-            // Creating the directory
-            SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-        }
-    }
-
     static void RunForEachArea(const ListType& list, SurveyResults& results, unsigned int numSpace)
     {
         using namespace Yuni;
@@ -418,8 +384,8 @@ private:
                     results.data.output.clear();
                     results.data.output << results.data.originalOutput << SEP << "links" << SEP
                                         << area.id << " - " << results.data.link->with->id;
-                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(list, results, numSpace);
-
+                    SurveyReportBuilderFile<GlobalT, NextT, CDataLevel>::Run(
+                      list, results, numSpace);
                 }
             }
         }

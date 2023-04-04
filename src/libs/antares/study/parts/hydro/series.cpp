@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -303,7 +303,9 @@ uint64 DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
 }
 
-void DataSeriesHydro::AdjustMonth(const Study& study, uint firstDayMonth[13], uint daysPerMonthDecals[12])
+void DataSeriesHydro::AdjustMonth(const Study& study,
+                                  uint firstDayMonth[13],
+                                  uint daysPerMonthDecals[12])
 {
     for (int oldMonth = 0; oldMonth < 12; oldMonth++)
     {

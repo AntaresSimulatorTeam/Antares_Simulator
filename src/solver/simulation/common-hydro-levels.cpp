@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,32 +25,23 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <yuni/core/math.h>
 #include <antares/study/study.h>
-#include <antares/study/memory-usage.h>
 #include "common-eco-adq.h"
-#include <antares/logs.h>
-#include <cassert>
 #include "simulation.h"
-#include <antares/study/area/scratchpad.h>
 #include <antares/study/parts/hydro/container.h>
 
-namespace Antares
+namespace Antares::Solver::Simulation
 {
-namespace Solver
-{
-namespace Simulation
-{
-void computingHydroLevels(const Data::Study& study,
+
+const unsigned int nbHoursInAWeek = 168;
+
+
+void computingHydroLevels(const Data::AreaList& areas,
                           PROBLEME_HEBDO& problem,
-                          uint nbHoursInAWeek,
                           bool remixWasRun,
                           bool computeAnyway)
 {
-    assert(study.parameters.mode != Data::stdmAdequacyDraft);
-
-    study.areas.each([&](const Data::Area& area) {
+    areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;
 
@@ -95,21 +86,20 @@ void computingHydroLevels(const Data::Study& study,
     });
 }
 
-void interpolateWaterValue(const Data::Study& study,
+void interpolateWaterValue(const Data::AreaList& areas,
                            PROBLEME_HEBDO& problem,
-                           Antares::Solver::Variable::State& state,
-                           int firstHourOfTheWeek,
-                           uint nbHoursInAWeek)
+                           const Date::Calendar& calendar,
+                           int firstHourOfTheWeek)
 {
     uint daysOfWeek[7] = {0, 0, 0, 0, 0, 0, 0};
 
-    const uint weekFirstDay = study.calendar.hours[firstHourOfTheWeek].dayYear;
+    const uint weekFirstDay = calendar.hours[firstHourOfTheWeek].dayYear;
 
     daysOfWeek[0] = weekFirstDay;
     for (int d = 1; d < 7; d++)
         daysOfWeek[d] = weekFirstDay + d;
 
-    study.areas.each([&](const Data::Area& area) {
+    areas.each([&](const Data::Area& area) {
         uint index = area.index;
 
         RESULTATS_HORAIRES* weeklyResults = problem.ResultatsHoraires[index];
@@ -130,25 +120,24 @@ void interpolateWaterValue(const Data::Study& study,
         double* niv = weeklyResults->niveauxHoraires;
 
         Antares::Data::getWaterValue(
-          problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
-          area.hydro.waterValues,
-          weekFirstDay,
-          state.h2oValueWorkVars,
-          waterVal[0]);
+                problem.previousSimulationFinalLevel[index] * 100 / reservoirCapacity,
+                area.hydro.waterValues,
+                weekFirstDay,
+                waterVal[0]);
         for (uint h = 1; h < nbHoursInAWeek; h++)
-            Antares::Data::getWaterValue(niv[h - 1],
+        {
+            Antares::Data::getWaterValue(niv[h - 1], 
                                          area.hydro.waterValues,
-                                         daysOfWeek[h / 24],
-                                         state.h2oValueWorkVars,
+                                         daysOfWeek[h / 24], 
                                          waterVal[h]);
+        }
     });
 }
 
-void updatingWeeklyFinalHydroLevel(const Data::Study& study,
-                                   PROBLEME_HEBDO& problem,
-                                   uint nbHoursInAWeek)
+void updatingWeeklyFinalHydroLevel(const Data::AreaList& areas,
+                                   PROBLEME_HEBDO& problem)
 {
-    study.areas.each([&](const Data::Area& area) {
+    areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;
 
@@ -165,12 +154,12 @@ void updatingWeeklyFinalHydroLevel(const Data::Study& study,
     });
 }
 
-void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& problem)
+void updatingAnnualFinalHydroLevel(const Data::AreaList& areas, PROBLEME_HEBDO& problem)
 {
     if (!problem.hydroHotStart)
         return;
 
-    study.areas.each([&](const Data::Area& area) {
+    areas.each([&](const Data::Area& area) {
         if (!area.hydro.reservoirManagement)
             return;
 
@@ -183,6 +172,4 @@ void updatingAnnualFinalHydroLevel(const Data::Study& study, PROBLEME_HEBDO& pro
     });
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

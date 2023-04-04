@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,8 +27,6 @@
 #ifndef __SOLVER_SIMULATION_ADEQUACY_H__
 #define __SOLVER_SIMULATION_ADEQUACY_H__
 
-#include <yuni/yuni.h>
-#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/adequacy/all.h"
 #include "../variable/economy/all.h"
@@ -37,11 +35,7 @@
 
 #include "solver.h" // for definition of type yearRandomNumbers
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 class Adequacy
 {
@@ -110,8 +104,6 @@ private:
 
 }; // class Adequacy
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ADEQUACY_H__

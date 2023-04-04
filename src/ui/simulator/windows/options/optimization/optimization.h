@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -113,8 +113,7 @@ private:
     void onPopupMenuLinkType(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuExportMPSstatus(Component::Button&, wxMenu& menu, void*);
     void onPopupMenuUnfeasibleBehavior(Component::Button&, wxMenu& menu, void*);
-    void onPopupMenuAdequacyPatch(Component::Button&, wxMenu& menu, void*, const PopupInfo& info);
-
+    
     void onInternalMotion(wxMouseEvent&);
 
 private:
@@ -131,9 +130,6 @@ private:
     Component::Button* pBtnSimplexOptimizationRange;
 
     Component::Button* pBtnExportMPS;
-    Component::Button* pBtnAdequacyPatch;
-    Component::Button* pBtnAdqPatchOutsideInside;
-    Component::Button* pBtnAdqPatchOutsideOutside;
     Component::Button* pBtnUnfeasibleProblemBehavior;
     bool* pTargetRef;
 
@@ -150,18 +146,17 @@ void Optimization::onSelectExportMPS(wxCommandEvent&)
 template<Data::mpsExportStatus MPS_EXPORT_STATUS>
 void Optimization::createMPSexportItemIntoMenu(wxMenu& menu)
 {
-    const wxMenuItem* it = Menu::CreateItem(
-        &menu,
-        wxID_ANY,
-        mpsExportStatusToString(MPS_EXPORT_STATUS),
-        mpsExportIcon(MPS_EXPORT_STATUS),
-        wxEmptyString);
+    const wxMenuItem* it = Menu::CreateItem(&menu,
+                                            wxID_ANY,
+                                            mpsExportStatusToString(MPS_EXPORT_STATUS),
+                                            mpsExportIcon(MPS_EXPORT_STATUS),
+                                            wxEmptyString);
 
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectExportMPS<MPS_EXPORT_STATUS>),
+                 nullptr,
+                 this);
 }
 
 const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity);
@@ -169,18 +164,17 @@ const char* transmissionCapacityIcon(Data::GlobalTransmissionCapacities capacity
 template<Data::GlobalTransmissionCapacities CAPACITY>
 void Optimization::createGlobalTransmissionCapacitiesItemIntoMenu(wxMenu& menu)
 {
-    const wxMenuItem* it = Menu::CreateItem(
-        &menu,
-        wxID_ANY,
-        GlobalTransmissionCapacitiesToString_Display(CAPACITY),
-        transmissionCapacityIcon(CAPACITY),
-        wxEmptyString);
+    const wxMenuItem* it = Menu::CreateItem(&menu,
+                                            wxID_ANY,
+                                            GlobalTransmissionCapacitiesToString_Display(CAPACITY),
+                                            transmissionCapacityIcon(CAPACITY),
+                                            wxEmptyString);
 
     menu.Connect(it->GetId(),
-        wxEVT_COMMAND_MENU_SELECTED,
-        wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
-        nullptr,
-        this);
+                 wxEVT_COMMAND_MENU_SELECTED,
+                 wxCommandEventHandler(Optimization::onSelectTransmissionCapacity<CAPACITY>),
+                 nullptr,
+                 this);
 }
 
 } // namespace Options

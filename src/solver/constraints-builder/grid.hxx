@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -211,7 +211,7 @@ bool Grid<NodeT>::buildMesh()
 
     for (uint i = 0; i < linksToBeAdded.size(); i++)
     {
-        logs.info() << "Searching basis (loop " << i+1 << "/" << linksToBeAdded.size() << ")";
+        logs.info() << "Searching basis (loop " << i + 1 << "/" << linksToBeAdded.size() << ")";
         // build the graph with two copies (+/-) for each node and edge
         Grid<NodeT> polarisedDuplicate;
         getDuplicatedGrid(polarisedDuplicate);

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -1267,7 +1267,6 @@ void Matrix<T, ReadWriteT>::resizeWithoutDataLost(uint x, uint y, const T& defVa
 
                 for (uint j = minH; j < y; ++j)
                     column[j] = defVal;
-
             }
 
             if (defVal == T())
@@ -1423,7 +1422,6 @@ void Matrix<T, ReadWriteT>::copyFrom(const Matrix<U, V>& rhs)
             // optimisations
             if (Yuni::Static::Type::StrictlyEqual<T, U>::Yes)
             {
-
                 (void)::memcpy((void*)column, (void*)src, sizeof(T) * height);
             }
             else

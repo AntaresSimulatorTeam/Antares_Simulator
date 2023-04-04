@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,7 +41,7 @@ extern NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION** NumeroChroniquesTireesParIn
 
 /* Optimisation */
 /*-Economique-*/
-// extern PROBLEME_HEBDO                        ProblemeHebdo;
+// extern PROBLEME_HEBDO                        problemeHebdo;
 /*-Adequation-*/
 extern PROBLEME_HORAIRE_ADEQUATION ProblemeHoraireAdequation;
 extern VALEURS_ANNUELLES** ValeursAnnuellesAdequation;

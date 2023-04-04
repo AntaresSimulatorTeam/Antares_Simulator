@@ -4,7 +4,7 @@ import numpy
 from check_on_results.check_general import check_interface
 from check_decorators.print_name import printNameDecorator
 from utils.find_reference import find_reference_folder
-from utils.find_output import find_output_folder
+from utils.find_output import find_dated_output_folder
 
 @printNameDecorator
 class integrity_compare(check_interface):
@@ -21,7 +21,7 @@ class integrity_compare(check_interface):
     def compare_files(self):
         reference_values = get_integrity_check_values(self.ref_folder)
 
-        path_to_output = find_output_folder(self.study_path)
+        path_to_output = find_dated_output_folder(self.study_path)
         output_values = get_integrity_check_values(path_to_output)
 
         numpy.testing.assert_allclose(reference_values[0:8], output_values[0:8], rtol=1e-3, atol=0)

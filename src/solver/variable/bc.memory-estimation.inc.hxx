@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -48,36 +48,35 @@ uint64 BindingConstraints<bc_next_type>::memoryUsage() const
 template<>
 void BindingConstraints<bc_next_type>::EstimateMemoryUsage(Data::StudyMemoryUsage& u)
 {
-    u.study.bindingConstraints.eachEnabled(
-      [&](const Data::BindingConstraint& constraint) {
-          if (constraint.operatorType() == Data::BindingConstraint::opEquality)
-              return;
+    u.study.bindingConstraints.eachEnabled([&](const Data::BindingConstraint& constraint) {
+        if (constraint.operatorType() == Data::BindingConstraint::opEquality)
+            return;
 
-          int bc_count = 1;
-          // If the current binding constraint is double (has operators "<" and ">"), it is counted
-          // twice
-          if (constraint.operatorType() == Data::BindingConstraint::opBoth)
-              bc_count = 2;
+        int bc_count = 1;
+        // If the current binding constraint is double (has operators "<" and ">"), it is counted
+        // twice
+        if (constraint.operatorType() == Data::BindingConstraint::opBoth)
+            bc_count = 2;
 
-          for (int i = 0; i < bc_count; i++)
-          {
-              u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
-              u.overheadDiskSpaceForSingleBindConstraint();
+        for (int i = 0; i < bc_count; i++)
+        {
+            u.requiredMemoryForOutput += sizeof(NextType) + sizeof(void*) /*overhead vector*/;
+            u.overheadDiskSpaceForSingleBindConstraint();
 
-              // year-by-year
-              if (!u.gatheringInformationsForInput)
-              {
-                  if (u.study.parameters.yearByYear && u.mode != Data::stdmAdequacyDraft)
-                  {
-                      for (unsigned int i = 0; i != u.years; ++i)
-                          u.overheadDiskSpaceForSingleBindConstraint();
-                  }
-              }
-          }
+            // year-by-year
+            if (!u.gatheringInformationsForInput)
+            {
+                if (u.study.parameters.yearByYear)
+                {
+                    for (unsigned int i = 0; i != u.years; ++i)
+                        u.overheadDiskSpaceForSingleBindConstraint();
+                }
+            }
+        }
 
-          // next
-          NextType::EstimateMemoryUsage(u);
-      });
+        // next
+        NextType::EstimateMemoryUsage(u);
+    });
 }
 
 } // namespace Variable

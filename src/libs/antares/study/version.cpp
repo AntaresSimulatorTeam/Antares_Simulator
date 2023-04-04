@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -97,7 +97,11 @@ const char* VersionToCStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return ">8.4";
+        return ">8.6";
+    case version860:
+        return "8.6";
+    case version850:
+        return "8.5";
     case version840:
         return "8.4";
     case version830:
@@ -108,14 +112,14 @@ const char* VersionToCStr(const Version v)
         return "8.1";
     case version800:
         return "8.0";
+
+    // older versions
     case version720:
         return "7.2";
     case version710:
         return "7.1";
     case version700:
         return "7.0";
-
-    // older versions
     case version650:
         return "6.5";
     case version640:
@@ -182,7 +186,11 @@ const wchar_t* VersionToWStr(const Version v)
     switch (v)
     {
     case versionFutur:
-        return L">8.3";
+        return L">8.6";
+    case version860:
+        return L"8.6";
+    case version850:
+        return L"8.5";
     case version840:
         return L"8.4";
     case version830:
@@ -193,14 +201,14 @@ const wchar_t* VersionToWStr(const Version v)
         return L"8.1";
     case version800:
         return L"8.0";
+
+    // older versions
     case version720:
         return L"7.2";
     case version710:
         return L"7.1";
     case version700:
         return L"7.0";
-
-    // older versions
     case version650:
         return L"6.5";
     case version640:
@@ -266,6 +274,10 @@ Version VersionIntToVersion(uint version)
     // The list should remain ordered in the reverse order for performance reasons
     switch (version)
     {
+    case 860:
+        return version860;
+    case 850:
+        return version850;
     case 840:
         return version840;
     case 830:
@@ -276,6 +288,8 @@ Version VersionIntToVersion(uint version)
         return version810;
     case 800:
         return version800;
+
+    // older versions
     case 720:
         return version720;
     case 710:

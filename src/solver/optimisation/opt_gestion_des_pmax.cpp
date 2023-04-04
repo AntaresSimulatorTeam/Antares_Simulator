@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,31 +33,25 @@
 
 #include "opt_fonctions.h"
 
-void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Palier;
-    double* PuissanceDisponibleDuPalierThermiqueRef;
-    double* PuissanceDisponibleDuPalierThermiqueRef_SV;
-
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout;
-
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
 
-        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
         {
-            PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[Palier];
-            PuissanceDisponibleDuPalierThermiqueRef
+            PDISP_ET_COUTS_HORAIRES_PAR_PALIER* PuissanceDisponibleEtCout
+              = PaliersThermiquesDuPays->PuissanceDisponibleEtCout[palier];
+            double* PuissanceDisponibleDuPalierThermiqueRef
               = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef;
-            PuissanceDisponibleDuPalierThermiqueRef_SV
+            double* PuissanceDisponibleDuPalierThermiqueRef_SV
               = PuissanceDisponibleEtCout->PuissanceDisponibleDuPalierThermiqueRef_SV;
 
             memcpy((char*)PuissanceDisponibleDuPalierThermiqueRef_SV,
                    (char*)PuissanceDisponibleDuPalierThermiqueRef,
-                   ProblemeHebdo->NombreDePasDeTempsRef * sizeof(double));
+                   problemeHebdo->NombreDePasDeTempsRef * sizeof(double));
         }
     }
     return;

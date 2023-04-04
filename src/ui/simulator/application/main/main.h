@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -521,6 +521,10 @@ private:
     void evtOnOptionsOptimizationPrefs(wxCommandEvent& evt);
     //! Advanced parameters
     void evtOnOptionsAdvanced(wxCommandEvent& evt);
+    //! Adequacy Patch Configure
+    void evtOnOptionsAdequacyPatchOptions(wxCommandEvent& evt);
+    //! Adequacy Patch Areas
+    void evtOnOptionsAdequacyPatchAreas(wxCommandEvent& evt);
     //@}
 
     //! \name Event: Menu: Window
@@ -537,8 +541,6 @@ private:
     // void evtOnHelpVisitRTEWebsite(wxCommandEvent& evt);
     //! Event: About this application
     void evtOnHelpAbout(wxCommandEvent& evt);
-    //! Event: PDF General Reference guide
-    void evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF System Map Editor Reference guide
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library
@@ -634,6 +636,8 @@ private:
     wxMenu* pMenuOptions;
     //! SubMenu: Options > Geographic trimming
     wxMenuItem* pMenuGeographicTrimming;
+    //! SubMenu: Options > Adequacy Patch
+    wxMenuItem* pMenuAdequacyPatch;
     //! Menu: Window
     wxMenu* pMenuWindow;
     //! Menu: Tools

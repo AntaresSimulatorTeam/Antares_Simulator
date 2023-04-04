@@ -10,7 +10,9 @@
 
 using namespace operations_research;
 
-void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numSpace, int const n, Antares::Solver::IResultWriter::Ptr writer);
+void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver,
+                                                   Antares::Solver::IResultWriter::Ptr writer,
+                                                   const std::string& filename);
 
 /*!
  *  \brief Return list of available ortools solver name on our side
@@ -19,17 +21,16 @@ void ORTOOLS_EcrireJeuDeDonneesLineaireAuFormatMPS(MPSolver* solver, size_t numS
  */
 std::list<std::string> getAvailableOrtoolsSolverName();
 
-
 /*!
  *  \brief Create a MPSolver with correct linear or mixed variant
  *
  *  \return MPSolver
  */
-MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME *probleme, const std::string & solverName);
+MPSolver* MPSolverFactory(const Antares::Optimization::PROBLEME_SIMPLEXE_NOMME* probleme,
+                          const std::string& solverName);
 
 std::string generateTempPath(const std::string& filename);
 void removeTemporaryFile(const std::string& tmpPath);
-
 
 class OrtoolsUtils
 {
@@ -39,7 +40,6 @@ public:
         std::string LPSolverName, MIPSolverName;
     };
     static const std::map<std::string, struct SolverNames> solverMap;
-
 };
 
 namespace Antares

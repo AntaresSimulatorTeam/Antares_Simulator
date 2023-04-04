@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -108,7 +108,6 @@ private:
         //! The maximum number of days in a year
         dayYearCount = 366
     };
-
 
 public:
     //! Reference to the study

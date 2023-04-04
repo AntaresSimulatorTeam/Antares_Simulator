@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -40,9 +40,9 @@ class LayerData
 {
 public:
     LayerData(size_t activeLayer, bool showLayer) :
-        activeLayerID(activeLayer),
-        showAllLayer(showLayer)
-        {}
+     activeLayerID(activeLayer), showAllLayer(showLayer)
+    {
+    }
 
     //! \name Layers
     //@{

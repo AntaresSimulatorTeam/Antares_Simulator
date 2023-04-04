@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -28,11 +28,14 @@
 #define __EXPORT_STRUCTURE__
 
 #include <vector>
+#include <optional>
 #include <string>
 
 #include <yuni/yuni.h>
 
 #include <antares/Enum.hpp>
+#include "../writer/i_writer.h"
+#include <antares/study.h>
 
 namespace Antares
 {
@@ -62,27 +65,17 @@ class Study;
 struct PROBLEME_HEBDO;
 
 void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
+                             int var,
                              Antares::Data::Enum::ExportStructDict structDict,
+                             int ts, // TODO remove
                              int firstVal,
-                             int secondVal,
-                             int ts);
-void OPT_Export_add_variable(std::vector<std::string>& varname,
-                             int Var,
-                             Antares::Data::Enum::ExportStructDict structDict,
-                             int firstVal,
-                             int ts);
-
-void OPT_ExportInterco(const Antares::Data::Study& study,
-                       PROBLEME_HEBDO* ProblemeHebdo,
-                       uint numSpace);
-void OPT_ExportAreaName(const Antares::Data::Study& study,
-                        PROBLEME_HEBDO* ProblemeHebdo,
-                        uint numSpace);
-void OPT_ExportVariables(const Antares::Data::Study& study,
+                             std::optional<int> secondVal = std::nullopt);
+void OPT_ExportInterco(const Antares::Solver::IResultWriter::Ptr writer,
+                       PROBLEME_HEBDO* problemeHebdo);
+void OPT_ExportAreaName(Antares::Solver::IResultWriter::Ptr writer,
+                        const Antares::Data::AreaList& areas);
+void OPT_ExportVariables(const Antares::Solver::IResultWriter::Ptr writer,
                          const std::vector<std::string>& varname,
-                         const std::string& fileName,
-                         const std::string& fileExtension,
-                         uint numSpace);
+                         const std::string& filename);
 
 #endif

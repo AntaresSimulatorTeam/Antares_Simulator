@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -39,41 +39,37 @@
 
 #define SEP Yuni::IO::Separator
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 struct setOfParallelYears
 {
-    // Un lot d'année à exécuter en parallèle.
-    // En fonction d'une éventuelle play-list, certaines seront jouées et d'autres non.
+    // Un lot d'annÃ©e Ã  exÃ©cuter en parallÃ¨le.
+    // En fonction d'une Ã©ventuelle play-list, certaines seront jouÃ©es et d'autres non.
 
 public:
-    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouées en cas de
-    // play-list "trouée")
+    // Numeros des annees en parallele pour ce lot (certaines ne seront pas jouÃ©es en cas de
+    // play-list "trouÃ©e")
     std::vector<unsigned int> yearsIndices;
 
-    // Une annee doit-elle être rejouée ?
+    // Une annee doit-elle Ãªtre rejouÃ©e ?
     std::map<uint, bool> yearFailed;
 
-    // Associe le numero d'une année jouée à l'indice de l'espace
+    // Associe le numero d'une annÃ©e jouÃ©e Ã  l'indice de l'espace
     std::map<unsigned int, unsigned int> performedYearToSpace;
 
-    // L'inverse : pour une année jouée, associe l'indice de l'espace au numero de l'année
+    // L'inverse : pour une annÃ©e jouÃ©e, associe l'indice de l'espace au numero de l'annÃ©e
     std::map<unsigned int, unsigned int> spaceToPerformedYear;
 
-    // Pour chaque année, est-elle la première à devoir être jouée dans son lot d'années ?
+    // Pour chaque annÃ©e, est-elle la premiÃ¨re Ã  devoir Ãªtre jouÃ©e dans son lot d'annÃ©es ?
     std::map<unsigned int, bool> isFirstPerformedYearOfASet;
 
-    // Pour chaque année du lot, est-elle jouée ou non ?
+    // Pour chaque annÃ©e du lot, est-elle jouÃ©e ou non ?
     std::map<unsigned int, bool> isYearPerformed;
 
-    // Nbre d'années en parallele vraiment jouées pour ce lot
+    // Nbre d'annÃ©es en parallele vraiment jouÃ©es pour ce lot
     unsigned int nbPerformedYears;
 
-    // Nbre d'années en parallele jouées ou non pour ce lot
+    // Nbre d'annÃ©es en parallele jouÃ©es ou non pour ce lot
     unsigned int nbYears;
 
     // Regenere-t-on des times series avant de jouer les annees du lot courant
@@ -438,8 +434,6 @@ struct compareHydroCostsNoises
         return (std::abs(hcnr1.getValue()) < std::abs(hcnr2.getValue())) ? true : false;
     }
 };
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_H__

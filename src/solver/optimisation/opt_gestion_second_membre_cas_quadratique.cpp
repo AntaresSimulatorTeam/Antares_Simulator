@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -32,18 +32,14 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
+void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    int Cnt;
-    int Pays;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays - 1; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays - 1; pays++)
     {
-        Cnt = ProblemeHebdo->NumeroDeContrainteDeSoldeDEchange[Pays];
-        ProblemeAResoudre->SecondMembre[Cnt]
-          = ProblemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[Pays];
+        int cnt = problemeHebdo->NumeroDeContrainteDeSoldeDEchange[pays];
+        ProblemeAResoudre->SecondMembre[cnt]
+          = problemeHebdo->SoldeMoyenHoraire[PdtHebdo]->SoldeMoyenDuPays[pays];
     }
 }

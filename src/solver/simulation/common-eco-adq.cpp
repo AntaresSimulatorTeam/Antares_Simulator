@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -41,11 +41,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 static void RecalculDesEchangesMoyens(Data::Study& study,
                                       PROBLEME_HEBDO& problem,
@@ -74,7 +70,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
         std::vector<double> avgDirect;
         std::vector<double> avgIndirect;
-        for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
+        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
             auto* link = study.runtime->areaLink[j];
             int ret = retrieveAverageNTC(
@@ -113,7 +109,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
         auto& ntcValues = *(problem.ValeursDeNTC[i]);
         assert(&ntcValues);
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
+        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
             ResultatsParInterconnexion[j]->TransitMoyenRecalculQuadratique[indx]
               = ntcValues.ValeurDuFlux[j];
@@ -200,12 +196,12 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
     const bool flowQuadEnabled
-      = study.parameters.variablesPrintInfo.searchIncrementally_getPrintStatus("FLOW QUAD.");
+      = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 
     uint maxHours = study.runtime->nbHoursPerYear;
-    for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
+    for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
     {
         auto& lnk = *(study.runtime->areaLink[j]);
         auto& impedances = lnk.parameters[Data::fhlImpedances];
@@ -233,7 +229,7 @@ void ComputeFlowQuad(Data::Study& study,
         logs.info() << "Post-processing... (quadratic optimisation)";
 
         problem.TypeDOptimisation = OPTIMISATION_QUADRATIQUE;
-        problem.LeProblemeADejaEteInstancie = NON_ANTARES;
+        problem.LeProblemeADejaEteInstancie = false;
         for (uint w = 0; w != nbWeeks; ++w)
         {
             int PasDeTempsDebut = startTime + (w * problem.NombreDePasDeTemps);
@@ -244,7 +240,7 @@ void ComputeFlowQuad(Data::Study& study,
     {
         logs.info() << "  The quadratic optimisation has been skipped";
 
-        for (uint j = 0; j < study.runtime->interconnectionsCount; ++j)
+        for (uint j = 0; j < study.runtime->interconnectionsCount(); ++j)
         {
             for (uint w = 0; w != nbWeeks; ++w)
             {
@@ -416,6 +412,4 @@ void finalizeOptimizationStatistics(PROBLEME_HEBDO& problem,
     secondOptStat.reset();
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

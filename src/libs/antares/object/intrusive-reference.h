@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -60,7 +60,8 @@ public:
         //! A default type
         using PtrSingleThreaded = Yuni::SmartPtr<T, Yuni::Policy::Ownership::COMReferenceCounted>;
         //! The most suitable smart pointer for T
-        using Ptr = typename Yuni::Static::If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType;
+        using Ptr = typename Yuni::Static::
+          If<ThreadingPolicy::threadSafe, PtrThreadSafe, PtrSingleThreaded>::ResultType;
     }; // class SmartPtr
 
 public:

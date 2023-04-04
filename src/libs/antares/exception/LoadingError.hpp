@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -177,6 +177,12 @@ class NoAreaInsideAdqPatchMode : public LoadingError
 {
 public:
     NoAreaInsideAdqPatchMode();
+};
+
+class IncompatibleHurdleCostCSR : public LoadingError
+{
+public:
+    IncompatibleHurdleCostCSR();
 };
 
 class IncompatibleOutputOptions : public LoadingError

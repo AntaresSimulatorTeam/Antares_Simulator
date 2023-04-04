@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -223,7 +223,6 @@ uint64 Study::memoryUsage() const
            + preproHydroCorrelation.memoryUsage() + preproWindCorrelation.memoryUsage()
            + (uiinfo ? uiinfo->memoryUsage() : 0);
 }
-
 
 std::map<std::string, uint> Study::getRawNumberCoresPerLevel()
 {
@@ -621,25 +620,40 @@ void Study::performTransformationsBeforeLaunchingSimulation()
     });
 }
 
-bool Study::prepareOutput()
+// This function is a helper. It should be completed when adding new formats
+static std::string getOutputSuffix(ResultFormat fmt)
 {
-    pStartTime = DateTime::Now();
+    switch (fmt)
+    {
+    case zipArchive:
+        return ".zip";
+    default:
+        return "";
+    }
+}
+
+YString StudyCreateOutputPath(StudyMode mode,
+                              ResultFormat fmt,
+                              const YString& outputRoot,
+                              const YString& label,
+                              Yuni::sint64 startTime)
+{
+    auto suffix = getOutputSuffix(fmt);
+
+    YString folderOutput;
 
     // Determining the new output folder
     // This folder is composed by the name of the simulation + the current date/time
-    folderOutput.clear() << folder << SEP << "output" << SEP;
-    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", pStartTime, false);
+    folderOutput.clear() << outputRoot << SEP;
+    DateTime::TimestampToString(folderOutput, "%Y%m%d-%H%M", startTime, false);
 
-    switch (parameters.mode)
+    switch (mode)
     {
     case stdmEconomy:
         folderOutput += "eco";
         break;
     case stdmAdequacy:
         folderOutput += "adq";
-        break;
-    case stdmAdequacyDraft:
-        folderOutput += "dft";
         break;
     case stdmUnknown:
     case stdmExpansion:
@@ -652,33 +666,43 @@ bool Study::prepareOutput()
     buffer.reserve(1024);
 
     // Folder output
-    if (not simulationComments.name.empty())
+    if (not label.empty())
     {
         buffer.clear();
-        TransformNameIntoID(simulationComments.name, buffer);
+        TransformNameIntoID(label, buffer);
         folderOutput << '-' << buffer;
     }
 
-    if (parameters.noOutput or not usedByTheSolver)
-        return true;
-
-    // TODO : use writer
+    buffer.clear() << folderOutput << suffix;
     // avoid creating the same output twice
-    if (IO::Exists(folderOutput))
+    if (IO::Exists(buffer))
     {
         String newpath;
         uint index = 1; // will start from 2
         do
         {
             ++index;
-            newpath.clear() << folderOutput << '-' << index;
+            newpath.clear() << folderOutput << '-' << index << suffix;
         } while (IO::Exists(newpath) and index < 2000);
 
-        folderOutput = newpath;
+        folderOutput << '-' << index;
     }
+    return folderOutput;
+}
+
+void Study::prepareOutput()
+{
+    pStartTime = DateTime::Now();
+
+    if (parameters.noOutput || !usedByTheSolver)
+        return;
+
+    buffer.clear() << folder << SEP << "output";
+
+    folderOutput = StudyCreateOutputPath(
+      parameters.mode, parameters.resultFormat, buffer, simulationComments.name, pStartTime);
 
     logs.info() << "  Output folder : " << folderOutput;
-    return true;
 }
 
 void Study::saveAboutTheStudy()
@@ -1162,19 +1186,10 @@ void Study::initializeProgressMeter(bool tsGeneratorOnly)
         // Output - Areas
         ticksPerOutput += (int)areas.size();
         // Output - Links
-        ticksPerOutput += (int)runtime->interconnectionsCount;
+        ticksPerOutput += (int)runtime->interconnectionsCount();
         // Output - digest
         ticksPerOutput += 1;
-
-        if (parameters.mode != stdmAdequacyDraft)
-        {
-            ticksPerYear =
-              // nb weeks
-              ((int)((double)(parameters.simulationDays.end - parameters.simulationDays.first)
-                     / 7));
-        }
-        else
-            ticksPerYear = 1;
+        ticksPerYear = 1;
     }
 
     int n;
@@ -1351,7 +1366,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
         String filename;
         filename << studyfolder << SEP << "output" << SEP;
 
-        if (parameters.adequacyDraft() or linkname.empty())
+        if (linkname.empty())
         {
             if (areaname.empty())
                 filename.clear();
@@ -1363,11 +1378,7 @@ bool Study::checkForFilenameLimits(bool output, const String& chfolder) const
                 filename << (parameters.economy() ? "economy" : "adequacy") << SEP;
                 filename << "mc-all" << SEP << "areas";
                 filename << SEP << areaname << SEP;
-
-                if (parameters.adequacyDraft())
-                    filename << "without-network-hourly.txt";
-                else
-                    filename << "values-hourly.txt";
+                filename << "values-hourly.txt";
             }
         }
         else

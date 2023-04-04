@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,12 +29,9 @@
 
 #include <antares/study.h>
 
-namespace Antares
-{
-namespace Solver
+namespace Antares::Solver
 {
 void ApplyCustomScenario(Data::Study& study);
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver
 
 #endif // __SOLVER_SIMULATION_APPLY_SCENARIO_H__

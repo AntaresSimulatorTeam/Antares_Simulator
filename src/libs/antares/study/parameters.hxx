@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -49,11 +49,6 @@ inline bool Parameters::economy() const
 inline bool Parameters::adequacy() const
 {
     return mode == stdmAdequacy;
-}
-
-inline bool Parameters::adequacyDraft() const
-{
-    return mode == stdmAdequacyDraft;
 }
 
 } // namespace Data

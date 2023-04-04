@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -53,8 +53,6 @@
 #include "layerdata.h"
 
 #include <memory>
-
-#include "equipments/equipments.h" // experimental
 
 //# include "../../../solver/variable/state.h"
 
@@ -375,7 +373,7 @@ public:
     /*!
     ** \brief Prepare the output where the results of the simulation will be written
     */
-    bool prepareOutput();
+    void prepareOutput();
 
     void saveAboutTheStudy();
 
@@ -762,6 +760,10 @@ protected:
     bool internalLoadSets();
     //@}
 
+    bool internalLoadIni(const YString& path, const StudyLoadOptions& options);
+
+    void parameterFiller(const StudyLoadOptions& options);
+
     //! \name Misc
     //@{
     //! Reset the input extension according the study version
@@ -780,6 +782,11 @@ extern YString StudyIconFile;
 bool areasThermalClustersMinStablePowerValidity(const AreaList& areas,
                                                 std::map<int, YString>& areaClusterNames);
 
+YString StudyCreateOutputPath(StudyMode mode,
+                              ResultFormat fmt,
+                              const YString& folder,
+                              const YString& label,
+                              Yuni::sint64 startTime);
 } // namespace Data
 } // namespace Antares
 

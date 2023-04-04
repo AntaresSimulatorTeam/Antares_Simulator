@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -61,7 +61,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
     std::string buffer;
     timeseriesNumbers.saveToBuffer(buffer,
                                    0,         // precision
-                                   true,     // print_dimensions
+                                   true,      // print_dimensions
                                    predicate, // predicate
                                    true);     // save even if all coeffs are zero
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -30,13 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Private
-{
-namespace Simulation
+namespace Antares::Solver::Private::Simulation
 {
 class CacheData
 {
@@ -71,9 +65,6 @@ public:
 
 }; // class CacheData
 
-} // namespace Simulation
-} // namespace Private
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Private::Simulation
 
 #endif // __SOLVER_SIMULATION_SOLVER_H__

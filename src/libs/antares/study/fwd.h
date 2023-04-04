@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -103,8 +103,6 @@ enum StudyError
 enum StudyMode
 {
     stdmUnknown = -1,
-    //! Adequation
-    stdmAdequacyDraft = 0,
     //! Economic
     stdmEconomy,
     //! Adequacy (subset of the economy mode)
@@ -202,18 +200,6 @@ enum StyleType
 }; // enum StyleType
 
 std::string styleToString(const StyleType& style);
-
-/*!
-** \brief Link Type mode
-*/
-enum LinkType
-{
-    //! Link Type defined locally
-    ltLocal = 0,
-    //! Link Type AC
-    ltAC,
-
-}; // enum LinkType
 
 /*!
 ** \brief Types of timeSeries
@@ -549,8 +535,8 @@ enum ResultFormat
 enum class mpsExportStatus : int
 {
     NO_EXPORT = 0,
-    EXPORT_FIRST_OPIM = 1,
-    EXPORT_SECOND_OPIM = 2,
+    EXPORT_FIRST_OPTIM = 1,
+    EXPORT_SECOND_OPTIM = 2,
     EXPORT_BOTH_OPTIMS = 3,
     UNKNOWN_EXPORT = 4
 };
@@ -572,44 +558,6 @@ class TSNumberRules;
 class Sets;
 
 } // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
-
-namespace Antares
-{
-namespace Data
-{
-namespace AdequacyPatch
-{
-/*!
-** \brief Types of Adequacy patch mode
-*/
-enum AdequacyPatchMode
-{
-    //! Virtual area in adq patch
-    virtualArea = 0,
-    //! Physical Area outside the adq-patch
-    physicalAreaOutsideAdqPatch = 1,
-    //! Physical Area inside the adq-patch
-    physicalAreaInsideAdqPatch = 2
-}; // enum AdequacyPatchMode
-
-/*!
-** \brief Setting Link Capacity (NTC) for Adequacy patch first step
-*/
-enum LinkCapacityForAdequacyPatchFirstStep
-{
-    //! Leave NTC local values
-    leaveLocalValues = 0,
-    //! Set NTC to zero
-    setToZero,
-    //! set only origine->extremity NTC to zero
-    setOrigineExtremityToZero,
-    //! set only extremity->origine NTC to zero
-    setExtremityOrigineToZero
-
-}; // enum NTC
-} // namespace AdequacyPatch
 } // namespace Data
 } // namespace Antares
 

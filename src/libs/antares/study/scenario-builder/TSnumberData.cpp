@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -104,7 +104,9 @@ inline bool CheckValidity<Data::DataSeriesHydro>(uint value,
 }
 
 template<>
-inline bool CheckValidity<Data::AreaLink>(uint value, const Data::AreaLink& data, uint /* tsGenMax */)
+inline bool CheckValidity<Data::AreaLink>(uint value,
+                                          const Data::AreaLink& data,
+                                          uint /* tsGenMax */)
 {
     return value < data.directCapacities.width;
 }
@@ -336,7 +338,8 @@ bool thermalTSNumberData::reset(const Study& study)
     return true;
 }
 
-void thermalTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
+void thermalTSNumberData::saveToINIFile(const Study& /* study */,
+                                        Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -469,7 +472,8 @@ uint renewableTSNumberData::get_tsGenCount(const Study& study) const
     return tsGenRenewable ? 1 : 0u;
 }
 
-void renewableTSNumberData::saveToINIFile(const Study& /* study */, Yuni::IO::File::Stream& file) const
+void renewableTSNumberData::saveToINIFile(const Study& /* study */,
+                                          Yuni::IO::File::Stream& file) const
 {
     // Prefix
     CString<512, false> prefix;
@@ -511,8 +515,7 @@ bool renewableTSNumberData::reset(const Study& study)
     //   solver or not.
     // WARNING: At this point in time, the variable pArea->renewable.clusterCount()
     //   might not be valid (because not really initialized yet)
-    uint clusterCount
-      = (study.usedByTheSolver) ? (pArea->renewable.list.size()) : pArea->renewable.list.size();
+    const uint clusterCount = pArea->renewable.list.size();
     // Resize
     pTSNumberRules.reset(clusterCount, nbYears);
     return true;

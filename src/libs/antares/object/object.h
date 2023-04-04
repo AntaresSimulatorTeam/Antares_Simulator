@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -127,7 +127,8 @@ protected:
 
 protected:
     //! The most suitable type for a bool
-    using EnableType = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>,bool>::ResultType;
+    using EnableType
+      = Yuni::Static::If<ThreadingPolicy::threadSafe, Yuni::Atomic::Int<>, bool>::ResultType;
 
     //! Object Identifier
     const Ref pOID;

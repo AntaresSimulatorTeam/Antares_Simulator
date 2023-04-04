@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -45,50 +45,40 @@ extern "C"
 
 using namespace Antares;
 
-void OPT_LiberationProblemesSimplexe(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO* problemeHebdo)
 {
-    PROBLEME_SPX* ProbSpx;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-    int NbIntervalles;
-    int NumIntervalle;
     int NombreDePasDeTempsPourUneOptimisation;
-    MPSolver* solver;
-
-    if (ProblemeHebdo->OptimisationAuPasHebdomadaire == NON_ANTARES)
-    {
-        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-    }
+    if (!problemeHebdo->OptimisationAuPasHebdomadaire)
+        NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTempsDUneJournee;
     else
-    {
-        NombreDePasDeTempsPourUneOptimisation = ProblemeHebdo->NombreDePasDeTemps;
-    }
-    NbIntervalles
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation);
+        NombreDePasDeTempsPourUneOptimisation = problemeHebdo->NombreDePasDeTemps;
 
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
-    if (ProblemeAResoudre)
-    {
-        auto& study = *Data::Study::Current::Get();
-        bool ortoolsUsed = study.parameters.ortoolsUsed;
+    int nbIntervalles = problemeHebdo->NombreDePasDeTemps / NombreDePasDeTempsPourUneOptimisation;
 
-        if (ProblemeHebdo->LeProblemeADejaEteInstancie == NON_ANTARES)
+    const PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+    if (!ProblemeAResoudre)
+        return;
+
+    const auto& study = *Data::Study::Current::Get();
+    bool ortoolsUsed = study.parameters.ortoolsUsed;
+
+    if (!problemeHebdo->LeProblemeADejaEteInstancie)
+    {
+        for (int numIntervalle = 0; numIntervalle < nbIntervalles; numIntervalle++)
         {
-            for (NumIntervalle = 0; NumIntervalle < NbIntervalles; NumIntervalle++)
-            {
-                ProbSpx
-                  = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
-                solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[NumIntervalle]);
+            auto ProbSpx
+              = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
+            auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[numIntervalle]);
 
-                if (ortoolsUsed && solver != NULL)
-                {
-                    ORTOOLS_LibererProbleme(solver);
-                    solver = NULL;
-                }
-                else if (ProbSpx != NULL)
-                {
-                    SPX_LibererProbleme(ProbSpx);
-                    ProbSpx = NULL;
-                }
+            if (ortoolsUsed && solver != NULL)
+            {
+                ORTOOLS_LibererProbleme(solver);
+                solver = NULL;
+            }
+            else if (ProbSpx != NULL)
+            {
+                SPX_LibererProbleme(ProbSpx);
+                ProbSpx = NULL;
             }
         }
     }

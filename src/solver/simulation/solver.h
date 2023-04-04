@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -43,11 +43,7 @@
 
 #include <writer_factory.h>
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 template<class Impl>
 class yearJob;
@@ -188,9 +184,7 @@ public:
     //! Result writer
     Antares::Solver::IResultWriter::Ptr pResultWriter = nullptr;
 }; // class ISimulation
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #include "solver.hxx"
 

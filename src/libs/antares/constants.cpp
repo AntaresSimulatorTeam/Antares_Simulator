@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,8 +27,8 @@
 
 #include "constants.h"
 
-namespace Antares::Constants {
-
+namespace Antares::Constants
+{
 const std::array<unsigned int, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-} // namespace constants
+} // namespace Antares::Constants

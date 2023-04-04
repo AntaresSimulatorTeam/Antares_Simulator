@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -25,26 +25,14 @@
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
 
-#include <yuni/yuni.h>
-#include <antares/study/memory-usage.h>
 #include "adequacy.h"
-#include <antares/study.h>
 #include <antares/exception/UnfeasibleProblemError.hpp>
 #include <antares/exception/AssertionError.hpp>
-#include <yuni/core/math.h>
-#include "simulation.h"
-#include "../optimisation/opt_fonctions.h"
-#include "common-eco-adq.h"
 #include "opt_time_writer.h"
-#include "sim_structure_probleme_economique.h"
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Solver
-{
-namespace Simulation
+namespace Antares::Solver::Simulation
 {
 enum
 {
@@ -102,7 +90,6 @@ bool Adequacy::simulationBegin()
         for (uint numSpace = 0; numSpace < pNbMaxPerformedYearsInParallel; numSpace++)
         {
             pProblemesHebdo[numSpace] = new PROBLEME_HEBDO();
-            memset(pProblemesHebdo[numSpace], '\0', sizeof(PROBLEME_HEBDO));
             SIM_InitialisationProblemeHebdo(study, *pProblemesHebdo[numSpace], 168, numSpace);
 
             assert((uint)nbHoursInAWeek == (uint)pProblemesHebdo[numSpace]->NombreDePasDeTemps
@@ -162,6 +149,7 @@ bool Adequacy::year(Progression::Task& progression,
 {
     // No failed week at year start
     failedWeekList.clear();
+    pProblemesHebdo[numSpace]->year = state.year;
 
     PrepareRandomNumbers(study, *pProblemesHebdo[numSpace], randomForYear);
 
@@ -177,14 +165,14 @@ bool Adequacy::year(Progression::Task& progression,
     for (uint w = 0; w != pNbWeeks; ++w)
     {
         state.hourInTheYear = hourInTheYear;
-        state.study.runtime->weekInTheYear[numSpace] = state.weekInTheYear = w;
+        pProblemesHebdo[numSpace]->weekInTheYear = state.weekInTheYear = w;
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-          *pProblemesHebdo[numSpace], state, numSpace, hourInTheYear);
+            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
-        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim ? OUI_ANTARES : NON_ANTARES;
+        pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
         reinitOptim = false;
 
         state.simplexHasBeenRan = (w == 0) || simplexIsRequired(hourInTheYear, numSpace);
@@ -232,12 +220,16 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], numSpace);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-                RemixHydroForAllAreas(
-                  study, *pProblemesHebdo[numSpace], numSpace, hourInTheYear, nbHoursInAWeek);
+                RemixHydroForAllAreas(study.areas, 
+                                      *pProblemesHebdo[numSpace],
+                                      study.parameters.shedding.policy,
+                                      study.parameters.simplexOptimizationRange,
+                                      numSpace, 
+                                      hourInTheYear);
 
-                computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, true);
+                computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
             }
             catch (Data::AssertionError& ex)
             {
@@ -277,14 +269,14 @@ bool Adequacy::year(Progression::Task& progression,
             {
                 auto& varduales
                   = *(pProblemesHebdo[numSpace]->VariablesDualesDesContraintesDeNTC[i]);
-                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount; ++lnkindex)
+                for (uint lnkindex = 0; lnkindex != runtime.interconnectionsCount(); ++lnkindex)
                     varduales.VariableDualeParInterconnexion[lnkindex] = 0.;
             }
 
             for (uint hw = 0; hw != nbHoursInAWeek; ++hw)
             {
                 auto* ntc = pProblemesHebdo[numSpace]->ValeursDeNTC[hw];
-                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount);
+                memset(ntc->ValeurDuFlux, 0, sizeof(double) * runtime.interconnectionsCount());
             }
 
             for (uint ar = 0; ar != nbAreas; ++ar)
@@ -327,13 +319,12 @@ bool Adequacy::year(Progression::Task& progression,
                 }
             }
 
-            computingHydroLevels(study, *pProblemesHebdo[numSpace], nbHoursInAWeek, false, true);
+            computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(
-          study, *pProblemesHebdo[numSpace], state, hourInTheYear, nbHoursInAWeek);
+        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
-        updatingWeeklyFinalHydroLevel(study, *pProblemesHebdo[numSpace], nbHoursInAWeek);
+        updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
         variables.weekBegin(state);
         uint previousHourInTheYear = state.hourInTheYear;
@@ -367,7 +358,7 @@ bool Adequacy::year(Progression::Task& progression,
         ++progression;
     }
 
-    updatingAnnualFinalHydroLevel(study, *pProblemesHebdo[numSpace]);
+    updatingAnnualFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 
     optWriter.finalize();
     finalizeOptimizationStatistics(*pProblemesHebdo[numSpace], state);
@@ -399,7 +390,7 @@ static std::vector<AvgExchangeResults*> retrieveBalance(
 
 void Adequacy::simulationEnd()
 {
-    if (!preproOnly && study.runtime->interconnectionsCount > 0)
+    if (!preproOnly && study.runtime->interconnectionsCount() > 0)
     {
         auto balance = retrieveBalance(study, variables);
         ComputeFlowQuad(study, *pProblemesHebdo[0], balance, pNbWeeks);
@@ -411,6 +402,4 @@ void Adequacy::prepareClustersInMustRunMode(uint numSpace)
     PrepareDataFromClustersInMustrunMode(study, numSpace);
 }
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation

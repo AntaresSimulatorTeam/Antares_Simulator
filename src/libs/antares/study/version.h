@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -114,6 +114,10 @@ enum Version
     version830 = 830,
     //! Study version 8.4
     version840 = 840,
+    //! Study version 8.5
+    version850 = 850,
+    //! Study version 8.6
+    version860 = 860,
     // see versionLatest below
 
     // Constants
@@ -125,7 +129,7 @@ enum Version
 enum
 {
     //! The latest version
-    versionLatest = version840,
+    versionLatest = version860,
 };
 
 /*!

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -39,22 +39,20 @@ namespace Category
 {
 enum DataLevel
 {
-    //! Data that do not belong to any area
-    standard = 1,
     //! Data that belong to a single area
-    area = 2,
+    area = 1,
     //! Data that belong to a thermal dispatchable cluster
-    thermalAggregate = 4,
+    thermalAggregate = 2,
     //! Data that belong to a link
-    link = 8,
+    link = 4,
     //! Data that belong to a set
-    setOfAreas = 16,
+    setOfAreas = 8,
     // Data belonging to a binding constraint
-    bindingConstraint = 32,
+    bindingConstraint = 16,
     //! The maximum available level
-    maxDataLevel = 32,
+    maxDataLevel = 16,
     //! All data level
-    allDataLevel = standard | area | thermalAggregate | link | setOfAreas | bindingConstraint
+    allDataLevel = area | thermalAggregate | link | setOfAreas | bindingConstraint
 };
 
 enum File
@@ -65,20 +63,14 @@ enum File
     id = 2,
     //! Detailed values regarding thermal generation
     de = 4,
-    //! Adequacy results not taking into account the interconnection capacities
-    is = 8,
-    //! Adequacy results taking into account the actually available interconnection capacities
-    cn = 16,
-    //! Annual adequacy results
-    mc = 32,
     //! Detailed values regarding RES generation
-    de_res = 64,
+    de_res = 8,
     //! Detailed values regarding binding constraints
-    bc = 128,
+    bc = 16,
     //! The maximum available value
-    maxFileLevel = 128,
+    maxFileLevel = 16,
     //! All file level
-    allFile = va | id | de | is | cn | mc | de_res | bc,
+    allFile = va | id | de | de_res | bc,
 };
 
 enum Precision
@@ -179,9 +171,6 @@ inline void DataLevelToStream(StreamT& out, int dataLevel)
 {
     switch (dataLevel)
     {
-    case standard:
-        out += "group";
-        break;
     case area:
         out += "area";
         break;
@@ -213,15 +202,6 @@ inline void FileLevelToStreamShort(StreamT& out, int fileLevel)
     case de:
         out += "de";
         break;
-    case is:
-        out += "is";
-        break;
-    case cn:
-        out += "cn";
-        break;
-    case mc:
-        out += "mc";
-        break;
     case de_res:
         out += "res";
         break;
@@ -246,15 +226,6 @@ inline void FileLevelToStream(StreamT& out, int fileLevel)
         break;
     case de:
         out += "details";
-        break;
-    case is:
-        out += "without-network";
-        break;
-    case cn:
-        out += "with-network";
-        break;
-    case mc:
-        out += "mc";
         break;
     case de_res:
         out += "details-res";

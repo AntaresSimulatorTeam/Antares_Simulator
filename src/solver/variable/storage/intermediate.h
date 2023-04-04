@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -93,9 +93,9 @@ public:
     void computeStatisticsAdequacyForTheCurrentYear();
 
     // Compute averages for the current year from a particular time division results :
-    // For instances : 
+    // For instances :
     // - compute averages daily to yearly, from hourly results
-    // - compute averages monthly to yearly, from weekly results 
+    // - compute averages monthly to yearly, from weekly results
     void computeAveragesForCurrentYearFromHourlyResults();
     void computeAveragesForCurrentYearFromDailyResults();
     void computeAveragesForCurrentYearFromWeeklyResults();
@@ -151,8 +151,13 @@ public:
 
 private:
     // non copyable
-    IntermediateValues(const IntermediateValues&) {}
-    IntermediateValues& operator=(const IntermediateValues&) { return *this; }
+    IntermediateValues(const IntermediateValues&)
+    {
+    }
+    IntermediateValues& operator=(const IntermediateValues&)
+    {
+        return *this;
+    }
 
     template<uint Size, class VCardT, class A>
     void internalExportAnnualValues(SurveyResults& report, const A& array, bool annual) const;

@@ -38,7 +38,7 @@ InvalidOptimizationRange::InvalidOptimizationRange() :
 
 InvalidSimulationMode::InvalidSimulationMode() :
  LoadingError(
-   "Only one simulation mode is allowed: --expansion, --economy, --adequacy or --adequacy-draft")
+   "Only one simulation mode is allowed: --expansion, --economy, --adequacy")
 {
 }
 
@@ -130,6 +130,11 @@ IncompatibleStudyModeForAdqPatch::IncompatibleStudyModeForAdqPatch() :
 
 NoAreaInsideAdqPatchMode::NoAreaInsideAdqPatchMode() :
  LoadingError("Minimum one area must be inside adequacy patch mode when using adequacy patch")
+{
+}
+
+IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR() :
+ LoadingError("Incompatible options include.hurdleCost and curtailmentSharing.includeHurdleCost")
 {
 }
 

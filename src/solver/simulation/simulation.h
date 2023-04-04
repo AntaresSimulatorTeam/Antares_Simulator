@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -29,22 +29,8 @@
 
 #include "../config.h"
 #include <antares/study/study.h>
-#include "sim_structure_donnees.h"
-#include "sim_structure_probleme_economique.h"
-#include "../variable/state.h"
 
-#define OUI_ANTARES 1
-#define NON_ANTARES 0
-#define LINFINI_ANTARES 1.e+80
-#define LINFINI_ENTIER 20000000
-
-#define OPTIMISATION_LINEAIRE 1
-#define OPTIMISATION_QUADRATIQUE 2
-
-#define ZERO_PMAX 0.0
-#define ZERO_PMIN 1.e-2
-
-#define ZERO_RESERVE_J_MOINS1 1.e-2
+class PROBLEME_HEBDO;
 
 void SIM_AllocationTableaux(void);
 
@@ -64,21 +50,17 @@ void SIM_InitialisationProblemeHebdo(Antares::Data::Study& study,
 void SIM_PreallocationTableaux(void);
 
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
-                                    Antares::Solver::Variable::State& state,
+                                    uint weekInTheYear,
                                     uint numSpace,
                                     const int);
 
 void SIM_RenseignementProblemeHoraireAdequation(uint);
-
-void SIM_RenseignementValeursPourTouteLAnnee(const Antares::Data::Study& study, uint numSpace);
 
 void SIM_CalculFlotHoraireAdequation(void);
 
 void SIM_InitialisationProblemeHoraireAdequation(void);
 
 void SIM_AllocationProblemeHoraireAdequation(void);
-
-void SIM_AlgorithmeDeFlot(void);
 
 void SIM_InitialisationChainagePourAdequation(void);
 

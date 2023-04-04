@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -37,33 +37,26 @@
 
 #define ZERO 1.e-2
 
-void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO* problemeHebdo)
 {
-    int Pays;
-    int Palier;
-    int Pdt;
-    PALIERS_THERMIQUES* PaliersThermiquesDuPays;
-    PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout;
-    double* PuissanceMinDuPalierThermique;
-    double* PuissanceMinDuPalierThermique_SV;
-    int NombreDePasDeTempsProblemeHebdo;
+    int NombreDePasDeTempsProblemeHebdo = problemeHebdo->NombreDePasDeTempsRef;
 
-    NombreDePasDeTempsProblemeHebdo = ProblemeHebdo->NombreDePasDeTempsRef;
-
-    for (Pays = 0; Pays < ProblemeHebdo->NombreDePays; Pays++)
+    for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        PaliersThermiquesDuPays = ProblemeHebdo->PaliersThermiquesDuPays[Pays];
-        PuissanceDisponibleEtCout = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
-        for (Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
+        const PALIERS_THERMIQUES* PaliersThermiquesDuPays
+          = problemeHebdo->PaliersThermiquesDuPays[pays];
+        PDISP_ET_COUTS_HORAIRES_PAR_PALIER** PuissanceDisponibleEtCout
+          = PaliersThermiquesDuPays->PuissanceDisponibleEtCout;
+        for (int palier = 0; palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; palier++)
         {
-            PuissanceMinDuPalierThermique
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique;
-            PuissanceMinDuPalierThermique_SV
-              = PuissanceDisponibleEtCout[Palier]->PuissanceMinDuPalierThermique_SV;
+            const double* PuissanceMinDuPalierThermique
+              = PuissanceDisponibleEtCout[palier]->PuissanceMinDuPalierThermique;
+            double* PuissanceMinDuPalierThermique_SV
+              = PuissanceDisponibleEtCout[palier]->PuissanceMinDuPalierThermique_SV;
 
-            for (Pdt = 0; Pdt < NombreDePasDeTempsProblemeHebdo; Pdt++)
+            for (int pdt = 0; pdt < NombreDePasDeTempsProblemeHebdo; pdt++)
             {
-                PuissanceMinDuPalierThermique_SV[Pdt] = PuissanceMinDuPalierThermique[Pdt];
+                PuissanceMinDuPalierThermique_SV[pdt] = PuissanceMinDuPalierThermique[pdt];
             }
         }
     }

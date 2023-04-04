@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -75,7 +75,6 @@ void Areas<NEXTTYPE>::initializeFromStudy(Data::Study& study)
     for (uint i = 0; i != pAreaCount; ++i)
     {
         // Instancing a new set of variables of the area
-        auto& n = pAreas[i];
         auto* currentArea = study.areas.byIndex[i];
         if (!(--tick))
         {
@@ -91,16 +90,18 @@ void Areas<NEXTTYPE>::initializeFromStudy(Data::Study& study)
 
         // Initialize the variables
         // From the study
-        n.initializeFromStudy(study);
+        pAreas[i].initializeFromStudy(study);
         // From the area
-        n.initializeFromArea(&study, currentArea);
+        pAreas[i].initializeFromArea(&study, currentArea);
         // Does current output variable appears non applicable in areas' output files, not
         // districts'. Note that digest gather area and district results.
-        n.broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
+        pAreas[i].broadcastNonApplicability(not currentArea->hydro.reservoirManagement);
 
         // For each current area's variable, getting the print status, that is :
         // is variable's column(s) printed in output (areas) reports ?
-        n.getPrintStatusFromStudy(study);
+        pAreas[i].getPrintStatusFromStudy(study);
+
+        pAreas[i].supplyMaxNumberOfColumns(study);
     }
 }
 

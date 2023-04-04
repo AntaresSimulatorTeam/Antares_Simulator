@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -31,12 +31,11 @@
 #include <yuni/core/string.h>
 #include <yuni/core/bit/array.h>
 
-
 namespace Antares
 {
 namespace Data
 {
-    class StudyMemoryUsage;
+class StudyMemoryUsage;
 } // namespace Data
 } // namespace Antares
 
@@ -117,7 +116,6 @@ public:
     static void Assign(uint count, U* array, const U& value);
 
 public:
-
     template<class T>
     static void Allocate(T*& out, size_t size);
 
@@ -156,7 +154,7 @@ public:
     */
     ~Memory() = default;
     //@}
-    
+
     bool initializeTemporaryFolder();
     //@}
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -73,11 +73,9 @@ enum
     timerInterval = 3500 // ms
 };
 
-static const wxString featuresNames[featuresCount]
-  = {wxT(" Default  "), wxT(" Parallel ")};
+static const wxString featuresNames[featuresCount] = {wxT(" Default  "), wxT(" Parallel ")};
 
-static const Solver::Feature featuresAlias[featuresCount]
-  = {Solver::standard, Solver::parallel};
+static const Solver::Feature featuresAlias[featuresCount] = {Solver::standard, Solver::parallel};
 
 static wxString TimeSeriesToWxString(uint m)
 {
@@ -859,13 +857,9 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
     // cleanup
     pMappingSolverMode.clear();
 
-    // Simulation mode is adequacy-draft mode ?
-    auto& study = *Data::Study::Current::Get();
-    bool draftMode = study.parameters.adequacyDraft();
-
     for (uint i = 0; i != featuresCount; ++i)
     {
-        wxMenuItem* it = Menu::CreateItem(&menu,
+        const wxMenuItem* it = Menu::CreateItem(&menu,
                                           wxID_ANY,
                                           featuresNames[i],
                                           "images/16x16/empty.png",
@@ -879,10 +873,6 @@ void Run::prepareMenuSolverMode(Antares::Component::Button&, wxMenu& menu, void*
                      wxCommandEventHandler(Run::onSelectMode),
                      nullptr,
                      this);
-
-        // In case of adequacy-draft mode, parallel mode is disabled
-        if (i == Solver::parallel && draftMode)
-            it->Enable(false);
     }
 }
 

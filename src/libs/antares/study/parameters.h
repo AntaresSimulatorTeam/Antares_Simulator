@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -38,13 +38,12 @@
 #include "../inifile.h"
 #include "fwd.h"
 #include "variable-print-info.h"
+#include "parameters/adq-patch-params.h"
 
 #include <antares/study/UnfeasibleProblemBehavior.hpp>
 
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief General data for a study
@@ -75,8 +74,6 @@ public:
     bool economy() const;
     //! Get if the simulation is in adequacy mode
     bool adequacy() const;
-    //! Get if the simulation is in adequacy-draft mode
-    bool adequacyDraft() const;
     //@}
 
     /*!
@@ -136,6 +133,10 @@ public:
     ** \brief Reset to default all seeds
     */
     void resetSeeds();
+    /*!
+    ** \brief Reset to default all threshold values in adequacy patch
+    */
+    void resetThresholdsAdqPatch();
     /*!
     ** \brief Reset to default all adequacy patch values
     */
@@ -370,8 +371,6 @@ public:
 
     //! Improve units startup
     bool improveUnitsStartup;
-    //! Block size used by the adequacy algorithm
-    uint adequacyBlockSize;
 
     //! Accuracy on correlation
     uint timeSeriesAccuracyOnCorrelation;
@@ -484,31 +483,12 @@ public:
 
     //! Transmission capacities
     GlobalTransmissionCapacities transmissionCapacities;
-    //! Asset type
-    LinkType linkType;
     //! Simplex optimization range (day/week)
     SimplexOptimization simplexOptimizationRange;
     //@}
 
-    struct AdequacyPatch
-    {
-        struct LocalMatching
-        {
-            //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
-            //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
-            //! only in the first step of adequacy patch local matching rule.
-            bool setToZeroOutsideInsideLinks = true;
-            //! Transmission capacities between physical areas outside adequacy patch (area type 1).
-            //! NTC is set to null (if true) only in the first step of adequacy patch local matching
-            //! rule.
-            bool setToZeroOutsideOutsideLinks = true;
-        };
-        bool enabled;
-        LocalMatching localMatching;
-        void addExcludedVariables(std::vector<std::string>&) const;
-    };
 
-    AdequacyPatch adqPatch;
+    AdequacyPatch::AdqPatchParams adqPatchParams;
 
     //! \name Scenariio Builder - Rules
     //@{
@@ -566,8 +546,7 @@ const char* StudyModeToCString(StudyMode mode);
 */
 bool StringToStudyMode(StudyMode& mode, Yuni::CString<20, false> text);
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "parameters.hxx"
 

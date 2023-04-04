@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -113,8 +113,7 @@ bool Memory::initializeTemporaryFolder()
     if (not pCacheFolder.empty() and not pAllowedToChangeCacheFolder
         and not IO::Directory::Create(pCacheFolder))
     {
-        logs.warning() << "Impossible to create the cache folder "
-                       << pCacheFolder;
+        logs.warning() << "Impossible to create the cache folder " << pCacheFolder;
         pCacheFolder.clear();
     }
     return true;

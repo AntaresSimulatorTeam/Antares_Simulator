@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -152,11 +152,11 @@ Yuni::uint64 computeOverheadDiskSpaceForAnyDataLevelComponent()
     // Reminder : a data level can be an area, a link or a binding constraint
     Yuni::uint64 diskSpace = 0;
 
-    diskSpace += 160 * 1024;    // hourly
-    diskSpace += 6 * 1024;      // daily
-    diskSpace += 6 * 1024;      // weekly
-    diskSpace += 2 * 1024;      // monthly
-    diskSpace += 1024;          // annual
+    diskSpace += 160 * 1024; // hourly
+    diskSpace += 6 * 1024;   // daily
+    diskSpace += 6 * 1024;   // weekly
+    diskSpace += 2 * 1024;   // monthly
+    diskSpace += 1024;       // annual
 
     return diskSpace;
 }

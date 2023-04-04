@@ -12,15 +12,9 @@ on:
       - doc/*
 
 jobs:
-  doc_generation:
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   windows:
 
     runs-on: ${{ matrix.os }}
-    needs: doc_generation
     strategy:
       matrix:
         os: [windows-latest]
@@ -42,17 +36,11 @@ jobs:
     - name: Pre-requisites
       shell: cmd
       run: |
-          choco install wget unzip --no-progress
+          choco install wget unzip zip --no-progress
 
     - name : Init VCPKG submodule
       run: |
           git submodule update --init vcpkg
-
-    - name: Download userguide
-      uses: actions/download-artifact@v3
-      with:
-        name: pdf-doc
-        path: docs/ref_guides
 
     # Restore both vcpkg and its artifacts from the GitHub cache service.
     - name: Restore vcpkg and its artifacts.
@@ -132,11 +120,6 @@ jobs:
            cd _build
            ctest -C Release --output-on-failure -R unfeasible
 
-    - name: Run adq-patch related tests
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R test-adq-patch
-
     - name: Run unit and end-to-end tests
       run: |
            cd _build
@@ -148,12 +131,6 @@ jobs:
            tar xvf src/tests/kirchhoff-cbuilder/reference.tar.gz -C src/tests/kirchhoff-cbuilder/
            cd _build
            ctest -C Release --output-on-failure -R kirchhoff
-
-    - name: Run MPS comparison test
-      shell: bash
-      run: |
-           cd _build
-           ctest -C Release --output-on-failure -R mps
 
     - name: Upload build on failure
       if: ${{ failure() }}
@@ -170,6 +147,13 @@ jobs:
         path: 'simtest.json'
         prop_path: 'version'
 
+    - name: Run tests for adequacy patch (CSR)
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: adequacy-patch-CSR
+        os: ${{ matrix.test-platform }}
+
     - name: Run tests about infinity on BCs RHS
       uses: ./.github/workflows/run-tests
       with:
@@ -184,7 +168,18 @@ jobs:
         batch-name: short-tests
         os: ${{ matrix.test-platform }}
 
+    - name: Run mps tests
+      uses: ./.github/workflows/run-tests
+      with:
+        simtest-tag: ${{steps.simtest-version.outputs.prop}}
+        batch-name: valid-mps
+        os: ${{ matrix.test-platform }}
 
+    - name: Solver archive creation
+      shell: bash
+      run: |
+           cd _build
+           zip -r antares-solver_windows.zip solver/Release/antares-*-solver.exe solver/Release/*.dll
 
     - name: NSIS Installer creation
       shell: bash
@@ -196,6 +191,13 @@ jobs:
            export NSIS_NAME=$(ls *.exe)
            echo "NSIS_NAME=$NSIS_NAME" >> $GITHUB_ENV
 
+    - name: Upload NSIS log on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: NSISError.log
+        path: _build/_CPack_Packages/win64/NSIS/NSISOutput.log
+
     - name: .zip creation
       run: |
            cd _build
@@ -204,18 +206,9 @@ jobs:
     - name: Installer upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-installer-64bits
         path: _build/${{env.NSIS_NAME}}
 
     - name: Archive upload
       uses: actions/upload-artifact@v3
       with:
-        name: antares-windows-archive
         path: _build/*.zip
-
-    - name: Upload build on failure
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v3
-      with:
-        name: build-after-failure
-        path: ${{ github.workspace }}/_build

@@ -1,6 +1,5 @@
-
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -44,8 +43,8 @@ static void AllocateResultsForEconomicMode(void)
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
     ResultatsParInterconnexion = (RESULTATS_PAR_INTERCONNEXION**)MemAlloc(
-      (1 + study.runtime->interconnectionsCount) * sizeof(void*));
-    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
+      (1 + study.runtime->interconnectionsCount()) * sizeof(void*));
+    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = (RESULTATS_PAR_INTERCONNEXION*)MemAlloc(sizeof(RESULTATS_PAR_INTERCONNEXION));
         ResultatsParInterconnexion[i] = rpNtc;
@@ -68,7 +67,7 @@ static void DeallocateResultsForEconomicMode(void)
     auto& study = *Data::Study::Current::Get();
     RESULTATS_PAR_INTERCONNEXION* rpNtc;
 
-    for (uint i = 0; i != study.runtime->interconnectionsCount; i++)
+    for (uint i = 0; i != study.runtime->interconnectionsCount(); i++)
     {
         rpNtc = ResultatsParInterconnexion[i];
 
@@ -146,18 +145,14 @@ void SIM_AllocationTableaux()
             intercoCount * sizeof(NUMERO_CHRONIQUES_TIREES_PAR_INTERCONNEXION*));
     }
 
-    if (not study.parameters.adequacyDraft())
-    {
-        AllocateResultsForEconomicMode();
-    }
+    AllocateResultsForEconomicMode();
 }
 
 void SIM_DesallocationTableaux()
 {
-    auto studyptr = Data::Study::Current::Get();
-    if (!(!studyptr))
+    if (Data::Study::Current::Valid())
     {
-        auto& study = *studyptr;
+        const auto& study = *Data::Study::Current::Get();
         for (uint i = 0; i < study.areas.size(); ++i)
             MemFree(DonneesParPays[i]);
 
@@ -172,7 +167,6 @@ void SIM_DesallocationTableaux()
                 MemFree(NumeroChroniquesTireesParPays[numSpace][i]);
                 MemFree(ValeursGenereesParPays[numSpace][i]->HydrauliqueModulableQuotidien);
                 MemFree(ValeursGenereesParPays[numSpace][i]->AleaCoutDeProductionParPalier);
-
 
                 if (area.hydro.reservoirManagement)
                 {
@@ -200,8 +194,5 @@ void SIM_DesallocationTableaux()
     MemFree(DonneesParPays);
     DonneesParPays = NULL;
 
-    if (not studyptr->parameters.adequacyDraft())
-    {
-        DeallocateResultsForEconomicMode();
-    }
+    DeallocateResultsForEconomicMode();
 }

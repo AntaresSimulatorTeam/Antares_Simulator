@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -65,37 +65,13 @@ bool Study::loadFromFolder(const AnyString& path, const StudyLoadOptions& option
     return internalLoadFromFolder(normPath, options);
 }
 
-bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+bool Study::internalLoadIni(const String& path, const StudyLoadOptions& options)
 {
-    // IO statistics
-    Statistics::LogsDumper statisticsDumper;
-
-    gotFatalError = false;
-
-    // Check if the path is correct
-    if (!IO::Directory::Exists(path))
-    {
-        logs.error()
-          << path << ": The directory does not exist (or not enough privileges to read the folder)";
-        return false;
-    }
-
     if (not internalLoadHeader(path))
     {
         if (options.loadOnlyNeeded)
             return false;
     }
-
-    // Initialize all internal paths
-    relocate(path);
-
-    // Compatibility - The extension according the study version
-    inputExtensionCompatibility();
-
-    // Reserving enough space in buffer to avoid several calls to realloc
-    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
-    this->bufferLoadingTS.reserve(2096);
-    assert(this->bufferLoadingTS.capacity() > 0);
 
     // The simulation settings
     if (not simulationComments.loadFromFolder(options))
@@ -115,6 +91,11 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     buffer.clear() << path << SEP << "layers" << SEP << "layers.ini";
     loadLayers(buffer);
 
+    return true;
+}
+
+void Study::parameterFiller(const StudyLoadOptions& options)
+{
     if (usedByTheSolver and not options.prepareOutput)
     {
         parameters.noOutput = true;
@@ -137,44 +118,13 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
         {
             logs.error() << "Stochastic TS stored in input : study must be upgraded to "
                          << Data::VersionToCStr((Data::Version)Data::versionLatest);
-            gotFatalError = true;
             // it is useless to continue at this point
-            return false;
         }
     }
 
     // This settings can only be enabled from the solver
     // Prepare the output for the study
-    if (not prepareOutput()) // will abort early if not usedByTheSolver
-        return false;
-
-    // -------------------------
-    // Logical cores
-    // -------------------------
-    // Getting the number of logical cores to use before loading and creating the areas :
-    // Areas need this number to be up-to-date at construction.
-    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
-
-    // In case the study is run in the draft mode, only 1 core is allowed
-    if (parameters.mode == Data::stdmAdequacyDraft)
-        maxNbYearsInParallel = 1;
-
-    // In case parallel mode was not chosen, only 1 core is allowed
-    if (!options.enableParallel && !options.forceParallel)
-        maxNbYearsInParallel = 1;
-
-    // End logical core --------
-
-    // Areas - Raw Data
-    bool ret = areas.loadFromFolder(options);
-
-    logs.info() << "Loading correlation matrices...";
-    // Correlation matrices
-    ret = internalLoadCorrelationMatrices(options) and ret;
-    // Binding constraints
-    ret = internalLoadBindingConstraints(options) and ret;
-    // Sets of areas & links
-    ret = internalLoadSets() and ret;
+    prepareOutput(); // will abort early if not usedByTheSolver
 
     // Scenario Rules sets, only available since v3.6
     // After two consecutive load, some scenario builder data
@@ -199,11 +149,66 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     // In case hydro hot start is enabled, check all conditions are met.
     // (has to be called after areas load and calendar building)
     if (usedByTheSolver && !checkHydroHotStart())
-        return false;
+        logs.error() << "hydro hot start is enabled, conditions are not met. Aborting";
 
     // Reducing memory footprint
     reduceMemoryUsage();
+}
 
+bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
+{
+    // IO statistics
+    Statistics::LogsDumper statisticsDumper;
+
+    // Check if the path is correct
+    if (!IO::Directory::Exists(path))
+    {
+        logs.error()
+          << path << ": The directory does not exist (or not enough privileges to read the folder)";
+        return false;
+    }
+
+    // Initialize all internal paths
+    relocate(path);
+
+    // Compatibility - The extension according the study version
+    inputExtensionCompatibility();
+
+    // Reserving enough space in buffer to avoid several calls to realloc
+    this->dataBuffer.reserve(4 * 1024 * 1024); // For matrices, reserving 4Mo
+    this->bufferLoadingTS.reserve(2096);
+    assert(this->bufferLoadingTS.capacity() > 0);
+
+    if (not internalLoadIni(path, options))
+    {
+        return false;
+    }
+
+    // -------------------------
+    // Logical cores
+    // -------------------------
+    // Getting the number of logical cores to use before loading and creating the areas :
+    // Areas need this number to be up-to-date at construction.
+    getNumberOfCores(options.forceParallel, options.maxNbYearsInParallel);
+
+    // In case parallel mode was not chosen, only 1 core is allowed
+    if (!options.enableParallel && !options.forceParallel)
+        maxNbYearsInParallel = 1;
+
+    // End logical core --------
+
+    // Areas - Raw Data
+    bool ret = areas.loadFromFolder(options);
+
+    logs.info() << "Loading correlation matrices...";
+    // Correlation matrices
+    ret = internalLoadCorrelationMatrices(options) and ret;
+    // Binding constraints
+    ret = internalLoadBindingConstraints(options) and ret;
+    // Sets of areas & links
+    ret = internalLoadSets() and ret;
+
+    parameterFiller(options);
     return ret;
 }
 

@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -102,38 +102,29 @@ protected:
                            int fileLevel,
                            int precision) const
     {
-        if (0 != (fileLevel & FileFilter))
+        if (fileLevel & FileFilter && !(fileLevel & Category::id))
         {
-            switch (fileLevel)
+            switch (precision)
             {
-            case Category::mc:
-                InternalExportValuesMC<1, VCardT>(precision, report, rawdata.year);
+            case Category::hourly:
+                InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
+                  report, ::Antares::Memory::RawPointer(rawdata.hourly));
                 break;
-            case Category::id:
+            case Category::daily:
+                InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
+                                                                              rawdata.daily);
                 break;
-            default:
-                switch (precision)
-                {
-                case Category::hourly:
-                    InternalExportValues<Category::hourly, maxHoursInAYear, VCardT>(
-                      report, ::Antares::Memory::RawPointer(rawdata.hourly));
-                    break;
-                case Category::daily:
-                    InternalExportValues<Category::daily, maxDaysInAYear, VCardT>(report,
-                                                                                  rawdata.daily);
-                    break;
-                case Category::weekly:
-                    InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
-                                                                                    rawdata.weekly);
-                    break;
-                case Category::monthly:
-                    InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
-                                                                               rawdata.monthly);
-                    break;
-                case Category::annual:
-                    InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
-                    break;
-                }
+            case Category::weekly:
+                InternalExportValues<Category::weekly, maxWeeksInAYear, VCardT>(report,
+                                                                                rawdata.weekly);
+                break;
+            case Category::monthly:
+                InternalExportValues<Category::monthly, maxMonths, VCardT>(report,
+                                                                           rawdata.monthly);
+                break;
+            case Category::annual:
+                InternalExportValues<Category::annual, 1, VCardT>(report, rawdata.year);
+                break;
             }
         }
         // Next
@@ -147,26 +138,23 @@ protected:
         if ((dataLevel & Category::area || dataLevel & Category::setOfAreas)
             && digestLevel & Category::digestAllYears)
         {
-            if (report.data.study.parameters.mode != Antares::Data::stdmAdequacyDraft)
-            {
-                assert(report.data.columnIndex < report.maxVariables
-                       && "Column index out of bounds");
+            assert(report.data.columnIndex < report.maxVariables
+                    && "Column index out of bounds");
 
-                report.captions[0][report.data.columnIndex] = report.variableCaption;
-                report.captions[1][report.data.columnIndex] = VCardT::Unit();
-                report.captions[2][report.data.columnIndex] = "values";
+            report.captions[0][report.data.columnIndex] = report.variableCaption;
+            report.captions[1][report.data.columnIndex] = VCardT::Unit();
+            report.captions[2][report.data.columnIndex] = "values";
 
-                // Precision
-                report.precision[report.data.columnIndex]
-                  = PrecisionToPrintfFormat<VCardT::decimal>::Value();
-                // Value
-                report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
-                // Non applicability
-                report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
-                  = *report.isCurrentVarNA;
+            // Precision
+            report.precision[report.data.columnIndex]
+                = PrecisionToPrintfFormat<VCardT::decimal>::Value();
+            // Value
+            report.values[report.data.columnIndex][report.data.rowIndex] = rawdata.allYears;
+            // Non applicability
+            report.digestNonApplicableStatus[report.data.rowIndex][report.data.columnIndex]
+                = *report.isCurrentVarNA;
 
-                ++(report.data.columnIndex);
-            }
+            ++(report.data.columnIndex);
         }
         // Next
         NextType::template buildDigest<VCardT>(report, digestLevel, dataLevel);

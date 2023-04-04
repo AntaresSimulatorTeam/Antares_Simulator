@@ -1,8 +1,88 @@
 Antares Changelog
 =================
 
+v8.6.0-rc1 (03/2023)
+--------------------
+
+## New features
+* Add pollutant emissions (#1184, #1222)
+
+## Enhancements
+* Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
+
+## For developers
+* Use CMakeLists.txt instead of *.cmake (#1198)
+* Remove OUI_ANTARES NON_ANTARES (#1188)
+* Clean up src/solver/optimisation (#1161)
+* Adequacy patch : refactor parameters management (#1154)
+* Add a few const qualifiers (#1178)
+* INI files load encapsulation (#1057)
+
+v8.5.0 (02/2022)
+--------------------
+
+## New features
+* Curtailment Sharing Rule for Adequacy Patch #1062, including a scaling coefficient in hurdle costs #1155. This feature was contributed by RTE-i with support from RTE, ELIA and APG.
+
+## Bugfix
+* Hydraulic patch #697
+* Fix link path error in Kirchhoff constraint builder #1157
+
+## For developers
+* Fix build on Ubuntu 22.04 #1160
+* Cleaning #1142, 1146, #1149
+
+## Examples & documentation
+* Update docs to include CSR #1156
+* Fix examples studies (invalid v8.3.0 -> v8.5.0) #1136
+
+v8.4.2 (01/2022)
+--------------------
+
+## Improvements
+* Generate a solver-only asset for every release #976, #1080
+* Use MPS writer from solvers, instead of copy-pasted functions #1023
+
+## GUI
+* Allow more than 100 thermal clusters #1011
+* Remove status bar count. The sum was sometimes wrong #1029
+* Remove unused "District marginal prices" button from Advanced Parameters #1067
+
+## Bugfix
+* Fix overwritten MPS files when optimization/simplex-range=day #1041
+* Restore warm start for OR-Tools+XPRESS #1079
+* Fix output overwrite when using zip output by adding a -2, -3, etc. suffix #1044
+* Fix crash when generaldata.ini is empty, using default values #892
+
+
+## Testing
+* Introduce missing MPS comparison tests #1035
+
+## For developers
+* Fix empty CMAKE_BUILD_TYPE #1028
+* Fix memory leaks #669
+
+## Code cleaning
+* Clean up Yuni #1055
+* Remove default implementation for hourEnd (see variable.hxx) #1020
+* Remove free functions for areas' mem allocation #922
+* Remove dead code associated to debug #1048
+* Remove unused `ContrainteDeReserveJMoins1ParZone`, `NumeroDeVariableDefaillanceEnReserve` #1047
+* Extract code related to spilled energy bounds #1049
+* Simplify code for adq patch (Local matching) #1054
+* Refactor naming for {MPS, criterion, etc.} files and exported structures (see parameter optimization/include-exportstructure) #1030
+* Refactor: move current year and week from study to weekly optimization problem #1032
+* Pass optimization number as an argument #1040
+
+
+## New Contributors
+* @JasonMarechal25 made their first contribution in #1055
+
+**Full Changelog**: https://github.com/AntaresSimulatorTeam/Antares_Simulator/compare/v8.4.1...v8.4.2
+
 v8.4.1 (12/2022)
 --------------------
+
 ### Bugfix
 * Fix formula for profit calculation #1022
 
@@ -47,9 +127,9 @@ v8.4.0 (12/2022)
 
 
 ### Documentation
-* [DOC] OR-Tools build by @flomnes in #880
-* Document how to run JSON tests by @flomnes in #902
-* Document option --list-solvers by @flomnes in #770
+* [DOC] OR-Tools build #880
+* Document how to run JSON tests #902
+* Document option --list-solvers #770
 
 ## New Contributors
 * @kathvargasr made their first contribution in #967

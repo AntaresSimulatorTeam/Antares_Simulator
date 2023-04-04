@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,27 +33,24 @@
 
 #include "opt_fonctions.h"
 
-void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* ProblemeHebdo, int PdtHebdo)
+void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO* problemeHebdo, int PdtHebdo)
 {
-    int Interco;
-    int Var;
-    CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim;
-    VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances;
-    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre;
-
-    ProblemeAResoudre = ProblemeHebdo->ProblemeAResoudre;
+    PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     memset((char*)ProblemeAResoudre->CoutLineaire,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-    CorrespondanceVarNativesVarOptim = ProblemeHebdo->CorrespondanceVarNativesVarOptim[0];
-    ValeursDeResistances = ProblemeHebdo->ValeursDeNTC[PdtHebdo];
 
-    for (Interco = 0; Interco < ProblemeHebdo->NombreDInterconnexions; Interco++)
+    const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeResistances
+      = problemeHebdo->ValeursDeNTC[PdtHebdo];
+    const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
+      = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+
+    for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
     {
-        Var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[Interco];
-        if (Var >= 0 && Var < ProblemeAResoudre->NombreDeVariables)
-            ProblemeAResoudre->CoutQuadratique[Var]
-              = ValeursDeResistances->ResistanceApparente[Interco];
+        int var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDeLInterconnexion[interco];
+        if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)
+            ProblemeAResoudre->CoutQuadratique[var]
+              = ValeursDeResistances->ResistanceApparente[interco];
     }
 }

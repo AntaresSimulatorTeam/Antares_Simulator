@@ -1,6 +1,34 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 
+## v8.6.0
+### Input
+In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
+
+### Output
+In files **economy/mc-all/areas/** add column: CO2 EMIS.
+One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
+
+## v8.5.2
+### Input
+In file **settings/generaldata.ini**, in section `optimization`, link-type is now deprecated
+
+## v8.5.0
+### Input
+In file **settings/generaldata.ini**, in section `adequacy patch`, add properties
+
+* `price-taking-order` [string] can take values `DENS` (default value) and `Load`.
+* `include-hurdle-cost-csr` [bool]. Default value = `false`
+* `check-csr-cost-function` [bool]. Default value = `false`
+* `threshold-initiate-curtailment-sharing-rule` [double]. Default value = `0.0`
+* `threshold-display-local-matching-rule-violations` [double]. Default value = `0.0`
+* `threshold-csr-variable-bounds-relaxation` [int]. Default value = `3`
+
+### Output
+* If `include-adq-patch` is set to `true`, add column `LMR VIOL.` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+* If `include-adq-patch` is set to `true`, add column `SPIL. ENRG. CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+* If `include-adq-patch` is set to `true`, add column `DTG MRG CSR` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+
 ## v8.4.0
 ### Input
 #### Zero/infinite capacity for physical links only

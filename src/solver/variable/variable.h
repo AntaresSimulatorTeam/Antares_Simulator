@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -113,6 +113,10 @@ public:
     template<class PredicateT>
     static void RetrieveVariableList(PredicateT& predicate);
 
+    void getPrintStatusFromStudy(Data::Study& study);
+    void supplyMaxNumberOfColumns(Data::Study& study);
+
+
 public:
     //! \name Constructor
     //@{
@@ -132,6 +136,8 @@ public:
     ** \param study The attached study
     */
     void initializeFromStudy(Data::Study& study);
+
+    uint getMaxNumberColumns() const;
 
     /*!
     ** \brief Initialize the variable with a specific area
@@ -162,8 +168,6 @@ public:
     //@}
 
     void broadcastNonApplicability(bool applyNonApplicable);
-
-    void getPrintStatusFromStudy(Data::Study& study);
 
     //! \name Simulation
     //@{

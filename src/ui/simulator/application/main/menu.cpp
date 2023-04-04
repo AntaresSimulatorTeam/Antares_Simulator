@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -447,6 +447,23 @@ wxMenu* ApplWnd::createMenuOptions()
                           wxT("Advanced parameters"),
                           "images/16x16/empty.png",
                           wxT("Set advanced parameters"));
+
+    delete pMenuAdequacyPatch;
+    pMenuAdequacyPatch
+      = pMenuOptions->AppendSubMenu(new wxMenu(), wxT("Adequacy Patch..."));
+
+    wxMenu* adqPatchSubMenu = pMenuAdequacyPatch->GetSubMenu();
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchOptions,
+                     wxT("Options"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Options"));
+    Menu::CreateItem(adqPatchSubMenu,
+                     mnIDOptionAdequacyPatchAreas,
+                     wxT("Areas"),
+                     "images/16x16/filter.png",
+                     wxT("Adequacy Patch Areas"));
+
     it->Enable(false);
 
     return pMenuOptions;
@@ -555,12 +572,6 @@ wxMenu* ApplWnd::createMenuHelp()
 {
     delete pMenuHelp;
     pMenuHelp = new wxMenu();
-
-    Menu::CreateItem(pMenuHelp,
-                     mnIDHelpPDFGeneralReferenceGuide,
-                     wxT("General reference guide    \tF1"),
-                     "images/16x16/help.png",
-                     wxT("Open PDF : General reference guide"));
 
     Menu::CreateItem(pMenuHelp,
                      mnIDHelpPDFSystemMapEditorReferenceGuide,

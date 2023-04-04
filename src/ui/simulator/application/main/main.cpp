@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -159,6 +159,8 @@ EVT_MENU(mnIDOptionConfigureMCScenarioPlaylist, ApplWnd::evtOnOptionsMCPlaylist)
 EVT_MENU(mnIDOptionConfigureMCScenarioBuilder, ApplWnd::evtOnOptionsMCScenarioBuilder)
 EVT_MENU(mnIDOptionOptimizationPrefs, ApplWnd::evtOnOptionsOptimizationPrefs)
 EVT_MENU(mnIDOptionAdvanced, ApplWnd::evtOnOptionsAdvanced)
+EVT_MENU(mnIDOptionAdequacyPatchOptions, ApplWnd::evtOnOptionsAdequacyPatchOptions)
+EVT_MENU(mnIDOptionAdequacyPatchAreas, ApplWnd::evtOnOptionsAdequacyPatchAreas)
 
 // Window
 EVT_MENU(mnIDFullscreen, ApplWnd::evtOnFullscreen)
@@ -177,7 +179,6 @@ EVT_MENU(mnIDWindowRaise_Other, ApplWnd::evtOnRaiseWindow)
 
 // Help
 EVT_MENU(mnIDHelpAbout, ApplWnd::evtOnHelpAbout)
-EVT_MENU(mnIDHelpPDFGeneralReferenceGuide, ApplWnd::evtOnHelpPDFGeneralReferenceGuide)
 EVT_MENU(mnIDHelpPDFSystemMapEditorReferenceGuide,
          ApplWnd::evtOnHelpPDFSystemMapEditorReferenceGuide)
 EVT_MENU(mnIDHelpPDFExamplesLibrary, ApplWnd::evtOnHelpPDFExamplesLibrary)
@@ -219,6 +220,7 @@ ApplWnd::ApplWnd() :
  pMenuSimulation(nullptr),
  pMenuOptions(nullptr),
  pMenuGeographicTrimming(nullptr),
+ pMenuAdequacyPatch(nullptr),
  pMenuWindow(nullptr),
  pMenuTools(nullptr),
  pMenuHelp(nullptr),
@@ -463,6 +465,8 @@ void ApplWnd::evtOnUpdateGUIAfterStudyIO(bool opened)
         EnableItem(menu, mnIDOptionConfigureMCScenarioPlaylist, opened);
         EnableItem(menu, mnIDOptionOptimizationPrefs, opened);
         EnableItem(menu, mnIDOptionAdvanced, opened);
+        EnableItem(menu, mnIDOptionAdequacyPatchOptions, opened);
+        EnableItem(menu, mnIDOptionAdequacyPatchAreas, opened);
 
         EnableItem(menu, mnIDInspector, opened);
 

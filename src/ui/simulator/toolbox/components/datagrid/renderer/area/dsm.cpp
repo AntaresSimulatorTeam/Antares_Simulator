@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -51,9 +51,9 @@ wxString DSM::columnCaption(int colIndx) const
     switch (colIndx)
     {
     case Data::fhrPrimaryReserve:
-        return wxT("  Primary Res. (draft)  ");
+        return wxT("  Primary Res.  ");
     case Data::fhrStrategicReserve:
-        return wxT("  Strategic Res. (draft) ");
+        return wxT("  Strategic Res.  ");
     case Data::fhrDSM:
         return wxT("       DSM       ");
     case Data::fhrDayBefore:

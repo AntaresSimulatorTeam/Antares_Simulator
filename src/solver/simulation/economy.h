@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -27,48 +27,17 @@
 #ifndef __SOLVER_SIMULATION_ECONOMY_H__
 #define __SOLVER_SIMULATION_ECONOMY_H__
 
-#include <yuni/yuni.h>
-#include <memory>
-#include <antares/benchmarking.h>
 #include "../variable/variable.h"
 #include "../variable/economy/all.h"
 #include "../variable/state.h"
-#include "common-eco-adq.h"
+
+#include "../optimisation/base_weekly_optimization.h"
+#include "base_post_process.h"
 
 #include "solver.h" // for definition of type yearRandomNumbers
 
-namespace Antares
+namespace Antares::Solver::Simulation
 {
-namespace Solver
-{
-namespace Simulation
-{
-class EconomyWeeklyOptimization
-{
-public:
-    using Ptr = std::unique_ptr<EconomyWeeklyOptimization>;
-    virtual void solve(Variable::State& state, int hourInTheYear, uint numSpace) = 0;
-    static Ptr create(bool adqPatchEnabled, PROBLEME_HEBDO** pProblemesHebdo);
-
-protected:
-    explicit EconomyWeeklyOptimization(PROBLEME_HEBDO** pProblemesHebdo);
-    PROBLEME_HEBDO** pProblemesHebdo;
-};
-
-class AdequacyPatchOptimization : public EconomyWeeklyOptimization
-{
-public:
-    explicit AdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State& state, int hourInTheYear, uint numSpace) override;
-};
-
-class NoAdequacyPatchOptimization : public EconomyWeeklyOptimization
-{
-public:
-    explicit NoAdequacyPatchOptimization(PROBLEME_HEBDO** problemesHebdo);
-    void solve(Variable::State&, int, uint numSpace) override;
-};
-
 class Economy
 {
 public:
@@ -130,11 +99,10 @@ private:
     uint pNbMaxPerformedYearsInParallel;
     bool pPreproOnly;
     PROBLEME_HEBDO** pProblemesHebdo;
-    EconomyWeeklyOptimization::Ptr weeklyOptProblem;
+    std::vector<std::unique_ptr<Antares::Solver::Optimization::WeeklyOptimization>> weeklyOptProblems_;
+    std::vector<std::unique_ptr<interfacePostProcessList>> postProcessesList_;
 }; // class Economy
 
-} // namespace Simulation
-} // namespace Solver
-} // namespace Antares
+} // namespace Antares::Solver::Simulation
 
 #endif // __SOLVER_SIMULATION_ECONOMY_H__

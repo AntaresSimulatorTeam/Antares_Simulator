@@ -1,5 +1,5 @@
 /*
-** Copyright 2007-2018 RTE
+** Copyright 2007-2023 RTE
 ** Authors: Antares_Simulator Team
 **
 ** This file is part of Antares_Simulator.
@@ -33,28 +33,24 @@
 
 #include "opt_fonctions.h"
 
-void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
-    double X;
-    int PdtHebdo;
-    ProblemeHebdo->NombreDeJours
-      = (int)(ProblemeHebdo->NombreDePasDeTemps / ProblemeHebdo->NombreDePasDeTempsDUneJournee);
-    for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+    problemeHebdo->NombreDeJours
+      = problemeHebdo->NombreDePasDeTemps / problemeHebdo->NombreDePasDeTempsDUneJournee;
+    for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
     {
-        X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsDUneJournee;
-        ProblemeHebdo->NumeroDeJourDuPasDeTemps[PdtHebdo] = (int)floor(X);
+        double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsDUneJournee;
+        problemeHebdo->NumeroDeJourDuPasDeTemps[pdtHebdo] = (int)floor(X);
     }
     return;
 }
 
-void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* ProblemeHebdo)
+void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
-    double X;
-    int PdtHebdo;
-    for (PdtHebdo = 0; PdtHebdo < ProblemeHebdo->NombreDePasDeTemps; PdtHebdo++)
+    for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
     {
-        X = PdtHebdo / ProblemeHebdo->NombreDePasDeTempsPourUneOptimisation;
-        ProblemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[PdtHebdo] = (int)floor(X);
+        double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
+        problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[pdtHebdo] = (int)floor(X);
     }
     return;
 }
