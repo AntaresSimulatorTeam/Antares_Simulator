@@ -108,6 +108,9 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
                                           const Data::AreaLink& data,
                                           uint /* tsGenMax */)
 {
+    //Value = index of time series
+    //Direct Capacities = all time series
+    //directCapacities.width = Number of time series
     return value < data.directCapacities.width;
 }
 
@@ -612,6 +615,20 @@ uint ntcTSNumberData::get_tsGenCount(const Study& /* study */) const
     return 0;
 }
 
+// ================================
+// Binding Constraints ...
+// ================================
+bool BindingConstraintsTSNumberData::apply(Study& study)
+{
+    uint errors = 0;
+    CString<512, false> logprefix;
+    study.bindingConstraints;
+    for (const auto& [bc_name_and_year, ts_number]: rules_) {
+
+    }
+    //ApplyToMatrix(errors, logprefix, *cluster.series, , 0);
+    return true;
+}
 } // namespace ScenarioBuilder
 } // namespace Data
 } // namespace Antares
