@@ -134,9 +134,8 @@ bool CBuilder::checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour)
 
 bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
-    Data::AreaLink* link = linkInfo->ptr;
-
-    if (link->parameters[Data::fhlPShiftMinus][hour]
+    if (Data::AreaLink* link = linkInfo->ptr;
+            link->parameters[Data::fhlPShiftMinus][hour]
             > link->parameters[Data::fhlPShiftPlus][hour])
     {
         logs.error() << "Error on phase shift calendar validity at hour " << hour + 1
@@ -146,16 +145,12 @@ bool CBuilder::checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
     return true;
 }
 
-bool CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
+void CBuilder::updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const
 {
-    Data::AreaLink* link = linkInfo->ptr;
-    if (link->parameters[Data::fhlPShiftMinus][hour]
+    if (Data::AreaLink* link = linkInfo->ptr;
+            link->parameters[Data::fhlPShiftMinus][hour]
             != link->parameters[Data::fhlPShiftPlus][hour])
-    {
         linkInfo->hasPShiftsEqual = false;
-    }
-
-    return checkLinkPhaseShift(linkInfo, hour);
 }
 
 bool CBuilder::updateLinks()
@@ -189,8 +184,13 @@ bool CBuilder::updateLinks()
             if (includeLoopFlow && !checkValidityOfNodalLoopFlow(linkInfo, hour))
                 return false;
 
-            if (includePhaseShift && !updateLinkPhaseShift(linkInfo, hour)) // check validity of phase-shift
+            if (!includePhaseShift)
+                continue;
+
+            updateLinkPhaseShift(linkInfo, hour);
+            if (!checkLinkPhaseShift(linkInfo, hour))
                 return false;
+
         }
 
         linkInfo->nImpedanceChanges = (uint)impedances.size();

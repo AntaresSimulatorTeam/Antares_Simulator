@@ -358,7 +358,7 @@ public:
 
     bool checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour);
 
-    bool updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
+    void updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
     bool checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
 
     void setCalendarStart(int start)
