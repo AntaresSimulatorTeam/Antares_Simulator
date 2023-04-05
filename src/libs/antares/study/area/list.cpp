@@ -1296,12 +1296,9 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
         if (IO::Directory::Exists(buffer))
         {
-            CString<30, false> stStoragePlant;
-            stStoragePlant << SEP << "st-storage" << SEP << "clusters" << SEP;
-
             for (const auto& [id, area] : areas)
             {
-                buffer.clear() << pStudy.folderInput << stStoragePlant << area->id;
+                buffer << SEP << "clusters" << SEP << area->id;
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
                       && ret;
             }

@@ -144,17 +144,10 @@ bool Series::validate() const
     return true;
 }
 
-bool Series::validateInflowsAndRuleCurve() const
+bool Series::validateRuleCurve() const
 {
     for (int i = 0; i < HOURS_PER_YEAR; i++)
     {
-        if (inflows[i] > maxWithdrawalModulation[i] || inflows[i] < maxInjectionModulation[i])
-        {
-            logs.warning() << "Inflows value " << inflows[i] << " at line: " << i + 1 << " is not"
-                << "within withdrawal and injection values";
-            return false;
-        }
-
         if (lowerRuleCurve[i] > upperRuleCurve[i])
         {
             logs.warning() << "Lower rule curve greater than upper at line: " << i + 1;
