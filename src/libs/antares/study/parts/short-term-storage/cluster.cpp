@@ -65,6 +65,7 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 
 bool STStorageCluster::validate()
 {
+    logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate() && series->validate();
 }
 

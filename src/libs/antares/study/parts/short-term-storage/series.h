@@ -33,6 +33,7 @@ namespace Antares::Data::ShortTermStorage
 class Series
 {
 public:
+    // check if series values are valid
     bool validate() const;
 
     // load all series files with folder path
@@ -44,6 +45,13 @@ public:
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
+private:
+    bool validateSizes() const;
+    bool validateMaxInjection() const;
+    bool validateMaxWithdrawal() const;
+    bool validateRuleCurves() const;
+    bool validateUpperRuleCurve() const;
+    bool validateLowerRuleCurve() const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);

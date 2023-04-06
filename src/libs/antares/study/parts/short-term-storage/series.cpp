@@ -35,36 +35,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool Series::validate() const
-{
-    if (maxInjectionModulation.size() != HOURS_PER_YEAR
-        || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
-        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
-    {
-        logs.warning() << "Size of series for short term storage is wrong";
-        return false;
-    }
 
-    auto checkVectPositive = [](const std::vector<double>& v) {
-        return std::all_of(v.begin(), v.end(), [](double d){ return d >= 0.0; });
-    };
-    if (!checkVectPositive(maxInjectionModulation) || !checkVectPositive(maxWithdrawalModulation))
-    {
-        logs.warning() << "Values for PMAX series should be positive";
-        return false;
-    }
-
-    auto checkVectBetween = [](const std::vector<double>& v) {
-        return std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); });
-    };
-    if (!checkVectBetween(lowerRuleCurve) || !checkVectBetween(upperRuleCurve))
-    {
-        logs.warning() << "Values for rule curve series should be between 0 and 1";
-        return false;
-    }
-
-    return true;
-}
 
 bool Series::loadFromFolder(const std::string& folder)
 {
@@ -81,7 +52,7 @@ bool Series::loadFromFolder(const std::string& folder)
 
 bool loadFile(const std::string& path, std::vector<double>& vect)
 {
-    logs.debug() << "Loading file " << path;
+    logs.debug() << "  :: loading file " << path;
 
     vect.reserve(HOURS_PER_YEAR);
 
@@ -142,6 +113,71 @@ void Series::fillDefaultSeriesIfEmpty()
     fillIfEmpty(inflows, 0.0);
     fillIfEmpty(lowerRuleCurve, 0.0);
     fillIfEmpty(upperRuleCurve, 1.0);
+}
+
+bool Series::validate() const
+{
+    return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
+        && validateRuleCurves();
+}
+
+static bool checkVectBetweenZeroOne(const std::vector<double>& v, const std::string& name )
+{
+    if(!std::all_of(v.begin(), v.end(), [](double d){ return (d >= 0.0 && d <= 1.0); }))
+    {
+        logs.warning() << "Values for " << name << " series should be between 0 and 1";
+        return false;
+    }
+    return true;
+}
+
+bool Series::validateSizes() const
+{
+    if (maxInjectionModulation.size() != HOURS_PER_YEAR
+        || maxWithdrawalModulation.size() != HOURS_PER_YEAR || inflows.size() != HOURS_PER_YEAR
+        || lowerRuleCurve.size() != HOURS_PER_YEAR || upperRuleCurve.size() != HOURS_PER_YEAR)
+    {
+        logs.warning() << "Size of series for short term storage is wrong";
+        return false;
+    }
+    return true;
+}
+
+bool Series::validateMaxInjection() const
+{
+    return checkVectBetweenZeroOne(maxInjectionModulation, "PMAX injection");
+}
+
+bool Series::validateMaxWithdrawal() const
+{
+    return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
+
+}
+
+bool Series::validateRuleCurves() const
+{
+    if (!validateUpperRuleCurve() || !validateLowerRuleCurve())
+        return false;
+
+    for (int i = 0; i < HOURS_PER_YEAR; i++)
+    {
+        if (lowerRuleCurve[i] > upperRuleCurve[i])
+        {
+            logs.warning() << "Lower rule curve greater than upper at line: " << i + 1;
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Series::validateUpperRuleCurve() const
+{
+    return checkVectBetweenZeroOne(upperRuleCurve, "upper rule curve");
+}
+
+bool Series::validateLowerRuleCurve() const
+{
+    return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }
 
 } // namespace Antares::Data::ShortTermStorage
