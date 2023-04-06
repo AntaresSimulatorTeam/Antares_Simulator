@@ -35,7 +35,6 @@ class Series
 public:
     // check if series values are valid
     bool validate() const;
-    bool validateRuleCurve() const;
 
     // load all series files with folder path
     bool loadFromFolder(const std::string& folder);

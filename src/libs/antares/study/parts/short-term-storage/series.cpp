@@ -141,11 +141,6 @@ bool Series::validate() const
         return false;
     }
 
-    return true;
-}
-
-bool Series::validateRuleCurve() const
-{
     for (int i = 0; i < HOURS_PER_YEAR; i++)
     {
         if (lowerRuleCurve[i] > upperRuleCurve[i])
@@ -154,6 +149,7 @@ bool Series::validateRuleCurve() const
             return false;
         }
     }
+
     return true;
 }
 
