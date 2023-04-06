@@ -11,6 +11,7 @@ add_executable(short-term-storage-input ${SRC_SC_BUILDER_READ})
 
 target_include_directories(short-term-storage-input
 								PRIVATE
+									"${src_libs_antares_study}"
 									"${src_libs_antares_study}/parts/short-term-storage"
 )
 
