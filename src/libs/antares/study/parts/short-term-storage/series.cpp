@@ -117,10 +117,7 @@ void Series::fillDefaultSeriesIfEmpty()
 
 bool Series::validate() const
 {
-    if (!validateSizes())
-        return false;
-
-    return validateMaxInjection() && validateMaxWithdrawal()
+    return validateSizes() && validateMaxInjection() && validateMaxWithdrawal()
         && validateRuleCurves();
 }
 
