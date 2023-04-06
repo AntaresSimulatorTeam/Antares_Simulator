@@ -215,18 +215,19 @@ public:
         NextType::computeSummary(numSpaceToYear, nbYearsForCurrentSummary);
     }
 
-    void hourForClusters(State& state, unsigned int numSpace)
+    void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
         for (uint stsIndex = 0; stsIndex < state.area->shortTermStorage.count(); stsIndex++)
         {
-            const auto* cluster = state.area->shortTermStorage.storagesByIndex[stsIndex];
+            const auto* cluster = area->shortTermStorage.storagesByIndex[stsIndex];
             const uint group
               = Antares::Data::ShortTermStorage::groupIndex(cluster->properties.group);
             pValuesForTheCurrentYear[numSpace][group][state.hourInTheYear]
               += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
         }
 
-        NextType::hourForClusters(state, numSpace);
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
