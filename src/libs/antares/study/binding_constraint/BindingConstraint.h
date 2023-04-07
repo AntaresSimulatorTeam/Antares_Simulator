@@ -680,9 +680,11 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, Matrix<Yuni::uint32>>& TimeSeries() const {
+    [[nodiscard]] const std::map<std::string, DataSeriesCommon>& TimeSeries() const {
         return time_series;
     }
+
+    void resizeAllTimeseriesNumbers(unsigned nb_years);
 
 private:
     bool internalSaveToFolder(BindingConstraint::EnvForSaving& env) const;
@@ -692,7 +694,7 @@ private:
     BindingConstraint::Vector pList;
 
 public:
-    std::map<std::string, Matrix<Yuni::uint32>> time_series;
+    std::map<std::string, DataSeriesCommon> time_series;
 }; // class BindConstList
 
 struct CompareBindingConstraintName final

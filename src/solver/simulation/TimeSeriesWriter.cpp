@@ -48,7 +48,7 @@ static void genericStoreTimeseriesNumbers(Solver::IResultWriter::Ptr writer,
 void TimeSeriesWriter::write(const Data::BindConstList &list) {
     for (auto const& [group, time_series]: list.TimeSeries()) {
         genericStoreTimeseriesNumbers(writer_,
-                                      time_series,
+                                      time_series.timeseriesNumbers,
                                       group,
                                       "bindingconstraints");
     }
