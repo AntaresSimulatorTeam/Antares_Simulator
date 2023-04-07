@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     BOOST_CHECK_EQUAL(file_exists, true);
 }
 
-BOOST_AUTO_TEST_CASE(BC_output_ts_file_for_each_group) {
+BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     Study study;
     study.parameters.storeTimeseriesNumbers = true;
     study.bindingConstraints.time_series = {
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_file_for_each_group) {
     BOOST_CHECK_EQUAL(fs::exists(test2_path), true);
 }
 
-BOOST_AUTO_TEST_CASE(BC_timeseries_store_values) {
+BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     Study study;
     study.parameters.storeTimeseriesNumbers = true;
     study.bindingConstraints.time_series = {
@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_store_values) {
     series[0][1] = 1;
     series[1][0] = 42;
     series[1][1] = 3;
-    study.bindingConstraints.time_series["test1"].series = series;
+    study.bindingConstraints.time_series["test1"].timeseriesNumbers = series;
 
     Simulation::TimeSeriesWriter time_series_writer(study.resultWriter);
     TimeSeriesNumbers::StoreTimeseriesIntoOuput(study, time_series_writer);
