@@ -29,6 +29,7 @@
 #include <antares/constants.h>
 #include <antares/array/array1d.h>
 
+#include <optional>
 #include <fstream>
 
 #include "series.h"
@@ -151,7 +152,6 @@ bool Series::validateMaxInjection() const
 bool Series::validateMaxWithdrawal() const
 {
     return checkVectBetweenZeroOne(maxWithdrawalModulation, "PMAX withdrawal");
-
 }
 
 bool Series::validateRuleCurves() const
@@ -178,6 +178,26 @@ bool Series::validateUpperRuleCurve() const
 bool Series::validateLowerRuleCurve() const
 {
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
+}
+
+bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
+        unsigned int cycle, unsigned int start, unsigned int end)
+{
+    if (start < end)
+        end += HOURS_PER_YEAR;
+
+    if (level.has_value())
+    {
+        for (unsigned int h = 0; h < end; h += cycle)
+        {
+            unsigned int realHour = h % HOURS_PER_YEAR;
+            if (upperRuleCurve[realHour] < level.value() ||
+                lowerRuleCurve[realHour] > level.value())
+                return false;
+        }
+    }
+
+    return true;
 }
 
 } // namespace Antares::Data::ShortTermStorage

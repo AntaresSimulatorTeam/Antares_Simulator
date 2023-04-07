@@ -33,12 +33,14 @@ namespace Antares::Data::ShortTermStorage
 class Series
 {
 public:
-    // check if series values are valid
-    bool validate() const;
-
     // load all series files with folder path
     bool loadFromFolder(const std::string& folder);
     void fillDefaultSeriesIfEmpty();
+
+    // check if series values are valid
+    bool validate() const;
+    bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
+            unsigned int cycle, unsigned int start, unsigned int end);
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
