@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <fstream>
 
-#include "parameters.h"
 #include "container.h"
 
 #define SEP Yuni::IO::Separator
@@ -251,7 +250,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_load)
     createIniFile();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-    BOOST_CHECK(container.storagesByIndex[0]->properties.validate(sorWeek));
+    BOOST_CHECK(container.storagesByIndex[0]->properties.validate(true));
 
     removeIniFile();
 }
@@ -261,7 +260,7 @@ BOOST_AUTO_TEST_CASE(check_container_properties_wrong_value)
     createIniFileWrongValue();
 
     BOOST_CHECK(container.createSTStorageClustersFromIniFile(folder));
-    BOOST_CHECK(!container.storagesByIndex[0]->properties.validate(sorWeek));
+    BOOST_CHECK(!container.storagesByIndex[0]->properties.validate(true));
 
     removeIniFile();
 }

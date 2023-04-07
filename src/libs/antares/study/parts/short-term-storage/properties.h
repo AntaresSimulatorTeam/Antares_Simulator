@@ -30,7 +30,6 @@
 #include <string>
 #include <map>
 
-#include <antares/study/parameters.h>
 #include <antares/inifile.h>
 
 namespace Antares::Data::ShortTermStorage

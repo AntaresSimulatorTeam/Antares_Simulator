@@ -56,6 +56,7 @@ private:
     bool validateLowerRuleCurve() const;
 
     bool checkLevelValue(double level, unsigned int time, unsigned int start, unsigned int end) const;
+    bool checkLevelInterval(unsigned int time, unsigned int start, unsigned int end) const;
 
 };
 
