@@ -54,6 +54,9 @@ private:
     bool validateRuleCurves() const;
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
+
+    bool checkLevelValue(double level, unsigned int time, unsigned int start, unsigned int end) const;
+
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);

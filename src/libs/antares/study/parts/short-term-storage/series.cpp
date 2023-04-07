@@ -186,17 +186,26 @@ bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<doubl
     if (start < end)
         end += HOURS_PER_YEAR;
 
+    unsigned int simulationHour = (simplexIsWeek) ? 168 : 24;
     if (level.has_value())
     {
-        for (unsigned int h = 0; h < end; h += cycle)
-        {
-            unsigned int realHour = h % HOURS_PER_YEAR;
-            if (upperRuleCurve[realHour] < level.value() ||
-                lowerRuleCurve[realHour] > level.value())
-                return false;
-        }
+        if (!checkLevelValue(level.value(), cycle, start, end) ||
+                !checkLevelValue(level.value(), simulationHour, start, end))
+            return false;
     }
 
+    return true;
+}
+
+bool Series::checkLevelValue(double level, unsigned int time, unsigned int start, unsigned int end) const
+{
+    for (unsigned int h = start; h < end; h += time)
+    {
+        unsigned int realHour = h % HOURS_PER_YEAR;
+        if (upperRuleCurve[realHour] < level ||
+                lowerRuleCurve[realHour] > level)
+            return false;
+    }
     return true;
 }
 
