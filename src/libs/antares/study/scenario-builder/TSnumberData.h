@@ -350,8 +350,11 @@ inline CString<512, false> BindingConstraintsTSNumberData::get_prefix() const
     return "bc,";
 }
 
-inline unsigned BindingConstraintsTSNumberData::get_tsGenCount(const Study& /*study*/) const {
-    return 0;
+inline unsigned BindingConstraintsTSNumberData::get_tsGenCount(const Study& study) const {
+    auto& parameters = study.parameters;
+
+    bool genTS = (0 != (parameters.timeSeriesToGenerate & timeSeriesBindingConstraints));
+    return genTS ? 1 : 0u;
 }
 
 } // namespace ScenarioBuilder

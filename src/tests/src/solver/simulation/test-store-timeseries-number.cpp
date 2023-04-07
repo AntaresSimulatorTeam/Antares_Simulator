@@ -97,7 +97,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_store_values) {
     series[0][1] = 1;
     series[1][0] = 42;
     series[1][1] = 3;
-    study.bindingConstraints.time_series["test1"] = series;
+    study.bindingConstraints.time_series["test1"].series = series;
 
     Simulation::TimeSeriesWriter time_series_writer(study.resultWriter);
     TimeSeriesNumbers::StoreTimeseriesIntoOuput(study, time_series_writer);
