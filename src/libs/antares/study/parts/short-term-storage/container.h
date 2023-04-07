@@ -35,11 +35,13 @@ namespace Antares::Data::ShortTermStorage
 class STStorageInput
 {
 public:
-    bool validate(Antares::Data::SimplexOptimization simplex) const;
     // 1. Read list.ini
     bool createSTStorageClustersFromIniFile(const std::string& path);
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
+    // 3. Validate data consistency
+    bool validate(bool simplexIsWeek, unsigned int start, unsigned int end) const;
+
     // Number of ST storages
     std::size_t count() const;
 

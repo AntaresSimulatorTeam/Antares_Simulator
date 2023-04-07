@@ -121,7 +121,7 @@ bool Properties::loadKey(const IniFile::Property* p)
     return false;
 }
 
-bool Properties::validate(Antares::Data::SimplexOptimization simplex)
+bool Properties::validate(bool simplexIsWeek)
 {
     auto checkMandatory = [this](const auto& prop, const std::string& label) {
         if (!prop.has_value())
@@ -196,7 +196,7 @@ bool Properties::validate(Antares::Data::SimplexOptimization simplex)
         }
     }
 
-    if (simplex == Antares::Data::sorDay)
+    if (!simplexIsWeek)
     {
         if (storagecycle.value() > 24 || storagecycle.value() < 1)
         {
@@ -206,7 +206,7 @@ bool Properties::validate(Antares::Data::SimplexOptimization simplex)
             storagecycle = 24;
         }
     }
-    else if (simplex == Antares::Data::sorWeek)
+    else
     {
 
         if (storagecycle.value() > 168 || storagecycle.value() < 1)
@@ -216,11 +216,6 @@ bool Properties::validate(Antares::Data::SimplexOptimization simplex)
             logs.info() << "cycle duration set to 24";
             storagecycle = 24;
         }
-    }
-    else
-    {
-        logs.warning() << "Simplex optimization range value not recognized";
-        return false;
     }
 
     return true;

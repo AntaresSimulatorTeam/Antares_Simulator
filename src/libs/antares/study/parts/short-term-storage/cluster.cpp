@@ -73,10 +73,10 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
     return ret;
 }
 
-bool STStorageCluster::validate(Antares::Data::SimplexOptimization simplex)
+bool STStorageCluster::validate(bool simplexIsWeek, unsigned int start, unsigned int end)
 {
     logs.debug() << "Validating properties and series for st storage: " << id;
-    return properties.validate(simplex) && series->validate();
+    return properties.validate(simplexIsWeek) && series->validate();
 }
 
 } // namespace Antares::Data::ShortTermStorage

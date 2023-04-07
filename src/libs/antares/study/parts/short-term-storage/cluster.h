@@ -37,10 +37,11 @@ namespace Antares::Data::ShortTermStorage
 class STStorageCluster
 {
 public:
-    bool validate(Antares::Data::SimplexOptimization simplex);
     bool loadFromSection(const IniFile::Section& section);
 
     bool loadSeries(const std::string& folder) const;
+
+    bool validate(bool simplexIsWeek, unsigned int start, unsigned int end);
 
     std::string id;
 

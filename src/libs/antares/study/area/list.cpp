@@ -1081,11 +1081,15 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
 
     // Short term storage
     {
+        unsigned int start =  study.calendar.days[study.parameters.simulationDays.first].hours.first;
+        unsigned int end =  study.calendar.days[study.parameters.simulationDays.end].hours.end;
+        bool simplexIsWeek = (study.parameters.simplexOptimizationRange == sorWeek);
+
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
-        ret = area.shortTermStorage.validate(study.parameters.simplexOptimizationRange) && ret;
+        ret = area.shortTermStorage.validate(simplexIsWeek, start, end) && ret;
     }
 
     // Renewable cluster list
