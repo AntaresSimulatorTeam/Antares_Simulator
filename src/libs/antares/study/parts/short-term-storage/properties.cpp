@@ -70,25 +70,40 @@ unsigned int groupIndex(Group group)
     }
 }
 
+template<class T>
+static bool valueForOptional(const IniFile::Property* property, std::optional<T>& out)
+{
+    if (double tmp; property->value.to<double>(tmp))
+    {
+        out = tmp;
+        return true;
+    }
+    return false;
+}
+
+template<class T>
+static bool checkMandatory(const std::string& name,
+                           const std::optional<T>& property,
+                           const std::string& label)
+{
+    if (!property.has_value())
+    {
+        logs.error() << "Property " << label << " is mandatory for short term storage " << name;
+        return false;
+    }
+    return true;
+}
+
 bool Properties::loadKey(const IniFile::Property* p)
 {
-    auto valueForOptional = [p](auto& opt) {
-        if (double tmp; p->value.to<double>(tmp))
-        {
-            opt = tmp;
-            return true;
-        }
-        return false;
-    };
-
     if (p->key == "injectionnominalcapacity")
-        return valueForOptional(this->injectionCapacity);
+        return valueForOptional(p, this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return valueForOptional(this->withdrawalCapacity);
+        return valueForOptional(p, this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return valueForOptional(this->capacity);
+        return valueForOptional(p, this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -97,14 +112,14 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "storagecycle")
-        return valueForOptional(this->storagecycle);
+        return valueForOptional(p, this->storagecycle);
 
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
             return true;
 
-        return valueForOptional(this->initialLevel);
+        return valueForOptional(p, this->initialLevel);
     }
 
     if (p->key == "group")
@@ -123,26 +138,16 @@ bool Properties::loadKey(const IniFile::Property* p)
 
 bool Properties::validate(bool simplexIsWeek)
 {
-    auto checkMandatory = [this](const auto& prop, const std::string& label) {
-        if (!prop.has_value())
-        {
-            logs.error() << "Property " << label << " is mandatory for short term storage "
-                         << this->name;
-            return false;
-        }
-        return true;
-    };
-
-    if (!checkMandatory(injectionCapacity, "injectionnominalcapacity"))
+    if (!checkMandatory(name, injectionCapacity, "injectionnominalcapacity"))
         return false;
 
-    if (!checkMandatory(withdrawalCapacity, "withdrawalnominalcapacity"))
+    if (!checkMandatory(name, withdrawalCapacity, "withdrawalnominalcapacity"))
         return false;
 
-    if (!checkMandatory(capacity, "reservoircapacity"))
+    if (!checkMandatory(name, capacity, "reservoircapacity"))
         return false;
 
-    if (!checkMandatory(storagecycle, "storagecycle"))
+    if (!checkMandatory(name, storagecycle, "storagecycle"))
         return false;
 
     if (injectionCapacity < 0)
@@ -191,7 +196,7 @@ bool Properties::validate(bool simplexIsWeek)
         if (initialLevel > capacity)
         {
             logs.warning() << "initiallevel for cluster: " << name
-                << " should be inferior to reservoir capacity: " << capacity.value();
+                           << " should be inferior to reservoir capacity: " << capacity.value();
             initialLevel = capacity;
         }
     }
@@ -201,18 +206,19 @@ bool Properties::validate(bool simplexIsWeek)
         if (storagecycle.value() > 24 || storagecycle.value() < 1)
         {
             logs.warning() << "simplex optimization range set to day: "
-                "storagecycle for cluster: " << name << " should be <= 24 and >= 1";
+                              "storagecycle for cluster: "
+                           << name << " should be <= 24 and >= 1";
             logs.info() << "cycle duration set to 24";
             storagecycle = 24;
         }
     }
     else
     {
-
         if (storagecycle.value() > 168 || storagecycle.value() < 1)
         {
             logs.warning() << "simplex optimization range set to week: "
-                "storagecycle for cluster: " << name << " should be <= 168 and >= 1";
+                              "storagecycle for cluster: "
+                           << name << " should be <= 168 and >= 1";
             logs.info() << "cycle duration set to 24";
             storagecycle = 24;
         }
