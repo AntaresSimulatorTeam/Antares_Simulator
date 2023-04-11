@@ -194,8 +194,6 @@ bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<doubl
     else
         return checkLevelInterval(cycle, startHour, endHour) &&
                 checkLevelInterval(simulationHour, startHour, endHour);
-
-    return true;
 }
 
 bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const
