@@ -37,6 +37,7 @@
 #include "../../array/matrix.h"
 #include "../../inifile/inifile.h"
 #include "antares/study/filter.h"
+#include "BindingConstraintTimeSeries.h"
 #include <vector>
 #include <set>
 
@@ -680,7 +681,7 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, DataSeriesCommon>& TimeSeries() const {
+    [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeries>& TimeSeries() const {
         return time_series;
     }
 
@@ -694,7 +695,7 @@ private:
     BindingConstraint::Vector pList;
 
 public:
-    std::map<std::string, DataSeriesCommon> time_series;
+    std::map<std::string, BindingConstraintTimeSeries> time_series;
 }; // class BindConstList
 
 struct CompareBindingConstraintName final

@@ -114,6 +114,13 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
     return value < data.directCapacities.width;
 }
 
+template<>
+inline bool CheckValidity<Data::BindingConstraintTimeSeries>(uint value, const Data::BindingConstraintTimeSeries& data, uint tsGenMax)
+{
+    // When the TS-Generators are not used
+    return (!tsGenMax) ? (value < data.SeriesWidth()) : (value < tsGenMax);
+}
+
 template<class StringT, class D>
 bool ApplyToMatrix(uint& errors,
                    StringT& logprefix,
