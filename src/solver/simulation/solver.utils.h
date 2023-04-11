@@ -28,11 +28,12 @@
 #define __SOLVER_SIMULATION_SOLVER_UTILS_H__
 
 #include <vector>
-#include <iostream> // For std namespace
-#include <limits>   // For std numeric_limits
-#include <sstream>  // For ostringstream
-#include <iomanip>  // For setprecision
-// #include <stdio.h>
+#include <iostream>
+#include <limits>
+#include <sstream>
+#include <iomanip>
+#include <functional>
+
 #include <yuni/yuni.h>
 
 #include <i_writer.h>
@@ -133,26 +134,26 @@ class annualCostsStatistics
 {
 public:
     annualCostsStatistics() :
-     mCosts({&systemCost,
-             &criterionCost1,
-             &criterionCost2,
-             &optimizationTime1,
-             &optimizationTime2,
-             &simplexIterations1,
-             &simplexIterations2})
+      mCosts({std::ref(systemCost),
+              std::ref(criterionCost1),
+              std::ref(criterionCost2),
+              std::ref(optimizationTime1),
+              std::ref(optimizationTime2),
+              std::ref(simplexIterations1),
+              std::ref(simplexIterations2)})
     {
     }
 
     void setNbPerformedYears(uint n)
     {
       for (auto cost : mCosts)
-          cost->setNbPerformedYears(n);
+          cost.get().setNbPerformedYears(n);
     };
 
     void endStandardDeviations()
     {
       for (auto cost : mCosts)
-          cost->endStandardDeviation();
+          cost.get().endStandardDeviation();
     };
 
     void writeToOutput(IResultWriter::Ptr writer)
@@ -265,7 +266,7 @@ private:
     inline static const std::string criterionsCostsFilename = "checkIntegrity.txt";
     inline static const std::string optimizationTimeFilename = "timeStatistics.txt";
     inline static const std::string simplexIterationsFilename = "simplexIterations.txt";
-    const std::vector<costStatistics*> mCosts;
+    const std::vector<std::reference_wrapper<costStatistics>> mCosts;
     char conversionBuffer[256]; // Used to round a double to the closer integer
 };
 
