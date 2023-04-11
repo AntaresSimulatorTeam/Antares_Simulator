@@ -26,7 +26,7 @@
 */
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
-#include "constraint.h"
+#include "BindingConstraint.h"
 #include "../study.h"
 #include "../../logs.h"
 #include "../../utils.h"
@@ -822,11 +822,11 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
     return pValues.saveToCSVFile(env.matrixFilename);
 }
 
-BindConstList::BindConstList()
+BindingConstraintsList::BindingConstraintsList()
 {
 }
 
-void BindConstList::clear()
+void BindingConstraintsList::clear()
 {
     if (not pList.empty())
     {
@@ -836,16 +836,16 @@ void BindConstList::clear()
     }
 }
 
-BindConstList::~BindConstList()
+BindingConstraintsList::~BindingConstraintsList()
 {
     // see clear()
     for (uint i = 0; i != pList.size(); ++i)
         delete pList[i];
 }
 
-bool BindConstList::loadFromFolder(Study& study,
-                                   const StudyLoadOptions& options,
-                                   const AnyString& folder)
+bool BindingConstraintsList::loadFromFolder(Study& study,
+                                            const StudyLoadOptions& options,
+                                            const AnyString& folder)
 {
     // Log entries
     logs.info(); // space for beauty
@@ -922,7 +922,7 @@ bool BindConstList::loadFromFolder(Study& study,
     return true;
 }
 
-void BindConstList::mutateWeeklyConstraintsIntoDailyOnes()
+void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
 {
     each([&](BindingConstraint& constraint) {
         if (constraint.type() == BindingConstraint::typeWeekly)
@@ -934,7 +934,7 @@ void BindConstList::mutateWeeklyConstraintsIntoDailyOnes()
     });
 }
 
-bool BindConstList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) const
+bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) const
 {
     if (pList.empty())
     {
@@ -971,12 +971,12 @@ bool BindConstList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) c
     return ini.save(env.folder) and ret;
 }
 
-void BindConstList::reverseWeightSign(const AreaLink* lnk)
+void BindingConstraintsList::reverseWeightSign(const AreaLink* lnk)
 {
     each([&](BindingConstraint& constraint) { constraint.reverseWeightSign(lnk); });
 }
 
-void BindConstList::reverseWeightSign(const ThermalCluster* clstr)
+void BindingConstraintsList::reverseWeightSign(const ThermalCluster* clstr)
 {
     each([&](BindingConstraint& constraint) { constraint.reverseWeightSign(clstr); });
 }
@@ -1001,9 +1001,9 @@ void BindingConstraint::reverseWeightSign(const ThermalCluster* clstr)
     }
 }
 
-uint64 BindConstList::memoryUsage() const
+uint64 BindingConstraintsList::memoryUsage() const
 {
-    uint64 m = sizeof(BindConstList);
+    uint64 m = sizeof(BindingConstraintsList);
     for (uint i = 0; i != pList.size(); ++i)
         m += pList[i]->memoryUsage();
     return m;
@@ -1056,21 +1056,21 @@ private:
 
 } // anonymous namespace
 
-void BindConstList::remove(const Area* area)
+void BindingConstraintsList::remove(const Area* area)
 {
     RemovePredicate<Area> predicate(area);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
 }
 
-void BindConstList::remove(const AreaLink* lnk)
+void BindingConstraintsList::remove(const AreaLink* lnk)
 {
     RemovePredicate<AreaLink> predicate(lnk);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
     pList.erase(e, pList.end());
 }
 
-void BindConstList::remove(const BindingConstraint* bc)
+void BindingConstraintsList::remove(const BindingConstraint* bc)
 {
     RemovePredicate<BindingConstraint> predicate(bc);
     auto e = std::remove_if(pList.begin(), pList.end(), predicate);
@@ -1164,22 +1164,22 @@ void BindingConstraint::buildHTMLFormula(String& s) const
     }
 }
 
-BindConstList::iterator BindConstList::begin()
+BindingConstraintsList::iterator BindingConstraintsList::begin()
 {
     return pList.begin();
 }
 
-BindConstList::const_iterator BindConstList::begin() const
+BindingConstraintsList::const_iterator BindingConstraintsList::begin() const
 {
     return pList.begin();
 }
 
-BindConstList::iterator BindConstList::end()
+BindingConstraintsList::iterator BindingConstraintsList::end()
 {
     return pList.end();
 }
 
-BindConstList::const_iterator BindConstList::end() const
+BindingConstraintsList::const_iterator BindingConstraintsList::end() const
 {
     return pList.end();
 }
@@ -1201,7 +1201,7 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
            + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void*));
 }
 
-void BindConstList::estimateMemoryUsage(StudyMemoryUsage& u) const
+void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     // Disabled by the optimization preferences
     if (!u.study.parameters.include.constraints)
@@ -1376,7 +1376,7 @@ bool BindingConstraint::forceReload(bool reload) const
     return pValues.forceReload(reload);
 }
 
-bool BindConstList::forceReload(bool reload) const
+bool BindingConstraintsList::forceReload(bool reload) const
 {
     if (not pList.empty())
     {
@@ -1393,7 +1393,7 @@ void BindingConstraint::markAsModified() const
     pValues.markAsModified();
 }
 
-void BindConstList::markAsModified() const
+void BindingConstraintsList::markAsModified() const
 {
     if (not pList.empty())
     {
@@ -1457,7 +1457,7 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     pValues.markAsModified();
 }
 
-bool BindConstList::saveToFolder(const AnyString& folder) const
+bool BindingConstraintsList::saveToFolder(const AnyString& folder) const
 {
     auto* env = new BindingConstraint::EnvForSaving();
     env->folder = folder;
@@ -1466,7 +1466,7 @@ bool BindConstList::saveToFolder(const AnyString& folder) const
     return r;
 }
 
-bool BindConstList::rename(BindingConstraint* bc, const AnyString& newname)
+bool BindingConstraintsList::rename(BindingConstraint* bc, const AnyString& newname)
 {
     // Copy of the name
     ConstraintName name;
@@ -1482,7 +1482,7 @@ bool BindConstList::rename(BindingConstraint* bc, const AnyString& newname)
     return true;
 }
 
-BindingConstraint* BindConstList::find(const AnyString& id)
+BindingConstraint* BindingConstraintsList::find(const AnyString& id)
 {
     for (uint i = 0; i != (uint)pList.size(); ++i)
     {
@@ -1492,7 +1492,7 @@ BindingConstraint* BindConstList::find(const AnyString& id)
     return NULL;
 }
 
-const BindingConstraint* BindConstList::find(const AnyString& id) const
+const BindingConstraint* BindingConstraintsList::find(const AnyString& id) const
 {
     for (uint i = 0; i != (uint)pList.size(); ++i)
     {
@@ -1502,7 +1502,7 @@ const BindingConstraint* BindConstList::find(const AnyString& id) const
     return NULL;
 }
 
-BindingConstraint* BindConstList::findByName(const AnyString& name)
+BindingConstraint* BindingConstraintsList::findByName(const AnyString& name)
 {
     for (uint i = 0; i != (uint)pList.size(); ++i)
     {
@@ -1512,7 +1512,7 @@ BindingConstraint* BindConstList::findByName(const AnyString& name)
     return NULL;
 }
 
-const BindingConstraint* BindConstList::findByName(const AnyString& name) const
+const BindingConstraint* BindingConstraintsList::findByName(const AnyString& name) const
 {
     for (uint i = 0; i != (uint)pList.size(); ++i)
     {
@@ -1522,13 +1522,13 @@ const BindingConstraint* BindConstList::findByName(const AnyString& name) const
     return NULL;
 }
 
-void BindConstList::removeConstraintsWhoseNameConstains(const AnyString& filter)
+void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString& filter)
 {
     WhoseNameContains pred(filter);
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
 }
 
-BindingConstraint* BindConstList::add(const AnyString& name)
+BindingConstraint* BindingConstraintsList::add(const AnyString& name)
 {
     auto* bc = new BindingConstraint();
     bc->name(name);

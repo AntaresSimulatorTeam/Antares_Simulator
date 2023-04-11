@@ -514,7 +514,7 @@ private:
 
 }; // class BindingConstraint
 
-class BindConstList final : public Yuni::NonCopyable<BindConstList>
+class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
 {
 public:
     using iterator = BindingConstraint::Vector::iterator;
@@ -526,11 +526,11 @@ public:
     /*!
     ** \brief Default constructor
     */
-    BindConstList();
+    BindingConstraintsList();
     /*!
     ** \brief Destructor
     */
-    ~BindConstList();
+    ~BindingConstraintsList();
     //@}
 
     /*!
@@ -701,6 +701,6 @@ private:
 } // namespace Data
 } // namespace Antares
 
-#include "constraint.hxx"
+#include "BindingConstraint.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__

@@ -27,6 +27,6 @@
 #ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_H__
 #define __ANTARES_LIBS_STUDY_CONSTRAINT_H__
 
-#include "constraint/constraint.h"
+#include "binding_constraint/BindingConstraint.h"
 
 #endif // __ANTARES_LIBS_STUDY_CONSTRAINT_H__

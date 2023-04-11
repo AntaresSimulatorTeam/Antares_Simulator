@@ -1499,7 +1499,7 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([&](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-void AreaList::fixOrientationForAllInterconnections(BindConstList& bindingconstraints)
+void AreaList::fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints)
 {
     each([&](Data::Area& area) {
         bool mustLoop;

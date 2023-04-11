@@ -651,7 +651,7 @@ public:
     /*!
     ** \brief Fix all invalid orientations
     */
-    void fixOrientationForAllInterconnections(BindConstList& bindingconstraints);
+    void fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints);
 
     //! Remove all load timeseries
     void removeLoadTimeseries();
