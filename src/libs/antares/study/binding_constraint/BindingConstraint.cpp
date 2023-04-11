@@ -1549,7 +1549,7 @@ BindingConstraint* BindingConstraintsList::add(const AnyString& name)
     return bc;
 }
 
-void BindConstList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
     time_series.clear();
     std::set<std::string> group_names;
     std::for_each(pList.begin(), pList.end(), [&group_names](const auto& bc) {
