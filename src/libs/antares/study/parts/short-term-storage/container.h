@@ -40,7 +40,7 @@ public:
     // 2. Read ALL series
     bool loadSeriesFromFolder(const std::string& folder) const;
     // 3. Validate data consistency
-    bool validate(bool simplexIsWeek, unsigned int start, unsigned int end) const;
+    bool validate(bool simplexIsWeek, unsigned int startHour, unsigned int endHour) const;
 
     // Number of ST storages
     std::size_t count() const;

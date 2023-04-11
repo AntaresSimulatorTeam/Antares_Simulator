@@ -181,33 +181,27 @@ bool Series::validateLowerRuleCurve() const
 }
 
 bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-        unsigned int cycle, unsigned int start, unsigned int end)
+        unsigned int cycle, unsigned int startHour, unsigned int endHour)
 {
-    if (start > end)
-        end += HOURS_PER_YEAR;
+    if (startHour > endHour)
+        endHour += HOURS_PER_YEAR;
     cycle = 20;
-    logs.notice() << "end : " << end;
+    logs.notice() << "endHour : " << endHour;
     unsigned int simulationHour = (simplexIsWeek) ? 168 : 24;
 
     if (level.has_value())
-    {
-        if (!checkLevelValue(level.value(), cycle, start, end) ||
-                !checkLevelValue(level.value(), simulationHour, start, end))
-            return false;
-    }
+        return checkLevelValue(level.value(), cycle, startHour, endHour) &&
+                checkLevelValue(level.value(), simulationHour, startHour, endHour);
     else
-    {
-        if (!checkLevelInterval(cycle, start, end) ||
-                !checkLevelInterval(simulationHour, start, end))
-            return false;
-    }
+        return checkLevelInterval(cycle, startHour, endHour) &&
+                checkLevelInterval(simulationHour, startHour, endHour);
 
     return true;
 }
 
-bool Series::checkLevelValue(double level, unsigned int time, unsigned int start, unsigned int end) const
+bool Series::checkLevelValue(double level, unsigned int duration, unsigned int startHour, unsigned int endHour) const
 {
-    for (unsigned int h = start; h < end; h += time)
+    for (unsigned int h = startHour; h < endHour; h += duration)
     {
         unsigned int realHour = h % HOURS_PER_YEAR;
         logs.notice() << "h: " << realHour << " lrc: " << lowerRuleCurve[realHour] <<  " level : " << level <<
@@ -215,22 +209,32 @@ bool Series::checkLevelValue(double level, unsigned int time, unsigned int start
 
         if (upperRuleCurve[realHour] < level ||
                 lowerRuleCurve[realHour] > level)
+        {
+            logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                "lower rule curves, initial level is not between those values";
+
             return false;
+        }
     }
     return true;
 }
 
-bool Series::checkLevelInterval(unsigned int time, unsigned int start, unsigned int end) const
+bool Series::checkLevelInterval(unsigned int time, unsigned int startHour, unsigned int endHour) const
 {
-    double min = lowerRuleCurve[start];
-    double max = upperRuleCurve[start];
+    double min = lowerRuleCurve[startHour];
+    double max = upperRuleCurve[startHour];
 
-    for (unsigned int h = start + time; h < end; h += time)
+    for (unsigned int h = startHour + time; h < endHour; h += time)
     {
         unsigned int realHour = h % HOURS_PER_YEAR;
         if (upperRuleCurve[realHour] < min ||
                 lowerRuleCurve[realHour] > max)
+        {
+            logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                "lower rule curves, values at the start of the cycle are outside of those values";
+
             return false;
+        }
     }
     return true;
 }

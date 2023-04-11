@@ -40,7 +40,7 @@ public:
     // check if series values are valid
     bool validate() const;
     bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-            unsigned int cycle, unsigned int start, unsigned int end);
+            unsigned int cycle, unsigned int startHour, unsigned int endHour);
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
@@ -55,8 +55,8 @@ private:
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
 
-    bool checkLevelValue(double level, unsigned int time, unsigned int start, unsigned int end) const;
-    bool checkLevelInterval(unsigned int time, unsigned int start, unsigned int end) const;
+    bool checkLevelValue(double level, unsigned int time, unsigned int startHour, unsigned int endHour) const;
+    bool checkLevelInterval(unsigned int time, unsigned int startHour, unsigned int endHour) const;
 
 };
 
