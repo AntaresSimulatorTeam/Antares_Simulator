@@ -1078,6 +1078,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
+    if (!ret)
+        logs.error() << "Error while loading thermal cluster list series";
 
     // Short term storage
     {
@@ -1089,8 +1091,10 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             << SEP << area.id;
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
-        ret = area.shortTermStorage.validate(simplexIsWeek, start, end) && ret;
+        ret = area.shortTermStorage.validate(simplexIsWeek, 99, 2000) && ret;
     }
+    if (!ret)
+        logs.error() << "Error while loading sts series";
 
     // Renewable cluster list
     if (study.header.version >= 810)
@@ -1099,7 +1103,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
     if (!ret)
-        logs.error() << "Error while loading sts series";
+        logs.error() << "Error while loading renew cluster list series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
