@@ -52,10 +52,36 @@ if(UNIX AND NOT APPLE)
 	target_link_libraries(test-store-timeseries-number PRIVATE stdc++fs)
 endif()
 
-
 set_target_properties(test-store-timeseries-number PROPERTIES FOLDER Unit-tests)
 
 add_test(NAME store-timeseries-number COMMAND test-store-timeseries-number)
 
 set_property(TEST store-timeseries-number PROPERTY LABELS unit)
+
+# ===================================
+# Tests on time series
+# ===================================
+set(SRC_STORE_TS
+		test-time_series.cpp
+		)
+add_executable(test-time_series ${SRC_STORE_TS})
+
+target_link_libraries(test-time_series
+		PRIVATE
+		Boost::unit_test_framework
+		libantares-core
+		libantares-solver-simulation
+		)
+
+# Linux
+if(UNIX AND NOT APPLE)
+	target_link_libraries(test-time_series PRIVATE stdc++fs)
+endif()
+
+
+set_target_properties(test-time_series PROPERTIES FOLDER Unit-tests)
+
+add_test(NAME time_series COMMAND test-time_series)
+
+set_property(TEST time_series PROPERTY LABELS unit)
 
