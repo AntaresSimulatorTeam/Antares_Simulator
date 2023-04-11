@@ -1078,23 +1078,19 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         if (study.usedByTheSolver and study.parameters.mode == stdmAdequacy)
             area.thermal.list.enableMustrunForEveryone();
     }
-    if (!ret)
-        logs.error() << "Error while loading thermal cluster list series";
 
     // Short term storage
     {
-        unsigned int start =  study.calendar.days[study.parameters.simulationDays.first].hours.first;
-        unsigned int end =  study.calendar.days[study.parameters.simulationDays.end].hours.end;
+        unsigned int startHour =  study.calendar.days[study.parameters.simulationDays.first].hours.first;
+        unsigned int endHour =  study.calendar.days[study.parameters.simulationDays.end].hours.end;
         bool simplexIsWeek = (study.parameters.simplexOptimizationRange == sorWeek);
 
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
-        ret = area.shortTermStorage.validate(simplexIsWeek, 99, 2000) && ret;
+        ret = area.shortTermStorage.validate(simplexIsWeek, startHour, endHour) && ret;
     }
-    if (!ret)
-        logs.error() << "Error while loading sts series";
 
     // Renewable cluster list
     if (study.header.version >= 810)
@@ -1102,8 +1098,9 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
+
     if (!ret)
-        logs.error() << "Error while loading renew cluster list series";
+        logs.error() << "Error while loading series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
