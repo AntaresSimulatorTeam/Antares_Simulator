@@ -3,12 +3,12 @@
 //
 
 #pragma once
-#include "antares/study/constraint/constraint.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares::Solver::Simulation {
 class ITimeSeriesWriter {
 
 public:
-    virtual void write(const Antares::Data::BindConstList& list) = 0;
+    virtual void write(const Antares::Data::BindingConstraintsList& list) = 0;
 };
 }

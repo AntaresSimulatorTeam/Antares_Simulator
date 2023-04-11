@@ -16,7 +16,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     Study study;
 
     StudyLoadOptions options;
-    BindConstList bindingConstraints;
+    BindingConstraintsList bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -62,7 +62,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     study.areaAdd("area3");
 
     StudyLoadOptions options;
-    BindConstList bindingConstraints;
+    BindingConstraintsList bindingConstraints;
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
