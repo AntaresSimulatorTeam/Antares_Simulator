@@ -274,4 +274,27 @@ BOOST_AUTO_TEST_CASE(check_container_properties_empty_file)
     removeIniFile();
 }
 
+BOOST_AUTO_TEST_CASE(check_series_lower_curve)
+{
+    createFileSeries(0.5, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    series.lowerRuleCurve[220] = 0.6;
+
+    BOOST_CHECK(!series.validateInitialLevelSimplex(true, std::optional<double>(0.5), 20, 100, 2000));
+}
+
+BOOST_AUTO_TEST_CASE(check_series_upper_curve)
+{
+    createFileSeries(0.5, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    series.upperRuleCurve[1680] = 0.2;
+
+    BOOST_CHECK(!series.validateInitialLevelSimplex(true, std::optional<double>(0.5), 20, 100, 2000));
+}
 BOOST_AUTO_TEST_SUITE_END()
