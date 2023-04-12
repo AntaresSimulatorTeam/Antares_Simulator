@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
-    BindingConstraint* constraint = (*bindingConstraints.begin());
+    BindingConstraint const* constraint = (*bindingConstraints.begin());
     BOOST_CHECK_EQUAL(constraint->name(), "dummy_name");
     BOOST_CHECK_EQUAL(constraint->id(), "dummy_id");
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
