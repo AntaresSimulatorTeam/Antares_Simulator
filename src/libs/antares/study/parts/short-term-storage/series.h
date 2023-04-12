@@ -55,8 +55,10 @@ private:
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
 
-    bool checkLevelValue(double level, unsigned int time, unsigned int startHour, unsigned int endHour) const;
-    bool checkLevelInterval(unsigned int time, unsigned int startHour, unsigned int endHour) const;
+    bool checkLevelValue(double level, unsigned int cycleDuration, unsigned int simuDuration,
+            unsigned int startHour, unsigned int endHour) const;
+    bool checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
+            unsigned int startHour, unsigned int endHour) const;
 
 };
 

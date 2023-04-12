@@ -219,8 +219,8 @@ bool Properties::validate(bool simplexIsWeek)
             logs.warning() << "simplex optimization range set to week: "
                               "storagecycle for cluster: "
                            << name << " should be <= 168 and >= 1";
-            logs.info() << "cycle duration set to 24";
-            storagecycle = 24;
+            logs.info() << "cycle duration set to 168";
+            storagecycle = 168;
         }
     }
 

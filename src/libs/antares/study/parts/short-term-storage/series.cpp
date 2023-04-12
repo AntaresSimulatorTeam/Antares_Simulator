@@ -27,8 +27,8 @@
 #include <yuni/io/file.h>
 #include <antares/logs.h>
 #include <antares/constants.h>
-#include <antares/array/array1d.h>
 
+#include <algorithm>
 #include <optional>
 #include <fstream>
 
@@ -186,50 +186,65 @@ bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<doubl
     if (startHour > endHour)
         endHour += HOURS_PER_YEAR;
 
-    unsigned int simulationHour = simplexIsWeek ? 168 : 24;
+    unsigned int simuDuration = simplexIsWeek ? 168 : 24;
 
     if (level.has_value())
-        return checkLevelValue(level.value(), cycleDuration, startHour, endHour) &&
-                checkLevelValue(level.value(), simulationHour, startHour, endHour);
+        return checkLevelValue(level.value(), cycleDuration, simuDuration, startHour, endHour);
     else
-        return checkLevelInterval(cycleDuration, startHour, endHour) &&
-                checkLevelInterval(simulationHour, startHour, endHour);
+        return checkLevelInterval(cycleDuration, simuDuration, startHour, endHour);
 }
 
-bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const
+bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned int simuDuration,
+        unsigned int startHour, unsigned int endHour) const
 {
-    for (unsigned int h = startHour; h < endHour; h += cycleDuration)
+    // loop on each week or day depending on simulation mode, then on cycles in it
+    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
     {
-        unsigned int realHour = h % HOURS_PER_YEAR;
-
-        if (upperRuleCurve[realHour] < level ||
-                lowerRuleCurve[realHour] > level)
+        for (unsigned cycleHour = simuIndex; cycleHour < simuDuration; cycleHour += cycleDuration)
         {
-            logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
-                "lower rule curves, initial level is not between those values";
+            unsigned int realHour = cycleHour % HOURS_PER_YEAR;
 
-            return false;
+            if (upperRuleCurve[realHour] < level ||
+                    lowerRuleCurve[realHour] > level)
+            {
+                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                    "lower rule curves, initial level is not between those values";
+
+                return false;
+            }
         }
     }
     return true;
 }
 
-bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const
+bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
+        unsigned int startHour, unsigned int endHour) const
 {
-    double min = lowerRuleCurve[startHour];
-    double max = upperRuleCurve[startHour];
-
-    for (unsigned int h = startHour + cycleDuration; h < endHour; h += cycleDuration)
+    // loop on each week or day depending on simulation mode, then on cycles in it
+    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
     {
-        unsigned int realHour = h % HOURS_PER_YEAR;
+        double minBase = lowerRuleCurve[simuIndex];
+        double maxBase = upperRuleCurve[simuIndex];
 
-        if (upperRuleCurve[realHour] < min ||
-                lowerRuleCurve[realHour] > max)
+        for (unsigned cycleHour = simuIndex + cycleDuration; cycleHour < simuDuration;
+                cycleHour += cycleDuration)
         {
-            logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
-                "lower rule curves, values at the start of the cycle are outside of those values";
+            unsigned int realHour = cycleHour % HOURS_PER_YEAR;
 
-            return false;
+            double minCycle = lowerRuleCurve[realHour];
+            double maxCycle = upperRuleCurve[realHour];
+
+            if (maxCycle < minBase || minCycle > maxBase)
+            {
+                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                    "lower rule curves, values at the start of the cycle are outside of those values";
+
+                return false;
+            }
+
+            // reduce the interval if necessary
+            minBase = std::max(minBase, minCycle);
+            maxBase = std::min(minBase, minCycle);
         }
     }
     return true;
