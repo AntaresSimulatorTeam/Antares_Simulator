@@ -4,7 +4,6 @@
 
 #include <boost/test/included/unit_test.hpp>
 
-#include <study.h>
 #include <timeseries-numbers.h>
 
 #include <algorithm> // std::adjacent_find
