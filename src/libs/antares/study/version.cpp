@@ -170,11 +170,12 @@ Version VersionIntToVersion(uint version)
     case versionFutur:
     case versionUnknown:
         return versionUnknown;
-    }
+    default:
     logs.error() << "Version not found";
     logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
         << " if it's the case";
     return versionUnknown;
+    }
 }
 
 Version StudyTryToFindTheVersion(const AnyString& folder)

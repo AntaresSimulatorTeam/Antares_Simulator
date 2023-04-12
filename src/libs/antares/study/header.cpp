@@ -165,7 +165,7 @@ bool StudyHeader::internalLoadFromINIFile(const IniFile& ini, bool warnings)
             logs.error() << "The main section has not been found. The study seems invalid.";
     }
 
-    if (version >= 700 || version == 7)
+    if (version >= 700)
     {
         if (version > static_cast<uint>(Data::versionLatest))
         {
