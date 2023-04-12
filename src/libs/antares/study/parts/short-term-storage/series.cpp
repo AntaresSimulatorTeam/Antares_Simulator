@@ -200,9 +200,9 @@ bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned 
     // loop on each week or day depending on simulation mode, then on cycles in it
     for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
     {
-        for (unsigned cycleHour = simuIndex; cycleHour < simuDuration; cycleHour += cycleDuration)
+        for (unsigned int cycleHour = 0; cycleHour < simuDuration; cycleHour += cycleDuration)
         {
-            unsigned int realHour = cycleHour % HOURS_PER_YEAR;
+            unsigned int realHour = (simuIndex + cycleHour) % HOURS_PER_YEAR;
 
             if (upperRuleCurve[realHour] < level ||
                     lowerRuleCurve[realHour] > level)
@@ -223,20 +223,22 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int simuDur
     // loop on each week or day depending on simulation mode, then on cycles in it
     for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
     {
-        double minBase = lowerRuleCurve[simuIndex];
-        double maxBase = upperRuleCurve[simuIndex];
+        double realSimuIndex = simuIndex % HOURS_PER_YEAR;
 
-        for (unsigned cycleHour = simuIndex + cycleDuration; cycleHour < simuDuration;
+        double minBase = lowerRuleCurve[realSimuIndex];
+        double maxBase = upperRuleCurve[realSimuIndex];
+
+        for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < simuDuration;
                 cycleHour += cycleDuration)
         {
-            unsigned int realHour = cycleHour % HOURS_PER_YEAR;
+            unsigned int realHour = simuIndex + cycleHour;
 
             double minCycle = lowerRuleCurve[realHour];
             double maxCycle = upperRuleCurve[realHour];
 
             if (maxCycle < minBase || minCycle > maxBase)
             {
-                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or " <<
                     "lower rule curves, values at the start of the cycle are outside of those values";
 
                 return false;
