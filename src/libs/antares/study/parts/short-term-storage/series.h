@@ -40,7 +40,7 @@ public:
     // check if series values are valid
     bool validate() const;
     bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-            unsigned int cycle, unsigned int startHour, unsigned int endHour);
+            unsigned int cycle, unsigned int startHour, unsigned int endHour) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;

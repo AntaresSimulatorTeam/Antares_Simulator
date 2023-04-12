@@ -181,12 +181,12 @@ bool Series::validateLowerRuleCurve() const
 }
 
 bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-        unsigned int cycle, unsigned int startHour, unsigned int endHour)
+        unsigned int cycle, unsigned int startHour, unsigned int endHour) const
 {
     if (startHour > endHour)
         endHour += HOURS_PER_YEAR;
 
-    unsigned int simulationHour = (simplexIsWeek) ? 168 : 24;
+    unsigned int simulationHour = simplexIsWeek ? 168 : 24;
 
     if (level.has_value())
         return checkLevelValue(level.value(), cycle, startHour, endHour) &&
@@ -201,8 +201,6 @@ bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned 
     for (unsigned int h = startHour; h < endHour; h += cycleDuration)
     {
         unsigned int realHour = h % HOURS_PER_YEAR;
-        logs.notice() << "h: " << realHour << " lrc: " << lowerRuleCurve[realHour] <<  " level : " << level <<
-            " urc: " << upperRuleCurve[realHour];
 
         if (upperRuleCurve[realHour] < level ||
                 lowerRuleCurve[realHour] > level)
@@ -224,6 +222,7 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int startHo
     for (unsigned int h = startHour + cycleDuration; h < endHour; h += cycleDuration)
     {
         unsigned int realHour = h % HOURS_PER_YEAR;
+
         if (upperRuleCurve[realHour] < min ||
                 lowerRuleCurve[realHour] > max)
         {
