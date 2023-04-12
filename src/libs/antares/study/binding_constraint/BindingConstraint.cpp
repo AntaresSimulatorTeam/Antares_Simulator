@@ -738,28 +738,7 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
     if (pLinkWeights.empty() && pClusterWeights.empty())
         pEnabled = false;
 
-    // Values
-    env.buffer.clear() << env.folder << SEP << pID << ".txt";
-    if (pValues.loadFromCSVFile(env.buffer,
-                columnMax,
-                (pType == typeHourly) ? 8784 : 366,
-                Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                &env.matrixBuffer))
-    {
-        if (pComments.empty())
-        {
-            logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
-                << OperatorToShortCString(pOperator) << ')';
-        }
-        else
-        {
-            logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
-                << OperatorToShortCString(pOperator) << ") " << pComments;
-        }
-        return true;
-    }
-
-    return false;
+    return true;
 }
 
 void BindingConstraint::clear() {
@@ -921,7 +900,7 @@ bool BindingConstraintsList::loadFromFolder(Study& study,
             logs.info() << pList.size() << " binding constraints found";
     }
 
-    delete e;
+    loadTimeSeries(study.parameters.nbYears, env);
 
     // When ran from the solver and if the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
@@ -1560,7 +1539,72 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
     });
 }
 
-void BindingConstraint::matrix(const double onevalue)
+void BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env) {
+    resizeAllTimeseriesNumbers(nb_years);
+    std::map<std::string, BindingConstraint::Type> group_and_type;
+    std::for_each(pList.begin(), pList.end(), [&group_and_type](const auto& bc) {
+        if (group_and_type.find(bc->group()) == group_and_type.end()) {
+            group_and_type[bc->group()] = bc->type();
+        } else {
+            assert(group_and_type[bc->group()] == bc->type());
+        }
+    });
+    std::for_each(group_and_type.begin(), group_and_type.end(), [&](const auto& group_type) {
+        //Ensure all constraints in group same hourly/weekly
+        const auto& [group, type] = group_type;
+        bool load_ok = true;
+        load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opLess);
+        load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opGreater);
+        load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opEquality);
+        return load_ok;
+    });
+}
+
+    bool
+    BindingConstraintsList::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, std::string group,
+                                                  BindingConstraint::Type type,
+                                                  BindingConstraint::Operator operatorType) {
+        bool load_ok = false;
+
+        switch (operatorType) {
+            case BindingConstraint::opLess:
+                env.buffer.clear() << env.folder << SEP << group << SEP << group << "_lt" << ".txt";
+                load_ok = time_series[group].lower_bound_series.loadFromCSVFile(env.buffer,
+                                                                                BindingConstraint::columnMax,
+                                                                                (type == BindingConstraint::typeHourly) ? 8784 : 366,
+                                                                                Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                                                                &env.matrixBuffer);
+                break;
+            case BindingConstraint::opGreater:
+                env.buffer.clear() << env.folder << SEP << group << SEP << group << "_gt" << ".txt";
+                load_ok = time_series[group].upper_bound_series.loadFromCSVFile(env.buffer,
+                                                                                BindingConstraint::columnMax,
+                                                                                (type == BindingConstraint::typeHourly) ? 8784 : 366,
+                                                                                Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                                                                &env.matrixBuffer);
+                break;
+            case BindingConstraint::opEquality:
+                env.buffer.clear() << env.folder << SEP << group << SEP << group << "_eq" << ".txt";
+                load_ok = time_series[group].equality_series.loadFromCSVFile(env.buffer,
+                                                                                BindingConstraint::columnMax,
+                                                                                (type == BindingConstraint::typeHourly) ? 8784 : 366,
+                                                                                Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                                                                &env.matrixBuffer);
+                break;
+            default:
+                assert(false);
+        }
+        if (load_ok)
+        {
+            logs.info() << " added for group`" << group << "` (" << BindingConstraint::TypeToCString(type) << ", "
+                        << BindingConstraint::OperatorToShortCString(BindingConstraint::opLess) << ')';
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void BindingConstraint::matrix(const double onevalue)
 {
     pValues.fill(onevalue);
     pValues.markAsModified();
