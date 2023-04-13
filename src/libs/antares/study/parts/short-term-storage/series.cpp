@@ -262,7 +262,7 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
     for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
             firstHourOfTheWeek += optimizationRange)
     {
-        double realSimuIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
+        unsigned int realSimuIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
 
         double minBase = lowerRuleCurve[realSimuIndex];
         double maxBase = upperRuleCurve[realSimuIndex];
@@ -286,7 +286,7 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
 
             // reduce the interval if necessary
             minBase = std::max(minBase, minCycle);
-            maxBase = std::min(minBase, minCycle);
+            maxBase = std::min(maxBase, maxCycle);
         }
     }
     return true;
