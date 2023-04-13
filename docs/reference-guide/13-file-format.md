@@ -12,7 +12,7 @@ A few changes related to the introduction of short-term storage objects.
     * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other_1", ... , "Other_5". Default Other_1
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
-    * `initiallevel` [double] &gt; 0
+    * `initiallevel` [double] in range 0-1
     * `withdrawalnominalcapacity` [double] in range 0-1
     * `injectionnominalcapacity` [double] in range 0-1
     * `storagecycle` [int] in range 24-168
@@ -102,7 +102,7 @@ They constrol which marginal price time granularity is printed, either regarding
 #### Marginal cost for binding constraints
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
-Examples : 
+Examples :
 * **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/binding_constraints**
 * **output/yyyymmdd-hhmmeco/economy/mc-all/binding_constraints**
 
