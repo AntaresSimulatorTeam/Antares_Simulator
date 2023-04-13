@@ -262,15 +262,15 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
     for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
             firstHourOfTheWeek += optimizationRange)
     {
-        unsigned int realSimuIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
+        unsigned int calendarWeekIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
 
-        double minBase = lowerRuleCurve[realSimuIndex];
-        double maxBase = upperRuleCurve[realSimuIndex];
+        double minBase = lowerRuleCurve[calendarWeekIndex];
+        double maxBase = upperRuleCurve[calendarWeekIndex];
 
         for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < optimizationRange;
                 cycleHour += cycleDuration)
         {
-            unsigned int calendarHour = firstHourOfTheWeek + cycleHour;
+            unsigned int calendarHour = calendarWeekIndex + cycleHour;
 
             double minCycle = lowerRuleCurve[calendarHour];
             double maxCycle = upperRuleCurve[calendarHour];
