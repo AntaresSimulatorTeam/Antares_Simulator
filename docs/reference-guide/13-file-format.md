@@ -13,16 +13,16 @@ A few changes related to the introduction of short-term storage objects.
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
     * `initiallevel` [double] &gt; 0
-    * `withdrawalnominalcapacity` [double] &gt; 0
-    * `injectionnominalcapacity` [double] &gt; 0
+    * `withdrawalnominalcapacity` [double] in range 0-1
+    * `injectionnominalcapacity` [double] in range 0-1
     * `storagecycle` [int] in range 24-168
 
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
-    * **PMAX-injection.txt**
-    * **PMAX-withdrawal.txt**
-    * **inflow.txt**
-    * **lower-rule-curve.txt**
-    * **upper-rule-curve.txt**
+    * **PMAX-injection.txt** All entries must be in range 0-1
+    * **PMAX-withdrawal.txt** All entries must be in range 0-1
+    * **inflow.txt** All entries must be &gt; 0
+    * **lower-rule-curve.txt** All entries must be in range 0-1
+    * **upper-rule-curve.txt** All entries must be in range 0-1
 
 In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
 
