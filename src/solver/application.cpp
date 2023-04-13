@@ -115,6 +115,18 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
     }
 }
 
+void checkAdqPatchDisabledLocalMatching(
+  const bool adqPatchOn,
+  const Antares::Data::AdequacyPatch::AdqPatchPTO priceTakingOrder)
+{
+    using namespace Antares::Data::AdequacyPatch;
+    if (adqPatchOn && priceTakingOrder == isDens)
+    {
+        // TODO[FOM] new exception
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+
 void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
                                     const bool includeHurdleCost,
                                     const bool includeHurdleCostCsr)
@@ -293,12 +305,17 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatchParams.enabled, pParameters->mode);
+    {
+        auto& adqParams = pParameters->adqPatchParams;
+        checkAdqPatchStudyModeEconomyOnly(adqPatchParams.enabled, pParameters->mode);
 
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatchParams.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatchParams.enabled,
-                                   pParameters->include.hurdleCosts,
-                                   pParameters->adqPatchParams.curtailmentSharing.includeHurdleCost);
+        checkAdqPatchContainsAdqPatchArea(adqPatchParams.enabled, pStudy->areas);
+        checkAdqPatchIncludeHurdleCost(adqPatchParams.enabled,
+                                       pParameters->include.hurdleCosts,
+                                       adqPatchParams.curtailmentSharing.includeHurdleCost);
+        checkAdqPatchDisabledLocalMatching(adqPatchParams.enabled,
+                                           adqPatchParams.localMatching.enabled);
+    }
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
