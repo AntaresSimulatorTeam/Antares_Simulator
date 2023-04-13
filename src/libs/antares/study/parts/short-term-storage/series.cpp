@@ -181,29 +181,29 @@ bool Series::validateLowerRuleCurve() const
 }
 
 bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
-        unsigned int startHour, unsigned int endHour) const
+        unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
-    if (startHour > endHour)
-        endHour += HOURS_PER_YEAR;
+    if (simuFirstHour > simuLastHour)
+        simuLastHour += HOURS_PER_YEAR;
 
-    unsigned int simuDuration = simplexIsWeek ? 168 : 24;
+    unsigned int optimizationRange = simplexIsWeek ? 168 : 24;
 
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
+    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour; simuIndex += optimizationRange)
     {
-        for (unsigned int cycleHour = 0; cycleHour < simuDuration; cycleHour += cycleDuration)
+        for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
         {
             double sumInflows = 0.0;
             double sumInjection = 0.0;
             double sumWithdrawal = 0.0;
 
-            for (unsigned int i = 0; i < cycleDuration && i + cycleHour < simuDuration; i++)
+            for (unsigned int i = 0; i < cycleDuration && i + cycleHour < optimizationRange; i++)
             {
-                unsigned int realHour = (simuIndex + cycleHour + i) % HOURS_PER_YEAR;
+                unsigned int calendarHour = (simuIndex + cycleHour + i) % HOURS_PER_YEAR;
 
-                sumInflows += inflows[realHour];
-                sumInjection += maxInjectionModulation[realHour];
-                sumWithdrawal += maxWithdrawalModulation[realHour];
+                sumInflows += inflows[calendarHour];
+                sumInjection += maxInjectionModulation[calendarHour];
+                sumWithdrawal += maxWithdrawalModulation[calendarHour];
             }
 
             if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
@@ -215,34 +215,36 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
 }
 
 
-bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-        unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const
+bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> initialLevel,
+        unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
-    if (startHour > endHour)
-        endHour += HOURS_PER_YEAR;
+    if (simuFirstHour > simuLastHour)
+        simuLastHour += HOURS_PER_YEAR;
 
-    unsigned int simuDuration = simplexIsWeek ? 168 : 24;
+    unsigned int optimizationRange = simplexIsWeek ? 168 : 24;
 
-    if (level.has_value())
-        return checkLevelValue(level.value(), cycleDuration, simuDuration, startHour, endHour);
+    if (initialLevel.has_value())
+        return checkLevelValue(initialLevel.value(), cycleDuration, optimizationRange,
+                simuFirstHour, simuLastHour);
     else
-        return checkLevelInterval(cycleDuration, simuDuration, startHour, endHour);
+        return checkLevelInterval(cycleDuration, optimizationRange, simuFirstHour, simuLastHour);
 }
 
-bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned int simuDuration,
-        unsigned int startHour, unsigned int endHour) const
+bool Series::checkLevelValue(double initialLevel, unsigned int cycleDuration,
+        unsigned int optimizationRange, unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
+    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour;
+            simuIndex += optimizationRange)
     {
-        for (unsigned int cycleHour = 0; cycleHour < simuDuration; cycleHour += cycleDuration)
+        for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
         {
-            unsigned int realHour = (simuIndex + cycleHour) % HOURS_PER_YEAR;
+            unsigned int calendarHour = (simuIndex + cycleHour) % HOURS_PER_YEAR;
 
-            if (upperRuleCurve[realHour] < level ||
-                    lowerRuleCurve[realHour] > level)
+            if (upperRuleCurve[calendarHour] < initialLevel ||
+                    lowerRuleCurve[calendarHour] > initialLevel)
             {
-                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or  " <<
+                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper or  " <<
                     "lower rule curves, initial level is not between those values";
 
                 return false;
@@ -252,29 +254,31 @@ bool Series::checkLevelValue(double level, unsigned int cycleDuration, unsigned 
     return true;
 }
 
-bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
-        unsigned int startHour, unsigned int endHour) const
+bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimizationRange,
+        unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
+    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour;
+            simuIndex += optimizationRange)
     {
         double realSimuIndex = simuIndex % HOURS_PER_YEAR;
 
         double minBase = lowerRuleCurve[realSimuIndex];
         double maxBase = upperRuleCurve[realSimuIndex];
 
-        for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < simuDuration;
+        for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < optimizationRange;
                 cycleHour += cycleDuration)
         {
-            unsigned int realHour = simuIndex + cycleHour;
+            unsigned int calendarHour = simuIndex + cycleHour;
 
-            double minCycle = lowerRuleCurve[realHour];
-            double maxCycle = upperRuleCurve[realHour];
+            double minCycle = lowerRuleCurve[calendarHour];
+            double maxCycle = upperRuleCurve[calendarHour];
 
             if (maxCycle < minBase || minCycle > maxBase)
             {
-                logs.warning() << "Error at line: " << realHour + 1 << " for sts series upper or " <<
-                    "lower rule curves, values at the start of the cycle are outside of those values";
+                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper" <<
+                    " or lower rule curves, values at the start of the cycle are outside of" <<
+                    " those values";
 
                 return false;
             }

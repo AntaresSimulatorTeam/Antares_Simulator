@@ -40,9 +40,10 @@ public:
     // check if series values are valid
     bool validate() const;
     bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
-            unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const;
+            unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour)
+            const;
     bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
-            unsigned int startHour, unsigned int endHour) const;
+            unsigned int simuFirstHour, unsigned int simuLastHour) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
@@ -59,9 +60,9 @@ private:
     bool validateLowerRuleCurve() const;
 
     bool checkLevelValue(double level, unsigned int cycleDuration, unsigned int simuDuration,
-            unsigned int startHour, unsigned int endHour) const;
+            unsigned int simuFirstHour, unsigned int simuLastHour) const;
     bool checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
-            unsigned int startHour, unsigned int endHour) const;
+            unsigned int simuFirstHour, unsigned int simuLastHour) const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
