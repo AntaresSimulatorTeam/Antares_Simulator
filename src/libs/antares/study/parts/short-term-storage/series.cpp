@@ -200,7 +200,7 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
             for (unsigned int i = 0; i < cycleDuration && i + cycleHour < simuDuration; i++)
             {
                 unsigned int realHour = (simuIndex + cycleHour + i) % HOURS_PER_YEAR;
-                logs.notice() << "realHour: " << realHour;
+
                 sumInflows += inflows[realHour];
                 sumInjection += maxInjectionModulation[realHour];
                 sumWithdrawal += maxWithdrawalModulation[realHour];

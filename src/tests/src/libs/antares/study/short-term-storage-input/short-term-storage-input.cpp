@@ -343,8 +343,41 @@ BOOST_AUTO_TEST_CASE(check_series_interval_upper_backward)
 
     series.upperRuleCurve[504] = 0.2;
 
-    std::cout << series.upperRuleCurve[108] << std::endl;
     BOOST_CHECK(!series.validateInitialLevelSimplex(true, std::optional<double>(), 20, 7000, 2000));
+}
+
+BOOST_AUTO_TEST_CASE(check_series_sum_inflows_good)
+{
+    createFileSeries(0.4, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    BOOST_CHECK(series.validateInflowsSums(true, 20, 100, 500));
+}
+
+BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_withdrawal)
+{
+    createFileSeries(0.4, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    std::fill(series.maxWithdrawalModulation.begin(), series.maxWithdrawalModulation.end(), 0.3);
+
+    BOOST_CHECK(!series.validateInflowsSums(true, 20, 100, 500));
+}
+
+BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
+{
+    createFileSeries(0.4, 8760);
+
+    BOOST_CHECK(series.loadFromFolder(folder));
+    BOOST_CHECK(series.validate());
+
+    std::fill(series.maxInjectionModulation.begin(), series.maxInjectionModulation.end(), 0.7);
+
+    BOOST_CHECK(!series.validateInflowsSums(true, 20, 100, 500));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
