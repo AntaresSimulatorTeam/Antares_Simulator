@@ -37,6 +37,7 @@ namespace Antares::Data::AdequacyPatch
  * given area and hour.
  */
 std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* problemeHebdo,
+                                                            bool setNTCOutsideToInsideToZero,
                                                             int Area,
                                                             int hour);
 
@@ -45,6 +46,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
  */
 double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             double totalNodeBalance,
+                            const double threshold,
                             int Area,
                             int hour);
 
