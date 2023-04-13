@@ -189,7 +189,8 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
     unsigned int optimizationRange = simplexIsWeek ? 168 : 24;
 
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour; simuIndex += optimizationRange)
+    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
+            firstHourOfTheWeek += optimizationRange)
     {
         for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
         {
@@ -199,7 +200,7 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
 
             for (unsigned int i = 0; i < cycleDuration && i + cycleHour < optimizationRange; i++)
             {
-                unsigned int calendarHour = (simuIndex + cycleHour + i) % HOURS_PER_YEAR;
+                unsigned int calendarHour = (firstHourOfTheWeek + cycleHour + i) % HOURS_PER_YEAR;
 
                 sumInflows += inflows[calendarHour];
                 sumInjection += maxInjectionModulation[calendarHour];
@@ -234,18 +235,18 @@ bool Series::checkLevelValue(double initialLevel, unsigned int cycleDuration,
         unsigned int optimizationRange, unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour;
-            simuIndex += optimizationRange)
+    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
+            firstHourOfTheWeek += optimizationRange)
     {
         for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
         {
-            unsigned int calendarHour = (simuIndex + cycleHour) % HOURS_PER_YEAR;
+            unsigned int calendarHour = (firstHourOfTheWeek + cycleHour) % HOURS_PER_YEAR;
 
             if (upperRuleCurve[calendarHour] < initialLevel ||
                     lowerRuleCurve[calendarHour] > initialLevel)
             {
-                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper or  " <<
-                    "lower rule curves, initial level is not between those values";
+                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series " <<
+                    "upper or lower rule curves, initial level is not between those values";
 
                 return false;
             }
@@ -258,10 +259,10 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
         unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
     // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int simuIndex = simuFirstHour; simuIndex < simuLastHour;
-            simuIndex += optimizationRange)
+    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
+            firstHourOfTheWeek += optimizationRange)
     {
-        double realSimuIndex = simuIndex % HOURS_PER_YEAR;
+        double realSimuIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
 
         double minBase = lowerRuleCurve[realSimuIndex];
         double maxBase = upperRuleCurve[realSimuIndex];
@@ -269,15 +270,15 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
         for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < optimizationRange;
                 cycleHour += cycleDuration)
         {
-            unsigned int calendarHour = simuIndex + cycleHour;
+            unsigned int calendarHour = firstHourOfTheWeek + cycleHour;
 
             double minCycle = lowerRuleCurve[calendarHour];
             double maxCycle = upperRuleCurve[calendarHour];
 
             if (maxCycle < minBase || minCycle > maxBase)
             {
-                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper" <<
-                    " or lower rule curves, values at the start of the cycle are outside of" <<
+                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper"
+                    << " or lower rule curves, values at the start of the cycle are outside of" <<
                     " those values";
 
                 return false;
