@@ -689,7 +689,7 @@ public:
 
 private:
     bool internalSaveToFolder(BindingConstraint::EnvForSaving& env) const;
-    void loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env);
+    bool loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env);
     bool loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, std::string group,
                                BindingConstraint::Type type,
                                BindingConstraint::Operator operatorType);
