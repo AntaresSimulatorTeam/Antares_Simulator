@@ -900,7 +900,7 @@ bool BindingConstraintsList::loadFromFolder(Study& study,
             logs.info() << pList.size() << " binding constraints found";
     }
 
-    loadTimeSeries(study.parameters.nbYears, env);
+    auto load_ok = loadTimeSeries(study.parameters.nbYears, env);
 
     // When ran from the solver and if the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
@@ -910,7 +910,7 @@ bool BindingConstraintsList::loadFromFolder(Study& study,
             mutateWeeklyConstraintsIntoDailyOnes();
     }
 
-    return true;
+    return load_ok;
 }
 
 void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
@@ -1539,7 +1539,7 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
     });
 }
 
-void BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env) {
+bool BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env) {
     resizeAllTimeseriesNumbers(nb_years);
     std::map<std::string, BindingConstraint::Type> group_and_type;
     std::for_each(pList.begin(), pList.end(), [&group_and_type](const auto& bc) {
@@ -1549,15 +1549,15 @@ void BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstr
             assert(group_and_type[bc->group()] == bc->type());
         }
     });
+    bool load_ok = true;
     std::for_each(group_and_type.begin(), group_and_type.end(), [&](const auto& group_type) {
         //Ensure all constraints in group same hourly/weekly
         const auto& [group, type] = group_type;
-        bool load_ok = true;
         load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opLess);
         load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opGreater);
         load_ok = load_ok && loadBoundedTimeSeries(env, group, type, BindingConstraint::opEquality);
-        return load_ok;
     });
+    return load_ok;
 }
 
     bool
