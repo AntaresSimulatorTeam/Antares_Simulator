@@ -60,7 +60,7 @@ public:
     std::optional<double> withdrawalCapacity;
     // Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> capacity;
-    // Initial level, <= capacity
+    // Initial level, between 0 and 1
     std::optional<double> initialLevel;
     // Efficiency factor between 0 and 1
     double efficiencyFactor = 1;

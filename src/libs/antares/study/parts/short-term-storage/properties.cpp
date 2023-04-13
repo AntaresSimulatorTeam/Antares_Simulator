@@ -193,11 +193,10 @@ bool Properties::validate(bool simplexIsWeek)
             initialLevel = 0;
         }
 
-        if (initialLevel > capacity)
+        if (initialLevel > 1)
         {
-            logs.warning() << "initiallevel for cluster: " << name
-                           << " should be inferior to reservoir capacity: " << capacity.value();
-            initialLevel = capacity;
+            logs.warning() << "initiallevel for cluster: " << name << " should be inferior to 1";
+            initialLevel = 1;
         }
     }
 
