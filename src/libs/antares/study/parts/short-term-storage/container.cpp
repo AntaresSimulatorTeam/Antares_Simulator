@@ -49,13 +49,16 @@ bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
 {
     const std::string pathIni(path + SEP + "list.ini");
 
+    // if file doesn't exists do nothing
     if (!Yuni::IO::File::Exists(pathIni))
         return true;
 
     IniFile ini;
+    // if file exists but can't be opened as ini: error
     if (!ini.open(pathIni))
         return false;
 
+    // if file exists but is empty do nothing
     if (!ini.firstSection)
         return true;
 

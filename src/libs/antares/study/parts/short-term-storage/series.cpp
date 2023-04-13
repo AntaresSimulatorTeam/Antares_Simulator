@@ -216,7 +216,7 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
 }
 
 
-bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> initialLevel,
+bool Series::checkInitialLevelBetweenBounds(bool simplexIsWeek, std::optional<double> initialLevel,
         unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
     if (simuFirstHour > simuLastHour)

@@ -78,7 +78,7 @@ bool STStorageCluster::validate(bool simplexIsWeek, unsigned int startHour, unsi
     logs.debug() << "Validating properties and series for st storage: " << id;
     return properties.validate(simplexIsWeek)
         && series->validate()
-        && series->validateInitialLevelSimplex(simplexIsWeek, properties.initialLevel,
+        && series->checkInitialLevelBetweenBounds(simplexIsWeek, properties.initialLevel,
             properties.storagecycle.value(), startHour, endHour)
         && series->validateInflowsSums(simplexIsWeek, properties.storagecycle.value(),
             startHour, endHour);

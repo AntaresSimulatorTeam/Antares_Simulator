@@ -200,28 +200,17 @@ bool Properties::validate(bool simplexIsWeek)
         }
     }
 
-    if (!simplexIsWeek)
-    {
-        if (storagecycle.value() > 24 || storagecycle.value() < 1)
+    auto checkSimplexAndCycle = [&](unsigned int maxValue) {
+        if (storagecycle.value() > maxValue || storagecycle.value() < 1)
         {
-            logs.warning() << "simplex optimization range set to day: "
-                              "storagecycle for cluster: "
-                           << name << " should be <= 24 and >= 1";
-            logs.info() << "cycle duration set to 24";
-            storagecycle = 24;
+            logs.warning() << "simplex optimization range set to day: storagecycle for" <<
+                " cluster: " << name << " should be <= " << maxValue << " and >= 1";
+            logs.info() << "cycle duration set to " << maxValue;
+            storagecycle = maxValue;
         }
-    }
-    else
-    {
-        if (storagecycle.value() > 168 || storagecycle.value() < 1)
-        {
-            logs.warning() << "simplex optimization range set to week: "
-                              "storagecycle for cluster: "
-                           << name << " should be <= 168 and >= 1";
-            logs.info() << "cycle duration set to 168";
-            storagecycle = 168;
-        }
-    }
+    };
+
+    simplexIsWeek ? checkSimplexAndCycle(168) : checkSimplexAndCycle(24);
 
     return true;
 }

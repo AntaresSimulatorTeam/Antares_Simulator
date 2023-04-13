@@ -39,7 +39,7 @@ public:
 
     // check if series values are valid
     bool validate() const;
-    bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
+    bool checkInitialLevelBetweenBounds(bool simplexIsWeek, std::optional<double> level,
             unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour)
             const;
     bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
