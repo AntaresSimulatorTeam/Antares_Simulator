@@ -41,12 +41,15 @@ public:
     bool validate() const;
     bool validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
             unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const;
+    bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
+            unsigned int startHour, unsigned int endHour) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;
     std::vector<double> lowerRuleCurve;
     std::vector<double> upperRuleCurve;
+
 private:
     bool validateSizes() const;
     bool validateMaxInjection() const;
@@ -59,7 +62,6 @@ private:
             unsigned int startHour, unsigned int endHour) const;
     bool checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
             unsigned int startHour, unsigned int endHour) const;
-
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);

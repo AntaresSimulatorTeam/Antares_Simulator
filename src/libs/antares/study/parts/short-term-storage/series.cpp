@@ -180,6 +180,41 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }
 
+bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
+        unsigned int startHour, unsigned int endHour) const
+{
+    if (startHour > endHour)
+        endHour += HOURS_PER_YEAR;
+
+    unsigned int simuDuration = simplexIsWeek ? 168 : 24;
+
+    // loop on each week or day depending on simulation mode, then on cycles in it
+    for (unsigned int simuIndex = startHour; simuIndex < endHour; simuIndex += simuDuration)
+    {
+        for (unsigned int cycleHour = 0; cycleHour < simuDuration; cycleHour += cycleDuration)
+        {
+            double sumInflows = 0.0;
+            double sumInjection = 0.0;
+            double sumWithdrawal = 0.0;
+
+            for (unsigned int i = 0; i < cycleDuration && i + cycleHour < simuDuration; i++)
+            {
+                unsigned int realHour = (simuIndex + cycleHour + i) % HOURS_PER_YEAR;
+                logs.notice() << "realHour: " << realHour;
+                sumInflows += inflows[realHour];
+                sumInjection += maxInjectionModulation[realHour];
+                sumWithdrawal += maxWithdrawalModulation[realHour];
+            }
+
+            if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
+                return false;
+        }
+    }
+
+    return true;
+}
+
+
 bool Series::validateInitialLevelSimplex(bool simplexIsWeek, std::optional<double> level,
         unsigned int cycleDuration, unsigned int startHour, unsigned int endHour) const
 {
