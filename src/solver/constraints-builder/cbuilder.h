@@ -140,8 +140,8 @@ public:
         uint columnImpedance = (uint)Antares::Data::fhlImpedances;
 
         std::vector<double> impedances;
-        Data::AreaLink* previousLine;
-        double currentLineSign;
+        Data::AreaLink* previousLine = linkList[0]->ptr;
+        double currentLineSign = 1;
         for (auto line = linkList.begin(); line != linkList.end(); line++)
         {
             if ((*line)->nImpedanceChanges > 0
@@ -175,8 +175,8 @@ public:
             sign.push_back(currentLineSign);
             previousLine = (*line)->ptr;
         }
-        State st(impedances, time, pInfinite);
-        states.push_back(st);
+        State state(impedances, time, pInfinite);
+        states.push_back(state);
     }
 
     State& getState(std::vector<double>& impedances)
@@ -353,6 +353,13 @@ public:
     }
 
     bool update();
+
+    bool updateLinks();
+
+    bool checkValidityOfNodalLoopFlow(linkInfo* linkInfo, size_t hour);
+
+    void updateLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
+    bool checkLinkPhaseShift(linkInfo* linkInfo, size_t hour) const;
 
     void setCalendarStart(int start)
     {
