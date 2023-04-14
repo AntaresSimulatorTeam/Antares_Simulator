@@ -219,8 +219,8 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     {
         uint realmonth = study.calendar.months[month].realmonth;
         // Monthly minimum generation <= Monthly inflows for each month
-        if (area.hydro.followLoadModulations && 
-            !area.hydro.reservoirManagement && 
+        if (area.hydro.followLoadModulations &&
+            !area.hydro.reservoirManagement &&
             data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
             logs.error() << "In Area " << area.name << " the minimum generation of "
@@ -234,8 +234,8 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
 void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
-    if (area.hydro.followLoadModulations && 
-        area.hydro.reservoirManagement && 
+    if (area.hydro.followLoadModulations &&
+        area.hydro.reservoirManagement &&
         data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
@@ -335,7 +335,7 @@ void HydroManagement::checkMinGeneration(uint numSpace)
             checkYearlyMinGeneration(numSpace, tsIndex, area);
             checkWeeklyMinGeneration(tsIndex, area);
         }
-          
+
         checkHourlyMinGeneration(tsIndex, area);
     });
 }
