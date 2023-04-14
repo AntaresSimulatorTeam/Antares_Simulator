@@ -36,6 +36,7 @@
 #include <wx/button.h>
 #include <wx/textctrl.h>
 #include <wx/choice.h>
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 
