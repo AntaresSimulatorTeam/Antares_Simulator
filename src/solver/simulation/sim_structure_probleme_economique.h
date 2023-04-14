@@ -65,6 +65,7 @@ struct CORRESPONDANCES_DES_VARIABLES
     int* NumeroDeVariableDuNombreDeGroupesQuiDemarrentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiSArretentDuPalierThermique;
     int* NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique;
+
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -83,6 +84,7 @@ struct CORRESPONDANCES_DES_CONTRAINTES
     int* NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne;
 
     int* NumeroDeContrainteDesNiveauxPays;
+
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
@@ -90,10 +92,11 @@ struct CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES
     int* NumeroDeContrainteDesContraintesCouplantes;
 };
 
-struct CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES
+typedef struct
 {
     int* NumeroDeContrainteDesContraintesCouplantes;
-};
+
+} CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES;
 
 struct VALEURS_DE_NTC_ET_RESISTANCES
 {
@@ -202,6 +205,7 @@ struct ALL_MUST_RUN_GENERATION
 struct SOLDE_MOYEN_DES_ECHANGES
 {
     double* SoldeMoyenDuPays;
+
 };
 
 struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
@@ -223,6 +227,7 @@ struct PDISP_ET_COUTS_HORAIRES_PAR_PALIER
 
     int* NombreMaxDeGroupesEnMarcheDuPalierThermique;
     int* NombreMinDeGroupesEnMarcheDuPalierThermique;
+
 };
 
 struct PALIERS_THERMIQUES
@@ -396,6 +401,7 @@ struct PRODUCTION_THERMIQUE_OPTIMALE
     double* NombreDeGroupesQuiSArretentDuPalier;
 
     double* NombreDeGroupesQuiTombentEnPanneDuPalier;
+
 };
 
 struct RESULTATS_HORAIRES
@@ -438,6 +444,7 @@ struct COUTS_DE_TRANSPORT
 
     double* CoutDeTransportOrigineVersExtremiteRef;
     double* CoutDeTransportExtremiteVersOrigineRef;
+
 };
 
 struct VARIABLES_DUALES_INTERCONNEXIONS
@@ -500,8 +507,7 @@ struct PROBLEME_HEBDO
     bool* DefaillanceNegativeUtiliserHydro = nullptr;
     bool* DefaillanceNegativeUtiliserConsoAbattue = nullptr;
 
-    char TypeDOptimisation
-      = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
+    char TypeDOptimisation = OPTIMISATION_LINEAIRE; // OPTIMISATION_LINEAIRE or OPTIMISATION_QUADRATIQUE
 
     double** BruitSurCoutHydraulique = nullptr;
 
@@ -523,10 +529,8 @@ struct PROBLEME_HEBDO
 
     CORRESPONDANCES_DES_VARIABLES** CorrespondanceVarNativesVarOptim = nullptr;
     CORRESPONDANCES_DES_CONTRAINTES** CorrespondanceCntNativesCntOptim = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres
-      = nullptr;
-    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires
-      = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES** CorrespondanceCntNativesCntOptimJournalieres = nullptr;
+    CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES** CorrespondanceCntNativesCntOptimHebdomadaires = nullptr;
 
     RESERVE_JMOINS1** ReserveJMoins1 = nullptr;
 
