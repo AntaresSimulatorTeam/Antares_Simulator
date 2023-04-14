@@ -265,22 +265,18 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForClusters(State& state, unsigned int numSpace)
-    {
+        auto area = state.area;
+        auto& thermal = state.thermal;
         for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
              ++clusterIndex)
         {
-            const auto* thermalCluster = state.area->thermal.clusters[clusterIndex];
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
             pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
-              += state.thermalClustersProductions[state.area->index][clusterIndex];
+              += thermal[area->index].thermalClustersProductions[clusterIndex];
         }
 
-        // Next item in the list
-        NextType::hourForClusters(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(

@@ -288,12 +288,6 @@ public:
         NextType::hourForEachArea(state);
     }
 
-    void hourForClusters(State& state)
-    {
-        // Next item in the list
-        NextType::hourForClusters(state);
-    }
-
     template<class V, class SetT>
     void yearEndSpatialAggregates(V& allVars, uint year, const SetT& set, uint numSpace)
     {

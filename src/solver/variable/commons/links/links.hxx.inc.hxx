@@ -42,7 +42,7 @@ inline Links::Links()
     // Do nothing
 }
 
-inline void Links::initializeFromStudy(Data::Study& study)
+inline void Links::initializeFromStudy([[maybe_unused]]  Data::Study& study)
 {
     // Do nothing
 }
@@ -157,13 +157,6 @@ inline void Links::hourForEachArea(State& state, unsigned int numSpace)
 inline void Links::hourForEachLink(State& state, unsigned int numSpace)
 {
     pLinks[state.link->indexForArea].hourForEachLink(state, numSpace);
-}
-
-inline void Links::hourForClusters(State& state, unsigned int numSpace) const
-{
-    UNUSED_VARIABLE(state);
-    UNUSED_VARIABLE(numSpace);
-    // No cluster on links
 }
 
 inline void Links::hourEnd(State& state, uint hourInTheYear)

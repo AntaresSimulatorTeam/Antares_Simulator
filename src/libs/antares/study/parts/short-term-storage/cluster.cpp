@@ -33,6 +33,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -64,13 +65,14 @@ bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 
 bool STStorageCluster::validate()
 {
-    return properties.validate() && series.validate();
+    logs.debug() << "Validating properties and series for st storage: " << id;
+    return properties.validate() && series->validate();
 }
 
-bool STStorageCluster::loadSeries(const std::string& folder)
+bool STStorageCluster::loadSeries(const std::string& folder) const
 {
-    bool ret = series.loadFromFolder(folder);
-    series.fillDefaultSeriesIfEmpty(); // fill series if no file series
+    bool ret = series->loadFromFolder(folder);
+    series->fillDefaultSeriesIfEmpty(); // fill series if no file series
     return ret;
 }
 

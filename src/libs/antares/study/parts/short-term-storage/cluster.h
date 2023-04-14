@@ -27,6 +27,7 @@
 
 #pragma once
 #include <string>
+#include <memory>
 #include <antares/inifile.h>
 #include "properties.h"
 #include "series.h"
@@ -39,11 +40,12 @@ public:
     bool validate();
     bool loadFromSection(const IniFile::Section& section);
 
-    bool loadSeries(const std::string& folder);
+    bool loadSeries(const std::string& folder) const;
 
     std::string id;
 
-    Series series;
+    std::shared_ptr<Series> series = std::make_shared<Series>();
     Properties properties;
+
 };
 } // namespace Antares::Data::ShortTermStorage
