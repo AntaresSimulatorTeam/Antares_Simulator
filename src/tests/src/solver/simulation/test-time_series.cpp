@@ -110,7 +110,35 @@ BOOST_AUTO_TEST_CASE(verify_all_series_have_the_same_width) {
 }
 
 BOOST_AUTO_TEST_CASE(verify_all_bc_in_a_group_have_same_type) {
-    BOOST_CHECK(false);
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
+        constraints << "[1]\n"
+                    << "name = dummy_name\n"
+                    <<"id = dummy_id\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = equal\n"
+                    << "filter-year-by-year = annual\n"
+                    << "filter-synthesis = hourly\n"
+                    << "comments = dummy_comment\n"
+                    << "group = dummy_group\n"
+                    << "[2]\n"
+                    << "name = dummy_2\n"
+                    <<"id = dummy_2\n"
+                    << "enabled = false\n"
+                    << "type = weekly\n"
+                    << "operator = equal\n"
+                    << "filter-year-by-year = annual\n"
+                    << "filter-synthesis = hourly\n"
+                    << "comments = dummy_comment\n"
+                    << "group = dummy_group\n"
+                ;
+        constraints.close();
+        const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+        BOOST_CHECK_EQUAL(loading_ok, false);
+}
+
+BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_ones) {
+
 }
 
 BOOST_AUTO_TEST_SUITE_END()
