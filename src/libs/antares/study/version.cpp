@@ -171,7 +171,8 @@ Version VersionIntToVersion(uint version)
     case versionUnknown:
         return versionUnknown;
     default:
-    logs.error() << "Version not found";
+    logs.error() << "Study version " << version << " is not supported by this version of antares-solver";
+    
     logs.error() << "Studies in version <7.0 are no longer supported. Please upgrade it first"
         << " if it's the case";
     return versionUnknown;
