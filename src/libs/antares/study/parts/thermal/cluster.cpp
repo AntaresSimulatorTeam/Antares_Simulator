@@ -500,9 +500,6 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-
-    // Links
-    coupling.clear();
 }
 
 bool Data::ThermalCluster::integrityCheck()

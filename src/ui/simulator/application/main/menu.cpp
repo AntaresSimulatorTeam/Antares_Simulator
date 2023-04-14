@@ -574,12 +574,6 @@ wxMenu* ApplWnd::createMenuHelp()
     pMenuHelp = new wxMenu();
 
     Menu::CreateItem(pMenuHelp,
-                     mnIDHelpPDFGeneralReferenceGuide,
-                     wxT("General reference guide    \tF1"),
-                     "images/16x16/help.png",
-                     wxT("Open PDF : General reference guide"));
-
-    Menu::CreateItem(pMenuHelp,
                      mnIDHelpPDFSystemMapEditorReferenceGuide,
                      wxT("System Map Editor reference guide"),
                      "images/16x16/help.png",

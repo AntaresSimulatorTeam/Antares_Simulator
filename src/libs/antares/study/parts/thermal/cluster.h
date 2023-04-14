@@ -329,9 +329,6 @@ public:
     //! Data for the preprocessor
     PreproThermal* prepro;
 
-    //! List of all other clusters linked with the current one
-    SetPointer coupling;
-
     //! \name Temporary data for simulation
     //@{
     /*!
