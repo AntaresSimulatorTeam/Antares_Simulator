@@ -196,9 +196,7 @@ public:
 
             if (isALevelColumn)
                 pValuesForTheCurrentYear[numSpace][col_index].computeAveragesForCurrentYearFromHourlyResults();
-            if (isAnInjectionColumn)
-                pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
-            if (isAnWithdrawalColumn)
+            if (isAnInjectionColumn || isAnWithdrawalColumn)
                 pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
         }
 
