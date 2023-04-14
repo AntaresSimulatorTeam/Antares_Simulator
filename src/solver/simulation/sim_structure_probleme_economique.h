@@ -168,7 +168,7 @@ struct PROPERTIES
     double withdrawalCapacity;
     double efficiency;
     std::optional<double> initialLevel;
-    int storagecycle;
+    unsigned int storagecycle;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 

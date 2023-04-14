@@ -183,6 +183,8 @@ bool Series::validateLowerRuleCurve() const
 bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
         unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
+    // allows to loop on hours even if simulation starts in november and ends in january or later
+    // calendarHour is calculated with modulo to abstract the year and only use an hour index
     if (simuFirstHour > simuLastHour)
         simuLastHour += HOURS_PER_YEAR;
 
@@ -198,6 +200,7 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
             double sumInjection = 0.0;
             double sumWithdrawal = 0.0;
 
+            // sum until end of cycle or end of optimizationRange
             for (unsigned int i = 0; i < cycleDuration && i + cycleHour < optimizationRange; i++)
             {
                 unsigned int calendarHour = (firstHourOfTheWeek + cycleHour + i) % HOURS_PER_YEAR;
@@ -215,10 +218,11 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
     return true;
 }
 
-
 bool Series::checkInitialLevelBetweenBounds(bool simplexIsWeek, std::optional<double> initialLevel,
         unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour) const
 {
+    // allows to loop on hours even if simulation starts in november and ends in january or later
+    // calendarHour is calculated with modulo to abstract the year and only use an hour index
     if (simuFirstHour > simuLastHour)
         simuLastHour += HOURS_PER_YEAR;
 
