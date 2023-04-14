@@ -258,12 +258,6 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForClusters(State& state, unsigned int numSpace)
-    {
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
             ++clusterIndex)
         {
@@ -272,8 +266,8 @@ public:
                 = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[clusterIndex];
         }
 
-        // Next item in the list
-        NextType::hourForClusters(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     inline void buildDigest(SurveyResults& results, int digestLevel, int dataLevel) const
