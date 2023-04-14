@@ -38,6 +38,7 @@
 #include <wx/wupdlock.h>
 #include <wx/sizer.h>
 #include "thermal-cluster.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

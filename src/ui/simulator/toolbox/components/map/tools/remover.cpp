@@ -33,6 +33,7 @@
 #include "../../../../application/main/main.h"
 #include "../../../../application/study.h"
 #include "../../../../windows/inspector.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

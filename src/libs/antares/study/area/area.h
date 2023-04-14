@@ -129,7 +129,7 @@ public:
     */
     void detachLinkFromID(const AreaName& id);
 
-    void detachLink(const AreaLink* lnk);
+    static void detachLink(const AreaLink* lnk);
 
     /*!
     ** \brief Remove a link from its raw pointer

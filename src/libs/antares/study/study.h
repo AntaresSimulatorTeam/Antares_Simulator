@@ -53,8 +53,6 @@
 
 #include <memory>
 
-//# include "../../../solver/variable/state.h"
-
 namespace Antares
 {
 namespace Data
