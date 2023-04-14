@@ -633,7 +633,6 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
         ApplyToMatrix(errors, logprefix, study.bindingConstraints.time_series[group_name], ts_numbers[0],
                       get_tsGenCount(study));
     }
-    //ApplyToMatrix(errors, logprefix, *cluster.series, , 0);
     return true;
 }
 } // namespace ScenarioBuilder
