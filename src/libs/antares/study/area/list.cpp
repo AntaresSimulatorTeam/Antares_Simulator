@@ -937,6 +937,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Short term storage
+    if (study.header.version >= 860)
     {
         unsigned int startHour =  study.calendar.days[study.parameters.simulationDays.first].hours.first;
         unsigned int endHour =  study.calendar.days[study.parameters.simulationDays.end].hours.end;
@@ -1111,6 +1112,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Short term storage data, specific to areas
+    if (pStudy.header.version >= 860)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
