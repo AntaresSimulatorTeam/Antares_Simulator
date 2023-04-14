@@ -43,6 +43,7 @@
 #include "edit.h"
 #include "../../application/main.h"
 #include "../../application/wait.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

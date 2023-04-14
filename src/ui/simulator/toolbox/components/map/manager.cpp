@@ -34,6 +34,7 @@
 #include "../../../application/study.h"
 #include "../../../windows/inspector.h"
 #include "../../clipboard/clipboard.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 using namespace Yuni;
 

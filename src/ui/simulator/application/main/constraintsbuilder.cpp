@@ -35,6 +35,7 @@
 #include "../../../../solver/constraints-builder/cbuilder.h"
 #include <ui/common/lock.h>
 #include "../wait.h"
+#include "antares/study/ui-runtimeinfos.h"
 
 #define SEP IO::Separator
 
