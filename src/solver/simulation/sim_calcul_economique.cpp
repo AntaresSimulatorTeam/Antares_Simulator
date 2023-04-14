@@ -84,27 +84,9 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.hydroHotStart
       = (parameters.initialReservoirLevels.iniLevels == Antares::Data::irlHotStart);
 
+    // gp adq : to be removed
     if (parameters.adqPatchParams.enabled)
     {
-        problem.adqPatchParams = std::make_shared<AdequacyPatchParameters>();
-        // AdequacyFirstStep will be initialized during the economy solve
-        problem.adqPatchParams->SetNTCOutsideToInsideToZero
-          = parameters.adqPatchParams.localMatching.setToZeroOutsideInsideLinks;
-        problem.adqPatchParams->SetNTCOutsideToOutsideToZero
-          = parameters.adqPatchParams.localMatching.setToZeroOutsideOutsideLinks;
-        problem.adqPatchParams->PriceTakingOrder
-          = parameters.adqPatchParams.curtailmentSharing.priceTakingOrder;
-        problem.adqPatchParams->IncludeHurdleCostCsr
-          = parameters.adqPatchParams.curtailmentSharing.includeHurdleCost;
-        problem.adqPatchParams->CheckCsrCostFunctionValue
-          = parameters.adqPatchParams.curtailmentSharing.checkCsrCostFunction;
-        problem.adqPatchParams->ThresholdRunCurtailmentSharingRule
-          = parameters.adqPatchParams.curtailmentSharing.thresholdRun;
-        problem.adqPatchParams->ThresholdDisplayLocalMatchingRuleViolations
-          = parameters.adqPatchParams.curtailmentSharing.thresholdDisplayViolations;
-        double temp = pow(10, -parameters.adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
-        problem.adqPatchParams->ThresholdCSRVarBoundsRelaxation = temp < 0.1 ? temp : 0.1;
-
         problem.adequacyPatchRuntimeData
           = std::make_shared<AdequacyPatchRuntimeData>(study.areas, study.runtime->areaLink);
     }

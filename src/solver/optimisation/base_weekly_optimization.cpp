@@ -30,21 +30,28 @@
 #include "weekly_optimization.h"
 #include "adequacy_patch_local_matching/adequacy_patch_weekly_optimization.h"
 
+using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
 namespace Antares::Solver::Optimization
 {
-WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint thread_number) :
- problemeHebdo_(problemesHebdo), thread_number_(thread_number)
+WeeklyOptimization::WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo,
+                                       AdqPatchParams& adqPatchParams,
+                                       uint thread_number) :
+    problemeHebdo_(problemesHebdo),
+    adqPatchParams_(adqPatchParams),
+    thread_number_(thread_number)
 {
 }
 
-std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(bool adqPatchEnabled,
-                                                               PROBLEME_HEBDO* problemeHebdo,
-                                                               uint thread_number)
+std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
+    AdqPatchParams& adqPatchParams,
+    PROBLEME_HEBDO* problemeHebdo,
+    uint thread_number)
 {
-    if (adqPatchEnabled)
-        return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, thread_number);
+    if (adqPatchParams.enabled)
+        return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, adqPatchParams, thread_number);
     else
-        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, thread_number);
+        return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, adqPatchParams, thread_number);
 }
 
 } // namespace Antares::Solver::Optimization

@@ -1002,29 +1002,17 @@ void OpenStudyFromFolder(wxString folder)
     wxStringToString(folder, studyfolder);
     auto version = Data::StudyTryToFindTheVersion(studyfolder);
 
-    switch (version)
-    {
-    case Data::versionUnknown:
+    if (version == Data::versionUnknown)
     {
         logs.error() << studyfolder << ": it does not seem a valid study";
-        return; // Error not a valid study
-    }
-    // 1.x format (Old format)
-    case Data::version1xx:
-    {
-        logs.error() << studyfolder
-                     << ": The support for the studies in 1.x format is no longer available since "
-                        "Antares v3.4.";
         return;
     }
-    default:
-        if ((uint)version > (uint)Data::versionLatest)
-        {
-            logs.error() << "A more recent version of Antares is required to open `" << studyfolder
-                         << "`  (" << Data::VersionToCStr(version) << ')';
-            return;
-        }
-        break;
+
+    if ((uint)version > (uint)Data::versionLatest)
+    {
+        logs.error() << "A more recent version of Antares is required to open `" << studyfolder
+            << "`  (" << Data::VersionToCStr(version) << ')';
+        return;
     }
 
     // Lazy creation of all visual components

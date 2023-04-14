@@ -285,30 +285,6 @@ void Job::gatherInfosAboutYearByYearData(const AnyString& path)
         }
     }
 
-    // <= 3.6 compatibility, only if individual years have not been found
-    if (not pContent->hasYearByYear)
-    {
-        DirInfo dirinfo(path);
-        auto end = dirinfo.folder_end();
-        for (auto i = dirinfo.folder_begin(); i != end; ++i)
-        {
-            const String& name = *i;
-            if (name.size() > 8 and name[2] == '-' and name.icontains("mc-i"))
-            {
-                AnyString stryear(name.c_str() + 4, name.size() - 4);
-                uint year;
-                if (stryear.to(year) and year and year < 500000)
-                {
-                    pContent->hasYearByYear = true;
-                    if (year < pContent->ybyInterval[0])
-                        pContent->ybyInterval[0] = year;
-                    if (year > pContent->ybyInterval[1])
-                        pContent->ybyInterval[1] = year;
-                }
-            }
-        }
-    }
-
     // Checking for individual years concatened
     if (pContent->hasYearByYear)
     {

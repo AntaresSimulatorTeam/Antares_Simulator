@@ -138,42 +138,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
     }
 
-    // The operating cost, for a single cluster of a single area
-    //
-    // Reminder :
-    //   The current area    : state.area
-    //   The current cluster : thermalCluster
-    //
-    // --- v3.4 ---
-    //  O(h) = MB * P(h)
-    // which was merely the following expression :
-    // (state.aggregate->productionCost[state.hourInTheYear] 
-    //      * state.thermalClustersProductions[area->index][clusterAreaWideIndex]);
-    // OperatingCost = OperatingCost for the thermal cluster/Mwh * production
-    //
-    // --- v3.5 ---
-    // Marginal (€/MWh)     MA
-    // Spread (€/MWh)       SP
-    // Fixed (€ / hour)     FI
-    // Start-up (€/start)   SU
-    // Market bid (€/ MWh)  MB
-    //
-    // P : production of the current cluster for the current hour
-    // Unom : nominal hourly power for one unit
-    // N(h) = ceil(P / Unom) : minimal number of unit used for the current hour
-    // O = result for the current hour
-    //
-    // O(h) = MA * P(h) * Modulation
-    // if (P > 0)
-    //     O += FI * unit
-    // if (N(h) > N(h-1))
-    //     O += SU * [N(h) - N(h-1)]
-    //
-    // \see 101206-antares-couts.doc
-    //
-    // --- v3.7 ---
-    // New algorithm
-    //
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector

@@ -36,7 +36,7 @@
 #include "spx_definition_arguments.h"
 #include "spx_fonctions.h"
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
+bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams, uint numSpace)
 {
     if (!problemeHebdo->LeProblemeADejaEteInstancie)
     {
@@ -87,5 +87,5 @@ bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpa
         OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(problemeHebdo);
     }
 
-    return OPT_OptimisationLineaire(problemeHebdo, numSpace);
+    return OPT_OptimisationLineaire(problemeHebdo, adqPatchParams, numSpace);
 }

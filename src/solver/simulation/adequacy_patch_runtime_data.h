@@ -46,6 +46,7 @@ public:
     std::vector<adqPatchParamsMode> originAreaMode;
     std::vector<adqPatchParamsMode> extremityAreaMode;
     std::vector<double> hurdleCostCoefficients;
+    bool AdequacyFirstStep = true;
 
     bool wasCSRTriggeredAtAreaHour(int area, int hour) const;
     void addCSRTriggeredAtAreaHour(int area, int hour);
