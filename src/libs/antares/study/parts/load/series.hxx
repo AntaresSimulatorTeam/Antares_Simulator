@@ -33,7 +33,7 @@ namespace Data
 {
 inline Yuni::uint64 DataSeriesLoadMemoryUsage(DataSeriesLoad* l)
 {
-    return (l) ? l->series.memoryUsage() : 0;
+    return (l) ? l->time_series.memoryUsage() : 0;
 }
 
 } // namespace Data

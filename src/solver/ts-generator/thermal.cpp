@@ -172,7 +172,7 @@ void GeneratorTempData::writeResultsToDisk(const Data::Area& area,
         };
 
         std::string buffer;
-        cluster.series->series.saveToBuffer(buffer, precision);
+        cluster.series->time_series.saveToBuffer(buffer, precision);
 
         pWriter->addEntryFromBuffer(pTempFilename.c_str(), buffer);
     }
@@ -273,14 +273,14 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
 
     if (0 == cluster.unitCount or 0 == cluster.nominalCapacity)
     {
-        cluster.series->series.reset(1, nbHoursPerYear);
+        cluster.series->time_series.reset(1, nbHoursPerYear);
 
         if (archive)
             writeResultsToDisk(area, cluster);
         return;
     }
 
-    cluster.series->series.resize(nbThermalTimeseries, nbHoursPerYear);
+    cluster.series->time_series.resize(nbThermalTimeseries, nbHoursPerYear);
 
     const auto& preproData = *(cluster.prepro);
 
@@ -383,7 +383,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
         uint hour = 0;
 
         if (tsIndex > 1)
-            dstSeries = &cluster.series->series[tsIndex - 2];
+            dstSeries = &cluster.series->time_series[tsIndex - 2];
 
         for (uint dayInTheYear = 0; dayInTheYear < daysPerYear; ++dayInTheYear)
         {
@@ -623,7 +623,7 @@ void GeneratorTempData::operator()(Data::Area& area, Data::ThermalCluster& clust
     }
 
     if (derated)
-        cluster.series->series.averageTimeseries();
+        cluster.series->time_series.averageTimeseries();
 
     if (archive)
         writeResultsToDisk(area, cluster);

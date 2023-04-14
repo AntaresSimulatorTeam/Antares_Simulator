@@ -42,12 +42,12 @@ namespace Data
 {
 bool DataSeriesCommon::forceReload(bool reload) const
 {
-    return series.forceReload(reload);
+    return time_series.forceReload(reload);
 }
 
 void DataSeriesCommon::markAsModified() const
 {
-    series.markAsModified();
+    time_series.markAsModified();
 }
 
 void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries ts) const
@@ -66,7 +66,7 @@ void DataSeriesCommon::estimateMemoryUsage(StudyMemoryUsage& u, enum TimeSeries 
     default:
         nbTimeSeries = 0;
     }
-    series.estimateMemoryUsage(
+    time_series.estimateMemoryUsage(
       u, 0 != (ts & u.study.parameters.timeSeriesToGenerate), nbTimeSeries, HOURS_PER_YEAR);
 }
 

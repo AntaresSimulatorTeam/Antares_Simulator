@@ -37,7 +37,7 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
                 auto& cluster = *(i->second);
                 uint chro = NumeroChroniquesTireesParPays[thread_number_][area.index]
                               ->ThermiqueParPalier[cluster.areaWideIndex];
-                auto& matrix = cluster.series->series;
+                auto& matrix = cluster.series->time_series;
                 assert(chro < matrix.width);
                 auto& column = matrix.entry[chro];
                 assert(hourInYear + nbHoursInWeek <= matrix.height && "index out of bounds");

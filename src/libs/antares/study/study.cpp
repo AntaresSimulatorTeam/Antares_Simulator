@@ -598,7 +598,7 @@ void Study::performTransformationsBeforeLaunchingSimulation()
         }
 
         // Informations about time-series for the load
-        auto& matrix = area.load.series->series;
+        auto& matrix = area.load.series->time_series;
         auto& dsmvalues = area.reserves[fhrDSM];
 
         // Adding DSM values

@@ -220,8 +220,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     prepro->copyFrom(*cluster.prepro);
     // timseries
 
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->time_series = cluster.series->time_series;
+    cluster.series->time_series.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -355,7 +355,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->time_series;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -379,7 +379,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->time_series;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 

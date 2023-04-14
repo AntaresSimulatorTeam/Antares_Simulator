@@ -607,7 +607,7 @@ bool XCast::runWithPredicate(PredicateT& predicate, Progression::Task& progressi
             assert(area.load.series);
             assert(static_cast<uint>(Data::fhrDSM) < area.reserves.width);
 
-            auto& matrix = area.load.series->series;
+            auto& matrix = area.load.series->time_series;
             auto& dsmvalues = area.reserves.column(Data::fhrDSM);
 
             assert(matrix.width > 0);

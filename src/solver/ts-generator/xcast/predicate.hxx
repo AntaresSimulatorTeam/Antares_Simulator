@@ -61,7 +61,7 @@ public:
     Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
     {
         assert(area.wind.series != NULL);
-        return area.wind.series->series;
+        return area.wind.series->time_series;
     }
 
     Data::XCast& xcastData(Data::Area& area) const
@@ -104,7 +104,7 @@ public:
     Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
     {
         assert(area.load.series != NULL);
-        return area.load.series->series;
+        return area.load.series->time_series;
     }
 
     Data::XCast& xcastData(Data::Area& area) const
@@ -147,7 +147,7 @@ public:
     Matrix<double, Yuni::sint32>& matrix(Data::Area& area) const
     {
         assert(area.solar.series != NULL);
-        return area.solar.series->series;
+        return area.solar.series->time_series;
     }
 
     Data::XCast& xcastData(Data::Area& area) const

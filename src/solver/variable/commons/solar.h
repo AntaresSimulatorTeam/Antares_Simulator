@@ -199,9 +199,9 @@ public:
         {
             // The current solar time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->solar.series->series
+                           pArea->solar.series->time_series
                              .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Solar],
-                           sizeof(double) * pArea->solar.series->series.height);
+                           sizeof(double) * pArea->solar.series->time_series.height);
         }
 
         // Next variable

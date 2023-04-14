@@ -198,9 +198,9 @@ public:
         {
             // The current wind time-series
             (void)::memcpy(pValuesForTheCurrentYear[numSpace].hour,
-                           pArea->wind.series->series
+                           pArea->wind.series->time_series
                              .entry[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Eolien],
-                           sizeof(double) * pArea->wind.series->series.height);
+                           sizeof(double) * pArea->wind.series->time_series.height);
         }
 
         // Next variable
