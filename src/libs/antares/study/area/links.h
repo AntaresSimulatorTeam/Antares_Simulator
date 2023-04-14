@@ -72,7 +72,7 @@ public:
     ~AreaLink();
     //@}
 
-    bool loadTimeSeries(Study& study, const AnyString& folder);
+    bool loadTimeSeries(const Study& study, const AnyString& folder);
 
     void storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) const;
 
@@ -129,8 +129,6 @@ public:
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
-    bool linkLoadTimeSeries_for_version_under_320(const AnyString& folder, Study& study);
-    bool linkLoadTimeSeries_for_version_from_320_to_630(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
     NamePair getNamePair() const;

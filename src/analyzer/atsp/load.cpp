@@ -297,7 +297,7 @@ bool ATSP::loadFromINIFile(const String& filename)
 
 bool ATSP::checkStudyVersion() const
 {
-    auto v = Data::StudyTryToFindTheVersion(pStudyFolder, false);
+    auto v = Data::StudyTryToFindTheVersion(pStudyFolder);
     switch (v)
     {
     case Data::versionUnknown:

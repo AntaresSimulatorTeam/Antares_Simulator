@@ -60,7 +60,7 @@ public:
     /*!
     ** \brief Solar data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder

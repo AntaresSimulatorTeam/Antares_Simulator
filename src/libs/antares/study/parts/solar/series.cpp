@@ -54,16 +54,11 @@ int DataSeriesSolarLoadFromFolder(Study& study,
 
     int ret = 1;
     /* Solar the matrix */
-    if (study.header.version >= 330)
-    {
-        buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
-        ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
+    ret = s->series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
-        if (study.usedByTheSolver && study.parameters.derated)
-            s->series.averageTimeseries();
-    }
-    else
-        s->series.reset(1, HOURS_PER_YEAR);
+    if (study.usedByTheSolver && study.parameters.derated)
+        s->series.averageTimeseries();
 
     s->timeseriesNumbers.clear();
 

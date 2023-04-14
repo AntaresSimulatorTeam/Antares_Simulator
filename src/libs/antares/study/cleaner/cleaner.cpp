@@ -67,11 +67,6 @@ bool StudyCleaningInfos::analyze()
 
     switch (version)
     {
-    case version1xx:
-    {
-        logs.error() << "Study version: 1.x. Too old version. Nothing will be done: " << folder;
-        break;
-    }
     case versionFutur:
     {
         logs.error() << "A more recent version of Antares is required for " << folder;
@@ -84,7 +79,7 @@ bool StudyCleaningInfos::analyze()
     }
     default:
     {
-        if ((int)version >= (int)version200 && (int)version <= (int)versionLatest)
+        if ((int)version <= (int)versionLatest)
         {
             if (not PreflightVersion20(this))
             {
