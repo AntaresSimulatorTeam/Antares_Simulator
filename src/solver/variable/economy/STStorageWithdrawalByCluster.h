@@ -40,13 +40,13 @@ struct VCardSTstorageWithdrawalByCluster
     //! Unit
     static const char* Unit()
     {
-        return "P-withdrawal - MWh";
+        return "P-withdrawal - MW";
     }
 
     //! The short description of the variable
     static const char* Description()
     {
-        return "Withdrawal by ST storage clusters";
+        return "Energy withdrawn by ST storage clusters";
     }
 
     //! The expecte results

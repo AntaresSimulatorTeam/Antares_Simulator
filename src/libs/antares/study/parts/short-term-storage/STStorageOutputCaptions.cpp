@@ -4,7 +4,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-const std::vector<std::string> groups = {
+static const std::vector<std::string> groups = {
     "PSP_open", 
     "PSP_closed", 
     "Pondage", 
@@ -15,7 +15,7 @@ const std::vector<std::string> groups = {
     "Other4", 
     "Other5"};
 
-const std::vector<std::string> variables = {"injection", "withdrawal", "level"};
+static const std::vector<std::string> variables = {"injection", "withdrawal", "level"};
 
 const unsigned int nb_groups = groups.size();
 const unsigned int nb_variables = variables.size();

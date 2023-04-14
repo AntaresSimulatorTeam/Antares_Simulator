@@ -179,20 +179,26 @@ public:
     {
         // Here we perform time-aggregations :
         // ---------------------------------
-        // for a given MC year, from hourly results we compute daily, weekly, monthly and annual 
+        // For a given MC year, from hourly results we compute daily, weekly, monthly and annual 
         // results by aggregation operations (averages or sums).
         // Caution : 
-        //  - level results are stored in columns of which indices satisfy : col_index % 3 == 1.
+        //  - level results are stored in columns of which indices satisfy : col_index % 3 == 2.
         //    They are time-aggregated by means of averages
         //  - injection and withdrawal results are stored in columns of which indices 
-        //    satisfy : col_index % 3 != 1.
+        //    satisfy : col_index % 3 != 2.
         //    They are time-aggregated by means of sums.
 
         for (unsigned int col_index = 0; col_index != VCardType::columnCount; ++col_index)
         {
-            if (col_index % 3 == 1)
+            bool isAnInjectionColumn = (col_index % 3) == 0;
+            bool isAnWithdrawalColumn = (col_index % 3) == 1;
+            bool isALevelColumn = (col_index % 3) == 2;
+
+            if (isALevelColumn)
                 pValuesForTheCurrentYear[numSpace][col_index].computeAveragesForCurrentYearFromHourlyResults();
-            else
+            if (isAnInjectionColumn)
+                pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
+            if (isAnWithdrawalColumn)
                 pValuesForTheCurrentYear[numSpace][col_index].computeStatisticsForTheCurrentYear();
         }
 

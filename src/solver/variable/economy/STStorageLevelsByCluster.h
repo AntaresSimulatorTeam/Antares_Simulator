@@ -40,7 +40,7 @@ struct VCardSTstorageLevelsByCluster
     //! Unit
     static const char* Unit()
     {
-        return "P-levels - MWh";
+        return "Levels - MWh";
     }
 
     //! The short description of the variable
