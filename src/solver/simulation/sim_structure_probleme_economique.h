@@ -467,7 +467,6 @@ struct RESULTATS_HORAIRES
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
     std::vector<::ShortTermStorage::RESULTS>* ShortTermStorage = nullptr;
-    PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique;
 };
 
 struct COUTS_DE_TRANSPORT
