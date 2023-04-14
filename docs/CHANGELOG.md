@@ -1,6 +1,23 @@
 Antares Changelog
 =================
 
+v8.6.0-rc1 (03/2023)
+--------------------
+
+## New features
+* Add pollutant emissions (#1184, #1222)
+
+## Enhancements
+* Tune XPRESS resolution (#1158), this should improve performance for OR-Tools+XPRESS
+
+## For developers
+* Use CMakeLists.txt instead of *.cmake (#1198)
+* Remove OUI_ANTARES NON_ANTARES (#1188)
+* Clean up src/solver/optimisation (#1161)
+* Adequacy patch : refactor parameters management (#1154)
+* Add a few const qualifiers (#1178)
+* INI files load encapsulation (#1057)
+
 v8.5.0 (02/2022)
 --------------------
 

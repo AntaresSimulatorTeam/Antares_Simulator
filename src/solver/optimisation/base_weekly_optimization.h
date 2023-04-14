@@ -29,6 +29,7 @@
 
 #include <yuni/yuni.h> // for "uint" definition
 #include "../simulation/sim_structure_probleme_economique.h"
+#include <antares/study/parameters/adq-patch-params.h>
 
 namespace Antares::Solver::Optimization
 {
@@ -37,13 +38,16 @@ class WeeklyOptimization
 public:
     virtual void solve(uint weekInTheYear, int hourInTheYear) = 0;
     virtual ~WeeklyOptimization() = default;
-    static std::unique_ptr<WeeklyOptimization> create(bool adqPatchEnabled,
+    static std::unique_ptr<WeeklyOptimization> create(Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams,
                                                       PROBLEME_HEBDO* problemesHebdo,
                                                       uint numSpace);
 
 protected:
-    explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, uint numSpace);
+    explicit WeeklyOptimization(PROBLEME_HEBDO* problemesHebdo, 
+                                Antares::Data::AdequacyPatch::AdqPatchParams&, 
+                                uint numSpace);
     PROBLEME_HEBDO* const problemeHebdo_ = nullptr;
+    Antares::Data::AdequacyPatch::AdqPatchParams& adqPatchParams_;
     const uint thread_number_ = 0;
 };
 } // namespace Antares::Solver::Optimization

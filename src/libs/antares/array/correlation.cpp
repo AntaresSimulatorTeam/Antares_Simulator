@@ -323,13 +323,13 @@ Correlation::~Correlation()
     delete[] monthly;
 }
 
-bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings, int version)
+bool Correlation::loadFromFile(Study& study, const AnyString& filename, bool warnings)
 {
 #ifndef NDEBUG
     Antares::logs.debug() << "  " << correlationName << ": loading " << filename;
 #endif
     IniFile ini;
-    return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings, version) : false;
+    return (ini.open(filename)) ? internalLoadFromINI(study, ini, warnings) : false;
 }
 
 bool Correlation::saveToFile(Study& study, const AnyString& filename) const
@@ -403,7 +403,7 @@ void Correlation::internalSaveToINI(Study& study, IO::File::Stream& file) const
         logs.error() << correlationName << ": the montlhy correlation coefficients are missing";
 }
 
-bool Correlation::internalLoadFromINIPost32(Study& study, const IniFile& ini, bool warnings)
+bool Correlation::internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings)
 {
     if (!ReadCorrelationModeFromINI(ini, pMode, warnings))
         return false;
@@ -500,7 +500,7 @@ void Correlation::clear()
     }
 }
 
-bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings, int version)
+bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool warnings)
 {
     // Clean
     if (annual)
@@ -514,14 +514,7 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         monthly = nullptr;
     }
 
-    if (version == static_cast<int>(versionUnknown))
-        version = static_cast<int>(study.header.version);
-    // Compatibility <= 3.2
-    if (version <= static_cast<int>(version320))
-        return internalLoadFromINIv32(study, ini, warnings);
-
-    // Post 3.2
-    if (!internalLoadFromINIPost32(study, ini, warnings))
+    if (!internalLoadFromINITry(study, ini, warnings))
     {
         // The loading has failed - fallback
         pMode = modeAnnual;
@@ -548,61 +541,6 @@ bool Correlation::internalLoadFromINI(Study& study, const IniFile& ini, bool war
         }
 
         return false;
-    }
-    return true;
-}
-
-bool Correlation::internalLoadFromINIv32(Study& study, const IniFile& ini, bool warnings)
-{
-    // Force the mode of the study
-    pMode = modeAnnual;
-
-    annual = new Matrix<>();
-    annual->resize(study.areas.size(), study.areas.size());
-    annual->fillUnit();
-
-    if (JIT::usedFromGUI)
-    {
-        // Preparing the monthly correlation matrices
-        monthly = new Matrix<>[12];
-        for (int i = 0; i < 12; ++i)
-        {
-            monthly[i].resize(study.areas.size(), study.areas.size());
-            monthly[i].fillUnit();
-        }
-    }
-
-    AreaName name;
-
-    // Browsing each section
-    for (auto* s = ini.firstSection; s; s = s->next)
-    {
-        name = s->name;
-        name.toLower();
-        auto* from = study.areas.find(name);
-        if (!from)
-        {
-            if (warnings)
-                logs.warning() << correlationName << "*: " << s->name << ": Area not found";
-            continue;
-        }
-
-        for (const IniFile::Property* p = s->firstProperty; p; p = p->next)
-        {
-            name = p->key;
-            name.toLower();
-            const Area* to = study.areas.find(name);
-            if (to)
-            {
-                set(*annual, *from, *to, p->value);
-            }
-            else
-            {
-                if (warnings)
-                    logs.warning() << correlationName << "*: " << s->name << ": " << p->key
-                                   << ": Area not found";
-            }
-        }
     }
     return true;
 }
