@@ -1542,13 +1542,18 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
 bool BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env) {
     resizeAllTimeseriesNumbers(nb_years);
     std::map<std::string, BindingConstraint::Type> group_and_type;
-    std::for_each(pList.begin(), pList.end(), [&group_and_type](const auto& bc) {
+    bool all_types_the_same = true;
+    std::for_each(pList.begin(), pList.end(), [&group_and_type, &all_types_the_same](const auto& bc) {
         if (group_and_type.find(bc->group()) == group_and_type.end()) {
             group_and_type[bc->group()] = bc->type();
         } else {
-            assert(group_and_type[bc->group()] == bc->type());
+            if(group_and_type[bc->group()] != bc->type()) {
+                all_types_the_same = false;
+            }
         }
     });
+    if (!all_types_the_same)
+        return false;
     bool load_ok = true;
     std::for_each(group_and_type.begin(), group_and_type.end(), [&](const auto& group_type) {
         //Ensure all constraints in group same hourly/weekly
