@@ -133,6 +133,13 @@ Area::~Area()
     ui = nullptr;
 }
 
+bool Area::checkWeeklyData(uint firstHourOfTheWeek) const
+{
+    // TODO checks on wind/solar/thermal/short-term storage/etc.
+    logs.notice() << "checkWeekData " << firstHourOfTheWeek;
+    return true;
+}
+
 void Area::clearAllLinks()
 {
     if (not links.empty())

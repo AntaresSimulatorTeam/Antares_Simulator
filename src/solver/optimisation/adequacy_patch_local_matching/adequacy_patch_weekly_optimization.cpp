@@ -32,9 +32,8 @@
 #include "antares/study/area/scratchpad.h"
 #include "antares/study/fwd.h"
 
-const int nbHoursInAWeek = 168;
-
 using namespace Antares::Data::AdequacyPatch;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Optimization
 {
