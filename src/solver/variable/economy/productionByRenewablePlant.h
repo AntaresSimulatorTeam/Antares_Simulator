@@ -45,7 +45,7 @@ struct VCardProductionByRenewablePlant
         return "RES generation by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
@@ -356,6 +356,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = renewable.clusters[i]->name();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

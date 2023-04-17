@@ -172,6 +172,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardT::Multiple::Caption(i);
+                results.variableUnit = VCardT::Multiple::Unit(i);
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
             // Shift to the next internal variable's non applicable status and print status
@@ -192,6 +193,7 @@ struct VariableAccessor
             if (*results.isPrinted)
             {
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
@@ -371,11 +373,13 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             for (uint i = 0; i != container.size(); ++i)
             {
                 results.variableCaption = thermal.clusters[i]->name();
+
                 container[i].template buildDigest<VCardT>(results, digestLevel, dataLevel);
             }
         }
     }
 
+    template<class VCardType>
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
         assert(results.data.area && "Area is NULL");
@@ -394,6 +398,9 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             logs.error() << "Inconsistent fileLevel detected";
             return false;
         }
+
+        results.variableUnit = VCardType::Unit();
+
         if (thermal_details)
         {
             auto& thermal = results.data.area->thermal;
@@ -427,7 +434,7 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
-                res = setClusterCaption(results, fileLevel, i);
+                res = setClusterCaption<VCardType>(results, fileLevel, i);
                 if (!res)
                     return;
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
@@ -570,6 +577,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         if (*results.isPrinted)
         {
             results.variableCaption = VCardT::Caption();
+            results.variableUnit = VCardT::Unit();
             container.template buildDigest<VCardT>(results, digestLevel, dataLevel);
         }
     }
@@ -587,6 +595,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
             if (updateCaption)
             {
                 results.variableCaption = VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
             }
             container.template buildSurveyReport<ResultsT, VCardType>(
               results, container, dataLevel, fileLevel, precision);
@@ -602,6 +611,7 @@ struct VariableAccessor<ResultsT, Category::singleColumn /* The default */>
         if (*results.isPrinted)
         {
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             container.template buildAnnualSurveyReport<VCardType>(results, fileLevel, precision);
         }
     }

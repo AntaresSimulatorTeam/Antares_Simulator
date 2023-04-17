@@ -46,7 +46,7 @@ struct VCardCongestionProbability
         return "CONG. PROB. (+/-)";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "%";
     }
@@ -102,6 +102,11 @@ struct VCardCongestionProbability
             default:
                 return "<unknown>";
             }
+        }
+
+        static std::string Unit(const unsigned int indx)
+        {
+            return VCardCongestionProbability::Unit();
         }
     };
 
@@ -340,6 +345,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForYearLocalReport[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

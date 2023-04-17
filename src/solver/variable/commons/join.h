@@ -44,7 +44,7 @@ struct VCardJoin
         return "";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }

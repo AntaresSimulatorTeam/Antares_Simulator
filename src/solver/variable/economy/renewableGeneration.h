@@ -45,7 +45,7 @@ struct VCardRenewableGeneration
         return "Renewable Gen.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
@@ -123,6 +123,11 @@ struct VCardRenewableGeneration
             default:
                 return "<unknown>";
             }
+        }
+
+        static std::string Unit(const unsigned int indx)
+        {
+            return VCardRenewableGeneration::Unit();
         }
     };
 }; // class VCard
@@ -297,6 +302,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

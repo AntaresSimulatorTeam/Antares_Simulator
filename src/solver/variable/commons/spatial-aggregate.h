@@ -45,12 +45,22 @@ struct MultipleCaptionProxy
     {
         return VCardT::Multiple::Caption(indx);
     }
+
+    static std::string Unit(const unsigned int indx)
+    {
+        return VCardT::Multiple::Unit(indx);
+    }
 };
 
 template<class VCardT>
 struct MultipleCaptionProxy<0, VCardT>
 {
     static std::string Caption(const uint indx)
+    {
+        return NULL;
+    }
+
+    static std::string Unit(const uint indx)
     {
         return NULL;
     }
@@ -63,12 +73,22 @@ struct MultipleCaptionProxy<1, VCardT>
     {
         return NULL;
     }
+
+    static std::string Unit(const uint indx)
+    {
+        return NULL;
+    }
 };
 
 template<class VCardT>
 struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 {
     static std::string Caption(const uint indx)
+    {
+        return NULL;
+    }
+
+    static std::string Unit(const uint indx)
     {
         return NULL;
     }
@@ -86,7 +106,7 @@ struct VCardProxy
         return VCardOrigin::Caption();
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return VCardOrigin::Unit();
     }
@@ -136,6 +156,11 @@ struct VCardProxy
         static std::string Caption(const uint indx)
         {
             return MultipleCaptionProxy<columnCount, VCardOrigin>::Caption(indx);
+        }
+
+        static std::string Unit(const unsigned int indx)
+        {
+            return MultipleCaptionProxy<columnCount, VCardOrigin>::Unit(indx);
         }
     };
 

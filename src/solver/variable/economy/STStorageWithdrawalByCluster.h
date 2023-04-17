@@ -38,7 +38,7 @@ struct VCardSTstorageWithdrawalByCluster
         return "STS withdrawal by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "P-withdrawal - MW";
     }
@@ -311,6 +311,7 @@ public:
                 // Write the data for the current year
                 const auto* cluster = shortTermStorage.storagesByIndex[clusterIndex];
                 results.variableCaption = cluster->properties.name;
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex].template buildAnnualSurveyReport<VCardType>(
                     results, fileLevel, precision);
             }

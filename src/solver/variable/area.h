@@ -43,7 +43,7 @@ struct VCardAllAreas
         return "Areas";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
