@@ -30,5 +30,5 @@
 namespace Antares::Constants
 {
 const std::array<unsigned int, 12> daysPerMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-
+const unsigned int nbHoursInAWeek = 168;
 } // namespace Antares::Constants

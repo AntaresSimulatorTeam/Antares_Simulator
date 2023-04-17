@@ -97,6 +97,11 @@ uint FirstDayPerMonth[12 + 1]; // deprecated
 
 uint FirstDayPerWeek[54 + 1]; // deprecated
 
+uint DayInterval::numberOfWeeks() const
+{
+    return (end - first) / 7;
+}
+
 const char* DayOfTheWeekToString(DayOfTheWeek d)
 {
     static const char* const days[]

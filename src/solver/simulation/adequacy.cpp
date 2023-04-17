@@ -31,15 +31,10 @@
 #include "opt_time_writer.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-enum
-{
-
-    nbHoursInAWeek = 168,
-};
-
 Adequacy::Adequacy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }
@@ -111,7 +106,7 @@ bool Adequacy::simulationBegin()
     }
 
     pStartTime = study.calendar.days[study.parameters.simulationDays.first].hours.first;
-    pNbWeeks = (study.parameters.simulationDays.end - study.parameters.simulationDays.first) / 7;
+    pNbWeeks = study.parameters.simulationDays.numberOfWeeks();
     return true;
 }
 
