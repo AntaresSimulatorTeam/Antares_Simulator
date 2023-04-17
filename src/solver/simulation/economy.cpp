@@ -35,14 +35,10 @@
 #include "opt_time_writer.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 namespace Antares::Solver::Simulation
 {
-enum
-{
-    nbHoursInAWeek = 168,
-};
-
 Economy::Economy(Data::Study& study) : study(study), preproOnly(false), pProblemesHebdo(nullptr)
 {
 }

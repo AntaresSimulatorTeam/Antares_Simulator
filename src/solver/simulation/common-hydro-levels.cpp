@@ -32,9 +32,7 @@
 
 namespace Antares::Solver::Simulation
 {
-
-const unsigned int nbHoursInAWeek = 168;
-
+using Constants::nbHoursInAWeek;
 
 void computingHydroLevels(const Data::AreaList& areas,
                           PROBLEME_HEBDO& problem,
