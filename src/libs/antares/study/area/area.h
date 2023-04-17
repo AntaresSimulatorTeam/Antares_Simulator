@@ -87,7 +87,7 @@ public:
     ~Area();
     //@}
 
-    bool checkWeekData(uint hourInTheYear, uint weekIndex) const;
+    bool checkWeeklyData(uint firstHourOfTheWeek) const;
 
     // !\name isVisibleOnLayer
     //@{

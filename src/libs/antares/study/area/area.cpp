@@ -133,10 +133,10 @@ Area::~Area()
     ui = nullptr;
 }
 
-bool Area::checkWeekData(uint hourInTheYear, uint weekIndex) const
+bool Area::checkWeeklyData(uint firstHourOfTheWeek) const
 {
     // TODO checks on wind/solar/thermal/short-term storage/etc.
-    logs.notice() << "checkWeekData " << hourInTheYear << " " << weekIndex;
+    logs.notice() << "checkWeekData " << firstHourOfTheWeek;
     return true;
 }
 

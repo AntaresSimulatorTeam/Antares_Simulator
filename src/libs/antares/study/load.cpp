@@ -167,10 +167,8 @@ bool postCalendarLoadChecks(const AreaList& areas,
     bool success = true;
     for (uint weekIndex = 0; weekIndex < nbWeeks; weekIndex++)
     {
-        areas.each([&](Data::Area& area)
-        {
-            success = area.checkWeekData(hourInTheYear, weekIndex) && success;
-        });
+        areas.each(
+          [&](Data::Area& area) { success = area.checkWeeklyData(hourInTheYear) && success; });
         hourInTheYear += nbHoursInAWeek;
     }
     return success;
@@ -229,6 +227,8 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     parameterFiller(options);
 
     ret = postCalendarLoadChecks(areas, parameters, calendar) && ret;
+    if (!ret)
+        logs.info() << "Post calendar checks failed";
 
     return ret;
 }
