@@ -84,4 +84,10 @@ bool STStorageCluster::validate(bool simplexIsWeek, unsigned int startHour, unsi
             startHour, endHour);
 }
 
+bool STStorageCluster::validateCycle(unsigned int firstHourOfTheWeek) const
+{
+    return series->validateCycle(firstHourOfTheWeek, properties.initialLevel,
+            properties.storagecycle.value());
+}
+
 } // namespace Antares::Data::ShortTermStorage

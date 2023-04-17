@@ -45,6 +45,9 @@ public:
     bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
             unsigned int simuFirstHour, unsigned int simuLastHour) const;
 
+    bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
+            unsigned int cycleDuration) const;
+
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;

@@ -296,4 +296,52 @@ bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimiz
     return true;
 }
 
+bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
+        unsigned int cycleDuration) const
+{
+    if (initialLevel.has_value())
+    {
+        for (unsigned int hour = firstHourOfTheWeek;
+                hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
+                hour += cycleDuration)
+        {
+            if (upperRuleCurve[hour] < initialLevel || lowerRuleCurve[hour] > initialLevel)
+            {
+                logs.warning() << "Error at line: " << hour + 1 << " for sts series upper or " <<
+                    "lower rule curves, initial level is not between those values";
+
+                return false;
+            }
+        }
+    }
+    else
+    {
+        double minBase = lowerRuleCurve[firstHourOfTheWeek];
+        double maxBase = upperRuleCurve[firstHourOfTheWeek];
+
+        for (unsigned int hour = firstHourOfTheWeek + cycleDuration;
+                hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
+                hour += cycleDuration)
+        {
+            double minCycle = lowerRuleCurve[hour];
+            double maxCycle = upperRuleCurve[hour];
+
+            if (maxCycle < minBase || minCycle > maxBase)
+            {
+                logs.warning() << "Error at line: " << hour + 1 << " for sts series upper"
+                    << " or lower rule curves, values at the start of the cycle are outside of" <<
+                    " those values";
+
+                return false;
+            }
+
+            // reduce the interval if necessary
+            minBase = std::max(minBase, minCycle);
+            maxBase = std::min(maxBase, maxCycle);
+        }
+
+    }
+    return true;
+}
+
 } // namespace Antares::Data::ShortTermStorage

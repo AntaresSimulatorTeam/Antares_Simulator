@@ -136,6 +136,7 @@ Area::~Area()
 bool Area::checkWeeklyData(uint firstHourOfTheWeek) const
 {
     // TODO checks on wind/solar/thermal/short-term storage/etc.
+    shortTermStorage.validateCycle(firstHourOfTheWeek);
     logs.notice() << "checkWeekData " << firstHourOfTheWeek;
     return true;
 }
