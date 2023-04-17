@@ -379,7 +379,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         }
     }
 
-    template<class VCardType>
     static bool setClusterCaption(SurveyResults& results, int fileLevel, uint idx)
     {
         assert(results.data.area && "Area is NULL");
@@ -398,8 +397,6 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
             logs.error() << "Inconsistent fileLevel detected";
             return false;
         }
-
-        results.variableUnit = VCardType::Unit();
 
         if (thermal_details)
         {
@@ -434,9 +431,11 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             for (uint i = 0; i != container.size(); ++i)
             {
-                res = setClusterCaption<VCardType>(results, fileLevel, i);
+                res = setClusterCaption(results, fileLevel, i);
                 if (!res)
                     return;
+                results.variableUnit = VCardType::Unit();
+
                 container[i].template buildSurveyReport<ResultsT, VCardType>(
                   results, container[i], dataLevel, fileLevel, precision);
             }
