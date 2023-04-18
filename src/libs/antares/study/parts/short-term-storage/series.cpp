@@ -189,13 +189,14 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
         double sumInjection = 0.0;
         double sumWithdrawal = 0.0;
 
+        unsigned int calendarHour;
         // sum until end of cycle or end of week
         for (unsigned int hourInCycle = 0;
                 hourInCycle < cycleDuration
                     && hourInCycle + firstHourOfTheCycle < Antares::Constants::nbHoursInAWeek;
                 hourInCycle++)
         {
-            unsigned int calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
+            calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
 
             sumInflows += inflows[calendarHour];
             sumInjection += maxInjectionModulation[calendarHour];
@@ -204,7 +205,7 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
 
         if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
         {
-            logs.warning() << "Error at week: " << firstHourOfTheWeek + 1 << " for short term "
+            logs.warning() << "Error at end of cycle: " << calendarHour + 1 << " for short term "
                 "storage inflows, sums at cycle timesteps are wrong";
 
             return false;

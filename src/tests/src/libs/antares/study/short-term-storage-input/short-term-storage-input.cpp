@@ -283,7 +283,7 @@ BOOST_AUTO_TEST_CASE(check_series_lower_curve)
 
     series.lowerRuleCurve[120] = 0.6;
 
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(0.5), 20, 100, 2000)); */
+    BOOST_CHECK(!series.validateCycle(100, std::optional<double>(0.5), 20));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_upper_curve)
@@ -293,21 +293,10 @@ BOOST_AUTO_TEST_CASE(check_series_upper_curve)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
     //624 is third week first cycle (100 + 168*3 + 20)
-    series.upperRuleCurve[624] = 0.2;
+    series.upperRuleCurve[190] = 0.2;
 
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(0.5), 20, 100, 2000)); */
-}
+    BOOST_CHECK(!series.validateCycle(100, std::optional<double>(0.5), 45));
 
-BOOST_AUTO_TEST_CASE(check_series_upper_curve_backward)
-{
-    createFileSeries(0.5, 8760);
-
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
-    //504 is 13th fourth cycle (100 + 168*13 + 20*4)
-    series.upperRuleCurve[504] = 0.2;
-
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(0.5), 20, 7000, 2000)); */
 }
 
 BOOST_AUTO_TEST_CASE(check_series_interval_lower)
@@ -319,7 +308,7 @@ BOOST_AUTO_TEST_CASE(check_series_interval_lower)
 
     series.lowerRuleCurve[120] = 0.6;
 
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(), 20, 100, 2000)); */
+    BOOST_CHECK(!series.validateCycle(100, std::optional<double>(), 20));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_interval_upper)
@@ -329,21 +318,9 @@ BOOST_AUTO_TEST_CASE(check_series_interval_upper)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
-    series.upperRuleCurve[624] = 0.2;
+    series.upperRuleCurve[190] = 0.2;
 
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(), 20, 100, 2000)); */
-}
-
-BOOST_AUTO_TEST_CASE(check_series_interval_upper_backward)
-{
-    createFileSeries(0.4, 8760);
-
-    BOOST_CHECK(series.loadFromFolder(folder));
-    BOOST_CHECK(series.validate());
-
-    series.upperRuleCurve[504] = 0.2;
-
-    /* BOOST_CHECK(!series.checkInitialLevelBetweenBounds(true, std::optional<double>(), 20, 7000, 2000)); */
+    BOOST_CHECK(!series.validateCycle(100, std::optional<double>(), 30));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_good)
@@ -353,7 +330,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_good)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
-    /* BOOST_CHECK(series.validateInflowsSums(true, 20, 100, 500)); */
+    BOOST_CHECK(series.validateInflowsSums(100, 8));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_withdrawal)
@@ -365,7 +342,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_withdrawal)
 
     std::fill(series.maxWithdrawalModulation.begin(), series.maxWithdrawalModulation.end(), 0.3);
 
-    /* BOOST_CHECK(!series.validateInflowsSums(true, 20, 100, 500)); */
+    BOOST_CHECK(!series.validateInflowsSums(100, 27));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
@@ -377,7 +354,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
 
     std::fill(series.maxInjectionModulation.begin(), series.maxInjectionModulation.end(), 0.7);
 
-    /* BOOST_CHECK(!series.validateInflowsSums(true, 20, 100, 500)); */
+    BOOST_CHECK(!series.validateInflowsSums(100, 27));
 }
 
 BOOST_AUTO_TEST_SUITE_END()
