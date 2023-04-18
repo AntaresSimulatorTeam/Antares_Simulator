@@ -218,84 +218,6 @@ bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
     return true;
 }
 
-bool Series::checkInitialLevelBetweenBounds(bool simplexIsWeek, std::optional<double> initialLevel,
-        unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour) const
-{
-    // allows to loop on hours even if simulation starts in november and ends in january or later
-    // calendarHour is calculated with modulo to abstract the year and only use an hour index
-    if (simuFirstHour > simuLastHour)
-        simuLastHour += HOURS_PER_YEAR;
-
-    unsigned int optimizationRange = simplexIsWeek ? 168 : 24;
-
-    if (initialLevel.has_value())
-        return checkLevelValue(initialLevel.value(), cycleDuration, optimizationRange,
-                simuFirstHour, simuLastHour);
-    else
-        return checkLevelInterval(cycleDuration, optimizationRange, simuFirstHour, simuLastHour);
-}
-
-bool Series::checkLevelValue(double initialLevel, unsigned int cycleDuration,
-        unsigned int optimizationRange, unsigned int simuFirstHour, unsigned int simuLastHour) const
-{
-    // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
-            firstHourOfTheWeek += optimizationRange)
-    {
-        for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
-        {
-            unsigned int calendarHour = (firstHourOfTheWeek + cycleHour) % HOURS_PER_YEAR;
-
-            if (upperRuleCurve[calendarHour] < initialLevel ||
-                    lowerRuleCurve[calendarHour] > initialLevel)
-            {
-                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series " <<
-                    "upper or lower rule curves, initial level is not between those values";
-
-                return false;
-            }
-        }
-    }
-    return true;
-}
-
-bool Series::checkLevelInterval(unsigned int cycleDuration, unsigned int optimizationRange,
-        unsigned int simuFirstHour, unsigned int simuLastHour) const
-{
-    // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
-            firstHourOfTheWeek += optimizationRange)
-    {
-        unsigned int calendarWeekIndex = firstHourOfTheWeek % HOURS_PER_YEAR;
-
-        double minBase = lowerRuleCurve[calendarWeekIndex];
-        double maxBase = upperRuleCurve[calendarWeekIndex];
-
-        for (unsigned int cycleHour = 0 + cycleDuration; cycleHour < optimizationRange;
-                cycleHour += cycleDuration)
-        {
-            unsigned int calendarHour = calendarWeekIndex + cycleHour;
-
-            double minCycle = lowerRuleCurve[calendarHour];
-            double maxCycle = upperRuleCurve[calendarHour];
-
-            if (maxCycle < minBase || minCycle > maxBase)
-            {
-                logs.warning() << "Error at line: " << calendarHour + 1 << " for sts series upper"
-                    << " or lower rule curves, values at the start of the cycle are outside of" <<
-                    " those values";
-
-                return false;
-            }
-
-            // reduce the interval if necessary
-            minBase = std::max(minBase, minCycle);
-            maxBase = std::min(maxBase, maxCycle);
-        }
-    }
-    return true;
-}
-
 bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
         unsigned int cycleDuration) const
 {
@@ -316,32 +238,35 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
     }
     else
     {
-        double minBase = lowerRuleCurve[firstHourOfTheWeek];
-        double maxBase = upperRuleCurve[firstHourOfTheWeek];
-
-        for (unsigned int hour = firstHourOfTheWeek + cycleDuration;
-                hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
-                hour += cycleDuration)
+        auto bounds = getBoundsForInitialLevel(firstHourOfTheWeek, cycleDuration);
+        if (std::get<0>(bounds) > std::get<1>(bounds))
         {
-            double minCycle = lowerRuleCurve[hour];
-            double maxCycle = upperRuleCurve[hour];
-
-            if (maxCycle < minBase || minCycle > maxBase)
-            {
-                logs.warning() << "Error at line: " << hour + 1 << " for sts series upper"
-                    << " or lower rule curves, values at the start of the cycle are outside of" <<
-                    " those values";
+            logs.warning() << "Error starting line: " << firstHourOfTheWeek + 1 << " for sts "
+                "series upper or lower rule curves, values at the start of the cycle are outside of"
+                " those values";
 
                 return false;
-            }
-
-            // reduce the interval if necessary
-            minBase = std::max(minBase, minCycle);
-            maxBase = std::min(maxBase, maxCycle);
         }
-
     }
     return true;
+}
+
+std::tuple<double, double> Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
+        unsigned int cycleDuration) const
+{
+    double minCycle = lowerRuleCurve[firstHourOfTheWeek];
+    double maxCycle = upperRuleCurve[firstHourOfTheWeek];
+
+    for (unsigned int hour = firstHourOfTheWeek + cycleDuration;
+            hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
+            hour += cycleDuration)
+    {
+        // reduce the interval if necessary
+        minCycle = std::max(minCycle, lowerRuleCurve[hour]);
+        maxCycle = std::min(maxCycle, upperRuleCurve[hour]);
+    }
+
+    return std::make_tuple(minCycle, maxCycle);
 }
 
 } // namespace Antares::Data::ShortTermStorage

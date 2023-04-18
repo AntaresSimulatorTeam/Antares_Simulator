@@ -27,6 +27,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <tuple>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -39,13 +40,13 @@ public:
 
     // check if series values are valid
     bool validate() const;
-    bool checkInitialLevelBetweenBounds(bool simplexIsWeek, std::optional<double> level,
-            unsigned int cycleDuration, unsigned int simuFirstHour, unsigned int simuLastHour)
-            const;
     bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
             unsigned int simuFirstHour, unsigned int simuLastHour) const;
 
     bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
+            unsigned int cycleDuration) const;
+
+    std::tuple<double, double> getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
             unsigned int cycleDuration) const;
 
     std::vector<double> maxInjectionModulation;
@@ -62,10 +63,6 @@ private:
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
 
-    bool checkLevelValue(double level, unsigned int cycleDuration, unsigned int simuDuration,
-            unsigned int simuFirstHour, unsigned int simuLastHour) const;
-    bool checkLevelInterval(unsigned int cycleDuration, unsigned int simuDuration,
-            unsigned int simuFirstHour, unsigned int simuLastHour) const;
 };
 
 bool loadFile(const std::string& folder, std::vector<double>& vect);
