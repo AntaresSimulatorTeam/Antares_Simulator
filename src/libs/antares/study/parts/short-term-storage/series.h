@@ -40,8 +40,8 @@ public:
 
     // check if series values are valid
     bool validate() const;
-    bool validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
-            unsigned int simuFirstHour, unsigned int simuLastHour) const;
+
+    bool validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration) const;
 
     bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
             unsigned int cycleDuration) const;

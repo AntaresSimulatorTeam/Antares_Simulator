@@ -37,7 +37,6 @@
 namespace Antares::Data::ShortTermStorage
 {
 
-
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
@@ -180,47 +179,41 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }
 
-bool Series::validateInflowsSums(bool simplexIsWeek, unsigned int cycleDuration,
-        unsigned int simuFirstHour, unsigned int simuLastHour) const
+bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration) const
 {
-    // allows to loop on hours even if simulation starts in november and ends in january or later
-    // calendarHour is calculated with modulo to abstract the year and only use an hour index
-    if (simuFirstHour > simuLastHour)
-        simuLastHour += HOURS_PER_YEAR;
-
-    unsigned int optimizationRange = simplexIsWeek ? 168 : 24;
-
-    // loop on each week or day depending on simulation mode, then on cycles in it
-    for (unsigned int firstHourOfTheWeek = simuFirstHour; firstHourOfTheWeek < simuLastHour;
-            firstHourOfTheWeek += optimizationRange)
+    for (unsigned int cycleHour = 0; cycleHour < Antares::Constants::nbHoursInAWeek;
+            cycleHour += cycleDuration)
     {
-        for (unsigned int cycleHour = 0; cycleHour < optimizationRange; cycleHour += cycleDuration)
+        double sumInflows = 0.0;
+        double sumInjection = 0.0;
+        double sumWithdrawal = 0.0;
+
+        // sum until end of cycle or end of week
+        for (unsigned int i = 0;
+                i < cycleDuration && i + cycleHour < Antares::Constants::nbHoursInAWeek; i++)
         {
-            double sumInflows = 0.0;
-            double sumInjection = 0.0;
-            double sumWithdrawal = 0.0;
+            unsigned int calendarHour = firstHourOfTheWeek + cycleHour + i;
 
-            // sum until end of cycle or end of optimizationRange
-            for (unsigned int i = 0; i < cycleDuration && i + cycleHour < optimizationRange; i++)
-            {
-                unsigned int calendarHour = (firstHourOfTheWeek + cycleHour + i) % HOURS_PER_YEAR;
+            sumInflows += inflows[calendarHour];
+            sumInjection += maxInjectionModulation[calendarHour];
+            sumWithdrawal += maxWithdrawalModulation[calendarHour];
+        }
 
-                sumInflows += inflows[calendarHour];
-                sumInjection += maxInjectionModulation[calendarHour];
-                sumWithdrawal += maxWithdrawalModulation[calendarHour];
-            }
+        if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
+        {
+            logs.warning() << "Error at week: " << firstHourOfTheWeek + 1 << " for sts series "
+                "inflows, sums at cycle timesteps are wrong";
 
-            if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
-                return false;
+            return false;
         }
     }
-
     return true;
 }
 
 bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
         unsigned int cycleDuration) const
 {
+    // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())
     {
         for (unsigned int hour = firstHourOfTheWeek;

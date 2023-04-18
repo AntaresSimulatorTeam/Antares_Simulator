@@ -76,16 +76,16 @@ bool STStorageCluster::loadSeries(const std::string& folder) const
 bool STStorageCluster::validate(bool simplexIsWeek, unsigned int startHour, unsigned int endHour)
 {
     logs.debug() << "Validating properties and series for st storage: " << id;
-    return properties.validate(simplexIsWeek)
-        && series->validate()
-        && series->validateInflowsSums(simplexIsWeek, properties.storagecycle.value(),
-            startHour, endHour);
+    return properties.validate(simplexIsWeek) && series->validate();
 }
 
 bool STStorageCluster::validateCycle(unsigned int firstHourOfTheWeek) const
 {
+    logs.debug() << "Validating cycles in series for st storage: " << id;
+
     return series->validateCycle(firstHourOfTheWeek, properties.initialLevel,
-            properties.storagecycle.value());
+            properties.storagecycle.value())
+        && series->validateInflowsSums(firstHourOfTheWeek, properties.storagecycle.value());
 }
 
 } // namespace Antares::Data::ShortTermStorage
