@@ -36,13 +36,11 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-bool STStorageInput::validate(bool simplexIsWeek, unsigned int startHour, unsigned int endHour) const
 
+bool STStorageInput::validate(bool simplexIsWeek) const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(),
-            [&simplexIsWeek, &startHour, &endHour](auto& cluster) {
-        return cluster->validate(simplexIsWeek, startHour, endHour);
-    });
+            [&simplexIsWeek](auto& cluster) { return cluster->validate(simplexIsWeek); });
 }
 
 bool STStorageInput::validateCycle(unsigned int firstHourOfTheWeek) const

@@ -41,7 +41,7 @@ public:
 
     bool loadSeries(const std::string& folder) const;
 
-    bool validate(bool simplexIsWeek, unsigned int startHour, unsigned int endHour);
+    bool validate(bool simplexIsWeek);
     bool validateCycle(unsigned int firstHourOfTheWeek) const;
 
     std::string id;
