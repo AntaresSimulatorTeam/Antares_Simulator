@@ -181,18 +181,21 @@ bool Series::validateLowerRuleCurve() const
 
 bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration) const
 {
-    for (unsigned int cycleHour = 0; cycleHour < Antares::Constants::nbHoursInAWeek;
-            cycleHour += cycleDuration)
+    for (unsigned int firstHourOfTheCycle = 0;
+            firstHourOfTheCycle < Antares::Constants::nbHoursInAWeek;
+            firstHourOfTheCycle += cycleDuration)
     {
         double sumInflows = 0.0;
         double sumInjection = 0.0;
         double sumWithdrawal = 0.0;
 
         // sum until end of cycle or end of week
-        for (unsigned int i = 0;
-                i < cycleDuration && i + cycleHour < Antares::Constants::nbHoursInAWeek; i++)
+        for (unsigned int hourInCycle = 0;
+                hourInCycle < cycleDuration
+                    && hourInCycle + firstHourOfTheCycle < Antares::Constants::nbHoursInAWeek;
+                hourInCycle++)
         {
-            unsigned int calendarHour = firstHourOfTheWeek + cycleHour + i;
+            unsigned int calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
 
             sumInflows += inflows[calendarHour];
             sumInjection += maxInjectionModulation[calendarHour];
@@ -201,8 +204,8 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
 
         if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
         {
-            logs.warning() << "Error at week: " << firstHourOfTheWeek + 1 << " for sts series "
-                "inflows, sums at cycle timesteps are wrong";
+            logs.warning() << "Error at week: " << firstHourOfTheWeek + 1 << " for short term "
+                "storage inflows, sums at cycle timesteps are wrong";
 
             return false;
         }
@@ -220,10 +223,17 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
                 hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
                 hour += cycleDuration)
         {
-            if (upperRuleCurve[hour] < initialLevel || lowerRuleCurve[hour] > initialLevel)
+            if (upperRuleCurve[hour] < initialLevel)
             {
-                logs.warning() << "Error at line: " << hour + 1 << " for sts series upper or " <<
-                    "lower rule curves, initial level is not between those values";
+                logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
+                    "series upper rule curve, initial level is beyond value";
+
+                return false;
+            }
+            if ( lowerRuleCurve[hour] > initialLevel)
+            {
+                logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
+                    "lower rule curves, initial level is under value";
 
                 return false;
             }
@@ -232,11 +242,11 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
     else
     {
         auto bounds = getBoundsForInitialLevel(firstHourOfTheWeek, cycleDuration);
-        if (std::get<0>(bounds) > std::get<1>(bounds))
+        if (bounds.lower > bounds.upper)
         {
-            logs.warning() << "Error starting line: " << firstHourOfTheWeek + 1 << " for sts "
-                "series upper or lower rule curves, values at the start of the cycle are outside of"
-                " those values";
+            logs.warning() << "Error starting hour: " << firstHourOfTheWeek + 1 << " for short "
+                "term storage series upper or lower rule curves, values at the start of the "
+                "cycle are outside those values";
 
                 return false;
         }
@@ -244,13 +254,13 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
     return true;
 }
 
-std::tuple<double, double> Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
+Bounds Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
         unsigned int cycleDuration) const
 {
     double minCycle = lowerRuleCurve[firstHourOfTheWeek];
     double maxCycle = upperRuleCurve[firstHourOfTheWeek];
 
-    for (unsigned int hour = firstHourOfTheWeek + cycleDuration;
+    for (unsigned int hour = firstHourOfTheWeek;
             hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
             hour += cycleDuration)
     {
@@ -259,7 +269,7 @@ std::tuple<double, double> Series::getBoundsForInitialLevel(unsigned int firstHo
         maxCycle = std::min(maxCycle, upperRuleCurve[hour]);
     }
 
-    return std::make_tuple(minCycle, maxCycle);
+    return Bounds(minCycle, maxCycle);
 }
 
 } // namespace Antares::Data::ShortTermStorage

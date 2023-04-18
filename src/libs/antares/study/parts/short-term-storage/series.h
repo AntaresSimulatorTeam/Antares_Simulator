@@ -31,6 +31,15 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+
+class Bounds
+{
+public:
+    Bounds(double l, double u) : lower(l), upper(u) {}
+    double lower;
+    double upper;
+};
+
 class Series
 {
 public:
@@ -46,7 +55,7 @@ public:
     bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
             unsigned int cycleDuration) const;
 
-    std::tuple<double, double> getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
+    Bounds getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
             unsigned int cycleDuration) const;
 
     std::vector<double> maxInjectionModulation;
@@ -64,7 +73,6 @@ private:
     bool validateLowerRuleCurve() const;
 
 };
-
 bool loadFile(const std::string& folder, std::vector<double>& vect);
 
 } // namespace Antares::Data::ShortTermStorage
