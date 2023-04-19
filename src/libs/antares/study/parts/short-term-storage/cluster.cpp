@@ -79,7 +79,7 @@ bool STStorageCluster::validate(bool simplexIsWeek)
     return properties.validate(simplexIsWeek) && series->validate();
 }
 
-bool STStorageCluster::validateCycle(unsigned int firstHourOfTheWeek) const
+bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek) const
 {
     logs.debug() << "Validating cycles in series for st storage: " << id;
 

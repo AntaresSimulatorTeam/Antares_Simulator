@@ -47,7 +47,7 @@ bool STStorageInput::validateCycle(unsigned int firstHourOfTheWeek) const
 {
     return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(),
             [&firstHourOfTheWeek](auto& cluster) {
-                return cluster->validateCycle(firstHourOfTheWeek);
+                return cluster->validateWeeklyTimeseries(firstHourOfTheWeek);
     });
 }
 
