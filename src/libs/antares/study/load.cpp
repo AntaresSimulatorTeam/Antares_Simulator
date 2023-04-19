@@ -168,7 +168,8 @@ bool postCalendarLoadChecks(const AreaList& areas,
     for (uint weekIndex = 0; weekIndex < nbWeeks; weekIndex++)
     {
         areas.each(
-          [&](Data::Area& area) { success = area.checkWeeklyData(firstHourOfWeek) && success; });
+            [&firstHourOfWeek, &success] (const Data::Area& area)
+                { success = area.checkWeeklyData(firstHourOfWeek) && success; });
         firstHourOfWeek += nbHoursInAWeek;
     }
     return success;
