@@ -32,6 +32,7 @@
 
 namespace Antares::Data::ShortTermStorage
 {
+
 const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
   = {{"PSP_open", Group::PSP_open},
      {"PSP_closed", Group::PSP_closed},
@@ -71,17 +72,6 @@ unsigned int groupIndex(Group group)
 }
 
 template<class T>
-static bool valueForOptional(const IniFile::Property* property, std::optional<T>& out)
-{
-    if (double tmp; property->value.to<double>(tmp))
-    {
-        out = tmp;
-        return true;
-    }
-    return false;
-}
-
-template<class T>
 static bool checkMandatory(const std::string& name,
                            const std::optional<T>& property,
                            const std::string& label)
@@ -97,13 +87,13 @@ static bool checkMandatory(const std::string& name,
 bool Properties::loadKey(const IniFile::Property* p)
 {
     if (p->key == "injectionnominalcapacity")
-        return valueForOptional(p, this->injectionCapacity);
+        return p->value.to<std::optional<double>>(this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return valueForOptional(p, this->withdrawalCapacity);
+        return p->value.to<std::optional<double>>(this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return valueForOptional(p, this->capacity);
+        return p->value.to<std::optional<double>>(this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -112,14 +102,15 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "storagecycle")
-        return valueForOptional(p, this->storagecycle);
+        return p->value.to<std::optional<unsigned int>>(this->storagecycle);
 
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
             return true;
 
-        return valueForOptional(p, this->initialLevel);
+        return p->value.to<std::optional<double>>(this->initialLevel);
+
     }
 
     if (p->key == "group")
@@ -200,13 +191,13 @@ bool Properties::validate(bool simplexIsWeek)
         }
     }
 
-    auto checkSimplexAndCycle = [&](unsigned int maxValue) {
-        if (storagecycle.value() > maxValue || storagecycle.value() < 1)
+    auto checkSimplexAndCycle = [&](unsigned int nbHoursInOptim) {
+        if (storagecycle.value() > nbHoursInOptim || storagecycle.value() < 1)
         {
             logs.warning() << "simplex optimization range set to day: storagecycle for" <<
-                " cluster: " << name << " should be <= " << maxValue << " and >= 1";
-            logs.info() << "cycle duration set to " << maxValue;
-            storagecycle = maxValue;
+                " cluster: " << name << " should be <= " << nbHoursInOptim << " and >= 1";
+            logs.info() << "cycle duration set to " << nbHoursInOptim;
+            storagecycle = nbHoursInOptim;
         }
     };
 

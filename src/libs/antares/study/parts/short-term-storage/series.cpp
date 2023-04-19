@@ -181,8 +181,7 @@ bool Series::validateLowerRuleCurve() const
 
 bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration) const
 {
-    for (unsigned int firstHourOfTheCycle = 0;
-            firstHourOfTheCycle < Antares::Constants::nbHoursInAWeek;
+    for (unsigned int firstHourOfTheCycle = 0; firstHourOfTheCycle < Constants::nbHoursInAWeek;
             firstHourOfTheCycle += cycleDuration)
     {
         double sumInflows = 0.0;
@@ -193,7 +192,7 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
         // sum until end of cycle or end of week
         for (unsigned int hourInCycle = 0;
                 hourInCycle < cycleDuration
-                    && hourInCycle + firstHourOfTheCycle < Antares::Constants::nbHoursInAWeek;
+                    && hourInCycle + firstHourOfTheCycle < Constants::nbHoursInAWeek;
                 hourInCycle++)
         {
             calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
@@ -221,8 +220,7 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
     if (initialLevel.has_value())
     {
         for (unsigned int hour = firstHourOfTheWeek;
-                hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
-                hour += cycleDuration)
+                hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; hour += cycleDuration)
         {
             if (upperRuleCurve[hour] < initialLevel)
             {
@@ -258,19 +256,18 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
 Bounds Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
         unsigned int cycleDuration) const
 {
-    double minCycle = lowerRuleCurve[firstHourOfTheWeek];
-    double maxCycle = upperRuleCurve[firstHourOfTheWeek];
+    double maxLowerBound = lowerRuleCurve[firstHourOfTheWeek];
+    double minUpperBound = upperRuleCurve[firstHourOfTheWeek];
 
     for (unsigned int hour = firstHourOfTheWeek;
-            hour < firstHourOfTheWeek + Antares::Constants::nbHoursInAWeek;
-            hour += cycleDuration)
+            hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; hour += cycleDuration)
     {
         // reduce the interval if necessary
-        minCycle = std::max(minCycle, lowerRuleCurve[hour]);
-        maxCycle = std::min(maxCycle, upperRuleCurve[hour]);
+        maxLowerBound = std::max(maxLowerBound, lowerRuleCurve[hour]);
+        minUpperBound = std::min(minUpperBound, upperRuleCurve[hour]);
     }
 
-    return Bounds(minCycle, maxCycle);
+    return Bounds(maxLowerBound, minUpperBound);
 }
 
 } // namespace Antares::Data::ShortTermStorage

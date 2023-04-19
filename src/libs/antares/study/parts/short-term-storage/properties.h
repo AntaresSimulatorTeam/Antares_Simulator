@@ -54,23 +54,24 @@ class Properties
 public:
     bool validate(bool simplexIsWeek);
     bool loadKey(const IniFile::Property* p);
-    // Not optional   Injection nominal capacity, >= 0
+    // Mandatory   Injection nominal capacity, >= 0
     std::optional<double> injectionCapacity;
-    // Not optional   Withdrawal nominal capacity, >= 0
+    // Mandatory   Withdrawal nominal capacity, >= 0
     std::optional<double> withdrawalCapacity;
-    // Not optional   Reservoir capacity in MWh, >= 0
+    // Mandatory   Reservoir capacity in MWh, >= 0
     std::optional<double> capacity;
     // Initial level, between 0 and 1
     std::optional<double> initialLevel;
     // Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
-    // Not optional   Cycle duration, 1 <= storagecycle <= 168
+    // Mandatory   Cycle duration, 1 <= storagecycle <= 168
     std::optional<unsigned int> storagecycle;
     // Used to sort outputs
     Group group = Group::Other1;
     // cluster name
     std::string name;
 
+private:
     static const std::map<std::string, enum Group> ST_STORAGE_PROPERTY_GROUP_ENUM;
 };
 } // namespace Antares::Data::ShortTermStorage
