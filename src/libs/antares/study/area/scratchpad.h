@@ -86,10 +86,6 @@ public:
     //	else pumpHasMod = false
     bool pumpHasMod;
 
-    //! Spinning reserve
-    // This variable is initialized once at the begining of the simulation
-    double spinningReserve[HOURS_PER_YEAR];
-
     //! Sum of all 'must-run' clusters
     // This variable is initialized every MC-year
     double mustrunSum[HOURS_PER_YEAR];
