@@ -161,15 +161,15 @@ bool postCalendarLoadChecks(const AreaList& areas,
                             const Date::Calendar& calendar)
 {
     // TODO de-duplicate this loop from economy.cpp / adequacy.cpp
-    const uint firstHour = calendar.days[parameters.simulationDays.first].hours.first;
+    const uint firstHourOfSimu = calendar.days[parameters.simulationDays.first].hours.first;
     const uint nbWeeks = parameters.simulationDays.numberOfWeeks();
-    uint hourInTheYear = firstHour;
+    uint firstHourOfWeek = firstHourOfSimu;
     bool success = true;
     for (uint weekIndex = 0; weekIndex < nbWeeks; weekIndex++)
     {
         areas.each(
-          [&](Data::Area& area) { success = area.checkWeeklyData(hourInTheYear) && success; });
-        hourInTheYear += nbHoursInAWeek;
+          [&](Data::Area& area) { success = area.checkWeeklyData(firstHourOfWeek) && success; });
+        firstHourOfWeek += nbHoursInAWeek;
     }
     return success;
 }
