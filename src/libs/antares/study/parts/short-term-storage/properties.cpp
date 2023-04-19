@@ -32,7 +32,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 const std::map<std::string, enum Group> Properties::ST_STORAGE_PROPERTY_GROUP_ENUM
   = {{"PSP_open", Group::PSP_open},
      {"PSP_closed", Group::PSP_closed},
@@ -72,6 +71,17 @@ unsigned int groupIndex(Group group)
 }
 
 template<class T>
+static bool valueForOptional(const IniFile::Property* property, std::optional<T>& out)
+{
+    if (double tmp; property->value.to<double>(tmp))
+    {
+        out = tmp;
+        return true;
+    }
+    return false;
+}
+
+template<class T>
 static bool checkMandatory(const std::string& name,
                            const std::optional<T>& property,
                            const std::string& label)
@@ -87,13 +97,13 @@ static bool checkMandatory(const std::string& name,
 bool Properties::loadKey(const IniFile::Property* p)
 {
     if (p->key == "injectionnominalcapacity")
-        return p->value.to<std::optional<double>>(this->injectionCapacity);
+        return valueForOptional(p, this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return p->value.to<std::optional<double>>(this->withdrawalCapacity);
+        return valueForOptional(p, this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return p->value.to<std::optional<double>>(this->capacity);
+        return valueForOptional(p, this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -102,15 +112,14 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "storagecycle")
-        return p->value.to<std::optional<unsigned int>>(this->storagecycle);
+        return valueForOptional(p, this->storagecycle);
 
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
             return true;
 
-        return p->value.to<std::optional<double>>(this->initialLevel);
-
+        return valueForOptional(p, this->initialLevel);
     }
 
     if (p->key == "group")

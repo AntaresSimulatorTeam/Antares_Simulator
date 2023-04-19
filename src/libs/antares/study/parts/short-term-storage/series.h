@@ -50,7 +50,8 @@ public:
     // check if series values are valid
     bool validate() const;
 
-    bool validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration) const;
+    bool validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
+            double capacity) const;
 
     bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
             unsigned int cycleDuration) const;
