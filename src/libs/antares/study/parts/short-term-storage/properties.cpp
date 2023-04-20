@@ -86,29 +86,29 @@ static bool checkMandatory(const std::string& name,
 bool Properties::loadKey(const IniFile::Property* p)
 {
     if (p->key == "injectionnominalcapacity")
-        return p->value.to<std::optional<double>>(this->injectionCapacity);
+        return p->value.to(this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return p->value.to<std::optional<double>>(this->withdrawalCapacity);
+        return p->value.to(this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return p->value.to<std::optional<double>>(this->capacity);
+        return p->value.to(this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
 
     if (p->key == "name")
-        return p->value.to<std::string>(this->name);
+        return p->value.to(this->name);
 
     if (p->key == "storagecycle")
-        return p->value.to<std::optional<unsigned int>>(this->storagecycle);
+        return p->value.to(this->storagecycle);
 
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
             return true;
 
-        return p->value.to<std::optional<double>>(this->initialLevel);
+        return p->value.to(this->initialLevel);
     }
 
     if (p->key == "group")
