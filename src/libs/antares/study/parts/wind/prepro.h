@@ -60,7 +60,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -84,12 +84,8 @@ public:
     */
     void resetToDefault();
 
-public:
     //! XCast
     Data::XCast xcast;
-
-private:
-    bool internalLoadFormatBefore33(Study& study, const AnyString& folder);
 
 }; // Prepro
 

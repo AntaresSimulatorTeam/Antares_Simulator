@@ -76,37 +76,6 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
     return false;
 }
 
-static bool LoadPreproThermal350(Study& study, Matrix<>& data, const AnyString& folder)
-{
-    // very old code for loading thermal ts-generator data for Antares <3.5
-    // resize the matrix
-    data.resize(PreproThermal::thermalPreproMax, DAYS_PER_YEAR, true);
-
-    String buffer;
-    double* tmp = new double[DAYS_PER_YEAR];
-    bool ret = true;
-
-    buffer.clear() << folder << SEP << "fo-duration." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::foDuration, tmp);
-
-    buffer.clear() << folder << SEP << "po-duration." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::poDuration, tmp);
-
-    buffer.clear() << folder << SEP << "fo-rate." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::foRate, tmp);
-
-    buffer.clear() << folder << SEP << "po-rate." << study.inputExtension;
-    ret = Array1DLoadFromFile(buffer.c_str(), tmp, DAYS_PER_YEAR) and ret;
-    data.pasteToColumn(PreproThermal::poRate, tmp);
-
-    // release
-    delete[] tmp;
-    return ret;
-}
-
 bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
@@ -118,87 +87,31 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
     auto parentArea = cluster->parentArea;
 
-    if (study.header.version < 350)
+    buffer.clear() << folder << SEP << "data.txt";
+
+    // standard loading
+    ret = data.loadFromCSVFile(
+            buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          and ret;
+    // fuelCost loading
+    buffer.clear() << folder << SEP << "fuelCost.txt";
+    if (IO::File::Exists(buffer))
     {
-        ret = LoadPreproThermal350(study, data, folder) and ret;
+        ret = fuelcost.loadFromCSVFile(
+                buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
+              and ret;
+        if (study.usedByTheSolver && study.parameters.derated)
+            fuelcost.averageTimeseries();
     }
-    else
+    // CO2Cost loading
+    buffer.clear() << folder << SEP << "CO2Cost.txt";
+    if (IO::File::Exists(buffer))
     {
-        buffer.clear() << folder << SEP << "data.txt";
-
-        if (study.header.version < 440)
-        {
-            // temporary matrix
-            Matrix<> tmp;
-            // reset
-            data.reset(thermalPreproMax, DAYS_PER_YEAR, true);
-
-            enum
-            {
-                flags = Matrix<>::optFixedSize | Matrix<>::optImmediate,
-            };
-
-            if (tmp.loadFromCSVFile(buffer, 4, DAYS_PER_YEAR, flags, &study.dataBuffer))
-            {
-                for (uint x = 0; x != 4; ++x)
-                    data.pasteToColumn(x, tmp.column(x));
-
-                // Reset NPO max to cluster size
-                auto& npomax = data[npoMax];
-                for (uint y = 0; y != data.height; ++y)
-                    npomax[y] = cluster->unitCount;
-            }
-            else
-                ret = false;
-            // the structure must be marked as modified
-            data.markAsModified();
-        }
-        else
-        {
-            // standard loading
-            ret = data.loadFromCSVFile(buffer,
-                                       thermalPreproMax,
-                                       DAYS_PER_YEAR,
-                                       Matrix<>::optFixedSize,
-                                       &study.dataBuffer)
-                  and ret;
-
-            buffer.clear() << folder << SEP << "fuelCost.txt";
-            if (IO::File::Exists(buffer))
-            {
-                ret = fuelcost.loadFromCSVFile(buffer,
-                                        1,
-                                        HOURS_PER_YEAR,
-                                        Matrix<>::optImmediate,
-                                        &study.dataBuffer)
-                    and ret;
-                if (study.usedByTheSolver && study.parameters.derated)
-                    fuelcost.averageTimeseries();
-            }
-            
-            buffer.clear() << folder << SEP << "CO2Cost.txt";
-            if(IO::File::Exists(buffer))
-            {
-                ret = co2cost.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, 
-                                    Matrix<>::optImmediate, &study.dataBuffer) 
-                                    and ret;
-                if (study.usedByTheSolver && study.parameters.derated)
-                    co2cost.averageTimeseries();                  
-            }
-        }
-    }
-
-    if (study.header.version < 390)
-    {
-        data.forceReload(true);
-        auto& colFoDuration = data[foDuration];
-        auto& colPoDuration = data[poDuration];
-        for (uint i = 0; i != DAYS_PER_YEAR; ++i)
-        {
-            colFoDuration[i] = Math::Round(colFoDuration[i]);
-            colPoDuration[i] = Math::Round(colPoDuration[i]);
-        }
-        data.markAsModified();
+        ret = co2cost.loadFromCSVFile(
+                buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
+              and ret;
+        if (study.usedByTheSolver && study.parameters.derated)
+            co2cost.averageTimeseries();
     }
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);

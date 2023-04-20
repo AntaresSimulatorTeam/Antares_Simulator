@@ -238,7 +238,6 @@ static void PreflightVersion20_interco(PathList& p, const Area* area, StringT& b
 bool PreflightVersion20(StudyCleaningInfos* infos)
 {
     auto* study = new Study();
-    study->inputExtension = "txt";
     study->relocate(infos->folder);
 
     PathList& e = infos->exclude;

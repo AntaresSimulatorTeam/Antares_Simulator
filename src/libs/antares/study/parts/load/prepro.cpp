@@ -45,14 +45,9 @@ Prepro::~Prepro()
 {
 }
 
-bool Prepro::loadFromFolder(Study& study, const AnyString& folder)
+bool Prepro::loadFromFolder(const AnyString& folder)
 {
-    if (study.header.version <= 320)
-    {
-        xcast.resetToDefaultValues();
-        return true;
-    }
-    return xcast.loadFromFolder(study, folder);
+    return xcast.loadFromFolder(folder);
 }
 
 bool Prepro::saveToFolder(const AnyString& folder) const

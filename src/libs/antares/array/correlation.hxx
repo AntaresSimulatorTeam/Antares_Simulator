@@ -49,11 +49,6 @@ inline Correlation::Mode Correlation::mode() const
     return pMode;
 }
 
-inline bool Correlation::loadFromINI(Study& study, const IniFile& ini, bool warnings, int version)
-{
-    return internalLoadFromINI(study, ini, warnings, version);
-}
-
 template<class StringT>
 inline void Correlation::set(Matrix<>& m, const Area& from, const Area& to, const StringT& value)
 {

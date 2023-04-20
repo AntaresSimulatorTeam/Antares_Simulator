@@ -531,73 +531,46 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
         if (p->key.empty())
             continue;
 
-        if (env.version > 310)
+        if (p->key == "name")
         {
-            if (p->key == "name")
-            {
-                pName = p->value;
-                continue;
-            }
-            if (p->key == "id")
-            {
-                pID = p->value;
-                pID.toLower(); // force the lowercase
-                continue;
-            }
-            if (p->key == "enabled")
-            {
-                pEnabled = p->value.to<bool>();
-                continue;
-            }
-            if (p->key == "type")
-            {
-                pType = BindingConstraint::StringToType(p->value);
-                continue;
-            }
-            if (p->key == "operator")
-            {
-                pOperator = BindingConstraint::StringToOperator(p->value);
-                continue;
-            }
-            if (p->key == "filter-year-by-year")
-            {
-                pFilterYearByYear = stringIntoDatePrecision(p->value);
-                continue;
-            }
-            if (p->key == "filter-synthesis")
-            {
-                pFilterSynthesis = stringIntoDatePrecision(p->value);
-                continue;
-            }
-            if (p->key == "comments")
-            {
-                pComments = p->value;
-                continue;
-            }
+            pName = p->value;
+            continue;
         }
-        else
+        if (p->key == "id")
         {
-            // All versions <= 3.1
-            if (p->key == "name")
-            {
-                // For studies <=3.1, the ID is the name of the binding constraint but
-                // in lowercase
-                pName = p->value;
-                pID = pName;
-                pID.toLower();
-                continue;
-            }
-            if (p->key == "type")
-            {
-                // For all studies <3.2, the field `type` is invalid, but it must be present
-                // For compatibility, we have to force its value to `typeHourly`, since it
-                // was the only type of binding constraint available for those studies.
-                pType = typeHourly;
-                // Only one operator was available for those studies. Since the field `type`
-                // must be present, we can assign the operator here.
-                pOperator = opLess;
-                continue;
-            }
+            pID = p->value;
+            pID.toLower(); // force the lowercase
+            continue;
+        }
+        if (p->key == "enabled")
+        {
+            pEnabled = p->value.to<bool>();
+            continue;
+        }
+        if (p->key == "type")
+        {
+            pType = BindingConstraint::StringToType(p->value);
+            continue;
+        }
+        if (p->key == "operator")
+        {
+            pOperator = BindingConstraint::StringToOperator(p->value);
+            continue;
+        }
+        if (p->key == "filter-year-by-year")
+        {
+            pFilterYearByYear = stringIntoDatePrecision(p->value);
+            continue;
+        }
+        if (p->key == "filter-synthesis")
+        {
+            pFilterSynthesis = stringIntoDatePrecision(p->value);
+            continue;
+        }
+        if (p->key == "comments")
+        {
+            pComments = p->value;
+            continue;
         }
 
         // It may be a link
@@ -767,51 +740,27 @@ bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env)
     if (pLinkWeights.empty() && pClusterWeights.empty())
         pEnabled = false;
 
-    if (env.version > 310)
+    // Values
+    env.buffer.clear() << env.folder << SEP << pID << ".txt";
+    if (pValues.loadFromCSVFile(env.buffer,
+                columnMax,
+                (pType == typeHourly) ? 8784 : 366,
+                Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                &env.matrixBuffer))
     {
-        // Values
-        env.buffer.clear() << env.folder << SEP << pID << ".txt";
-        if (pValues.loadFromCSVFile(env.buffer,
-                                    columnMax,
-                                    (pType == typeHourly) ? 8784 : 366,
-                                    Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                    &env.matrixBuffer))
+        if (pComments.empty())
         {
-            if (pComments.empty())
-            {
-                logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
-                            << OperatorToShortCString(pOperator) << ')';
-            }
-            else
-            {
-                logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
-                            << OperatorToShortCString(pOperator) << ") " << pComments;
-            }
-            return true;
-        }
-    }
-    else // studies <= 3.1
-    {
-        // For studies <=3.1, only a mere vector was available for the second member
-        // Resetting the matrix
-        pValues.reset(columnMax, 8784, true);
-        env.buffer.clear() << env.folder << SEP << "boundvalues_" << pID
-                           << (env.version < 310 ? ".csv" : ".txt");
-        ::Matrix<> m;
-        if (m.loadFromCSVFile(env.buffer,
-                              1,
-                              8760,
-                              Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                              &env.matrixBuffer))
-        {
-            // Copying values
-            const uint h = (m.height <= 8760) ? m.height : 8760;
-            (void)memcpy(pValues.entry[columnInferior], m.entry[0], sizeof(double) * h);
             logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
-                        << OperatorToShortCString(pOperator) << ')';
-            return true;
+                << OperatorToShortCString(pOperator) << ')';
         }
+        else
+        {
+            logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
+                << OperatorToShortCString(pOperator) << ") " << pComments;
+        }
+        return true;
     }
+
     return false;
 }
 
@@ -919,7 +868,7 @@ bool BindConstList::loadFromFolder(Study& study,
         }
     }
 
-    auto* e = new BindingConstraint::EnvForLoading(study.areas, study.header.version);
+    auto* e = new BindingConstraint::EnvForLoading(study.areas);
     auto& env = *e;
     env.folder = folder;
 
