@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_good)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
-    BOOST_CHECK(series.validateInflowsForWeek(100, 8, 1));
+    BOOST_CHECK(series.validateInflowsForWeek(100, 8, 1, 1));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_withdrawal)
@@ -341,7 +341,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_withdrawal)
 
     std::fill(series.maxWithdrawalModulation.begin(), series.maxWithdrawalModulation.end(), 0.3);
 
-    BOOST_CHECK(!series.validateInflowsForWeek(100, 27, 1));
+    BOOST_CHECK(!series.validateInflowsForWeek(100, 27, 1, 1));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
@@ -353,7 +353,7 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
 
     std::fill(series.maxInjectionModulation.begin(), series.maxInjectionModulation.end(), 0.7);
 
-    BOOST_CHECK(!series.validateInflowsForWeek(100, 27, 1));
+    BOOST_CHECK(!series.validateInflowsForWeek(100, 27, 1, 1));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

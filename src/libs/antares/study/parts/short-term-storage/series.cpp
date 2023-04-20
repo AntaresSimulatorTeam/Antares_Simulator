@@ -180,7 +180,7 @@ bool Series::validateLowerRuleCurve() const
 }
 
 bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-        double capacity) const
+        double injectionCapacity, double withdrawalCapacity) const
 {
     for (unsigned int firstHourOfTheCycle = 0; firstHourOfTheCycle < Constants::nbHoursInAWeek;
             firstHourOfTheCycle += cycleDuration)
@@ -200,8 +200,8 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
 
             sumInflows += inflows[calendarHour];
             // multiply by capacity to have the same unit as inflows: MWh
-            sumInjection += maxInjectionModulation[calendarHour] * capacity;
-            sumWithdrawal += maxWithdrawalModulation[calendarHour] * capacity;
+            sumInjection += maxInjectionModulation[calendarHour] * injectionCapacity;
+            sumWithdrawal += maxWithdrawalModulation[calendarHour] * withdrawalCapacity;
         }
 
         if (sumInjection > sumInflows || sumWithdrawal < sumInflows )

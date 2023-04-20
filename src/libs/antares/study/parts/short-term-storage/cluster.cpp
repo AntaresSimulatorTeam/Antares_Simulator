@@ -86,7 +86,7 @@ bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek)
     return series->validateCycleForWeek(firstHourOfTheWeek, properties.initialLevel,
             properties.storagecycle.value())
         && series->validateInflowsForWeek(firstHourOfTheWeek, properties.storagecycle.value(),
-            properties.capacity.value());
+            properties.injectionCapacity.value(), properties.withdrawalCapacity.value());
 }
 
 } // namespace Antares::Data::ShortTermStorage

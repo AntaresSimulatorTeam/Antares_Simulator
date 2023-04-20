@@ -27,7 +27,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <tuple>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -51,7 +50,7 @@ public:
     bool validate() const;
 
     bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-            double capacity) const;
+            double injectionCapacity, double withdrawalCapacity) const;
 
     bool validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
             unsigned int cycleDuration) const;
