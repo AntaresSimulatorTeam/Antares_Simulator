@@ -568,9 +568,12 @@ public:
     static bool Perform(const StringT& s, std::optional<T>& out)
     {
         T tmp;
-        bool ret = Into<T>::Perform(s, tmp);
-        out = tmp;
-        return ret;
+        if (Into<T>::Perform(s, tmp))
+        {
+            out = tmp;
+            return true;
+        }
+        return false;
     }
 };
 
