@@ -179,11 +179,13 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }
 
-bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-        double capacity) const
+bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, 
+                                 unsigned int cycleDuration,
+                                 double capacity) const
 {
-    for (unsigned int firstHourOfTheCycle = 0; firstHourOfTheCycle < Constants::nbHoursInAWeek;
-            firstHourOfTheCycle += cycleDuration)
+    for (unsigned int firstHourOfTheCycle = 0; 
+         firstHourOfTheCycle < Constants::nbHoursInAWeek;
+         firstHourOfTheCycle += cycleDuration)
     {
         double sumInflows = 0.0;
         double sumInjection = 0.0;
@@ -192,9 +194,8 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
         unsigned int calendarHour = 0;
         // sum until end of cycle or end of week
         for (unsigned int hourInCycle = 0;
-                hourInCycle < cycleDuration
-                    && hourInCycle + firstHourOfTheCycle < Constants::nbHoursInAWeek;
-                hourInCycle++)
+             hourInCycle < cycleDuration && hourInCycle + firstHourOfTheCycle < Constants::nbHoursInAWeek;
+             hourInCycle++)
         {
             calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
 
@@ -215,14 +216,16 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int c
     return true;
 }
 
-bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
-        unsigned int cycleDuration) const
+bool Series::validateCycle(unsigned int firstHourOfTheWeek, 
+                           std::optional<double> initialLevel,
+                           unsigned int cycleDuration) const
 {
     // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())
     {
         for (unsigned int hour = firstHourOfTheWeek;
-                hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; hour += cycleDuration)
+             hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; 
+             hour += cycleDuration)
         {
             if (upperRuleCurve[hour] < initialLevel)
             {
@@ -231,7 +234,7 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
 
                 return false;
             }
-            if ( lowerRuleCurve[hour] > initialLevel)
+            if (lowerRuleCurve[hour] > initialLevel)
             {
                 logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
                     "lower rule curves, initial level is under value";
@@ -256,13 +259,14 @@ bool Series::validateCycle(unsigned int firstHourOfTheWeek, std::optional<double
 }
 
 Bounds Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
-        unsigned int cycleDuration) const
+                                        unsigned int cycleDuration) const
 {
     double maxLowerBound = lowerRuleCurve[firstHourOfTheWeek];
     double minUpperBound = upperRuleCurve[firstHourOfTheWeek];
 
     for (unsigned int hour = firstHourOfTheWeek;
-            hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; hour += cycleDuration)
+         hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; 
+         hour += cycleDuration)
     {
         // reduce the interval if necessary
         maxLowerBound = std::max(maxLowerBound, lowerRuleCurve[hour]);

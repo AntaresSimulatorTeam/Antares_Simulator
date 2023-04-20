@@ -11,6 +11,7 @@
 #pragma once
 #include <stdlib.h>
 #include <ctype.h>
+#include <optional>
 
 namespace Yuni
 {
@@ -389,7 +390,6 @@ YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(uint64, strtoull);
 YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(long, strtol);
 YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC(unsigned long, strtoul);
 #endif
-
 #undef YUNI_CORE_EXTENSION_ISTRING_TO_NUMERIC
 
 /*!
@@ -559,6 +559,21 @@ public:
         return 0.;
     }
 };
+
+template<class T>
+class Into<std::optional<T>> final
+{
+public:
+    template<class StringT>
+    static bool Perform(const StringT& s, std::optional<T>& out)
+    {
+        T tmp;
+        bool ret = Into<T>::Perform(s, tmp);
+        out = tmp;
+        return ret;
+    }
+};
+
 
 /*!
 ** \brief const void*

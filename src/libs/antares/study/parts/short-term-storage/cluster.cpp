@@ -83,10 +83,12 @@ bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek)
 {
     logs.debug() << "Validating cycles in series for st storage: " << id;
 
-    return series->validateCycle(firstHourOfTheWeek, properties.initialLevel,
-            properties.storagecycle.value())
-        && series->validateInflowsSums(firstHourOfTheWeek, properties.storagecycle.value(),
-            properties.capacity.value());
+    return series->validateCycle(firstHourOfTheWeek, 
+                                 properties.initialLevel,
+                                 properties.storagecycle.value()) &&
+           series->validateInflowsSums(firstHourOfTheWeek, 
+                                       properties.storagecycle.value(),
+                                       properties.capacity.value());
 }
 
 } // namespace Antares::Data::ShortTermStorage

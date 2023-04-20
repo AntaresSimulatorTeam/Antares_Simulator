@@ -71,17 +71,6 @@ unsigned int groupIndex(Group group)
 }
 
 template<class T>
-static bool valueForOptional(const IniFile::Property* property, std::optional<T>& out)
-{
-    if (double tmp; property->value.to<double>(tmp))
-    {
-        out = tmp;
-        return true;
-    }
-    return false;
-}
-
-template<class T>
 static bool checkMandatory(const std::string& name,
                            const std::optional<T>& property,
                            const std::string& label)
@@ -97,13 +86,13 @@ static bool checkMandatory(const std::string& name,
 bool Properties::loadKey(const IniFile::Property* p)
 {
     if (p->key == "injectionnominalcapacity")
-        return valueForOptional(p, this->injectionCapacity);
+        return p->value.to<std::optional<double>>(this->injectionCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return valueForOptional(p, this->withdrawalCapacity);
+        return p->value.to<std::optional<double>>(this->withdrawalCapacity);
 
     if (p->key == "reservoircapacity")
-        return valueForOptional(p, this->capacity);
+        return p->value.to<std::optional<double>>(this->capacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -112,14 +101,14 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<std::string>(this->name);
 
     if (p->key == "storagecycle")
-        return valueForOptional(p, this->storagecycle);
+        return p->value.to<std::optional<unsigned int>>(this->storagecycle);
 
     if (p->key == "initiallevel")
     {
         if (p->value == "optim")
             return true;
 
-        return valueForOptional(p, this->initialLevel);
+        return p->value.to<std::optional<double>>(this->initialLevel);
     }
 
     if (p->key == "group")

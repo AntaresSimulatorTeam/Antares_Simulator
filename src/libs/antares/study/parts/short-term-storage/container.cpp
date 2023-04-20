@@ -45,10 +45,10 @@ bool STStorageInput::validate(bool simplexIsWeek) const
 
 bool STStorageInput::validateCycle(unsigned int firstHourOfTheWeek) const
 {
-    return std::all_of(storagesByIndex.cbegin(), storagesByIndex.cend(),
-            [&firstHourOfTheWeek](auto& cluster) {
-                return cluster->validateWeeklyTimeseries(firstHourOfTheWeek);
-    });
+    return std::all_of(storagesByIndex.cbegin(), 
+                       storagesByIndex.cend(),
+                       [&firstHourOfTheWeek](auto& cluster) 
+                                {return cluster->validateWeeklyTimeseries(firstHourOfTheWeek);});
 }
 
 bool STStorageInput::createSTStorageClustersFromIniFile(const std::string& path)
