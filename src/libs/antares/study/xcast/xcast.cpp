@@ -40,21 +40,6 @@ namespace Antares
 {
 namespace Data
 {
-static void XCastNormalizeMuStrictlyLessThan24(Matrix<float>& data)
-{
-    data.forceReload(true); // load data if needed
-    bool modified = false;
-    for (uint i = 0; i != data.height; ++i)
-    {
-        if (data[XCast::dataCoeffMu][i] > 23.f)
-        {
-            data[XCast::dataCoeffMu][i] = 23.f;
-            modified = true;
-        }
-    }
-    if (modified)
-        data.markAsModified();
-}
 
 const char* XCast::TSTranslationUseToCString(TSTranslationUse use)
 {
@@ -184,7 +169,7 @@ void XCast::resetToDefaultValues()
     useTranslation = tsTranslationNone;
 }
 
-bool XCast::loadFromFolder(Study& study, const AnyString& folder)
+bool XCast::loadFromFolder(const AnyString& folder)
 {
     // reset
     distribution = dtBeta;
@@ -269,29 +254,9 @@ bool XCast::loadFromFolder(Study& study, const AnyString& folder)
     // Coefficients
     buffer.clear() << folder << SEP << "data.txt";
 
-    // Since 3.5, Beta' = 1 / Beta
-    if (study.header.version < 350 && distribution == dtGammaShapeA)
-    {
-        ret = data.loadFromCSVFile(buffer,
-                                   (uint)dataMax,
-                                   12,
-                                   Matrix<>::optFixedSize | Matrix<>::optImmediate,
-                                   &readBuffer)
-              && ret;
-        for (uint y = 0; y != data.height; ++y)
-            data[dataCoeffBeta][y] = 1.f / data[dataCoeffBeta][y];
-        data.markAsModified();
-    }
-    else
-    {
-        // Performing normal loading
-        ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
-              && ret;
-    }
-
-    // Before 4.3, mu could be falsy equal to 24
-    if (study.header.version < 430)
-        XCastNormalizeMuStrictlyLessThan24(data);
+    // Performing normal loading
+    ret = data.loadFromCSVFile(buffer, (uint)dataMax, 12, Matrix<>::optFixedSize, &readBuffer)
+        && ret;
 
     // K
     buffer.clear() << folder << SEP << "k.txt";

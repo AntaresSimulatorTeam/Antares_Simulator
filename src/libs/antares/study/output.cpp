@@ -97,7 +97,7 @@ Output::Output(const AnyString& folder) :
 bool Output::valid() const
 {
     // The outputs as we know them was first introduced in Antares 3.0
-    return ((uint)version >= 300) && ((uint)version <= (uint)Data::versionLatest);
+    return (uint)version <= (uint)Data::versionLatest;
 }
 
 bool Output::loadFromFolder(const AnyString& folder)
@@ -138,7 +138,7 @@ bool Output::loadFromFolder(const AnyString& folder)
             version = p->value.to<uint>();
 
             // Early checks about the version
-            if (version < 300 || version > (uint)Data::versionLatest)
+            if (version > (uint)Data::versionLatest)
             {
                 version = 0;
                 return false;

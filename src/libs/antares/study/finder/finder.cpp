@@ -66,8 +66,6 @@ protected:
         const Version versionFound = StudyTryToFindTheVersion(filename);
         switch (versionFound)
         {
-        case version1xx: // skipped
-            return IO::flowSkip;
         case versionFutur:
             return IO::flowSkip;
         case versionUnknown:
