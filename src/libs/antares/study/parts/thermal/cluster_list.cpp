@@ -49,6 +49,8 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
             cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
+        if (cluster.ecoInput)
+            cluster.ecoInput->estimateMemoryUsage(u);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
@@ -375,6 +377,8 @@ void ThermalClusterList::ensureDataPrepro()
         auto c = it->second;
         if (not c->prepro)
             c->prepro = new PreproThermal(c);
+        if (!c->ecoInput)
+            c->ecoInput = new EconomicInputData(c);
     }
 }
 
@@ -516,6 +520,12 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
             ret = c.prepro->saveToFolder(buffer) and ret;
         }
+        if (c.ecoInput)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+            ret = c.ecoInput->saveToFolder(buffer) and ret;
+        }
     });
     return ret;
 }
@@ -549,6 +559,14 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                 result = c.prepro->normalizeAndCheckNPO();
             }
 
+            ret = result and ret;
+        }
+        if (c.ecoInput)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+
+            bool result = c.ecoInput->loadFromFolder(study, buffer);
             c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
 
             ret = result and ret;

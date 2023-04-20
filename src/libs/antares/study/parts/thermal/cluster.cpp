@@ -148,6 +148,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  PthetaInf(HOURS_PER_YEAR, 0),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
+ ecoInput(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
@@ -195,6 +196,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  PthetaInf(HOURS_PER_YEAR, 0),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
+ ecoInput(nullptr),
  productionCost(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
@@ -208,6 +210,7 @@ Data::ThermalCluster::~ThermalCluster()
 {
     delete[] productionCost;
     delete prepro;
+    delete ecoInput;
     delete series;
 
     if (unitCountLastHour)
@@ -304,8 +307,11 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
+    if (!ecoInput)
+        ecoInput = new EconomicInputData(this->weak_from_this());
 
     prepro->copyFrom(*cluster.prepro);
+    ecoInput->copyFrom(*cluster.ecoInput);
     // timseries
 
     series->series = cluster.series->series;
@@ -418,6 +424,8 @@ bool Data::ThermalCluster::forceReload(bool reload) const
         ret = series->forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
+    if (ecoInput)
+        ret = ecoInput->forceReload(reload) and ret;
     return ret;
 }
 
@@ -428,6 +436,8 @@ void Data::ThermalCluster::markAsModified() const
         series->markAsModified();
     if (prepro)
         prepro->markAsModified();
+    if (ecoInput)
+        ecoInput->markAsModified();
 }
 
 void Data::ThermalCluster::calculationOfSpinning()
@@ -590,6 +600,9 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
+    if (!ecoInput)
+        ecoInput = new EconomicInputData(this->weak_from_this());
+    ecoInput->reset();
 }
 
 bool Data::ThermalCluster::integrityCheck()
@@ -746,6 +759,8 @@ uint64 ThermalCluster::memoryUsage() const
     uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
+    if (ecoInput)
+        amount += ecoInput->memoryUsage();
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

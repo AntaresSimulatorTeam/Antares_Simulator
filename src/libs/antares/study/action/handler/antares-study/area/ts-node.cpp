@@ -112,6 +112,7 @@ bool NodeTimeseries::performWL(Context& ctx)
         {
             ctx.cluster->series->series.reset(1, HOURS_PER_YEAR);
             ctx.cluster->prepro->reset();
+            ctx.cluster->ecoInput->reset();
         }
         break;
     default:
