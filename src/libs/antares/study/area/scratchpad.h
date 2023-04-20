@@ -86,10 +86,6 @@ public:
     //	else pumpHasMod = false
     bool pumpHasMod;
 
-    //! Spinning reserve
-    // This variable is initialized once at the begining of the simulation
-    double spinningReserve[HOURS_PER_YEAR];
-
     //! Sum of all 'must-run' clusters
     // This variable is initialized every MC-year
     double mustrunSum[HOURS_PER_YEAR];
@@ -111,19 +107,6 @@ public:
     ** running the hydro remix.
     */
     double dispatchableGenerationMargin[168];
-
-    /*!
-    ** \brief Temporary variables used to compute the min/max of ConsommationsAbattues
-    ** for the area
-    **
-    ** This value is only valid wthin OPT_InitialiserLesCoutsLineaire().
-    **
-    ** \see opt_gestion_des_couts_cas_linerais.cpp (Cout progressif
-    ** pour placer la defaillance a la pointe)
-    */
-    double consoMin;
-    double consoMax;
-
 }; // class AreaScratchpad
 
 } // namespace Data

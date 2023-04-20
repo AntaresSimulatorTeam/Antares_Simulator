@@ -36,6 +36,7 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
     problem.adequacyPatchRuntimeData->AdequacyFirstStep = true;
 
     AdqPatchParams adqPatchParams;
+    adqPatchParams.enabled = true;
     adqPatchParams.localMatching.setToZeroOutsideOutsideLinks = SetNTCOutsideToOutsideToZero;
     adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
 
