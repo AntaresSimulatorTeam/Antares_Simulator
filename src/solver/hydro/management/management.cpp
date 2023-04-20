@@ -268,11 +268,10 @@ void HydroManagement::checkMinGeneration(uint numSpace)
                   double totalWeekMingen = 0.0;
                   double totalWeekInflows = 0.0;
                   for (uint hour = calendar.weeks[week].hours.first;
-                       hour < calendar.weeks[week].hours.end;
+                       hour < calendar.weeks[week].hours.end && hour < HOURS_PER_YEAR;
                        ++hour)
                   {
-                      if (hour < HOURS_PER_YEAR)
-                          totalWeekMingen += srcmingen[hour];
+                      totalWeekMingen += srcmingen[hour];
                   }
 
                   for (uint day = calendar.weeks[week].daysYear.first;
