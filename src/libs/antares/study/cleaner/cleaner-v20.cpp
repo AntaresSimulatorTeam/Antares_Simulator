@@ -209,7 +209,7 @@ static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, cons
 }
 
 template<class StringT>
-static void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, StringT& buffer)
+void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, StringT& buffer)
 {
     auto end = area->links.end();
     for (auto i = area->links.begin(); i != end; ++i)
