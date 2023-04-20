@@ -81,7 +81,7 @@ bool StudyCleaningInfos::analyze()
     {
         if ((int)version <= (int)versionLatest)
         {
-            if (not PreflightVersion20(this))
+            if (not listOfFilesAnDirectoriesToKeep(this))
             {
                 logs.error() << "Aborting: an error has been encountered: " << folder;
                 return false;

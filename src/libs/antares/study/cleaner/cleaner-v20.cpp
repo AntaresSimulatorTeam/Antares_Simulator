@@ -42,7 +42,8 @@ namespace Data
 namespace // anonymous
 {
 template<class StringT>
-static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, StringT& buffer)
+static void listOfFilesAnDirectoriesToKeepForArea(PathList& e, PathList& p, const Area* area,
+        StringT& buffer)
 {
     // ID of the current area
     const AreaName& id = area->id;
@@ -208,7 +209,7 @@ static void PreflightVersion20_area(PathList& e, PathList& p, const Area* area, 
 }
 
 template<class StringT>
-static void PreflightVersion20_interco(PathList& p, const Area* area, StringT& buffer)
+static void listOfFilesAnDirectoriesToKeepForLinks(PathList& p, const Area* area, StringT& buffer)
 {
     auto end = area->links.end();
     for (auto i = area->links.begin(); i != end; ++i)
@@ -235,7 +236,7 @@ static void PreflightVersion20_interco(PathList& p, const Area* area, StringT& b
 
 } // anonymous namespace
 
-bool PreflightVersion20(StudyCleaningInfos* infos)
+bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos)
 {
     auto* study = new Study();
     study->relocate(infos->folder);
@@ -356,7 +357,7 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
             }
 
             // Exclude
-            PreflightVersion20_area(e, p, area, buffer);
+            listOfFilesAnDirectoriesToKeepForArea(e, p, area, buffer);
             // Clear the memory used by the thermal clusters of the area
             area->thermal.list.clear();
 
@@ -375,7 +376,7 @@ bool PreflightVersion20(StudyCleaningInfos* infos)
                 // restoring standard verbosity level
                 logs.verbosityLevel = Logs::Verbosity::Debug::level;
             }
-            PreflightVersion20_interco(p, area, buffer);
+            listOfFilesAnDirectoriesToKeepForLinks(p, area, buffer);
             area->clearAllLinks();
         }
     }
