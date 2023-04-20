@@ -482,22 +482,22 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
     uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     thermalEconomicTimeSeries.resize(tsCount, ThermalEconomicTimeSeries());
-    for (uint tsIndex = 1; tsIndex <= tsCount; ++tsIndex)
+    for (uint tsIndex = 0; tsIndex < tsCount; ++tsIndex)
     {
-        uint tsIndexFuel = std::min(fuelCostWidth, tsIndex);
-        uint tsIndexCo2 = std::min(co2CostWidth, tsIndex);
+        uint tsIndexFuel = std::min(fuelCostWidth - 1, tsIndex);
+        uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            thermalEconomicTimeSeries[tsIndex - 1].marketBidCostPerHourTs[hour]
-              = prepro->fuelcost[tsIndexFuel - 1][hour] * 360.0 / fuelEfficiency
-                + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2 - 1][hour]
+            thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour]
+              = prepro->fuelcost[tsIndexFuel][hour] * 360.0 / fuelEfficiency
+                + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2][hour]
                 + variableomcost;
-            thermalEconomicTimeSeries[tsIndex - 1].marginalCostPerHourTs[hour]
-              = thermalEconomicTimeSeries[tsIndex - 1].marketBidCostPerHourTs[hour];
+            thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
+              = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
             if (modulation.width > 0)
             {
-                thermalEconomicTimeSeries[tsIndex - 1].productionCostTs[hour]
-                  = thermalEconomicTimeSeries[tsIndex - 1].marginalCostPerHourTs[hour]
+                thermalEconomicTimeSeries[tsIndex].productionCostTs[hour]
+                  = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
                     * modulation[Data::thermalModulationCost][hour];
             }
         }
