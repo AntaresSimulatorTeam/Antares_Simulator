@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
-#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_H__
+#ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
+#define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_H__
 
 #include "cluster.h"
 #include "../../../array/matrix.h"
@@ -40,34 +40,15 @@ namespace Data
 /*!
 ** \brief Thermal
 */
-class PreproThermal
+class EconomicInputData
 {
-public:
-    enum
-    {
-        //! FO Duration (Forced outage Duration - Duree moyenne d'indisponibilite fortuite)
-        foDuration = 0,
-        //! PO Duration (Planned outage Duration - Duree moyenne d'indisponibilite programmee)
-        poDuration,
-        //! FO Rate (Forced outage Rate - Taux moyen d'indisponibilite fortuite)
-        foRate,
-        //! PO Rate (Planned outage Rate - Taux moyen d'indisponibilite programmee)
-        poRate,
-        //! NPO min (nombre minimal de groupes en maintenance)
-        npoMin,
-        //! NPO max (nombre maximal de groupes en maintenance)
-        npoMax,
-        // max
-        thermalPreproMax,
-    };
-
 public:
     //! \name Constructor
     //@{
     /*!
     ** \brief Default constructor
     */
-    explicit PreproThermal(std::weak_ptr<const ThermalCluster> cluster);
+    explicit EconomicInputData(std::weak_ptr<const ThermalCluster> cluster);
     //@}
 
     bool forceReload(bool reload) const;
@@ -82,7 +63,7 @@ public:
     void reset();
 
     //! Copy data from another struct
-    void copyFrom(const PreproThermal& rhs);
+    void copyFrom(const EconomicInputData& rhs);
 
     /*!
     ** \brief Load settings for the thermal prepro from a folder
@@ -105,23 +86,15 @@ public:
     */
     Yuni::uint64 memoryUsage() const;
 
-    /*!
-    ** \brief Normalize NPO max and check for consistency
-    **
-    ** This method should only be used by the solver
-    */
-    bool normalizeAndCheckNPO();
-
     //! All {FO,PO}{Duration,Rate} annual values
     // max x DAYS_PER_YEAR
-    Matrix<> data;
+    Matrix<double> fuelcost;
+    Matrix<double> co2cost;
     // Parent thermal cluster
     std::weak_ptr<const ThermalCluster> itsThermalCluster;
 }; // class PreproThermal
 
 } // namespace Data
 } // namespace Antares
-
-#include "prepro.hxx"
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_PREPRO_HXX__

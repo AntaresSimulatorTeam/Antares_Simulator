@@ -35,7 +35,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
     each([&](const ThermalCluster& cluster) {
-        uint prepoCnt = Math::Max(cluster.prepro->co2cost.width, cluster.prepro->fuelcost.width);
+        uint prepoCnt = Math::Max(cluster.ecoInput->co2cost.width, cluster.ecoInput->fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost

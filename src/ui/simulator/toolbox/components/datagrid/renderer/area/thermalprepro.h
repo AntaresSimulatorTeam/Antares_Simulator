@@ -111,6 +111,7 @@ private:
     virtual void onStudyClosed() override;
 
 private:
+    // Antares::Data::EconomicInputData* pEconomicInputData;
     Antares::Data::PreproThermal* pPreproThermal;
     Antares::Data::ThermalCluster* pCluster;
 

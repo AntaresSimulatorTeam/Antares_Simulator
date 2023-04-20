@@ -32,6 +32,7 @@
 #include "../../../array/matrix.h"
 #include "defines.h"
 #include "prepro.h"
+#include "ecoInput.h"
 #include "../common/cluster.h"
 #include "../../fwd.h"
 #include "pollutant.h"
@@ -389,6 +390,8 @@ public:
         std::array<double, HOURS_PER_YEAR> marginalCostPerHourTs;
     };
     std::vector<ThermalEconomicTimeSeries> thermalEconomicTimeSeries;
+
+    EconomicInputData* ecoInput;
 
     /*!
     ** \brief The number of units used the last hour in the simulation

@@ -477,8 +477,8 @@ void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPer
 
 void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour()
 {
-    uint fuelCostWidth = prepro->fuelcost.width;
-    uint co2CostWidth = prepro->co2cost.width;
+    uint fuelCostWidth = ecoInput->fuelcost.width;
+    uint co2CostWidth = ecoInput->co2cost.width;
     uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     thermalEconomicTimeSeries.resize(tsCount, ThermalEconomicTimeSeries());
@@ -489,8 +489,8 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
             thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour]
-              = prepro->fuelcost[tsIndexFuel][hour] * 360.0 / fuelEfficiency
-                + emissions.factors[Pollutant::CO2] * prepro->co2cost[tsIndexCo2][hour]
+              = ecoInput->fuelcost[tsIndexFuel][hour] * 360.0 / fuelEfficiency
+                + emissions.factors[Pollutant::CO2] * ecoInput->co2cost[tsIndexCo2][hour]
                 + variableomcost;
             thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
               = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
