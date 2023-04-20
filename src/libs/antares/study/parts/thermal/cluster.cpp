@@ -503,16 +503,6 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         }
     }
 
-    // calculate marketBidCost and marginalBidCost as average of the first column
-    marketBidCost = std::accumulate(thermalEconomicTimeSeries[0].marketBidCostPerHourTs.begin(),
-                                    thermalEconomicTimeSeries[0].marketBidCostPerHourTs.end(),
-                                    0)
-                    / HOURS_PER_YEAR;
-    marginalCost = std::accumulate(thermalEconomicTimeSeries[0].marginalCostPerHourTs.begin(),
-                                   thermalEconomicTimeSeries[0].marginalCostPerHourTs.end(),
-                                   0)
-                   / HOURS_PER_YEAR;
-
     return;
 }
 
