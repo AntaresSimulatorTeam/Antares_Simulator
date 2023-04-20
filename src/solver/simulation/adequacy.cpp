@@ -169,7 +169,7 @@ bool Adequacy::year(Progression::Task& progression,
         pProblemesHebdo[numSpace]->HeureDansLAnnee = hourInTheYear;
 
         ::SIM_RenseignementProblemeHebdo(
-            *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
+          *pProblemesHebdo[numSpace], state.weekInTheYear, numSpace, hourInTheYear);
 
         // Reinit optimisation if needed
         pProblemesHebdo[numSpace]->ReinitOptimisation = reinitOptim;
@@ -218,15 +218,16 @@ bool Adequacy::year(Progression::Task& progression,
 
             try
             {
-                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace], study.parameters.adqPatchParams, numSpace);
+                OPT_OptimisationHebdomadaire(pProblemesHebdo[numSpace],
+                                             study.parameters.adqPatchParams);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false);
 
-                RemixHydroForAllAreas(study.areas, 
+                RemixHydroForAllAreas(study.areas,
                                       *pProblemesHebdo[numSpace],
                                       study.parameters.shedding.policy,
                                       study.parameters.simplexOptimizationRange,
-                                      numSpace, 
+                                      numSpace,
                                       hourInTheYear);
 
                 computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], true);
@@ -322,7 +323,8 @@ bool Adequacy::year(Progression::Task& progression,
             computingHydroLevels(study.areas, *pProblemesHebdo[numSpace], false, true);
         }
 
-        interpolateWaterValue(study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
+        interpolateWaterValue(
+          study.areas, *pProblemesHebdo[numSpace], study.calendar, hourInTheYear);
 
         updatingWeeklyFinalHydroLevel(study.areas, *pProblemesHebdo[numSpace]);
 

@@ -40,38 +40,9 @@
 
 #include "spx_constantes_externes.h"
 
-static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
-                                      const int PremierPasDeTempsHebdo,
-                                      const int DernierPasDeTempsHebdo,
-                                      uint numSpace)
-{
-    using namespace Antares::Data;
-
-    const auto& study = *Antares::Data::Study::Current::Get();
-    const auto end = study.areas.end();
-    for (auto i = study.areas.begin(); i != end; ++i)
-    {
-        const Area& area = *(i->second);
-        auto& scratchpad = *(area.scratchpad[numSpace]);
-        scratchpad.consoMin = +std::numeric_limits<double>::infinity();
-        scratchpad.consoMax = -std::numeric_limits<double>::infinity();
-
-        for (int i = PremierPasDeTempsHebdo; i < DernierPasDeTempsHebdo; ++i)
-        {
-            double d
-              = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
-            if (d < scratchpad.consoMin)
-                scratchpad.consoMin = d;
-            if (d > scratchpad.consoMax)
-                scratchpad.consoMax = d;
-        }
-    }
-}
-
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
-                                     const int DernierPdtDeLIntervalle,
-                                     uint numSpace)
+                                     const int DernierPdtDeLIntervalle)
 {
     const auto& study = *Antares::Data::Study::Current::Get();
 
@@ -82,9 +53,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     memset((char*)ProblemeAResoudre->CoutQuadratique,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-
-    ComputeMinMaxValueForLoad(
-      problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
