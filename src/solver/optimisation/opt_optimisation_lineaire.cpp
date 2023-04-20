@@ -84,10 +84,10 @@ OptimisationHebdo:
         int PremierPdtDeLIntervalle = pdtHebdo;
         DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo, 
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo,
                                                                adqPatchParams,
-                                                               PremierPdtDeLIntervalle, 
-                                                               DernierPdtDeLIntervalle, 
+                                                               PremierPdtDeLIntervalle,
+                                                               DernierPdtDeLIntervalle,
                                                                optimizationNumber);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
@@ -97,7 +97,7 @@ OptimisationHebdo:
                                                         optimizationNumber);
 
         OPT_InitialiserLesCoutsLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.

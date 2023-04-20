@@ -42,8 +42,7 @@
 
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
-                                     const int DernierPdtDeLIntervalle,
-                                     uint numSpace)
+                                     const int DernierPdtDeLIntervalle)
 {
     const auto& study = *Antares::Data::Study::Current::Get();
 
