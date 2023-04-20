@@ -72,7 +72,7 @@ bool Sets::loadFromStudy(Study& study)
     filename << study.folder << SEP << "settings" << SEP << "scenariobuilder.dat";
     bool r = true;
     // If the source code below is changed, please change it in loadFromINIFile too
-    if (study.header.version >= 360 && IO::Exists(filename))
+    if (IO::Exists(filename))
         r = internalLoadFromINIFile(filename);
     else
         pMap.clear();

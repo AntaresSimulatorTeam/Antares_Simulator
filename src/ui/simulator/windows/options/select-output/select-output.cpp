@@ -163,8 +163,7 @@ void SelectOutput::onSelectAll(void*)
     auto& study = *studyptr;
 
     Freeze();
-    for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
-        study.parameters.variablesPrintInfo[i]->enablePrint(true);
+    study.parameters.variablesPrintInfo.setAllPrintStatusesTo(true);
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -180,8 +179,7 @@ void SelectOutput::onUnselectAll(void*)
     auto& study = *studyptr;
 
     Freeze();
-    for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
-        study.parameters.variablesPrintInfo[i]->enablePrint(false);
+    study.parameters.variablesPrintInfo.setAllPrintStatusesTo(false);
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -197,11 +195,7 @@ void SelectOutput::onToggle(void*)
     auto& study = *studyptr;
 
     Freeze();
-    for (uint i = 0; i != study.parameters.variablesPrintInfo.size(); ++i)
-    {
-        study.parameters.variablesPrintInfo[i]->enablePrint(
-          not study.parameters.variablesPrintInfo[i]->isPrinted());
-    }
+    study.parameters.variablesPrintInfo.reverseAll();
     pGrid->forceRefresh();
     updateCaption();
     Dispatcher::GUI::Refresh(pGrid);
@@ -226,18 +220,13 @@ void SelectOutput::updateCaption()
 
     if (d.thematicTrimming)
     {
-        uint v = 0;
-        for (uint i = 0; i != d.variablesPrintInfo.size(); ++i)
-        {
-            if (d.variablesPrintInfo[i]->isPrinted())
-                ++v;
-        }
-        if (v < 2)
+        uint nbPrintedVars = d.variablesPrintInfo.numberOfEnabledVariables();
+        if (nbPrintedVars < 2)
             pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << v << wxT(" output variable  "));
+                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variable  "));
         else
             pStatus->SetLabel(wxString()
-                              << wxT(" Ask for selecting ") << v << wxT(" output variables  "));
+                              << wxT(" Ask for selecting ") << nbPrintedVars << wxT(" output variables  "));
     }
     else
         pStatus->SetLabel(wxT(" Ask for selecting output variables "));

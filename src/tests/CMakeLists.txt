@@ -55,7 +55,7 @@ if(Python3_Interpreter_FOUND)
 
       add_test(
         NAME json
-        COMMAND Python3::Interpreter -m pytest -n 2 -m json --solver-path=$<TARGET_FILE:antares-solver>
+        COMMAND Python3::Interpreter -m pytest -m json --solver-path=$<TARGET_FILE:antares-solver>
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/run-study-tests"
         )
 
