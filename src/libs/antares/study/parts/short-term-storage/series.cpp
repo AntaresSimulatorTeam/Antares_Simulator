@@ -179,9 +179,8 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
 }
 
-bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek, 
-                                 unsigned int cycleDuration,
-                                 double capacity) const
+bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
+        double injectionCapacity, double withdrawalCapacity) const
 {
     for (unsigned int firstHourOfTheCycle = 0; 
          firstHourOfTheCycle < Constants::nbHoursInAWeek;
@@ -201,8 +200,8 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek,
 
             sumInflows += inflows[calendarHour];
             // multiply by capacity to have the same unit as inflows: MWh
-            sumInjection += maxInjectionModulation[calendarHour] * capacity;
-            sumWithdrawal += maxWithdrawalModulation[calendarHour] * capacity;
+            sumInjection += maxInjectionModulation[calendarHour] * injectionCapacity;
+            sumWithdrawal += maxWithdrawalModulation[calendarHour] * withdrawalCapacity;
         }
 
         if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
@@ -216,9 +215,8 @@ bool Series::validateInflowsSums(unsigned int firstHourOfTheWeek,
     return true;
 }
 
-bool Series::validateCycle(unsigned int firstHourOfTheWeek, 
-                           std::optional<double> initialLevel,
-                           unsigned int cycleDuration) const
+bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
+        unsigned int cycleDuration) const
 {
     // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())

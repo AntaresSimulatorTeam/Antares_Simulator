@@ -27,7 +27,6 @@
 #pragma once
 #include <vector>
 #include <string>
-#include <tuple>
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -50,10 +49,10 @@ public:
     // check if series values are valid
     bool validate() const;
 
-    bool validateInflowsSums(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-            double capacity) const;
+    bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
+            double injectionCapacity, double withdrawalCapacity) const;
 
-    bool validateCycle(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
+    bool validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
             unsigned int cycleDuration) const;
 
     Bounds getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
