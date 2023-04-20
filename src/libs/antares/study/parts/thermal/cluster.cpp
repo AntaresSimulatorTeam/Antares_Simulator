@@ -686,7 +686,7 @@ bool Data::ThermalCluster::integrityCheck()
     if (variableomcost < 0.)
     {
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The variable O&M cost must be positive or null";
+                     << ": The variable operation & maintenance cost must be positive or null";
         variableomcost = 0.;
         ret = false;
     }
