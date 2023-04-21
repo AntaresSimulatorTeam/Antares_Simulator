@@ -120,7 +120,7 @@ void checkAdqPatchDisabledLocalMatching(
   const Antares::Data::AdequacyPatch::AdqPatchPTO priceTakingOrder)
 {
     using namespace Antares::Data::AdequacyPatch;
-    if (adqPatchOn && priceTakingOrder == isDens)
+    if (adqPatchOn && priceTakingOrder == Antares::Data::AdequacyPatch::AdqPatchPTO::isDens)
     {
         // TODO[FOM] new exception
         throw Error::IncompatibleStudyModeForAdqPatch();
@@ -307,14 +307,14 @@ void Application::prepare(int argc, char* argv[])
 
     {
         auto& adqParams = pParameters->adqPatchParams;
-        checkAdqPatchStudyModeEconomyOnly(adqPatchParams.enabled, pParameters->mode);
+        checkAdqPatchStudyModeEconomyOnly(adqParams.enabled, pParameters->mode);
 
-        checkAdqPatchContainsAdqPatchArea(adqPatchParams.enabled, pStudy->areas);
-        checkAdqPatchIncludeHurdleCost(adqPatchParams.enabled,
+        checkAdqPatchContainsAdqPatchArea(adqParams.enabled, pStudy->areas);
+        checkAdqPatchIncludeHurdleCost(adqParams.enabled,
                                        pParameters->include.hurdleCosts,
-                                       adqPatchParams.curtailmentSharing.includeHurdleCost);
-        checkAdqPatchDisabledLocalMatching(adqPatchParams.enabled,
-                                           adqPatchParams.localMatching.enabled);
+                                       adqParams.curtailmentSharing.includeHurdleCost);
+        checkAdqPatchDisabledLocalMatching(adqParams.enabled,
+                                           adqParams.curtailmentSharing.priceTakingOrder);
     }
 
     bool tsGenThermal

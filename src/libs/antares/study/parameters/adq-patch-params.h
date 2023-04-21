@@ -99,7 +99,7 @@ public:
 
     bool updateFromKeyValue(const String& key, const String& value);
     void addProperties(IniFile::Section* section) const;
-    
+
     void reset();
 
 private:
@@ -109,7 +109,7 @@ private:
 
 struct AdqPatchParams
 {
-    
+
     bool enabled;
     LocalMatching localMatching;
     CurtailmentSharing curtailmentSharing;
