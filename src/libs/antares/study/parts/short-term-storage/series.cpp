@@ -176,13 +176,13 @@ bool Series::validateUpperRuleCurve() const
 
 bool Series::validateLowerRuleCurve() const
 {
-    return checkVectBetweenZeroOne(maxInjectionModulation, "lower rule curve");
+    return checkVectBetweenZeroOne(lowerRuleCurve, "lower rule curve");
 }
 
 bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
         double injectionCapacity, double withdrawalCapacity) const
 {
-    for (unsigned int firstHourOfTheCycle = 0; 
+    for (unsigned int firstHourOfTheCycle = 0;
          firstHourOfTheCycle < Constants::nbHoursInAWeek;
          firstHourOfTheCycle += cycleDuration)
     {
@@ -222,7 +222,7 @@ bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional
     if (initialLevel.has_value())
     {
         for (unsigned int hour = firstHourOfTheWeek;
-             hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; 
+             hour < firstHourOfTheWeek + Constants::nbHoursInAWeek;
              hour += cycleDuration)
         {
             if (upperRuleCurve[hour] < initialLevel)
@@ -263,7 +263,7 @@ Bounds Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
     double minUpperBound = upperRuleCurve[firstHourOfTheWeek];
 
     for (unsigned int hour = firstHourOfTheWeek;
-         hour < firstHourOfTheWeek + Constants::nbHoursInAWeek; 
+         hour < firstHourOfTheWeek + Constants::nbHoursInAWeek;
          hour += cycleDuration)
     {
         // reduce the interval if necessary
