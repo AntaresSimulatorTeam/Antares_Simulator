@@ -350,7 +350,12 @@ BOOST_AUTO_TEST_CASE(check_series_sum_inflows_wrong_injection)
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
 
-    std::fill(series.maxInjectionModulation.begin(), series.maxInjectionModulation.end(), 0.7);
+    std::fill(series.inflows.begin(),
+              series.inflows.end(),
+              -10);
+    std::fill(series.maxInjectionModulation.begin(),
+              series.maxInjectionModulation.end(),
+              0.7);
 
     BOOST_CHECK(!series.validateInflowsForWeek(100, 27, 1, 1, 1.));
 }

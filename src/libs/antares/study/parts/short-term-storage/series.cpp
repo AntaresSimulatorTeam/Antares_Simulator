@@ -36,7 +36,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool Series::loadFromFolder(const std::string& folder)
 {
     bool ret = true;
@@ -179,11 +178,13 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(lowerRuleCurve, "lower rule curve");
 }
 
-bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-                                    double injectionCapacity, double withdrawalCapacity, double efficiencyFactor) const
+bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek,
+                                    unsigned int cycleDuration,
+                                    double injectionCapacity,
+                                    double withdrawalCapacity,
+                                    double efficiencyFactor) const
 {
-    for (unsigned int firstHourOfTheCycle = 0;
-         firstHourOfTheCycle < Constants::nbHoursInAWeek;
+    for (unsigned int firstHourOfTheCycle = 0; firstHourOfTheCycle < Constants::nbHoursInAWeek;
          firstHourOfTheCycle += cycleDuration)
     {
         double sumInflows = 0.0;
@@ -193,7 +194,8 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
         unsigned int calendarHour = 0;
         // sum until end of cycle or end of week
         for (unsigned int hourInCycle = 0;
-             hourInCycle < cycleDuration && hourInCycle + firstHourOfTheCycle < Constants::nbHoursInAWeek;
+             hourInCycle < cycleDuration
+             && hourInCycle + firstHourOfTheCycle < Constants::nbHoursInAWeek;
              hourInCycle++)
         {
             calendarHour = firstHourOfTheWeek + firstHourOfTheCycle + hourInCycle;
@@ -206,21 +208,21 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
 
         if (-efficiencyFactor * sumInjectionCapacities > sumInflows)
         {
-            logs.warning() << "Error at end of cycle: " << calendarHour + 1
+            logs.warning() << "Error at hour " << calendarHour + 1
                            << " for short term "
-                              "storage, inflows too low for cycle"
+                              "storage, inflows too low for cycle "
                            << "(sumInflows = " << sumInflows
-                           << " min = " << efficiencyFactor * sumInjectionCapacities << ")";
+                           << ", min = " << -efficiencyFactor * sumInjectionCapacities << ")";
             return false;
         }
 
         if (sumInflows > sumWithdrawalCapacities)
         {
-            logs.warning() << "Error at end of cycle: " << calendarHour + 1
+            logs.warning() << "Error at hour " << calendarHour + 1
                            << " for short term "
                               "storage, inflows too high for cycle "
-                           << "(sumInflows = " << sumInflows << " max = " << sumWithdrawalCapacities
-                           << ")";
+                           << "(sumInflows = " << sumInflows
+                           << ", max = " << sumWithdrawalCapacities << ")";
             return false;
         }
     }
