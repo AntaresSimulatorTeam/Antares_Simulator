@@ -33,7 +33,6 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-
 bool STStorageCluster::loadFromSection(const IniFile::Section& section)
 {
     if (!section.firstProperty)
@@ -89,7 +88,8 @@ bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek)
            series->validateInflowsForWeek(firstHourOfTheWeek,
                                           properties.storagecycle.value(),
                                           properties.injectionCapacity.value(),
-                                          properties.withdrawalCapacity.value());
+                                          properties.withdrawalCapacity.value(),
+                                          properties.efficiencyFactor);
 }
 
 } // namespace Antares::Data::ShortTermStorage

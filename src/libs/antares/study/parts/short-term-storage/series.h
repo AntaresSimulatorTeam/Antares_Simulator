@@ -49,14 +49,18 @@ public:
     // check if series values are valid
     bool validate() const;
 
-    bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-            double injectionCapacity, double withdrawalCapacity) const;
+    bool validateInflowsForWeek(unsigned int firstHourOfTheWeek,
+                                unsigned int cycleDuration,
+                                double injectionCapacity,
+                                double withdrawalCapacity,
+                                double efficiencyFactor) const;
 
-    bool validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
-            unsigned int cycleDuration) const;
+    bool validateCycleForWeek(unsigned int firstHourOfTheWeek,
+                              std::optional<double> initialLevel,
+                              unsigned int cycleDuration) const;
 
     Bounds getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
-            unsigned int cycleDuration) const;
+                                    unsigned int cycleDuration) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
@@ -71,7 +75,6 @@ private:
     bool validateRuleCurves() const;
     bool validateUpperRuleCurve() const;
     bool validateLowerRuleCurve() const;
-
 };
 bool loadFile(const std::string& folder, std::vector<double>& vect);
 
