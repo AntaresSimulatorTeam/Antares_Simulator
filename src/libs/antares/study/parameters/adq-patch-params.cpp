@@ -24,6 +24,8 @@ bool LocalMatching::updateFromKeyValue(const String& key, const String& value)
         return value.to<bool>(setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(setToZeroOutsideOutsideLinks);
+    if (key == "enable-first-step")
+        return value.to<bool>(enabled);
     return false;
 }
 

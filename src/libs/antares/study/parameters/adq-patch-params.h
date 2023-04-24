@@ -63,7 +63,6 @@ enum class AdqPatchPTO
 
 struct LocalMatching
 {
-    // TODO[FOM] I/O, add documentation for I/O
     bool enabled = true;
     //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
     //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
