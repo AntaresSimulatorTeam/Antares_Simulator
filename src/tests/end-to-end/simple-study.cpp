@@ -84,6 +84,15 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 	return pArea;
 }
 
+    BindingConstraint *addBindingConstraints(Study::Ptr study, std::string name, std::string group, int nbTS) {
+        auto bc = study->bindingConstraints.add(name);
+        bc->group(group);
+        bc->type();
+        auto ts = study->bindingConstraints.time_series[group];
+        ts.resize(nbTS, HOURS_PER_YEAR);
+        ts.fill(0.0);
+        return bc;
+    }
 
 std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clusterName, double maximumPower, double cost, int nbTS, int unitCount = 1)
 {
@@ -245,6 +254,48 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Clean simulation
 	cleanSimulation(pStudy, simulation);	
+}
+
+BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
+    //Create study
+    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+
+    //On year  and one TS
+    int nbYears = 1;
+    int nbTS = 1;
+
+    //Prepare study
+    prepareStudy(pStudy, nbYears);
+    pStudy->parameters.nbTimeSeriesBindingConstraints = nbTS;
+
+    Area *area1 = addArea(pStudy, "Area 1", nbTS);
+    Area *area2 = addArea(pStudy, "Area 2", nbTS);
+    auto link = AreaAddLinkBetweenAreas(area1, area2);
+
+    auto load = 0.3;
+    auto cost = 1;
+
+    //Add BC
+    auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
+    BC->weight(link, 1);
+    auto ts = pStudy->bindingConstraints.time_series[BC->group()];
+    ts.fill(load);
+
+    //Launch simulation
+    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+
+    //checkVariable<Solver::Variable::Economy::VCardFlowLinear>(simulation, area1, load * cost);
+    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
+    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
+    BOOST_TEST(result->avgdata.hourly[0] == load * cost, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.daily[0] == load * cost * 24, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == load * cost * 24 * 7, tt::tolerance(0.001));
+
+    //Clean simulation
+    cleanSimulation(pStudy, simulation);
+
+    //2 noeud, 1 lien. Coef 1, equlity. Scenariser le RHS contrainte d'eq
+    //Verifie le flux sur le lien égale au second membre (flow algebrique sur lien?)
 }
 
 //Very simple test with one area and one load and two year

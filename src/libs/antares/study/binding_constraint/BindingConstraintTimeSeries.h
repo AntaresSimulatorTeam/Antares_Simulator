@@ -19,6 +19,7 @@ public:
     Matrix<Yuni::uint32> timeseriesNumbers;
     unsigned SeriesWidth() const;
     void resize(unsigned width, unsigned height);
+    void fill(double value);
 };
 
 } // Data
