@@ -40,7 +40,7 @@ namespace Economy
 struct VCardProfitByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Profit by plant";
     }

@@ -34,7 +34,7 @@ namespace Antares::Solver::Variable::Economy
 struct VCardSpilledEnergyAfterCSR
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "SPIL. ENRG. CSR";
     }

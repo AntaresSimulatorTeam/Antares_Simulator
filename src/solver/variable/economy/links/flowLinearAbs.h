@@ -41,7 +41,7 @@ namespace Economy
 struct VCardFlowLinearAbs
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "UCAP LIN.";
     }

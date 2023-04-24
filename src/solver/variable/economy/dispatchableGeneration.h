@@ -40,7 +40,7 @@ namespace Economy
 struct VCardDispatchableGeneration
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Dispatch. Gen.";
     }
@@ -98,7 +98,7 @@ struct VCardDispatchableGeneration
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
             switch (indx)
             {

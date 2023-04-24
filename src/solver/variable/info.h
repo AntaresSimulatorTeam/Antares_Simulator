@@ -381,7 +381,15 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         assert(results.data.area && "Area is NULL");
         const bool thermal_details = fileLevel & Category::de;
         const bool renewable_details = fileLevel & Category::de_res;
-        if (thermal_details && renewable_details)
+        const bool st_storage_details = fileLevel & Category::de_sts;
+
+        std::array<bool, 3> kind_of_details = { thermal_details, renewable_details , st_storage_details };
+
+        // The current result file must be a detail file and of one kind only.
+        // So the vector above must contain one true. No less, no more.
+        unsigned int how_many_kinds_of_details = std::count(kind_of_details.begin(), kind_of_details.end(), true);
+
+        if (how_many_kinds_of_details != 1)
         {
             logs.error() << "Inconsistent fileLevel detected";
             return false;
@@ -396,6 +404,12 @@ struct VariableAccessor<ResultsT, Category::dynamicColumns>
         {
             auto& renewable = results.data.area->renewable;
             results.variableCaption = renewable.clusters[idx]->name();
+            return true;
+        }
+        if (st_storage_details)
+        {
+            auto& st_storage_part = results.data.area->shortTermStorage;
+            results.variableCaption = st_storage_part.storagesByIndex[idx]->properties.name;
             return true;
         }
         return true;

@@ -41,7 +41,7 @@ namespace Economy
 struct VCardTimeSeriesValuesHydro
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "H. ROR";
     }

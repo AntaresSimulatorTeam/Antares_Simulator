@@ -40,7 +40,7 @@ namespace Economy
 struct VCardNbOfDispatchedUnitsByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NODU by plant";
     }

@@ -41,7 +41,7 @@ namespace Economy
 struct VCardCongestionProbability
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. PROB. (+/-)";
     }
@@ -91,7 +91,7 @@ struct VCardCongestionProbability
 
     struct Multiple
     {
-        static const char* Caption(uint indx)
+        static std::string Caption(uint indx)
         {
             switch (indx)
             {

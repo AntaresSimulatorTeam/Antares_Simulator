@@ -39,7 +39,7 @@ namespace Variable
 struct VCardJoin
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "";
     }

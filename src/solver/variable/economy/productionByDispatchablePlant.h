@@ -40,7 +40,7 @@ namespace Economy
 struct VCardProductionByDispatchablePlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "DTG by plant";
     }

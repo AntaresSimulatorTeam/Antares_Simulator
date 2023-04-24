@@ -40,7 +40,7 @@ namespace Economy
 struct VCardNbOfDispatchedUnits
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NODU";
     }

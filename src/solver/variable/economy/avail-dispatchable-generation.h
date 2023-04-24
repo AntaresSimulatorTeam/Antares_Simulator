@@ -40,7 +40,7 @@ namespace Economy
 struct VCardAvailableDispatchGen
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "AVL DTG";
     }

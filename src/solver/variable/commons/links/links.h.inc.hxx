@@ -44,7 +44,7 @@ namespace LINK_NAMESPACE
 struct VCardAllLinks
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Links";
     }

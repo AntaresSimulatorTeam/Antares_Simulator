@@ -40,7 +40,7 @@ namespace Adequacy
 struct VCardSpilledEnergy
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "SPIL. ENRG";
     }

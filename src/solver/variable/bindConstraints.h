@@ -37,7 +37,7 @@ namespace Variable
 struct VCardAllBindingConstraints
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Binding constraints";
     }

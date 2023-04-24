@@ -42,7 +42,7 @@ namespace Economy
 struct VCardRowBalance
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "ROW BAL.";
     }

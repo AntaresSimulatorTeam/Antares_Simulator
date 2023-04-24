@@ -40,7 +40,7 @@ namespace Economy
 struct VCardMARGE
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "MAX MRG";
     }

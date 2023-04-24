@@ -60,7 +60,6 @@
 #include "waterValue.h"
 #include "hydroCost.h"
 #include "shortTermStorage.h"
-#include "shortTermStorageLevels.h"
 #include "unsupliedEnergy.h"
 #include "domesticUnsuppliedEnergy.h"
 #include "localMatchingRuleViolations.h"
@@ -83,6 +82,12 @@
 
 // By RES plant
 #include "productionByRenewablePlant.h"
+
+// Short term storage output variables by cluster
+#include "STStorageInjectionByCluster.h"
+#include "STStorageWithdrawalByCluster.h"
+#include "STStorageLevelsByCluster.h"
+
 
 // Output variables associated to links
 #include "links/flowLinear.h"
@@ -149,8 +154,10 @@ typedef          // Prices
                      <Overflows          // Hydraulic overflows
                       <WaterValue        // Water values
                        <HydroCost        // Hydro costs
-                        <ShortTermStorageEnergy
-                        <ShortTermStorageLevels
+                        <ShortTermStorageByGroup
+                        <STstorageInjectionByCluster
+                        <STstorageWithdrawalByCluster
+                        <STstorageLevelsByCluster
                         <UnsupliedEnergy // Unsuplied Energy
                          <DomesticUnsuppliedEnergy // Domestic Unsupplied Energy
                           <LMRViolations           // LMR Violations
@@ -171,7 +178,7 @@ typedef          // Prices
                                      <ProfitByPlant
                                       // Links
                                       <Variable::Economy::Links // All links
-                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                       >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerArea;
 
 /*!
@@ -226,9 +233,7 @@ typedef // Prices
                                           Common::SpatialAggregate<
                                             HydroCost,
                                             Common::SpatialAggregate <
-                                              ShortTermStorageEnergy,
-                                            Common::SpatialAggregate <
-                                              ShortTermStorageLevels,
+                                              ShortTermStorageByGroup,
                                             Common::SpatialAggregate<
                                               UnsupliedEnergy,
                                               Common::SpatialAggregate<
@@ -268,7 +273,7 @@ typedef // Prices
                                                                                           // -
                                                                                           // refs:
                                                                                           // #55
-                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+                                                                      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     VariablesPerSetOfAreas;
 
 typedef BindingConstMarginCost< // Marginal cost for a binding constraint

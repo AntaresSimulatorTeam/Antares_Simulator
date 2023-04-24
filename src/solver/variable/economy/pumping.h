@@ -40,7 +40,7 @@ namespace Economy
 struct VCardPumping
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "H. PUMP";
     }
