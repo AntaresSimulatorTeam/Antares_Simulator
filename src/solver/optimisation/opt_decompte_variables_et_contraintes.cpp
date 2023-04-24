@@ -220,12 +220,12 @@ int OPT_DecompteDesVariablesEtDesContraintesDuProblemeAOptimiser(PROBLEME_HEBDO*
         }
     }
 
-    for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
+    // Short term storage
     {
-        // Level, withdrawal, injection
-        const uint nbSTS = (uint)(*problemeHebdo->ShortTermStorage)[areaIndex].size();
+        const uint nbSTS = problemeHebdo->NumberOfShortTermStorages;
+        // Level, injection, withdrawal
         ProblemeAResoudre->NombreDeVariables += 3 * nbSTS * nombreDePasDeTempsPourUneOptimisation;
-        // Levels equation
+        // Level equation (Level[h+1] = Level[h] + ...)
         ProblemeAResoudre->NombreDeContraintes += nbSTS * nombreDePasDeTempsPourUneOptimisation;
     }
 
