@@ -258,7 +258,7 @@ void Application::prepare(int argc, char* argv[])
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
     if (pParameters->adqPatchParams.enabled)
-        pParameters->adqPatchParams.checkAdqPatchParams(pStudy->parameters.mode,
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
                                                         pStudy->areas,
                                                         pParameters->include.hurdleCosts);
 
