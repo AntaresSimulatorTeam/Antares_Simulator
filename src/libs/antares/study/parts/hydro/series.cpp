@@ -192,33 +192,5 @@ uint64 DataSeriesHydro::memoryUsage() const
     return sizeof(double) + ror.memoryUsage() + storage.memoryUsage();
 }
 
-void DataSeriesHydro::AdjustMonth(const Study& study,
-                                  uint firstDayMonth[13],
-                                  uint daysPerMonthDecals[12])
-{
-    for (int oldMonth = 0; oldMonth < 12; oldMonth++)
-    {
-        int realMonth = (oldMonth + study.parameters.firstMonthInYear) % 12;
-        daysPerMonthDecals[oldMonth] = Constants::daysPerMonth[realMonth];
-        if (study.parameters.leapYear)
-        {
-            if (realMonth == 1) // February
-            {
-                daysPerMonthDecals[oldMonth]++;
-            }
-            if (oldMonth == 11) // Last month of the year
-            {
-                daysPerMonthDecals[oldMonth]--;
-            }
-        }
-    }
-
-    firstDayMonth[0] = 0;
-    for (int i = 1; i < 13; i++)
-    {
-        firstDayMonth[i] = daysPerMonthDecals[i - 1] + firstDayMonth[i - 1];
-    }
-}
-
 } // namespace Data
 } // namespace Antares

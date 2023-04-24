@@ -962,7 +962,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
                    << "optimization.ini";
     IniFile ini;
     if (!ini.open(buffer))
-        return ret;
+        return false;
 
     ini.each([&](const IniFile::Section& section) {
         for (auto* p = section.firstProperty; p; p = p->next)

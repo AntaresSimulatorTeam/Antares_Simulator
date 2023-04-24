@@ -1117,7 +1117,7 @@ void RunSimulationOnTheStudy(Data::Study::Ptr study,
 
         // Where is our solver ?
         String solverLocation;
-        if (!Solver::FindLocation(solverLocation, Data::versionUnknown, features))
+        if (!Solver::FindLocation(solverLocation))
         {
             logs.error() << "Impossible to find the program `antares-solver`.";
             return;
