@@ -180,15 +180,15 @@ bool Series::validateLowerRuleCurve() const
 }
 
 bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-        double injectionCapacity, double withdrawalCapacity) const
+                                    double injectionCapacity, double withdrawalCapacity, double efficiencyFactor) const
 {
     for (unsigned int firstHourOfTheCycle = 0;
          firstHourOfTheCycle < Constants::nbHoursInAWeek;
          firstHourOfTheCycle += cycleDuration)
     {
         double sumInflows = 0.0;
-        double sumInjection = 0.0;
-        double sumWithdrawal = 0.0;
+        double sumInjectionCapacities = 0.0;
+        double sumWithdrawalCapacities = 0.0;
 
         unsigned int calendarHour = 0;
         // sum until end of cycle or end of week
@@ -200,23 +200,36 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
 
             sumInflows += inflows[calendarHour];
             // multiply by capacity to have the same unit as inflows: MWh
-            sumInjection += maxInjectionModulation[calendarHour] * injectionCapacity;
-            sumWithdrawal += maxWithdrawalModulation[calendarHour] * withdrawalCapacity;
+            sumInjectionCapacities += maxInjectionModulation[calendarHour] * injectionCapacity;
+            sumWithdrawalCapacities += maxWithdrawalModulation[calendarHour] * withdrawalCapacity;
         }
 
-        if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
+        if (-efficiencyFactor * sumInjectionCapacities > sumInflows)
         {
-            logs.warning() << "Error at end of cycle: " << calendarHour + 1 << " for short term "
-                "storage inflows, sums at cycle timesteps are wrong";
+            logs.warning() << "Error at end of cycle: " << calendarHour + 1
+                           << " for short term "
+                              "storage, inflows too low for cycle"
+                           << "(sumInflows = " << sumInflows
+                           << " min = " << efficiencyFactor * sumInjectionCapacities << ")";
+            return false;
+        }
 
+        if (sumInflows > sumWithdrawalCapacities)
+        {
+            logs.warning() << "Error at end of cycle: " << calendarHour + 1
+                           << " for short term "
+                              "storage, inflows too high for cycle "
+                           << "(sumInflows = " << sumInflows << " max = " << sumWithdrawalCapacities
+                           << ")";
             return false;
         }
     }
     return true;
 }
 
-bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
-        unsigned int cycleDuration) const
+bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek,
+                                  std::optional<double> initialLevel,
+                                  unsigned int cycleDuration) const
 {
     // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())
