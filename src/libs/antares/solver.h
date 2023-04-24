@@ -46,9 +46,7 @@ enum Feature
 ** \brief Find the location of the solver
 ** \return A non-empty string if the solver has been found, empty otherwise
 */
-bool FindLocation(Yuni::String& location,
-                  Data::Version version = Data::versionUnknown,
-                  Feature features = standard);
+bool FindLocation(Yuni::String& location);
 
 /*!
 ** \brief Find the location of the analyzer
