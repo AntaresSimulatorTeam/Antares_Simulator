@@ -19,4 +19,10 @@ namespace Antares::Data {
         upper_bound_series.resize(width, height);
         equality_series.resize(width, height);
     }
+
+    void BindingConstraintTimeSeries::fill(double value) {
+        lower_bound_series.fill(value);
+        upper_bound_series.fill(value);
+        equality_series.fill(value);
+    }
 } // Data
