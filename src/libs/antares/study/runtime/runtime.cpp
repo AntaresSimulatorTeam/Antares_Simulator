@@ -411,7 +411,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
- shortTermStorageCount(0),
  quadraticOptimizationHasFailed(false)
 {
     // Evite les confusions de numeros de TS entre AMC
@@ -449,7 +448,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     mode = gd.mode;
     thermalPlantTotalCount = 0;
     thermalPlantTotalCountMustRun = 0;
-    shortTermStorageCount = 0;
     // Calendar
     logs.info() << "Generating calendar informations";
     if (study.usedByTheSolver)
