@@ -198,9 +198,9 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
             // We have here too much hours, the interval will be reduced
             // Log Entry
             logs.info() << "    Partial week detected. Not allowed in "
-                << StudyModeToCString(study.parameters.mode);
+                        << StudyModeToCString(study.parameters.mode);
             logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                << (1 + b);
+                        << (1 + b);
             // Reducing
             while (b > a and 0 != ((b - a + 1) % 168))
                 --b;
@@ -208,8 +208,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 
     // Getting informations about the given hours
-    auto& ca = study.calendar.hours[a]; // Antares::Date::StudyHourlyCalendar[a];
-    auto& cb = study.calendar.hours[b]; // Antares::Date::StudyHourlyCalendar[b];
+    auto& ca = study.calendar.hours[a];
+    auto& cb = study.calendar.hours[b];
 
     assert(ca.dayYear < 400 and "Trivial check failed");
     assert(cb.dayYear < 400 and "Trivial check failed");
