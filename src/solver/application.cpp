@@ -117,14 +117,13 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
 
 void checkAdqPatchDisabledLocalMatching(
   const bool adqPatchOn,
+  const bool localMatchingEnabled,
   const Antares::Data::AdequacyPatch::AdqPatchPTO priceTakingOrder)
 {
     using namespace Antares::Data::AdequacyPatch;
-    if (adqPatchOn && priceTakingOrder == Antares::Data::AdequacyPatch::AdqPatchPTO::isDens)
-    {
-        // TODO[FOM] new exception
-        throw Error::IncompatibleStudyModeForAdqPatch();
-    }
+    if (adqPatchOn && !localMatchingEnabled
+            && priceTakingOrder == Antares::Data::AdequacyPatch::AdqPatchPTO::isDens)
+        throw Error::AdqPatchDisabledLMR();
 }
 
 void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
@@ -314,6 +313,7 @@ void Application::prepare(int argc, char* argv[])
                                        pParameters->include.hurdleCosts,
                                        adqParams.curtailmentSharing.includeHurdleCost);
         checkAdqPatchDisabledLocalMatching(adqParams.enabled,
+                                           adqParams.localMatching.enabled,
                                            adqParams.curtailmentSharing.priceTakingOrder);
     }
 

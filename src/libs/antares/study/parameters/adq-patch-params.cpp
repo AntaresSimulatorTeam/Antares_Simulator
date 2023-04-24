@@ -136,7 +136,7 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
         out.emplace_back("SPIL. ENRG. CSR");
         out.emplace_back("DTG MRG CSR");
     }
-    // TODO[FOM] check this
+
     // If the adequacy patch is enabled, but the LMR is disabled, the DENS variable shouldn't exist
     if (enabled && !localMatching.enabled)
     {
