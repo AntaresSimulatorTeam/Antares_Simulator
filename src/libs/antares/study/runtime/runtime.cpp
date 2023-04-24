@@ -483,9 +483,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
-    // Max number of thermal/renewable clusters
-    initializeMaxClusters(study);
-
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 

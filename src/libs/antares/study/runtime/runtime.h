@@ -194,7 +194,6 @@ public:
 private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
-    void initializeMaxClusters(const Study& study);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
