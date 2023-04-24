@@ -304,18 +304,7 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    {
-        auto& adqParams = pParameters->adqPatchParams;
-        checkAdqPatchStudyModeEconomyOnly(adqParams.enabled, pParameters->mode);
-
-        checkAdqPatchContainsAdqPatchArea(adqParams.enabled, pStudy->areas);
-        checkAdqPatchIncludeHurdleCost(adqParams.enabled,
-                                       pParameters->include.hurdleCosts,
-                                       adqParams.curtailmentSharing.includeHurdleCost);
-        checkAdqPatchDisabledLocalMatching(adqParams.enabled,
-                                           adqParams.localMatching.enabled,
-                                           adqParams.curtailmentSharing.priceTakingOrder);
-    }
+    prepareAdqPatchParams();
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -336,6 +325,21 @@ void Application::prepare(int argc, char* argv[])
     }
     else
         logs.info() << "  The progression is disabled";
+}
+
+void Application::prepareAdqPatchParams()
+{
+    const auto& adqParams = pParameters->adqPatchParams;
+
+    checkAdqPatchStudyModeEconomyOnly(adqParams.enabled, pStudy->parameters.mode);
+
+    checkAdqPatchContainsAdqPatchArea(adqParams.enabled, pStudy->areas);
+    checkAdqPatchIncludeHurdleCost(adqParams.enabled,
+                                   pParameters->include.hurdleCosts,
+                                   adqParams.curtailmentSharing.includeHurdleCost);
+    checkAdqPatchDisabledLocalMatching(adqParams.enabled,
+                                       adqParams.localMatching.enabled,
+                                       adqParams.curtailmentSharing.priceTakingOrder);
 }
 
 void Application::initializeRandomNumberGenerators()

@@ -41,6 +41,13 @@ public:
     void prepare(int argc, char* argv[]);
 
     /*!
+    ** \brief Check validity of adequacy patch parameters
+    **
+    ** \return False if the operation failed.
+    */
+    void prepareAdqPatchParams();
+
+    /*!
     ** \brief Execute the simulation
     **
     ** \return Exit status
