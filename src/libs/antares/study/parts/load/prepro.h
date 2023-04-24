@@ -60,7 +60,7 @@ public:
     /*!
     ** \brief Load data from a folder
     */
-    bool loadFromFolder(Study& study, const AnyString& folder);
+    bool loadFromFolder(const AnyString& folder);
 
     /*!
     ** \brief Save data to a folder
@@ -93,7 +93,6 @@ public:
 
 private:
     bool internalLoadFromFolder(Study& study, const char* folder, uint length);
-    bool internalLoadFormatBefore33(Study& study, const YString& folder);
 
 }; // Prepro
 

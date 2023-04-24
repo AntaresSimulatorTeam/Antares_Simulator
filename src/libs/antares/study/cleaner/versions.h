@@ -31,7 +31,7 @@ namespace Antares
 {
 namespace Data
 {
-bool PreflightVersion20(StudyCleaningInfos* infos);
+bool listOfFilesAnDirectoriesToKeep(StudyCleaningInfos* infos);
 
 } // namespace Data
 } // namespace Antares

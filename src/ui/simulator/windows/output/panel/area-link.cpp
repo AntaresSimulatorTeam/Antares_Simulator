@@ -689,11 +689,7 @@ void Panel::loadDataFromFile()
         break;
     case lodDetailledResults:
     {
-        if (output.version <= (uint)Data::version360)
-            filename << "mc-i";
-        else
-            filename << "mc-ind" << SEP;
-
+        filename << "mc-ind" << SEP;
         CString<8, false> tmp;
         tmp.resize(5, "0");
         CString<12, false> stryear(pComponent->pCurrentYear);
