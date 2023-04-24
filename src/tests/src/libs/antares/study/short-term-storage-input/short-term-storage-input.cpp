@@ -291,7 +291,6 @@ BOOST_AUTO_TEST_CASE(check_series_upper_curve)
 
     BOOST_CHECK(series.loadFromFolder(folder));
     BOOST_CHECK(series.validate());
-    //624 is third week first cycle (100 + 168*3 + 20)
     series.upperRuleCurve[190] = 0.2;
 
     BOOST_CHECK(!series.validateCycleForWeek(100, 0.5, 45));
