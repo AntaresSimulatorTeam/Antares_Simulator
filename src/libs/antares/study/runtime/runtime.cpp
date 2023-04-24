@@ -515,61 +515,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     return true;
 }
 
-namespace CompareAreasByNumberOfClusters
-{
-// Compare areas by number of thermal clusters
-struct thermal
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->thermal.clusterCount();
-    }
-};
-// Compare areas by number of renewable clusters
-struct renewable
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->renewable.clusterCount();
-    }
-};
-} // namespace CompareAreasByNumberOfClusters
-
-template<class CompareGetT>
-static size_t maxNumberOfClusters(const Study& study)
-{
-    CompareGetT cmp;
-    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
-    if (pairWithMostClusters != study.areas.end())
-    {
-        auto area = pairWithMostClusters->second;
-        return cmp.getNbClusters(area);
-    }
-    return 0;
-}
-
-void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
-{
-    this->maxThermalClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
-    this->maxRenewableClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
-}
-
 uint StudyRuntimeInfos::interconnectionsCount() const
 {
     return static_cast<uint>(areaLink.size());

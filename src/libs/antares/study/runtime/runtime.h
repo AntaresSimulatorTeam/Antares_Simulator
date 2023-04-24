@@ -174,12 +174,6 @@ public:
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 
-    //! The maximum number of thermal clusters for each area
-    size_t maxThermalClustersForSingleArea = 0;
-
-    //! The maximum number of renewable clusters for each area
-    size_t maxRenewableClustersForSingleArea = 0;
-
     /*!
     ** \brief The number of simulation days per month
     */
