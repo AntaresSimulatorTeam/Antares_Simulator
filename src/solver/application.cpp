@@ -91,53 +91,6 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
-// Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
-                                       const Antares::Data::StudyMode studyMode)
-{
-    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
-    {
-        throw Error::IncompatibleStudyModeForAdqPatch();
-    }
-}
-// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
-void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
-{
-    using namespace Antares::Data;
-    if (adqPatchOn)
-    {
-        const bool containsAdqArea
-          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
-            });
-        if (!containsAdqArea)
-            throw Error::NoAreaInsideAdqPatchMode();
-    }
-}
-
-void checkAdqPatchDisabledLocalMatching(
-  const bool adqPatchOn,
-  const bool localMatchingEnabled,
-  const Antares::Data::AdequacyPatch::AdqPatchPTO priceTakingOrder)
-{
-    using namespace Antares::Data::AdequacyPatch;
-    if (adqPatchOn && !localMatchingEnabled
-            && priceTakingOrder == Antares::Data::AdequacyPatch::AdqPatchPTO::isDens)
-        throw Error::AdqPatchDisabledLMR();
-}
-
-void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
-                                    const bool includeHurdleCost,
-                                    const bool includeHurdleCostCsr)
-{
-    // No need to check if adq-patch is disabled
-    if (!adqPatchOn)
-        return;
-
-    if (includeHurdleCostCsr && !includeHurdleCost)
-        throw Error::IncompatibleHurdleCostCSR();
-}
-
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
@@ -304,7 +257,10 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    prepareAdqPatchParams();
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(pStudy->parameters.mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));
@@ -325,21 +281,6 @@ void Application::prepare(int argc, char* argv[])
     }
     else
         logs.info() << "  The progression is disabled";
-}
-
-void Application::prepareAdqPatchParams()
-{
-    const auto& adqParams = pParameters->adqPatchParams;
-
-    checkAdqPatchStudyModeEconomyOnly(adqParams.enabled, pStudy->parameters.mode);
-
-    checkAdqPatchContainsAdqPatchArea(adqParams.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(adqParams.enabled,
-                                   pParameters->include.hurdleCosts,
-                                   adqParams.curtailmentSharing.includeHurdleCost);
-    checkAdqPatchDisabledLocalMatching(adqParams.enabled,
-                                       adqParams.localMatching.enabled,
-                                       adqParams.curtailmentSharing.priceTakingOrder);
 }
 
 void Application::initializeRandomNumberGenerators()

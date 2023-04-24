@@ -1,6 +1,10 @@
 #include "adq-patch-params.h"
 #include "antares/logs.h"
 
+#include <antares/study.h>
+
+#include <antares/exception/LoadingError.hpp>
+
 namespace Antares::Data::AdequacyPatch
 {
 
@@ -162,5 +166,47 @@ void AdqPatchParams::saveToINI(IniFile& ini) const
     curtailmentSharing.addProperties(section);
 }
 
+void AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
+                                         const AreaList& areas,
+                                         const bool includeHurdleCostParameters) const
+{
+    checkAdqPatchStudyModeEconomyOnly(studyMode);
+    checkAdqPatchContainsAdqPatchArea(areas);
+    checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
+    checkAdqPatchDisabledLocalMatching();
+}
+
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const
+{
+    if (studyMode != StudyMode::stdmEconomy)
+    {
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+
+// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
+void AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const
+{
+    const bool containsAdqArea
+        = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == physicalAreaInsideAdqPatch;
+                });
+
+    if (!containsAdqArea)
+        throw Error::NoAreaInsideAdqPatchMode();
+}
+
+void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCostParameters) const
+{
+    if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
+        throw Error::IncompatibleHurdleCostCSR();
+}
+
+void AdqPatchParams::checkAdqPatchDisabledLocalMatching() const
+{
+    if (!localMatching.enabled && curtailmentSharing.priceTakingOrder == AdqPatchPTO::isDens)
+        throw Error::AdqPatchDisabledLMR();
+}
 
 } // Antares::Data::AdequacyPatch

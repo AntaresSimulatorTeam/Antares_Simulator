@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include <antares/study/fwd.h>
 #include <yuni/core/string.h>
 #include "antares/inifile/inifile.h"
 
@@ -118,6 +119,16 @@ struct AdqPatchParams
     void addExcludedVariables(std::vector<std::string>&) const;
     bool updateFromKeyValue(const String& key, const String& value);
     void saveToINI(IniFile& ini) const;
+    void checkAdqPatchParams(const StudyMode studyMode,
+                             const AreaList& areas,
+                             const bool includeHurdleCostParameters) const;
+
+private:
+    void checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const;
+    void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
+    void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
+    void checkAdqPatchDisabledLocalMatching() const;
+
 };
 
 } // namespace Antares::Data::AdequacyPatch
