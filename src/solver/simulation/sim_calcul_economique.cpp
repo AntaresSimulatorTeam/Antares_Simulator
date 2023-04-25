@@ -107,7 +107,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
 
     problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
-    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
+    problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraint.size();
 
     problem.ExportMPS = study.parameters.include.exportMPS;
     problem.ExportStructure = study.parameters.include.exportStructure;
@@ -218,7 +218,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.PaysExtremiteDeLInterconnexion[i] = link.with->index;
     }
 
-    for (uint i = 0; i < study.runtime->bindingConstraintCount; ++i)
+    for (uint i = 0; i < study.runtime->bindingConstraint.size(); ++i)
     {
         BindingConstraintRTI& bc = study.runtime->bindingConstraint[i];
 
@@ -378,9 +378,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = false;
     }
 
-    if (studyruntime.bindingConstraintCount)
+    if (studyruntime.bindingConstraint.size())
     {
-        for (uint k = 0; k != studyruntime.bindingConstraintCount; ++k)
+        for (uint k = 0; k != studyruntime.bindingConstraint.size(); ++k)
         {
             auto& bc = studyruntime.bindingConstraint[k];
             switch (bc.type)
@@ -542,7 +542,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    for (unsigned j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
         assert(NULL != ntc);
@@ -576,7 +576,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                sizeOfIntercoDouble);
 
         {
-            const uint constraintCount = studyruntime.bindingConstraintCount;
+            const uint constraintCount = studyruntime.bindingConstraint.size();
             for (uint k = 0; k != constraintCount; ++k)
             {
                 auto& bc = studyruntime.bindingConstraint[k];
