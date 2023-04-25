@@ -99,9 +99,8 @@ struct VCardShortTermStorage
 
         static std::string Unit(const unsigned int indx)
         {
-            // TODO[FOM] Clean up
             if (indx % 3 == 2)
-                return VCardShortTermStorage::Unit();
+                return "MWh";
             else
                 return "MW";
         }
