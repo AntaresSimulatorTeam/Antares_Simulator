@@ -1,3 +1,10 @@
+#include <memory>
+#include "antares/study/area/area.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "economy/bindingConstraints/bindingConstraintsMarginalCost.h"
+#include "economy/links/flowLinear.h"
+#include "i_writer.h"
+
 #define BOOST_TEST_MODULE test-end-to-end tests
 
 #define WIN32_LEAN_AND_MEAN
@@ -12,13 +19,34 @@
 #include <simulation/economy.h>
 
 #include <iostream>
-#include <stdio.h>
 
 namespace utf = boost::unit_test;
 namespace tt = boost::test_tools;
 
 using namespace Yuni;
 using namespace Antares::Data;
+
+class NoOPResultWriter: public Solver::IResultWriter {
+    void addEntryFromBuffer(const std::string &entryPath, Clob &entryContent) override {
+
+    }
+
+    void addEntryFromBuffer(const std::string &entryPath, std::string &entryContent) override {
+
+    }
+
+    void addEntryFromFile(const std::string &entryPath, const std::string &filePath) override {
+
+    }
+
+    bool needsTheJobQueue() const override {
+        return false;
+    }
+
+    void finalize(bool verbose) override {
+
+    }
+};
 
 BOOST_AUTO_TEST_SUITE(simple_test)
 
@@ -38,7 +66,7 @@ void checkVariable(
 						double expectedHourlyValue
 				   )
 
-{ 
+{
 	/*Get value*/
 	typename Antares::Solver::Variable::Storage<VCard>::ResultsType* result = nullptr;
 	simulation->variables.retrieveResultsForArea<VCard>(&result, pArea);
@@ -99,7 +127,7 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
     auto pCluster = std::make_shared<ThermalCluster>(pArea);
 	pCluster->setName(clusterName);
 	pCluster->reset();
-	
+
 	pCluster->unitCount			= unitCount;
 	pCluster->nominalCapacity	= maximumPower;
 
@@ -125,7 +153,7 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
 	if (not pCluster->productionCost)
 		pCluster->productionCost = new double[HOURS_PER_YEAR];
 
-	
+
 	double* prodCost	= pCluster->productionCost;
 	double marginalCost = pCluster->marginalCost;
 
@@ -134,7 +162,7 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
 	for (uint h = 0; h != pCluster->modulation.height; ++h)
 		prodCost[h] = marginalCost * modulation[h];
 
-	
+
 	pCluster->nominalCapacityWithSpinning = pCluster->nominalCapacity;
 
     auto added = pArea->thermal.list.add(pCluster);
@@ -171,7 +199,7 @@ float defineYearsWeight(Study::Ptr pStudy, const std::vector<float>& yearsWeight
 	{
 		pStudy->parameters.setYearWeight(i, yearsWeight[i]);
 	}
-    
+
 	return pStudy->parameters.getYearsWeightSum();
 }
 
@@ -229,7 +257,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Create area
 	double load = 7.0;
-	Area*  pArea = addArea(pStudy,"Area 1", nbTS);	
+	Area*  pArea = addArea(pStudy,"Area 1", nbTS);
 
 	//Initialize time series
 	pArea->load.series->timeSeries.fillColumn(0, load);
@@ -245,7 +273,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 
 	//Launch simulation
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
-		
+
 	//Overall cost must be load * cost by MW
 	checkVariable<Solver::Variable::Economy::VCardOverallCost>(simulation, pArea, load * cost);
 
@@ -253,13 +281,13 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	checkVariable<Solver::Variable::Economy::VCardTimeSeriesValuesLoad>(simulation, pArea, load);
 
 	//Clean simulation
-	cleanSimulation(pStudy, simulation);	
+	cleanSimulation(pStudy, simulation);
 }
 
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-
+    pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
     //On year  and one TS
     int nbYears = 1;
     int nbTS = 1;
@@ -272,14 +300,20 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     Area *area2 = addArea(pStudy, "Area 2", nbTS);
     auto link = AreaAddLinkBetweenAreas(area1, area2);
 
-    auto load = 0.3;
+    auto rhs = 1;
     auto cost = 1;
 
     //Add BC
     auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
     BC->weight(link, 1);
-    auto ts = pStudy->bindingConstraints.time_series[BC->group()];
-    ts.fill(load);
+    BC->enabled(true);
+    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->operatorType(BindingConstraint::opEquality);
+    auto& ts = pStudy->bindingConstraints.time_series[BC->group()];
+    ts.resize(1, 8760);
+    ts.fill(rhs);
+    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
+    ts.timeseriesNumbers.fill(0);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -287,9 +321,9 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     //checkVariable<Solver::Variable::Economy::VCardFlowLinear>(simulation, area1, load * cost);
     typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-    BOOST_TEST(result->avgdata.hourly[0] == load * cost, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0] == load * cost * 24, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == load * cost * 24 * 7, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.hourly[0] == rhs * cost, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.daily[0] == rhs * cost * 24, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 24 * 7, tt::tolerance(0.001));
 
     //Clean simulation
     cleanSimulation(pStudy, simulation);

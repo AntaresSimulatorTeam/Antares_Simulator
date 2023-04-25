@@ -13,6 +13,8 @@ public:
     BindingConstraintTimeSeries() = default;
     ~BindingConstraintTimeSeries() = default;
     BindingConstraintTimeSeries(const BindingConstraintTimeSeries&) = default;
+    //Width = number of chronicles
+    //Height = number of time step
     Matrix<double> lower_bound_series;
     Matrix<double> upper_bound_series;
     Matrix<double> equality_series;

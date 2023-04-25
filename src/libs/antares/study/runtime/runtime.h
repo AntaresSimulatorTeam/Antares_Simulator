@@ -88,6 +88,7 @@ public:
     long* clusterIndex;
     long* clustersAreaIndex;
     std::string name;
+    std::string group;
 };
 
 /*!
