@@ -29,6 +29,7 @@
 #include <antares/study/area/constants.h>
 #include <antares/study/area/scratchpad.h>
 
+#include "antares/study/fwd.h"
 #include "simulation.h"
 #include "sim_structure_probleme_economique.h"
 #include "sim_extern_variables_globales.h"
@@ -581,13 +582,29 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             for (uint k = 0; k != constraintCount; ++k)
             {
                 auto& bc = studyruntime.bindingConstraint[k];
+                const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
 
+                auto& ts = study.bindingConstraints.time_series[bc.group];
+                double** column = nullptr;
                 if (bc.type == BindingConstraint::typeHourly)
                 {
-                    auto& column = bc.bounds[0];
+                    switch (bc.operatorType) {
+                        case '=':
+                            column = &ts.equality_series[ts_number];
+                            break;
+                        case '<':
+                            column = &ts.lower_bound_series[ts_number];
+                            break;
+                        case '>':
+                            column = &ts.upper_bound_series[ts_number];
+                            break;
+                        default:
+                            assert(false);
+                            break;
+                    }
                     problem.MatriceDesContraintesCouplantes[k]
                       ->SecondMembreDeLaContrainteCouplante[j]
-                      = column[PasDeTempsDebut + j];
+                      = (*column)[PasDeTempsDebut + j];
                     problem.MatriceDesContraintesCouplantes[k]
                       ->SecondMembreDeLaContrainteCouplanteRef[j]
                       = problem.MatriceDesContraintesCouplantes[k]
