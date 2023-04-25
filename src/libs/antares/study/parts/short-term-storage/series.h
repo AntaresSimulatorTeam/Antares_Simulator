@@ -27,17 +27,10 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "level-bounds.h"
 
 namespace Antares::Data::ShortTermStorage
 {
-
-class Bounds
-{
-public:
-    Bounds(double l, double u) : lower(l), upper(u) {}
-    double lower;
-    double upper;
-};
 
 class Series
 {
@@ -52,8 +45,9 @@ public:
     bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
             double injectionCapacity, double withdrawalCapacity) const;
 
-    bool validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
-            unsigned int cycleDuration) const;
+    bool validateCycleForWeek(unsigned int firstHourOfTheWeek, 
+                              std::optional<double> initialLevel,
+                              unsigned int cycleDuration) const;
 
     Bounds getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
             unsigned int cycleDuration) const;

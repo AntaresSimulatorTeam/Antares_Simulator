@@ -215,8 +215,9 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
     return true;
 }
 
-bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, std::optional<double> initialLevel,
-        unsigned int cycleDuration) const
+bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, 
+                                  std::optional<double> initialLevel,
+                                  unsigned int cycleDuration) const
 {
     // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())

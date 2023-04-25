@@ -46,6 +46,7 @@ namespace Antares::Constants
 {
 extern const std::array<unsigned int, 12> daysPerMonth;
 extern const unsigned int nbHoursInAWeek;
+extern const unsigned int nbHoursInDay;
 } // namespace Antares::Constants
 
 /*! Max number of MC years */
