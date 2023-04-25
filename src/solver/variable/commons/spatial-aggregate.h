@@ -57,12 +57,12 @@ struct MultipleCaptionProxy<0, VCardT>
 {
     static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
     }
 
     static std::string Unit(const uint indx)
     {
-        return NULL;
+        return "";
     }
 };
 
@@ -71,12 +71,12 @@ struct MultipleCaptionProxy<1, VCardT>
 {
     static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
     }
 
     static std::string Unit(const uint indx)
     {
-        return NULL;
+        return "";
     }
 };
 
@@ -85,12 +85,12 @@ struct MultipleCaptionProxy<Category::dynamicColumns, VCardT>
 {
     static std::string Caption(const uint indx)
     {
-        return NULL;
+        return "";
     }
 
     static std::string Unit(const uint indx)
     {
-        return NULL;
+        return "";
     }
 };
 
