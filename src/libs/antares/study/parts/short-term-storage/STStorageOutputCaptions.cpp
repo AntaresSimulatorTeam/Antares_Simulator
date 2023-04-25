@@ -21,7 +21,7 @@ const unsigned int nb_groups = groups.size();
 const unsigned int nb_variables = variables.size();
 
 
-std::string getVariableCaptionFromColumnIndex(int col_index)
+std::string getVariableCaptionFromColumnIndex(uint col_index)
 {
     if (col_index < nb_groups * nb_variables)
     {

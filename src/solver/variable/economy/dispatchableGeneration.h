@@ -127,7 +127,7 @@ struct VCardDispatchableGeneration
                 return "<unknown>";
             }
         }
-        static std::string Unit(const unsigned int indx)
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
         {
             return VCardDispatchableGeneration::Unit();
         }
