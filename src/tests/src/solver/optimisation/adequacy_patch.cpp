@@ -8,6 +8,8 @@
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include <adequacy_patch_runtime_data.h>
 #include "antares/study/parameters/adq-patch-params.h"
+#include <antares/exception/LoadingError.hpp>
+#include <fstream>
 
 #include <vector>
 #include <tuple>
@@ -128,6 +130,17 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
 
     // return
     return std::make_pair(netPositionInit, densNew);
+}
+
+AdqPatchParams createParams()
+{
+    AdqPatchParams p;
+    p.enabled = true;
+    p.curtailmentSharing.includeHurdleCost = true;
+    p.localMatching.enabled = true;
+    p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
+
+    return p;
 }
 
 // Virtual -> Virtual (0 -> 0)
@@ -486,4 +499,54 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(densNew, 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(check_valid_adq_param)
+{
+    auto p = createParams();
+
+    p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmEconomy);
+    p.checkAdqPatchIncludeHurdleCost(true);
+    p.checkAdqPatchDisabledLocalMatching();
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
+{
+    bool res = false;
+    auto p = createParams();
+    try
+    {
+        p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmAdequacy);
+    }
+    catch (const Error::IncompatibleStudyModeForAdqPatch&) { res = true; }
+
+    BOOST_CHECK(res);
+}
+
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
+{
+    bool res = false;
+    auto p = createParams();
+    try
+    {
+        p.checkAdqPatchIncludeHurdleCost(false);
+    }
+    catch (const Error::IncompatibleHurdleCostCSR&) { res = true; }
+
+    BOOST_CHECK(res);
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_lmr_disabled)
+{
+    bool res = false;
+    auto p = createParams();
+    p.localMatching.enabled = false;
+    try
+    {
+        p.checkAdqPatchDisabledLocalMatching();
+    }
+    catch (const Error::AdqPatchDisabledLMR&) { res = true; }
+
+    BOOST_CHECK(res);
 }
