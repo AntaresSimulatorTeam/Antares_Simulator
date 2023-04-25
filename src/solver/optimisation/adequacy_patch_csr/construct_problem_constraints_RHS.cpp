@@ -82,7 +82,6 @@ void HourlyCSRProblem::setRHSnodeBalanceValue()
 
 void HourlyCSRProblem::setRHSbindingConstraintsValue()
 {
-    double csrSolverRelaxationRHS = problemeHebdo_->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
     double* SecondMembre = problemeAResoudre_.SecondMembre;
 
     // constraint:
@@ -144,11 +143,11 @@ void HourlyCSRProblem::setRHSbindingConstraintsValue()
         }
         if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '<')
         {
-            SecondMembre[Cnt] += csrSolverRelaxationRHS;
+            SecondMembre[Cnt] += belowThisThresholdSetToZero;
         }
         else if (MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante == '>')
         {
-            SecondMembre[Cnt] -= csrSolverRelaxationRHS;
+            SecondMembre[Cnt] -= belowThisThresholdSetToZero;
         }
         logs.debug() << Cnt << ": Hourly bc: -RHS[" << Cnt << "] = " << SecondMembre[Cnt];
     }

@@ -697,7 +697,7 @@ public:
     ** Since the v3.1, the file extensions in the input have been renamed into .txt,
     ** (instead of .csv)
     */
-    FileExtension inputExtension;
+    FileExtension inputExtension = "txt";
 
     //! Progression about the current action performed on the study
     mutable Solver::Progression progression;
@@ -766,8 +766,6 @@ protected:
 
     //! \name Misc
     //@{
-    //! Reset the input extension according the study version
-    void inputExtensionCompatibility();
     //! Release all unnecessary buffers
     void reduceMemoryUsage();
     //@}

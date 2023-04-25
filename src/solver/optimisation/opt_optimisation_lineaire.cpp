@@ -46,7 +46,7 @@ double OPT_ObjectiveFunctionResult(const PROBLEME_HEBDO* Probleme,
         return Probleme->coutOptimalSolution2[NumeroDeLIntervalle];
 }
 
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, uint numSpace)
+bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adqPatchParams)
 {
     int optimizationNumber = PREMIERE_OPTIMISATION;
 
@@ -84,8 +84,11 @@ OptimisationHebdo:
         int PremierPdtDeLIntervalle = pdtHebdo;
         DernierPdtDeLIntervalle = pdtHebdo + NombreDePasDeTempsPourUneOptimisation;
 
-        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, optimizationNumber);
+        OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo,
+                                                               adqPatchParams,
+                                                               PremierPdtDeLIntervalle,
+                                                               DernierPdtDeLIntervalle,
+                                                               optimizationNumber);
 
         OPT_InitialiserLeSecondMembreDuProblemeLineaire(problemeHebdo,
                                                         PremierPdtDeLIntervalle,
@@ -94,7 +97,7 @@ OptimisationHebdo:
                                                         optimizationNumber);
 
         OPT_InitialiserLesCoutsLineaire(
-          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
+          problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle);
 
         // An optimization period represents a sequence as <year>-<week> or <year>-<week>-<day>,
         // depending whether the optimization is daily or weekly.

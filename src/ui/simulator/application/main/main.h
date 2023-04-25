@@ -541,8 +541,6 @@ private:
     // void evtOnHelpVisitRTEWebsite(wxCommandEvent& evt);
     //! Event: About this application
     void evtOnHelpAbout(wxCommandEvent& evt);
-    //! Event: PDF General Reference guide
-    void evtOnHelpPDFGeneralReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF System Map Editor Reference guide
     void evtOnHelpPDFSystemMapEditorReferenceGuide(wxCommandEvent& evt);
     //! Event: PDF Examples library

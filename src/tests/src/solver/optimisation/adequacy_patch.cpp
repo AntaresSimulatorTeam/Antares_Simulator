@@ -7,6 +7,7 @@
 #include "adequacy_patch_local_matching/adq_patch_local_matching.h"
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include <adequacy_patch_runtime_data.h>
+#include "antares/study/parameters/adq-patch-params.h"
 
 #include <vector>
 #include <tuple>
@@ -32,22 +33,26 @@ std::pair<double, double> setNTCboundsForOneTimeStep(AdequacyPatchMode originTyp
 
     problem.adequacyPatchRuntimeData->originAreaMode[0] = originType;
     problem.adequacyPatchRuntimeData->extremityAreaMode[0] = extremityType;
-    problem.adqPatchParams
-      = std::unique_ptr<AdequacyPatchParameters>(new AdequacyPatchParameters());
-    auto& adqPatchParams = problem.adqPatchParams;
+    problem.adequacyPatchRuntimeData->AdequacyFirstStep = true;
 
-    adqPatchParams->AdequacyFirstStep = true;
-    adqPatchParams->SetNTCOutsideToOutsideToZero = SetNTCOutsideToOutsideToZero;
-    adqPatchParams->SetNTCOutsideToInsideToZero = SetNTCOutsideToInsideToZero;
+    AdqPatchParams adqPatchParams;
+    adqPatchParams.enabled = true;
+    adqPatchParams.localMatching.setToZeroOutsideOutsideLinks = SetNTCOutsideToOutsideToZero;
+    adqPatchParams.localMatching.setToZeroOutsideInsideLinks = SetNTCOutsideToInsideToZero;
 
     VALEURS_DE_NTC_ET_RESISTANCES ValeursDeNTC;
-    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = &origineExtremite;
-    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = &extremiteOrigine;
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite = new double[1];
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine = new double[1];
+    ValeursDeNTC.ValeurDeNTCOrigineVersExtremite[0] = origineExtremite;
+    ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine[0] = extremiteOrigine;
 
-    double Xmin;
-    double Xmax;
+    double Xmin(0.);
+    double Xmax(0.);
 
-    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem);
+    setNTCbounds(Xmax, Xmin, &ValeursDeNTC, 0, &problem, adqPatchParams);
+
+    delete[] ValeursDeNTC.ValeurDeNTCOrigineVersExtremite;
+    delete[] ValeursDeNTC.ValeurDeNTCExtremiteVersOrigine;
 
     return std::make_pair(Xmin, Xmax);
 }
@@ -75,8 +80,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.adequacyPatchRuntimeData->originAreaMode.resize(3);
     problem.adequacyPatchRuntimeData->extremityAreaMode.resize(3);
 
-    auto& adqPatchParams = problem.adqPatchParams;
-    adqPatchParams = std::make_shared<AdequacyPatchParameters>();
+    AdqPatchParams adqPatchParams;
 
     problem.ResultatsHoraires = new RESULTATS_HORAIRES*;
     problem.ResultatsHoraires[0] = new RESULTATS_HORAIRES;
@@ -90,7 +94,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     problem.IndexDebutIntercoExtremite = new int[1];
 
     // input values
-    adqPatchParams->SetNTCOutsideToInsideToZero = !includeFlowsOutsideAdqPatchToDensNew;
+    adqPatchParams.localMatching.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
     problem.ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
@@ -108,7 +112,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     double netPositionInit;
     double densNew;
     std::tie(netPositionInit, densNew, std::ignore)
-      = calculateAreaFlowBalance(&problem, Area, hour);
+        = calculateAreaFlowBalance(&problem, adqPatchParams.localMatching.setToZeroOutsideInsideLinks, Area, hour);
 
     // free memory
     delete[] problem.IndexDebutIntercoExtremite;

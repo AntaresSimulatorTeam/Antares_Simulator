@@ -30,6 +30,7 @@
 // TODO[FOM] Remove this, it is only required for PROBLEME_HEBDO
 // but this problem has nothing to do with PROBLEME_HEBDO
 #include "../simulation/sim_structure_probleme_economique.h"
+#include <antares/study/parameters/adq-patch-params.h>
 
 class HourlyCSRProblem
 {
@@ -64,6 +65,10 @@ private:
     void setQuadraticCost();
     void setLinearCost();
 
+private:
+    using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+    const AdqPatchParams& adqPatchParams_;
+
 public:
     void run(uint week, uint year);
 
@@ -72,9 +77,14 @@ public:
     double belowThisThresholdSetToZero;
     PROBLEME_HEBDO* problemeHebdo_;
     PROBLEME_ANTARES_A_RESOUDRE problemeAResoudre_;
-    explicit HourlyCSRProblem(PROBLEME_HEBDO* p) : problemeHebdo_(p)
+
+    explicit HourlyCSRProblem(const AdqPatchParams& adqPatchParams,PROBLEME_HEBDO* p) :
+        adqPatchParams_(adqPatchParams),
+        problemeHebdo_(p)
     {
-        belowThisThresholdSetToZero = p->adqPatchParams->ThresholdCSRVarBoundsRelaxation;
+        double temp = pow(10, -adqPatchParams.curtailmentSharing.thresholdVarBoundsRelaxation);
+        belowThisThresholdSetToZero = std::min(temp, 0.1);
+
         allocateProblem();
     }
 
@@ -100,6 +110,7 @@ public:
     std::map<int, double> rhsAreaBalanceValues;
     std::set<int> varToBeSetToZeroIfBelowThreshold; // place inside only ENS and Spillage variable
     std::set<int> ensVariablesInsideAdqPatch;       // place inside only ENS inside adq-patch
+
     struct LinkVariable
     {
         LinkVariable() : directVar(-1), indirectVar(-1)
@@ -120,6 +131,7 @@ public:
         int directVar;
         int indirectVar;
     };
-    std::map<int, LinkVariable>
-      linkInsideAdqPatch; // links between two areas inside the adq-patch domain
+
+    // links between two areas inside the adq-patch domain
+    std::map<int, LinkVariable> linkInsideAdqPatch;
 };

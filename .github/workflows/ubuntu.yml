@@ -20,12 +20,6 @@ env:
 
 jobs:
 
-  doc_generation:
-    if: ${{ github.event_name == 'release' || contains(github.ref_name, 'doc/') }}
-    uses: ./.github/workflows/build-userguide.yml
-    with:
-      artifact_name: pdf-doc
-
   build:
     name: Build
     env:
@@ -164,7 +158,7 @@ jobs:
         os: ${{ matrix.test-platform }}
 
     - name: Run tests for adequacy patch (CSR)
-      if: ${{ env.IS_RELEASE == 'true' }}
+      if: ${{ env.IS_PUSH == 'true' }}
       uses: ./.github/workflows/run-tests
       with:
         simtest-tag: ${{steps.simtest-version.outputs.prop}}
