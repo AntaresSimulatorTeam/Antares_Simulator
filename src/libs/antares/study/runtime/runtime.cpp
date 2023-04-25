@@ -331,7 +331,7 @@ BindingConstraintRTI::~BindingConstraintRTI()
 void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
 {
     // Calculating the total number of binding constraints
-    bindingConstraintCount = 0;
+    auto bindingConstraintCount = 0;
 
     list.eachEnabled([&](const BindingConstraint& constraint) {
         bindingConstraintCount
@@ -350,7 +350,8 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         logs.info() << "Optimizing " << bindingConstraintCount << " binding constraints";
     }
 
-    bindingConstraint = new BindingConstraintRTI[bindingConstraintCount];
+    bindingConstraint.clear();
+    bindingConstraint.resize(bindingConstraintCount);
 
     uint index = 0;
     list.eachEnabled([&](const BindingConstraint& constraint) {
@@ -407,8 +408,6 @@ StudyRuntimeInfos::StudyRuntimeInfos(uint nbYearsParallel) :
  nbMonthsPerYear(0),
  parameters(nullptr),
  timeseriesNumberYear(nullptr),
- bindingConstraintCount(0),
- bindingConstraint(nullptr),
  thermalPlantTotalCount(0),
  thermalPlantTotalCountMustRun(0),
  quadraticOptimizationHasFailed(false)
@@ -506,7 +505,7 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info() << "     thermal clusters: " << thermalPlantTotalCount;
     logs.info() << "     thermal clusters (must-run): " << thermalPlantTotalCountMustRun;
     logs.info() << "     short-term storages: " << shortTermStorageCount;
-    logs.info() << "     binding constraints: " << bindingConstraintCount;
+    logs.info() << "     binding constraints: " << bindingConstraint.size();
     logs.info() << "     geographic trimming:" << (gd.geographicTrimming ? "true" : "false");
     logs.info() << "     memory : " << ((study.memoryUsage()) / 1024 / 1024) << "Mo";
     logs.info();
@@ -526,15 +525,15 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& 
 
 uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
 {
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    const auto firstBC = bindingConstraint.begin();
+    const auto lastBC = bindingConstraint.end();
     return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
 }
 
 std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
 {
-    const auto* firstBC = this->bindingConstraint;
-    const auto* lastBC = firstBC + this->bindingConstraintCount;
+    const auto firstBC = bindingConstraint.begin();
+    const auto lastBC = bindingConstraint.end();
 
     std::vector<uint> indices;
     for (auto bc = firstBC; bc < lastBC; bc++)
@@ -644,17 +643,6 @@ StudyRuntimeInfos::~StudyRuntimeInfos()
     logs.debug() << "Releasing runtime data";
 
     delete[] timeseriesNumberYear;
-    delete[] bindingConstraint;
-}
-
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r)
-{
-    if (r)
-    {
-        return sizeof(StudyRuntimeInfos) + sizeof(AreaLink*) * r->interconnectionsCount()
-               + sizeof(BindingConstraint*) * r->bindingConstraintCount;
-    }
-    return 0;
 }
 
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
@@ -664,6 +652,7 @@ void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
         u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
     });
 
+    //TODO ?
     // Binding constraints
     // see BindConstList::estimateMemoryUsage
 }
