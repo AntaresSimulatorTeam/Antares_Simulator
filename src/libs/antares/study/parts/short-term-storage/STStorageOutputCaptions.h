@@ -4,5 +4,5 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-std::string getVariableCaptionFromColumnIndex(uint index);
+std::string getVariableCaptionFromColumnIndex(unsigned int index);
 }
