@@ -99,9 +99,9 @@ struct VCardShortTermStorage
 
         static std::string Unit(const unsigned int indx)
         {
-            if (indx % 3 == 2)
+            if (indx % 3 == 2) // Level
                 return "MWh";
-            else
+            else // Injection, withdrawal
                 return "MW";
         }
     };
