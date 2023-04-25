@@ -32,6 +32,8 @@
 #include "../simulation/sim_structure_probleme_adequation.h"
 #include "../simulation/sim_extern_variables_globales.h"
 #include "alea_fonctions.h"
+#include <algorithm>
+#include <iterator>
 #include <limits>
 #include <antares/logs.h>
 #include <antares/date.h>
@@ -184,6 +186,18 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         assert(directWidth == indirectWidth);
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
+    }
+    //Each binding constraints group
+    std::vector<std::string> all_groups;
+    std::transform(runtime.bindingConstraint.begin(), runtime.bindingConstraint.end(),
+                   std::back_inserter(all_groups),
+                   [](auto bc)->std::string {
+        return bc.group;
+    });
+    all_groups.erase(std::unique(all_groups.begin(), all_groups.end()), all_groups.end());
+    for (const auto& group_name : all_groups) {
+        assert(year < study.bindingConstraints.time_series[group_name].SeriesWidth()); //TODO width or height ?
+        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series[group_name].timeseriesNumbers[0][year];
     }
 }
 

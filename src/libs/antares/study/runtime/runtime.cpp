@@ -159,8 +159,6 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
-    rti.bounds.resize(1, b.matrix().height);
-    rti.bounds.pasteToColumn(0, b.matrix()[C]);
 
     rti.linkWeight = new double[rti.linkCount];
     rti.linkOffset = new int[rti.linkCount];
@@ -178,6 +176,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
                      rti.linkIndex,
                      rti.clusterIndex,
                      rti.clustersAreaIndex);
+    rti.group = b.group();
 }
 
 void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimits& limits)
