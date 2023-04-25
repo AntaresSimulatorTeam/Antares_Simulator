@@ -45,13 +45,13 @@ struct VCardRenewableGeneration
         return "Renewable Gen.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all the renewable generation throughout all MC years";
     }
@@ -123,6 +123,11 @@ struct VCardRenewableGeneration
             default:
                 return "<unknown>";
             }
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardRenewableGeneration::Unit();
         }
     };
 }; // class VCard
@@ -262,14 +267,16 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount();
+             ++clusterIndex)
         {
             const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
             uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
-            double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+            double renewableClusterProduction
+              = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
 
             pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
-                += renewableClusterProduction;
+              += renewableClusterProduction;
         }
 
         // Next variable
@@ -297,6 +304,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

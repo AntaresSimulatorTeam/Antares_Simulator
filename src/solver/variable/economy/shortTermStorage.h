@@ -39,13 +39,13 @@ struct VCardShortTermStorage
         return "ST storage";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all short term storage throughout all MC years";
     }
@@ -95,6 +95,14 @@ struct VCardShortTermStorage
         static std::string Caption(const unsigned int indx)
         {
             return Antares::Data::ShortTermStorage::getVariableCaptionFromColumnIndex(indx);
+        }
+
+        static std::string Unit(const unsigned int indx)
+        {
+            if (indx % 3 == 2) // Level
+                return "MWh";
+            else // Injection, withdrawal
+                return "MW";
         }
     };
 }; // class VCard
@@ -270,6 +278,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

@@ -45,13 +45,13 @@ struct VCardNbOfDispatchedUnitsByPlant
         return "NODU by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NODU";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Number of Dispatchable Units by plant";
     }
@@ -363,6 +363,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

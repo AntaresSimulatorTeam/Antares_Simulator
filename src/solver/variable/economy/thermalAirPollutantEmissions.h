@@ -40,13 +40,13 @@ struct VCardThermalAirPollutantEmissions
         return "";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Tons";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Overall pollutant emissions expected from all the thermal clusters";
     }
@@ -99,6 +99,11 @@ struct VCardThermalAirPollutantEmissions
                 return Antares::Data::Pollutant::getPollutantName(indx).c_str();
 
             return "<unknown>";
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardThermalAirPollutantEmissions::Unit();
         }
     };
 }; // class VCard
@@ -279,6 +284,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

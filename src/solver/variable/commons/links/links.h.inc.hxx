@@ -49,7 +49,7 @@ struct VCardAllLinks
         return "Links";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }

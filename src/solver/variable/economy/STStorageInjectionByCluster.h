@@ -38,13 +38,13 @@ struct VCardSTstorageInjectionByCluster
         return "STS inj by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "P-injection - MW";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Energy injected by ST storage clusters";
     }
@@ -311,6 +311,7 @@ public:
                 // Write the data for the current year
                 const auto* cluster = shortTermStorage.storagesByIndex[clusterIndex];
                 results.variableCaption = cluster->properties.name;
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][clusterIndex].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

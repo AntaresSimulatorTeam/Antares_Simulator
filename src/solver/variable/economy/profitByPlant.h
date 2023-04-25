@@ -45,13 +45,13 @@ struct VCardProfitByPlant
         return "Profit by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Profit - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Profit for thermal units";
     }
@@ -340,6 +340,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

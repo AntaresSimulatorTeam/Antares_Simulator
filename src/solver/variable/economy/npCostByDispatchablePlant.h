@@ -45,13 +45,13 @@ struct VCardNonProportionalCostByDispatchablePlant
         return "NP Cost by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NP Cost - Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non proportional costs by all the clusters";
     }
@@ -341,6 +341,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

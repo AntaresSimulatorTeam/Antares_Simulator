@@ -597,7 +597,7 @@ public:
     static void Do(PredicateT& predicate)
     {
         for (int i = 0; i < VCardT::columnCount; ++i)
-            predicate.add(VCardT::Multiple::Caption(i), VCardT::Unit(), VCardT::Description());
+            predicate.add(VCardT::Multiple::Caption(i), VCardT::Multiple::Unit(i), VCardT::Description());
     }
 
     // Function used to build the collection of variables print info from the static variables list.

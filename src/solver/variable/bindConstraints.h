@@ -42,13 +42,13 @@ struct VCardAllBindingConstraints
         return "Binding constraints";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }

@@ -39,13 +39,13 @@ struct VCardLMRViolations
         return "LMR VIOL.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return " ";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Local Matching Rule is violated more than the provided threshold";
     }
@@ -251,6 +251,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }
