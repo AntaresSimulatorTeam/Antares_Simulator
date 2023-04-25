@@ -52,7 +52,7 @@ struct VCardTimeSeriesValuesHydro
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Hydro generation, thoughout all MC years";
     }

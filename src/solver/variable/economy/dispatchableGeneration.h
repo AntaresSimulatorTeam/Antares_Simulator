@@ -51,7 +51,7 @@ struct VCardDispatchableGeneration
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all the dispatchable generation throughout all MC years";
     }

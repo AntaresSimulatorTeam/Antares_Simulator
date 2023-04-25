@@ -19,7 +19,7 @@ static const std::vector<std::string> variables = {"injection", "withdrawal", "l
 const unsigned int nb_groups = groups.size();
 const unsigned int nb_variables = variables.size();
 
-std::string getVariableCaptionFromColumnIndex(uint col_index)
+std::string getVariableCaptionFromColumnIndex(unsigned int col_index)
 {
     if (col_index < nb_groups * nb_variables)
     {

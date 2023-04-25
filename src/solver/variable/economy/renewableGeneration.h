@@ -51,7 +51,7 @@ struct VCardRenewableGeneration
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all the renewable generation throughout all MC years";
     }

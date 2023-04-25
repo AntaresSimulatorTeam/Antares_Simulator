@@ -52,7 +52,7 @@ struct VCardCongestionProbability
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Probability for the line to be congested in the upstream-downstream way";
     }

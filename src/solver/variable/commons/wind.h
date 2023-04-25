@@ -52,7 +52,7 @@ struct VCardTimeSeriesValuesWind
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Wind generation, thoughout all MC years";
     }

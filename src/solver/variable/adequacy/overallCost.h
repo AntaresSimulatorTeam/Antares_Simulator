@@ -51,7 +51,7 @@ struct VCardOverallCost
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Overall Cost throughout all MC years";
     }

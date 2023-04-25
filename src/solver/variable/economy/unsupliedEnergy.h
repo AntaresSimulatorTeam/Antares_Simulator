@@ -50,7 +50,7 @@ struct VCardUnsupliedEnergy
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Unsuplied Energy (demand that cannot be satisfied)";
     }

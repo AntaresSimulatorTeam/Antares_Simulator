@@ -44,7 +44,7 @@ struct VCardSpilledEnergyAfterCSR
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Spilled Energy After CSR Optimization (generation that cannot be satisfied) "
                "after CSR optimization";

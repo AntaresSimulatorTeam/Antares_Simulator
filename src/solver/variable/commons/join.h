@@ -50,7 +50,7 @@ struct VCardJoin
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }

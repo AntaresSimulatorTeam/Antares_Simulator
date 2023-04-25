@@ -52,7 +52,7 @@ struct VCardFlowLinearAbs
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Used capacity assessed, over all MC years, through linear optimization";
     }

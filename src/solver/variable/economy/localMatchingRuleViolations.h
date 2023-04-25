@@ -45,7 +45,7 @@ struct VCardLMRViolations
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Local Matching Rule is violated more than the provided threshold";
     }

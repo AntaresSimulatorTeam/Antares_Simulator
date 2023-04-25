@@ -51,7 +51,7 @@ struct VCardFlowQuad
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Flow (quad.)";
     }
