@@ -53,7 +53,7 @@ struct VCardMiscGenMinusRowPSP
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non-dispatchable generation (not including wind and run-of-the-river)";
     }

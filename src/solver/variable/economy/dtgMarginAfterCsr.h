@@ -44,7 +44,7 @@ struct VCardDtgMarginCsr
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Dispatchable Generation Margin (after CSR optimization)";
     }

@@ -52,7 +52,7 @@ struct VCardTimeSeriesValuesSolar
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Solar generation, thoughout all MC years";
     }

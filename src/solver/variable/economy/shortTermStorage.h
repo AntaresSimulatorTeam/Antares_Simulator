@@ -45,7 +45,7 @@ struct VCardShortTermStorage
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all short term storage throughout all MC years";
     }

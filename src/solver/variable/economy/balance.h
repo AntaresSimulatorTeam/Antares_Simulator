@@ -51,7 +51,7 @@ struct VCardBalance
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Nodal energy balance, throughout all MC years";
     }

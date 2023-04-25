@@ -46,7 +46,7 @@ struct VCardThermalAirPollutantEmissions
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Overall pollutant emissions expected from all the thermal clusters";
     }

@@ -111,7 +111,7 @@ struct VCardProxy
         return VCardOrigin::Unit();
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return VCardOrigin::Description();
     }

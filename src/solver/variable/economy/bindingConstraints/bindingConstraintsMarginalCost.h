@@ -51,7 +51,7 @@ struct VCardBindingConstMarginCost
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Marginal cost for binding constraints";
     }

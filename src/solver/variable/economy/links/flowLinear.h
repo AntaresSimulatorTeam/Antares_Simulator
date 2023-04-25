@@ -51,7 +51,7 @@ struct VCardFlowLinear
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Flow assessed, over all MC years, through linear optimization";
     }

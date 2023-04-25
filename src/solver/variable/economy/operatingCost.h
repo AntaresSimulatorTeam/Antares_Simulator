@@ -51,7 +51,7 @@ struct VCardOperatingCost
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Operating Cost throughout all MC years, of all the thermal dispatchable clusters";
     }

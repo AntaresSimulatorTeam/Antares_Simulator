@@ -51,7 +51,7 @@ struct VCardNonProportionalCost
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non Proportional Cost throughout all MC years, of all the thermal dispatchable "
                "clusters";

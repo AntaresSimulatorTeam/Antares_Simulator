@@ -51,7 +51,7 @@ struct VCardCongestionFeeAbs
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Congestion fee collected throughout all MC years (Absolute value)";
     }

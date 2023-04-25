@@ -51,7 +51,7 @@ struct VCardMarginalCost
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Decrease of the overall operating cost expected by a 1MW capacity reinforcement";
     }

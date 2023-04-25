@@ -51,7 +51,7 @@ struct VCardNonProportionalCostByDispatchablePlant
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Non proportional costs by all the clusters";
     }

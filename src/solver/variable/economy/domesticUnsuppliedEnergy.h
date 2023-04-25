@@ -50,7 +50,7 @@ struct VCardDomesticUnsuppliedEnergy
         return "MWh";
     }
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Domestic Unsupplied Energy (demand that cannot be satisfied without "
                "interconnections/links)";

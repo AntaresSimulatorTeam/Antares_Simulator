@@ -51,7 +51,7 @@ struct VCardHurdleCosts
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Hurdle costs, over all MC years";
     }

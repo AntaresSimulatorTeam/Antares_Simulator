@@ -51,7 +51,7 @@ struct VCardMARGE
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Maximum margin throughout all MC years";
     }
