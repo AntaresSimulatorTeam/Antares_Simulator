@@ -4,22 +4,20 @@
 
 namespace Antares::Data::ShortTermStorage
 {
-static const std::vector<std::string> groups = {
-    "PSP_open", 
-    "PSP_closed", 
-    "Pondage", 
-    "Battery", 
-    "Other1", 
-    "Other2", 
-    "Other3", 
-    "Other4", 
-    "Other5"};
+static const std::vector<std::string> groups = {"PSP_open",
+                                                "PSP_closed",
+                                                "Pondage",
+                                                "Battery",
+                                                "Other1",
+                                                "Other2",
+                                                "Other3",
+                                                "Other4",
+                                                "Other5"};
 
 static const std::vector<std::string> variables = {"injection", "withdrawal", "level"};
 
 const unsigned int nb_groups = groups.size();
 const unsigned int nb_variables = variables.size();
-
 
 std::string getVariableCaptionFromColumnIndex(uint col_index)
 {

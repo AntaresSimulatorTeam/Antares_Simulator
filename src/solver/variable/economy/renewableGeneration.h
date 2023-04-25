@@ -267,14 +267,16 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount(); ++clusterIndex)
+        for (uint clusterIndex = 0; clusterIndex != state.area->renewable.clusterCount();
+             ++clusterIndex)
         {
             const auto* renewableCluster = state.area->renewable.clusters[clusterIndex];
             uint serieIndex = state.timeseriesIndex->RenouvelableParPalier[clusterIndex];
-            double renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
+            double renewableClusterProduction
+              = renewableCluster->valueAtTimeStep(serieIndex, state.hourInTheYear);
 
             pValuesForTheCurrentYear[numSpace][renewableCluster->groupID][state.hourInTheYear]
-                += renewableClusterProduction;
+              += renewableClusterProduction;
         }
 
         // Next variable
