@@ -504,49 +504,27 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
 BOOST_AUTO_TEST_CASE(check_valid_adq_param)
 {
     auto p = createParams();
-
-    p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmEconomy);
-    p.checkAdqPatchIncludeHurdleCost(true);
-    p.checkAdqPatchDisabledLocalMatching();
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmEconomy));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchIncludeHurdleCost(true));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchDisabledLocalMatching());
 }
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
 {
-    bool res = false;
     auto p = createParams();
-    try
-    {
-        p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmAdequacy);
-    }
-    catch (const Error::IncompatibleStudyModeForAdqPatch&) { res = true; }
-
-    BOOST_CHECK(res);
+    BOOST_CHECK_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmAdequacy),
+            Error::IncompatibleStudyModeForAdqPatch);
 }
-
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
 {
-    bool res = false;
     auto p = createParams();
-    try
-    {
-        p.checkAdqPatchIncludeHurdleCost(false);
-    }
-    catch (const Error::IncompatibleHurdleCostCSR&) { res = true; }
-
-    BOOST_CHECK(res);
+    BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
 }
 
 BOOST_AUTO_TEST_CASE(check_adq_param_wrong_lmr_disabled)
 {
-    bool res = false;
     auto p = createParams();
     p.localMatching.enabled = false;
-    try
-    {
-        p.checkAdqPatchDisabledLocalMatching();
-    }
-    catch (const Error::AdqPatchDisabledLMR&) { res = true; }
-
-    BOOST_CHECK(res);
+    BOOST_CHECK_THROW(p.checkAdqPatchDisabledLocalMatching(), Error::AdqPatchDisabledLMR);
 }
