@@ -153,9 +153,7 @@ public:
     */
     uint* timeseriesNumberYear;
 
-    //! Number of binding constraint
-    uint bindingConstraintCount;
-    BindingConstraintRTI* bindingConstraint;
+    std::vector<BindingConstraintRTI> bindingConstraint;
 
     //! Total
     uint thermalPlantTotalCount;
