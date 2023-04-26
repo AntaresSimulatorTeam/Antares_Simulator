@@ -33,6 +33,7 @@ void LocalMatching::addProperties(IniFile::Section* section) const
 {
     section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step", setToZeroOutsideInsideLinks);
     section->add("set-to-null-ntc-between-physical-out-for-first-step", setToZeroOutsideOutsideLinks);
+    section->add("enable-first-step", enabled);
 }
 
 // -----------------------
