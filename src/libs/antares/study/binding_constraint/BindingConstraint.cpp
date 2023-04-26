@@ -1574,7 +1574,7 @@ bool BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstr
         switch (operatorType) {
             case BindingConstraint::opLess:
                 env.buffer.clear() << env.folder << SEP << group << SEP << group << "_lt" << ".txt";
-                load_ok = time_series[group].lower_bound_series.loadFromCSVFile(env.buffer,
+                load_ok = time_series[group].lesser_than_series.loadFromCSVFile(env.buffer,
                                                                                 BindingConstraint::columnMax,
                                                                                 (type == BindingConstraint::typeHourly) ? 8784 : 366,
                                                                                 Matrix<>::optImmediate | Matrix<>::optFixedSize,
@@ -1582,11 +1582,11 @@ bool BindingConstraintsList::loadTimeSeries(unsigned int nb_years, BindingConstr
                 break;
             case BindingConstraint::opGreater:
                 env.buffer.clear() << env.folder << SEP << group << SEP << group << "_gt" << ".txt";
-                load_ok = time_series[group].upper_bound_series.loadFromCSVFile(env.buffer,
-                                                                                BindingConstraint::columnMax,
+                load_ok = time_series[group].greater_than_series.loadFromCSVFile(env.buffer,
+                                                                                 BindingConstraint::columnMax,
                                                                                 (type == BindingConstraint::typeHourly) ? 8784 : 366,
                                                                                 Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                                                                &env.matrixBuffer);
+                                                                                 &env.matrixBuffer);
                 break;
             case BindingConstraint::opEquality:
                 env.buffer.clear() << env.folder << SEP << group << SEP << group << "_eq" << ".txt";
