@@ -115,7 +115,6 @@ public:
     static const char* GroupName(enum ThermalDispatchableGroup grp);
 
     explicit ThermalCluster(Data::Area* parent);
-    explicit ThermalCluster(Data::Area* parent, uint nbParallelYears);
 
     ThermalCluster() = delete;
     ~ThermalCluster();
