@@ -593,10 +593,10 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                             column = &ts.equality_series[ts_number];
                             break;
                         case '<':
-                            column = &ts.lower_bound_series[ts_number];
+                            column = &ts.lesser_than_series[ts_number];
                             break;
                         case '>':
-                            column = &ts.upper_bound_series[ts_number];
+                            column = &ts.greater_than_series[ts_number];
                             break;
                         default:
                             assert(false);
