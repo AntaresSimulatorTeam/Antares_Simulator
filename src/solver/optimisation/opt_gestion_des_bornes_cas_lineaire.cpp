@@ -141,9 +141,9 @@ void setBoundsForUnsuppliedEnergy(PROBLEME_HEBDO* problemeHebdo,
                 Xmax[var] = 0.;
 
             // adq patch: update ENS <= DENS in 2nd run
-            if (adqPatchParams.enabled &&
-                ! problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep &&
-                problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
+            if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
+                && !problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep
+                && problemeHebdo->adequacyPatchRuntimeData->areaMode[pays]
                      == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
                 Xmax[var] = std::min(
                   Xmax[var], problemeHebdo->ResultatsHoraires[pays]->ValeursHorairesDENS[pdtHebdo]);
