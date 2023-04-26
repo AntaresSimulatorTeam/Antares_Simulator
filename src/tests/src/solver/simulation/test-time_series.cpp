@@ -97,8 +97,8 @@ BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
 BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
     BOOST_CHECK_EQUAL(loading_ok, true);
-    CheckEqual(bindingConstraints.time_series["dummy_group"].lower_bound_series, expected_lower_bound_series);
-    CheckEqual(bindingConstraints.time_series["dummy_group"].upper_bound_series, expected_upper_bound_series);
+    CheckEqual(bindingConstraints.time_series["dummy_group"].lesser_than_series, expected_lower_bound_series);
+    CheckEqual(bindingConstraints.time_series["dummy_group"].greater_than_series, expected_upper_bound_series);
     CheckEqual(bindingConstraints.time_series["dummy_group"].equality_series, expected_equality_series);
 }
 

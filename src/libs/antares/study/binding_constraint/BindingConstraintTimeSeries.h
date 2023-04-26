@@ -15,8 +15,8 @@ public:
     BindingConstraintTimeSeries(const BindingConstraintTimeSeries&) = default;
     //Width = number of chronicles
     //Height = number of time step
-    Matrix<double> lower_bound_series;
-    Matrix<double> upper_bound_series;
+    Matrix<double> lesser_than_series;
+    Matrix<double> greater_than_series;
     Matrix<double> equality_series;
     Matrix<Yuni::uint32> timeseriesNumbers;
     unsigned SeriesWidth() const;
