@@ -62,7 +62,6 @@ Area::Area() :
  filterYearByYear(filterAll),
  ui(nullptr),
  nbYearsInParallel(0),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -79,7 +78,6 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
  filterYearByYear(filterAll),
  ui(NULL),
  nbYearsInParallel(nbParallelYears),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -98,7 +96,6 @@ Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uin
  filterYearByYear(filterAll),
  ui(nullptr),
  nbYearsInParallel(nbParallelYears),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -110,18 +107,6 @@ Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uin
 Area::~Area()
 {
     logs.debug() << "  :: destroying area " << name;
-
-    if (scratchpad)
-    {
-        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
-        {
-            if (scratchpad[numSpace])
-                delete scratchpad[numSpace];
-            scratchpad[numSpace] = nullptr;
-        }
-        delete[] scratchpad;
-        scratchpad = nullptr;
-    }
 
     // Delete all links
     clearAllLinks();
@@ -239,8 +224,8 @@ Yuni::uint64 Area::memoryUsage() const
         ret += ui->memoryUsage();
 
     // scratchpad
-    if (scratchpad)
-        ret += sizeof(AreaScratchpad) * nbYearsInParallel;
+    if (!scratchpad.empty())
+        ret += sizeof(scratchpad[0]) * scratchpad.size();
 
     // links
     auto end = links.end();

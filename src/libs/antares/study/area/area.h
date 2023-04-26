@@ -321,7 +321,7 @@ public:
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable AreaScratchpad** scratchpad;
+    mutable std::vector<std::shared_ptr<AreaScratchpad>> scratchpad;
     //@}
 
     //! \name Data
