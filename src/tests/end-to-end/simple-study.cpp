@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <memory>
 #include "antares/study/area/area.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
@@ -10,6 +11,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <boost/test/included/unit_test.hpp>
+#include <boost/test/data/test_case.hpp>
 
 #include <antares/study/study.h>
 #include <antares/study/scenario-builder/sets.h>
@@ -298,10 +300,33 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
 
     Area *area1 = addArea(pStudy, "Area 1", nbTS);
     Area *area2 = addArea(pStudy, "Area 2", nbTS);
+    auto* area3 = addArea(pStudy, "Area 3", nbTS);
     auto link = AreaAddLinkBetweenAreas(area1, area2);
+    link->directCapacities.resize(1, 8760);
+    link->indirectCapacities.resize(1, 8760);
+    link->directCapacities.fill(1);
+    link->indirectCapacities.fill(1);
+    auto link2 = AreaAddLinkBetweenAreas(area2, area3);
+    auto link3 = AreaAddLinkBetweenAreas(area1, area3);
+    link2->directCapacities.resize(1, 8760);
+    link2->directCapacities.resize(1, 8760);
+    link2->directCapacities.fill(1);
+    link2->indirectCapacities.fill(1);
+    link3->directCapacities.resize(1, 8760);
+    link3->directCapacities.resize(1, 8760);
+    link3->directCapacities.fill(1);
+    link3->indirectCapacities.fill(1);
 
-    auto rhs = 1;
+    auto rhs = 0.3;
     auto cost = 1;
+
+    //Add thermal  cluster
+    double availablePower = 50000.0;
+    double maximumPower = 100000.0;
+    auto pCluster = addCluster(pStudy, area1, "Cluster 1", maximumPower, 1, nbTS);
+
+    //Initialize time series
+    pCluster->series->time_series.fillColumn(0, availablePower);
 
     //Add BC
     auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
