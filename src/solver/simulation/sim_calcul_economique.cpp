@@ -43,14 +43,15 @@ static void importShortTermStorages(
   const AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
-    int STindex = 0;
+    int globalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
+            int STindex = 0;
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];
-            toInsert.globalIndex = STindex;
+            toInsert.globalIndex = globalIndex;
 
             // Properties
             toInsert.capacity = st->properties.capacity.value();
@@ -63,6 +64,7 @@ static void importShortTermStorages(
 
             // TODO add missing properties, or use the same struct
             STindex++;
+            globalIndex++;
         }
     }
 }
