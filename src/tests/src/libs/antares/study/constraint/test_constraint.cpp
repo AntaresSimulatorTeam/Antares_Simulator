@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
                 << "group = dummy_group\n"
                    ;
     constraints.close();
-    std::ofstream rhs(working_tmp_dir / "dummy_id.txt");
+    std::ofstream rhs(working_tmp_dir / "dummy_name.txt");
     rhs.close();
 
     const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
@@ -100,3 +100,5 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     BOOST_CHECK_CLOSE(constraint->matrix()[1][30], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(constraint->matrix()[2][8783], 0.6, 0.0001);
 }
+
+//TODO Load empty file? load missing file? Load 1 column for N years ?

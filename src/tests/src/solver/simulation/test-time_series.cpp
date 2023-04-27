@@ -29,7 +29,7 @@ void initializeStudy(Study& study)
 }
 
 template<class Ta, class Tb>
-void CheckEqual(Matrix<Ta>& a, Matrix<Tb>& b) {
+void CheckEqual(const Matrix<Ta>& a, const Matrix<Tb>& b) {
     BOOST_CHECK_EQUAL(a.width, b.width);
     BOOST_CHECK_EQUAL(a.height, b.height);
     if (a.height > 0 && a.width > 0) {
@@ -78,10 +78,9 @@ struct Fixture {
         expected_equality_series.fillColumn(2, 0.9);
         expected_equality_series[0][8763] = 1;
 
-        fs::create_directories(working_tmp_dir / "dummy_group");
-        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_group" / "dummy_group_lt.txt").c_str());
-        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_group" /"dummy_group_gt.txt").c_str());
-        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_group" /"dummy_group_eq.txt").c_str());
+        expected_lower_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_lt.txt").c_str());
+        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_gt.txt").c_str());
+        expected_equality_series.saveToCSVFile((working_tmp_dir / "dummy_name_eq.txt").c_str());
     };
     Study study;
     StudyLoadOptions options;
@@ -97,14 +96,14 @@ BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
 BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
     BOOST_CHECK_EQUAL(loading_ok, true);
-    CheckEqual(bindingConstraints.time_series["dummy_group"].lesser_than_series, expected_lower_bound_series);
-    CheckEqual(bindingConstraints.time_series["dummy_group"].greater_than_series, expected_upper_bound_series);
-    CheckEqual(bindingConstraints.time_series["dummy_group"].equality_series, expected_equality_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().lesser_than_series, expected_lower_bound_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().greater_than_series, expected_upper_bound_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().equality_series, expected_equality_series);
 }
 
 BOOST_AUTO_TEST_CASE(verify_all_series_have_the_same_width) {
         expected_upper_bound_series.resize(1, 8784);
-        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_group" /"dummy_group_gt.txt").c_str());
+        expected_upper_bound_series.saveToCSVFile((working_tmp_dir / "dummy_name_gt.txt").c_str());
         const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
         BOOST_CHECK_EQUAL(loading_ok, false);
 }
@@ -137,6 +136,7 @@ BOOST_AUTO_TEST_CASE(verify_all_bc_in_a_group_have_same_type) {
         BOOST_CHECK_EQUAL(loading_ok, false);
 }
 
+//TODO
 BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_ones) {
 
 }
