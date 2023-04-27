@@ -51,6 +51,12 @@ public:
                               std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator,
                               unsigned int cycleDuration) const;
 
+    bool isInitLevelBetweenRuleCurvesOnWeek(unsigned int firstHourOfTheWeek,
+                                            std::optional<double> initialLevel,
+                                            unsigned int cycleDuration) const;
+    bool ruleCurvesFramesHaveIntersection(unsigned int firstHourOfTheWeek,
+                                          std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator) const;
+
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
     std::vector<double> inflows;
@@ -58,12 +64,6 @@ public:
     std::vector<double> upperRuleCurve;
 
 private:
-    bool isInitLevelBetweenRuleCurvesOnWeek(unsigned int firstHourOfTheWeek,
-                                            std::optional<double> initialLevel,
-                                            unsigned int cycleDuration) const;
-    bool ruleCurvesFramesHaveIntersection(unsigned int firstHourOfTheWeek,
-                                          std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator) const;
-
     bool validateSizes() const;
     bool validateMaxInjection() const;
     bool validateMaxWithdrawal() const;
