@@ -46,7 +46,7 @@ public:
     bool validate(bool simplexIsWeek);
     bool validateWeeklyTimeseries(unsigned int firstHourOfTheWeek) const;
 
-    void STStorageCluster::setInitLevelBoundsCalculator(bool isSimplexWeekly);
+    void setInitLevelBoundsCalculator(bool isSimplexWeekly);
     std::vector<Bounds> getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek);
 
     std::string id;
