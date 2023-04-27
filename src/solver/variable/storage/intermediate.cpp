@@ -109,7 +109,6 @@ void IntermediateValues::computeStatisticsForTheCurrentYear()
 
     // x(m)
     indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
-    // indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
     for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
     {
         double d = 0.;
@@ -162,7 +161,6 @@ void IntermediateValues::computeStatisticsOrForTheCurrentYear()
     }
 
     // x(m)
-    // indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
     indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
     for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
     {
@@ -324,7 +322,6 @@ void IntermediateValues::computeProbabilitiesForTheCurrentYear()
     }
 
     // x(m)
-    // indx = Date::FirstDayPerMonth[pRange->month[Data::rangeBegin]];
     indx = calendar->months[pRange->month[Data::rangeBegin]].daysYear.first;
     for (i = pRange->month[Data::rangeBegin]; i <= pRange->month[Data::rangeEnd]; ++i)
     {

@@ -129,7 +129,7 @@ public:
     void overrideTransmissionCapacityAccordingToGlobalParameter(GlobalTransmissionCapacities tc);
 
 private:
-    bool linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder);
+    bool linkLoadTimeSeries_for_version_below_810(const AnyString& folder);
     bool linkLoadTimeSeries_for_version_820_and_later(const AnyString& folder);
     NamePair getNamePair() const;
 

@@ -87,7 +87,7 @@ AreaLink::~AreaLink()
 {
 }
 
-bool AreaLink::linkLoadTimeSeries_for_version_from_630_to_810(const AnyString& folder)
+bool AreaLink::linkLoadTimeSeries_for_version_below_810(const AnyString& folder)
 {
     String buffer;
     buffer.clear() << folder << SEP << with->id << ".txt";
@@ -179,7 +179,7 @@ void AreaLink::overrideTransmissionCapacityAccordingToGlobalParameter(
 bool AreaLink::loadTimeSeries(const Study& study, const AnyString& folder)
 {
     if (study.header.version < 820)
-        return linkLoadTimeSeries_for_version_from_630_to_810(folder);
+        return linkLoadTimeSeries_for_version_below_810(folder);
     else
         return linkLoadTimeSeries_for_version_820_and_later(folder);
 }

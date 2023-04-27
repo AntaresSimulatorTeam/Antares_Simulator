@@ -103,7 +103,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
 
             auto& L = (loadTS < load.width) ? load[loadTS] : load[0];
 
-            const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+            const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
             for (uint i = offset; i < endHour; ++i)
             {

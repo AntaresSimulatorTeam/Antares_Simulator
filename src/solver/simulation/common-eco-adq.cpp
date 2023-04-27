@@ -96,7 +96,7 @@ static void RecalculDesEchangesMoyens(Data::Study& study,
 
     try
     {
-        OPT_OptimisationHebdomadaire(&problem, study.parameters.adqPatchParams, 0);
+        OPT_OptimisationHebdomadaire(&problem, study.parameters.adqPatchParams);
     }
     catch (Data::UnfeasibleProblemError&)
     {
@@ -124,7 +124,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         auto& area = *study.areas[i];
-        auto& scratchpad = *(area.scratchpad[numSpace]);
+        auto& scratchpad = area.scratchpad[numSpace];
 
         memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)
@@ -195,8 +195,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
 
 bool ShouldUseQuadraticOptimisation(const Data::Study& study)
 {
-    const bool flowQuadEnabled
-      = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
+    const bool flowQuadEnabled = study.parameters.variablesPrintInfo.isPrinted("FLOW QUAD.");
     if (!flowQuadEnabled)
         return false;
 

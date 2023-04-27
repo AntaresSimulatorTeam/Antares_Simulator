@@ -93,7 +93,7 @@ public:
     }
     //@}
 
-    static void initializeFromStudy(Data::Study& study)
+    static void initializeFromStudy([[maybe_unused]] Data::Study& study)
     {
     }
 
@@ -111,11 +111,11 @@ public:
     {
     }
 
-    void getPrintStatusFromStudy(Data::Study& study)
+    void getPrintStatusFromStudy([[maybe_unused]] Data::Study& study)
     {
     }
 
-    void supplyMaxNumberOfColumns(Data::Study& study)
+    void supplyMaxNumberOfColumns([[maybe_unused]] Data::Study& study)
     {
     }
 

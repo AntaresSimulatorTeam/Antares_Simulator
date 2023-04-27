@@ -174,12 +174,6 @@ public:
     //! Override enable/disable TS generation per cluster
     bool thermalTSRefresh = false;
 
-    //! The maximum number of thermal clusters for each area
-    size_t maxThermalClustersForSingleArea = 0;
-
-    //! The maximum number of renewable clusters for each area
-    size_t maxRenewableClustersForSingleArea = 0;
-
     /*!
     ** \brief The number of simulation days per month
     */
@@ -200,7 +194,6 @@ public:
 private:
     void initializeBindingConstraints(BindConstList& list);
     void initializeRangeLimits(const Study& study, StudyRangeLimits& limits);
-    void initializeMaxClusters(const Study& study);
     //! Prepare all thermal clusters in 'must-run' mode
     void initializeThermalClustersInMustRunMode(Study& study) const;
     void removeDisabledThermalClustersFromSolverComputations(Study& study);
