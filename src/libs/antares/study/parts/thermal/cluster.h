@@ -346,13 +346,6 @@ public:
     double* productionCost;
 
     /*!
-    ** \brief The number of units used the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    uint* unitCountLastHour;
-
-    /*!
     ** \brief The production of the last hour in the simulation
     **
     ** \warning This variable is only valid when used from the solver

@@ -55,6 +55,7 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
     PMinOfClusters.resize(count);
+    unitCountLastHour.resize(count);
 }
 
 State::State(Data::Study& s) :
@@ -147,7 +148,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         // alias to the production of the current thermal cluster
         double p = thermal[area->index].thermalClustersProductions[clusterAreaWideIndex];
         // alias to the previous number of started units
-        uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
+        uint previousUnitCount = thermal[area->index].unitCountLastHour[clusterAreaWideIndex];
 
         // Looking for the new number of units which have been started
         uint newUnitCount;
@@ -195,13 +196,13 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
           += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
-        thermalCluster->unitCountLastHour[numSpace] = newUnitCount;
+        thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
         thermalCluster->productionLastHour[numSpace] = p;
     }
     else
     {
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
-        thermalCluster->unitCountLastHour[numSpace] = 0u;
+        thermal[area->index].unitCountLastHour[clusterAreaWideIndex]= 0u;
         thermalCluster->productionLastHour[numSpace] = 0.;
     }
 

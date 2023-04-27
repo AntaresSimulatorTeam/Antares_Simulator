@@ -59,6 +59,8 @@ public:
 
         //! Minimum power of all clusters for the current hour in the year
         std::vector<double> PMinOfClusters;
+
+        std::vector<double> unitCountLastHour;
     };
 
     StateForAnArea& operator[](size_t areaIndex);
