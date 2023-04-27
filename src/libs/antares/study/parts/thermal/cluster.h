@@ -345,14 +345,6 @@ public:
     */
     double* productionCost;
 
-    /*!
-    ** \brief The minimum power of a group of the cluster
-    **
-    ** \warning This variable is only valid when used from the solver
-    ** \Field pminDUnGroupeDuPalierThermique of the PALIERS_THERMIQUES structure
-    */
-    double* pminOfAGroup;
-
     LocalTSGenerationBehavior tsGenBehavior = LocalTSGenerationBehavior::useGlobalParameter;
 
     friend class ThermalClusterList;
