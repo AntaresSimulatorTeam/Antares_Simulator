@@ -92,34 +92,30 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
             for (const auto& storage : (*problemeHebdo->ShortTermStorage)[pays])
             {
                 const int globalIndex = storage.globalIndex;
+
                 // 1. Injection
-                CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex] = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
+
                 // 2. Withdrawal
-                CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex]
-                  = NombreDeVariables;
-                ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                  = VARIABLE_BORNEE_DES_DEUX_COTES;
+                CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex] = NombreDeVariables;
+                ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
                 NombreDeVariables++;
+
                 // 3. Level
                 if (pdt == 0 || (pdt % storage.storagecycle != 0))
                 {
                     // Create new variable
-                    CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
-                      = NombreDeVariables;
-                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables]
-                      = VARIABLE_BORNEE_DES_DEUX_COTES;
+                    CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex] = NombreDeVariables;
+                    ProblemeAResoudre->TypeDeVariable[NombreDeVariables] = VARIABLE_BORNEE_DES_DEUX_COTES;
                     NombreDeVariables++;
                 }
-                else
+                else // Here : pdt != 0 && storage.storagecycle == 0
                 {
                     // Re-use initial level variable
                     CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex]
-                      = CorrespondanceVarNativesVarOptim_init->ShortTermStorage
-                          .LevelVariable[globalIndex];
+                         = CorrespondanceVarNativesVarOptim_init->ShortTermStorage.LevelVariable[globalIndex];
                 }
             }
 

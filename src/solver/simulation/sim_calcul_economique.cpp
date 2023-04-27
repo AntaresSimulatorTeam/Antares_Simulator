@@ -690,12 +690,15 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
     }
 
     // Short term storage : update of initial level bounds for current week
-    //      
+    //      These bounds are useful only if initial level is a set by optimization,
+    //      that is if initial level (of type std::optional) is empty (= has no value).
     for (uint areaIndex = 0; areaIndex < nbPays; ++areaIndex)
     {
         int clusterLocalIndex = 0;
         for (auto ST_cluster : study.areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
+            if (ST_cluster->properties.initialLevel.has_value())
+                continue;
             int globalIndex = (*problem.ShortTermStorage)[areaIndex][clusterLocalIndex].globalIndex;
             problem.stStorageInitLevelBounds[globalIndex] = ST_cluster->getBoundsOverTheWeekStartingAtHour(PasDeTempsDebut);
             clusterLocalIndex++;

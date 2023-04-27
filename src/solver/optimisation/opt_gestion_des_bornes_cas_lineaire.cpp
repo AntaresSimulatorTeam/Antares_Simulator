@@ -167,46 +167,71 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
-    for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
-         pdtHebdo++, pdtJour++)
+
+    for (int pdtHebdo = PremierPdtDeLIntervalle, pdtDeLaPeriodeOpt = 0; pdtHebdo < DernierPdtDeLIntervalle;
+         pdtHebdo++, pdtDeLaPeriodeOpt++)
     {
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
-          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
+          = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtDeLaPeriodeOpt];
+
+        auto CorrespondanceVarNativesVarOptim_init = problemeHebdo->CorrespondanceVarNativesVarOptim[0];
+
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
             int storageIndex = 0;
             for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex])
             {
                 const int globalIndex = storage.globalIndex;
-                auto& STSResult
-                  = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
+                auto& STSResult = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
+
                 // 1. Injection
-                int varInjection = CorrespondanceVarNativesVarOptim->ShortTermStorage
-                                     .InjectionVariable[globalIndex];
+                int varInjection = CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex];
                 Xmin[varInjection] = 0.;
-                Xmax[varInjection]
-                  = storage.injectionCapacity * storage.series->maxInjectionModulation[pdtHebdo];
+                Xmax[varInjection] = storage.injectionCapacity * storage.series->maxInjectionModulation[pdtHebdo];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
-                int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage
-                                      .WithdrawalVariable[globalIndex];
+                int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex];
                 Xmin[varWithdrawal] = 0.;
-                Xmax[varWithdrawal]
-                  = storage.withdrawalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
+                Xmax[varWithdrawal] = storage.withdrawalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
-                int varLevel
-                  = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
-                if (pdtHebdo == PremierPdtDeLIntervalle && storage.initialLevel.has_value())
-                {
-                    Xmin[varLevel] = Xmax[varLevel] = storage.capacity * storage.initialLevel.value();
+                // int varInitialLevel = CorrespondanceVarNativesVarOptim_init->ShortTermStorage.LevelVariable[globalIndex];
+                int varLevel = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
+
+                if (storage.initialLevel.has_value())
+                { 
+                    if (pdtDeLaPeriodeOpt == 0)
+                    {
+                        Xmin[varLevel] = Xmax[varLevel] = storage.capacity * storage.initialLevel.value();
+                    }
+                    else if (pdtDeLaPeriodeOpt % storage.storagecycle != 0)
+                    {
+                        Xmin[varLevel] = storage.capacity * storage.series->lowerRuleCurve[pdtHebdo];
+                        Xmax[varLevel] = storage.capacity * storage.series->upperRuleCurve[pdtHebdo];
+                    }
+                    else // here : pdtDeLaPeriodeOpt != 0 && storage.storagecycle == 0
+                    {
+                        // we do nothing regarding bounds.
+                    }
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.capacity * storage.series->lowerRuleCurve[pdtHebdo];
-                    Xmax[varLevel] = storage.capacity * storage.series->upperRuleCurve[pdtHebdo];
+                    if (pdtDeLaPeriodeOpt == 0)
+                    {
+                        Xmin[varLevel] = problemeHebdo->stStorageInitLevelBounds[globalIndex][numeroDeLIntervalle].lower;
+                        Xmax[varLevel] = problemeHebdo->stStorageInitLevelBounds[globalIndex][numeroDeLIntervalle].upper;
+                    }
+                    else if (pdtDeLaPeriodeOpt % storage.storagecycle != 0)
+                    {
+                        Xmin[varLevel] = storage.capacity * storage.series->lowerRuleCurve[pdtHebdo];
+                        Xmax[varLevel] = storage.capacity * storage.series->upperRuleCurve[pdtHebdo];
+                    }
+                    else // here : pdtDeLaPeriodeOpt != 0 && storage.storagecycle == 0
+                    {
+                        // we do nothing regarding bounds.
+                    }
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 
