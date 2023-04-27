@@ -94,6 +94,15 @@ public:
     void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
+    ** \brief Initialize some variable according a thermal cluster index
+    **
+    ** Called in initFromAreaIndex to split code
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
+
+    /*!
     ** \brief End the year by smoothing the thermal units run
     ** and computing costs.
     ** We assume here that the variables related to an area

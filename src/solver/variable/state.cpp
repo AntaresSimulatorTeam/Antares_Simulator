@@ -141,6 +141,24 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
     }
 
+    initFromThermalClusterIndexProduction(clusterAreaWideIndex);
+
+    if (studyMode != Data::stdmAdequacy)
+    {
+        // Minimum power of a group of the cluster, one per year for each cluster - from the
+        // solver
+        thermal[area->index].pminOfAGroup[clusterAreaWideIndex] = thermalClusterPMinOfAGroup;
+    }
+
+    // Nombre min de groupes appelés
+    // en mode accurate : est pris depuis le solveur
+    // en mode fast : est pris depuis l'heuristique
+}
+
+void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
+{
+    Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
@@ -207,17 +225,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex]= 0u;
         thermal[area->index].productionLastHour[clusterAreaWideIndex] = 0.;
     }
-
-    if (studyMode != Data::stdmAdequacy)
-    {
-        // Minimum power of a group of the cluster, one per year for each cluster - from the
-        // solver
-        thermal[area->index].pminOfAGroup[clusterAreaWideIndex] = thermalClusterPMinOfAGroup;
-    }
-
-    // Nombre min de groupes appelés
-    // en mode accurate : est pris depuis le solveur
-    // en mode fast : est pris depuis l'heuristique
 }
 
 void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
