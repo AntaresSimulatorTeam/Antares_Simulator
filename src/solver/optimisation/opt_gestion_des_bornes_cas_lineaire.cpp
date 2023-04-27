@@ -173,9 +173,9 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
+            int storageIndex = 0;
             for (const auto& storage : (*problemeHebdo->ShortTermStorage)[areaIndex])
             {
-                int storageIndex = 0;
                 const int globalIndex = storage.globalIndex;
                 auto& STSResult
                   = (*problemeHebdo->ResultatsHoraires[areaIndex]->ShortTermStorage)[pdtHebdo];
