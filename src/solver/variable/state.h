@@ -112,6 +112,11 @@ public:
     */
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
+    void yearEndBuildFromThermalClusterIndexDurPositive(uint dur,
+                                                        uint ON_min[],
+                                                        uint ON_max[],
+                                                        uint ON_opt[]);
+
     /*!
     ** \brief Smooth the thermal units run after resolutions
     ** using heuristics
