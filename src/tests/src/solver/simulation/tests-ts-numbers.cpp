@@ -656,7 +656,7 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	BOOST_CHECK_EQUAL(thCluster_area_2->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 }
 
-
+//TODO Add BC
 BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_ts)
 {
 	// Creating a study
