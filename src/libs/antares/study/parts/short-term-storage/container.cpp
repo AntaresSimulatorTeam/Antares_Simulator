@@ -51,12 +51,11 @@ bool STStorageInput::validateCycle(unsigned int firstHourOfTheWeek) const
                             {return cluster->validateWeeklyTimeseries(firstHourOfTheWeek);});
 }
 
-void STStorageInput::computeInitLevelBoundsAtCycles(unsigned int firstHourOfTheWeek, 
-                                                    bool isSimplexWeekly)
+void STStorageInput::setInitLevelBoundsCalculator(bool isSimplexWeekly)
 {
     for (auto& cluster : storagesByIndex)
     {
-        cluster->computeInitLevelBoundsAtCycles(firstHourOfTheWeek, isSimplexWeekly);
+        cluster->setInitLevelBoundsCalculator(isSimplexWeekly);
     }
 }
 

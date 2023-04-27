@@ -28,6 +28,7 @@
 #include <vector>
 #include <string>
 #include "level-bounds.h"
+#include "level-bounds-calculator.h"
 
 namespace Antares::Data::ShortTermStorage
 {
@@ -45,12 +46,10 @@ public:
     bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
             double injectionCapacity, double withdrawalCapacity) const;
 
-    bool validateCycleForWeek(unsigned int firstHourOfTheWeek, 
+    bool validateCycleForWeek(unsigned int firstHourOfTheWeek,
                               std::optional<double> initialLevel,
+                              std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator,
                               unsigned int cycleDuration) const;
-
-    Bounds getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
-            unsigned int cycleDuration) const;
 
     std::vector<double> maxInjectionModulation;
     std::vector<double> maxWithdrawalModulation;
@@ -59,6 +58,12 @@ public:
     std::vector<double> upperRuleCurve;
 
 private:
+    bool isInitLevelBetweenRuleCurvesOnWeek(unsigned int firstHourOfTheWeek,
+                                            std::optional<double> initialLevel,
+                                            unsigned int cycleDuration) const;
+    bool ruleCurvesFramesHaveIntersection(unsigned int firstHourOfTheWeek,
+                                          std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator) const;
+
     bool validateSizes() const;
     bool validateMaxInjection() const;
     bool validateMaxWithdrawal() const;

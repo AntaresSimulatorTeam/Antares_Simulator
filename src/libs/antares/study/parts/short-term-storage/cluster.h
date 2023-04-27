@@ -46,9 +46,8 @@ public:
     bool validate(bool simplexIsWeek);
     bool validateWeeklyTimeseries(unsigned int firstHourOfTheWeek) const;
 
-    void computeInitLevelBoundsAtCycles(unsigned int firstHourOfTheWeek,
-                                        bool isSimplexWeekly);
-    Bounds getInitLevelBoundsAtHour(unsigned int hour);
+    void STStorageCluster::setInitLevelBoundsCalculator(bool isSimplexWeekly);
+    std::vector<Bounds> getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek);
 
     std::string id;
 
@@ -56,11 +55,6 @@ public:
     Properties properties;
 
 private:
-    // For now, we don't need to store the initial level bound calculator.
-    // It could be instantied, used and destroyed inside computeInitLevelBoundsAtCycles(...).
-    // But we keep it as a data member because it should be done in a work to come.
     std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator_;
-    std::map<unsigned int, Bounds> initLevelBounds_;
-
 };
 } // namespace Antares::Data::ShortTermStorage

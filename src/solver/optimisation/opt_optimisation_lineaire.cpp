@@ -86,6 +86,7 @@ OptimisationHebdo:
 
         OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(problemeHebdo, 
                                                                adqPatchParams,
+                                                               numeroDeLIntervalle,
                                                                PremierPdtDeLIntervalle, 
                                                                DernierPdtDeLIntervalle, 
                                                                optimizationNumber);

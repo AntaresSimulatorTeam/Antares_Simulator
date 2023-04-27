@@ -2,12 +2,10 @@
 set(src_libs_antares_study "${CMAKE_SOURCE_DIR}/libs/antares/study")
 
 # ====================================
-# Tests on reading scenario-builder
+# Tests on short term storage
 # ====================================
-set(SRC_SC_BUILDER_READ
-	short-term-storage-input.cpp
-)
-add_executable(short-term-storage-input ${SRC_SC_BUILDER_READ})
+
+add_executable(short-term-storage-input short-term-storage-input.cpp)
 
 target_include_directories(short-term-storage-input
 								PRIVATE

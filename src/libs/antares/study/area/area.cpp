@@ -141,11 +141,6 @@ bool Area::checkWeeklyData(uint firstHourOfTheWeek) const
     return true;
 }
 
-void Area::computeSTstorageInitialLevelBounds(uint firstHourOfTheWeek, bool isSimplexWeekly)
-{
-    shortTermStorage.computeInitLevelBoundsAtCycles(firstHourOfTheWeek, isSimplexWeekly);
-}
-
 void Area::clearAllLinks()
 {
     if (not links.empty())

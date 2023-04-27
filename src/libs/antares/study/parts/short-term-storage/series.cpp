@@ -28,7 +28,6 @@
 #include <antares/logs.h>
 #include <antares/constants.h>
 
-#include <algorithm>
 #include <optional>
 #include <fstream>
 
@@ -207,7 +206,7 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
         if (sumInjection > sumInflows || sumWithdrawal < sumInflows )
         {
             logs.warning() << "Error at end of cycle: " << calendarHour + 1 << " for short term "
-                "storage inflows, sums at cycle timesteps are wrong";
+                              "storage inflows, sums at cycle timesteps are wrong";
 
             return false;
         }
@@ -215,64 +214,68 @@ bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned in
     return true;
 }
 
-bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek, 
+bool Series::validateCycleForWeek(unsigned int firstHourOfTheWeek,
                                   std::optional<double> initialLevel,
+                                  std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator,
                                   unsigned int cycleDuration) const
 {
-    // Check that the initial level is inside the rule curves at all cycle timesteps
     if (initialLevel.has_value())
     {
-        for (unsigned int hour = firstHourOfTheWeek;
-             hour < firstHourOfTheWeek + Constants::nbHoursInAWeek;
-             hour += cycleDuration)
-        {
-            if (upperRuleCurve[hour] < initialLevel)
-            {
-                logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
-                    "series upper rule curve, initial level is beyond value";
-
-                return false;
-            }
-            if (lowerRuleCurve[hour] > initialLevel)
-            {
-                logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
-                    "lower rule curves, initial level is under value";
-
-                return false;
-            }
-        }
+        return isInitLevelBetweenRuleCurvesOnWeek(firstHourOfTheWeek,
+                                                  initialLevel,
+                                                  cycleDuration);
     }
     else
     {
-        auto bounds = getBoundsForInitialLevel(firstHourOfTheWeek, cycleDuration);
-        if (bounds.lower > bounds.upper)
-        {
-            logs.warning() << "Error starting hour: " << firstHourOfTheWeek + 1 << " for short "
-                "term storage series upper or lower rule curves, values at the start of the "
-                "cycle are outside those values";
+        return ruleCurvesFramesHaveIntersection(firstHourOfTheWeek,
+                                                levelBoundsCalculator);
+    }
+}
 
-                return false;
+bool Series::isInitLevelBetweenRuleCurvesOnWeek(
+                    unsigned int firstHourOfTheWeek,
+                    std::optional<double> initialLevel,
+                    unsigned int cycleDuration) const
+{
+    for (unsigned int hour = firstHourOfTheWeek;
+        hour < firstHourOfTheWeek + Constants::nbHoursInAWeek;
+        hour += cycleDuration)
+    {
+        if (upperRuleCurve[hour] < initialLevel)
+        {
+            logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
+                              "series upper rule curve, initial level is beyond value";
+
+            return false;
+        }
+        if (lowerRuleCurve[hour] > initialLevel)
+        {
+            logs.warning() << "Error at hour: " << hour + 1 << " for short term storage "
+                              "lower rule curves, initial level is under value";
+
+            return false;
         }
     }
     return true;
 }
 
-Bounds Series::getBoundsForInitialLevel(unsigned int firstHourOfTheWeek,
-                                        unsigned int cycleDuration) const
+bool Series::ruleCurvesFramesHaveIntersection(
+    unsigned int firstHourOfTheWeek,
+    std::shared_ptr<LevelBoundsCalculator> levelBoundsCalculator) const
 {
-    double maxLowerBound = lowerRuleCurve[firstHourOfTheWeek];
-    double minUpperBound = upperRuleCurve[firstHourOfTheWeek];
-
-    for (unsigned int hour = firstHourOfTheWeek;
-         hour < firstHourOfTheWeek + Constants::nbHoursInAWeek;
-         hour += cycleDuration)
+    // Depending on whether the optimization is weekly or daily, the following vector
+    // can contain 1 or 7 pair of up/down bounds.
+    auto boundsCollection = levelBoundsCalculator->getBoundsOverTheWeekStartingAtHour(firstHourOfTheWeek);
+    for (auto& bounds : boundsCollection)
     {
-        // reduce the interval if necessary
-        maxLowerBound = std::max(maxLowerBound, lowerRuleCurve[hour]);
-        minUpperBound = std::min(minUpperBound, upperRuleCurve[hour]);
+        if (bounds.lower > bounds.upper)
+        {
+            logs.warning() << "St storage level bounds : rule curves frames at cycles have no intersection";
+            logs.warning() << "in week " << firstHourOfTheWeek + 1;
+            return false;
+        }
     }
-
-    return Bounds(maxLowerBound, minUpperBound);
+    return true;
 }
 
 } // namespace Antares::Data::ShortTermStorage

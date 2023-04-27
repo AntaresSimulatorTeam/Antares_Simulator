@@ -32,6 +32,7 @@
 #include "../utils/optimization_statistics.h"
 #include "../../libs/antares/study/fwd.h"
 #include "../../libs/antares/study/study.h"
+#include "antares/study/parts/short-term-storage/level-bounds.h"
 #include <vector>
 #include <optional>
 #include <memory>
@@ -538,8 +539,12 @@ struct PROBLEME_HEBDO
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
 
     int NumberOfShortTermStorages = 0;
-    // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
+
+    // ST storage initial level bounds (in case initial level is managed by optimization)
+    // Caution : this size of this vector is the global number of clusters (over all areas)
+    //           Thus, to access bounds for a given ST cluster, we need its global index.
+    std::vector<std::vector<Data::ShortTermStorage::Bounds>> stStorageInitLevelBounds;
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;

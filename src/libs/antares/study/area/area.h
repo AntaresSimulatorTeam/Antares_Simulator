@@ -89,8 +89,6 @@ public:
 
     bool checkWeeklyData(uint firstHourOfTheWeek) const;
 
-    void computeSTstorageInitialLevelBounds(uint firstHourOfTheWeek, bool isSimplexWeekly);
-
     // !\name isVisibleOnLayer
     //@{
     /*!

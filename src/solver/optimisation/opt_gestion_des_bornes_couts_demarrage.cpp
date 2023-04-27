@@ -45,9 +45,9 @@
 using namespace Yuni;
 
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
-  PROBLEME_HEBDO* problemeHebdo,
-  const int PremierPdtDeLIntervalle,
-  const int DernierPdtDeLIntervalle)
+                PROBLEME_HEBDO* problemeHebdo,
+                const int PremierPdtDeLIntervalle,
+                const int DernierPdtDeLIntervalle)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
     int NombreDePasDeTempsPourUneOptimisation

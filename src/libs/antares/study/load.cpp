@@ -175,23 +175,6 @@ bool postCalendarLoadChecks(const AreaList& areas,
     return success;
 }
 
-void computeSTstorageInitialLevelBounds(const AreaList& areas,
-                                 const Parameters& parameters,
-                                 const Date::Calendar& calendar)
-{
-    bool isSimplexWeekly = (parameters.simplexOptimizationRange == sorWeek);
-    const uint firstHourOfSimu = calendar.days[parameters.simulationDays.first].hours.first;
-    const uint nbWeeks = parameters.simulationDays.numberOfWeeks();
-    uint firstHourOfWeek = firstHourOfSimu;
-    for (uint weekIndex = 0; weekIndex < nbWeeks; weekIndex++)
-    {
-        areas.each(
-            [&firstHourOfWeek, &isSimplexWeekly](Data::Area& area)
-                { area.computeSTstorageInitialLevelBounds(firstHourOfWeek, isSimplexWeekly); });
-        firstHourOfWeek += nbHoursInAWeek;
-    }
-}
-
 bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
     // IO statistics
@@ -245,7 +228,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     parameterFiller(options);
 
     ret = postCalendarLoadChecks(areas, parameters, calendar) && ret;
-    computeSTstorageInitialLevelBounds(areas, parameters, calendar);
     if (!ret)
         logs.info() << "Post calendar checks failed";
 

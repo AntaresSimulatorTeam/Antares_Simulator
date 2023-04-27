@@ -39,18 +39,18 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
-static void importShortTermStorages(
-  const AreaList& areas,
-  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+static void importShortTermStorages(const AreaList& areas,
+                                    std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
-    int STindex = 0;
+    int globalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
+            int STindex = 0;
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];
-            toInsert.globalIndex = STindex;
+            toInsert.globalIndex = globalIndex;
 
             // Properties
             toInsert.capacity = st->properties.capacity.value();
@@ -64,6 +64,7 @@ static void importShortTermStorages(
 
             // TODO add missing properties, or use the same struct
             STindex++;
+            globalIndex++;
         }
     }
 }
@@ -687,6 +688,19 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
               = area.reserves[fhrDayBefore][PasDeTempsDebut + j];
         }
     }
+
+    // Short term storage : update of initial level bounds for current week
+    //      
+    for (uint areaIndex = 0; areaIndex < nbPays; ++areaIndex)
+    {
+        int clusterLocalIndex = 0;
+        for (auto ST_cluster : study.areas[areaIndex]->shortTermStorage.storagesByIndex)
+        {
+            int globalIndex = (*problem.ShortTermStorage)[areaIndex][clusterLocalIndex].globalIndex;
+            problem.stStorageInitLevelBounds[globalIndex] = ST_cluster->getBoundsOverTheWeekStartingAtHour(PasDeTempsDebut);
+            clusterLocalIndex++;
+        }
+    } // End short term storage
 
     {
         for (uint k = 0; k < nbPays; ++k)

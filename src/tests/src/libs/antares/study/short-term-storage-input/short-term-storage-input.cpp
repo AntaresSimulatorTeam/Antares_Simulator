@@ -5,8 +5,10 @@
 #include <boost/test/included/unit_test.hpp>
 #include <yuni/io/file.h>
 #include <filesystem>
+#include <memory>
 
 #include "container.h"
+#include "level-bounds-calculator.h"
 
 #define SEP Yuni::IO::Separator
 
@@ -155,6 +157,12 @@ struct Fixture
     ShortTermStorage::Properties properties;
     ShortTermStorage::STStorageCluster cluster;
     ShortTermStorage::STStorageInput container;
+
+    std::shared_ptr<ShortTermStorage::LevelBoundsForWeeks> levelBoundsCalculator = 
+        std::make_shared<ShortTermStorage::LevelBoundsForWeeks>(
+            properties.storagecycle.value(),
+            series.lowerRuleCurve,
+            series.upperRuleCurve);
 };
 
 
@@ -282,7 +290,7 @@ BOOST_AUTO_TEST_CASE(check_series_lower_curve)
 
     series.lowerRuleCurve[120] = 0.6;
 
-    BOOST_CHECK(!series.validateCycleForWeek(100, 0.5, 20));
+    BOOST_CHECK(!series.validateCycleForWeek(100, 0.5, levelBoundsCalculator, 20));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_upper_curve)
@@ -293,7 +301,7 @@ BOOST_AUTO_TEST_CASE(check_series_upper_curve)
     BOOST_CHECK(series.validate());
     series.upperRuleCurve[190] = 0.2;
 
-    BOOST_CHECK(!series.validateCycleForWeek(100, 0.5, 45));
+    BOOST_CHECK(!series.validateCycleForWeek(100, 0.5, levelBoundsCalculator, 45));
 
 }
 
@@ -306,7 +314,7 @@ BOOST_AUTO_TEST_CASE(check_series_interval_lower)
 
     series.lowerRuleCurve[120] = 0.6;
 
-    BOOST_CHECK(!series.validateCycleForWeek(100, std::nullopt, 20));
+    BOOST_CHECK(!series.validateCycleForWeek(100, std::nullopt, levelBoundsCalculator, 20));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_interval_upper)
@@ -318,7 +326,7 @@ BOOST_AUTO_TEST_CASE(check_series_interval_upper)
 
     series.upperRuleCurve[190] = 0.2;
 
-    BOOST_CHECK(!series.validateCycleForWeek(100, std::nullopt, 30));
+    BOOST_CHECK(!series.validateCycleForWeek(100, std::nullopt, levelBoundsCalculator, 30));
 }
 
 BOOST_AUTO_TEST_CASE(check_series_sum_inflows_good)

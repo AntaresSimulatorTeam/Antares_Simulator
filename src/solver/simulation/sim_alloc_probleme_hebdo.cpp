@@ -47,7 +47,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     uint nbPays = study.areas.size();
 
     const uint linkCount = study.runtime->interconnectionsCount();
-    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
+    const uint totalSTstorageCount = study.runtime->shortTermStorageCount;
 
     problem.DefaillanceNegativeUtiliserPMinThermique = (bool*)MemAlloc(nbPays * sizeof(char));
     problem.DefaillanceNegativeUtiliserHydro = (bool*)MemAlloc(nbPays * sizeof(char));
@@ -115,6 +115,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
     problem.ShortTermStorage = new std::vector<::ShortTermStorage::AREA_INPUT>(nbPays);
+
+    problem.stStorageInitLevelBounds.resize(totalSTstorageCount);
 
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
@@ -238,11 +240,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
         problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.InjectionVariable
-          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+          = (int*)MemAlloc(totalSTstorageCount * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.WithdrawalVariable
-          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+          = (int*)MemAlloc(totalSTstorageCount * sizeof(int));
         problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.LevelVariable
-          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+          = (int*)MemAlloc(totalSTstorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = (int*)MemAlloc(nbPays * sizeof(int));
@@ -252,7 +254,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (int*)MemAlloc(nbPays * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
-          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+          = (int*)MemAlloc(totalSTstorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
           = (int*)MemAlloc(nbPays * sizeof(int));

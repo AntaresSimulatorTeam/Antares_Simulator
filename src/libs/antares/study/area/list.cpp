@@ -946,6 +946,8 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
         logs.debug() << "Loading series for st storage " << buffer;
         ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
         ret = area.shortTermStorage.validate(simplexIsWeek) && ret;
+        if (ret)
+            area.shortTermStorage.setInitLevelBoundsCalculator(simplexIsWeek);
     }
 
     // Renewable cluster list

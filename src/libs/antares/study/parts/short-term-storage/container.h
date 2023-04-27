@@ -42,7 +42,7 @@ public:
     // 3. Validate data consistency
     bool validate(bool simplexIsWeek) const;
     bool validateCycle(unsigned int firstHourOfTheWeek) const;
-    void computeInitLevelBoundsAtCycles(unsigned int firstHourOfTheWeek, bool isSimplexWeekly);
+    void setInitLevelBoundsCalculator(bool isSimplexWeekly);
 
     // Number of ST storages
     std::size_t count() const;

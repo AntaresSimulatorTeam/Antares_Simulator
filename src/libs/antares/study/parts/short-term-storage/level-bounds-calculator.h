@@ -10,23 +10,17 @@ namespace Antares::Data::ShortTermStorage
 class LevelBoundsCalculator
 {
 public:
-    LevelBoundsCalculator(unsigned int firstHourOfWeek,
-                          unsigned int lastHourOfWeek,
-                          unsigned int cycleSize,
+    LevelBoundsCalculator(unsigned int cycleSize,
                           std::vector<double>& lowerRuleCurve,
                           std::vector<double>& upperRuleCurve) :
-        firstHourOfWeek_(firstHourOfWeek),
-        lastHourOfWeek_(lastHourOfWeek),
         cycleSize_(cycleSize),
         lowerRuleCurve_(lowerRuleCurve),
         upperRuleCurve_(upperRuleCurve)
     {}
 
-    virtual void addBounds(std::map<unsigned int, Bounds>&) = 0;
+    virtual std::vector<Bounds> getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek) = 0;
 
 protected:
-    unsigned int firstHourOfWeek_ = 0;
-    unsigned int lastHourOfWeek_ = 0;
     unsigned int cycleSize_ = 0;
     std::vector<double>& lowerRuleCurve_;
     std::vector<double>& upperRuleCurve_;
@@ -35,29 +29,25 @@ protected:
 class LevelBoundsForWeeks : public LevelBoundsCalculator
 {
 public:
-    LevelBoundsForWeeks(unsigned int firstHourOfWeek,
-                        unsigned int lastHourOfWeek,
-                        unsigned int cycleSize,
+    LevelBoundsForWeeks(unsigned int cycleSize,
                         std::vector<double>& lowerRuleCurve,
                         std::vector<double>& upperRuleCurve) :
-        LevelBoundsCalculator(firstHourOfWeek, lastHourOfWeek, cycleSize, lowerRuleCurve, upperRuleCurve)
+        LevelBoundsCalculator(cycleSize, lowerRuleCurve, upperRuleCurve)
     {}
 
-    void addBounds(std::map<unsigned int, Bounds>& initLevelBounds) override;
+    std::vector<Bounds> getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek) override;
 };
 
 
 class LevelBoundsForDays : public LevelBoundsCalculator
 {
 public:
-    LevelBoundsForDays(unsigned int firstHourOfWeek,
-                       unsigned int lastHourOfWeek,
-                       unsigned int cycleSize,
+    LevelBoundsForDays(unsigned int cycleSize,
                        std::vector<double>& lowerRuleCurve,
                        std::vector<double>& upperRuleCurve) :
-        LevelBoundsCalculator(firstHourOfWeek, lastHourOfWeek, cycleSize, lowerRuleCurve, upperRuleCurve)
+        LevelBoundsCalculator(cycleSize, lowerRuleCurve, upperRuleCurve)
     {}
 
-    void addBounds(std::map<unsigned int, Bounds>& initLevelBounds) override;
+    std::vector<Bounds> getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek) override;
 };
 } // namespace Antares::Data::ShortTermStorage

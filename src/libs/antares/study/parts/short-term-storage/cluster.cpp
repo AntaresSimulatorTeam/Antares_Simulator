@@ -85,6 +85,7 @@ bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek)
 
     return series->validateCycleForWeek(firstHourOfTheWeek,
                                         properties.initialLevel,
+                                        levelBoundsCalculator_,
                                         properties.storagecycle.value()) &&
            series->validateInflowsForWeek(firstHourOfTheWeek,
                                           properties.storagecycle.value(),
@@ -92,8 +93,7 @@ bool STStorageCluster::validateWeeklyTimeseries(unsigned int firstHourOfTheWeek)
                                           properties.withdrawalCapacity.value());
 }
 
-void STStorageCluster::computeInitLevelBoundsAtCycles(unsigned int firstHourOfTheWeek,
-                                                      bool isSimplexWeekly)
+void STStorageCluster::setInitLevelBoundsCalculator(bool isSimplexWeekly)
 {
     // Caution : 
     //      we compute the bounds for initial levels only when initial level is not given by user.
@@ -103,15 +103,9 @@ void STStorageCluster::computeInitLevelBoundsAtCycles(unsigned int firstHourOfTh
     if (properties.initialLevel.has_value())
         return;
 
-    // TO DO : 
-    //      Normally, the choice and the storage of the level bound calculator should be
-    //      done in the cluster's constructor, so that we don't have to do it 
-    //      every weeks as here and now. At least, we should do it once. 
     if (isSimplexWeekly)
     {
         levelBoundsCalculator_ = std::make_shared<LevelBoundsForWeeks>(
-            firstHourOfTheWeek,
-            firstHourOfTheWeek + Constants::nbHoursInAWeek,
             properties.storagecycle.value(),
             series->lowerRuleCurve,
             series->upperRuleCurve);
@@ -119,19 +113,16 @@ void STStorageCluster::computeInitLevelBoundsAtCycles(unsigned int firstHourOfTh
     else
     {
         levelBoundsCalculator_ = std::make_shared<LevelBoundsForDays>(
-            firstHourOfTheWeek,
-            firstHourOfTheWeek + Constants::nbHoursInAWeek,
             properties.storagecycle.value(),
             series->lowerRuleCurve,
             series->upperRuleCurve);
     }
-
-    levelBoundsCalculator_->addBounds(initLevelBounds_);
 }
 
-Bounds STStorageCluster::getInitLevelBoundsAtHour(unsigned int hour)
+std::vector<Bounds> 
+STStorageCluster::getBoundsOverTheWeekStartingAtHour(unsigned int firstHourOfWeek)
 {
-    return initLevelBounds_.at(hour);
+    return levelBoundsCalculator_->getBoundsOverTheWeekStartingAtHour(firstHourOfWeek);
 }
 
 } // namespace Antares::Data::ShortTermStorage
