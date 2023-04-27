@@ -466,7 +466,7 @@ struct RESULTATS_HORAIRES
     double* CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS>* ShortTermStorage = nullptr;
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -538,7 +538,7 @@ struct PROBLEME_HEBDO
 
     int NumberOfShortTermStorages = 0;
     // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
-    std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;

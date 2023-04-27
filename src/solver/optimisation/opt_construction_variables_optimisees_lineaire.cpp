@@ -88,7 +88,7 @@ void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBD
                 NombreDeVariables++;
             }
 
-            for (const auto& storage : (*problemeHebdo->ShortTermStorage)[pays])
+            for (const auto& storage : problemeHebdo->ShortTermStorage[pays])
             {
                 const int globalIndex = storage.globalIndex;
                 // 1. Injection

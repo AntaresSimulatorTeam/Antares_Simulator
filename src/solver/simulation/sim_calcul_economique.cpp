@@ -208,7 +208,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
-    importShortTermStorages(study.areas, *problem.ShortTermStorage);
+    importShortTermStorages(study.areas, problem.ShortTermStorage);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {

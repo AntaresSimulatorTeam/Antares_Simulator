@@ -152,7 +152,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
-        shortTermStorageLevelsRHS(*problemeHebdo->ShortTermStorage,
+        shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,

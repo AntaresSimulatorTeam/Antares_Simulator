@@ -309,7 +309,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
                                     *CorrespondanceVarNativesVarOptim,
                                     nombreDeTermes,
                                     Pi,
@@ -373,7 +373,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
 
             // Short term storage
-            shortTermStorageLevels((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
                                    ProblemeAResoudre,
                                    CorrespondanceCntNativesCntOptim,
                                    problemeHebdo->CorrespondanceVarNativesVarOptim,

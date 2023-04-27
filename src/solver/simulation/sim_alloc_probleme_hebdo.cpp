@@ -114,7 +114,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
-    problem.ShortTermStorage = new std::vector<::ShortTermStorage::AREA_INPUT>(nbPays);
+    problem.ShortTermStorage.resize(nbPays);
 
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
@@ -134,7 +134,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
 
     problem.ReserveJMoins1 = (RESERVE_JMOINS1**)MemAlloc(nbPays * sizeof(void*));
-    problem.ResultatsHoraires = (RESULTATS_HORAIRES**)MemAlloc(nbPays * sizeof(void*));
+    // using new here since RESULTATS_HORAIRES contains C++ structures such as std::vector
+    // we must call their constructors, which MemAlloc doesn't do
+    problem.ResultatsHoraires = new RESULTATS_HORAIRES*[nbPays];
 
     for (uint p = 0; p != nbPays; ++p)
     {
@@ -396,7 +398,9 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
 
         problem.ReserveJMoins1[k] = (RESERVE_JMOINS1*)MemAlloc(sizeof(RESERVE_JMOINS1));
-        problem.ResultatsHoraires[k] = (RESULTATS_HORAIRES*)MemAlloc(sizeof(RESULTATS_HORAIRES));
+        // using new here since RESULTATS_HORAIRES contains C++ structures such as std::vector
+        // we must call their constructors, which MemAlloc doesn't do
+        problem.ResultatsHoraires[k] = new RESULTATS_HORAIRES();
 
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
@@ -587,15 +591,14 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         // Short term storage results
         const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
         const unsigned long nbShortTermStorage = storagesForArea.size();
-        problem.ResultatsHoraires[k]->ShortTermStorage
-          = new std::vector<::ShortTermStorage::RESULTS>(NombreDePasDeTemps);
+        problem.ResultatsHoraires[k]->ShortTermStorage.resize(NombreDePasDeTemps);
         for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].injection.resize(
+            problem.ResultatsHoraires[k]->ShortTermStorage[pdt].injection.resize(
               nbShortTermStorage);
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].withdrawal.resize(
+            problem.ResultatsHoraires[k]->ShortTermStorage[pdt].withdrawal.resize(
               nbShortTermStorage);
-            (*problem.ResultatsHoraires[k]->ShortTermStorage)[pdt].level.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k]->ShortTermStorage[pdt].level.resize(nbShortTermStorage);
         }
     }
 
@@ -764,8 +767,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.MatriceDesContraintesCouplantes);
     MemFree(problem.ResultatsContraintesCouplantes);
 
-    delete problem.ShortTermStorage;
-
     for (int k = 0; k < (int)nbPays; ++k)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
@@ -876,11 +877,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k]->debordementsHoraires);
         MemFree(problem.ResultatsHoraires[k]->CoutsMarginauxHoraires);
 
-        // Calling the destructor for object problem.ResultatsHoraires[k]->ShortTermStorage will
-        // call the destructor for all sub-objects. Unlike in C, there is nothing else to do to
-        // avoid memory leaks.
-        delete problem.ResultatsHoraires[k]->ShortTermStorage;
-
         for (int j = 0; j < problem.NombreDePasDeTemps; j++)
         {
             MemFree(
@@ -905,7 +901,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
             MemFree(problem.ResultatsHoraires[k]->ProductionThermique[j]);
         }
         MemFree(problem.ResultatsHoraires[k]->ProductionThermique);
-        MemFree(problem.ResultatsHoraires[k]);
+        delete problem.ResultatsHoraires[k];
 
         MemFree(problem.BruitSurCoutHydraulique[k]);
     }
@@ -917,7 +913,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone);
     MemFree(problem.ReserveJMoins1);
-    MemFree(problem.ResultatsHoraires);
+    delete[] problem.ResultatsHoraires;
 
     MemFree(problem.CoutDeDefaillancePositive);
     MemFree(problem.CoutDeDefaillanceNegative);

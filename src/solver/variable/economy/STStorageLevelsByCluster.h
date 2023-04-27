@@ -259,13 +259,13 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
-            ++clusterIndex)
+             ++clusterIndex)
         {
             // ST storage levels for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-                = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[clusterIndex];
+              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[clusterIndex];
         }
-        
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
     }
