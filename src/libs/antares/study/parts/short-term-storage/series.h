@@ -27,6 +27,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include <memory>
 #include "level-bounds.h"
 #include "level-bounds-calculator.h"
 
