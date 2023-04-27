@@ -43,10 +43,11 @@ public:
     // check if series values are valid
     bool validate() const;
 
-    bool validateInflowsForWeek(unsigned int firstHourOfTheWeek, 
+    bool validateInflowsForWeek(unsigned int firstHourOfTheWeek,
                                 unsigned int cycleDuration,
-                                double injectionCapacity, 
-                                double withdrawalCapacity) const;
+                                double injectionCapacity,
+                                double withdrawalCapacity,
+                                double efficiencyFactor) const;
 
     bool validateCycleForWeek(unsigned int firstHourOfTheWeek,
                               std::optional<double> initialLevel,
