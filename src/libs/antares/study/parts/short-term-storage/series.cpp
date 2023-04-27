@@ -178,8 +178,10 @@ bool Series::validateLowerRuleCurve() const
     return checkVectBetweenZeroOne(lowerRuleCurve, "lower rule curve");
 }
 
-bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, unsigned int cycleDuration,
-        double injectionCapacity, double withdrawalCapacity) const
+bool Series::validateInflowsForWeek(unsigned int firstHourOfTheWeek, 
+                                    unsigned int cycleDuration,
+                                    double injectionCapacity, 
+                                    double withdrawalCapacity) const
 {
     for (unsigned int firstHourOfTheCycle = 0;
          firstHourOfTheCycle < Constants::nbHoursInAWeek;
