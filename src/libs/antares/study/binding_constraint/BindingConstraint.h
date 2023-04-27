@@ -253,8 +253,10 @@ public:
     const Matrix<>& matrix() const;
     //! Values for inequalities
     Matrix<>& matrix();
-
     //@}
+
+    //Ref to prevent copy. const ref to prevent modification.
+    const BindingConstraintTimeSeries& TimeSeries() const;
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
 
@@ -440,7 +442,7 @@ public:
     ** \param env All information needed to perform the task
     ** \return True if the operation succeeded, false otherwise
     */
-    bool loadFromEnv(EnvForLoading& env);
+    bool loadFromEnv(EnvForLoading& env, unsigned nb_years);
 
     /*!
     ** \brief Save the binding constraint into a folder and an INI file
@@ -494,6 +496,9 @@ public:
     */
     void matrix(const double onevalue);
 
+    bool loadTimeSeries(BindingConstraint::EnvForLoading &env);
+    bool loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, BindingConstraint::Operator);
+
 private:
     //! Raw name
     ConstraintName pName;
@@ -501,6 +506,8 @@ private:
     ConstraintName pID;
     //! Matrix<> where values for inequalities could be found
     Matrix<> pValues;
+    //! Time series of the binding constraint
+    BindingConstraintTimeSeries time_series;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters
@@ -684,15 +691,10 @@ public:
     [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeries>& TimeSeries() const {
         return time_series;
     }
-
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
 private:
     bool internalSaveToFolder(BindingConstraint::EnvForSaving& env) const;
-    bool loadTimeSeries(unsigned int nb_years, BindingConstraint::EnvForLoading& env);
-    bool loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, std::string group,
-                               BindingConstraint::Type type,
-                               BindingConstraint::Operator operatorType);
 
 private:
     //! All constraints
