@@ -232,7 +232,6 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     uint dur;    // nombre d'heures de fonctionnement d'un groupe au delà duquel un
     // arrêt/redémarrage est préférable
     uint maxUnitNeeded = 0;
-    uint optimalCount;
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
         = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
@@ -245,9 +244,6 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     uint ON_opt[Variable::maxHoursInAYear]
         = {}; // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
 
-    double thermalClusterStartupCostForYear[Variable::maxHoursInAYear]
-        = {}; // Starup cost à l'heure h
-    double thermalClusterFixedCostForYear[Variable::maxHoursInAYear] = {};
 
     // Get cluster properties
     Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
@@ -360,6 +356,11 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // Calculation of non linear and startup costs
     for (uint i = startHourForCurrentYear; i < endHourForCurrentYear; ++i)
     {
+        double thermalClusterStartupCostForYear;
+        double thermalClusterFixedCostForYear;
+
+        uint optimalCount;
+
         // based on duration, if dur==0 we choose the mininum of ON clusters, otherwise, the
         // optimal number.
         (dur == 0) ? (optimalCount = ON_min[i]) : (optimalCount = ON_opt[i]);
@@ -368,7 +369,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         if (optimalCount > currentCluster->unitCount)
             optimalCount = currentCluster->unitCount;
 
-        thermalClusterFixedCostForYear[i] = currentCluster->fixedCost * optimalCount;
+        thermalClusterFixedCostForYear = currentCluster->fixedCost * optimalCount;
 
         if (i >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
         {
@@ -377,8 +378,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                 : (delta = ON_opt[i] - ON_opt[i - 1]);
 
             (delta > 0)
-                ? (thermalClusterStartupCostForYear[i] = currentCluster->startupCost * delta)
-                : (thermalClusterStartupCostForYear[i] = 0.);
+                ? (thermalClusterStartupCostForYear = currentCluster->startupCost * delta)
+                : (thermalClusterStartupCostForYear = 0.);
         }
 
         // Aggregated variables for output
@@ -386,7 +387,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         // Op. Cost = (P.lvl * P.Cost) + NP.Cost
 
         thermalClusterNonProportionalCostForYear[i]
-            = thermalClusterStartupCostForYear[i] + thermalClusterFixedCostForYear[i];
+            = thermalClusterStartupCostForYear + thermalClusterFixedCostForYear;
         thermalClusterOperatingCostForYear[i] += thermalClusterNonProportionalCostForYear[i];
 
         // Other variables for output
