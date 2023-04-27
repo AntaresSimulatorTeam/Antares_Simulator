@@ -225,7 +225,7 @@ Yuni::uint64 Area::memoryUsage() const
 
     // scratchpad
     if (!scratchpad.empty())
-        ret += sizeof(scratchpad[0]) * scratchpad.size();
+        ret += sizeof(AreaScratchpad) * nbYearsInParallel;
 
     // links
     auto end = links.end();
