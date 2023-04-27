@@ -61,6 +61,8 @@ public:
         std::vector<double> PMinOfClusters;
 
         std::vector<double> unitCountLastHour;
+        std::vector<double> productionLastHour;
+        std::vector<double> pminOfAGroup;
     };
 
     StateForAnArea& operator[](size_t areaIndex);
@@ -89,7 +91,7 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void initFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+    void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
     ** \brief End the year by smoothing the thermal units run
@@ -99,7 +101,7 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
     ** \brief Smooth the thermal units run after resolutions

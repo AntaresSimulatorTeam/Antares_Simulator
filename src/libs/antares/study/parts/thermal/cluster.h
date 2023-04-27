@@ -346,12 +346,6 @@ public:
     double* productionCost;
 
     /*!
-    ** \brief The production of the last hour in the simulation
-    **
-    ** \warning This variable is only valid when used from the solver
-    */
-    double* productionLastHour;
-    /*!
     ** \brief The minimum power of a group of the cluster
     **
     ** \warning This variable is only valid when used from the solver
