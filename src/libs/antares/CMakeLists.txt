@@ -512,7 +512,7 @@ set(SRC
     # TODO : should be in a target_include_directories : but need to remove all .h from all SRC
     Enum.hpp
     Enum.hxx
-        study/scenario-builder/BindingConstraintsTSNumbersData.cpp study/binding_constraint/BindingConstraintTimeSeries.cpp study/binding_constraint/BindingConstraintTimeSeries.h)
+        study/scenario-builder/BindingConstraintsTSNumbersData.cpp study/binding_constraint/BindingConstraintTimeSeries.cpp study/binding_constraint/BindingConstraintTimeSeries.h study/binding_constraint/BindingConstraintTimeSeriesNumbers.cpp study/binding_constraint/BindingConstraintTimeSeriesNumbers.h)
 
 
 

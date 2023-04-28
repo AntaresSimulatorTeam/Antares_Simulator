@@ -131,10 +131,10 @@ struct Fixture
 		area_2->resizeAllTimeseriesNumbers(study->parameters.nbYears);
 		area_3->resizeAllTimeseriesNumbers(study->parameters.nbYears);
 
-        study->bindingConstraints.add("BC_1")->group("groupTest");
+        auto bc = study->bindingConstraints.add("BC_1");
+        bc->group("groupTest");
         study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
-
-        study->bindingConstraints.time_series["groupTest"].resize(7, 1);
+        bc->TimeSeries().resize(7, 1);
 
 		BOOST_CHECK(my_rule.reset());
 	}

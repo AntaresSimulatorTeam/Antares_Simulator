@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
                 << "group = dummy_group\n"
                    ;
     constraints.close();
-    std::ofstream rhs(working_tmp_dir / "dummy_name.txt");
+    std::ofstream rhs(working_tmp_dir / "dummy_name_eq.txt");
     rhs.close();
 
     const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
@@ -84,7 +84,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
                 << "area3%area1 = 2.000000\n"
             ;
     constraints.close();
-    std::ofstream rhs(working_tmp_dir / "dummy_id.txt");
+    std::ofstream rhs(working_tmp_dir / "dummy_name_eq.txt");
     for (int i = 0; i < 8784; ++i) {
         rhs << "0.2\t0.4\t0.6\n";
     }
@@ -96,9 +96,10 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
     BindingConstraint* constraint = (*bindingConstraints.begin());
-    BOOST_CHECK_CLOSE(constraint->matrix()[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->matrix()[1][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->matrix()[2][8783], 0.6, 0.0001);
+    //TODO
+    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[1][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[2][8783], 0.6, 0.0001);
 }
 
 //TODO Load empty file? load missing file? Load 1 column for N years ?
