@@ -113,14 +113,14 @@ public:
     */
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
-    void yearEndBuildFromThermalClusterIndexDurPositive(uint dur,
-                std::array<uint, Variable::maxHoursInAYear> ON_min,
-                std::array<uint, Variable::maxHoursInAYear> ON_max,
-                std::array<uint, Variable::maxHoursInAYear> ON_opt) const;
+    void yearEndBuildFromThermalClusterIndexDurPositive(uint& dur,
+                std::array<uint, Variable::maxHoursInAYear>& ON_min,
+                std::array<uint, Variable::maxHoursInAYear>& ON_max,
+                std::array<uint, Variable::maxHoursInAYear>& ON_opt) const;
 
-    void yearEndBuildThermalClusterCalculateStartupCosts(uint dur,
-                std::array<uint, Variable::maxHoursInAYear> ON_min,
-                std::array<uint, Variable::maxHoursInAYear> ON_opt,
+    void yearEndBuildThermalClusterCalculateStartupCosts(uint& dur,
+                std::array<uint, Variable::maxHoursInAYear>& ON_min,
+                std::array<uint, Variable::maxHoursInAYear>& ON_opt,
                 Data::ThermalCluster* currentCluster);
     /*!
     ** \brief Smooth the thermal units run after resolutions
