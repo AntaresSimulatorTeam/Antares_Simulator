@@ -1552,35 +1552,25 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
     switch (operatorType) {
         case BindingConstraint::opLess:
             env.buffer.clear() << env.folder << SEP << name() << "_lt" << ".txt";
-            load_ok = time_series.lesser_than_series.loadFromCSVFile(env.buffer,
-                                                                            BindingConstraint::columnMax,
-                                                                            (type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                                                            Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                                                            &env.matrixBuffer);
             break;
         case BindingConstraint::opGreater:
             env.buffer.clear() << env.folder << SEP << name() << "_gt" << ".txt";
-            load_ok = time_series.greater_than_series.loadFromCSVFile(env.buffer,
-                                                                             BindingConstraint::columnMax,
-                                                                            (type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                                                            Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                                                             &env.matrixBuffer);
             break;
         case BindingConstraint::opEquality:
             env.buffer.clear() << env.folder << SEP << name() << "_eq" << ".txt";
-            load_ok = time_series.equality_series.loadFromCSVFile(env.buffer,
-                                                                            BindingConstraint::columnMax,
-                                                                            (type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                                                            Matrix<>::optImmediate | Matrix<>::optFixedSize,
-                                                                            &env.matrixBuffer);
             break;
         default:
             assert(false);
     }
+    load_ok = time_series.loadFromCSVFile(env.buffer,
+                                          BindingConstraint::columnMax,
+                                          (type() == BindingConstraint::typeHourly) ? 8784 : 366,
+                                          Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                          &env.matrixBuffer);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << name() << "` (" << BindingConstraint::TypeToCString(type()) << ", "
-                    << BindingConstraint::OperatorToShortCString(BindingConstraint::opLess) << ')';
+                    << BindingConstraint::OperatorToShortCString(operatorType) << ')';
         return true;
     } else {
         return false;
@@ -1603,11 +1593,11 @@ void BindingConstraint::group(std::string group_name) {
     markAsModified();
 }
 
-const BindingConstraintTimeSeries& BindingConstraint::TimeSeries() const {
+const Matrix<>& BindingConstraint::TimeSeries() const {
     return time_series;
 }
 
-BindingConstraintTimeSeries& BindingConstraint::TimeSeries() {
+Matrix<>& BindingConstraint::TimeSeries() {
     return time_series;
 }
 
