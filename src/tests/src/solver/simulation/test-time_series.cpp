@@ -94,11 +94,39 @@ struct Fixture {
 BOOST_FIXTURE_TEST_SUITE(BC_TimeSeries, Fixture)
 
 BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
     BOOST_CHECK_EQUAL(loading_ok, true);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().lesser_than_series, expected_lower_bound_series);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().greater_than_series, expected_upper_bound_series);
-    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries().equality_series, expected_equality_series);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_equality_series);
+
+    {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
+        constraints << "[1]\n"
+                    << "name = dummy_name\n"
+                    << "id = dummy_id\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = less\n"
+                    << "group = dummy_group\n";
+        constraints.close();
+    }
+    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_lower_bound_series);
+
+    {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini");
+        constraints << "[1]\n"
+                    << "name = dummy_name\n"
+                    << "id = dummy_id\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = greater\n"
+                    << "group = dummy_group\n";
+        constraints.close();
+    }
+    loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_upper_bound_series);
 }
 
 BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series) {

@@ -162,24 +162,8 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
     //rti.bounds.resize(1, b.matrix().height);
     //rti.bounds.pasteToColumn(0, b.matrix()[C]);
-    switch (C)
-    {
-        case BindingConstraint::columnInferior:
-            rti.time_series.resize(b.TimeSeries().lesser_than_series.width, b.TimeSeries().lesser_than_series.height);
-            rti.time_series.copyFrom(b.TimeSeries().lesser_than_series);
-            break;
-        case BindingConstraint::columnSuperior:
-            rti.time_series.resize(b.TimeSeries().greater_than_series.width, b.TimeSeries().greater_than_series.height);
-            rti.time_series.copyFrom(b.TimeSeries().greater_than_series);
-            break;
-        case BindingConstraint::columnEquality:
-            rti.time_series.resize(b.TimeSeries().equality_series.width, b.TimeSeries().equality_series.height);
-            rti.time_series.copyFrom(b.TimeSeries().equality_series);
-            break;
-        default:
-            //TODO What to do ?
-            break;
-    }
+    rti.time_series.resize(b.TimeSeries().width, b.TimeSeries().height);
+    rti.time_series.copyFrom(b.TimeSeries());
 
     rti.linkWeight = new double[rti.linkCount];
     rti.linkOffset = new int[rti.linkCount];
