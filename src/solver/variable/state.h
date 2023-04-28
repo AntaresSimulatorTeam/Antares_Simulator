@@ -28,6 +28,7 @@
 #define __SOLVER_VARIABLE_STATE_H__
 
 #include <vector>
+#include <array>
 #include <yuni/yuni.h>
 #include "constants.h"
 #include <antares/study/fwd.h>
@@ -113,9 +114,9 @@ public:
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     void yearEndBuildFromThermalClusterIndexDurPositive(uint dur,
-                                                        uint ON_min[],
-                                                        uint ON_max[],
-                                                        uint ON_opt[]);
+                std::array<uint, Variable::maxHoursInAYear> ON_min,
+                std::array<uint, Variable::maxHoursInAYear> ON_max,
+                std::array<uint, Variable::maxHoursInAYear> ON_opt) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions

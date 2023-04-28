@@ -83,7 +83,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
     // alias to the current thermal cluster
-    Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
       = thermalCluster->series->series[serieIndex][hourInTheYear];
@@ -157,7 +157,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
-    Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
 
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
@@ -237,12 +237,13 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
-    uint ON_min[Variable::maxHoursInAYear] = {}; // Nombre minimal de groupes en fonctionnement
-    // à l'heure h (determiné par Peff  et Pnom)
-    uint ON_max[Variable::maxHoursInAYear] = {}; // Nombre maximal de groupes en fonctionnement
-    // à l'heure h  (determine par Peff et Pmin)
-    uint ON_opt[Variable::maxHoursInAYear]
-        = {}; // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
+
+    // Nombre minimal de groupes en fonctionnement à l'heure h (determiné par Peff  et Pnom)
+    std::array<uint, Variable::maxHoursInAYear> ON_min;
+    // Nombre maximal de groupes en fonctionnement à l'heure h  (determine par Peff et Pmin)
+    std::array<uint, Variable::maxHoursInAYear> ON_max;
+    // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
+    std::array<uint, Variable::maxHoursInAYear> ON_opt;
 
 
     // Get cluster properties
@@ -356,8 +357,8 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // Calculation of non linear and startup costs
     for (uint i = startHourForCurrentYear; i < endHourForCurrentYear; ++i)
     {
-        double thermalClusterStartupCostForYear;
-        double thermalClusterFixedCostForYear;
+        double thermalClusterStartupCostForYear = 0;
+        double thermalClusterFixedCostForYear = 0;
 
         uint optimalCount;
 
@@ -397,9 +398,9 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 }
 
 void State::yearEndBuildFromThermalClusterIndexDurPositive(uint dur,
-                                                           uint ON_min[],
-                                                           uint ON_max[],
-                                                           uint ON_opt[])
+                std::array<uint, Variable::maxHoursInAYear> ON_min,
+                std::array<uint, Variable::maxHoursInAYear> ON_max,
+                std::array<uint, Variable::maxHoursInAYear> ON_opt) const
 {
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
