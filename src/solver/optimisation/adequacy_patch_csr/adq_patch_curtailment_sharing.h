@@ -52,10 +52,10 @@ double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
 
 /*!
  * Calculate densNew values for all hours and areas inside adequacy patch and places them into
- * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDENS[hour] to be displayed in output.
+ * problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDENS[hour] to be displayed in output.
  * copy-pastes spilled Energy values into spilled Energy values after CSR
  * calculates total LMR violations and LMR violations per area per hour inside
- * problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour]
+ * problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour]
  */
 double calculateDensNewAndTotalLmrViolation(PROBLEME_HEBDO* problemeHebdo,
                                             AreaList& areas,

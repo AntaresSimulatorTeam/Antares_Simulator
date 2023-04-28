@@ -229,10 +229,10 @@ public:
     {
 #define UPSTREAM_PRICE                                              \
     state.problemeHebdo->ResultatsHoraires[state.link->from->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 #define DOWNSTREAM_PRICE                                            \
     state.problemeHebdo->ResultatsHoraires[state.link->with->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear]

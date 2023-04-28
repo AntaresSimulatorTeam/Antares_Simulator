@@ -58,7 +58,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
     areas.each([&](const Data::Area& area) {
         auto index = area.index;
 
-        auto& weeklyResults = *(problem.ResultatsHoraires[index]);
+        auto& weeklyResults = problem.ResultatsHoraires[index];
 
         auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
 

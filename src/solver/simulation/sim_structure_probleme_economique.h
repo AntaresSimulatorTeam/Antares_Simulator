@@ -610,7 +610,7 @@ struct PROBLEME_HEBDO
     computeTimeStepLevel computeLvl_object;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
+    std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
 
     double* coutOptimalSolution1 = nullptr;
