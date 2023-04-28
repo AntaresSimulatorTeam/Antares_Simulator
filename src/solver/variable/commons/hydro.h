@@ -198,7 +198,7 @@ public:
     void yearBegin(unsigned int year, unsigned int numSpace)
     {
         // The current time-series
-        auto& ror = pArea->hydro.series->ror;
+        auto& ror = pArea->hydro.series->ror; //CR22 ror only for result in pFatalValues, H. ROR, nothing to change here
         const unsigned int nbchro
           = NumeroChroniquesTireesParPays[numSpace][pArea->index]->Hydraulique;
         pFatalValues[numSpace] = &(ror.entry[(nbchro < ror.width ? nbchro : 0)]);

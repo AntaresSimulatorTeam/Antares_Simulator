@@ -53,6 +53,10 @@ Series::Series(wxWindow* parent, Toolbox::InputSelector::Area* notifier) :
     com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMod(com, notifier));
     notebook->add(com, wxT("Hydro Storage"));
 
+    com = new Component::Datagrid::Component(notebook);
+    com->renderer(new Component::Datagrid::Renderer::TimeSeriesHydroMinGen(com, notifier));
+    notebook->add(com, wxT("Minimum Generation"));  
+
     // Connection to the notifier
     if (pNotifier)
         pNotifier->onAreaChanged.connect(this, &Series::onAreaChanged);

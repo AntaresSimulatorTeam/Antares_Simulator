@@ -27,6 +27,7 @@
 
 #include "h2o_j_donnees_mensuelles.h"
 #include "h2o_j_fonctions.h"
+#include <algorithm>
 
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelles,
                                             int NumeroDeProbleme)
@@ -38,6 +39,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     double* Xmax;
     int* NumeroDeVariableTurbine;
     double* TurbineMax;
+    double* TurbineMin;
     double* Turbine;
     double* TurbineCible;
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
@@ -47,6 +49,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
     TurbineMax = DonneesMensuelles->TurbineMax;
+    TurbineMin = DonneesMensuelles->TurbineMin;
     Turbine = DonneesMensuelles->Turbine;
     TurbineCible = DonneesMensuelles->TurbineCible;
 
@@ -70,14 +73,8 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
         Var = NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];
 
-        if (TurbineMax[Pdt] > TurbineCible[Pdt])
-        {
-            Xmin[Var] = TurbineCible[Pdt];
-        }
-        else
-        {
-            Xmin[Var] = TurbineMax[Pdt];
-        }
+        Xmin[Var] = std::min(TurbineMax[Pdt], std::max(TurbineCible[Pdt], TurbineMin[Pdt]));
+
         AdresseOuPlacerLaValeurDesVariablesOptimisees[Var] = &(Turbine[Pdt]);
     }
 

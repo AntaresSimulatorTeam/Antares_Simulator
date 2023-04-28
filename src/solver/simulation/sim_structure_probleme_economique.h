@@ -288,6 +288,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double* NiveauHoraireInf;
 
     double* ApportNaturelHoraire;
+    double* MingenHoraire; //CR22 mingen per hour
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;
