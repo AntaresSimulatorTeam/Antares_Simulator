@@ -55,9 +55,9 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
     PMinOfClusters.resize(count);
-    unitCountLastHour.resize(count);
-    productionLastHour.resize(count);
-    pminOfAGroup.resize(count);
+    unitCountLastHour.resize(count, 0);
+    productionLastHour.resize(count, 0);
+    pminOfAGroup.resize(count, 0);
 }
 
 State::State(Data::Study& s) :
