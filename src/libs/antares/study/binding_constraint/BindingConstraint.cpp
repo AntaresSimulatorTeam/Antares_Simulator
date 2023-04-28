@@ -32,6 +32,7 @@
 #include "../../utils.h"
 #include "../runtime.h"
 #include "../memory-usage.h"
+#include "BindingConstraintTimeSeries.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -268,8 +269,10 @@ void BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
     pComments.clear();
-    pValues.zero();
-    pValues.markAsModified();
+    time_series.reset();
+    markAsModified();
+    //pValues.zero();
+    //pValues.markAsModified();
 }
 
 void BindingConstraint::copyWeights(const Study& study,
@@ -812,7 +815,7 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
 
     // Exporting the matrix
     env.matrixFilename.clear() << env.folder << SEP << pID << ".txt";
-    return pValues.saveToCSVFile(env.matrixFilename);
+    return time_series.saveToCSVFile(env.matrixFilename.c_str());
 }
 
 BindingConstraintsList::BindingConstraintsList()
@@ -1179,7 +1182,7 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
            // comments
            + pComments.capacity()
            // Values
-           + pValues.memoryUsage()
+           + TimeSeries().memoryUsage()
            // Estimation
            + pLinkWeights.size() * (sizeof(double) + 3 * sizeof(void*))
            // Estimation
@@ -1362,7 +1365,7 @@ void BindingConstraint::initLinkArrays(double* w,
 
 bool BindingConstraint::forceReload(bool reload) const
 {
-    return pValues.forceReload(reload);
+    return TimeSeries().forceReload(reload);
 }
 
 bool BindingConstraintsList::forceReload(bool reload) const
@@ -1379,7 +1382,7 @@ bool BindingConstraintsList::forceReload(bool reload) const
 
 void BindingConstraint::markAsModified() const
 {
-    pValues.markAsModified();
+    TimeSeries().markAsModified();
 }
 
 void BindingConstraintsList::markAsModified() const
@@ -1416,34 +1419,34 @@ void BindingConstraint::clearAndReset(const AnyString& name,
     {
     case typeUnknown:
     {
-        pValues.reset(0, 0);
+        time_series.reset();
         logs.error() << "invalid type for " << name << " (got 'unknown')";
         assert(false);
         break;
     }
     case typeHourly:
     {
-        pValues.reset(columnMax, 8784, true);
+        time_series.reset(columnMax, 8784, true);
         break;
     }
     case typeDaily:
     {
-        pValues.reset(columnMax, 366, true);
+        time_series.reset(columnMax, 366, true);
         break;
     }
     case typeWeekly:
     {
-        pValues.reset(columnMax, 366);
+        time_series.reset(columnMax, 366);
         break;
     }
     case typeMax:
     {
-        pValues.reset(0, 0);
+        time_series.reset(0, 0);
         logs.error() << "invalid type for " << name;
         break;
     }
     }
-    pValues.markAsModified();
+    time_series.markAsModified();
 }
 
 bool BindingConstraintsList::saveToFolder(const AnyString& folder) const
@@ -1467,7 +1470,8 @@ bool BindingConstraintsList::rename(BindingConstraint* bc, const AnyString& newn
     if (NULL != find(id))
         return false;
     bc->name(name);
-    JIT::Invalidate(bc->matrix().jit);
+    //TODO
+    //JIT::Invalidate(bc->matrix().jit);
     return true;
 }
 
@@ -1538,11 +1542,7 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
 }
 
 bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env) {
-    bool load_ok = true;
-    load_ok = load_ok && loadBoundedTimeSeries(env, BindingConstraint::opLess);
-    load_ok = load_ok && loadBoundedTimeSeries(env, BindingConstraint::opGreater);
-    load_ok = load_ok && loadBoundedTimeSeries(env, BindingConstraint::opEquality);
-    return load_ok;
+    return loadBoundedTimeSeries(env, operatorType());
 }
 
 bool
@@ -1589,8 +1589,9 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
 
 void BindingConstraint::matrix(const double onevalue)
 {
-    pValues.fill(onevalue);
-    pValues.markAsModified();
+    //TODO (only type?)
+    //pValues.fill(onevalue);
+    //pValues.markAsModified();
 }
 
 std::string BindingConstraint::group() const {
@@ -1602,9 +1603,13 @@ void BindingConstraint::group(std::string group_name) {
     markAsModified();
 }
 
-    const BindingConstraintTimeSeries &BindingConstraint::TimeSeries() const {
-        return time_series;
-    }
+const BindingConstraintTimeSeries& BindingConstraint::TimeSeries() const {
+    return time_series;
+}
+
+BindingConstraintTimeSeries& BindingConstraint::TimeSeries() {
+    return time_series;
+}
 
 } // namespace Data
 } // namespace Antares

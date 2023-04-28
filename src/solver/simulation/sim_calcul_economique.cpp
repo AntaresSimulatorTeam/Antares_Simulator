@@ -393,28 +393,31 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
             case BindingConstraint::typeDaily:
             {
-                assert(bc.bounds.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                auto& column = bc.bounds[0];
+                //TODO
+                //assert(bc.bounds.width && "Invalid constraint data width");
+                //assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
+                //auto& column = bc.bounds[0];
                 double* sndMember
                   = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
                 double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
                                          ->SecondMembreDeLaContrainteCouplanteRef;
                 for (uint d = 0; d != 7; ++d)
                 {
-                    sndMember[d] = column[weekFirstDay + d];
+                    //TODO
+                    //sndMember[d] = column[weekFirstDay + d];
                     sndMemberRef[d] = sndMember[d];
                 }
                 break;
             }
             case BindingConstraint::typeWeekly:
             {
-                assert(bc.bounds.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                const Matrix<>::ColumnType& column = bc.bounds[0];
+                //TODO
+                //assert(bc.bounds.width && "Invalid constraint data width");
+                //assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
+                //const Matrix<>::ColumnType& column = bc.bounds[0];
                 double sum = 0;
-                for (uint d = 0; d != 7; ++d)
-                    sum += column[weekFirstDay + d];
+                //for (uint d = 0; d != 7; ++d)
+                    //sum += column[weekFirstDay + d];
 
                 problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
                   = sum;
@@ -584,19 +587,20 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto& bc = studyruntime.bindingConstraint[k];
                 const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
 
-                auto& ts = study.bindingConstraints.time_series[bc.group];
+                //TODO
+                //auto& ts = bc.bounds;
                 double** column = nullptr;
                 if (bc.type == BindingConstraint::typeHourly)
                 {
                     switch (bc.operatorType) {
                         case '=':
-                            column = &ts.equality_series[ts_number];
+                            //column = &ts.equality_series[ts_number];
                             break;
                         case '<':
-                            column = &ts.lesser_than_series[ts_number];
+                            //column = &ts.lesser_than_series[ts_number];
                             break;
                         case '>':
-                            column = &ts.greater_than_series[ts_number];
+                            //column = &ts.greater_than_series[ts_number];
                             break;
                         default:
                             assert(false);

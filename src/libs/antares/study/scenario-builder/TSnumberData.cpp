@@ -28,11 +28,7 @@
 #include "TSnumberData.h"
 #include "scBuilderUtils.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 enum
 {
@@ -115,10 +111,11 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<Data::BindingConstraintTimeSeries>(uint value, const Data::BindingConstraintTimeSeries& data, uint tsGenMax)
+inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint value, const Data::BindingConstraintTimeSeriesNumbers& data, uint tsGenMax)
 {
     // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.SeriesWidth()) : (value < tsGenMax);
+    //TODO : check width of series ? How to access series width at this point ?
+    return (!tsGenMax) ? /*(value < data.SeriesWidth())*/ true : (value < tsGenMax);
 }
 
 template<class StringT, class D>
@@ -635,6 +632,4 @@ bool BindingConstraintsTSNumberData::apply(Study& study)
     }
     return true;
 }
-} // namespace ScenarioBuilder
-} // namespace Data
 } // namespace Antares

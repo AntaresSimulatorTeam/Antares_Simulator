@@ -26,6 +26,7 @@
 */
 
 #include "../../sys/mem-wrapper.h"
+#include "antares/study/binding_constraint/BindingConstraint.h"
 #include "runtime.h"
 #include "../parameters.h"
 #include "../../date.h"
@@ -159,6 +160,26 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
+    //rti.bounds.resize(1, b.matrix().height);
+    //rti.bounds.pasteToColumn(0, b.matrix()[C]);
+    switch (C)
+    {
+        case BindingConstraint::columnInferior:
+            rti.time_series.resize(b.TimeSeries().lesser_than_series.width, b.TimeSeries().lesser_than_series.height);
+            rti.time_series.copyFrom(b.TimeSeries().lesser_than_series);
+            break;
+        case BindingConstraint::columnSuperior:
+            rti.time_series.resize(b.TimeSeries().greater_than_series.width, b.TimeSeries().greater_than_series.height);
+            rti.time_series.copyFrom(b.TimeSeries().greater_than_series);
+            break;
+        case BindingConstraint::columnEquality:
+            rti.time_series.resize(b.TimeSeries().equality_series.width, b.TimeSeries().equality_series.height);
+            rti.time_series.copyFrom(b.TimeSeries().equality_series);
+            break;
+        default:
+            //TODO What to do ?
+            break;
+    }
 
     rti.linkWeight = new double[rti.linkCount];
     rti.linkOffset = new int[rti.linkCount];
@@ -387,7 +408,8 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
         {
             rti.operatorType = '?';
             rti.linkCount = 0;
-            rti.bounds.clear();
+            rti.time_series.clear();
+            //rti.bounds.clear();
             break;
         }
         case BindingConstraint::opMax:

@@ -18,10 +18,19 @@ public:
     Matrix<double> lesser_than_series;
     Matrix<double> greater_than_series;
     Matrix<double> equality_series;
-    Matrix<Yuni::uint32> timeseriesNumbers;
     unsigned SeriesWidth() const;
     void resize(unsigned width, unsigned height);
     void fill(double value);
+    void reset();
+    void reset(uint w, uint h, bool fixedSize = false);
+
+    bool saveToCSVFile(std::string file_name);
+
+    size_t memoryUsage() const;
+
+    bool forceReload(bool reload) const;
+
+    void markAsModified() const;
 };
 
 } // Data
