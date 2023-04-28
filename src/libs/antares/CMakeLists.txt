@@ -210,6 +210,9 @@ set(SRC_STUDY_PART_THERMAL
 	study/parts/thermal/prepro.h
 	study/parts/thermal/prepro.hxx
 	study/parts/thermal/prepro.cpp
+	study/parts/thermal/ecoInput.h
+	study/parts/thermal/ecoInput.cpp
+	study/parts/thermal/ecoInput.hxx
 	study/parts/thermal/cluster.h
 	study/parts/thermal/cluster.hxx
 	study/parts/thermal/cluster.cpp

@@ -52,6 +52,24 @@ public:
 };
 
 template<class CStringT>
+class Append<CStringT, Antares::Data::CostGeneration>
+{
+public:
+    static void Perform(CStringT& string, Antares::Data::CostGeneration costgeneration)
+    {
+        switch (costgeneration)
+        {
+        case Antares::Data::setManually:
+            string += "setManually";
+            break;
+        case Antares::Data::useCostTimeseries:
+            string += "useCostTimeseries";
+            break;
+        }
+    }
+};
+
+template<class CStringT>
 class Append<CStringT, Antares::Data::LocalTSGenerationBehavior>
 {
 public:
@@ -90,6 +108,27 @@ public:
         TargetType law = Antares::Data::thermalLawUniform;
         Perform(s, law);
         return law;
+    }
+};
+
+template<>
+class Into<Antares::Data::CostGeneration>
+{
+public:
+    using TargetType = Antares::Data::CostGeneration;
+    enum
+    {
+        valid = 1
+    };
+
+    static bool Perform(AnyString string, TargetType& out);
+
+    template<class StringT>
+    static TargetType Perform(const StringT& s)
+    {
+        TargetType costgeneration = Antares::Data::setManually;
+        Perform(s, costgeneration);
+        return costgeneration;
     }
 };
 

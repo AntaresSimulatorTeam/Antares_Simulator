@@ -81,6 +81,9 @@ protected:
 
                     if (cluster.prepro)
                         cluster.prepro->estimateMemoryUsage(m);
+                    if (cluster.ecoInput)
+                        cluster.ecoInput->estimateMemoryUsage(m);
+
 
                     if (shouldAbort())
                         return false;

@@ -35,10 +35,13 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
     each([&](const ThermalCluster& cluster) {
+        uint prepoCnt = Math::Max(cluster.ecoInput->co2cost.width, cluster.ecoInput->fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
-        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // productionCost
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // PthetaInf
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marketBidCostPerHour
+        u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // marginalCostPerHour
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR; // dispatchedUnitsCount
         cluster.modulation.estimateMemoryUsage(u, true, thermalModulationMax, HOURS_PER_YEAR);
 
@@ -46,6 +49,8 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
             cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
+        if (cluster.ecoInput)
+            cluster.ecoInput->estimateMemoryUsage(u);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
@@ -139,8 +144,20 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             double marginalCost = cluster->marginalCost;
             // Production cost
             auto& modulation = cluster->modulation[thermalModulationCost];
-            for (uint h = 0; h != cluster->modulation.height; ++h)
-                prodCost[h] = marginalCost * modulation[h];
+            if (cluster->costgeneration == Data::setManually)
+            {
+                // alias to the marginal cost
+                double marginalCost = cluster->marginalCost;
+                for (uint h = 0; h != cluster->modulation.height; ++h)
+                    prodCost[h] = marginalCost * modulation[h];
+            }
+            else
+            {
+                const auto& marginalCostPerHour
+                  = cluster->thermalEconomicTimeSeries[0].marginalCostPerHourTs;
+                for (uint h = 0; h != cluster->modulation.height; ++h)
+                    prodCost[h] = marginalCostPerHour[h] * modulation[h];
+            }
 
             if (not study.parameters.include.thermal.minStablePower)
                 cluster->minStablePower = 0.;
@@ -191,9 +208,12 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
 
     if (p->key == "annuityinvestment")
         return p->value.to<uint>(cluster.annuityInvestment);
-
+    if (p->key == "costgeneration")
+        return p->value.to(cluster.costgeneration);
     if (p->key == "enabled")
         return p->value.to<bool>(cluster.enabled);
+    if (p->key == "efficiency")
+        return p->value.to<double>(cluster.fuelEfficiency);
     if (p->key == "fixed-cost")
         return p->value.to<double>(cluster.fixedCost);
 
@@ -266,6 +286,8 @@ static bool ThermalClusterLoadFromProperty(ThermalCluster& cluster, const IniFil
         return p->value.to(cluster.plannedVolatility);
     if (p->key == "volatility.forced")
         return p->value.to(cluster.forcedVolatility);
+    if (p->key == "variableomcost")
+        return p->value.to<double>(cluster.variableomcost);
 
     //pollutant
     if (auto it = Pollutant::namesToEnum.find(p->key.c_str()); it != Pollutant::namesToEnum.end())
@@ -355,6 +377,8 @@ void ThermalClusterList::ensureDataPrepro()
         auto c = it->second;
         if (not c->prepro)
             c->prepro = new PreproThermal(c);
+        if (!c->ecoInput)
+            c->ecoInput = new EconomicInputData(c);
     }
 }
 
@@ -409,6 +433,10 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
             if (not Math::Zero(c.spinning))
                 s->add("spinning", c.spinning);
 
+            // efficiency
+            if (c.fuelEfficiency != 100.0)
+                s->add("efficiency", c.fuelEfficiency);
+
             // volatility
             if (not Math::Zero(c.forcedVolatility))
                 s->add("volatility.forced", Math::Round(c.forcedVolatility, 3));
@@ -422,6 +450,8 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("law.planned", c.plannedLaw);
 
             // costs
+            if (c.costgeneration != setManually)
+                s->add("costgeneration", c.costgeneration);            
             if (not Math::Zero(c.marginalCost))
                 s->add("marginal-cost", Math::Round(c.marginalCost, 3));
             if (not Math::Zero(c.spreadCost))
@@ -432,6 +462,9 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("startup-cost", Math::Round(c.startupCost, 3));
             if (not Math::Zero(c.marketBidCost))
                 s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
+            if (not Math::Zero(c.variableomcost))
+                s->add("variableomcost", Math::Round(c.variableomcost,3));
+
 
             // groun{min,max}
             if (not Math::Zero(c.groupMinCount))
@@ -487,6 +520,12 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
             ret = c.prepro->saveToFolder(buffer) and ret;
         }
+        if (c.ecoInput)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+            ret = c.ecoInput->saveToFolder(buffer) and ret;
+        }
     });
     return ret;
 }
@@ -519,6 +558,16 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
                 // checking NPO max
                 result = c.prepro->normalizeAndCheckNPO();
             }
+
+            ret = result and ret;
+        }
+        if (c.ecoInput)
+        {
+            assert(c.parentArea and "cluster: invalid parent area");
+            buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
+
+            bool result = c.ecoInput->loadFromFolder(study, buffer);
+            c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
 
             ret = result and ret;
         }

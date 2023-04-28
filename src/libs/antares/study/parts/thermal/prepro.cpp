@@ -57,11 +57,13 @@ void PreproThermal::copyFrom(const PreproThermal& rhs)
 
 bool PreproThermal::saveToFolder(const AnyString& folder)
 {
+    bool ret = true;
     if (IO::Directory::Create(folder))
     {
         String buffer;
         buffer.clear() << folder << SEP << "data.txt";
-        return data.saveToCSVFile(buffer, /*decimal*/ 6);
+        ret = data.saveToCSVFile(buffer, /*decimal*/ 6) and ret;
+        return ret;
     }
     return false;
 }
@@ -80,12 +82,9 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
     buffer.clear() << folder << SEP << "data.txt";
 
     // standard loading
-    ret = data.loadFromCSVFile(buffer,
-            thermalPreproMax,
-            DAYS_PER_YEAR,
-            Matrix<>::optFixedSize,
-            &study.dataBuffer)
-        and ret;
+    ret = data.loadFromCSVFile(
+            buffer, thermalPreproMax, DAYS_PER_YEAR, Matrix<>::optFixedSize, &study.dataBuffer)
+          and ret;
 
     bool thermalTSglobalGeneration = study.parameters.isTSGeneratedByPrepro(timeSeriesThermal);
     if (study.usedByTheSolver && cluster->doWeGenerateTS(thermalTSglobalGeneration))
@@ -168,7 +167,9 @@ bool PreproThermal::loadFromFolder(Study& study, const AnyString& folder)
 
 bool PreproThermal::forceReload(bool reload) const
 {
-    return data.forceReload(reload);
+    bool ret = true;
+    ret = data.forceReload(reload) && ret;
+    return ret;
 }
 
 void PreproThermal::markAsModified() const
