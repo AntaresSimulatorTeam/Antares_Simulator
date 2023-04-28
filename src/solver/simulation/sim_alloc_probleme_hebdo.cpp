@@ -134,8 +134,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
 
     problem.ReserveJMoins1 = (RESERVE_JMOINS1**)MemAlloc(nbPays * sizeof(void*));
-    // using new here since RESULTATS_HORAIRES contains C++ structures such as std::vector
-    // we must call their constructors, which MemAlloc doesn't do
     problem.ResultatsHoraires.resize(nbPays);
 
     for (uint p = 0; p != nbPays; ++p)
@@ -398,10 +396,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
 
         problem.ReserveJMoins1[k] = (RESERVE_JMOINS1*)MemAlloc(sizeof(RESERVE_JMOINS1));
-        // using new here since RESULTATS_HORAIRES contains C++ structures such as std::vector
-        // we must call their constructors, which MemAlloc doesn't do
-        // problem.ResultatsHoraires[k] = new RESULTATS_HORAIRES();
-
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
           = (double*)MemAlloc(nbPaliers * sizeof(double));
