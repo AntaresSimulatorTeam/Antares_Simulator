@@ -38,6 +38,7 @@
 #include "../../inifile/inifile.h"
 #include "antares/study/filter.h"
 #include "BindingConstraintTimeSeries.h"
+#include "BindingConstraintTimeSeriesNumbers.h"
 #include <vector>
 #include <set>
 
@@ -257,6 +258,8 @@ public:
 
     //Ref to prevent copy. const ref to prevent modification.
     const BindingConstraintTimeSeries& TimeSeries() const;
+    BindingConstraintTimeSeries &TimeSeries();
+
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
 
@@ -505,7 +508,7 @@ private:
     //! Raw ID
     ConstraintName pID;
     //! Matrix<> where values for inequalities could be found
-    Matrix<> pValues;
+    //Matrix<> pValues;
     //! Time series of the binding constraint
     BindingConstraintTimeSeries time_series;
     //! Weights for links
@@ -534,6 +537,7 @@ private:
     std::string group_;
 
     void clear();
+
 }; // class BindingConstraint
 
 class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
@@ -688,7 +692,7 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeries>& TimeSeries() const {
+    [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeriesNumbers>& TimeSeries() const {
         return time_series;
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
@@ -701,7 +705,7 @@ private:
     BindingConstraint::Vector pList;
 
 public:
-    std::map<std::string, BindingConstraintTimeSeries> time_series;
+    std::map<std::string, BindingConstraintTimeSeriesNumbers> time_series;
 
 }; // class BindConstList
 

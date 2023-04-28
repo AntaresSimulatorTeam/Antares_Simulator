@@ -53,15 +53,15 @@ inline void BindingConstraint::comments(const AnyString& newcomments)
     pComments = newcomments;
 }
 
-inline const Matrix<>& BindingConstraint::matrix() const
-{
-    return pValues;
-}
-
-inline Matrix<>& BindingConstraint::matrix()
-{
-    return pValues;
-}
+//inline const Matrix<>& BindingConstraint::matrix() const
+//{
+//    return pValues;
+//}
+//
+//inline Matrix<>& BindingConstraint::matrix()
+//{
+//    return pValues;
+//}
 
 inline uint BindingConstraint::linkCount() const
 {

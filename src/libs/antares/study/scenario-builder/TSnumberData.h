@@ -29,11 +29,7 @@
 
 #include "scBuilderDataInterface.h"
 
-namespace Antares
-{
-namespace Data
-{
-namespace ScenarioBuilder
+namespace Antares::Data::ScenarioBuilder
 {
 /*!
 ** \brief Rules for TS numbers, for all years and a single timeseries
@@ -357,8 +353,6 @@ inline unsigned BindingConstraintsTSNumberData::get_tsGenCount(const Study& stud
     return genTS ? 1 : 0u;
 }
 
-} // namespace ScenarioBuilder
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data::ScenarioBuilder
 
 #endif // __LIBS_STUDY_SCENARIO_BUILDER_DATA_TS_NUMBER_H__

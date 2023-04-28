@@ -1139,8 +1139,9 @@ void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
     foreach (auto* constraint, bindingConstraints)
     {
-        if (not JIT::IsReady(constraint->matrix().jit))
-            constraint->matrix().forceReload(true);
+        //TODO
+//        if (not JIT::IsReady(constraint->matrix().jit))
+//            constraint->matrix().forceReload(true);
     }
 }
 

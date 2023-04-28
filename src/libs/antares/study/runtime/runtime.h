@@ -71,7 +71,7 @@ public:
     ~BindingConstraintRTI();
 
 public:
-    Matrix<double> bounds;
+    //Matrix<double> bounds;
     BindingConstraint::Type type;
     char operatorType;
     uint filterYearByYear_ = filterAll;
@@ -89,6 +89,7 @@ public:
     long* clustersAreaIndex;
     std::string name;
     std::string group;
+    Matrix<> time_series;
 };
 
 /*!
