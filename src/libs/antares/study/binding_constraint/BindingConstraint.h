@@ -257,8 +257,8 @@ public:
     //@}
 
     //Ref to prevent copy. const ref to prevent modification.
-    const BindingConstraintTimeSeries& TimeSeries() const;
-    BindingConstraintTimeSeries &TimeSeries();
+    const Matrix<>& TimeSeries() const;
+    Matrix<> &TimeSeries();
 
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
@@ -509,8 +509,8 @@ private:
     ConstraintName pID;
     //! Matrix<> where values for inequalities could be found
     //Matrix<> pValues;
-    //! Time series of the binding constraint
-    BindingConstraintTimeSeries time_series;
+    //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
+    Matrix<> time_series;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters

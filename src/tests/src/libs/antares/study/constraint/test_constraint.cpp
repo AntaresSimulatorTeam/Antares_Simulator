@@ -96,10 +96,9 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
     BindingConstraint* constraint = (*bindingConstraints.begin());
-    //TODO
-    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[0][0], 0.2, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[1][30], 0.4, 0.0001);
-    BOOST_CHECK_CLOSE(constraint->TimeSeries().equality_series[2][8783], 0.6, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->TimeSeries()[0][0], 0.2, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->TimeSeries()[1][30], 0.4, 0.0001);
+    BOOST_CHECK_CLOSE(constraint->TimeSeries()[2][8783], 0.6, 0.0001);
 }
 
 //TODO Load empty file? load missing file? Load 1 column for N years ?
