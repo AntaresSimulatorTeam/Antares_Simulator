@@ -839,7 +839,7 @@ static bool SGDIntLoadFamily_VariablesSelection(Parameters& d,
     }
     if (key == "select_var +" || key == "select_var -")
     {
-        // Check if the read output variable exists 
+        // Check if the read output variable exists
         if (not d.variablesPrintInfo.exists(value.to<std::string>()))
             return false;
 
