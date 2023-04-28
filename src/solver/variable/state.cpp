@@ -355,6 +355,18 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         yearEndBuildFromThermalClusterIndexDurPositive(dur, ON_min, ON_max, ON_opt);
 
     // Calculation of non linear and startup costs
+    yearEndBuildThermalClusterCalculateStartupCosts(dur, ON_min, ON_opt, currentCluster);
+}
+
+void State::yearEndBuildThermalClusterCalculateStartupCosts(uint dur,
+                std::array<uint, Variable::maxHoursInAYear> ON_min,
+                std::array<uint, Variable::maxHoursInAYear> ON_opt,
+                Data::ThermalCluster* currentCluster)
+{
+    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint endHourForCurrentYear
+        = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+
     for (uint i = startHourForCurrentYear; i < endHourForCurrentYear; ++i)
     {
         double thermalClusterStartupCostForYear = 0;
