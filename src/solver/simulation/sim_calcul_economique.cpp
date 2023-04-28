@@ -587,25 +587,11 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto& bc = studyruntime.bindingConstraint[k];
                 const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
 
-                //TODO
-                //auto& ts = bc.bounds;
+                auto& ts = bc.time_series;
                 double** column = nullptr;
                 if (bc.type == BindingConstraint::typeHourly)
                 {
-                    switch (bc.operatorType) {
-                        case '=':
-                            //column = &ts.equality_series[ts_number];
-                            break;
-                        case '<':
-                            //column = &ts.lesser_than_series[ts_number];
-                            break;
-                        case '>':
-                            //column = &ts.greater_than_series[ts_number];
-                            break;
-                        default:
-                            assert(false);
-                            break;
-                    }
+                    column = &ts[ts_number];
                     problem.MatriceDesContraintesCouplantes[k]
                       ->SecondMembreDeLaContrainteCouplante[j]
                       = (*column)[PasDeTempsDebut + j];

@@ -160,8 +160,7 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.clusterCount = b.enabledClusterCount();
     assert(rti.linkCount < 50000000 and "Seems a bit large...");    // arbitrary value
     assert(rti.clusterCount < 50000000 and "Seems a bit large..."); // arbitrary value
-    //rti.bounds.resize(1, b.matrix().height);
-    //rti.bounds.pasteToColumn(0, b.matrix()[C]);
+
     rti.time_series.resize(b.TimeSeries().width, b.TimeSeries().height);
     rti.time_series.copyFrom(b.TimeSeries());
 

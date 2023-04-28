@@ -335,11 +335,11 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
-    auto& ts = pStudy->bindingConstraints.time_series[BC->group()];
-    //ts.resize(1, 8760);
-    //ts.fill(rhs);
+    auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
+    BC->TimeSeries().resize(1, 8760);
+    BC->TimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
-    ts.timeseriesNumbers.fill(0);
+    ts_numbers.timeseriesNumbers.fill(0);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
