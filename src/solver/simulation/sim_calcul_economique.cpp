@@ -666,10 +666,15 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
                 auto& mingenmatrix = area.hydro.series->mingen;
-                auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
-                for(uint j = 0; j < problem.NombreDePasDeTemps; ++j)
+                if (study.header.version > 860)
                 {
-                  problem.CaracteristiquesHydrauliques[k]->MingenHoraire[j] = srcmingen[PasDeTempsDebut + j];
+                    auto const& srcmingen
+                      = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
+                    {
+                        problem.CaracteristiquesHydrauliques[k]->MingenHoraire[j]
+                          = srcmingen[PasDeTempsDebut + j];
+                    }
                 }
 
                 if (area.hydro.reservoirManagement)
