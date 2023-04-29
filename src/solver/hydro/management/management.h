@@ -77,6 +77,14 @@ private:
     void prepareInflowsScaling(uint numSpace);
     //! Prepare minimum generation scaling for each area
     void minGenerationScaling(uint numSpace);
+    //! check Monthly minimum generation is lower than available inflows
+    void checkMonthlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area);
+    //! check Yearly minimum generation is lower than available inflows
+    void checkYearlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area);
+    //! check Weekly minimum generation is lower than available inflows
+    void checkWeeklyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area);
+    //! check Hourly minimum generation is lower than available inflows
+    void checkHourlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area);
     //! check minimum generation is lower than available inflows
     void checkMinGeneration(uint numSpace);
     //! Prepare the net demand for each area
@@ -133,7 +141,7 @@ public:
         //! inflows
         double inflows[12];
         //! monthly minimal generation
-        double mingens[12];
+        std::array<double, 12> mingens;
 
         //! Net demand, for each day of the year, for each area
         double DLN[dayYearCount];
@@ -142,13 +150,13 @@ public:
         //! Daily optimized Generation
         double DOG[dayYearCount];
         //! daily minimal generation
-        double dailyMinGen[dayYearCount];
+        std::array<double, dayYearCount> dailyMinGen;
 
         // Data for minGen<->inflows preChecks
         //! monthly total mingen
-        double totalMonthMingen[12];
+        std::array<double, 12> totalMonthMingen;
         //! monthly total inflows
-        double totalMonthInflows[12];
+        std::array<double, 12> totalMonthInflows;
         //! yearly total mingen
         double totalYearMingen;
         //! yearly total inflows

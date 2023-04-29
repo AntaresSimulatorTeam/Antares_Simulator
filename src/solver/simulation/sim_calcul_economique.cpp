@@ -666,7 +666,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
 
                 auto& mingenmatrix = area.hydro.series->mingen;
-                if (study.header.version > 860)
+                if (study.header.version >= 860)
                 {
                     auto const& srcmingen
                       = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];

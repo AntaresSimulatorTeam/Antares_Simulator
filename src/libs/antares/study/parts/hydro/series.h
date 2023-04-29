@@ -100,6 +100,11 @@ public:
     void estimateMemoryUsage(StudyMemoryUsage&) const;
     //@}
 
+    /*!
+    ** \brief Check TS number for Minimum Generation and logs error if necessary
+    */
+    void checkMinGenTsNumber(Study& s, const AreaName& areaID);
+
 public:
     /*!
     ** \brief Run-of-the-river - ROR (MW)

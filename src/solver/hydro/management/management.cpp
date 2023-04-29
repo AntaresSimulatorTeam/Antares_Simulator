@@ -153,14 +153,14 @@ void HydroManagement::minGenerationScaling(uint numSpace)
 {
     if (study.header.version < 860)
         return;
-    auto& calendar = study.calendar;
+    const auto& calendar = study.calendar;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [this, &numSpace, &calendar](Data::Area& area)
       {
           uint z = area.index;
 
-          auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
           auto& mingenmatrix = area.hydro.series->mingen;
           auto tsIndex = (uint)ptchro.Hydraulique;
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
@@ -180,7 +180,7 @@ void HydroManagement::minGenerationScaling(uint numSpace)
               data.totalMonthMingen[realmonth] = totalMonthMingen;
               totalYearMingen += totalMonthMingen;
 
-              if (not(area.hydro.reservoirCapacity < 1e-4))
+              if (!(area.hydro.reservoirCapacity < 1e-4))
               {
                   if (area.hydro.reservoirManagement)
                   {
@@ -214,117 +214,129 @@ void HydroManagement::minGenerationScaling(uint numSpace)
       });
 }
 
+void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+{
+    const auto& data = pAreas[numSpace][area.index];
+    for (uint month = 0; month != 12; ++month)
+    {
+        uint realmonth = study.calendar.months[month].realmonth;
+        // Monthly minimum generation <= Monthly inflows for each month
+        if (area.hydro.followLoadModulations && !area.hydro.reservoirManagement
+            && (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth]))
+        {
+            logs.error() << "In Area " << area.name << " the minimum generation of "
+                         << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
+                         << " of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
+                         << data.totalMonthInflows[realmonth] << " MW.";
+        }
+    }
+}
+
+void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+{
+    const auto& data = pAreas[numSpace][area.index];
+    if (area.hydro.followLoadModulations && area.hydro.reservoirManagement
+        && (data.totalYearMingen > data.totalYearInflows))
+    {
+        // Yearly minimum generation <= Yearly inflows
+        logs.error() << "In Area " << area.name << " the minimum generation of "
+                     << data.totalYearMingen << " MW of TS-" << tsIndex + 1
+                     << " is incompatible with the inflows of " << data.totalYearInflows << " MW.";
+    }
+}
+
+void HydroManagement::checkWeeklyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+{
+    if (!area.hydro.followLoadModulations)
+    {
+        const auto& calendar = study.calendar;
+        auto& inflowsmatrix = area.hydro.series->storage;
+        auto& mingenmatrix = area.hydro.series->mingen;
+        auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+        auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+        // Weekly minimum generation <= Weekly inflows for each week
+        for (uint week = 0; week < calendar.maxWeeksInYear - 1; ++week)
+        {
+            double totalWeekMingen = 0.0;
+            double totalWeekInflows = 0.0;
+            for (uint hour = calendar.weeks[week].hours.first;
+                 hour < calendar.weeks[week].hours.end && hour < HOURS_PER_YEAR;
+                 ++hour)
+            {
+                totalWeekMingen += srcmingen[hour];
+            }
+
+            for (uint day = calendar.weeks[week].daysYear.first;
+                 day < calendar.weeks[week].daysYear.end;
+                 ++day)
+            {
+                totalWeekInflows += srcinflows[day];
+            }
+            if (totalWeekMingen > totalWeekInflows)
+            {
+                logs.error() << "In Area " << area.name << " the minimum generation of "
+                             << totalWeekMingen << " MW in week " << week + 1 << " of TS-"
+                             << tsIndex + 1 << " is incompatible with the inflows of "
+                             << totalWeekInflows << " MW.";
+            }
+        }
+    }
+}
+
+void HydroManagement::checkHourlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+{
+    // Hourly minimum generation <= hourly inflows for each hour
+    const auto& calendar = study.calendar;
+    auto& mingenmatrix = area.hydro.series->mingen;
+    auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+    auto const& maxPower = area.hydro.maxPower;
+    auto const& maxP = maxPower[Data::PartHydro::genMaxP];
+
+    if (!area.hydro.reservoirManagement)
+    {
+        for (uint month = 0; month != 12; ++month)
+        {
+            uint realmonth = calendar.months[month].realmonth;
+            uint simulationMonth = study.calendar.mapping.months[realmonth];
+            auto daysPerMonth = study.calendar.months[simulationMonth].days;
+            uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
+            uint endDay = firstDay + daysPerMonth;
+
+            for (uint day = firstDay; day != endDay; ++day)
+            {
+                for (uint h = 0; h < 24; ++h)
+                {
+                    if (srcmingen[day * 24 + h] > maxP[day])
+                    {
+                        logs.error()
+                          << "In area: " << area.name << " [hourly] minimum generation of "
+                          << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
+                          << " of TS-" << tsIndex + 1
+                          << " is incompatible with the maximum generation of " << maxP[day]
+                          << " MW.";
+                    }
+                }
+            }
+        }
+    }
+}
+
 void HydroManagement::checkMinGeneration(uint numSpace)
 {
     if (study.header.version < 860)
         return;
-    auto& calendar = study.calendar;
 
     study.areas.each(
-      [&](Data::Area& area)
+      [this, &numSpace](Data::Area& area)
       {
           uint z = area.index;
-          auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
-
-          auto& inflowsmatrix = area.hydro.series->storage;
-          auto& mingenmatrix = area.hydro.series->mingen;
-          assert(inflowsmatrix.width && inflowsmatrix.height);
+          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
           auto tsIndex = (uint)ptchro.Hydraulique;
-          auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-          auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
-          auto& data = pAreas[numSpace][z];
-
-          for (uint month = 0; month != 12; ++month)
-          {
-              uint realmonth = calendar.months[month].realmonth;
-              // Monthly minimum generation <= Monthly inflows for each month
-              if (area.hydro.followLoadModulations && !area.hydro.reservoirManagement)
-              {
-                  if (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
-                  {
-                      logs.error()
-                        << "In Area " << area.name << " the minimum generation of "
-                        << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
-                        << " of TS-" << tsIndex + 1 << " is incompatible with the inflows of "
-                        << data.totalMonthInflows[realmonth] << " MW.";
-                  }
-              }
-          }
-
-          if (area.hydro.followLoadModulations && area.hydro.reservoirManagement)
-          {
-              // Yearly minimum generation <= Yearly inflows
-              if (data.totalYearMingen > data.totalYearInflows)
-              {
-                  logs.error() << "In Area " << area.name << " the minimum generation of "
-                               << data.totalYearMingen << " MW of TS-" << tsIndex + 1
-                               << " is incompatible with the inflows of " << data.totalYearInflows
-                               << " MW.";
-              }
-          }
-
-          if (!area.hydro.followLoadModulations)
-          {
-              // Weekly minimum generation <= Weekly inflows for each week
-              for (uint week = 0; week < calendar.maxWeeksInYear - 1; ++week)
-              {
-                  double totalWeekMingen = 0.0;
-                  double totalWeekInflows = 0.0;
-                  for (uint hour = calendar.weeks[week].hours.first;
-                       hour < calendar.weeks[week].hours.end && hour < HOURS_PER_YEAR;
-                       ++hour)
-                  {
-                      totalWeekMingen += srcmingen[hour];
-                  }
-
-                  for (uint day = calendar.weeks[week].daysYear.first;
-                       day < calendar.weeks[week].daysYear.end;
-                       ++day)
-                  {
-                      totalWeekInflows += srcinflows[day];
-                  }
-                  if (totalWeekMingen > totalWeekInflows)
-                  {
-                      logs.error()
-                        << "In Area " << area.name << " the minimum generation of "
-                        << totalWeekMingen << " MW in week " << week + 1 << " of TS-" << tsIndex + 1
-                        << " is incompatible with the inflows of " << totalWeekInflows << " MW.";
-                  }
-              }
-          }
-
-          // Hourly minimum generation <= hourly inflows for each hour
-          auto const& maxPower = area.hydro.maxPower;
-          auto const& maxP = maxPower[Data::PartHydro::genMaxP];
-
-          if (!area.hydro.reservoirManagement)
-          {
-              for (uint month = 0; month != 12; ++month)
-              {
-                  uint realmonth = calendar.months[month].realmonth;
-                  uint simulationMonth = study.calendar.mapping.months[realmonth];
-                  auto daysPerMonth = study.calendar.months[simulationMonth].days;
-                  uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
-                  uint endDay = firstDay + daysPerMonth;
-
-                  for (uint day = firstDay; day != endDay; ++day)
-                  {
-                      for (uint h = 0; h < 24; ++h)
-                      {
-                          if (srcmingen[day * 24 + h] > maxP[day])
-                          {
-                              logs.error()
-                                << "In area: " << area.name << " [hourly] minimum generation of "
-                                << srcmingen[day * 24 + h] << " MW in timestep " << day * 24 + h + 1
-                                << " of TS-" << tsIndex + 1
-                                << " is incompatible with the maximum generation of " << maxP[day]
-                                << " MW.";
-                          }
-                      }
-                  }
-              }
-          }
+          checkMonthlyMinGeneration(numSpace, tsIndex, area);
+          checkYearlyMinGeneration(numSpace, tsIndex, area);
+          checkWeeklyMinGeneration(numSpace, tsIndex, area);
+          checkHourlyMinGeneration(numSpace, tsIndex, area);
       });
 }
 
@@ -355,7 +367,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             {
                 netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
                             - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
-                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour] //CR22 todo add mingen here or not?
+                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
@@ -364,7 +376,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             else if (parameters.renewableGeneration.isClusters())
             {
                 netdemand = scratchpad.ts.load[ptchro.Consommation][hour]
-                            - scratchpad.miscGenSum[hour] - ror[hour] //CR22 todo add mingen here or not?
+                            - scratchpad.miscGenSum[hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 

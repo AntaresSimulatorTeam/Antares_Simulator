@@ -32,19 +32,18 @@
 void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelles,
                                             int NumeroDeProbleme)
 {
-    int Pdt;
     int NbPdt;
     int Var;
     double* Xmin;
     double* Xmax;
-    int* NumeroDeVariableTurbine;
-    double* TurbineMax;
-    double* TurbineMin;
+    const int* NumeroDeVariableTurbine;
+    const double* TurbineMax;
+    const double* TurbineMin;
     double* Turbine;
-    double* TurbineCible;
+    const double* TurbineCible;
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-    PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
+    const PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
     CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
@@ -68,7 +67,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     AdresseOuPlacerLaValeurDesVariablesOptimisees
       = ProblemeLineairePartieVariable->AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
-    for (Pdt = 0; Pdt < NbPdt; Pdt++)
+    for (int Pdt = 0; Pdt < NbPdt; Pdt++)
     {
         Var = NumeroDeVariableTurbine[Pdt];
         Xmax[Var] = TurbineMax[Pdt];

@@ -50,7 +50,7 @@ extern "C"
         int NombreDeJoursDuMois; /* A renseigner par l'appelant */
         double TurbineDuMois; /* A renseigner par l'appelant (somme des turbines cibles du mois) */
         double* TurbineMax;   /* A renseigner par l'appelant : 1 valeur par jour */
-        double* TurbineMin; //CR22 mingen
+        double* TurbineMin;   /*Minimum Hourly Hydro-Storage Generation*/
         double* TurbineCible; /* A renseigner par l'appelant : 1 valeur par jour */
         double reservoirCapacity;
         double NiveauInitialDuMois;
