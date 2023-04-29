@@ -355,7 +355,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             {
                 netdemand = +scratchpad.ts.load[ptchro.Consommation][hour]
                             - scratchpad.ts.wind[ptchro.Eolien][hour] - scratchpad.miscGenSum[hour]
-                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour] //CR22 todo add mingen here or not?
+                            - scratchpad.ts.solar[ptchro.Solar][hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
             }
@@ -364,7 +364,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
             else if (parameters.renewableGeneration.isClusters())
             {
                 netdemand = scratchpad.ts.load[ptchro.Consommation][hour]
-                            - scratchpad.miscGenSum[hour] - ror[hour] //CR22 todo add mingen here or not?
+                            - scratchpad.miscGenSum[hour] - ror[hour]
                             - ((ModeT != Data::stdmAdequacy) ? scratchpad.mustrunSum[hour]
                                                              : scratchpad.originalMustrunSum[hour]);
 
