@@ -147,34 +147,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                           << "Impossible to find the area `" << areaID << "` to invalidate it";
                 }
             }
-
-            if(mingen.width != count)
-            {
-                if(mingen.width > 1)
-                {
-                    logs.fatal() << "Hydro: `" << areaID
-                                    << "`: The matrices Minimum Generation must "
-                                    "has the same number of time-series as ROR and hydro-storage.";
-                    study.gotFatalError = true; 
-                }
-                else
-                {
-                    mingen.resizeWithoutDataLost(count, mingen.height);
-                    for (uint x = 1; x < count; ++x)
-                        mingen.pasteToColumn(x, mingen[0]);
-                    Area* areaToInvalidate = study.areas.find(areaID);
-                    if (areaToInvalidate)
-                    {
-                        areaToInvalidate->invalidateJIT = true;
-                        logs.info()
-                          << "  '" << areaID << "': The hydro minimum generation data have been normalized to "
-                          << count << " timeseries";
-                    }
-                    else
-                        logs.error()
-                          << "Impossible to find the area `" << areaID << "` to invalidate it";                                   
-                }
-            }
+            checkMinGenTsNumber(study, areaID);
         }
 
         if (study.parameters.derated)
@@ -189,6 +162,36 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     timeseriesNumbers.clear();
 
     return ret;
+}
+
+void DataSeriesHydro::checkMinGenTsNumber(Study& study, const AreaName& areaID)
+{
+    if (mingen.width != storage.width)
+    {
+        if (mingen.width > 1)
+        {
+            logs.fatal() << "Hydro: `" << areaID
+                         << "`: The matrices Minimum Generation must "
+                            "has the same number of time-series as ROR and hydro-storage.";
+            study.gotFatalError = true;
+        }
+        else
+        {
+            mingen.resizeWithoutDataLost(count, mingen.height);
+            for (uint x = 1; x < count; ++x)
+                mingen.pasteToColumn(x, mingen[0]);
+            Area* areaToInvalidate = study.areas.find(areaID);
+            if (areaToInvalidate)
+            {
+                areaToInvalidate->invalidateJIT = true;
+                logs.info() << "  '" << areaID
+                            << "': The hydro minimum generation data have been normalized to "
+                            << count << " timeseries";
+            }
+            else
+                logs.error() << "Impossible to find the area `" << areaID << "` to invalidate it";
+        }
+    }
 }
 
 bool DataSeriesHydro::forceReload(bool reload) const
