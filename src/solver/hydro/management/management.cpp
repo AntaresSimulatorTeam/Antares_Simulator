@@ -214,7 +214,7 @@ void HydroManagement::minGenerationScaling(uint numSpace)
       });
 }
 
-void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
     for (uint month = 0; month != 12; ++month)
@@ -232,7 +232,7 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, Dat
     }
 }
 
-void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
     if (area.hydro.followLoadModulations && area.hydro.reservoirManagement
@@ -245,7 +245,7 @@ void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, Data
     }
 }
 
-void HydroManagement::checkWeeklyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+void HydroManagement::checkWeeklyMinGeneration(uint tsIndex, Data::Area& area) const
 {
     if (!area.hydro.followLoadModulations)
     {
@@ -283,7 +283,7 @@ void HydroManagement::checkWeeklyMinGeneration(uint numSpace, uint tsIndex, Data
     }
 }
 
-void HydroManagement::checkHourlyMinGeneration(uint numSpace, uint tsIndex, Data::Area& area)
+void HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) const
 {
     // Hourly minimum generation <= hourly inflows for each hour
     const auto& calendar = study.calendar;
@@ -335,8 +335,8 @@ void HydroManagement::checkMinGeneration(uint numSpace)
 
           checkMonthlyMinGeneration(numSpace, tsIndex, area);
           checkYearlyMinGeneration(numSpace, tsIndex, area);
-          checkWeeklyMinGeneration(numSpace, tsIndex, area);
-          checkHourlyMinGeneration(numSpace, tsIndex, area);
+          checkWeeklyMinGeneration(tsIndex, area);
+          checkHourlyMinGeneration(tsIndex, area);
       });
 }
 

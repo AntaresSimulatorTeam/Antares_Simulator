@@ -44,7 +44,7 @@ void H2O_J_InitialiserLesBornesdesVariables(DONNEES_MENSUELLES* DonneesMensuelle
     double** AdresseOuPlacerLaValeurDesVariablesOptimisees;
 
     const PROBLEME_HYDRAULIQUE* ProblemeHydraulique;
-    CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
+    const CORRESPONDANCE_DES_VARIABLES* CorrespondanceDesVariables;
     PROBLEME_LINEAIRE_PARTIE_VARIABLE* ProblemeLineairePartieVariable;
 
     TurbineMax = DonneesMensuelles->TurbineMax;
