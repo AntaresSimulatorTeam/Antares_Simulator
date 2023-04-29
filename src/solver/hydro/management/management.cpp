@@ -153,14 +153,14 @@ void HydroManagement::minGenerationScaling(uint numSpace)
 {
     if (study.header.version < 860)
         return;
-    auto& calendar = study.calendar;
+    const auto& calendar = study.calendar;
 
     study.areas.each(
       [&](Data::Area& area)
       {
           uint z = area.index;
 
-          auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
           auto& mingenmatrix = area.hydro.series->mingen;
           auto tsIndex = (uint)ptchro.Hydraulique;
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
@@ -180,7 +180,7 @@ void HydroManagement::minGenerationScaling(uint numSpace)
               data.totalMonthMingen[realmonth] = totalMonthMingen;
               totalYearMingen += totalMonthMingen;
 
-              if (not(area.hydro.reservoirCapacity < 1e-4))
+              if (!(area.hydro.reservoirCapacity < 1e-4))
               {
                   if (area.hydro.reservoirManagement)
                   {
@@ -218,13 +218,13 @@ void HydroManagement::checkMinGeneration(uint numSpace)
 {
     if (study.header.version < 860)
         return;
-    auto& calendar = study.calendar;
+    const auto& calendar = study.calendar;
 
     study.areas.each(
       [&](Data::Area& area)
       {
           uint z = area.index;
-          auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 
           auto& inflowsmatrix = area.hydro.series->storage;
           auto& mingenmatrix = area.hydro.series->mingen;
@@ -233,7 +233,7 @@ void HydroManagement::checkMinGeneration(uint numSpace)
           auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
           auto const& srcmingen = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
 
-          auto& data = pAreas[numSpace][z];
+          const auto& data = pAreas[numSpace][z];
 
           for (uint month = 0; month != 12; ++month)
           {

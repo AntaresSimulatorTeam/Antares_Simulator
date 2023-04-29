@@ -37,7 +37,7 @@ void H2O_M_InitialiserBornesEtCoutsDesVariables(DONNEES_ANNUELLES* DonneesAnnuel
     double* Xmax;
     double* X;
     double* TurbineMax;
-    double* TurbineMin;
+    const double* TurbineMin;
     double* CoutLineaire;
     double CoutDepassementVolume;
 

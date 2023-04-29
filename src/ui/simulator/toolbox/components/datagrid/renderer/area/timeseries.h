@@ -306,28 +306,27 @@ class TimeSeriesHydroMinGen final : public ATimeSeries
 public:
     using AncestorType = Renderer::Matrix<double, Yuni::sint32>;
 
-public:
     TimeSeriesHydroMinGen(wxWindow* control, Toolbox::InputSelector::Area* notifier) :
      ATimeSeries(control, notifier)
     {
     }
-    virtual ~TimeSeriesHydroMinGen()
+    ~TimeSeriesHydroMinGen() override
     {
         destroyBoundEvents();
     }
 
-    virtual Date::Precision precision()
+    Date::Precision precision() override
     {
         return Date::hourly;
     }
 
-    virtual uint maxHeightResize() const
+    uint maxHeightResize() const override
     {
         return HOURS_PER_YEAR;
     }
 
-protected:
-    virtual void internalAreaChanged(Antares::Data::Area* area)
+private:
+    void internalAreaChanged(Antares::Data::Area* area) override
     {
         matrix((area && Data::Study::Current::Valid()) ? &(area->hydro.series->mingen) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
