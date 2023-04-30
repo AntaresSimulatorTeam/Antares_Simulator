@@ -125,8 +125,7 @@ void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
         for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
         {
             const auto& cluster = *(area.thermal.clusters[clusterIndex]);
-            bool setCostManual = cluster.costgeneration == Antares::Data::setManually;
-            if (setCostManual)
+            if (cluster.costgeneration == Antares::Data::setManually)
                 continue;
             uint fuelCostWidth = cluster.ecoInput->fuelcost.width;
             uint co2CostWidth = cluster.ecoInput->co2cost.width;

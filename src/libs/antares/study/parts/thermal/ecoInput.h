@@ -33,9 +33,7 @@
 #include "../../fwd.h"
 #include <memory>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 /*!
 ** \brief Thermal
@@ -94,8 +92,7 @@ public:
     std::weak_ptr<const ThermalCluster> itsThermalCluster;
 }; // class PreproThermal
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "ecoInput.hxx"
 

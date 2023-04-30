@@ -39,9 +39,7 @@ using namespace Yuni;
 
 #define SEP IO::Separator
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster) :
  itsThermalCluster(cluster)
@@ -64,9 +62,9 @@ bool EconomicInputData::saveToFolder(const AnyString& folder)
     {
         String buffer;
         buffer.clear() << folder << SEP << "fuelCost.txt";
-        ret = fuelcost.saveToCSVFile(buffer) and ret;
+        ret = fuelcost.saveToCSVFile(buffer) && ret;
         buffer.clear() << folder << SEP << "CO2Cost.txt";
-        ret = co2cost.saveToCSVFile(buffer) and ret;
+        ret = co2cost.saveToCSVFile(buffer) && ret;
         return ret;
     }
     return false;
@@ -81,7 +79,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
     if (!cluster)
         return false;
 
-    auto parentArea = cluster->parentArea;
     if (study.header.version >= 860)
     {
         buffer.clear() << folder << SEP << "fuelCost.txt";
@@ -89,7 +86,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
         {
             ret = fuelcost.loadFromCSVFile(
                     buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
-                  and ret;
+                  && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 fuelcost.averageTimeseries();
         }
@@ -99,7 +96,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
         {
             ret = co2cost.loadFromCSVFile(
                     buffer, 1, HOURS_PER_YEAR, Matrix<>::optImmediate, &study.dataBuffer)
-                  and ret;
+                  && ret;
             if (study.usedByTheSolver && study.parameters.derated)
                 co2cost.averageTimeseries();
         }
@@ -139,5 +136,4 @@ void EconomicInputData::reset()
     co2cost.reset(1, HOURS_PER_YEAR, true);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data

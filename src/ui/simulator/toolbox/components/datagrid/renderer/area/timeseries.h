@@ -400,9 +400,9 @@ class TimeSeriesThermalClusterFuelCost final : public TimeSeriesCluster
 {
 public:
     TimeSeriesThermalClusterFuelCost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
-    virtual ~TimeSeriesThermalClusterFuelCost();
+    ~TimeSeriesThermalClusterFuelCost() override;
 
-protected:
+private:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
     void onStudyClosed() override;
 };
@@ -414,9 +414,9 @@ class TimeSeriesThermalClusterCO2Cost final : public TimeSeriesCluster
 {
 public:
     TimeSeriesThermalClusterCO2Cost(wxWindow* control, Toolbox::InputSelector::ThermalCluster* notifier);
-    virtual ~TimeSeriesThermalClusterCO2Cost();
+    ~TimeSeriesThermalClusterCO2Cost() override;
 
-protected:
+private:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster);
     void onStudyClosed() override;
 };

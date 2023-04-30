@@ -147,7 +147,6 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
             if (cluster->costgeneration == Data::setManually)
             {
                 // alias to the marginal cost
-                double marginalCost = cluster->marginalCost;
                 for (uint h = 0; h != cluster->modulation.height; ++h)
                     prodCost[h] = marginalCost * modulation[h];
             }
@@ -462,7 +461,7 @@ bool ThermalClusterList::saveToFolder(const AnyString& folder) const
                 s->add("startup-cost", Math::Round(c.startupCost, 3));
             if (not Math::Zero(c.marketBidCost))
                 s->add("market-bid-cost", Math::Round(c.marketBidCost, 3));
-            if (not Math::Zero(c.variableomcost))
+            if (!Math::Zero(c.variableomcost))
                 s->add("variableomcost", Math::Round(c.variableomcost,3));
 
 
@@ -524,7 +523,7 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-            ret = c.ecoInput->saveToFolder(buffer) and ret;
+            ret = c.ecoInput->saveToFolder(buffer) && ret;
         }
     });
     return ret;
@@ -569,7 +568,7 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
             bool result = c.ecoInput->loadFromFolder(study, buffer);
             c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
 
-            ret = result and ret;
+            ret = result && ret;
         }
         ++options.progressTicks;
         options.pushProgressLogs();

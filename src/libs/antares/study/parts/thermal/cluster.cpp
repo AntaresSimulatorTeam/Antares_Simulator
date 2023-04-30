@@ -138,18 +138,18 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
- variableomcost(0.),
  fixedCost(0.),
  startupCost(0.),
  marketBidCost(0.),
+ variableomcost(0.),
  groupMinCount(0),
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
- thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
- ecoInput(nullptr),
  productionCost(nullptr),
+ thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
+ ecoInput(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -186,18 +186,18 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  costgeneration(setManually),
  marginalCost(0.),
  spreadCost(0.),
- variableomcost(0.),
  fixedCost(0.),
  startupCost(0.),
  marketBidCost(0.),
+ variableomcost(0.),
  groupMinCount(0),
  groupMaxCount(0),
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
- thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  prepro(nullptr),
- ecoInput(nullptr),
  productionCost(nullptr),
+ thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
+ ecoInput(nullptr),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -425,7 +425,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
     if (ecoInput)
-        ret = ecoInput->forceReload(reload) and ret;
+        ret = ecoInput->forceReload(reload) && ret;
     return ret;
 }
 
@@ -678,7 +678,7 @@ bool Data::ThermalCluster::integrityCheck()
         }
 
     }
-    if (fuelEfficiency <= 0. or fuelEfficiency > 100.)
+    if (fuelEfficiency <= 0. || fuelEfficiency > 100.)
     {
         fuelEfficiency = 100.;
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
