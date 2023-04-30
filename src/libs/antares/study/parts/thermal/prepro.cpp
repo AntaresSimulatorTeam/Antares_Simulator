@@ -62,7 +62,7 @@ bool PreproThermal::saveToFolder(const AnyString& folder)
     {
         String buffer;
         buffer.clear() << folder << SEP << "data.txt";
-        ret = data.saveToCSVFile(buffer, /*decimal*/ 6) and ret;
+        ret = data.saveToCSVFile(buffer, /*decimal*/ 6) && ret;
         return ret;
     }
     return false;

@@ -908,8 +908,7 @@ bool InspectorGrid::onPropertyChanging_ThermalCluster(wxPGProperty*,
     }
     if (name == "cluster.variableomcost")
     {
-        const double d = value.GetDouble();
-        if (d < 0.)
+        if (const double d = value.GetDouble() < 0.)
         {
             for (; i != end; ++i)
                 (*i)->variableomcost = 0.;

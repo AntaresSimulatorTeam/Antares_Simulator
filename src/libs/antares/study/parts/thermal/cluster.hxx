@@ -116,7 +116,7 @@ class Into<Antares::Data::CostGeneration>
 {
 public:
     using TargetType = Antares::Data::CostGeneration;
-    enum
+    enum class Validation
     {
         valid = 1
     };

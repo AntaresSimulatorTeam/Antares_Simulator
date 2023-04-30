@@ -27,16 +27,13 @@
 #ifndef __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_HXX__
 #define __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_HXX__
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 inline Yuni::uint64 EconomicInputData::memoryUsage() const
 {
     return sizeof(EconomicInputData);
 }
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #endif // __ANTARES_LIBS_STUDY_PARTS_THERMAL_ECOINPUT_HXX__
