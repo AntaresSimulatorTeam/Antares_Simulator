@@ -77,7 +77,7 @@ public:
     ** \param folder The targer folder
     ** \return A non-zero value if the operation succeeded, 0 otherwise
     */
-    bool saveToFolder(const AnyString& folder);
+    bool saveToFolder(const AnyString& folder) const;
 
     /*!
     ** \brief Get the amount of memory used by the class

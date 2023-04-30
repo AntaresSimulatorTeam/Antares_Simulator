@@ -55,7 +55,7 @@ void EconomicInputData::copyFrom(const EconomicInputData& rhs)
     rhs.co2cost.unloadFromMemory();
 }
 
-bool EconomicInputData::saveToFolder(const AnyString& folder)
+bool EconomicInputData::saveToFolder(const AnyString& folder) const
 {
     bool ret = true;
     if (IO::Directory::Create(folder))
