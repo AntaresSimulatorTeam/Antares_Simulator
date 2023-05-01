@@ -31,8 +31,6 @@
 #include "../../toolbox/input/area.h"
 #include "../../toolbox/components/notebook/notebook.h"
 #include <ui/common/component/panel.h>
-#include <memory>
-#include <vector>
 
 namespace Antares
 {
@@ -57,8 +55,6 @@ private:
     void onStudyLoaded();
     void onStudyClosed();
 
-    void DeallocateComponents();
-    void AllocateComponents(Component::Notebook *notebook);
 private:
     //! Event: An area has been selected
     void onAreaChanged(Data::Area* area);
@@ -69,8 +65,6 @@ private:
     //! Page
     Component::Notebook::Page* pPageFatal;
 
-    Component::Datagrid::Component **com;
-    uint datagridNum; 
 }; // class Series
 
 } // namespace Hydro
