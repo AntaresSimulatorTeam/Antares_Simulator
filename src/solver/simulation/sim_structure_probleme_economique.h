@@ -537,7 +537,7 @@ struct PROBLEME_HEBDO
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
 
     int NumberOfShortTermStorages = 0;
-    // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
+    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
     std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */

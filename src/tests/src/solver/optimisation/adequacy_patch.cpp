@@ -123,7 +123,6 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     delete problem.ValeursDeNTC;
     delete problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive;
 
-    // return
     return std::make_pair(netPositionInit, densNew);
 }
 
