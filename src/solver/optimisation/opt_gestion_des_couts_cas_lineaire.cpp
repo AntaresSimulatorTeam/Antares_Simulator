@@ -190,7 +190,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
             }
 
-            shortTermStorageCost((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
                                  CorrespondanceVarNativesVarOptim,
                                  ProblemeAResoudre->CoutLineaire);
 
