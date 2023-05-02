@@ -47,10 +47,10 @@ static void importShortTermStorages(
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
-        int STindex = 0;
+        int storageIndex = 0;
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
             toInsert.globalIndex = globalIndex;
 
             // Properties
@@ -63,7 +63,7 @@ static void importShortTermStorages(
             toInsert.series = st->series;
 
             // TODO add missing properties, or use the same struct
-            STindex++;
+            storageIndex++;
             globalIndex++;
         }
     }
