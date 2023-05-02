@@ -259,11 +259,11 @@ public:
     void hourForEachArea(State& state, unsigned int numSpace)
     {
         for (uint clusterIndex = 0; clusterIndex != state.area->shortTermStorage.count();
-            ++clusterIndex)
+             ++clusterIndex)
         {
             // ST storage withdrawal for the current cluster and this hour
             pValuesForTheCurrentYear[numSpace][clusterIndex].hour[state.hourInTheYear]
-                = (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[clusterIndex];
+              = state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[clusterIndex];
         }
 
         // Next variable

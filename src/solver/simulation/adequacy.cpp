@@ -277,7 +277,7 @@ bool Adequacy::year(Progression::Task& progression,
 
             for (uint ar = 0; ar != nbAreas; ++ar)
             {
-                auto& hourlyResults = *(pProblemesHebdo[numSpace]->ResultatsHoraires[ar]);
+                auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[ar];
 
                 memset(hourlyResults.ValeursHorairesDeDefaillancePositive,
                        0,
@@ -302,7 +302,7 @@ bool Adequacy::year(Progression::Task& progression,
                     assert(k < state.resSpilled.width);
                     assert(j < state.resSpilled.height);
                     auto& valgen = *ValeursGenereesParPays[numSpace][k];
-                    auto& hourlyResults = *(pProblemesHebdo[numSpace]->ResultatsHoraires[k]);
+                    auto& hourlyResults = pProblemesHebdo[numSpace]->ResultatsHoraires[k];
 
                     hourlyResults.TurbinageHoraire[j]
                       = valgen.HydrauliqueModulableQuotidien[dayInTheYear] / 24.;

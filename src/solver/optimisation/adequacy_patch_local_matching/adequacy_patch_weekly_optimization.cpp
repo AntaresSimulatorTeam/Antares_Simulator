@@ -53,11 +53,11 @@ void AdequacyPatchOptimization::solve(uint weekInTheYear, int hourInTheYear)
     {
         if (problemeHebdo_->adequacyPatchRuntimeData->areaMode[pays]
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
-            memcpy(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
-                   problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDeDefaillancePositive,
+            memcpy(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS,
+                   problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDeDefaillancePositive,
                    problemeHebdo_->NombreDePasDeTemps * sizeof(double));
         else
-            memset(problemeHebdo_->ResultatsHoraires[pays]->ValeursHorairesDENS,
+            memset(problemeHebdo_->ResultatsHoraires[pays].ValeursHorairesDENS,
                    0,
                    problemeHebdo_->NombreDePasDeTemps * sizeof(double));
     }

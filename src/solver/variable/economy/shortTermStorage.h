@@ -242,15 +242,15 @@ public:
 
             // Injection
             pValuesForTheCurrentYear[numSpace][3 * group][state.hourInTheYear]
-              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].injection[stsIndex];
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].injection[stsIndex];
 
             // Withdrawal
             pValuesForTheCurrentYear[numSpace][3 * group + 1][state.hourInTheYear]
-              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].withdrawal[stsIndex];
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].withdrawal[stsIndex];
 
             // Levels
             pValuesForTheCurrentYear[numSpace][3 * group + 2][state.hourInTheYear]
-              += (*state.hourlyResults->ShortTermStorage)[state.hourInTheWeek].level[stsIndex];
+              += state.hourlyResults->ShortTermStorage[state.hourInTheWeek].level[stsIndex];
         }
 
         // Next item in the list
