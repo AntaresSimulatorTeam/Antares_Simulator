@@ -1107,6 +1107,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Short term storage data, specific to areas
+    if (pStudy.header.version >= 860)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
