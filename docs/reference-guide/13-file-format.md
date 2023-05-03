@@ -9,10 +9,10 @@ This is a list of all recent changes that came with new Antares Simulator featur
     - **input/bindingconstraints/&lt;id&gt;_gt.txt**
     - **input/bindingconstraints/&lt;id&gt;_eq.txt**
 
-    Each of these files must have 8674 rows and N >= 1 columns, the same number for the 3 files.
+    Each of these files can be either empty or have N column of 8674 rows
 
 - In file **input/bindingconstraints/bindingconstraints.ini**, add property `group` to every section
-- Binding constraints in the same group must have the same number of RHS columns (3 files described above)
+- Binding constraints in the same group must have the same number of RHS columns (3 files described above for their respective types). Exception: a constraint in a group can have empty RHS or only one RHS column
 - In file **settings/scenariobuilder.dat**, add prefix `bc` for every group of binding constraints. The syntax is the following
 ```
 bc,<group>,<MC Year> = <TS number>
