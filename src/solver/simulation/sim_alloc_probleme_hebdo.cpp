@@ -579,8 +579,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               = (double*)MemAlloc(nbPaliers * sizeof(double));
         }
         // Short term storage results
-        const auto& storagesForArea = study.areas.byIndex[k]->shortTermStorage.storagesByIndex;
-        const unsigned long nbShortTermStorage = storagesForArea.size();
+        const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
         problem.ResultatsHoraires[k].ShortTermStorage.resize(NombreDePasDeTemps);
         for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {

@@ -173,7 +173,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
         {
-            int areaWideIndex = 0;
+            int storageIndex = 0;
             for (const auto& storage : problemeHebdo->ShortTermStorage[areaIndex])
             {
                 const int globalIndex = storage.globalIndex;
@@ -185,7 +185,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection]
                   = storage.injectionCapacity * storage.series->maxInjectionModulation[pdtHebdo];
-                AddressForVars[varInjection] = &STSResult.injection[areaWideIndex];
+                AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
                 int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage
@@ -193,7 +193,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal]
                   = storage.withdrawalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
-                AddressForVars[varWithdrawal] = &STSResult.withdrawal[areaWideIndex];
+                AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
                 int varLevel
@@ -207,9 +207,9 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                     Xmin[varLevel] = storage.capacity * storage.series->lowerRuleCurve[pdtHebdo];
                     Xmax[varLevel] = storage.capacity * storage.series->upperRuleCurve[pdtHebdo];
                 }
-                AddressForVars[varLevel] = &STSResult.level[areaWideIndex];
+                AddressForVars[varLevel] = &STSResult.level[storageIndex];
 
-                areaWideIndex++;
+                storageIndex++;
             }
         }
     }
