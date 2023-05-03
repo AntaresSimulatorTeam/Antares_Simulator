@@ -328,6 +328,75 @@ void SIM_InitialisationResultats()
     }
 }
 
+void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int PasDeTempsDebut,
+                               const StudyRuntimeInfos &studyruntime, const uint weekFirstDay, int pasDeTemps) {
+    const auto constraintCount = studyruntime.bindingConstraint.size();
+    for (uint k = 0; k != constraintCount; ++k)
+    {
+        auto& bc = studyruntime.bindingConstraint[k];
+        assert(bc.time_series.width && "Invalid constraint data width");
+        const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
+        auto& ts = bc.time_series;
+        switch (bc.type)
+        {
+            case BindingConstraint::typeHourly:
+            {
+                double const* column = ts[ts_number];
+                problem.MatriceDesContraintesCouplantes[k]
+                        ->SecondMembreDeLaContrainteCouplante[pasDeTemps]
+                        = column[PasDeTempsDebut + pasDeTemps];
+                problem.MatriceDesContraintesCouplantes[k]
+                        ->SecondMembreDeLaContrainteCouplanteRef[pasDeTemps]
+                        = problem.MatriceDesContraintesCouplantes[k]
+                        ->SecondMembreDeLaContrainteCouplante[pasDeTemps];
+                break;
+            }
+            case BindingConstraint::typeDaily:
+            {
+                assert(ts.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
+                double const* column = ts[ts_number];
+
+                double* sndMember
+                        = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
+                double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
+                        ->SecondMembreDeLaContrainteCouplanteRef;
+                for (uint d = 0; d != 7; ++d)
+                {
+                    sndMember[d] = column[weekFirstDay + d];
+                    sndMemberRef[d] = sndMember[d];
+                }
+                break;
+            }
+            case BindingConstraint::typeWeekly:
+            {
+                assert(ts.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
+
+                double const* column = ts[ts_number];
+                double sum = 0;
+                for (uint d = 0; d != 7; ++d)
+                    sum += column[weekFirstDay + d];
+
+                problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
+                        = sum;
+                problem.MatriceDesContraintesCouplantes[k]
+                        ->SecondMembreDeLaContrainteCouplanteRef[0]
+                        = sum;
+                break;
+            }
+            case BindingConstraint::typeUnknown:
+            case BindingConstraint::typeMax:
+            default:
+            {
+                assert(false && "invalid constraint type");
+                logs.error() << "internal error. Please submit a full bug report";
+                break;
+            }
+        }
+    }
+}
+
 void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                                     uint weekInTheYear,
                                     uint numSpace,
@@ -378,65 +447,6 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
         else
             problem.CoutDeTransport[k]->IntercoGereeAvecLoopFlow = false;
-    }
-
-    if (studyruntime.bindingConstraint.size())
-    {
-        for (uint k = 0; k != studyruntime.bindingConstraint.size(); ++k)
-        {
-            auto& bc = studyruntime.bindingConstraint[k];
-            assert(bc.time_series.width && "Invalid constraint data width");
-            const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
-            auto& ts = bc.time_series;
-            switch (bc.type)
-            {
-            case BindingConstraint::typeHourly:
-            {
-                break;
-            }
-            case BindingConstraint::typeDaily:
-            {
-                assert(ts.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
-                double const* column = ts[ts_number];
-
-                double* sndMember
-                  = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
-                double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
-                                         ->SecondMembreDeLaContrainteCouplanteRef;
-                for (uint d = 0; d != 7; ++d)
-                {
-                    sndMember[d] = column[weekFirstDay + d];
-                    sndMemberRef[d] = sndMember[d];
-                }
-                break;
-            }
-            case BindingConstraint::typeWeekly:
-            {
-                assert(ts.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
-
-                double const* column = ts[ts_number];
-                double sum = 0;
-                for (uint d = 0; d != 7; ++d)
-                    sum += column[weekFirstDay + d];
-
-                problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
-                  = sum;
-                problem.MatriceDesContraintesCouplantes[k]
-                  ->SecondMembreDeLaContrainteCouplanteRef[0]
-                  = sum;
-                break;
-            }
-            case BindingConstraint::typeUnknown:
-            case BindingConstraint::typeMax:
-            {
-                assert(false && "invalid constraint type");
-                logs.error() << "internal error. Please submit a full bug report";
-                break;
-            }
-            }
-        }
     }
 
     int weekDayIndex[8];
@@ -582,28 +592,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)ntc->ValeurDeLoopFlowOrigineVersExtremite,
                sizeOfIntercoDouble);
 
-        {
-            const auto constraintCount = studyruntime.bindingConstraint.size();
-            for (uint k = 0; k != constraintCount; ++k)
-            {
-                auto& bc = studyruntime.bindingConstraint[k];
-                const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
-
-                auto& ts = bc.time_series;
-                double** column = nullptr;
-                if (bc.type == BindingConstraint::typeHourly)
-                {
-                    column = &ts[ts_number];
-                    problem.MatriceDesContraintesCouplantes[k]
-                      ->SecondMembreDeLaContrainteCouplante[j]
-                      = (*column)[PasDeTempsDebut + j];
-                    problem.MatriceDesContraintesCouplantes[k]
-                      ->SecondMembreDeLaContrainteCouplanteRef[j]
-                      = problem.MatriceDesContraintesCouplantes[k]
-                          ->SecondMembreDeLaContrainteCouplante[j];
-                }
-            }
-        }
+        preparerBindingConstraint(problem, numSpace, PasDeTempsDebut, studyruntime, weekFirstDay, j);
 
         const uint dayInTheYear = study.calendar.hours[indx].dayYear;
 
