@@ -385,6 +385,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         for (uint k = 0; k != studyruntime.bindingConstraint.size(); ++k)
         {
             auto& bc = studyruntime.bindingConstraint[k];
+            assert(bc.time_series.width && "Invalid constraint data width");
+            const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
+            auto& ts = bc.time_series;
             switch (bc.type)
             {
             case BindingConstraint::typeHourly:
@@ -393,31 +396,30 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
             }
             case BindingConstraint::typeDaily:
             {
-                //TODO
-                //assert(bc.bounds.width && "Invalid constraint data width");
-                //assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                //auto& column = bc.bounds[0];
+                assert(ts.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
+                double const* column = ts[ts_number];
+
                 double* sndMember
                   = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
                 double* sndMemberRef = problem.MatriceDesContraintesCouplantes[k]
                                          ->SecondMembreDeLaContrainteCouplanteRef;
                 for (uint d = 0; d != 7; ++d)
                 {
-                    //TODO
-                    //sndMember[d] = column[weekFirstDay + d];
+                    sndMember[d] = column[weekFirstDay + d];
                     sndMemberRef[d] = sndMember[d];
                 }
                 break;
             }
             case BindingConstraint::typeWeekly:
             {
-                //TODO
-                //assert(bc.bounds.width && "Invalid constraint data width");
-                //assert(weekFirstDay + 6 < bc.bounds.height && "Invalid constraint data height");
-                //const Matrix<>::ColumnType& column = bc.bounds[0];
+                assert(ts.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
+
+                double const* column = ts[ts_number];
                 double sum = 0;
-                //for (uint d = 0; d != 7; ++d)
-                    //sum += column[weekFirstDay + d];
+                for (uint d = 0; d != 7; ++d)
+                    sum += column[weekFirstDay + d];
 
                 problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante[0]
                   = sum;
@@ -581,7 +583,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                sizeOfIntercoDouble);
 
         {
-            const uint constraintCount = studyruntime.bindingConstraint.size();
+            const auto constraintCount = studyruntime.bindingConstraint.size();
             for (uint k = 0; k != constraintCount; ++k)
             {
                 auto& bc = studyruntime.bindingConstraint[k];
