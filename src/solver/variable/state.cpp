@@ -366,16 +366,14 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurat
     uint endHourForCurrentYear
         = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
 
-    for (uint i = startHourForCurrentYear; i < endHourForCurrentYear; ++i)
+    for (uint hour = startHourForCurrentYear; hour < endHourForCurrentYear; ++hour)
     {
         double thermalClusterStartupCostForYear = 0;
         double thermalClusterFixedCostForYear = 0;
 
-        uint optimalCount;
-
         // based on duration, if maxDurationON==0 we choose the mininum of ON clusters, otherwise, the
         // optimal number.
-        (maxDurationON == 0) ? (optimalCount = ON_min[i]) : (optimalCount = ON_opt[i]);
+        uint optimalCount = (maxDurationON == 0) ? ON_min[hour] : ON_opt[hour];
 
         // NODU cannot be > unit count
         if (optimalCount > currentCluster->unitCount)
@@ -383,11 +381,11 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurat
 
         thermalClusterFixedCostForYear = currentCluster->fixedCost * optimalCount;
 
-        if (i >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
+        if (hour >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
         {
-            int delta; // nombre de groupes démarrés à l'heure h
-            (maxDurationON == 0) ? (delta = ON_min[i] - ON_min[i - 1])
-                : (delta = ON_opt[i] - ON_opt[i - 1]);
+            // nombre de groupes démarrés à l'heure h
+            int delta = (maxDurationON == 0) ? ON_min[hour] - ON_min[hour - 1]
+                : ON_opt[hour] - ON_opt[hour - 1];
 
             (delta > 0)
                 ? (thermalClusterStartupCostForYear = currentCluster->startupCost * delta)
@@ -398,13 +396,13 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurat
         // NP Cost = SU + Fx
         // Op. Cost = (P.lvl * P.Cost) + NP.Cost
 
-        thermalClusterNonProportionalCostForYear[i]
+        thermalClusterNonProportionalCostForYear[hour]
             = thermalClusterStartupCostForYear + thermalClusterFixedCostForYear;
-        thermalClusterOperatingCostForYear[i] += thermalClusterNonProportionalCostForYear[i];
+        thermalClusterOperatingCostForYear[hour] += thermalClusterNonProportionalCostForYear[hour];
 
         // Other variables for output
         //\todo get from the cluster
-        thermalClusterDispatchedUnitsCountForYear[i] = optimalCount;
+        thermalClusterDispatchedUnitsCountForYear[hour] = optimalCount;
     }
 }
 
