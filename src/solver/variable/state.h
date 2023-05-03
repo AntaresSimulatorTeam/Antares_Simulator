@@ -63,7 +63,7 @@ public:
 
         double unitCountLastHour = 0;
         double productionLastHour = 0;
-        double pminOfAGroup = 0;
+        std::vector<double> pminOfAGroup;
     };
 
     StateForAnArea& operator[](size_t areaIndex);
