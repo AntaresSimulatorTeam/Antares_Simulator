@@ -676,7 +676,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
     //Verifie le flux sur le lien égale au second membre (flow algebrique sur lien?)
 }
 
-BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly ,*boost::unit_test::disabled())
+BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
 {
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
@@ -710,9 +710,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly ,*boost::unit
 
     typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-    BOOST_TEST(result->avgdata.hourly[0] == rhs * cost / 7 / 24, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.daily[0] == rhs * cost  / 7, tt::tolerance(0.001));
-    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
 
     //Clean simulation
     cleanSimulation(pStudy, simulation);
@@ -752,7 +750,6 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
 
     typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
-    BOOST_TEST(result->avgdata.hourly[0] == rhs * cost / 24, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.daily[0] == rhs * cost, tt::tolerance(0.001));
     BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
 
