@@ -631,10 +631,7 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
 
 BOOST_AUTO_TEST_SUITE()
 
-BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
-{
-    //Create study
-    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type) {
     pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
     //On year  and one TS
     int nbYears = 1;
@@ -645,20 +642,27 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
 
     prepareStudy(nbYears, nbTS, pStudy, area1, link);
 
-    auto rhs = 0.3;
-    auto cost = 1;
-
     //Add BC
     auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
     BC->weight(link, 1);
     BC->enabled(true);
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
+    BC->mutateTypeWithoutCheck(type);
     BC->operatorType(BindingConstraint::opEquality);
     auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
     BC->TimeSeries().resize(1, 8760);
     BC->TimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
     ts_numbers.timeseriesNumbers.fill(0);
+    return link;
+}
+
+BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
+{
+    //Create study
+    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    auto rhs = 0.3;
+    auto cost = 1;
+    auto link = prepare(pStudy, rhs, BindingConstraint::typeHourly);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -680,30 +684,9 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
 {
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-    pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
-    //On year  and one TS
-    int nbYears = 1;
-    int nbTS = 1;
-
-    Area* area1;
-    AreaLink* link;
-
-    prepareStudy(nbYears, nbTS, pStudy, area1, link);
-
     auto rhs = 0.3;
-    auto cost = 1.0;
-
-    //Add BC
-    auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
-    BC->weight(link, 1);
-    BC->enabled(true);
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeWeekly);
-    BC->operatorType(BindingConstraint::opEquality);
-    auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
-    BC->TimeSeries().resize(1, 365);
-    BC->TimeSeries().fill(rhs);
-    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
-    ts_numbers.timeseriesNumbers.fill(0);
+    auto cost = 1;
+    auto link = prepare(pStudy, rhs, BindingConstraint::typeWeekly);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -720,30 +703,9 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
 {
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
-    pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
-    //On year  and one TS
-    int nbYears = 1;
-    int nbTS = 1;
-
-    Area* area1;
-    AreaLink* link;
-
-    prepareStudy(nbYears, nbTS, pStudy, area1, link);
-
     auto rhs = 0.3;
-    auto cost = 1.0;
-
-    //Add BC
-    auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
-    BC->weight(link, 1);
-    BC->enabled(true);
-    BC->mutateTypeWithoutCheck(BindingConstraint::typeDaily);
-    BC->operatorType(BindingConstraint::opEquality);
-    auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
-    BC->TimeSeries().resize(1, 365);
-    BC->TimeSeries().fill(rhs);
-    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
-    ts_numbers.timeseriesNumbers.fill(0);
+    auto cost = 1;
+    auto link = prepare(pStudy, rhs, BindingConstraint::typeDaily);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
