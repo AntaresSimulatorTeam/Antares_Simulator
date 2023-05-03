@@ -96,7 +96,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     // energie turbinee de la semaine
     {
         // DTG MRG
-        const double* M = area.scratchpad[numSpace]->dispatchableGenerationMargin;
+        const double* M = area.scratchpad[numSpace].dispatchableGenerationMargin;
 
         double WH = 0.;
         {

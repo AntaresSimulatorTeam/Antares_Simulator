@@ -155,11 +155,9 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
 
     // If pumping energy is nil over the whole year, pumpHasMod is false, true otherwise.
     pumpHasMod = (valuePumping > 0.);
-
-    // Spinning reserves
-    memcpy(
-      spinningReserve, area.reserves[fhrPrimaryReserve], sizeof(double) * rinfos.nbHoursPerYear);
 }
+
+AreaScratchpad::~AreaScratchpad() = default;
 
 } // namespace Data
 } // namespace Antares

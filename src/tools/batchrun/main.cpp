@@ -184,8 +184,7 @@ int main(int argc, char* argv[])
     String solver;
     if (optSolver.empty())
     {
-        Solver::Feature feature = Solver::standard;
-        Solver::FindLocation(solver, (Data::Version)Data::versionLatest, feature);
+        Solver::FindLocation(solver);
         if (solver.empty())
         {
             logs.fatal() << "The solver has not been found";

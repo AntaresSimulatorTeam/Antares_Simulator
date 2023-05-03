@@ -105,22 +105,7 @@ public:
     */
     bool loadFromFile(Study& study,
                       const AnyString& filename,
-                      bool warnings = true,
-                      int version = versionUnknown);
-
-    /*!
-    ** \brief Load correlated values from an INI structure in memory
-    **
-    ** \param study The attached study
-    ** \param ini The INI structure
-    ** \param warnings True to enable warnings
-    ** \param version Format version expected. Use studyVersionUnknown to use the format version
-    **   of the given study
-    */
-    bool loadFromINI(Study& study,
-                     const IniFile& ini,
-                     bool warnings = true,
-                     int version = versionUnknown);
+                      bool warnings = true);
 
     /*!
     ** \brief Save the correlation matrices into an INI file
@@ -185,9 +170,8 @@ public:
     int timeSeries;
 
 private:
-    bool internalLoadFromINI(Study& study, const IniFile& ini, bool warnings, int version);
-    bool internalLoadFromINIv32(Study& study, const IniFile& ini, bool warnings);
-    bool internalLoadFromINIPost32(Study& study, const IniFile& ini, bool warnings);
+    bool internalLoadFromINI(Study& study, const IniFile& ini, bool warnings);
+    bool internalLoadFromINITry(Study& study, const IniFile& ini, bool warnings);
 
     void internalSaveToINI(Study& study, Yuni::IO::File::Stream& file) const;
 

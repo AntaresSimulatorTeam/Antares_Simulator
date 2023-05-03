@@ -140,6 +140,7 @@ public:
 
     void broadcastNonApplicability(bool applyNonApplicable);
     void getPrintStatusFromStudy(Data::Study& study);
+    void supplyMaxNumberOfColumns(Data::Study& study);
 
     void simulationBegin();
     void simulationEnd();

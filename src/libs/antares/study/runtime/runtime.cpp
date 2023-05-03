@@ -100,9 +100,9 @@ static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos&
             area.thermal.mustrunList.calculationOfSpinning();
         }
 
-        area.scratchpad = new AreaScratchpad*[area.nbYearsInParallel];
+        area.scratchpad.reserve(area.nbYearsInParallel);
         for (uint numSpace = 0; numSpace < area.nbYearsInParallel; numSpace++)
-            area.scratchpad[numSpace] = new AreaScratchpad(r, area);
+            area.scratchpad.emplace_back(r, area);
 
         // statistics
         r.thermalPlantTotalCount += area.thermal.list.size();
@@ -198,9 +198,9 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
             // We have here too much hours, the interval will be reduced
             // Log Entry
             logs.info() << "    Partial week detected. Not allowed in "
-                << StudyModeToCString(study.parameters.mode);
+                        << StudyModeToCString(study.parameters.mode);
             logs.info() << "    Time interval that has been requested: " << (1 + a) << ".."
-                << (1 + b);
+                        << (1 + b);
             // Reducing
             while (b > a and 0 != ((b - a + 1) % 168))
                 --b;
@@ -208,8 +208,8 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 
     // Getting informations about the given hours
-    auto& ca = study.calendar.hours[a]; // Antares::Date::StudyHourlyCalendar[a];
-    auto& cb = study.calendar.hours[b]; // Antares::Date::StudyHourlyCalendar[b];
+    auto& ca = study.calendar.hours[a];
+    auto& cb = study.calendar.hours[b];
 
     assert(ca.dayYear < 400 and "Trivial check failed");
     assert(cb.dayYear < 400 and "Trivial check failed");
@@ -483,9 +483,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     // Must-run mode
     initializeThermalClustersInMustRunMode(study);
 
-    // Max number of thermal/renewable clusters
-    initializeMaxClusters(study);
-
     // Areas
     StudyRuntimeInfosInitializeAllAreas(study, *this);
 
@@ -513,61 +510,6 @@ bool StudyRuntimeInfos::loadFromStudy(Study& study)
     logs.info();
 
     return true;
-}
-
-namespace CompareAreasByNumberOfClusters
-{
-// Compare areas by number of thermal clusters
-struct thermal
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->thermal.clusterCount() < b.second->thermal.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->thermal.clusterCount();
-    }
-};
-// Compare areas by number of renewable clusters
-struct renewable
-{
-    bool operator()(const AreaList::value_type& a, const AreaList::value_type& b) const
-    {
-        assert(a.second);
-        assert(b.second);
-        return a.second->renewable.clusterCount() < b.second->renewable.clusterCount();
-    }
-    size_t getNbClusters(const Area* area) const
-    {
-        assert(area);
-        return area->renewable.clusterCount();
-    }
-};
-} // namespace CompareAreasByNumberOfClusters
-
-template<class CompareGetT>
-static size_t maxNumberOfClusters(const Study& study)
-{
-    CompareGetT cmp;
-    auto pairWithMostClusters = std::max_element(study.areas.begin(), study.areas.end(), cmp);
-    if (pairWithMostClusters != study.areas.end())
-    {
-        auto area = pairWithMostClusters->second;
-        return cmp.getNbClusters(area);
-    }
-    return 0;
-}
-
-void StudyRuntimeInfos::initializeMaxClusters(const Study& study)
-{
-    this->maxThermalClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::thermal>(study);
-    this->maxRenewableClustersForSingleArea
-      = maxNumberOfClusters<CompareAreasByNumberOfClusters::renewable>(study);
 }
 
 uint StudyRuntimeInfos::interconnectionsCount() const

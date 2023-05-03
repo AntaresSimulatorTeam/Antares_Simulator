@@ -91,42 +91,6 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
-// Adequacy Patch can only be used with Economy Study/Simulation Mode.
-void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
-                                       const Antares::Data::StudyMode studyMode)
-{
-    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
-    {
-        throw Error::IncompatibleStudyModeForAdqPatch();
-    }
-}
-// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
-void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
-{
-    using namespace Antares::Data;
-    if (adqPatchOn)
-    {
-        const bool containsAdqArea
-          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
-                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
-            });
-        if (!containsAdqArea)
-            throw Error::NoAreaInsideAdqPatchMode();
-    }
-}
-
-void checkAdqPatchIncludeHurdleCost(const bool adqPatchOn,
-                                    const bool includeHurdleCost,
-                                    const bool includeHurdleCostCsr)
-{
-    // No need to check if adq-patch is disabled
-    if (!adqPatchOn)
-        return;
-
-    if (includeHurdleCostCsr && !includeHurdleCost)
-        throw Error::IncompatibleHurdleCostCSR();
-}
-
 void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas)
 {
     if (tsGenThermal)
@@ -293,12 +257,10 @@ void Application::prepare(int argc, char* argv[])
 
     checkSimplexRangeHydroHeuristic(pParameters->simplexOptimizationRange, pStudy->areas);
 
-    checkAdqPatchStudyModeEconomyOnly(pParameters->adqPatchParams.enabled, pParameters->mode);
-
-    checkAdqPatchContainsAdqPatchArea(pParameters->adqPatchParams.enabled, pStudy->areas);
-    checkAdqPatchIncludeHurdleCost(pParameters->adqPatchParams.enabled,
-                                   pParameters->include.hurdleCosts,
-                                   pParameters->adqPatchParams.curtailmentSharing.includeHurdleCost);
+    if (pParameters->adqPatchParams.enabled)
+        pParameters->adqPatchParams.checkAdqPatchParams(pParameters->mode,
+                                                        pStudy->areas,
+                                                        pParameters->include.hurdleCosts);
 
     bool tsGenThermal
       = (0 != (pParameters->timeSeriesToGenerate & Antares::Data::TimeSeries::timeSeriesThermal));

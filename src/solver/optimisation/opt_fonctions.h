@@ -32,8 +32,11 @@
 #include "../simulation/sim_structure_donnees.h"
 #include "adequacy_patch_csr/hourly_csr_problem.h"
 #include "opt_period_string_generator_base.h"
+#include "antares/study/parameters/adq-patch-params.h"
 
-void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, uint);
+using AdqPatchParams = Antares::Data::AdequacyPatch::AdqPatchParams;
+
+void OPT_OptimisationHebdomadaire(PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO*);
 void OPT_ConstruireLaListeDesVariablesOptimiseesDuProblemeLineaire(PROBLEME_HEBDO*);
@@ -44,19 +47,26 @@ void OPT_InitialiserLesPminHebdo(PROBLEME_HEBDO*);
 void OPT_InitialiserLesContrainteDEnergieHydrauliqueParIntervalleOptimise(PROBLEME_HEBDO*);
 void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO*);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaire(PROBLEME_HEBDO*,
+                                                            AdqPatchParams&,
                                                             const int,
                                                             const int,
                                                             const int);
 void OPT_InitialiserLesBornesDesVariablesDuProblemeQuadratique(PROBLEME_HEBDO*, int);
 void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO*, int, int, int, const int);
 void OPT_InitialiserLeSecondMembreDuProblemeQuadratique(PROBLEME_HEBDO*, int);
-void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int, uint);
+void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO*, const int, const int);
 void OPT_InitialiserLesCoutsQuadratiques(PROBLEME_HEBDO*, int);
 void OPT_ControleDesPminPmaxThermiques(PROBLEME_HEBDO*);
 bool OPT_AppelDuSolveurQuadratique(PROBLEME_ANTARES_A_RESOUDRE*, const int);
-bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&, HourlyCSRProblem&, uint week, int year);
 
-bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, uint);
+using namespace Antares::Data::AdequacyPatch;
+bool ADQ_PATCH_CSR(PROBLEME_ANTARES_A_RESOUDRE&,
+                   HourlyCSRProblem&,
+                   const AdqPatchParams&,
+                   uint week,
+                   int year);
+
+bool OPT_PilotageOptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_VerifierPresenceReserveJmoins1(PROBLEME_HEBDO*);
 bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO*);
 
@@ -70,7 +80,7 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO*,
                          const int,
                          std::shared_ptr<OptPeriodStringGenerator>);
 void OPT_LiberationProblemesSimplexe(const PROBLEME_HEBDO*);
-bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, uint);
+bool OPT_OptimisationLineaire(PROBLEME_HEBDO*, AdqPatchParams&);
 void OPT_SauvegarderLesPmaxThermiques(PROBLEME_HEBDO*);
 void OPT_RestaurerLesDonnees(const PROBLEME_HEBDO*, const int);
 /*------------------------------*/

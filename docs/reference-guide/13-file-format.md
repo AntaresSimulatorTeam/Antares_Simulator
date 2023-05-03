@@ -3,8 +3,7 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.6.0
 ### Input
-A few changes related to the scenarization of RHS for binding constraints.
-
+#### Scenarized RHS for binding constraints
 - For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
     - **input/bindingconstraints/&lt;id&gt;_lt.txt**
     - **input/bindingconstraints/&lt;id&gt;_gt.txt**
@@ -23,8 +22,46 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
+#### Short-term storage
+* Add directories **input/st-storage/clusters** and **input/st-storage/series**
+* For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
+* This file contains the multiple sections whose name is ignored. Each section contains these properties:
+    * `name` [str]
+    * `group` [str]. Possible values: "PSP_open", "PSP_closed", "Pondage", "Battery", "Other_1", ... , "Other_5". Default Other_1
+    * `efficiency` [double] in range 0-1
+    * `reservoircapacity` [double] &gt; 0
+    * `initiallevel` [double] in range 0-1
+    * `withdrawalnominalcapacity` [double] in range 0-1
+    * `injectionnominalcapacity` [double] in range 0-1
+    * `storagecycle` [int] in range 24-168
+
+* For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
+    * **PMAX-injection.txt** All entries must be in range 0-1
+    * **PMAX-withdrawal.txt** All entries must be in range 0-1
+    * **inflow.txt** All entries must be &gt; 0
+    * **lower-rule-curve.txt** All entries must be in range 0-1
+    * **upper-rule-curve.txt** All entries must be in range 0-1
+
+#### Pollutant emission factors
+In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
+
+#### Adequacy patch
+In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
+
+
 ### Output
+#### Scenarized RHS for binding constraints
 Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
+
+#### Short-term storage
+* For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
+    * `ST-<group id>-withdrawal`
+    * `ST-<group id>-injection`
+    * `ST-<group id>-level`
+* For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
+
+#### Pollutant emission factors
+In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
 
 ## v8.5.2
 ### Input
@@ -93,7 +130,7 @@ They constrol which marginal price time granularity is printed, either regarding
 #### Marginal cost for binding constraints
 Still on the binding constraints marginal price results, 2 new folders **binding_constraints** are created inside any simulation output folder, more precisely under **mc-ind** and **mc-all**.
 
-Examples : 
+Examples :
 * **output/yyyymmdd-hhmmeco/economy/mc-ind/00001/binding_constraints**
 * **output/yyyymmdd-hhmmeco/economy/mc-all/binding_constraints**
 

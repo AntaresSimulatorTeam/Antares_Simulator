@@ -56,8 +56,7 @@ public:
     {
         if ((int)version != (int)Data::versionLatest)
         {
-            if (version > 100) // do not take care of very old studies
-                logs.warning() << "requires format upgrade, ignoring " << folder;
+            logs.warning() << "requires format upgrade, ignoring " << folder;
             return;
         }
 
