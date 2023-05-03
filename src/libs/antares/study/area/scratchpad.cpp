@@ -157,5 +157,7 @@ AreaScratchpad::AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area) : ts
     pumpHasMod = (valuePumping > 0.);
 }
 
+AreaScratchpad::~AreaScratchpad() = default;
+
 } // namespace Data
 } // namespace Antares

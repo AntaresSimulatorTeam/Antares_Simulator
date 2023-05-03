@@ -1,6 +1,10 @@
 #include "adq-patch-params.h"
 #include "antares/logs.h"
 
+#include <antares/study.h>
+
+#include <antares/exception/LoadingError.hpp>
+
 namespace Antares::Data::AdequacyPatch
 {
 
@@ -20,6 +24,8 @@ bool LocalMatching::updateFromKeyValue(const String& key, const String& value)
         return value.to<bool>(setToZeroOutsideInsideLinks);
     if (key == "set-to-null-ntc-between-physical-out-for-first-step")
         return value.to<bool>(setToZeroOutsideOutsideLinks);
+    if (key == "enable-first-step")
+        return value.to<bool>(enabled);
     return false;
 }
 
@@ -27,6 +33,7 @@ void LocalMatching::addProperties(IniFile::Section* section) const
 {
     section->add("set-to-null-ntc-from-physical-out-to-physical-in-for-first-step", setToZeroOutsideInsideLinks);
     section->add("set-to-null-ntc-between-physical-out-for-first-step", setToZeroOutsideOutsideLinks);
+    section->add("enable-first-step", enabled);
 }
 
 // -----------------------
@@ -136,6 +143,12 @@ void AdqPatchParams::addExcludedVariables(std::vector<std::string>& out) const
         out.emplace_back("SPIL. ENRG. CSR");
         out.emplace_back("DTG MRG CSR");
     }
+
+    // If the adequacy patch is enabled, but the LMR is disabled, the DENS variable shouldn't exist
+    if (enabled && !localMatching.enabled)
+    {
+        out.emplace_back("DENS");
+    }
 }
 
 
@@ -156,5 +169,47 @@ void AdqPatchParams::saveToINI(IniFile& ini) const
     curtailmentSharing.addProperties(section);
 }
 
+bool AdqPatchParams::checkAdqPatchParams(const StudyMode studyMode,
+                                         const AreaList& areas,
+                                         const bool includeHurdleCostParameters) const
+{
+    checkAdqPatchStudyModeEconomyOnly(studyMode);
+    checkAdqPatchContainsAdqPatchArea(areas);
+    checkAdqPatchIncludeHurdleCost(includeHurdleCostParameters);
+    checkAdqPatchDisabledLocalMatching();
+
+    return true;
+}
+
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void AdqPatchParams::checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const
+{
+    if (studyMode != StudyMode::stdmEconomy)
+        throw Error::IncompatibleStudyModeForAdqPatch();
+}
+
+// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
+void AdqPatchParams::checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const
+{
+    const bool containsAdqArea
+        = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == physicalAreaInsideAdqPatch;
+                });
+
+    if (!containsAdqArea)
+        throw Error::NoAreaInsideAdqPatchMode();
+}
+
+void AdqPatchParams::checkAdqPatchIncludeHurdleCost(const bool includeHurdleCostParameters) const
+{
+    if (curtailmentSharing.includeHurdleCost && !includeHurdleCostParameters)
+        throw Error::IncompatibleHurdleCostCSR();
+}
+
+void AdqPatchParams::checkAdqPatchDisabledLocalMatching() const
+{
+    if (!localMatching.enabled && curtailmentSharing.priceTakingOrder == AdqPatchPTO::isDens)
+        throw Error::AdqPatchDisabledLMR();
+}
 
 } // Antares::Data::AdequacyPatch

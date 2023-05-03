@@ -156,10 +156,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable
-          = area.scratchpad[numSpace]->hydroHasMod;
+          = area.scratchpad[numSpace].hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
-          = area.hydro.reservoirManagement && area.scratchpad[numSpace]->pumpHasMod
+          = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
               && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
 
@@ -602,7 +602,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         {
             auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
-            auto& scratchpad = *(area.scratchpad[numSpace]);
+            auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
 
             assert(&scratchpad);
