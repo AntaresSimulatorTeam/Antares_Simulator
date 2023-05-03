@@ -55,8 +55,6 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
     PMinOfClusters.resize(count);
-    unitCountLastHour.resize(count, 0);
-    pminOfAGroup.resize(count, 0);
 }
 
 State::State(Data::Study& s) :
@@ -146,7 +144,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     {
         // Minimum power of a group of the cluster, one per year for each cluster - from the
         // solver
-        thermal[area->index].pminOfAGroup[clusterAreaWideIndex] = thermalClusterPMinOfAGroup;
+        thermal[area->index].pminOfAGroup = thermalClusterPMinOfAGroup;
     }
 
     // Nombre min de groupes appelés
@@ -167,7 +165,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         // alias to the production of the current thermal cluster
         double p = thermal[area->index].thermalClustersProductions[clusterAreaWideIndex];
         // alias to the previous number of started units
-        uint previousUnitCount = thermal[area->index].unitCountLastHour[clusterAreaWideIndex];
+        uint previousUnitCount = thermal[area->index].unitCountLastHour;
 
         // Looking for the new number of units which have been started
         uint newUnitCount;
@@ -215,13 +213,13 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
           += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
-        thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
+        thermal[area->index].unitCountLastHour = newUnitCount;
         thermal[area->index].productionLastHour = p;
     }
     else
     {
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
-        thermal[area->index].unitCountLastHour[clusterAreaWideIndex]= 0u;
+        thermal[area->index].unitCountLastHour = 0u;
         thermal[area->index].productionLastHour = 0.;
     }
 }
@@ -302,12 +300,12 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
                     //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
                     // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
                     // 5.0.3b7
-                    if (thermal[area->index].pminOfAGroup[clusterAreaWideIndex] > 0.)
+                    if (thermal[area->index].pminOfAGroup > 0.)
                     {
                         ON_min[h] = Math::Max(
                                 Math::Min(static_cast<uint>(
                                         Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
-                                            / thermal[area->index].pminOfAGroup[clusterAreaWideIndex])),
+                                            / thermal[area->index].pminOfAGroup)),
                                     static_cast<uint>(
                                         Math::Ceil(thermalClusterAvailableProduction
                                             / currentCluster->nominalCapacityWithSpinning))),
