@@ -241,8 +241,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     // Nombre maximal de groupes en fonctionnement à l'heure h  (determine par Peff et Pmin)
     std::array<uint, Variable::maxHoursInAYear> ON_max;
     // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
-    std::array<uint, Variable::maxHoursInAYear> ON_opt;
-    ON_opt.fill(0);
+    std::array<uint, Variable::maxHoursInAYear> ON_opt {};
 
 
     // Get cluster properties
