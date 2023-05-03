@@ -56,7 +56,6 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     thermalClustersOperatingCost.resize(count);
     PMinOfClusters.resize(count);
     unitCountLastHour.resize(count, 0);
-    productionLastHour.resize(count, 0);
     pminOfAGroup.resize(count, 0);
 }
 
@@ -173,7 +172,7 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
         // Looking for the new number of units which have been started
         uint newUnitCount;
 
-        if (p > thermal[area->index].productionLastHour[clusterAreaWideIndex])
+        if (p > thermal[area->index].productionLastHour)
         {
             newUnitCount
               = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
@@ -217,13 +216,13 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
 
         // Storing the new unit count for the next hour
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
-        thermal[area->index].productionLastHour[clusterAreaWideIndex] = p;
+        thermal[area->index].productionLastHour = p;
     }
     else
     {
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
         thermal[area->index].unitCountLastHour[clusterAreaWideIndex]= 0u;
-        thermal[area->index].productionLastHour[clusterAreaWideIndex] = 0.;
+        thermal[area->index].productionLastHour = 0.;
     }
 }
 
@@ -358,10 +357,10 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     yearEndBuildThermalClusterCalculateStartupCosts(dur, ON_min, ON_opt, currentCluster);
 }
 
-void State::yearEndBuildThermalClusterCalculateStartupCosts(uint& dur,
+void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& dur,
                 std::array<uint, Variable::maxHoursInAYear>& ON_min,
                 std::array<uint, Variable::maxHoursInAYear>& ON_opt,
-                Data::ThermalCluster* currentCluster)
+                const Data::ThermalCluster* currentCluster)
 {
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
@@ -409,7 +408,7 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(uint& dur,
     }
 }
 
-void State::yearEndBuildFromThermalClusterIndexDurPositive(uint& dur,
+void State::yearEndBuildFromThermalClusterIndexDurPositive(const uint& dur,
                 std::array<uint, Variable::maxHoursInAYear>& ON_min,
                 std::array<uint, Variable::maxHoursInAYear>& ON_max,
                 std::array<uint, Variable::maxHoursInAYear>& ON_opt) const

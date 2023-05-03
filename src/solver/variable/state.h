@@ -62,7 +62,7 @@ public:
         std::vector<double> PMinOfClusters;
 
         std::vector<uint> unitCountLastHour;
-        std::vector<double> productionLastHour;
+        double productionLastHour = 0;
         std::vector<double> pminOfAGroup;
     };
 
@@ -113,15 +113,15 @@ public:
     */
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
 
-    void yearEndBuildFromThermalClusterIndexDurPositive(uint& dur,
+    void yearEndBuildFromThermalClusterIndexDurPositive(const uint& dur,
                 std::array<uint, Variable::maxHoursInAYear>& ON_min,
                 std::array<uint, Variable::maxHoursInAYear>& ON_max,
                 std::array<uint, Variable::maxHoursInAYear>& ON_opt) const;
 
-    void yearEndBuildThermalClusterCalculateStartupCosts(uint& dur,
+    void yearEndBuildThermalClusterCalculateStartupCosts(const uint& dur,
                 std::array<uint, Variable::maxHoursInAYear>& ON_min,
                 std::array<uint, Variable::maxHoursInAYear>& ON_opt,
-                Data::ThermalCluster* currentCluster);
+                const Data::ThermalCluster* currentCluster);
     /*!
     ** \brief Smooth the thermal units run after resolutions
     ** using heuristics
