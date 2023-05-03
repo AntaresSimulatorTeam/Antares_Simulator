@@ -3,8 +3,26 @@ This is a list of all recent changes that came with new Antares Simulator featur
 
 ## v8.6.0
 ### Input
-A few changes related to the introduction of short-term storage objects.
+#### Scenarized RHS for binding constraints
+- For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
+    - **input/bindingconstraints/&lt;id&gt;_lt.txt**
+    - **input/bindingconstraints/&lt;id&gt;_gt.txt**
+    - **input/bindingconstraints/&lt;id&gt;_eq.txt**
 
+    Each of these files can be either empty or have N column of 8674 rows
+
+- In file **input/bindingconstraints/bindingconstraints.ini**, add property `group` to every section
+- Binding constraints in the same group must have the same number of RHS columns (3 files described above for their respective types). Exception: a constraint in a group can have empty RHS or only one RHS column
+- In file **settings/scenariobuilder.dat**, add prefix `bc` for every group of binding constraints. The syntax is the following
+```
+bc,<group>,<MC Year> = <TS number>
+```
+This line is not mandatory for every group & MC year. If absent, the TS number will be drawn randomly (usual behavior).
+
+- 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
+- 1 &lt;=TS number &lt;= number of columns for the group
+
+#### Short-term storage
 * Add directories **input/st-storage/clusters** and **input/st-storage/series**
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
 * This file contains the multiple sections whose name is ignored. Each section contains these properties:
@@ -24,18 +42,25 @@ A few changes related to the introduction of short-term storage objects.
     * **lower-rule-curve.txt** All entries must be in range 0-1
     * **upper-rule-curve.txt** All entries must be in range 0-1
 
+#### Pollutant emission factors
 In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
 
-In file **settings/generaldata.ini**, in section `adequacy patch` add property
-* `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
+#### Adequacy patch
+In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
+
 
 ### Output
+#### Scenarized RHS for binding constraints
+Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
+
+#### Short-term storage
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`
     * `ST-<group id>-injection`
     * `ST-<group id>-level`
 * For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
 
+#### Pollutant emission factors
 In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
 
 ## v8.5.2
