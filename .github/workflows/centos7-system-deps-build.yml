@@ -5,6 +5,7 @@ on:
     branches:
       - release/*
       - develop
+      - fix/centos-cmake
 
 jobs:
 
@@ -24,10 +25,16 @@ jobs:
       run: |
            yum install -y epel-release
            yum install -y git redhat-lsb-core gcc gcc-c++ make wget centos-release-scl scl-utils rpm-build
-           yum install -y cmake3 devtoolset-9
+           yum install -y devtoolset-9
            yum install -y rh-git227-git
            yum install -y unzip libuuid-devel wxGTK3-devel boost-test boost-devel
 
+    - name: Install cmake
+      run: |
+           wget https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-linux-x86_64.tar.gz
+           tar xvf cmake-3.25.3-linux-x86_64.tar.gz
+           mv cmake-3.25.3-linux-x86_64.tar.gz /usr/local/cmake
+           echo "/usr/local/cmake" >> $GITHUB_PATH
 
     - name: Checkout
       run: |
