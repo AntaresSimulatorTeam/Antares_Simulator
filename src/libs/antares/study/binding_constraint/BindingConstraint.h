@@ -692,8 +692,8 @@ public:
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeriesNumbers>& TimeSeries() const {
-        return time_series;
+    [[nodiscard]] const std::map<std::string, BindingConstraintTimeSeriesNumbers>& TimeSeriesNumbers() const {
+        return time_series_numbers;
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
@@ -705,7 +705,7 @@ private:
     BindingConstraint::Vector pList;
 
 public:
-    std::map<std::string, BindingConstraintTimeSeriesNumbers> time_series;
+    std::map<std::string, BindingConstraintTimeSeriesNumbers> time_series_numbers;
 
 }; // class BindConstList
 

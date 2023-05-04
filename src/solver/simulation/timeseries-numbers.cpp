@@ -34,7 +34,7 @@
 #include <filesystem>
 
 #include "timeseries-numbers.h"
-#include "ITimeSeriesWriter.h"
+#include "ITimeSeriesNumbersWriter.h"
 
 using namespace Yuni;
 using namespace Antares::Data;
@@ -846,6 +846,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
         //TODO BC
+
     });
 }
 
@@ -952,7 +953,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study, Simulation::ITimeSeriesWriter& writer)
+void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
 {
     using namespace Antares::Data;
 
