@@ -32,9 +32,9 @@ jobs:
     - name: Install cmake
       run: |
            wget https://github.com/Kitware/CMake/releases/download/v3.25.3/cmake-3.25.3-linux-x86_64.tar.gz
-           tar xvf cmake-3.25.3-linux-x86_64.tar.gz
-           mv cmake-3.25.3-linux-x86_64.tar.gz /usr/local/cmake
-           echo "/usr/local/cmake" >> $GITHUB_PATH
+           tar xvf cmake-3.25.3-linux-x86_64.tar.gz -C /
+           echo "/cmake-3.25.3-linux-x86_64/bin" >> $GITHUB_PATH
+           rm cmake-3.25.3-linux-x86_64.tar.gz
 
     - name: Checkout
       run: |
