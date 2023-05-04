@@ -5,7 +5,6 @@ on:
     branches:
       - release/*
       - develop
-      - fix/centos-cmake
 
 jobs:
 
@@ -64,12 +63,12 @@ jobs:
     - name: Installer .rpm creation
       run: |
            cd _build
-           cpack3 -G RPM
+           cpack -G RPM
 
     - name: Installer .tar.gz creation
       run: |
            cd _build
-           cpack3 -G TGZ
+           cpack -G TGZ
 
     - name: Installer archive upload
       uses: actions/upload-artifact@v3
