@@ -664,11 +664,9 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
-
-                auto& mingenmatrix = area.hydro.series->mingen;
-                if (study.header.version >= 860)
                 {
-                    auto const& srcmingen
+                auto& mingenmatrix = area.hydro.series->mingen;
+                auto const& srcmingen
                       = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
                     for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
                     {

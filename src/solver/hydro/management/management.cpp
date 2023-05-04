@@ -151,8 +151,6 @@ void HydroManagement::prepareInflowsScaling(uint numSpace)
 
 void HydroManagement::minGenerationScaling(uint numSpace)
 {
-    if (study.header.version < 860)
-        return;
     const auto& calendar = study.calendar;
 
     study.areas.each(
@@ -323,9 +321,6 @@ void HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
 
 void HydroManagement::checkMinGeneration(uint numSpace)
 {
-    if (study.header.version < 860)
-        return;
-
     study.areas.each(
       [this, &numSpace](Data::Area& area)
       {

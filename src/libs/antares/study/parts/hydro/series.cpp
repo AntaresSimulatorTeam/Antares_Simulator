@@ -92,7 +92,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     }
     else
     {
-        mingen.reset(0, HOURS_PER_YEAR);
+        mingen.reset(1, HOURS_PER_YEAR);
         mingen.markAsModified();
     }
 
@@ -104,7 +104,7 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
                          << "`: empty matrix detected. Fixing it with default values";
             ror.reset(1, HOURS_PER_YEAR);
             storage.reset(1, DAYS_PER_YEAR);
-            mingen.reset(0, HOURS_PER_YEAR);
+            mingen.reset(1, HOURS_PER_YEAR);
         }
         else
         {
