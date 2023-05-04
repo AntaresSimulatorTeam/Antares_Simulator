@@ -5,15 +5,15 @@
 #pragma once
 
 #include <memory>
-#include "ITimeSeriesWriter.h"
+#include "ITimeSeriesNumbersWriter.h"
 #include "i_writer.h"
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares::Solver::Simulation {
-class TimeSeriesWriter: public ITimeSeriesWriter {
+class TimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {
 
 public:
-    TimeSeriesWriter(std::shared_ptr<Antares::Solver::IResultWriter> sharedPtr);
+    TimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> sharedPtr);
 
     void write(const Data::BindingConstraintsList &list) override;
 

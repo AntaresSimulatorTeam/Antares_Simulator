@@ -6,7 +6,7 @@
 #include "antares/study/binding_constraint/BindingConstraint.h"
 
 namespace Antares::Solver::Simulation {
-class ITimeSeriesWriter {
+class ITimeSeriesNumbersWriter {
 
 public:
     virtual void write(const Antares::Data::BindingConstraintsList& list) = 0;

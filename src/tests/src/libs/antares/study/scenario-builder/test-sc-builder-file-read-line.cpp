@@ -404,7 +404,7 @@ BOOST_AUTO_TEST_CASE(binding_constraints_group_groupTest__Load_TS_4_for_year_3__
     BOOST_CHECK_EQUAL(my_rule.binding_constraints.get("groupTest", yearNumber), tsNumber);
 
     BOOST_CHECK(my_rule.apply());
-    auto actual = study->bindingConstraints.time_series["groupTest"].timeseriesNumbers[0][yearNumber];
+    auto actual = study->bindingConstraints.time_series_numbers["groupTest"].timeseriesNumbers[0][yearNumber];
     BOOST_CHECK_EQUAL(actual, tsNumber-1);
 }
 

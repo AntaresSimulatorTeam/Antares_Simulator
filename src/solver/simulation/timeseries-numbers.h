@@ -30,7 +30,7 @@
 #include <yuni/yuni.h>
 #include <antares/study.h>
 #include <vector>
-#include "ITimeSeriesWriter.h"
+#include "ITimeSeriesNumbersWriter.h"
 
 namespace Antares::Solver::TimeSeriesNumbers
 {
@@ -39,7 +39,7 @@ namespace Antares::Solver::TimeSeriesNumbers
 */
 bool Generate(Data::Study& study);
 
-void StoreTimeseriesIntoOuput(Data::Study& study, Simulation::ITimeSeriesWriter& writer);
+void StoreTimeseriesIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer);
 
 // Exported for unit-tests
 bool checkAllElementsIdenticalOrOne(const std::vector<uint>& w);

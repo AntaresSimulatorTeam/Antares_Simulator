@@ -202,7 +202,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 assert(year < bc.time_series.width); //TODO width or height ?
             }
         }
-        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series[group_name].timeseriesNumbers[0][year];
+        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers[0][year];
     }
 }
 
