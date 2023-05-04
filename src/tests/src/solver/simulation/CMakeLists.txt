@@ -8,7 +8,7 @@ set(SRC_TS_NUMBERS
 	
 	# Necessary cpp files
 	${src_solver_simulation}/timeseries-numbers.cpp
-	${src_solver_simulation}/ITimeSeriesWriter.h)
+	${src_solver_simulation}/ITimeSeriesNumbersWriter.h)
 
 add_executable(tests-ts-numbers tests-ts-numbers.cpp ${SRC_TS_NUMBERS})
 

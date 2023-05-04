@@ -1536,8 +1536,8 @@ void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
         group_names.insert(bc->group());
     });
     std::for_each(group_names.begin(), group_names.end(), [&](const auto& group_name) {
-        time_series[group_name].timeseriesNumbers.clear();
-        time_series[group_name].timeseriesNumbers.resize(1, nb_years);
+        time_series_numbers[group_name].timeseriesNumbers.clear();
+        time_series_numbers[group_name].timeseriesNumbers.resize(1, nb_years);
     });
 }
 

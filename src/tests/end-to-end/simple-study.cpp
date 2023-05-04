@@ -118,7 +118,7 @@ BindingConstraint *addBindingConstraints(Study::Ptr study, std::string name, std
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
     bc->type();
-    auto ts = study->bindingConstraints.time_series[group];
+    auto ts = study->bindingConstraints.time_series_numbers[group];
     //TODO ? A verifier
     //ts.resize(nbTS, HOURS_PER_YEAR);
     //ts.fill(0.0);
@@ -631,10 +631,9 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
 
 BOOST_AUTO_TEST_SUITE()
 
-AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, BindingConstraint::Operator op) {
+AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, BindingConstraint::Operator op, int nbYears = 1) {
     pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
     //On year  and one TS
-    int nbYears = 1;
     int nbTS = 1;
 
     Area* area1;
@@ -648,7 +647,7 @@ AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, B
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
-    auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
     BC->TimeSeries().resize(1, 8674);
     BC->TimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
@@ -675,9 +674,6 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
 
     //Clean simulation
     cleanSimulation(pStudy, simulation);
-
-    //2 noeud, 1 lien. Coef 1, equlity. Scenariser le RHS contrainte d'eq
-    //Verifie le flux sur le lien égale au second membre (flow algebrique sur lien?)
 }
 
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
