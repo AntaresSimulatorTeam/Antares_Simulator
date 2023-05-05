@@ -196,12 +196,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     });
     all_groups.erase(std::unique(all_groups.begin(), all_groups.end()), all_groups.end());
     for (const auto& group_name : all_groups) {
-        for (const auto& bc: runtime.bindingConstraint)
-        {
-            if (bc.group == group_name) {
-                assert(year < bc.time_series.width); //TODO width or height ?
-            }
-        }
+        assert(year < study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers.height);
         NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers[0][year];
     }
 }

@@ -629,9 +629,9 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
     pCluster->series->time_series.fillColumn(0, availablePower);
 }
 
-BOOST_AUTO_TEST_SUITE()
+BOOST_AUTO_TEST_SUITE(test_bc)
 
-AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, BindingConstraint::Operator op, int nbYears = 1) {
+auto prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, BindingConstraint::Operator op, int nbYears = 1) {
     pStudy->resultWriter = std::make_shared<NoOPResultWriter>();
     //On year  and one TS
     int nbTS = 1;
@@ -648,11 +648,11 @@ AreaLink* prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, B
     BC->mutateTypeWithoutCheck(type);
     BC->operatorType(op);
     auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
-    BC->TimeSeries().resize(1, 8674);
+    BC->TimeSeries().resize(1, 8760);
     BC->TimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
     ts_numbers.timeseriesNumbers.fill(0);
-    return link;
+    return std::pair(BC, link);
 }
 
 BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
@@ -661,7 +661,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_Hourly)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opEquality);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -682,7 +682,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -701,7 +701,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDaily)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -721,7 +721,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints_HourlyLess)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeHourly, BindingConstraint::opLess);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -742,7 +742,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeeklyLess)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opLess);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opLess);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -761,7 +761,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
-    auto link = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeDaily, BindingConstraint::opEquality);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -770,6 +770,51 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
     simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
     BOOST_TEST(result->avgdata.daily[0] > rhs * cost);
     BOOST_TEST(result->avgdata.weekly[0] > rhs * cost * 7);
+
+    //Clean simulation
+    cleanSimulation(pStudy, simulation);
+}
+
+BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
+{
+    //Create study
+    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    auto rhs_ts1 = 0.3;
+    auto rhs_ts2 = 0.6;
+    auto cost = 1;
+    auto nbYears = 2;
+    auto [BC, link] = prepare(pStudy, rhs_ts1, BindingConstraint::typeHourly, BindingConstraint::opEquality, nbYears);
+
+    //Define years weight
+    std::vector<float> yearsWeight;
+    yearsWeight.assign(nbYears, 1);
+    yearsWeight[0] = 4.f;	yearsWeight[1] = 10.f;
+
+    float yearSum = defineYearsWeight(pStudy,yearsWeight);
+
+    //Add one TS
+    auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
+    BC->TimeSeries().resize(2, 8760);
+    BC->TimeSeries().fillColumn(0, rhs_ts1);
+    BC->TimeSeries().fillColumn(1, rhs_ts2);
+    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
+    ts_numbers.timeseriesNumbers.fill(0);
+    //Create scenario rules
+
+    ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
+    pRules->binding_constraints.setData(BC->group(), 0, 1);
+    pRules->binding_constraints.setData(BC->group(), 1, 2);
+
+    double averageLoad = (rhs_ts1 * 4.f + rhs_ts2 * 10.f) / yearSum;
+
+    //Launch simulation
+    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+
+    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
+    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
+    BOOST_TEST(result->avgdata.hourly[0] == averageLoad, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.daily[0] == averageLoad * 24, tt::tolerance(0.001));
+    BOOST_TEST(result->avgdata.weekly[0] == averageLoad * 24 * 7, tt::tolerance(0.001));
 
     //Clean simulation
     cleanSimulation(pStudy, simulation);
