@@ -61,7 +61,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
 * For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
 
 #### Pollutant emission factors
-In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutants: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
+In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutant: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
 
 ## v8.5.2
 ### Input
@@ -111,9 +111,9 @@ If property `output/result-format` is set to `zip`, all results are stored in a 
 MPS files of first optimization used to be overwritten by MPS files of second optimization. Not anymore.
 Now user can choose to print :
 * no MPS file,
-* MPS files related to the first opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
-* MPS files related to the second opimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
-* MPS files related to the both opimizations.
+* MPS files related to the first optimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-1.txt**),
+* MPS files related to the second optimization (named **problem-&lt;week&gt;-&lt;year&gt;--optim-nb-2.txt**),
+* MPS files related to the both optimizations.
 
 In the **generaldata.ini** input file, corresponding values for **include-exportmps** are : **none**, **optim-1**, **optim-2**, **both-optims**.
 
@@ -122,7 +122,7 @@ Compatibility with existing values is maintained (**true** = **both-optims**, **
 ### Marginal price of a binding constraint
 #### Input
 In the context of the addition of a new output variable (marginal price associated to a binding constraint), file **input/bindingconstraints/bindingconstraints.ini** get 2 new parameters for each binding constraint.
-They constrol which marginal price time granularity is printed, either regarding year by year or synthesis results.
+They control which marginal price time granularity is printed, either regarding year by year or synthesis results.
 
 * `filter-year-by-year`. Default value = hourly, daily, weekly, monthly, annual
 * `filter-synthesis`. Default value = hourly, daily, weekly, monthly, annual
@@ -211,7 +211,7 @@ adequacy-patch-mode = outside
 ### Output
 * If `include-adq-patch` is set to `true`, add column `DENS` in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
 * Add `Profit by plant` column in files **details-&lt;period&gt;.txt** (mc-all & mc-ind)
-* If `include-split-exported-mps` is set to `true`, create splitted MPS files in the output folder
+* If `include-split-exported-mps` is set to `true`, create split MPS files in the output folder
 * Add file **time_measurement.txt**, containing performance data
 
 NOTE: **period** can be any of the following
