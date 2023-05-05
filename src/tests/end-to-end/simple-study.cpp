@@ -775,6 +775,26 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
     cleanSimulation(pStudy, simulation);
 }
 
+BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly_TwoYear)
+{
+    //Create study
+    Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
+    auto rhs = 0.3;
+    auto cost = 1;
+    auto nbYear = 2;
+    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
+
+    //Launch simulation
+    Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
+
+    typename Antares::Solver::Variable::Storage<Solver::Variable::Economy::VCardFlowLinear>::ResultsType *result = nullptr;
+    simulation->variables.retrieveResultsForLink<Solver::Variable::Economy::VCardFlowLinear>(&result, link);
+    BOOST_TEST(result->avgdata.weekly[0] == rhs * cost * 7, tt::tolerance(0.001));
+
+    //Clean simulation
+    cleanSimulation(pStudy, simulation);
+}
+
 BOOST_AUTO_TEST_CASE(two_mc_year_two_ts__Binding_Constraints_Hourly)
 {
     //Create study
