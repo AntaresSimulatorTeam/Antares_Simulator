@@ -44,6 +44,11 @@ namespace Data
 {
 DataSeriesHydro::DataSeriesHydro() : count(0)
 {
+    // Pmin was introduced in v8.6
+    // The previous behavior was Pmin=0
+    // For compatibility reasons with existing studies, mingen is set to one column of zeros
+    // by default
+    mingen.reset(1, HOURS_PER_YEAR);
 }
 
 bool DataSeriesHydro::saveToFolder(const AreaName& areaID, const AnyString& folder) const
@@ -89,11 +94,6 @@ bool DataSeriesHydro::loadFromFolder(Study& study, const AreaName& areaID, const
     {
         buffer.clear() << folder << SEP << areaID << SEP << "mingen." << study.inputExtension;
         ret = mingen.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
-    }
-    else
-    {
-        mingen.reset(1, HOURS_PER_YEAR);
-        mingen.markAsModified();
     }
 
     if (study.usedByTheSolver)
