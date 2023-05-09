@@ -32,6 +32,7 @@
 #include <string>
 #include <array>
 #include <filesystem>
+#include <utility>
 
 #include "timeseries-numbers.h"
 #include "ITimeSeriesNumbersWriter.h"
@@ -845,9 +846,8 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                           fixTSNumbersSingleAreaSingleMode(
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
-        //TODO BC
-
     });
+    study.bindingConstraints.fixTSNumbersWhenWidthIsOne(study);
 }
 
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)
