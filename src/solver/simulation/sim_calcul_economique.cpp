@@ -334,13 +334,14 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     {
         auto& bc = studyruntime.bindingConstraint[k];
         assert(bc.time_series.width && "Invalid constraint data width");
-        const auto ts_number = NumeroChroniquesTireesParGroup[numSpace][bc.group];
-        auto& ts = bc.time_series;
+        //If there is only one TS, always select it.
+        const auto ts_number = bc.time_series.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
+        auto& timeSeries = bc.time_series;
         switch (bc.type)
         {
             case BindingConstraint::typeHourly:
             {
-                double const* column = ts[ts_number];
+                double const* column = timeSeries[ts_number];
                 problem.MatriceDesContraintesCouplantes[k]
                         ->SecondMembreDeLaContrainteCouplante[pasDeTemps]
                         = column[PasDeTempsDebut + pasDeTemps];
@@ -352,9 +353,9 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
             }
             case BindingConstraint::typeDaily:
             {
-                assert(ts.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
-                double const* column = ts[ts_number];
+                assert(timeSeries.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
+                double const* column = timeSeries[ts_number];
 
                 double* sndMember
                         = problem.MatriceDesContraintesCouplantes[k]->SecondMembreDeLaContrainteCouplante;
@@ -369,10 +370,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
             }
             case BindingConstraint::typeWeekly:
             {
-                assert(ts.width && "Invalid constraint data width");
-                assert(weekFirstDay + 6 < ts.height && "Invalid constraint data height");
+                assert(timeSeries.width && "Invalid constraint data width");
+                assert(weekFirstDay + 6 < timeSeries.height && "Invalid constraint data height");
 
-                double const* column = ts[ts_number];
+                double const* column = timeSeries[ts_number];
                 double sum = 0;
                 for (uint d = 0; d != 7; ++d)
                     sum += column[weekFirstDay + d];

@@ -707,6 +707,7 @@ private:
 public:
     std::map<std::string, BindingConstraintTimeSeriesNumbers> time_series_numbers;
 
+    void fixTSNumbersWhenWidthIsOne(Study &study);
 }; // class BindConstList
 
 struct CompareBindingConstraintName final
