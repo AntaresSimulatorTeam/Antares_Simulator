@@ -1576,9 +1576,9 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
             assert(false);
     }
     load_ok = time_series.loadFromCSVFile(env.buffer,
-                                          BindingConstraint::columnMax,
+                                          1,
                                           (type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                          Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                          Matrix<>::optImmediate,
                                           &env.matrixBuffer);
     if (load_ok)
     {
