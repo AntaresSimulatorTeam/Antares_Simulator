@@ -187,15 +187,10 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
         ptchro.TransmissionCapacities
           = (directWidth != 1) ? link->timeseriesNumbers[0][year] : 0; // zero-based
     }
-    //Each binding constraints group
-    std::vector<std::string> all_groups;
-    std::transform(runtime.bindingConstraint.begin(), runtime.bindingConstraint.end(),
-                   std::back_inserter(all_groups),
-                   [](auto& bc)->std::string { //Catch by reference else risk double delete of inner pointer members
-        return bc.group;
-    });
-    all_groups.erase(std::unique(all_groups.begin(), all_groups.end()), all_groups.end());
-    for (const auto& group_name : all_groups) {
+    //Binding constraints
+    //Setting 0 for time_series of width 0 is done when using the value.
+    //To do this here we would have to check every BC for its width
+    for (const auto& [group_name, _] : study.bindingConstraints.time_series_numbers) {
         assert(year < study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers.height);
         NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers[0][year];
     }
