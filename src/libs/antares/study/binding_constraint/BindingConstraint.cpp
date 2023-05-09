@@ -1554,8 +1554,12 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne(Study &study) {
     });
 }
 
-bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env) {
-    return loadBoundedTimeSeries(env, operatorType());
+bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env)
+{
+    if (env.version >= version860)
+        return loadBoundedTimeSeries(env, operatorType());
+
+    return loadTimeSeriesBefore860(env);
 }
 
 bool
@@ -1588,6 +1592,28 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
     } else {
         return false;
     }
+}
+
+bool BindingConstraint::loadTimeSeriesBefore860(BindingConstraint::EnvForLoading &env)
+{
+    env.buffer.clear() << env.folder << SEP << pID << ".txt";
+    if (time_series.loadFromCSVFile(env.buffer,
+                columnMax, // TODO VP: charge the right column
+                (pType == typeHourly) ? 8784 : 366,
+                Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                &env.matrixBuffer))
+    {
+        if (pComments.empty())
+            logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
+                << OperatorToShortCString(pOperator) << ')';
+        else
+            logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
+                << OperatorToShortCString(pOperator) << ") " << pComments;
+
+        return true;
+    }
+
+    return false;
 }
 
 void BindingConstraint::matrix(const double onevalue)
