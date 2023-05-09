@@ -297,26 +297,27 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
         else
         {
             logs.info() << "Archiving the hydro time-series";
+            const int precision = 0;
             String output;
-            study.areas.each(
-              [&](const Data::Area& area)
-              {
-                  study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
-                                       << currentYear << SEP << area.id;
+            study.areas.each([&](const Data::Area& area) {
+                study.buffer.clear() << "ts-generator" << SEP << "hydro" << SEP << "mc-"
+                                     << currentYear << SEP << area.id;
 
-                  {
-                      std::string ror_buffer;
-                      output.clear() << study.buffer << SEP << "ror.txt";
-                      writer->addEntryFromBuffer(output.c_str(), ror_buffer);
-                  }
+                {
+                    std::string buffer;
+                    area.hydro.series->ror.saveToBuffer(buffer, precision);
+                    output.clear() << study.buffer << SEP << "ror.txt";
+                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                }
 
-                  {
-                      std::string storage_buffer;
-                      output.clear() << study.buffer << SEP << "storage.txt";
-                      writer->addEntryFromBuffer(output.c_str(), storage_buffer);
-                  }
-                  ++progression;
-              });
+                {
+                    std::string buffer;
+                    area.hydro.series->storage.saveToBuffer(buffer, precision);
+                    output.clear() << study.buffer << SEP << "storage.txt";
+                    writer->addEntryFromBuffer(output.c_str(), buffer);
+                }
+                ++progression;
+            });
         }
     }
 
