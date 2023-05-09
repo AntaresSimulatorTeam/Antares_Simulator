@@ -62,6 +62,14 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
     });
 }
 
+static void PreproHydroFixMingenToZero(Data::Study& study)
+{
+    study.areas.each([&](Data::Area& area) {
+        auto& hydroseries = *(area.hydro.series);
+        hydroseries.mingen.reset(1, HOURS_PER_YEAR);
+    });
+}
+
 static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 {
     bool derated = study.parameters.derated;
@@ -321,6 +329,8 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
     }
 
     delete[] NORM;
+
+    PreproHydroFixMingenToZero(study);
 
     return true;
 }
