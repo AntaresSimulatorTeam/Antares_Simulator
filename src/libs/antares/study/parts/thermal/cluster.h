@@ -209,6 +209,10 @@ public:
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
+
     /*!
     ** \brief The group ID
     **
