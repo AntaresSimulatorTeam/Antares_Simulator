@@ -151,4 +151,17 @@ BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expectation);
 }
 
+BOOST_AUTO_TEST_CASE(Check_missing_file) {
+    std::vector file_names = {working_tmp_dir / "dummy_name_lt.txt",
+                              working_tmp_dir / "dummy_name_gt.txt",
+                              working_tmp_dir / "dummy_name_eq.txt"};
+    for (auto file_name: file_names) {
+        std::filesystem::remove(file_name);
+    }
+
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    BOOST_CHECK_EQUAL(bindingConstraints.size(), 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
