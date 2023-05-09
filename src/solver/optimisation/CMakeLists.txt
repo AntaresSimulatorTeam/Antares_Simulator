@@ -69,8 +69,6 @@ set(RTESOLVER_OPT
 		adequacy_patch_csr/count_constraints_variables.cpp
 
 		opt_period_string_generator_base.h
-		constraint_builder.cpp
-		constraint_builder.h
 	)
 
 

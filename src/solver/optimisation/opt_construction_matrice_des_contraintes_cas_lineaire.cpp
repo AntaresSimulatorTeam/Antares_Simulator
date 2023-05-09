@@ -33,7 +33,7 @@
 #include "../simulation/simulation.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
-#include "constraint_builder.h"
+
 #include <antares/study.h>
 
 using namespace Antares::Data;
@@ -83,7 +83,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     Study::Ptr study = Study::Current::Get();
     const bool exportStructure = problemeHebdo->ExportStructure;
     const bool firstWeekOfSimulation = problemeHebdo->firstWeekOfSimulation;
-    // TODO use share from this // create shared ptr
+
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     int nombreDePasDeTempsDUneJournee = problemeHebdo->NombreDePasDeTempsDUneJournee;
@@ -167,21 +167,67 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Colonne,
                           timeStepInYear,
                           varname);
-            ConstraintBuilder constraint_builder(ProblemeAResoudre);
+
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+
+                if (exportStructure)
+                {
+                    OPT_Export_add_variable(
+                      varname, var, Enum::ExportStructDict::ProdHyd, timeStepInYear, pays);
+                }
+            }
+
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+            }
+
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = -1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+
+                if (exportStructure)
+                {
+                    OPT_Export_add_variable(varname,
+                                            var,
+                                            Enum::ExportStructDict::DefaillancePositive,
+                                            timeStepInYear, // TODO[FOM] remove
+                                            pays);
+                }
+            }
+            var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
+            if (var >= 0)
+            {
+                Pi[nombreDeTermes] = 1.0;
+                Colonne[nombreDeTermes] = var;
+                nombreDeTermes++;
+
+                if (exportStructure)
+                {
+                    OPT_Export_add_variable(varname,
+                                            var,
+                                            Enum::ExportStructDict::DefaillanceNegative,
+                                            timeStepInYear, // TODO[FOM] remove
+                                            pays);
+                }
+            }
 
             CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesBilansPays[pays]
-              = constraint_builder
-                  .AddVariable(CorrespondanceVarNativesVarOptim->NumeroDeVariablesDeLaProdHyd[pays],
-                               -1.0)
-                  .AddVariable(CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays],
-                               1.0)
-                  .AddVariable(
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillancePositive[pays],
-                    -1.0)
-                  .AddVariable(
-                    CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays],
-                    1.0)
-                  .build('=');
+              = ProblemeAResoudre->NombreDeContraintes;
+
+            OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
 
             nombreDeTermes = 0;
 
@@ -822,7 +868,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         if (presenceHydro
             && (TurbEntreBornes
-                || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
+            || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
