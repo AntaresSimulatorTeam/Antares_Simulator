@@ -500,6 +500,7 @@ public:
     void matrix(const double onevalue);
 
     bool loadTimeSeries(BindingConstraint::EnvForLoading &env);
+    bool loadTimeSeriesBefore860(BindingConstraint::EnvForLoading &env);
     bool loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, BindingConstraint::Operator);
 
 private:
