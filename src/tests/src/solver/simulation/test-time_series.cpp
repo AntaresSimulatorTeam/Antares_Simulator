@@ -130,12 +130,25 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
 }
 
 BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series) {
-        //TODO
+    //TODO
 }
 
 //TODO
 BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
+    std::vector file_names = {working_tmp_dir / "dummy_name_lt.txt",
+                              working_tmp_dir / "dummy_name_gt.txt",
+                              working_tmp_dir / "dummy_name_eq.txt"};
+    for (auto file_name: file_names) {
+        std::ofstream ofs;
+        ofs.open(file_name, std::ofstream::out | std::ofstream::trunc);
+        ofs.close();
+    }
 
+    bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    BOOST_CHECK_EQUAL(loading_ok, true);
+    auto expectation = Matrix(1, 8784);
+    expectation.fill(0);
+    CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expectation);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
