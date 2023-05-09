@@ -775,14 +775,18 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsDailyGreater)
     cleanSimulation(pStudy, simulation);
 }
 
-BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_ConstraintsWeekly_TwoYear)
+BOOST_AUTO_TEST_CASE(two_year_one_ts__Binding_ConstraintsWeekly)
 {
     //Create study
     Study::Ptr pStudy = std::make_shared<Study>(true); // for the solver
     auto rhs = 0.3;
     auto cost = 1;
     auto nbYear = 2;
-    auto [_ ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
+    auto [BC ,link] = prepare(pStudy, rhs, BindingConstraint::typeWeekly, BindingConstraint::opEquality, nbYear);
+
+    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
+    auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
+    ts_numbers.timeseriesNumbers.fill(10);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -860,13 +864,13 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts__Binding_Constraints_Hourly)
     auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
     BC->TimeSeries().resize(1, 8760);
     BC->TimeSeries().fillColumn(0, rhs_ts1);
-    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(2);
+    pStudy->bindingConstraints.resizeAllTimeseriesNumbers(nbYears);
     ts_numbers.timeseriesNumbers.fill(0);
     //Create scenario rules
 
     ScenarioBuilder::Rules::Ptr pRules = createScenarioRules(pStudy);
     pRules->binding_constraints.setData(BC->group(), 0, 1);
-    pRules->binding_constraints.setData(BC->group(), 1, 2);
+    pRules->binding_constraints.setData(BC->group(), 1, 10);
 
     //Launch simulation
     Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
