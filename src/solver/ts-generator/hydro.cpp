@@ -58,7 +58,6 @@ static void PreproHydroInitMatrices(Data::Study& study, uint tsCount)
 
         hydroseries.ror.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.storage.resize(tsCount, DAYS_PER_YEAR);
-        hydroseries.mingen.resize(tsCount, HOURS_PER_YEAR);
         hydroseries.count = tsCount;
     });
 }
@@ -72,13 +71,11 @@ static void PreproRoundAllEntriesPlusDerated(Data::Study& study)
 
         hydroseries.ror.roundAllEntries();
         hydroseries.storage.roundAllEntries();
-        hydroseries.mingen.roundAllEntries();
 
         if (derated)
         {
             hydroseries.ror.averageTimeseries();
             hydroseries.storage.averageTimeseries();
-            hydroseries.mingen.averageTimeseries();
         }
     });
 }
@@ -317,12 +314,6 @@ bool GenerateHydroTimeSeries(Data::Study& study, uint currentYear, IResultWriter
                       std::string storage_buffer;
                       output.clear() << study.buffer << SEP << "storage.txt";
                       writer->addEntryFromBuffer(output.c_str(), storage_buffer);
-                  }
-
-                  {
-                      std::string mingen_buffer;
-                      output.clear() << study.buffer << SEP << "mingen.txt";
-                      writer->addEntryFromBuffer(output.c_str(), mingen_buffer);
                   }
                   ++progression;
               });
