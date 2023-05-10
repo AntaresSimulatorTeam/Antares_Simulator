@@ -33,6 +33,7 @@
 #include "../simulation/simulation.h"
 #include "../utils/filename.h"
 #include "opt_fonctions.h"
+#include "opt_rename_problem.h"
 
 #include <antares/study.h>
 
@@ -132,6 +133,19 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           pays,
                           interco);
                     }
+                    const auto origin
+                      = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
+                          ->name.c_str();
+                    const auto extremite
+                      = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
+                          ->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
+                                   timeStepInYear,
+                                   origin,
+                                   extremite,
+                                   pays);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoOrigine[interco];
             }
@@ -155,6 +169,19 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           pays,
                           interco);
                     }
+                    const auto origin
+                      = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
+                          ->name.c_str();
+                    const auto extremite
+                      = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
+                          ->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::ValeurDeNTCOrigineVersExtremite,
+                                   timeStepInYear,
+                                   origin,
+                                   extremite,
+                                   pays);
                 }
                 interco = problemeHebdo->IndexSuivantIntercoExtremite[interco];
             }
@@ -868,7 +895,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         if (presenceHydro
             && (TurbEntreBornes
-            || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
+                || problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable))
         {
             int nombreDeTermes = 0;
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)

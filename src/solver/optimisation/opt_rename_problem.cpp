@@ -13,12 +13,14 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     {
         std::stringstream buffer;
         buffer << Antares::Data::Enum::toString(structDict) << SEPARATOR;
-        buffer << origin << ZONE_SEPARATOR << extremite;
+        buffer << origin << ZONE_SEPARATOR << extremite << SEPARATOR;
         if (secondVal.has_value())
         {
             buffer << secondVal.value() << SEPARATOR;
         }
         buffer << ts;
+        // std::cout << "*************** RENAME " << problem->NomDesVariables[var] << " to "
+        //           << buffer.str() << "***************\n";
         problem->NomDesVariables[var] = buffer.str();
     }
 }
