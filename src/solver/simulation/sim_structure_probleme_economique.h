@@ -70,7 +70,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         int* InjectionVariable;
         int* WithdrawalVariable;
         int* LevelVariable;
-    } ShortTermStorage;
+    } SIM_ShortTermStorage;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -162,15 +162,15 @@ namespace ShortTermStorage
 {
 struct PROPERTIES
 {
-    double capacity;
-    double injectionCapacity;
-    double withdrawalCapacity;
+    double reservoirCapacity;
+    double injectionNominalCapacity;
+    double withdrawalNominalCapacity;
     double efficiency;
     std::optional<double> initialLevel;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
-    int globalIndex;
+    int clusterGlobalIndex;
 };
 
 using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local

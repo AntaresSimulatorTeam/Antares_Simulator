@@ -43,7 +43,7 @@ static void importShortTermStorages(
   const AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
-    int globalIndex = 0;
+    int clusterGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
@@ -51,20 +51,20 @@ static void importShortTermStorages(
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
             ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
-            toInsert.globalIndex = globalIndex;
+            toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
             // Properties
-            toInsert.capacity = st->properties.capacity.value();
+            toInsert.reservoirCapacity = st->properties.reservoirCapacity.value();
             toInsert.efficiency = st->properties.efficiencyFactor;
-            toInsert.injectionCapacity = st->properties.injectionCapacity.value();
-            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
+            toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
+            toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
 
             toInsert.series = st->series;
 
             // TODO add missing properties, or use the same struct
             storageIndex++;
-            globalIndex++;
+            clusterGlobalIndex++;
         }
     }
 }

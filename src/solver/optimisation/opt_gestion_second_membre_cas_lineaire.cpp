@@ -54,9 +54,9 @@ static void shortTermStorageLevelsRHS(
     {
         for (auto& storage : shortTermStorageInput[areaIndex])
         {
-            const int globalIndex = storage.globalIndex;
+            const int clusterGlobalIndex = storage.clusterGlobalIndex;
             const int cnt
-              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex];
+              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[pdtJour];
         }
     }

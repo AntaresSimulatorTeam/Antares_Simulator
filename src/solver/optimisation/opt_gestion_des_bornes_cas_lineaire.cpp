@@ -176,36 +176,36 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
             int storageIndex = 0;
             for (const auto& storage : problemeHebdo->ShortTermStorage[areaIndex])
             {
-                const int globalIndex = storage.globalIndex;
+                const int clusterGlobalIndex = storage.clusterGlobalIndex;
                 auto& STSResult
                   = problemeHebdo->ResultatsHoraires[areaIndex].ShortTermStorage[pdtHebdo];
                 // 1. Injection
-                int varInjection = CorrespondanceVarNativesVarOptim->ShortTermStorage
-                                     .InjectionVariable[globalIndex];
+                int varInjection = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage
+                                     .InjectionVariable[clusterGlobalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection]
-                  = storage.injectionCapacity * storage.series->maxInjectionModulation[pdtHebdo];
+                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[pdtHebdo];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
-                int varWithdrawal = CorrespondanceVarNativesVarOptim->ShortTermStorage
-                                      .WithdrawalVariable[globalIndex];
+                int varWithdrawal = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage
+                                      .WithdrawalVariable[clusterGlobalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal]
-                  = storage.withdrawalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
+                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
                 int varLevel
-                  = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
+                  = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
                 if (pdtHebdo == PremierPdtDeLIntervalle && storage.initialLevel.has_value())
                 {
-                    Xmin[varLevel] = Xmax[varLevel] = storage.capacity * storage.initialLevel.value();
+                    Xmin[varLevel] = Xmax[varLevel] = storage.reservoirCapacity * storage.initialLevel.value();
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.capacity * storage.series->lowerRuleCurve[pdtHebdo];
-                    Xmax[varLevel] = storage.capacity * storage.series->upperRuleCurve[pdtHebdo];
+                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[pdtHebdo];
+                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[pdtHebdo];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 

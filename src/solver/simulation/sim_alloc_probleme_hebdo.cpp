@@ -237,11 +237,11 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.InjectionVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.WithdrawalVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
-        problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.LevelVariable
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
           = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
@@ -666,9 +666,9 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
 
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.InjectionVariable);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.WithdrawalVariable);
-        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->ShortTermStorage.LevelVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable);
 
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);

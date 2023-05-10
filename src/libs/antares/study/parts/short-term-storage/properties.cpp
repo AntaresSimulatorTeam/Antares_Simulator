@@ -82,13 +82,13 @@ bool Properties::loadKey(const IniFile::Property* p)
     };
 
     if (p->key == "injectionnominalcapacity")
-        return valueForOptional(this->injectionCapacity);
+        return valueForOptional(this->injectionNominalCapacity);
 
     if (p->key == "withdrawalnominalcapacity")
-        return valueForOptional(this->withdrawalCapacity);
+        return valueForOptional(this->withdrawalNominalCapacity);
 
     if (p->key == "reservoircapacity")
-        return valueForOptional(this->capacity);
+        return valueForOptional(this->reservoirCapacity);
 
     if (p->key == "efficiency")
         return p->value.to<double>(this->efficiencyFactor);
@@ -133,28 +133,28 @@ bool Properties::validate()
         return true;
     };
 
-    if (!checkMandatory(injectionCapacity, "injectionnominalcapacity"))
+    if (!checkMandatory(injectionNominalCapacity, "injectionnominalcapacity"))
         return false;
 
-    if (!checkMandatory(withdrawalCapacity, "withdrawalnominalcapacity"))
+    if (!checkMandatory(withdrawalNominalCapacity, "withdrawalnominalcapacity"))
         return false;
 
-    if (!checkMandatory(capacity, "reservoircapacity"))
+    if (!checkMandatory(reservoirCapacity, "reservoircapacity"))
         return false;
 
-    if (injectionCapacity < 0)
+    if (injectionNominalCapacity < 0)
     {
         logs.error() << "Property injectionnominalcapacity must be >= 0 "
                      << "for short term storage " << name;
         return false;
     }
-    if (withdrawalCapacity < 0)
+    if (withdrawalNominalCapacity < 0)
     {
         logs.error() << "Property withdrawalnominalcapacity must be >= 0 "
                      << "for short term storage " << name;
         return false;
     }
-    if (capacity < 0)
+    if (reservoirCapacity < 0)
     {
         logs.error() << "Property reservoircapacity must be >= 0 "
                      << "for short term storage " << name;
