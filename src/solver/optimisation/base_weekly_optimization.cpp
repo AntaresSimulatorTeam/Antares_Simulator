@@ -48,7 +48,7 @@ std::unique_ptr<WeeklyOptimization> WeeklyOptimization::create(
     PROBLEME_HEBDO* problemeHebdo,
     uint thread_number)
 {
-    if (adqPatchParams.enabled)
+    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled)
         return std::make_unique<AdequacyPatchOptimization>(problemeHebdo, adqPatchParams, thread_number);
     else
         return std::make_unique<DefaultWeeklyOptimization>(problemeHebdo, adqPatchParams, thread_number);
