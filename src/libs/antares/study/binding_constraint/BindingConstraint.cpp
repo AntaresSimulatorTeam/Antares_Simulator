@@ -1597,8 +1597,9 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
 bool BindingConstraint::loadTimeSeriesBefore860(BindingConstraint::EnvForLoading &env)
 {
     env.buffer.clear() << env.folder << SEP << pID << ".txt";
-    if (time_series.loadFromCSVFile(env.buffer,
-                columnMax, // TODO VP: charge the right column
+    Matrix<> intermediate;
+    if (intermediate.loadFromCSVFile(env.buffer,
+                columnMax,
                 (pType == typeHourly) ? 8784 : 366,
                 Matrix<>::optImmediate | Matrix<>::optFixedSize,
                 &env.matrixBuffer))
@@ -1610,6 +1611,14 @@ bool BindingConstraint::loadTimeSeriesBefore860(BindingConstraint::EnvForLoading
             logs.info() << " added `" << pName << "` (" << TypeToCString(pType) << ", "
                 << OperatorToShortCString(pOperator) << ") " << pComments;
 
+        // 0 is BindingConstraint::opLess
+        int columnNumber = Column::columnInferior;
+        if (operatorType() == BindingConstraint::opGreater)
+            columnNumber = Column::columnSuperior;
+        else if (operatorType() == BindingConstraint::opEquality)
+            columnNumber = Column::columnEquality;
+
+        time_series.pasteToColumn(0, intermediate[columnNumber]);
         return true;
     }
 
