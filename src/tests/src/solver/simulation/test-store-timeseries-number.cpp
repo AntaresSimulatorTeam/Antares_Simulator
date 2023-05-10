@@ -33,6 +33,7 @@ BOOST_AUTO_TEST_CASE(BC_group_TestGroup_has_output_file) {
     Study study;
     study.parameters.storeTimeseriesNumbers = true;
     study.bindingConstraints.time_series_numbers["TestGroup"] = {};
+    study.bindingConstraints.time_series_numbers["TestGroup"].timeseriesNumbers.resize(1, 1);
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -55,7 +56,9 @@ BOOST_AUTO_TEST_CASE(BC_output_ts_numbers_file_for_each_group) {
     Study study;
     study.parameters.storeTimeseriesNumbers = true;
     study.bindingConstraints.time_series_numbers["test1"] = {};
+    study.bindingConstraints.time_series_numbers["test1"].timeseriesNumbers.resize(1, 1);
     study.bindingConstraints.time_series_numbers["test2"] = {};
+    study.bindingConstraints.time_series_numbers["test2"].timeseriesNumbers.resize(1, 1);
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);
@@ -79,6 +82,7 @@ BOOST_AUTO_TEST_CASE(BC_timeseries_numbers_store_values) {
     Study study;
     study.parameters.storeTimeseriesNumbers = true;
     study.bindingConstraints.time_series_numbers["test1"] = {};
+    study.bindingConstraints.time_series_numbers["test1"].timeseriesNumbers.resize(1, 1);
 
     auto tmp_dir = fs::temp_directory_path();
     auto working_tmp_dir = tmp_dir / std::tmpnam(nullptr);

@@ -656,7 +656,6 @@ BOOST_AUTO_TEST_CASE(load_wind_thermal_in_intra_and_inter_modal____check_all_ts_
 	BOOST_CHECK_EQUAL(thCluster_area_2->series->timeseriesNumbers[0][year], referenceLoadTsNumber);
 }
 
-//TODO Add BC
 BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_ts)
 {
 	// Creating a study
@@ -669,6 +668,7 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	study->parameters.timeSeriesToRefresh |= timeSeriesSolar;
 	study->parameters.timeSeriesToRefresh |= timeSeriesHydro;
 	study->parameters.timeSeriesToRefresh |= timeSeriesThermal;
+	study->parameters.timeSeriesToRefresh |= timeSeriesBindingConstraints;
 
 	// Number of TS for each energy
 	uint loadNumberOfTs = 10;
@@ -676,12 +676,14 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	uint solarNumberOfTs = 7;
 	uint hydroNumberOfTs = 9;
 	uint thermalNumberOfTs = 5;
+	uint binding_constraints_number_of_TS = 42;
 
 	study->parameters.nbTimeSeriesLoad = loadNumberOfTs;
 	study->parameters.nbTimeSeriesWind = windNumberOfTs;
 	study->parameters.nbTimeSeriesSolar = solarNumberOfTs;
 	study->parameters.nbTimeSeriesHydro = hydroNumberOfTs;
 	study->parameters.nbTimeSeriesThermal = thermalNumberOfTs;
+	study->parameters.nbTimeSeriesBindingConstraints = binding_constraints_number_of_TS;
 
 	Area* area = addAreaToStudy(study, "Area");
 
@@ -689,6 +691,11 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	auto thCluster = addClusterToArea<ThermalCluster>(area, "th-cluster");
 
 	area->resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
+    auto bc = study->bindingConstraints.add("dummy");
+    bc->group("dummy");
+    bc->TimeSeries().resize(42, 1);
+    study->bindingConstraints.time_series_numbers["dummy"] = BindingConstraintTimeSeriesNumbers();
+    study->bindingConstraints.resizeAllTimeseriesNumbers(1 + study->runtime->rangeLimits.year[rangeEnd]);
 
 	BOOST_CHECK(Generate(*study));
 
@@ -699,10 +706,12 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	uint solarTsNumber = area->solar.series->timeseriesNumbers[0][year];
 	uint hydroTsNumber = area->hydro.series->timeseriesNumbers[0][year];
 	uint thermalTsNumber = thCluster->series->timeseriesNumbers[0][year];
+	auto binding_constraints_TS_number = study->bindingConstraints.time_series_numbers["dummy"].timeseriesNumbers[0][year];
 
 	BOOST_CHECK(loadTsNumber < loadNumberOfTs);
 	BOOST_CHECK(windTsNumber < windNumberOfTs);
 	BOOST_CHECK(solarTsNumber < solarNumberOfTs);
 	BOOST_CHECK(hydroTsNumber < hydroNumberOfTs);
 	BOOST_CHECK(thermalTsNumber < thermalNumberOfTs);
+    BOOST_CHECK_LT(binding_constraints_TS_number, binding_constraints_number_of_TS);
 }

@@ -34,6 +34,7 @@
 #include "../runtime.h"
 #include "../memory-usage.h"
 #include "BindingConstraintTimeSeries.h"
+#include "BindingConstraintTimeSeriesNumbers.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -1526,13 +1527,9 @@ BindingConstraint* BindingConstraintsList::add(const AnyString& name)
 }
 
 void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-    std::set<std::string> group_names;
-    std::for_each(pList.begin(), pList.end(), [&group_names](const auto &bc) {
-        group_names.insert(bc->group());
-    });
-    std::for_each(group_names.begin(), group_names.end(), [&](const auto &group_name) {
-        time_series_numbers[group_name].timeseriesNumbers.clear();
-        time_series_numbers[group_name].timeseriesNumbers.resize(1, nb_years);
+    std::for_each(time_series_numbers.begin(), time_series_numbers.end(), [&](auto& kvp) {
+        time_series_numbers[kvp.first].timeseriesNumbers.clear();
+        time_series_numbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
     });
 }
 
@@ -1552,6 +1549,16 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne(Study &study) {
             it.second.timeseriesNumbers.fillColumn(0, 0);
         }
     });
+}
+
+unsigned int BindingConstraintsList::NumberOfTimeseries(std::string group_name) const {
+    //Assume all BC in a group have the same width
+    const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](BindingConstraint* bc) {
+       return bc->group() == group_name;
+    });
+    if (binding_constraint == pList.end())
+        return 0;
+    return (*binding_constraint)->TimeSeries().width;
 }
 
 bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env)
