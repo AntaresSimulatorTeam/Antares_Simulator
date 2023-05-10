@@ -1,5 +1,8 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
+## v8.6.0
+### Input
+For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
 
 ## v8.6.0
 ### Input

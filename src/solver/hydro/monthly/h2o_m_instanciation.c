@@ -64,6 +64,11 @@ DONNEES_ANNUELLES* H2O_M_Instanciation(int NombreDeReservoirs)
     {
         return (NULL);
     }
+    DonneesAnnuelles->TurbineMin = (double*)malloc((unsigned int)NbPdt * sizeof(double));
+    if (DonneesAnnuelles->TurbineMin == NULL)
+    {
+        return (NULL);
+    }    
 
     DonneesAnnuelles->TurbineCible = (double*)malloc((unsigned int)NbPdt * sizeof(double));
     if (DonneesAnnuelles->TurbineCible == NULL)
