@@ -710,6 +710,14 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
             }
         }
     });
+    // Binding constraints
+    std::for_each(study.bindingConstraints.time_series_numbers.begin(),
+                  study.bindingConstraints.time_series_numbers.end(),
+                  [&study, &year](auto& group_and_tsNumbers){
+        const auto nb_time_series = study.bindingConstraints.NumberOfTimeseries(group_and_tsNumbers.first);
+        group_and_tsNumbers.second.timeseriesNumbers[0][year] = (uint32)(
+                floor(study.runtime->random[seedTimeseriesNumbers].next() * nb_time_series));
+    });
 }
 
 Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(
