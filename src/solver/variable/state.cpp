@@ -33,12 +33,37 @@ using namespace Yuni;
 
 namespace Antares::Solver::Variable
 {
+ThermalState::ThermalState(const Data::AreaList& areas)
+{
+    thermal.resize(areas.size());
+    for (const auto& [id, area] : areas)
+    {
+        assert(area);
+        thermal[area->index].initializeFromArea(*area);
+    }
+}
+
+ThermalState::StateForAnArea& ThermalState::operator[](size_t areaIndex)
+{
+    return thermal[areaIndex];
+}
+
+void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
+{
+    const auto count = area.thermal.clusterCount();
+    thermalClustersProductions.resize(count);
+    numberOfUnitsONbyCluster.resize(count);
+    thermalClustersOperatingCost.resize(count);
+    PMinOfClusters.resize(count);
+}
+
 State::State(Data::Study& s) :
  hourInTheSimulation(0u),
  dispatchableMargin(nullptr),
  studyMode(s.parameters.mode),
  unitCommitmentMode(s.parameters.unitCommitment.ucMode),
  study(s),
+ thermal(s.areas),
  simplexHasBeenRan(true),
  annualSystemCost(0.),
  optimalSolutionCost1(0.),
@@ -54,14 +79,14 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     assert(area);
     assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
-    thermalClusterNonProportionalCost = 0.;
-
     // alias to the current thermal cluster
-    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
-
+    Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
-    thermalClusterAvailableProduction
-        = thermalCluster->series->series[serieIndex][hourInTheYear];
+    double thermalClusterAvailableProduction
+      = thermalCluster->series->series[serieIndex][hourInTheYear];
+
+    // Minimum power of a group of the cluster for the current hour in the year
+    double thermalClusterPMinOfAGroup = 0.;
 
     if (thermalCluster->mustrun)
     {
@@ -72,11 +97,12 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         assert(timeseriesIndex != NULL);
         assert(hourInTheYear < thermalCluster->series->series.height);
 
-        thermalClusterProduction = thermalClusterAvailableProduction;
+        thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
+          = thermalClusterAvailableProduction;
 
-        thermalClusterPMinOfAGroup = 0.;
-        thermalClusterPMinOfTheCluster = 0.;
-        thermalClusterNumberON = 0; // will be calculated during the smoothing
+        thermal[area->index].PMinOfClusters[clusterAreaWideIndex] = 0.;
+        thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
+          = 0; // will be calculated during the smoothing
     }
     else
     {
@@ -85,42 +111,41 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         if (studyMode != Data::stdmAdequacy) // Economy
         {
             thermalClusterPMinOfAGroup
-                = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
-            thermalClusterPMinOfTheCluster
-                = problemeHebdo->PaliersThermiquesDuPays[area->index]
-                ->PuissanceDisponibleEtCout[thermalCluster->index]
-                ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
+              = problemeHebdo->PaliersThermiquesDuPays[area->index]
+                  ->pminDUnGroupeDuPalierThermique[thermalCluster->index]; // one by cluster
+            thermal[area->index].PMinOfClusters[clusterAreaWideIndex]
+              = problemeHebdo->PaliersThermiquesDuPays[area->index]
+                  ->PuissanceDisponibleEtCout[thermalCluster->index]
+                  ->PuissanceMinDuPalierThermique[hourInTheWeek]; // one per hour for one
             // cluster
         }
         else
         {
             // Adequacy
-            thermalClusterPMinOfAGroup = 0.;
-            thermalClusterPMinOfTheCluster = 0.;
+            thermal[area->index].PMinOfClusters[clusterAreaWideIndex] = 0.;
         }
 
-        thermalClusterProduction = hourlyResults->ProductionThermique[hourInTheWeek]
-            ->ProductionThermiqueDuPalier[thermalCluster->index];
+        thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
+          = hourlyResults->ProductionThermique[hourInTheWeek]
+              ->ProductionThermiqueDuPalier[thermalCluster->index];
 
         if (unitCommitmentMode == Antares::Data::UnitCommitmentMode::ucMILP) // Economy accurate
-            thermalClusterNumberON
-                = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
-                        ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
+            thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex]
+              = static_cast<uint>(hourlyResults->ProductionThermique[hourInTheWeek]
+                                    ->NombreDeGroupesEnMarcheDuPalier[thermalCluster->index]);
         else
-            thermalClusterNumberON
-                = 0; // Economy Fast or Adequacy -- will be calculated during the smoothing
+            // Economy Fast or Adequacy -- will be calculated during the smoothing
+            thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
     }
-
 
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
 
-    if (thermalClusterProduction > 0.)
+    if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
-        double p = thermalClusterProduction;
+        double p = thermal[area->index].thermalClustersProductions[clusterAreaWideIndex];
         // alias to the previous number of started units
         uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
 
@@ -130,7 +155,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         if (p > thermalCluster->productionLastHour[numSpace])
         {
             newUnitCount
-                = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
+              = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
             if (newUnitCount > thermalCluster->unitCount)
                 newUnitCount = thermalCluster->unitCount;
             if (newUnitCount < previousUnitCount)
@@ -140,8 +165,8 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         {
             if (thermalCluster->minStablePower > 0.)
             {
-                newUnitCount = static_cast<uint>(
-                        Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
+                newUnitCount
+                  = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
                 if (newUnitCount > thermalCluster->unitCount)
                     newUnitCount = thermalCluster->unitCount;
             }
@@ -155,20 +180,19 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         // calculating the operating cost for the current hour
         // O(h) = MA * P(h) * Modulation
         assert(thermalCluster->productionCost != NULL && "invalid production cost");
-        thermalClusterOperatingCost = (p * thermalCluster->productionCost[hourInTheYear]);
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+          = (p * thermalCluster->productionCost[hourInTheYear]);
 
         // Startup cost
         if (newUnitCount > previousUnitCount && hourInTheSimulation != 0u)
         {
-            thermalClusterOperatingCost
-                += thermalCluster->startupCost * (newUnitCount - previousUnitCount);
-            thermalClusterNonProportionalCost
-                = thermalCluster->startupCost * (newUnitCount - previousUnitCount);
+            thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+              += thermalCluster->startupCost * (newUnitCount - previousUnitCount);
         }
 
         // Fixed price
-        thermalClusterOperatingCost += thermalCluster->fixedCost * newUnitCount;
-        thermalClusterNonProportionalCost += thermalCluster->fixedCost * newUnitCount;
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex]
+          += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
         thermalCluster->unitCountLastHour[numSpace] = newUnitCount;
@@ -176,8 +200,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     }
     else
     {
-        thermalClusterOperatingCost = 0.;
-        thermalClusterNonProportionalCost = 0.;
+        thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
         thermalCluster->unitCountLastHour[numSpace] = 0u;
         thermalCluster->productionLastHour[numSpace] = 0.;
     }
@@ -192,20 +215,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
     // Nombre min de groupes appelés
     // en mode accurate : est pris depuis le solveur
     // en mode fast : est pris depuis l'heuristique
-}
-
-void State::initFromRenewableClusterIndex(const uint clusterAreaWideIndex, uint /* numSpace */)
-{
-    assert(area);
-    assert(clusterAreaWideIndex < area->renewable.clusterCount());
-
-    // alias to the current renewable cluster
-    renewableCluster = area->renewable.clusters[clusterAreaWideIndex];
-    assert(timeseriesIndex);
-    uint serieIndex = timeseriesIndex->RenouvelableParPalier[clusterAreaWideIndex];
-
-    assert(renewableCluster->series);
-    renewableClusterProduction = renewableCluster->valueAtTimeStep(serieIndex, hourInTheYear);
 }
 
 void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
@@ -266,14 +275,14 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
         ON_max[h] = 0u;
 
         // Getting available production from cluster data
-        thermalClusterAvailableProduction = currentCluster->series->series[serieIndex][h];
-
+        double thermalClusterAvailableProduction = currentCluster->series->series[serieIndex][h];
+        double thermalClusterProduction = 0.;
         if (currentCluster->mustrun)
         {
             // When the cluster is in must-run mode, the production value
             // directly comes from the time-series
             thermalClusterProduction
-                = thermalClusterAvailableProduction; // in mustrun, production==available
+              = thermalClusterAvailableProduction; // in mustrun, production==available
             // production
         }
         else
@@ -292,16 +301,6 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
         {
             case Antares::Data::UnitCommitmentMode::ucHeuristic:
                 {
-                    /*if (thermalClusterPMinOfAGroup > 0.) // code 5.0.2
-                      {
-                      ON_min[h] = Math::Max(
-                      static_cast<uint>(Math::Ceil(thermalClusterProduction
-                      / currentCluster->nominalCapacityWithSpinning)),
-                      static_cast<uint>(Math::Ceil(thermalClusterPMinOfTheClusterForYear[h]
-                      / currentCluster->pminOfAGroup)) );
-
-                      }
-                      else*/
                     //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
                     // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
                     // 5.0.3b7
@@ -315,8 +314,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                                         Math::Ceil(thermalClusterAvailableProduction
                                             / currentCluster->nominalCapacityWithSpinning))),
                                 static_cast<uint>(
-                                    Math::Ceil(thermalClusterProduction
-                                        / currentCluster->nominalCapacityWithSpinning)));
+                                    Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)));
                     }
                     else
                         ON_min[h] = static_cast<uint>(Math::Ceil(
@@ -326,8 +324,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
             case Antares::Data::UnitCommitmentMode::ucMILP:
                 {
                     ON_min[h] = Math::Max(
-                            static_cast<uint>(Math::Ceil(thermalClusterProduction
-                                    / currentCluster->nominalCapacityWithSpinning)),
+                            static_cast<uint>(Math::Ceil(thermalClusterProduction / currentCluster->nominalCapacityWithSpinning)),
                             thermalClusterDispatchedUnitsCountForYear[h]); // eq. to thermalClusterON for
                     // that hour
 

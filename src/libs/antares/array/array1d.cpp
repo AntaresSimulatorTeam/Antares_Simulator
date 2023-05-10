@@ -156,8 +156,7 @@ int Array1DLoadFromFile(const char* filename, double* data, const int height)
                 buffer += '\n';
 
                 // Load the data
-                Array1DLoadFromBuffer(filename, buffer, data, height);
-                return 1;
+                return Array1DLoadFromBuffer(filename, buffer, data, height);
             }
             logs.error() << "I/O error: " << filename << ": Impossible to load the file";
             memset(data, 0, sizeof(double) * height);

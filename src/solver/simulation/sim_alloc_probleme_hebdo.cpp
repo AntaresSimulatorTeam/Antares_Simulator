@@ -46,7 +46,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     uint nbPays = study.areas.size();
 
-    uint linkCount = study.runtime->interconnectionsCount();
+    const uint linkCount = study.runtime->interconnectionsCount();
+    const uint shortTermStorageCount = study.runtime->shortTermStorageCount;
 
     problem.DefaillanceNegativeUtiliserPMinThermique = (bool*)MemAlloc(nbPays * sizeof(char));
     problem.DefaillanceNegativeUtiliserHydro = (bool*)MemAlloc(nbPays * sizeof(char));
@@ -113,6 +114,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (ENERGIES_ET_PUISSANCES_HYDRAULIQUES**)MemAlloc(nbPays * sizeof(void*));
     problem.previousSimulationFinalLevel = (double*)MemAlloc(nbPays * sizeof(double));
 
+    problem.ShortTermStorage.resize(nbPays);
+
     problem.previousYearFinalLevels = nullptr;
     if (problem.hydroHotStart)
     {
@@ -131,7 +134,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
       = (COUTS_MARGINAUX_ZONES_DE_RESERVE**)MemAlloc(nbPays * sizeof(void*));
 
     problem.ReserveJMoins1 = (RESERVE_JMOINS1**)MemAlloc(nbPays * sizeof(void*));
-    problem.ResultatsHoraires = (RESULTATS_HORAIRES**)MemAlloc(nbPays * sizeof(void*));
+    problem.ResultatsHoraires.resize(nbPays);
 
     for (uint p = 0; p != nbPays; ++p)
     {
@@ -234,12 +237,22 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique
           = (int*)MemAlloc(study.runtime->thermalPlantTotalCount * sizeof(int));
 
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+        problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
+
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContraintePourEviterLesChargesFictives
           = (int*)MemAlloc(nbPays * sizeof(int));
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays
           = (int*)MemAlloc(nbPays * sizeof(int));
+
+        problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint
+          = (int*)MemAlloc(shortTermStorageCount * sizeof(int));
 
         problem.CorrespondanceCntNativesCntOptim[k]->NumeroPremiereContrainteDeReserveParZone
           = (int*)MemAlloc(nbPays * sizeof(int));
@@ -383,8 +396,6 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
 
         problem.ReserveJMoins1[k] = (RESERVE_JMOINS1*)MemAlloc(sizeof(RESERVE_JMOINS1));
-        problem.ResultatsHoraires[k] = (RESULTATS_HORAIRES*)MemAlloc(sizeof(RESULTATS_HORAIRES));
-
         problem.PaliersThermiquesDuPays[k]->minUpDownTime = (int*)MemAlloc(nbPaliers * sizeof(int));
         problem.PaliersThermiquesDuPays[k]->PminDuPalierThermiquePendantUneHeure
           = (double*)MemAlloc(nbPaliers * sizeof(double));
@@ -449,51 +460,51 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ReserveJMoins1[k]->ReserveHoraireJMoins1Ref
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDENS
+        problem.ResultatsHoraires[k].ValeursHorairesDENS
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations
+        problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR
+        problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr
+        problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr
           = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegative
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeUp
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeDown
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeAny
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceEnReserve
+        problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->TurbinageHoraire
+        problem.ResultatsHoraires[k].TurbinageHoraire
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->PompageHoraire
+        problem.ResultatsHoraires[k].PompageHoraire
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->TurbinageHoraireUp
+        problem.ResultatsHoraires[k].TurbinageHoraireUp
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->TurbinageHoraireDown
+        problem.ResultatsHoraires[k].TurbinageHoraireDown
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->CoutsMarginauxHoraires
+        problem.ResultatsHoraires[k].CoutsMarginauxHoraires
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->niveauxHoraires
+        problem.ResultatsHoraires[k].niveauxHoraires
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->valeurH2oHoraire
+        problem.ResultatsHoraires[k].valeurH2oHoraire
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        problem.ResultatsHoraires[k]->debordementsHoraires
+        problem.ResultatsHoraires[k].debordementsHoraires
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout
           = (PDISP_ET_COUTS_HORAIRES_PAR_PALIER**)MemAlloc(nbPaliers * sizeof(void*));
-        problem.ResultatsHoraires[k]->ProductionThermique
+        problem.ResultatsHoraires[k].ProductionThermique
           = (PRODUCTION_THERMIQUE_OPTIMALE**)MemAlloc(NombreDePasDeTemps * sizeof(void*));
 
         for (j = 0; j < (int)nbPaliers; ++j)
@@ -550,28 +561,34 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
         for (j = 0; j < NombreDePasDeTemps; j++)
         {
-            problem.ResultatsHoraires[k]->ProductionThermique[j]
+            problem.ResultatsHoraires[k].ProductionThermique[j]
               = (PRODUCTION_THERMIQUE_OPTIMALE*)MemAlloc(sizeof(PRODUCTION_THERMIQUE_OPTIMALE));
-            problem.ResultatsHoraires[k]->ProductionThermique[j]->ProductionThermiqueDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
-            problem.ResultatsHoraires[k]->ProductionThermique[j]->ProductionThermiqueDuPalierUp
+            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp
               = (double*)MemAlloc(nbPaliers * sizeof(double));
-            problem.ResultatsHoraires[k]->ProductionThermique[j]->ProductionThermiqueDuPalierDown
+            problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown
               = (double*)MemAlloc(nbPaliers * sizeof(double));
-            problem.ResultatsHoraires[k]->ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
-            problem.ResultatsHoraires[k]
-              ->ProductionThermique[j]
-              ->NombreDeGroupesQuiDemarrentDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiDemarrentDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
-            problem.ResultatsHoraires[k]
-              ->ProductionThermique[j]
-              ->NombreDeGroupesQuiSArretentDuPalier
+            problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesQuiSArretentDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
             problem.ResultatsHoraires[k]
-              ->ProductionThermique[j]
+              .ProductionThermique[j]
               ->NombreDeGroupesQuiTombentEnPanneDuPalier
               = (double*)MemAlloc(nbPaliers * sizeof(double));
+        }
+        // Short term storage results
+        const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
+        problem.ResultatsHoraires[k].ShortTermStorage.resize(NombreDePasDeTemps);
+        for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        {
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].injection.resize(nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
+              nbShortTermStorage);
+            problem.ResultatsHoraires[k].ShortTermStorage[pdt].level.resize(nbShortTermStorage);
         }
     }
 
@@ -651,6 +668,10 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]
                   ->NumeroDeVariableDuNombreDeGroupesQuiTombentEnPanneDuPalierThermique);
 
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.InjectionVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.WithdrawalVariable);
+        MemFree(problem.CorrespondanceVarNativesVarOptim[k]->SIM_ShortTermStorage.LevelVariable);
+
         MemFree(problem.CorrespondanceVarNativesVarOptim[k]);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesBilansPays);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]->NumeroDeContrainteDesNiveauxPays);
@@ -671,6 +692,8 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
                   ->NumeroDeContrainteDesContraintesDeDureeMinDArret);
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]
                   ->NumeroDeLaDeuxiemeContrainteDesContraintesDesGroupesQuiTombentEnPanne);
+        MemFree(problem.CorrespondanceCntNativesCntOptim[k]->ShortTermStorageLevelConstraint);
+
         MemFree(problem.CorrespondanceCntNativesCntOptim[k]);
         MemFree(problem.VariablesDualesDesContraintesDeNTC[k]->VariableDualeParInterconnexion);
         MemFree(problem.VariablesDualesDesContraintesDeNTC[k]);
@@ -822,53 +845,51 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         }
         MemFree(problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout);
         MemFree(problem.PaliersThermiquesDuPays[k]);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositive);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDENS);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesLmrViolations);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesSpilledEnergyAfterCSR);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDtgMrgCsr);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveUp);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveDown);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillancePositiveAny);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegative);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeUp);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeDown);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceNegativeAny);
-        MemFree(problem.ResultatsHoraires[k]->ValeursHorairesDeDefaillanceEnReserve);
-        MemFree(problem.ResultatsHoraires[k]->TurbinageHoraire);
-        MemFree(problem.ResultatsHoraires[k]->PompageHoraire);
-        MemFree(problem.ResultatsHoraires[k]->TurbinageHoraireUp);
-        MemFree(problem.ResultatsHoraires[k]->TurbinageHoraireDown);
-        MemFree(problem.ResultatsHoraires[k]->niveauxHoraires);
-        MemFree(problem.ResultatsHoraires[k]->valeurH2oHoraire);
-        MemFree(problem.ResultatsHoraires[k]->debordementsHoraires);
-        MemFree(problem.ResultatsHoraires[k]->CoutsMarginauxHoraires);
+
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDENS);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesLmrViolations);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDtgMrgCsr);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveUp);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveDown);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositiveAny);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegative);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeUp);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeDown);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceNegativeAny);
+        MemFree(problem.ResultatsHoraires[k].ValeursHorairesDeDefaillanceEnReserve);
+        MemFree(problem.ResultatsHoraires[k].TurbinageHoraire);
+        MemFree(problem.ResultatsHoraires[k].PompageHoraire);
+        MemFree(problem.ResultatsHoraires[k].TurbinageHoraireUp);
+        MemFree(problem.ResultatsHoraires[k].TurbinageHoraireDown);
+        MemFree(problem.ResultatsHoraires[k].niveauxHoraires);
+        MemFree(problem.ResultatsHoraires[k].valeurH2oHoraire);
+        MemFree(problem.ResultatsHoraires[k].debordementsHoraires);
+        MemFree(problem.ResultatsHoraires[k].CoutsMarginauxHoraires);
+
         for (int j = 0; j < problem.NombreDePasDeTemps; j++)
         {
             MemFree(
-              problem.ResultatsHoraires[k]->ProductionThermique[j]->ProductionThermiqueDuPalier);
+              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier);
             MemFree(
-              problem.ResultatsHoraires[k]->ProductionThermique[j]->ProductionThermiqueDuPalierUp);
+              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierUp);
+            MemFree(
+              problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalierDown);
+            MemFree(
+              problem.ResultatsHoraires[k].ProductionThermique[j]->NombreDeGroupesEnMarcheDuPalier);
             MemFree(problem.ResultatsHoraires[k]
-                      ->ProductionThermique[j]
-                      ->ProductionThermiqueDuPalierDown);
-            MemFree(problem.ResultatsHoraires[k]
-                      ->ProductionThermique[j]
-                      ->NombreDeGroupesEnMarcheDuPalier);
-            MemFree(problem.ResultatsHoraires[k]
-                      ->ProductionThermique[j]
+                      .ProductionThermique[j]
                       ->NombreDeGroupesQuiDemarrentDuPalier);
             MemFree(problem.ResultatsHoraires[k]
-                      ->ProductionThermique[j]
+                      .ProductionThermique[j]
                       ->NombreDeGroupesQuiSArretentDuPalier);
             MemFree(problem.ResultatsHoraires[k]
-                      ->ProductionThermique[j]
+                      .ProductionThermique[j]
                       ->NombreDeGroupesQuiTombentEnPanneDuPalier);
-            MemFree(problem.ResultatsHoraires[k]->ProductionThermique[j]);
+            MemFree(problem.ResultatsHoraires[k].ProductionThermique[j]);
         }
-        MemFree(problem.ResultatsHoraires[k]->ProductionThermique);
-        MemFree(problem.ResultatsHoraires[k]);
-
+        MemFree(problem.ResultatsHoraires[k].ProductionThermique);
         MemFree(problem.BruitSurCoutHydraulique[k]);
     }
     MemFree(problem.PaliersThermiquesDuPays);
@@ -879,7 +900,6 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
 
     MemFree(problem.CoutsMarginauxDesContraintesDeReserveParZone);
     MemFree(problem.ReserveJMoins1);
-    MemFree(problem.ResultatsHoraires);
 
     MemFree(problem.CoutDeDefaillancePositive);
     MemFree(problem.CoutDeDefaillanceNegative);

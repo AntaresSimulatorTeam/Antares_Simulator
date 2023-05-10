@@ -40,18 +40,18 @@ namespace Economy
 struct VCardFlowLinear
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "FLOW LIN.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Flow assessed, over all MC years, through linear optimization";
     }
@@ -275,6 +275,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

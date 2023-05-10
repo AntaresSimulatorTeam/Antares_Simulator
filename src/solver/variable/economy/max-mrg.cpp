@@ -82,7 +82,7 @@ inline void PrepareMaxMRGFor(const State& state, double* opmrg, uint numSpace)
     // current problem
     auto& problem = *state.problemeHebdo;
     // Weekly results from solver for the current area
-    auto& weeklyResults = *(problem.ResultatsHoraires[index]);
+    auto& weeklyResults = problem.ResultatsHoraires[index];
     // Unsupplied enery for the current area
     auto& D = weeklyResults.ValeursHorairesDeDefaillancePositive;
     // Spillage

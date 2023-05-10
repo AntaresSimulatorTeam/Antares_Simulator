@@ -40,18 +40,18 @@ namespace Economy
 struct VCardOperatingCost
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "OP. COST";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Operating Cost throughout all MC years, of all the thermal dispatchable clusters";
     }
@@ -252,14 +252,6 @@ public:
         NextType::hourForEachArea(state, numSpace);
     }
 
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // result
-        // pValuesForTheCurrentYear[state.hourInTheYear] += state.thermalClusterOperatingCost;
-        // Next item in the list (static)
-        NextType::hourForEachThermalCluster(state, numSpace);
-    }
-
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
       unsigned int,
       unsigned int numSpace) const
@@ -279,6 +271,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

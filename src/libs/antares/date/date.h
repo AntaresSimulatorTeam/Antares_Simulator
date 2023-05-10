@@ -174,6 +174,8 @@ struct DayInterval
     //! The last day (not included)
     uint end;
 
+    uint numberOfWeeks() const;
+
     void reset()
     {
         first = 0;

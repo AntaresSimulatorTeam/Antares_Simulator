@@ -661,7 +661,7 @@ bool Matrix<T, ReadWriteT>::loadFromBuffer(const AnyString& filename,
     using namespace Yuni;
 
 #ifndef NDEBUG
-    logs.debug() << "  :: loading `" << filename << "'";
+    logs.debug() << "  :: loading `" << filename << "`";
 #endif
 
     // Detecting BOM

@@ -39,18 +39,18 @@ namespace Variable
 struct VCardAllSetsOfAreas
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Sets of Areas";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "";
     }
@@ -150,7 +150,6 @@ public:
     void hourBegin(unsigned int hourInTheYear);
     void hourForEachArea(State& state);
     void hourForEachLink(State& state);
-    void hourForEachThermalCluster(State& state);
     void hourEnd(State& state, unsigned int hourInTheYear);
 
     void weekBegin(State&);

@@ -40,18 +40,18 @@ namespace Economy
 struct VCardNbOfDispatchedUnitsByPlant
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "NODU by plant";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "NODU";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Number of Dispatchable Units by plant";
     }
@@ -323,19 +323,19 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][thermalCluster->areaWideIndex]
+              .hour[state.hourInTheYear]
+              = thermal[area->index].numberOfUnitsONbyCluster[clusterIndex];
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Production for this hour
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->areaWideIndex]
-          .hour[state.hourInTheYear]
-          = state.thermalClusterNumberON;
-
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -363,6 +363,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = thermal.clusters[i]->name(); // VCardType::Caption();
+                results.variableUnit = VCardType::Unit();
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }
