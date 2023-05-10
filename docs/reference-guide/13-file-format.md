@@ -34,6 +34,9 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 
 For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
 
+In file **settings/generaldata.ini**, in section `adequacy patch` add property
+* `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
+
 ### Output
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`

@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 
+#include <antares/study/fwd.h>
 #include <yuni/core/string.h>
 #include "antares/inifile/inifile.h"
 
@@ -62,6 +63,7 @@ enum class AdqPatchPTO
 
 struct LocalMatching
 {
+    bool enabled = true;
     //! Transmission capacities from physical areas outside adequacy patch (area type 1) to
     //! physical areas inside adequacy patch (area type 2). NTC is set to null (if true)
     //! only in the first step of adequacy patch local matching rule.
@@ -97,7 +99,7 @@ public:
 
     bool updateFromKeyValue(const String& key, const String& value);
     void addProperties(IniFile::Section* section) const;
-    
+
     void reset();
 
 private:
@@ -107,7 +109,7 @@ private:
 
 struct AdqPatchParams
 {
-    
+
     bool enabled;
     LocalMatching localMatching;
     CurtailmentSharing curtailmentSharing;
@@ -116,6 +118,15 @@ struct AdqPatchParams
     void addExcludedVariables(std::vector<std::string>&) const;
     bool updateFromKeyValue(const String& key, const String& value);
     void saveToINI(IniFile& ini) const;
+    bool checkAdqPatchParams(const StudyMode studyMode,
+                             const AreaList& areas,
+                             const bool includeHurdleCostParameters) const;
+
+
+    void checkAdqPatchStudyModeEconomyOnly(const StudyMode studyMode) const;
+    void checkAdqPatchContainsAdqPatchArea(const Antares::Data::AreaList& areas) const;
+    void checkAdqPatchIncludeHurdleCost(const bool includeHurdleCost) const;
+    void checkAdqPatchDisabledLocalMatching() const;
 };
 
-} // Antares::Data
+} // namespace Antares::Data::AdequacyPatch
