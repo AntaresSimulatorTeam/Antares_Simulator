@@ -6,6 +6,7 @@ v8.6.0-rc5 (05/2023)
 ## New features
 * Short-term storage (#1163). Cycles are planned for the next release.
 * Minimal generation for hydraulic (#1273, RTE/RTE-i/Redstork)
+* Make LMR optional with new option (#1247)
 
 ## Bug fixes
 * Fix empty ROR & STORAGE in output using the TS-Generator (#1293)
