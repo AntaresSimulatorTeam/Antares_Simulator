@@ -40,6 +40,37 @@
 
 #include "spx_constantes_externes.h"
 
+static void shortTermStorageCost(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
+  double* linearCost)
+{
+    for (auto& storage : shortTermStorageInput)
+    {
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
+        if (const int varLevel
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+            varLevel >= 0)
+        {
+            linearCost[varLevel] = 0;
+        }
+
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+            varInjection >= 0)
+        {
+            linearCost[varInjection] = 0;
+        }
+
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+            varWithdrawal >= 0)
+        {
+            linearCost[varWithdrawal] = 0;
+        }
+    }
+}
+
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
                                      const int DernierPdtDeLIntervalle)
@@ -158,6 +189,10 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                         ProblemeAResoudre->CoutLineaire[var] = -P;
                 }
             }
+
+            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
+                                 CorrespondanceVarNativesVarOptim,
+                                 ProblemeAResoudre->CoutLineaire);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)

@@ -101,7 +101,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
 
     for (int Pays = 0; Pays < problemeHebdo->NombreDePays; ++Pays)
     {
-        const RESULTATS_HORAIRES* ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
+        const RESULTATS_HORAIRES& ResultatsHoraires = problemeHebdo->ResultatsHoraires[Pays];
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[Pays];
         const double* PminDuPalierThermiquePendantUneHeure
@@ -111,7 +111,7 @@ void OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(PROBLEME_HEBDO* problemeH
         const int* minUpDownTime = PaliersThermiquesDuPays->minUpDownTime;
 
         PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermiqueOptimale
-          = ResultatsHoraires->ProductionThermique;
+          = ResultatsHoraires.ProductionThermique;
 
         for (int Palier = 0; Palier < PaliersThermiquesDuPays->NombreDePaliersThermiques; Palier++)
         {

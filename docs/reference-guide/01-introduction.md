@@ -1,6 +1,6 @@
 # Introduction
 
-This document describes all the main features of the **Antares\_Simulator** package, version 8.3.
+This document describes all the main features of the **Antares\_Simulator** package, version 8.6.
 
 It gives useful general information regarding the way data are handled and processed,
 as well as how the Graphic User Interface (GUI) works. To keep this documentation
@@ -94,6 +94,6 @@ In these studies, the default Antares option to use is the "Economy" simulation 
 
 
 
-[^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.3 application will as of now be simply denoted "Antares".
+[^1]: For simplicity's sake, the _**Antares\_Simulator**_ 8.6 application will as of now be simply denoted "Antares".
 
 [^2]: A detailed expression of the basic mathematical problem solved in the red box of the following figure can be found in the document "Optimization problems formulation".

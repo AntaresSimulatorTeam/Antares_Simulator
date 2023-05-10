@@ -201,7 +201,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision
@@ -266,7 +266,7 @@ private:
 
         // Caption
         report.captions[0][report.data.columnIndex] = report.variableCaption;
-        report.captions[1][report.data.columnIndex] = VCardT::Unit();
+        report.captions[1][report.data.columnIndex] = report.variableUnit;
         report.captions[2][report.data.columnIndex] = "std";
 
         // Precision

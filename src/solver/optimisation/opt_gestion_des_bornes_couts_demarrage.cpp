@@ -86,7 +86,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Xmin[var] = NombreMinDeGroupesEnMarcheDuPalierThermique[pdtHebdo];
 
                 double* adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                                ->ProductionThermique[pdtHebdo]
+                                                .ProductionThermique[pdtHebdo]
                                                 ->NombreDeGroupesEnMarcheDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
@@ -95,7 +95,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                        ->ProductionThermique[pdtHebdo]
+                                        .ProductionThermique[pdtHebdo]
                                         ->NombreDeGroupesQuiDemarrentDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
@@ -104,7 +104,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                 Xmax[var] = LINFINI_ANTARES;
                 Xmin[var] = 0;
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                        ->ProductionThermique[pdtHebdo]
+                                        .ProductionThermique[pdtHebdo]
                                         ->NombreDeGroupesQuiSArretentDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
 
@@ -125,7 +125,7 @@ void OPT_InitialiserLesBornesDesVariablesDuProblemeLineaireCoutsDeDemarrage(
                                 - NombreMaxDeGroupesEnMarcheDuPalierThermique[t1];
                 }
                 adresseDuResultat = &(problemeHebdo->ResultatsHoraires[pays]
-                                        ->ProductionThermique[pdtHebdo]
+                                        .ProductionThermique[pdtHebdo]
                                         ->NombreDeGroupesQuiTombentEnPanneDuPalier[index]);
                 AdresseOuPlacerLaValeurDesVariablesOptimisees[var] = adresseDuResultat;
             }

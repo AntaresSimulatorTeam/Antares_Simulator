@@ -936,12 +936,24 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
             area.thermal.list.enableMustrunForEveryone();
     }
 
+    // Short term storage
+    if (study.header.version >= 860)
+    {
+        buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
+            << SEP << area.id;
+        logs.debug() << "Loading series for st storage " << buffer;
+        ret = area.shortTermStorage.loadSeriesFromFolder(buffer.c_str()) && ret;
+        ret = area.shortTermStorage.validate() && ret;
+    }
+
     // Renewable cluster list
     if (study.header.version >= 810)
     {
         buffer.clear() << study.folderInput << SEP << "renewables" << SEP << "series";
         ret = area.renewable.list.loadDataSeriesFromFolder(study, options, buffer) && ret;
     }
+    if (!ret)
+        logs.error() << "Error while loading sts series";
 
     // Adequacy patch
     readAdqPatchMode(study, area, buffer);
@@ -1091,6 +1103,26 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
             buffer.clear() << pStudy.folderInput << thermalPlant << area.id;
             ret = area.thermal.list.loadFromFolder(pStudy, buffer.c_str(), &area) && ret;
             area.thermal.prepareAreaWideIndexes();
+        }
+    }
+
+    // Short term storage data, specific to areas
+    if (pStudy.header.version >= 860)
+    {
+        logs.info() << "Loading short term storage clusters...";
+        buffer.clear() << pStudy.folderInput << SEP << "st-storage";
+        if (IO::Directory::Exists(buffer))
+        {
+            for (const auto& [id, area] : areas)
+            {
+                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP << area->id;
+                ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
+                      && ret;
+            }
+        }
+        else
+        {
+            logs.info() << "Short term storage not found, skipping";
         }
     }
 
@@ -1585,6 +1617,7 @@ void AreaList::removeHydroTimeseries()
     each([&](Data::Area& area) {
         area.hydro.series->ror.reset(1, HOURS_PER_YEAR);
         area.hydro.series->storage.reset(1, DAYS_PER_YEAR);
+        area.hydro.series->mingen.reset(1, HOURS_PER_YEAR);
         area.hydro.series->count = 1;
     });
 }

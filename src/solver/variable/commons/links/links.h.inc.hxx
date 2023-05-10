@@ -44,12 +44,12 @@ namespace LINK_NAMESPACE
 struct VCardAllLinks
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Links";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "";
     }
@@ -165,8 +165,6 @@ public:
     void hourBegin(uint hourInTheYear);
     void hourForEachArea(State& state, uint numSpace);
     void hourForEachLink(State& state, uint numSpace);
-    void hourForEachThermalCluster(State& state, uint numSpace);
-    void hourForEachRenewableCluster(State& state, uint numSpace);
 
     void hourEnd(State& state, uint hourInTheYear);
 

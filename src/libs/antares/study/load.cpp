@@ -32,6 +32,7 @@
 #include "scenario-builder/sets.h"
 
 using namespace Yuni;
+using Antares::Constants::nbHoursInAWeek;
 
 #define SEP IO::Separator
 

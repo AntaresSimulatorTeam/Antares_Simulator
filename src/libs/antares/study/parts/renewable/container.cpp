@@ -74,7 +74,7 @@ void PartRenewable::prepareAreaWideIndexes()
         return;
     }
 
-    clusters = std::vector<RenewableCluster*>(list.size());
+    clusters.assign(list.size(), nullptr);
 
     auto end = list.end();
     uint idx = 0;

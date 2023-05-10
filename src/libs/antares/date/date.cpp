@@ -90,6 +90,11 @@ static const char* const monthShortLowerNames[]
 static const char* const monthShortUpperNames[]
   = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
+uint DayInterval::numberOfWeeks() const
+{
+    return (end - first) / 7;
+}
+
 const char* DayOfTheWeekToString(DayOfTheWeek d)
 {
     static const char* const days[]

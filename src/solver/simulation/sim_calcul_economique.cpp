@@ -39,6 +39,36 @@ using namespace Antares;
 using namespace Antares::Data;
 using namespace Yuni;
 
+static void importShortTermStorages(
+  const AreaList& areas,
+  std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
+{
+    int clusterGlobalIndex = 0;
+    for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
+    {
+        ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        int storageIndex = 0;
+        for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
+        {
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
+            toInsert.clusterGlobalIndex = clusterGlobalIndex;
+
+            // Properties
+            toInsert.reservoirCapacity = st->properties.reservoirCapacity.value();
+            toInsert.efficiency = st->properties.efficiencyFactor;
+            toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
+            toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
+            toInsert.initialLevel = st->properties.initialLevel;
+
+            toInsert.series = st->series;
+
+            // TODO add missing properties, or use the same struct
+            storageIndex++;
+            clusterGlobalIndex++;
+        }
+    }
+}
+
 void SIM_InitialisationProblemeHebdo(Data::Study& study,
                                      PROBLEME_HEBDO& problem,
                                      int NombreDePasDeTemps,
@@ -74,6 +104,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
     problem.NombreDePays = study.areas.size();
 
     problem.NombreDInterconnexions = study.runtime->interconnectionsCount();
+
+    problem.NumberOfShortTermStorages = study.runtime->shortTermStorageCount;
 
     problem.NombreDeContraintesCouplantes = study.runtime->bindingConstraintCount;
 
@@ -177,6 +209,8 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         assert(area.hydro.intraDailyModulation >= 1. && "Intra-daily modulation must be >= 1.0");
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
+
+    importShortTermStorages(study.areas, problem.ShortTermStorage);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
@@ -666,6 +700,16 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                 uint tsIndex = (*NumeroChroniquesTireesParPays[numSpace][k]).Hydraulique;
                 auto& inflowsmatrix = area.hydro.series->storage;
                 auto const& srcinflows = inflowsmatrix[tsIndex < inflowsmatrix.width ? tsIndex : 0];
+                {
+                auto& mingenmatrix = area.hydro.series->mingen;
+                auto const& srcmingen
+                      = mingenmatrix[tsIndex < mingenmatrix.width ? tsIndex : 0];
+                    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j)
+                    {
+                        problem.CaracteristiquesHydrauliques[k]->MingenHoraire[j]
+                          = srcmingen[PasDeTempsDebut + j];
+                    }
+                }
 
                 if (area.hydro.reservoirManagement)
                 {

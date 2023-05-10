@@ -35,18 +35,18 @@ namespace Antares::Solver::Variable::Economy
 struct VCardThermalAirPollutantEmissions
 {
     //! Caption not used: several columns
-    static const char* Caption()
+    static std::string Caption()
     {
         return "";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Tons";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Overall pollutant emissions expected from all the thermal clusters";
     }
@@ -93,12 +93,17 @@ struct VCardThermalAirPollutantEmissions
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
             if (indx < Antares::Data::Pollutant::POLLUTANT_MAX)
                 return Antares::Data::Pollutant::getPollutantName(indx).c_str();
 
             return "<unknown>";
+        }
+
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardThermalAirPollutantEmissions::Unit();
         }
     };
 }; // class VCard
@@ -107,8 +112,9 @@ struct VCardThermalAirPollutantEmissions
 ** \brief Marginal ThermalAirPollutantEmissions
 */
 template<class NextT = Container::EndOfList>
-class ThermalAirPollutantEmissions
- : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>, NextT, VCardThermalAirPollutantEmissions>
+class ThermalAirPollutantEmissions : public Variable::IVariable<ThermalAirPollutantEmissions<NextT>,
+                                                                NextT,
+                                                                VCardThermalAirPollutantEmissions>
 {
 public:
     //! Type of the next static variable
@@ -238,22 +244,23 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
-        // Next variable
-        NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        //Multiply every pollutant factor with production
-        for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        for (uint clusterIndex = 0; clusterIndex != area->thermal.clusterCount(); ++clusterIndex)
         {
-            pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
-                += state.thermalCluster->emissions.factors[i]
-                    * state.thermalClusterProduction;
+            auto* thermalCluster = area->thermal.clusters[clusterIndex];
+
+            // Multiply every pollutant factor with production
+            for (int i = 0; i < Antares::Data::Pollutant::POLLUTANT_MAX; i++)
+            {
+                pValuesForTheCurrentYear[numSpace][i][state.hourInTheYear]
+                  += thermalCluster->emissions.factors[i]
+                     * thermal[state.area->index].thermalClustersProductions[clusterIndex];
+            }
         }
 
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
+        // Next variable
+        NextType::hourForEachArea(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -277,6 +284,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

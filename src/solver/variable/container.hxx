@@ -186,12 +186,6 @@ inline void List<NextT>::hourForEachArea(State& state, unsigned int numSpace)
 }
 
 template<class NextT>
-inline void List<NextT>::hourForEachThermalCluster(State& state)
-{
-    NextType::hourForEachThermalCluster(state);
-}
-
-template<class NextT>
 inline void List<NextT>::hourForEachLink(State& state)
 {
     NextType::hourForEachLink(state);

@@ -40,18 +40,18 @@ namespace Economy
 struct VCardDispatchableGeneration
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "Dispatch. Gen.";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "MWh";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Value of all the dispatchable generation throughout all MC years";
     }
@@ -98,7 +98,7 @@ struct VCardDispatchableGeneration
 
     struct Multiple
     {
-        static const char* Caption(const unsigned int indx)
+        static std::string Caption(const unsigned int indx)
         {
             switch (indx)
             {
@@ -126,6 +126,10 @@ struct VCardDispatchableGeneration
             default:
                 return "<unknown>";
             }
+        }
+        static std::string Unit([[maybe_unused]] const unsigned int indx)
+        {
+            return VCardDispatchableGeneration::Unit();
         }
     };
 }; // class VCard
@@ -265,17 +269,18 @@ public:
 
     void hourForEachArea(State& state, unsigned int numSpace)
     {
+        auto area = state.area;
+        auto& thermal = state.thermal;
+        for (uint clusterIndex = 0; clusterIndex != state.area->thermal.clusterCount();
+             ++clusterIndex)
+        {
+            const auto* thermalCluster = area->thermal.clusters[clusterIndex];
+            pValuesForTheCurrentYear[numSpace][thermalCluster->groupID][state.hourInTheYear]
+              += thermal[area->index].thermalClustersProductions[clusterIndex];
+        }
+
         // Next variable
         NextType::hourForEachArea(state, numSpace);
-    }
-
-    void hourForEachThermalCluster(State& state, unsigned int numSpace)
-    {
-        // Adding the dispatchable generation for the class_name fuel
-        pValuesForTheCurrentYear[numSpace][state.thermalCluster->groupID][state.hourInTheYear]
-          += state.thermalClusterProduction;
-        // Next item in the list
-        NextType::hourForEachThermalCluster(state, numSpace);
     }
 
     Antares::Memory::Stored<double>::ConstReturnType retrieveRawHourlyValuesForCurrentYear(
@@ -299,6 +304,7 @@ public:
             {
                 // Write the data for the current year
                 results.variableCaption = VCardType::Multiple::Caption(i);
+                results.variableUnit = VCardType::Multiple::Unit(i);
                 pValuesForTheCurrentYear[numSpace][i].template buildAnnualSurveyReport<VCardType>(
                   results, fileLevel, precision);
             }

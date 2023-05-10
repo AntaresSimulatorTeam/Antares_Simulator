@@ -135,49 +135,9 @@ void checkMinStablePower(bool tsGenThermal, const Antares::Data::AreaList& areas
             throw Error::InvalidParametersForThermalClusters(areaClusterNames);
         }
     }
-
-    // CHECK PuissanceDisponible
-    /* Caracteristiques des paliers thermiques */
-    if (!tsGenThermal) // no time series generation asked (off mode)
+    else
     {
-        for (uint i = 0; i < areas.size(); ++i)
-        {
-            // Alias de la zone courant
-            auto& area = *(areas.byIndex[i]);
-
-            for (uint l = 0; l != area.thermal.clusterCount(); ++l) //
-            {
-                const auto& cluster = *(area.thermal.clusters[l]);
-                auto PmaxDUnGroupeDuPalierThermique = cluster.nominalCapacityWithSpinning;
-                auto pminDUnGroupeDuPalierThermique
-                  = (cluster.nominalCapacityWithSpinning < cluster.minStablePower)
-                      ? cluster.nominalCapacityWithSpinning
-                      : cluster.minStablePower;
-
-                bool condition = false;
-                bool report = false;
-
-                for (uint y = 0; y != cluster.series->series.height; ++y)
-                {
-                    for (uint x = 0; x != cluster.series->series.width; ++x)
-                    {
-                        auto rightpart = pminDUnGroupeDuPalierThermique
-                                         * ceil(cluster.series->series.entry[x][y]
-                                                / PmaxDUnGroupeDuPalierThermique);
-                        condition = rightpart > cluster.series->series.entry[x][y];
-                        if (condition)
-                        {
-                            cluster.series->series.entry[x][y] = rightpart;
-                            report = true;
-                        }
-                    }
-                }
-
-                if (report)
-                    logs.warning() << "Area : " << area.name << " cluster name : " << cluster.name()
-                                   << " available power lifted to match Pmin and Pnom requirements";
-            }
-        }
+        areas.each([](Antares::Data::Area& area) { area.thermal.checkAndCorrectAvailability(); });
     }
 }
 } // namespace
