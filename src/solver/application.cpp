@@ -105,7 +105,7 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
 {
     using namespace Antares::Data;
     if (adqPatchOn)
-    {
+    {   
         const bool containsAdqArea
           = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
                 return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
@@ -127,8 +127,8 @@ void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
             const auto& cluster = *(area.thermal.clusters[clusterIndex]);
             if (cluster.costgeneration == Antares::Data::setManually)
                 continue;
-            uint fuelCostWidth = cluster.ecoInput->fuelcost.width;
-            uint co2CostWidth = cluster.ecoInput->co2cost.width;
+            uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
+            uint co2CostWidth = cluster.ecoInput.co2cost.width;
             uint tsWidth = cluster.series->series.width;
             if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
             {

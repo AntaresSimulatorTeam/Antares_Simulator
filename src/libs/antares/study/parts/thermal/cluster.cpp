@@ -148,7 +148,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  prepro(nullptr),
  productionCost(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(nullptr),
+ ecoInput(EconomicInputData(this->weak_from_this())),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -195,7 +195,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  prepro(nullptr),
  productionCost(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(nullptr),
+ ecoInput(EconomicInputData(this->weak_from_this())),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -208,7 +208,6 @@ Data::ThermalCluster::~ThermalCluster()
 {
     delete[] productionCost;
     delete prepro;
-    delete ecoInput;
     delete series;
 
     if (unitCountLastHour)
@@ -305,11 +304,9 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
-    if (!ecoInput)
-        ecoInput = new EconomicInputData(this->weak_from_this());
-
+    
     prepro->copyFrom(*cluster.prepro);
-    ecoInput->copyFrom(*cluster.ecoInput);
+    ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
     series->series = cluster.series->series;
@@ -422,8 +419,8 @@ bool Data::ThermalCluster::forceReload(bool reload) const
         ret = series->forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
-    if (ecoInput)
-        ret = ecoInput->forceReload(reload) && ret;
+    
+    ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
 
@@ -434,8 +431,8 @@ void Data::ThermalCluster::markAsModified() const
         series->markAsModified();
     if (prepro)
         prepro->markAsModified();
-    if (ecoInput)
-        ecoInput->markAsModified();
+    
+    ecoInput.markAsModified();
 }
 
 void Data::ThermalCluster::calculationOfSpinning()
@@ -497,8 +494,8 @@ void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPer
 
 void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour()
 {
-    const uint fuelCostWidth = ecoInput->fuelcost.width;
-    const uint co2CostWidth = ecoInput->co2cost.width;
+    const uint fuelCostWidth = ecoInput.fuelcost.width;
+    const uint co2CostWidth = ecoInput.co2cost.width;
     const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     thermalEconomicTimeSeries.resize(tsCount, ThermalEconomicTimeSeries());
@@ -510,9 +507,9 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         {
 
             double &marketBidCostPerHourRef = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
-            double &fuelcostRef = ecoInput->fuelcost[tsIndexFuel][hour];
+            double &fuelcostRef = ecoInput.fuelcost[tsIndexFuel][hour];
             double &co2EmissionFactorRef = emissions.factors[Pollutant::CO2];
-            double &co2costRef = ecoInput->co2cost[tsIndexCo2][hour];
+            double &co2costRef = ecoInput.co2cost[tsIndexCo2][hour];
             double &marginalCostPerHourTsRef = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour];
             double &productionCostTsRef = thermalEconomicTimeSeries[tsIndex].productionCostTs[hour];
            
@@ -623,9 +620,8 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-    if (!ecoInput)
-        ecoInput = new EconomicInputData(this->weak_from_this());
-    ecoInput->reset();
+    
+    ecoInput.reset();
 }
 
 bool Data::ThermalCluster::integrityCheck()
@@ -782,8 +778,8 @@ uint64 ThermalCluster::memoryUsage() const
     uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    if (ecoInput)
-        amount += ecoInput->memoryUsage();
+    
+    amount += ecoInput.memoryUsage();
     if (series)
         amount += DataSeriesMemoryUsage(series);
     return amount;

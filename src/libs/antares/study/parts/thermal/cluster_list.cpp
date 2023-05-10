@@ -35,7 +35,7 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
     u.requiredMemoryForInput += (sizeof(void*) * 4 /*overhead map*/) * cluster.size();
 
     each([&](const ThermalCluster& cluster) {
-        uint prepoCnt = Math::Max(cluster.ecoInput->co2cost.width, cluster.ecoInput->fuelcost.width);
+        uint prepoCnt = Math::Max(cluster.ecoInput.co2cost.width, cluster.ecoInput.fuelcost.width);
         u.requiredMemoryForInput += sizeof(ThermalCluster);
         u.requiredMemoryForInput += sizeof(void*);
         u.requiredMemoryForInput += sizeof(double) * HOURS_PER_YEAR * prepoCnt; // productionCost
@@ -49,8 +49,8 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
             cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
-        if (cluster.ecoInput)
-            cluster.ecoInput->estimateMemoryUsage(u);
+        
+        cluster.ecoInput.estimateMemoryUsage(u);
 
         // From the solver
         u.requiredMemoryForInput += 70 * 1024;
@@ -376,8 +376,7 @@ void ThermalClusterList::ensureDataPrepro()
         auto c = it->second;
         if (not c->prepro)
             c->prepro = new PreproThermal(c);
-        if (!c->ecoInput)
-            c->ecoInput = new EconomicInputData(c);
+        //Add constructor for ecoInpput object
     }
 }
 
@@ -519,11 +518,10 @@ bool ThermalClusterList::savePreproToFolder(const AnyString& folder) const
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
             ret = c.prepro->saveToFolder(buffer) and ret;
         }
-        if (c.ecoInput)
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
-            ret = c.ecoInput->saveToFolder(buffer) && ret;
+            ret = c.ecoInput.saveToFolder(buffer) && ret;
         }
     });
     return ret;
@@ -560,12 +558,12 @@ bool ThermalClusterList::loadPreproFromFolder(Study& study,
 
             ret = result and ret;
         }
-        if (c.ecoInput)
+        
         {
             assert(c.parentArea and "cluster: invalid parent area");
             buffer.clear() << folder << SEP << c.parentArea->id << SEP << c.id();
 
-            bool result = c.ecoInput->loadFromFolder(study, buffer);
+            bool result = c.ecoInput.loadFromFolder(study, buffer);
             c.calculationOfMarketBidPerHourAndMarginalCostPerHour();
 
             ret = result && ret;

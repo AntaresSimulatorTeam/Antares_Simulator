@@ -384,7 +384,7 @@ public:
     };
     std::vector<ThermalEconomicTimeSeries> thermalEconomicTimeSeries;
 
-    EconomicInputData* ecoInput;
+    EconomicInputData ecoInput;
 
     /*!
     ** \brief The number of units used the last hour in the simulation
