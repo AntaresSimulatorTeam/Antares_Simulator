@@ -133,6 +133,7 @@ struct Fixture
 
         auto bc = study->bindingConstraints.add("BC_1");
         bc->group("groupTest");
+        study->bindingConstraints.time_series_numbers["groupTest"] = {};
         study->bindingConstraints.resizeAllTimeseriesNumbers(study->parameters.nbYears);
         bc->TimeSeries().resize(7, 1);
 
