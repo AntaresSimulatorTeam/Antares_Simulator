@@ -466,10 +466,22 @@ void Data::ThermalCluster::calculationOfSpinning()
 
 void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 {
-    if (costgeneration == Data::setManually || !prepro)
-        costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
-    else // costgeneration == Data::useCostTimeseries
-        costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+    
+    switch(costgeneration)
+    {
+
+        case Data::setManually:
+            costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
+            break;
+
+        case Data::useCostTimeseries:
+            costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+            break;
+        
+        default:
+            //Maybe to put some log message for default case or error
+            break;
+    }
 }
 
 void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPerHour()
@@ -480,7 +492,7 @@ void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPer
     std::fill(thermalEconomicTimeSeries[0].marginalCostPerHourTs.begin(),
               thermalEconomicTimeSeries[0].marginalCostPerHourTs.end(),
               marginalCost);
-    return;
+    
 }
 
 void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour()
@@ -496,22 +508,35 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour]
-              = ecoInput->fuelcost[tsIndexFuel][hour] * 360.0 / fuelEfficiency
-                + emissions.factors[Pollutant::CO2] * ecoInput->co2cost[tsIndexCo2][hour]
-                + variableomcost;
-            thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
-              = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
+
+            double &marketBidCostPerHourRef = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
+            double &fuelcostRef = ecoInput->fuelcost[tsIndexFuel][hour];
+            double &co2EmissionFactorRef = emissions.factors[Pollutant::CO2];
+            double &co2costRef = ecoInput->co2cost[tsIndexCo2][hour];
+            double &marginalCostPerHourTsRef = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour];
+            double &productionCostTsRef = thermalEconomicTimeSeries[tsIndex].productionCostTs[hour];
+           
+
+            marketBidCostPerHourRef = computeMarketBidCost(fuelcostRef, co2EmissionFactorRef, co2costRef);
+
+            marginalCostPerHourTsRef = marketBidCostPerHourRef;
+
             if (modulation.width > 0)
             {
-                thermalEconomicTimeSeries[tsIndex].productionCostTs[hour]
-                  = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
-                    * modulation[Data::thermalModulationCost][hour];
+                double &modulationRef = modulation[Data::thermalModulationCost][hour];
+                productionCostTsRef = marginalCostPerHourTsRef * modulationRef;
+            
             }
         }
     }
+}
 
-    return;
+
+inline double Data::ThermalCluster::computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost)
+{
+
+    return fuelCost * 360.0 / this->fuelEfficiency + co2EmissionFactor * co2cost + this->variableomcost;
+
 }
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
