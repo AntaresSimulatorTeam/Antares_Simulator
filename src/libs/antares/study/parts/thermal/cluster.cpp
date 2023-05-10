@@ -498,20 +498,22 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         {
             double& marketBidCostPerHour
               = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
+            double& marginalCostPerHour
+              = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour];
+            double& productionCostPerHour
+              = thermalEconomicTimeSeries[tsIndex].productionCostTs[hour];
+
             double& fuelcost = ecoInput.fuelcost[tsIndexFuel][hour];
             double& co2EmissionFactor = emissions.factors[Pollutant::CO2];
             double& co2cost = ecoInput.co2cost[tsIndexCo2][hour];
-            double& marginalCostPerHourTs
-              = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour];
-            double& productionCostTs = thermalEconomicTimeSeries[tsIndex].productionCostTs[hour];
 
             marketBidCostPerHour = computeMarketBidCost(fuelcost, co2EmissionFactor, co2cost);
-            marginalCostPerHourTs = marketBidCostPerHour;
+            marginalCostPerHour = marketBidCostPerHour;
 
             if (modulation.width > 0)
             {
                 double& modulationPerHour = modulation[Data::thermalModulationCost][hour];
-                productionCostTs = marginalCostPerHourTs * modulationPerHour;
+                productionCostPerHour = marginalCostPerHour * modulationPerHour;
             }
         }
     }
