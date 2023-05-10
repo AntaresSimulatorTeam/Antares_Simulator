@@ -525,8 +525,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterSpinning = P_FLOAT("Spinning (%)", "cluster.spinning");
     pPGThClusterSpinning->SetAttribute(wxPG_ATTR_MAX, 99.99);
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
-    
-    
+
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
     pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
