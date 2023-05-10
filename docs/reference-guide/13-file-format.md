@@ -32,7 +32,7 @@ For each thermal cluster, in existing file **input/thermal/clusters/&lt;area&gt;
 * `efficiency` [float] excluded from the section if default value 100 is selected (default behavior).
 * `variableomcost` [float] excluded from the section if default value 0 is selected (default behavior).
 
-For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**.
+For each thermal cluster, new files added **input/thermal/prepro/&lt;area&gt;/&lt;cluster&gt;/CO2Cost.txt** and **input/thermal/series/&lt;area&gt;/&lt;cluster&gt;/fuelCost.txt**. **fuelCost.txt** and **CO2Cost.txt** must either have one column, or the same number of columns as existing file **series.txt** (availability)
 
 In file **settings/generaldata.ini**, in section `adequacy patch` add property
 * `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column

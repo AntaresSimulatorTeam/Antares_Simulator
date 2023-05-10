@@ -148,7 +148,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
  prepro(nullptr),
  productionCost(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(nullptr),
+ ecoInput(EconomicInputData(this->weak_from_this())),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -195,7 +195,7 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  prepro(nullptr),
  productionCost(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(nullptr),
+ ecoInput(EconomicInputData(this->weak_from_this())),
  unitCountLastHour(nullptr),
  productionLastHour(nullptr),
  pminOfAGroup(nullptr)
@@ -208,7 +208,6 @@ Data::ThermalCluster::~ThermalCluster()
 {
     delete[] productionCost;
     delete prepro;
-    delete ecoInput;
     delete series;
 
     if (unitCountLastHour)
@@ -305,11 +304,10 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
-    if (!ecoInput)
-        ecoInput = new EconomicInputData(this->weak_from_this());
+    ecoInput.itsThermalCluster = this->weak_from_this();
 
     prepro->copyFrom(*cluster.prepro);
-    ecoInput->copyFrom(*cluster.ecoInput);
+    ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
     series->series = cluster.series->series;
@@ -422,8 +420,7 @@ bool Data::ThermalCluster::forceReload(bool reload) const
         ret = series->forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
-    if (ecoInput)
-        ret = ecoInput->forceReload(reload) && ret;
+    ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
 
@@ -434,8 +431,7 @@ void Data::ThermalCluster::markAsModified() const
         series->markAsModified();
     if (prepro)
         prepro->markAsModified();
-    if (ecoInput)
-        ecoInput->markAsModified();
+    ecoInput.markAsModified();
 }
 
 void Data::ThermalCluster::calculationOfSpinning()
@@ -466,10 +462,15 @@ void Data::ThermalCluster::calculationOfSpinning()
 
 void Data::ThermalCluster::calculationOfMarketBidPerHourAndMarginalCostPerHour()
 {
-    if (costgeneration == Data::setManually || !prepro)
+    switch (costgeneration)
+    {
+    case Data::setManually:
         costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
-    else // costgeneration == Data::useCostTimeseries
+        break;
+    case Data::useCostTimeseries:
         costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+        break;
+    }
 }
 
 void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPerHour()
@@ -480,13 +481,12 @@ void Data::ThermalCluster::costGenManualCalculationOfMarketBidAndMarginalCostPer
     std::fill(thermalEconomicTimeSeries[0].marginalCostPerHourTs.begin(),
               thermalEconomicTimeSeries[0].marginalCostPerHourTs.end(),
               marginalCost);
-    return;
 }
 
 void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour()
 {
-    const uint fuelCostWidth = ecoInput->fuelcost.width;
-    const uint co2CostWidth = ecoInput->co2cost.width;
+    const uint fuelCostWidth = ecoInput.fuelcost.width;
+    const uint co2CostWidth = ecoInput.co2cost.width;
     const uint tsCount = std::max(fuelCostWidth, co2CostWidth);
 
     thermalEconomicTimeSeries.resize(tsCount, ThermalEconomicTimeSeries());
@@ -496,22 +496,34 @@ void Data::ThermalCluster::costGenTimeSeriesCalculationOfMarketBidAndMarginalCos
         uint tsIndexCo2 = std::min(co2CostWidth - 1, tsIndex);
         for (uint hour = 0; hour < HOURS_PER_YEAR; ++hour)
         {
-            thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour]
-              = ecoInput->fuelcost[tsIndexFuel][hour] * 360.0 / fuelEfficiency
-                + emissions.factors[Pollutant::CO2] * ecoInput->co2cost[tsIndexCo2][hour]
-                + variableomcost;
-            thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
+            double& marketBidCostPerHour
               = thermalEconomicTimeSeries[tsIndex].marketBidCostPerHourTs[hour];
+            double& marginalCostPerHour
+              = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour];
+            double& productionCostPerHour
+              = thermalEconomicTimeSeries[tsIndex].productionCostTs[hour];
+
+            double& fuelcost = ecoInput.fuelcost[tsIndexFuel][hour];
+            double& co2EmissionFactor = emissions.factors[Pollutant::CO2];
+            double& co2cost = ecoInput.co2cost[tsIndexCo2][hour];
+
+            marketBidCostPerHour = computeMarketBidCost(fuelcost, co2EmissionFactor, co2cost);
+            marginalCostPerHour = marketBidCostPerHour;
+
             if (modulation.width > 0)
             {
-                thermalEconomicTimeSeries[tsIndex].productionCostTs[hour]
-                  = thermalEconomicTimeSeries[tsIndex].marginalCostPerHourTs[hour]
-                    * modulation[Data::thermalModulationCost][hour];
+                double& modulationPerHour = modulation[Data::thermalModulationCost][hour];
+                productionCostPerHour = marginalCostPerHour * modulationPerHour;
             }
         }
     }
+}
 
-    return;
+inline double Data::ThermalCluster::computeMarketBidCost(double fuelCost,
+                                                         double co2EmissionFactor,
+                                                         double co2cost)
+{
+    return fuelCost * 360.0 / fuelEfficiency + co2EmissionFactor * co2cost + variableomcost;
 }
 
 void Data::ThermalCluster::reverseCalculationOfSpinning()
@@ -598,9 +610,9 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-    if (!ecoInput)
-        ecoInput = new EconomicInputData(this->weak_from_this());
-    ecoInput->reset();
+
+    ecoInput.itsThermalCluster = this->weak_from_this();
+    ecoInput.reset();
 }
 
 bool Data::ThermalCluster::integrityCheck()
@@ -757,10 +769,9 @@ uint64 ThermalCluster::memoryUsage() const
     uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    if (ecoInput)
-        amount += ecoInput->memoryUsage();
     if (series)
         amount += DataSeriesMemoryUsage(series);
+    amount += ecoInput.memoryUsage();
     return amount;
 }
 

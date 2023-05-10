@@ -384,7 +384,7 @@ public:
     };
     std::vector<ThermalEconomicTimeSeries> thermalEconomicTimeSeries;
 
-    EconomicInputData* ecoInput;
+    EconomicInputData ecoInput;
 
     /*!
     ** \brief The number of units used the last hour in the simulation
@@ -424,6 +424,7 @@ private:
     */
     void costGenManualCalculationOfMarketBidAndMarginalCostPerHour();
     void costGenTimeSeriesCalculationOfMarketBidAndMarginalCostPerHour();
+    inline double computeMarketBidCost(double fuelCost, double co2EmissionFactor, double co2cost);
 
     unsigned int precision() const override;
 }; // class ThermalCluster

@@ -91,12 +91,35 @@ void checkSimplexRangeHydroHeuristic(Antares::Data::SimplexOptimization optRange
     }
 }
 
+// Adequacy Patch can only be used with Economy Study/Simulation Mode.
+void checkAdqPatchStudyModeEconomyOnly(const bool adqPatchOn,
+                                       const Antares::Data::StudyMode studyMode)
+{
+    if ((studyMode != Antares::Data::StudyMode::stdmEconomy) && adqPatchOn)
+    {
+        throw Error::IncompatibleStudyModeForAdqPatch();
+    }
+}
+// When Adequacy Patch is on at least one area must be inside Adequacy patch mode.
+void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Data::AreaList& areas)
+{
+    using namespace Antares::Data;
+    if (adqPatchOn)
+    {   
+        const bool containsAdqArea
+          = std::any_of(areas.cbegin(), areas.cend(), [](const std::pair<AreaName, Area*>& area) {
+                return area.second->adequacyPatchMode == AdequacyPatch::physicalAreaInsideAdqPatch;
+            });
+        if (!containsAdqArea)
+            throw Error::NoAreaInsideAdqPatchMode();
+    }
+}
 // Number of columns for Fuel & CO2 cost in thermal clusters must be one, or same as the number of
 // TS
 void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
 {
     bool error = false;
-    for (uint areaIndex  = 0; areaIndex < areas.size(); ++areaIndex )
+    for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
         const auto& area = *(areas.byIndex[areaIndex]);
         for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)
@@ -104,8 +127,8 @@ void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
             const auto& cluster = *(area.thermal.clusters[clusterIndex]);
             if (cluster.costgeneration == Antares::Data::setManually)
                 continue;
-            uint fuelCostWidth = cluster.ecoInput->fuelcost.width;
-            uint co2CostWidth = cluster.ecoInput->co2cost.width;
+            uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
+            uint co2CostWidth = cluster.ecoInput.co2cost.width;
             uint tsWidth = cluster.series->series.width;
             if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
             {

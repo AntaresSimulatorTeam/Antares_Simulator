@@ -525,9 +525,7 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterSpinning = P_FLOAT("Spinning (%)", "cluster.spinning");
     pPGThClusterSpinning->SetAttribute(wxPG_ATTR_MAX, 99.99);
     pPGThClusterCO2 = P_FLOAT("CO2 (Tons/MWh)", "cluster.co2");
-    pPGThClusterEfficiency = P_FLOAT("Efficiency (%)", "cluster.efficiency");
-    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
-    
+
     pPGThClusterCosts = Category(pg, wxT("Operating costs"), wxT("cluster.costs"));
     pPGThClusterCostGeneration = P_ENUM("Cost generation", "cluster.costgeneration", costgeneration);  
     pPGThClusterMarginalCost = P_FLOAT("Marginal (\u20AC/MWh)", "cluster.opcost_marginal");
@@ -535,7 +533,9 @@ Frame::Frame(wxWindow* parent, bool allowAnyObject) :
     pPGThClusterStartupCost = P_FLOAT("Startup (\u20AC/startup)", "cluster.opcost_startup");
     pPGThClusterOperatingCost = P_FLOAT("Market bid (\u20AC/MWh)", "cluster.opcost_marketbid");
     pPGThClusterRandomSpread = P_FLOAT("Spread (\u20AC/MWh)", "cluster.opcost_spread");
-    pPGThClusterVariableOMcost = P_FLOAT("Variable O\u0026M cost (\u20AC/MWh)", "cluster.variableomcost");
+    pPGThClusterVariableOMcost = P_FLOAT("Variable Operation\u0026Maintenance cost (\u20AC/MWh)", "cluster.variableomcost");
+    pPGThClusterEfficiency = P_FLOAT("Fuel Efficiency (%)", "cluster.efficiency");
+    pPGThClusterEfficiency->SetAttribute(wxPG_ATTR_MAX, 100.00);
 
     pPGThClusterReliabilityModel
       = Category(pg, wxT("Timeseries generation"), wxT("cluster.reliabilitymodel"));
