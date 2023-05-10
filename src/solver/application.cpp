@@ -119,7 +119,7 @@ void checkAdqPatchContainsAdqPatchArea(const bool adqPatchOn, const Antares::Dat
 void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
 {
     bool error = false;
-    for (uint areaIndex  = 0; areaIndex < areas.size(); ++areaIndex )
+    for (uint areaIndex = 0; areaIndex < areas.size(); ++areaIndex)
     {
         const auto& area = *(areas.byIndex[areaIndex]);
         for (uint clusterIndex = 0; clusterIndex != area.thermal.clusterCount(); ++clusterIndex)

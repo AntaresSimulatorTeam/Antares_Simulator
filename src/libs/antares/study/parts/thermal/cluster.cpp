@@ -420,7 +420,6 @@ bool Data::ThermalCluster::forceReload(bool reload) const
         ret = series->forceReload(reload) and ret;
     if (prepro)
         ret = prepro->forceReload(reload) and ret;
-    
     ret = ecoInput.forceReload(reload) && ret;
     return ret;
 }
@@ -432,7 +431,6 @@ void Data::ThermalCluster::markAsModified() const
         series->markAsModified();
     if (prepro)
         prepro->markAsModified();
-    
     ecoInput.markAsModified();
 }
 
@@ -610,7 +608,7 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-    
+
     ecoInput.itsThermalCluster = this->weak_from_this();
     ecoInput.reset();
 }
@@ -769,10 +767,9 @@ uint64 ThermalCluster::memoryUsage() const
     uint64 amount = sizeof(ThermalCluster) + modulation.memoryUsage();
     if (prepro)
         amount += prepro->memoryUsage();
-    
-    amount += ecoInput.memoryUsage();
     if (series)
         amount += DataSeriesMemoryUsage(series);
+    amount += ecoInput.memoryUsage();
     return amount;
 }
 

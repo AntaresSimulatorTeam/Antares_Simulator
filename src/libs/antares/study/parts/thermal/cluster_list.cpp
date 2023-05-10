@@ -49,7 +49,6 @@ void ThermalClusterList::estimateMemoryUsage(StudyMemoryUsage& u) const
             cluster.series->estimateMemoryUsage(u, timeSeriesThermal);
         if (cluster.prepro)
             cluster.prepro->estimateMemoryUsage(u);
-        
         cluster.ecoInput.estimateMemoryUsage(u);
 
         // From the solver
@@ -376,7 +375,7 @@ void ThermalClusterList::ensureDataPrepro()
         auto c = it->second;
         if (not c->prepro)
             c->prepro = new PreproThermal(c);
-        
+
         c->ecoInput.itsThermalCluster = c;
     }
 }
