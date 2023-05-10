@@ -248,7 +248,7 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Minimum Down time (hours)
     - Default contribution to the spinning reserve (% of nominal capacity)
     - CO2 tons emitted per electric MWh
-    - Efficiency (%)
+    - Fuel efficiency (%)
     - Cost generation [Set manually / Use cost timeseries]
     - Marginal operating cost (€/MWh)
     - Volatility (forced): a parameter between 0 and 1, see section [Time-series generation (thermal)](06-time_series_analysis_and_generation.md#time-series-generation-thermal)
@@ -263,7 +263,7 @@ Durations are expressed in days and rates belong to [0 , 1].
     - Start-up cost (€/start-up)
     - Market bid (€/MWh)
     - Random spread on the market bid (€/MWh)
-    - Variable O&M cost (€/MWh)
+    - Variable Operation&Maintenance cost (€/MWh, only used if **Cost generation** is set to **use cost timeseries**)
     - Seasonal marginal cost variations (gas more expensive in winter, ...)
     - Seasonal market bid modulations (assets costs charging strategy )
     - Nominal capacity modulations (seasonal thermodynamic efficiencies, special over-generation allowances, etc.). These modulations are taken into account during the generation of available power time-series
