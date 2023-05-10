@@ -103,6 +103,10 @@ set(SRC_VARIABLE_ECONOMY
 		economy/overflow.h
 		economy/waterValue.h
 		economy/hydroCost.h
+		economy/shortTermStorage.h
+		economy/STStorageInjectionByCluster.h
+		economy/STStorageWithdrawalByCluster.h
+		economy/STStorageLevelsByCluster.h
 		economy/unsupliedEnergy.h
 		economy/domesticUnsuppliedEnergy.h
 		economy/localMatchingRuleViolations.h
@@ -110,6 +114,7 @@ set(SRC_VARIABLE_ECONOMY
 		economy/dtgMarginAfterCsr.h
 		economy/spilledEnergy.h
 		economy/dispatchableGeneration.h
+		economy/renewableGeneration.h
 		economy/thermalAirPollutantEmissions.h
 		economy/productionByDispatchablePlant.h
         economy/productionByRenewablePlant.h

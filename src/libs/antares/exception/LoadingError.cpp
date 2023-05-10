@@ -138,6 +138,11 @@ IncompatibleHurdleCostCSR::IncompatibleHurdleCostCSR() :
 {
 }
 
+AdqPatchDisabledLMR::AdqPatchDisabledLMR() :
+ LoadingError("Incompatible options LMR disabled and priceTakingOrder equal Dens")
+{
+}
+
 IncompatibleOutputOptions::IncompatibleOutputOptions(const std::string& text) : LoadingError(text)
 {
 }

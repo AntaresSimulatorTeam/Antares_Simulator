@@ -40,38 +40,40 @@
 
 #include "spx_constantes_externes.h"
 
-static void ComputeMinMaxValueForLoad(PROBLEME_HEBDO* problemeHebdo,
-                                      const int PremierPasDeTempsHebdo,
-                                      const int DernierPasDeTempsHebdo,
-                                      uint numSpace)
+static void shortTermStorageCost(
+  const ::ShortTermStorage::AREA_INPUT& shortTermStorageInput,
+  const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim,
+  double* linearCost)
 {
-    using namespace Antares::Data;
-
-    const auto& study = *Antares::Data::Study::Current::Get();
-    const auto end = study.areas.end();
-    for (auto i = study.areas.begin(); i != end; ++i)
+    for (auto& storage : shortTermStorageInput)
     {
-        const Area& area = *(i->second);
-        auto& scratchpad = *(area.scratchpad[numSpace]);
-        scratchpad.consoMin = +std::numeric_limits<double>::infinity();
-        scratchpad.consoMax = -std::numeric_limits<double>::infinity();
-
-        for (int i = PremierPasDeTempsHebdo; i < DernierPasDeTempsHebdo; ++i)
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
+        if (const int varLevel
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
+            varLevel >= 0)
         {
-            double d
-              = problemeHebdo->ConsommationsAbattues[i]->ConsommationAbattueDuPays[area.index];
-            if (d < scratchpad.consoMin)
-                scratchpad.consoMin = d;
-            if (d > scratchpad.consoMax)
-                scratchpad.consoMax = d;
+            linearCost[varLevel] = 0;
+        }
+
+        if (const int varInjection
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
+            varInjection >= 0)
+        {
+            linearCost[varInjection] = 0;
+        }
+
+        if (const int varWithdrawal
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
+            varWithdrawal >= 0)
+        {
+            linearCost[varWithdrawal] = 0;
         }
     }
 }
 
 void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                                      const int PremierPdtDeLIntervalle,
-                                     const int DernierPdtDeLIntervalle,
-                                     uint numSpace)
+                                     const int DernierPdtDeLIntervalle)
 {
     const auto& study = *Antares::Data::Study::Current::Get();
 
@@ -82,9 +84,6 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
     memset((char*)ProblemeAResoudre->CoutQuadratique,
            0,
            ProblemeAResoudre->NombreDeVariables * sizeof(double));
-
-    ComputeMinMaxValueForLoad(
-      problemeHebdo, PremierPdtDeLIntervalle, DernierPdtDeLIntervalle, numSpace);
 
     for (int pdtHebdo = PremierPdtDeLIntervalle; pdtHebdo < DernierPdtDeLIntervalle; pdtHebdo++)
     {
@@ -190,6 +189,10 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                         ProblemeAResoudre->CoutLineaire[var] = -P;
                 }
             }
+
+            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
+                                 CorrespondanceVarNativesVarOptim,
+                                 ProblemeAResoudre->CoutLineaire);
 
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariablesDePompage[pays];
             if (var >= 0 && var < ProblemeAResoudre->NombreDeVariables)

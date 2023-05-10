@@ -51,6 +51,7 @@ extern "C"
         double CoutViolMaxDuVolumeMin; // A renseigner par l'appelant : 1 valeur
         double VolumeInitial;          /* A renseigner par l'appelant : 1 valeur */
         double* TurbineMax;            /* A renseigner par l'appelant : 1 valeur par mois */
+        double* TurbineMin;
         double* TurbineCible;          /* A renseigner par l'appelant : 1 valeur par mois */
         double* Apport;                /* A renseigner par l'appelant : 1 valeur par mois */
         /* Pour decrire la bande de volumes permise */

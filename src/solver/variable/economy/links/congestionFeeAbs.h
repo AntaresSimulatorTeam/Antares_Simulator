@@ -40,18 +40,18 @@ namespace Economy
 struct VCardCongestionFeeAbs
 {
     //! Caption
-    static const char* Caption()
+    static std::string Caption()
     {
         return "CONG. FEE (ABS.)";
     }
     //! Unit
-    static const char* Unit()
+    static std::string Unit()
     {
         return "Euro";
     }
 
     //! The short description of the variable
-    static const char* Description()
+    static std::string Description()
     {
         return "Congestion fee collected throughout all MC years (Absolute value)";
     }
@@ -231,10 +231,10 @@ public:
     {
 #define UPSTREAM_PRICE                                              \
     state.problemeHebdo->ResultatsHoraires[state.link->from->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 #define DOWNSTREAM_PRICE                                            \
     state.problemeHebdo->ResultatsHoraires[state.link->with->index] \
-      ->CoutsMarginauxHoraires[state.hourInTheWeek]
+      .CoutsMarginauxHoraires[state.hourInTheWeek]
 
         // Congestion Fee
         pValuesForTheCurrentYear[numSpace].hour[state.hourInTheYear] = Yuni::Math::Abs(
@@ -271,6 +271,7 @@ public:
         {
             // Write the data for the current year
             results.variableCaption = VCardType::Caption();
+            results.variableUnit = VCardType::Unit();
             pValuesForTheCurrentYear[numSpace].template buildAnnualSurveyReport<VCardType>(
               results, fileLevel, precision);
         }

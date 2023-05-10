@@ -108,6 +108,7 @@ public:
 
     //! Caption for the current variable
     CaptionType variableCaption;
+    std::string variableUnit;
 
     //! Matrix where to store all results
     double** values;

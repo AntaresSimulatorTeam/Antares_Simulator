@@ -209,6 +209,10 @@ public:
 
     bool doWeGenerateTS(bool globalTSgeneration) const;
 
+    // Check & correct availability timeseries for thermal availability
+    // Only applies if time-series are ready-made
+    void checkAndCorrectAvailability();
+
     /*!
     ** \brief The group ID
     **
@@ -328,9 +332,6 @@ public:
 
     //! Data for the preprocessor
     PreproThermal* prepro;
-
-    //! List of all other clusters linked with the current one
-    SetPointer coupling;
 
     //! \name Temporary data for simulation
     //@{

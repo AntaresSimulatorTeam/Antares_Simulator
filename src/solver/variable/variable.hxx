@@ -260,26 +260,10 @@ inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state)
 }
 
 template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForEachThermalCluster(State& state)
+inline void IVariable<ChildT, NextT, VCardT>::hourForEachArea(State& state, unsigned int numSpace)
 {
-    // Next item in the list
-    NextType::hourForEachThermalCluster(state);
-}
-
-template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForEachRenewableCluster(State& state,
-                                                                          unsigned int numSpace)
-{
-    // Next item in the list
-    NextType::hourForEachRenewableCluster(state, numSpace);
-}
-
-template<class ChildT, class NextT, class VCardT>
-inline void IVariable<ChildT, NextT, VCardT>::hourForEachThermalCluster(State& state,
-                                                                        unsigned int numSpace)
-{
-    // Next item in the list
-    NextType::hourForEachThermalCluster(state, numSpace);
+    // Next variable
+    NextType::hourForEachArea(state, numSpace);
 }
 
 template<class ChildT, class NextT, class VCardT>
@@ -613,7 +597,7 @@ public:
     static void Do(PredicateT& predicate)
     {
         for (int i = 0; i < VCardT::columnCount; ++i)
-            predicate.add(VCardT::Multiple::Caption(i), VCardT::Unit(), VCardT::Description());
+            predicate.add(VCardT::Multiple::Caption(i), VCardT::Multiple::Unit(i), VCardT::Description());
     }
 
     // Function used to build the collection of variables print info from the static variables list.

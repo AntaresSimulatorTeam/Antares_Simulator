@@ -86,6 +86,7 @@ static void CheckHydroAllocationProblem(Data::Area& area,
     }
 }
 
+
 double HydroManagement::prepareMonthlyTargetGenerations(Data::Area& area, PerArea& data)
 {
     double total = 0;
@@ -184,6 +185,7 @@ void HydroManagement::prepareMonthlyOptimalGenerations(double* random_reservoir_
                 uint firstDay = study.calendar.months[simulationMonth].daysYear.first;
 
                 problem.TurbineMax[month] = totalInflowsYear;
+                problem.TurbineMin[month] = data.mingens[realmonth];
                 problem.TurbineCible[month] = data.MTG[realmonth];
                 problem.Apport[month] = data.inflows[realmonth];
                 problem.VolumeMin[month] = minLvl[firstDay];

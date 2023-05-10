@@ -279,6 +279,8 @@ public:
     PartRenewable renewable;
     //@}
 
+    ShortTermStorage::STStorageInput shortTermStorage;
+
     //! \name Interconnections
     //@{
     //! All connections with this area
@@ -321,7 +323,7 @@ public:
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable AreaScratchpad** scratchpad;
+    mutable std::vector<AreaScratchpad> scratchpad;
     //@}
 
     //! \name Data

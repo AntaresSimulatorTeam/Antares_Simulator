@@ -98,16 +98,15 @@ static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatusOriginNodeOutsideAdq(
  * adq purposes.
  */
 static NtcSetToZeroStatus_AdqPatchStep1 getNTCtoZeroStatus(PROBLEME_HEBDO* problemeHebdo,
+                                                           const AdqPatchParams& adqPatchParams,
                                                            int Interco)
 {
     AdequacyPatchMode OriginNodeAdequacyPatchType
       = problemeHebdo->adequacyPatchRuntimeData->originAreaMode[Interco];
     AdequacyPatchMode ExtremityNodeAdequacyPatchType
       = problemeHebdo->adequacyPatchRuntimeData->extremityAreaMode[Interco];
-    bool setToZeroNTCfromOutToIn_AdqPatch
-      = problemeHebdo->adqPatchParams->SetNTCOutsideToInsideToZero;
-    bool setToZeroNTCfromOutToOut_AdqPatch
-      = problemeHebdo->adqPatchParams->SetNTCOutsideToOutsideToZero;
+    bool setToZeroNTCfromOutToIn_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideInsideLinks;
+    bool setToZeroNTCfromOutToOut_AdqPatch = adqPatchParams.localMatching.setToZeroOutsideOutsideLinks;
 
     switch (OriginNodeAdequacyPatchType)
     {
@@ -127,7 +126,8 @@ void setNTCbounds(double& Xmax,
                   double& Xmin,
                   const VALEURS_DE_NTC_ET_RESISTANCES* ValeursDeNTC,
                   const int Interco,
-                  PROBLEME_HEBDO* problemeHebdo)
+                  PROBLEME_HEBDO* problemeHebdo,
+                  const AdqPatchParams& adqPatchParams)
 {
     NtcSetToZeroStatus_AdqPatchStep1 ntcToZeroStatusForAdqPatch;
 
@@ -136,9 +136,10 @@ void setNTCbounds(double& Xmax,
     Xmin = -(ValeursDeNTC->ValeurDeNTCExtremiteVersOrigine[Interco]);
 
     // set for adq patch first step
-    if (problemeHebdo->adqPatchParams && problemeHebdo->adqPatchParams->AdequacyFirstStep)
+    if (adqPatchParams.enabled && adqPatchParams.localMatching.enabled
+        && problemeHebdo->adequacyPatchRuntimeData->AdequacyFirstStep)
     {
-        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, Interco);
+        ntcToZeroStatusForAdqPatch = getNTCtoZeroStatus(problemeHebdo, adqPatchParams, Interco);
 
         switch (ntcToZeroStatusForAdqPatch)
         {
