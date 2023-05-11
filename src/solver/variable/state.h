@@ -96,15 +96,6 @@ public:
     void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
-    ** \brief Initialize some variable according a thermal cluster index
-    **
-    ** Called in initFromAreaIndex to split code
-    **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
-    */
-    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
-
-    /*!
     ** \brief End the year by smoothing the thermal units run
     ** and computing costs.
     ** We assume here that the variables related to an area
@@ -112,7 +103,18 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
+
     void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
+
+private:
+    /*!
+    ** \brief Initialize some variable according a thermal cluster index
+    **
+    ** Called in initFromAreaIndex to split code
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
 
     void yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurationON,
                 std::array<uint, Variable::maxHoursInAYear>& ON_min,
@@ -132,30 +134,7 @@ public:
     */
     void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
 
-    /*!
-    ** \brief Computes the minimal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace);
-
-    /*!
-    ** \brief Computes the maximal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster);
-
-    /*!
-    ** \brief Computes the production, fixed and start-up costs, assuming
-    ** that thermalClusterDispatchedUnitsCountForYear has been built
-    **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
-    */
-    void yearEndComputeThermalClusterCosts(const unsigned int areaWideIndex);
-
+public:
     /*!
     ** \brief Reset internal data
     */
@@ -166,7 +145,6 @@ public:
     */
     void yearEndResetThermal();
 
-public:
     //! Current year
     unsigned int year;
     //! Current week for current year (zero-based)
