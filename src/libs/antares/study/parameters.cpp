@@ -193,6 +193,16 @@ Parameters::Parameters() : noOutput(false)
 
 Parameters::~Parameters() = default;
 
+bool Parameters::economy() const
+{
+    return mode == stdmEconomy;
+}
+
+bool Parameters::adequacy() const
+{
+    return mode == stdmAdequacy;
+}
+
 void Parameters::resetSeeds()
 {
     // Initialize all seeds
@@ -334,6 +344,11 @@ void Parameters::reset()
 
     // Initialize all seeds
     resetSeeds();
+}
+
+bool Parameters::isTSGeneratedByPrepro(const TimeSeries ts) const
+{
+    return (timeSeriesToGenerate & ts);
 }
 
 static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint value)
@@ -1141,6 +1156,11 @@ void Parameters::fixBadValues()
         nbTimeSeriesSolar = 1;
 }
 
+Yuni::uint64 Parameters::memoryUsage() const
+{
+    return 0;
+}
+
 void Parameters::resetYearsWeigth()
 {
     yearsWeight.clear();
@@ -1763,5 +1783,4 @@ bool Parameters::RenewableGeneration::isClusters() const
 {
     return rgModelling == Antares::Data::rgClusters;
 }
-
 } // namespace Antares::Data
