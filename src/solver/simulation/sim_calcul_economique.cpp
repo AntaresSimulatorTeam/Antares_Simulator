@@ -43,26 +43,28 @@ static void importShortTermStorages(
   const AreaList& areas,
   std::vector<::ShortTermStorage::AREA_INPUT>& ShortTermStorageOut)
 {
-    int STindex = 0;
+    int clusterGlobalIndex = 0;
     for (uint areaIndex = 0; areaIndex != areas.size(); areaIndex++)
     {
         ShortTermStorageOut[areaIndex].resize(areas[areaIndex]->shortTermStorage.count());
+        int storageIndex = 0;
         for (auto st : areas[areaIndex]->shortTermStorage.storagesByIndex)
         {
-            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][STindex];
-            toInsert.globalIndex = STindex;
+            ::ShortTermStorage::PROPERTIES& toInsert = ShortTermStorageOut[areaIndex][storageIndex];
+            toInsert.clusterGlobalIndex = clusterGlobalIndex;
 
             // Properties
-            toInsert.capacity = st->properties.capacity.value();
+            toInsert.reservoirCapacity = st->properties.reservoirCapacity.value();
             toInsert.efficiency = st->properties.efficiencyFactor;
-            toInsert.injectionCapacity = st->properties.injectionCapacity.value();
-            toInsert.withdrawalCapacity = st->properties.withdrawalCapacity.value();
+            toInsert.injectionNominalCapacity = st->properties.injectionNominalCapacity.value();
+            toInsert.withdrawalNominalCapacity = st->properties.withdrawalNominalCapacity.value();
             toInsert.initialLevel = st->properties.initialLevel;
 
             toInsert.series = st->series;
 
             // TODO add missing properties, or use the same struct
-            STindex++;
+            storageIndex++;
+            clusterGlobalIndex++;
         }
     }
 }
@@ -154,10 +156,10 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
           = (anoNonDispatchPower & area.nodalOptimization) != 0;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable
-          = area.scratchpad[numSpace]->hydroHasMod;
+          = area.scratchpad[numSpace].hydroHasMod;
 
         problem.CaracteristiquesHydrauliques[i]->PresenceDePompageModulable
-          = area.hydro.reservoirManagement && area.scratchpad[numSpace]->pumpHasMod
+          = area.hydro.reservoirManagement && area.scratchpad[numSpace].pumpHasMod
               && area.hydro.pumpingEfficiency > 0.
               && problem.CaracteristiquesHydrauliques[i]->PresenceDHydrauliqueModulable;
 
@@ -208,7 +210,7 @@ void SIM_InitialisationProblemeHebdo(Data::Study& study,
         problem.CoefficientEcretementPMaxHydraulique[i] = area.hydro.intraDailyModulation;
     }
 
-    importShortTermStorages(study.areas, *problem.ShortTermStorage);
+    importShortTermStorages(study.areas, problem.ShortTermStorage);
 
     for (uint i = 0; i < study.runtime->interconnectionsCount(); ++i)
     {
@@ -600,7 +602,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         {
             auto& tsIndex = *NumeroChroniquesTireesParPays[numSpace][k];
             auto& area = *(study.areas.byIndex[k]);
-            auto& scratchpad = *(area.scratchpad[numSpace]);
+            auto& scratchpad = area.scratchpad[numSpace];
             auto& ror = area.hydro.series->ror;
 
             assert(&scratchpad);

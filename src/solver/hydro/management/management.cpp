@@ -145,7 +145,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
     study.areas.each([&](Data::Area& area) {
         uint z = area.index;
 
-        auto& scratchpad = *(area.scratchpad[numSpace]);
+        auto& scratchpad = area.scratchpad[numSpace];
 
         auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
 

@@ -79,9 +79,9 @@ static void shortTermStorageBalance(
 {
     for (const auto& storage : shortTermStorageInput)
     {
-        const int globalIndex = storage.globalIndex;
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
         if (const int varInjection
-            = CorrespondanceVarNativesVarOptim.ShortTermStorage.InjectionVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -90,7 +90,7 @@ static void shortTermStorageBalance(
         }
 
         if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim.ShortTermStorage.WithdrawalVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim.SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -117,9 +117,9 @@ static void shortTermStorageLevels(
     for (auto& storage : shortTermStorageInput)
     {
         int nombreDeTermes = 0;
-        const int globalIndex = storage.globalIndex;
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
         // L[h+1] - L[h] - efficiency * injection[h] + withdrawal[h] = inflows[h]
-        if (const int varLevel_next = VarOptim_next->ShortTermStorage.LevelVariable[globalIndex];
+        if (const int varLevel_next = VarOptim_next->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel_next >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
@@ -127,7 +127,7 @@ static void shortTermStorageLevels(
             nombreDeTermes++;
         }
 
-        if (const int varLevel = VarOptim_current->ShortTermStorage.LevelVariable[globalIndex];
+        if (const int varLevel = VarOptim_current->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel >= 0)
         {
             Pi[nombreDeTermes] = -1.0;
@@ -136,7 +136,7 @@ static void shortTermStorageLevels(
         }
 
         if (const int varInjection
-            = VarOptim_current->ShortTermStorage.InjectionVariable[globalIndex];
+            = VarOptim_current->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             Pi[nombreDeTermes] = -1.0 * storage.efficiency;
@@ -145,14 +145,14 @@ static void shortTermStorageLevels(
         }
 
         if (const int varWithdrawal
-            = VarOptim_current->ShortTermStorage.WithdrawalVariable[globalIndex];
+            = VarOptim_current->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             Pi[nombreDeTermes] = 1.0;
             Colonne[nombreDeTermes] = varWithdrawal;
             nombreDeTermes++;
         }
-        CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex]
+        CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex]
           = ProblemeAResoudre->NombreDeContraintes;
         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
@@ -309,7 +309,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
-            shortTermStorageBalance((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageBalance(problemeHebdo->ShortTermStorage[pays],
                                     *CorrespondanceVarNativesVarOptim,
                                     nombreDeTermes,
                                     Pi,
@@ -373,7 +373,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
 
             // Short term storage
-            shortTermStorageLevels((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageLevels(problemeHebdo->ShortTermStorage[pays],
                                    ProblemeAResoudre,
                                    CorrespondanceCntNativesCntOptim,
                                    problemeHebdo->CorrespondanceVarNativesVarOptim,

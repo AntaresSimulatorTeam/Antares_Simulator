@@ -42,13 +42,12 @@ namespace Data
 /*!
 ** \brief Scratchpad for temporary data performed by the solver
 */
-class AreaScratchpad final : private Yuni::NonCopyable<AreaScratchpad>
+class AreaScratchpad final
 {
 public:
     //! Matrix used for time-series
     using TSMatrix = Matrix<double, Yuni::sint32>;
 
-public:
     //! \name Constructor
     //@{
     /*!
@@ -56,12 +55,9 @@ public:
     */
     AreaScratchpad(const StudyRuntimeInfos& rinfos, Area& area);
     //! Destructor
-    ~AreaScratchpad()
-    {
-    }
+    ~AreaScratchpad();
     //@}
 
-public:
     //! Sum of all fatal hors hydro
     double miscGenSum[HOURS_PER_YEAR];
 

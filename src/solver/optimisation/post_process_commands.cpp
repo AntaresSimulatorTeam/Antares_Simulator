@@ -23,13 +23,13 @@ void DispatchableMarginPostProcessCmd::execute(const optRuntimeData& opt_runtime
     unsigned int hourInYear = opt_runtime_data.hourInTheYear;
 
     area_list_.each([&](Data::Area& area) {
-        double* dtgmrg = area.scratchpad[thread_number_]->dispatchableGenerationMargin;
+        double* dtgmrg = area.scratchpad[thread_number_].dispatchableGenerationMargin;
         for (uint h = 0; h != nbHoursInWeek; ++h)
             dtgmrg[h] = 0.;
 
         if (not area.thermal.list.empty())
         {
-            auto& hourlyResults = *(problemeHebdo_->ResultatsHoraires[area.index]);
+            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[area.index];
             auto end = area.thermal.list.end();
 
             for (auto i = area.thermal.list.begin(); i != end; ++i)
@@ -126,10 +126,10 @@ void DTGmarginForAdqPatchPostProcessCmd::execute(const optRuntimeData&)
         for (uint hour = 0; hour < nbHoursInWeek; hour++)
         {
             // define access to the required variables
-            const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
+            const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
             double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
 
-            auto& hourlyResults = *(problemeHebdo_->ResultatsHoraires[Area]);
+            auto& hourlyResults = problemeHebdo_->ResultatsHoraires[Area];
             double& dtgMrgCsr = hourlyResults.ValeursHorairesDtgMrgCsr[hour];
             double& ens = hourlyResults.ValeursHorairesDeDefaillancePositive[hour];
             double& mrgCost = hourlyResults.CoutsMarginauxHoraires[hour];
@@ -233,16 +233,16 @@ double CurtailmentSharingPostProcessCmd::calculateDensNewAndTotalLmrViolation()
                 // adjust densNew according to the new specification/request by ELIA
                 /* DENS_new (node A) = max [ 0; ENS_init (node A) + net_position_init (node A)
                                         + ? flows (node 1 -> node A) - DTG.MRG(node A)] */
-                const auto& scratchpad = *(area_list_[Area]->scratchpad[thread_number_]);
+                const auto& scratchpad = area_list_[Area]->scratchpad[thread_number_];
                 double dtgMrg = scratchpad.dispatchableGenerationMargin[hour];
                 // write down densNew values for all the hours
-                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDENS[hour]
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDENS[hour]
                   = std::max(0.0, densNew - dtgMrg);
                 ;
                 // copy spilled Energy values into spilled Energy values after CSR
-                problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesSpilledEnergyAfterCSR[hour]
+                problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesSpilledEnergyAfterCSR[hour]
                   = problemeHebdo_->ResultatsHoraires[Area]
-                      ->ValeursHorairesDeDefaillanceNegative[hour];
+                      .ValeursHorairesDeDefaillanceNegative[hour];
                 // check LMR violations
                 totalLmrViolation += LmrViolationAreaHour(
                             problemeHebdo_, 
@@ -286,7 +286,7 @@ std::vector<double> CurtailmentSharingPostProcessCmd::calculateENSoverAllAreasFo
             == Data::AdequacyPatch::physicalAreaInsideAdqPatch)
         {
             const double* ENS
-              = problemeHebdo_->ResultatsHoraires[area]->ValeursHorairesDeDefaillancePositive;
+              = problemeHebdo_->ResultatsHoraires[area].ValeursHorairesDeDefaillancePositive;
             for (uint h = 0; h < nbHoursInWeek; ++h)
                 sumENS[h] += ENS[h];
         }

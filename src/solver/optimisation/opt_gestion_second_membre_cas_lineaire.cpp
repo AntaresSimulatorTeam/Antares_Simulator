@@ -54,9 +54,9 @@ static void shortTermStorageLevelsRHS(
     {
         for (auto& storage : shortTermStorageInput[areaIndex])
         {
-            const int globalIndex = storage.globalIndex;
+            const int clusterGlobalIndex = storage.clusterGlobalIndex;
             const int cnt
-              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[globalIndex];
+              = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex];
             SecondMembre[cnt] = storage.series->inflows[pdtJour];
         }
     }
@@ -122,7 +122,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             }
 
             double* adresseDuResultat
-              = &(problemeHebdo->ResultatsHoraires[pays]->CoutsMarginauxHoraires[pdtHebdo]);
+              = &(problemeHebdo->ResultatsHoraires[pays].CoutsMarginauxHoraires[pdtHebdo]);
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = adresseDuResultat;
 
             cnt = CorrespondanceCntNativesCntOptim
@@ -152,7 +152,7 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
-        shortTermStorageLevelsRHS(*problemeHebdo->ShortTermStorage,
+        shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,

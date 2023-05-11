@@ -156,24 +156,6 @@ void Study::parameterFiller(const StudyLoadOptions& options)
     reduceMemoryUsage();
 }
 
-bool postCalendarLoadChecks(const AreaList& areas,
-                            const Parameters& parameters,
-                            const Date::Calendar& calendar)
-{
-    // TODO de-duplicate this loop from economy.cpp / adequacy.cpp
-    const uint firstHour = calendar.days[parameters.simulationDays.first].hours.first;
-    const uint nbWeeks = parameters.simulationDays.numberOfWeeks();
-    uint hourInTheYear = firstHour;
-    bool success = true;
-    for (uint weekIndex = 0; weekIndex < nbWeeks; weekIndex++)
-    {
-        areas.each(
-          [&](Data::Area& area) { success = area.checkWeeklyData(hourInTheYear) && success; });
-        hourInTheYear += nbHoursInAWeek;
-    }
-    return success;
-}
-
 bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& options)
 {
     // IO statistics
@@ -225,11 +207,6 @@ bool Study::internalLoadFromFolder(const String& path, const StudyLoadOptions& o
     ret = internalLoadSets() && ret;
 
     parameterFiller(options);
-
-    ret = postCalendarLoadChecks(areas, parameters, calendar) && ret;
-    if (!ret)
-        logs.info() << "Post calendar checks failed";
-
     return ret;
 }
 

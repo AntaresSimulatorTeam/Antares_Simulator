@@ -8,6 +8,8 @@
 #include "adequacy_patch_csr/adq_patch_curtailment_sharing.h"
 #include <adequacy_patch_runtime_data.h>
 #include "antares/study/parameters/adq-patch-params.h"
+#include <antares/exception/LoadingError.hpp>
+#include <fstream>
 
 #include <vector>
 #include <tuple>
@@ -82,9 +84,8 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
 
     AdqPatchParams adqPatchParams;
 
-    problem.ResultatsHoraires = new RESULTATS_HORAIRES*;
-    problem.ResultatsHoraires[0] = new RESULTATS_HORAIRES;
-    problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive = new double;
+    problem.ResultatsHoraires.resize(1);
+    problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive = new double;
     problem.ValeursDeNTC = new VALEURS_DE_NTC_ET_RESISTANCES*;
     problem.ValeursDeNTC[0] = new VALEURS_DE_NTC_ET_RESISTANCES;
     problem.ValeursDeNTC[0]->ValeurDuFlux = new double[3];
@@ -95,7 +96,7 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
 
     // input values
     adqPatchParams.localMatching.setToZeroOutsideInsideLinks = !includeFlowsOutsideAdqPatchToDensNew;
-    problem.ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour] = ensInit;
+    problem.ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour] = ensInit;
     int Interco = 1;
     problem.IndexDebutIntercoOrigine[Area] = Interco;
     problem.adequacyPatchRuntimeData->extremityAreaMode[Interco] = Area1Mode;
@@ -122,12 +123,20 @@ std::pair<double, double> calculateAreaFlowBalanceForOneTimeStep(
     delete[] problem.ValeursDeNTC[0]->ValeurDuFlux;
     delete problem.ValeursDeNTC[0];
     delete problem.ValeursDeNTC;
-    delete problem.ResultatsHoraires[0]->ValeursHorairesDeDefaillancePositive;
-    delete problem.ResultatsHoraires[0];
-    delete problem.ResultatsHoraires;
+    delete problem.ResultatsHoraires[0].ValeursHorairesDeDefaillancePositive;
 
-    // return
     return std::make_pair(netPositionInit, densNew);
+}
+
+AdqPatchParams createParams()
+{
+    AdqPatchParams p;
+    p.enabled = true;
+    p.curtailmentSharing.includeHurdleCost = true;
+    p.localMatching.enabled = true;
+    p.curtailmentSharing.priceTakingOrder = AdqPatchPTO::isDens;
+
+    return p;
 }
 
 // Virtual -> Virtual (0 -> 0)
@@ -486,4 +495,32 @@ BOOST_AUTO_TEST_CASE(calculateAreaFlowBalanceForOneTimeStep_outside_inside_Inclu
                                                flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(netPositionInit, -flowArea0toArea1_positive + flowArea2toArea0_negative);
     BOOST_CHECK_EQUAL(densNew, 0.0);
+}
+
+BOOST_AUTO_TEST_CASE(check_valid_adq_param)
+{
+    auto p = createParams();
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmEconomy));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchIncludeHurdleCost(true));
+    BOOST_CHECK_NO_THROW(p.checkAdqPatchDisabledLocalMatching());
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_mode)
+{
+    auto p = createParams();
+    BOOST_CHECK_THROW(p.checkAdqPatchStudyModeEconomyOnly(Antares::Data::stdmAdequacy),
+            Error::IncompatibleStudyModeForAdqPatch);
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_hurdle_cost)
+{
+    auto p = createParams();
+    BOOST_CHECK_THROW(p.checkAdqPatchIncludeHurdleCost(false), Error::IncompatibleHurdleCostCSR);
+}
+
+BOOST_AUTO_TEST_CASE(check_adq_param_wrong_lmr_disabled)
+{
+    auto p = createParams();
+    p.localMatching.enabled = false;
+    BOOST_CHECK_THROW(p.checkAdqPatchDisabledLocalMatching(), Error::AdqPatchDisabledLMR);
 }

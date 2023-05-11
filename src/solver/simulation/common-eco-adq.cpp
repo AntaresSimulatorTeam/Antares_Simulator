@@ -124,7 +124,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
     for (uint i = 0; i < study.areas.size(); ++i)
     {
         auto& area = *study.areas[i];
-        auto& scratchpad = *(area.scratchpad[numSpace]);
+        auto& scratchpad = area.scratchpad[numSpace];
 
         memset(scratchpad.mustrunSum, 0, sizeof(double) * HOURS_PER_YEAR);
         if (inAdequacy)

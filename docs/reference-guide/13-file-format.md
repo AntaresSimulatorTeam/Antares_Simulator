@@ -26,6 +26,9 @@ A few changes related to the introduction of short-term storage objects.
 
 In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `pm2_5`, `pm5`, `pm10`, `nmvoc`, `op1`, `op2`, `op3`, `op4`, `op5` [double]. These properties are emission factors similar to the existing one for CO2.
 
+In file **settings/generaldata.ini**, in section `adequacy patch` add property
+* `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
+
 ### Output
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`

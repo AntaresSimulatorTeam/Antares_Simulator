@@ -937,6 +937,7 @@ static bool AreaListLoadFromFolderSingleArea(Study& study,
     }
 
     // Short term storage
+    if (study.header.version >= 860)
     {
         buffer.clear() << study.folderInput << SEP << "st-storage" << SEP << "series"
             << SEP << area.id;
@@ -1106,6 +1107,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
     }
 
     // Short term storage data, specific to areas
+    if (pStudy.header.version >= 860)
     {
         logs.info() << "Loading short term storage clusters...";
         buffer.clear() << pStudy.folderInput << SEP << "st-storage";
@@ -1113,7 +1115,7 @@ bool AreaList::loadFromFolder(const StudyLoadOptions& options)
         {
             for (const auto& [id, area] : areas)
             {
-                buffer << SEP << "clusters" << SEP << area->id;
+                buffer.clear() << pStudy.folderInput << SEP << "st-storage" << SEP << "clusters" << SEP << area->id;
                 ret = area->shortTermStorage.createSTStorageClustersFromIniFile(buffer.c_str())
                       && ret;
             }

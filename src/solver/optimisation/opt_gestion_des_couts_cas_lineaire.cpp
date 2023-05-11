@@ -47,23 +47,23 @@ static void shortTermStorageCost(
 {
     for (auto& storage : shortTermStorageInput)
     {
-        const int globalIndex = storage.globalIndex;
+        const int clusterGlobalIndex = storage.clusterGlobalIndex;
         if (const int varLevel
-            = CorrespondanceVarNativesVarOptim->ShortTermStorage.LevelVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.LevelVariable[clusterGlobalIndex];
             varLevel >= 0)
         {
             linearCost[varLevel] = 0;
         }
 
         if (const int varInjection
-            = CorrespondanceVarNativesVarOptim->ShortTermStorage.InjectionVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.InjectionVariable[clusterGlobalIndex];
             varInjection >= 0)
         {
             linearCost[varInjection] = 0;
         }
 
         if (const int varWithdrawal
-            = CorrespondanceVarNativesVarOptim->ShortTermStorage.WithdrawalVariable[globalIndex];
+            = CorrespondanceVarNativesVarOptim->SIM_ShortTermStorage.WithdrawalVariable[clusterGlobalIndex];
             varWithdrawal >= 0)
         {
             linearCost[varWithdrawal] = 0;
@@ -190,7 +190,7 @@ void OPT_InitialiserLesCoutsLineaire(PROBLEME_HEBDO* problemeHebdo,
                 }
             }
 
-            shortTermStorageCost((*problemeHebdo->ShortTermStorage)[pays],
+            shortTermStorageCost(problemeHebdo->ShortTermStorage[pays],
                                  CorrespondanceVarNativesVarOptim,
                                  ProblemeAResoudre->CoutLineaire);
 

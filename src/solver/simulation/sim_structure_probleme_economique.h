@@ -70,7 +70,7 @@ struct CORRESPONDANCES_DES_VARIABLES
         int* InjectionVariable;
         int* WithdrawalVariable;
         int* LevelVariable;
-    } ShortTermStorage;
+    } SIM_ShortTermStorage;
 };
 
 struct CORRESPONDANCES_DES_CONTRAINTES
@@ -162,15 +162,15 @@ namespace ShortTermStorage
 {
 struct PROPERTIES
 {
-    double capacity;
-    double injectionCapacity;
-    double withdrawalCapacity;
+    double reservoirCapacity;
+    double injectionNominalCapacity;
+    double withdrawalNominalCapacity;
     double efficiency;
     std::optional<double> initialLevel;
 
     std::shared_ptr<Antares::Data::ShortTermStorage::Series> series;
 
-    int globalIndex;
+    int clusterGlobalIndex;
 };
 
 using AREA_INPUT = std::vector<::ShortTermStorage::PROPERTIES>; // index is local
@@ -466,7 +466,7 @@ struct RESULTATS_HORAIRES
     double* CoutsMarginauxHoraires;
     PRODUCTION_THERMIQUE_OPTIMALE** ProductionThermique; // index is pdtHebdo
 
-    std::vector<::ShortTermStorage::RESULTS>* ShortTermStorage = nullptr;
+    std::vector<::ShortTermStorage::RESULTS> ShortTermStorage;
 };
 
 struct COUTS_DE_TRANSPORT
@@ -537,8 +537,8 @@ struct PROBLEME_HEBDO
     ENERGIES_ET_PUISSANCES_HYDRAULIQUES** CaracteristiquesHydrauliques = nullptr;
 
     int NumberOfShortTermStorages = 0;
-    // problemeHebdo->ShortTermStorage[area_idx][ststor_idx].capacity;
-    std::vector<::ShortTermStorage::AREA_INPUT>* ShortTermStorage = nullptr;
+    // problemeHebdo->ShortTermStorage[areaIndex][clusterIndex].capacity;
+    std::vector<::ShortTermStorage::AREA_INPUT> ShortTermStorage;
 
     /* Optimization problem */
     int NbTermesContraintesPourLesCoutsDeDemarrage = 0;
@@ -610,7 +610,7 @@ struct PROBLEME_HEBDO
     computeTimeStepLevel computeLvl_object;
 
     /* Results */
-    RESULTATS_HORAIRES** ResultatsHoraires = nullptr;
+    std::vector<RESULTATS_HORAIRES> ResultatsHoraires;
     VARIABLES_DUALES_INTERCONNEXIONS** VariablesDualesDesContraintesDeNTC = nullptr;
 
     double* coutOptimalSolution1 = nullptr;

@@ -45,14 +45,14 @@ double LmrViolationAreaHour(const PROBLEME_HEBDO* problemeHebdo,
                             int hour)
 {
     const double ensInit
-      = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+      = problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
 
-    problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 0;
+    problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour] = 0;
     // check LMR violations
     if ((ensInit > 0.0) && (totalNodeBalance < 0.0)
         && (std::fabs(totalNodeBalance) > ensInit + std::fabs(threshold)))
     {
-        problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesLmrViolations[hour] = 1;
+        problemeHebdo->ResultatsHoraires[Area].ValeursHorairesLmrViolations[hour] = 1;
         return std::fabs(totalNodeBalance);
     }
     return 0.0;
@@ -101,7 +101,7 @@ std::tuple<double, double, double> calculateAreaFlowBalance(PROBLEME_HEBDO* prob
     }
 
     double ensInit
-      = problemeHebdo->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+      = problemeHebdo->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
     if (!setNTCOutsideToInsideToZero)
     {
         densNew = std::max(0.0, ensInit + netPositionInit + flowsNode1toNodeA);
@@ -135,9 +135,9 @@ void HourlyCSRProblem::calculateCsrParameters()
                                            Area, 
                                            hour);
             double ensInit
-              = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillancePositive[hour];
+              = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillancePositive[hour];
             double spillageInit
-              = problemeHebdo_->ResultatsHoraires[Area]->ValeursHorairesDeDefaillanceNegative[hour];
+              = problemeHebdo_->ResultatsHoraires[Area].ValeursHorairesDeDefaillanceNegative[hour];
 
             rhsAreaBalanceValues[Area] = ensInit + netPositionInit - spillageInit;
         }

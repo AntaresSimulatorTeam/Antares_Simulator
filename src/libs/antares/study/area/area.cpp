@@ -62,7 +62,6 @@ Area::Area() :
  filterYearByYear(filterAll),
  ui(nullptr),
  nbYearsInParallel(0),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -79,7 +78,6 @@ Area::Area(const AnyString& name, uint nbParallelYears) :
  filterYearByYear(filterAll),
  ui(NULL),
  nbYearsInParallel(nbParallelYears),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -98,7 +96,6 @@ Area::Area(const AnyString& name, const AnyString& id, uint nbParallelYears, uin
  filterYearByYear(filterAll),
  ui(nullptr),
  nbYearsInParallel(nbParallelYears),
- scratchpad(nullptr),
  invalidateJIT(false)
 {
     internalInitialize();
@@ -111,18 +108,6 @@ Area::~Area()
 {
     logs.debug() << "  :: destroying area " << name;
 
-    if (scratchpad)
-    {
-        for (uint numSpace = 0; numSpace < nbYearsInParallel; numSpace++)
-        {
-            if (scratchpad[numSpace])
-                delete scratchpad[numSpace];
-            scratchpad[numSpace] = nullptr;
-        }
-        delete[] scratchpad;
-        scratchpad = nullptr;
-    }
-
     // Delete all links
     clearAllLinks();
 
@@ -131,13 +116,6 @@ Area::~Area()
 
     delete ui;
     ui = nullptr;
-}
-
-bool Area::checkWeeklyData(uint firstHourOfTheWeek) const
-{
-    // TODO checks on wind/solar/thermal/short-term storage/etc.
-    logs.notice() << "checkWeekData " << firstHourOfTheWeek;
-    return true;
 }
 
 void Area::clearAllLinks()
@@ -246,7 +224,7 @@ Yuni::uint64 Area::memoryUsage() const
         ret += ui->memoryUsage();
 
     // scratchpad
-    if (scratchpad)
+    if (!scratchpad.empty())
         ret += sizeof(AreaScratchpad) * nbYearsInParallel;
 
     // links

@@ -71,7 +71,7 @@ inline void State::yearEndResetThermal()
 inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace)
 {
     area = study.areas[areaIndex];
-    scratchpad = area->scratchpad[numSpace];
+    scratchpad = &area->scratchpad[numSpace];
     thermalCluster = nullptr;
     timeseriesIndex = NumeroChroniquesTireesParPays[numSpace][areaIndex];
 
@@ -79,12 +79,12 @@ inline void State::initFromAreaIndex(const unsigned int areaIndex, uint numSpace
     {
     case Data::stdmEconomy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmAdequacy:
     {
-        hourlyResults = problemeHebdo->ResultatsHoraires[areaIndex];
+        hourlyResults = &problemeHebdo->ResultatsHoraires[areaIndex];
         break;
     }
     case Data::stdmUnknown:

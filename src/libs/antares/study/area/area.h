@@ -87,8 +87,6 @@ public:
     ~Area();
     //@}
 
-    bool checkWeeklyData(uint firstHourOfTheWeek) const;
-
     // !\name isVisibleOnLayer
     //@{
     /*!
@@ -325,7 +323,7 @@ public:
     /*!
     ** \brief Scratchpad used temporary calculations (solver only)
     */
-    mutable AreaScratchpad** scratchpad;
+    mutable std::vector<AreaScratchpad> scratchpad;
     //@}
 
     //! \name Data
