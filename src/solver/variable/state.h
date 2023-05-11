@@ -62,8 +62,8 @@ public:
         //! Minimum power of all clusters for the current hour in the year
         std::vector<double> PMinOfClusters;
 
-        unsigned int unitCountLastHour = 0;
-        double productionLastHour = 0;
+        std::vector<unsigned int> unitCountLastHour;
+        std::vector<double> productionLastHour;
         std::vector<double> pminOfAGroup;
     };
 
