@@ -320,6 +320,7 @@ struct ENERGIES_ET_PUISSANCES_HYDRAULIQUES
     double* NiveauHoraireInf;
 
     double* ApportNaturelHoraire;
+    double* MingenHoraire; /*Minimum Hourly Hydro-Storage Generation*/
     double NiveauInitialReservoir;
     double TailleReservoir;
     double PumpingRatio;

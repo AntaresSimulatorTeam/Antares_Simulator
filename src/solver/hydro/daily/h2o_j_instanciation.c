@@ -83,6 +83,11 @@ DONNEES_MENSUELLES* H2O_J_Instanciation(void)
     {
         return (NULL);
     }
+    DonneesMensuelles->TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuelles->TurbineMin == NULL)
+    {
+        return (NULL);
+    }    
     DonneesMensuelles->TurbineCible = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
     if (DonneesMensuelles->TurbineCible == NULL)
     {

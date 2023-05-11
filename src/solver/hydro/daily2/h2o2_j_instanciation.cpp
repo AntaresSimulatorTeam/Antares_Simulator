@@ -75,7 +75,11 @@ DONNEES_MENSUELLES_ETENDUES* H2O2_J_Instanciation()
 
     DonneesMensuellesEtendues->TurbineMax = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
     if (DonneesMensuellesEtendues->TurbineMax == NULL)
-        return (NULL);
+        return (NULL);  
+ 
+    DonneesMensuellesEtendues->TurbineMin = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));
+    if (DonneesMensuellesEtendues->TurbineMin == NULL)
+        return (NULL); 
 
     DonneesMensuellesEtendues->TurbineCible
       = (double*)malloc(NbJoursDUnProbleme[3] * sizeof(double));

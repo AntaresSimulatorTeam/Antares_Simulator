@@ -155,8 +155,6 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 
 void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
 {
-    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
-
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
