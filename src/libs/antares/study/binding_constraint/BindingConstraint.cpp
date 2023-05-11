@@ -27,6 +27,7 @@
 #include <yuni/yuni.h>
 #include <yuni/core/math.h>
 #include <algorithm>
+#include <vector>
 #include "BindingConstraint.h"
 #include "../study.h"
 #include "../../logs.h"
@@ -879,11 +880,8 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
         {
             if (env.section->firstProperty)
             {
+                std::vector<BindingConstraint*> new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
                 BindingConstraint *bc = new BindingConstraint();
-                if (bc->loadFromEnv(env, study.parameters.nbYears))
-                    pList.push_back(bc);
-                else
-                    delete bc;
             }
         }
     }
@@ -1559,6 +1557,17 @@ unsigned int BindingConstraintsList::NumberOfTimeseries(std::string group_name) 
     if (binding_constraint == pList.end())
         return 0;
     return (*binding_constraint)->TimeSeries().width;
+}
+
+std::vector<BindingConstraint *>
+BindingConstraintsList::LoadBindingConstraint(BindingConstraint::EnvForLoading env, uint years) {
+
+    BindingConstraint *bc = new BindingConstraint();
+    if (bc->loadFromEnv(env, years))
+        pList.push_back(bc);
+    else
+        delete bc;
+    return {};
 }
 
 bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env)

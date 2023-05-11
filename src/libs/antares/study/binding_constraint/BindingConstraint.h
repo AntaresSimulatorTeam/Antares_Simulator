@@ -711,6 +711,8 @@ public:
     void fixTSNumbersWhenWidthIsOne(Study &study);
 
     unsigned int NumberOfTimeseries(std::string group_name) const;
+
+    std::vector<BindingConstraint *> LoadBindingConstraint(BindingConstraint::EnvForLoading loading, uint years);
 }; // class BindConstList
 
 struct CompareBindingConstraintName final
