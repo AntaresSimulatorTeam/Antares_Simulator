@@ -407,8 +407,8 @@ void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurat
 
 std::array<uint, Variable::maxHoursInAYear>
 State::computeEconomicallyOptimalNbClustersONforEachHour(const uint& maxDurationON,
-                        std::array<uint, Variable::maxHoursInAYear>& ON_min,
-                        std::array<uint, Variable::maxHoursInAYear>& ON_max) const
+                  const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+                  const std::array<uint, Variable::maxHoursInAYear>& ON_max) const
 {
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
