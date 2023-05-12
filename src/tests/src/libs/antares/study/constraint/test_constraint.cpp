@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
-    BindingConstraint const* constraint = (*bindingConstraints.begin());
+    auto constraint = *bindingConstraints.begin();
     BOOST_CHECK_EQUAL(constraint->name(), "dummy_name");
     BOOST_CHECK_EQUAL(constraint->id(), "dummy_id");
     BOOST_CHECK_EQUAL(constraint->enabled(), false);
@@ -95,7 +95,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
 
-    BindingConstraint* constraint = (*bindingConstraints.begin());
+    auto constraint = (*bindingConstraints.begin());
     BOOST_CHECK_CLOSE(constraint->TimeSeries()[0][0], 0.2, 0.0001);
     BOOST_CHECK_CLOSE(constraint->TimeSeries()[1][30], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(constraint->TimeSeries()[2][8783], 0.6, 0.0001);
@@ -151,7 +151,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[1][30], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[2][8783], 0.6, 0.0001);
 
-    BindingConstraint* bc_gt = *(++bindingConstraints.begin());
+    auto bc_gt = *(++bindingConstraints.begin());
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][0], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[1][30], 0.6, 0.0001);
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[2][8783], 0.8, 0.0001);

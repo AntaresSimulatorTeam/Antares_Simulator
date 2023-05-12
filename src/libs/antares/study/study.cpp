@@ -1137,7 +1137,7 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    foreach (auto* constraint, bindingConstraints)
+    foreach (auto constraint, bindingConstraints)
     {
         //TODO
 //        if (not JIT::IsReady(constraint->matrix().jit))

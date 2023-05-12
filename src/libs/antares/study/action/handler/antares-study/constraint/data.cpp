@@ -59,7 +59,7 @@ bool Data::performWL(Context& ctx)
         Antares::Data::ConstraintName id;
         TransformNameIntoID(pOriginalConstraintName, id);
 
-        Antares::Data::BindingConstraint* source = ctx.extStudy->bindingConstraints.find(id);
+        auto source = ctx.extStudy->bindingConstraints.find(id);
 
         if (source && source != ctx.constraint)
         {

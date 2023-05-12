@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <memory>
 #include "antares/study/area/area.h"
 
 namespace Antares::Data {
@@ -11,7 +12,7 @@ namespace Antares::Data {
 class BindingConstraint;
 class BindingConstraintLoader {
 public:
-    std::vector<BindingConstraint *> load(EnvForLoading env, unsigned int years) const;
+    std::vector<std::shared_ptr<BindingConstraint>> load(EnvForLoading env, unsigned int years) const;
 };
 
 } // Data

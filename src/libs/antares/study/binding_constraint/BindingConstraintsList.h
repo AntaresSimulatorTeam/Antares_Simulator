@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <memory>
 #include "BindingConstraint.h"
 
 namespace Antares::Data {
@@ -62,17 +63,17 @@ public:
     /*!
     ** \brief Add a new binding constraint
     */
-    Data::BindingConstraint* add(const AnyString& name);
+    std::shared_ptr<BindingConstraint> add(const AnyString& name);
 
     /*!
     ** Try to find a constraint from its id
     */
-    Data::BindingConstraint* find(const AnyString& id);
+    std::shared_ptr<Data::BindingConstraint> find(const AnyString& id);
 
     /*!
     ** \brief Try to find a constraint from its id (const)
     */
-    const Data::BindingConstraint* find(const AnyString& id) const;
+    std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
 
     /*!
     ** \brief Try to find a constraint from its name
@@ -173,7 +174,7 @@ public:
 
     unsigned int NumberOfTimeseries(std::string group_name) const;
 
-    std::vector<Data::BindingConstraint *> LoadBindingConstraint(EnvForLoading loading, uint years);
+    std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env, uint years);
 };
 
 }

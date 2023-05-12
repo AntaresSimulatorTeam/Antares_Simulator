@@ -191,14 +191,14 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
     return ret;
 }
 
-Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::ConstraintName& name,
+std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const Data::ConstraintName& name,
                                                           const String& op,
                                                           const String& type,
                                                           const WeightMap& weights,
                                                           const double& secondMember)
 {
     // Create a new contraint
-    auto* constraint = pStudy->bindingConstraints.add(name);
+    auto constraint = pStudy->bindingConstraints.add(name);
     const Data::BindingConstraint::Operator o = Data::BindingConstraint::StringToOperator(op);
     assert(o != Data::BindingConstraint::opUnknown);
     const Data::BindingConstraint::Type t = Data::BindingConstraint::StringToType(type);
@@ -207,7 +207,7 @@ Antares::Data::BindingConstraint* CBuilder::addConstraint(const Data::Constraint
     // Reseting
     constraint->clearAndReset(name, t, o);
     constraint->removeAllWeights();
-    constraint->enabled(1);
+    constraint->enabled(true);
 
     // weights
     for (auto j = weights.begin(); j != weights.end(); j++)

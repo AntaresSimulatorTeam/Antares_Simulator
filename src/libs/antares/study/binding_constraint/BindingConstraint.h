@@ -40,6 +40,7 @@
 #include "antares/study/filter.h"
 #include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
+#include <memory>
 #include <vector>
 #include <set>
 
@@ -114,9 +115,9 @@ public:
     using thermalOffsetConst_iterator = clusterOffsetMap::const_iterator;
 
     //! Vector of binding constraints
-    using Vector = std::vector<BindingConstraint*>;
+    using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
     //! Ordered Set of binding constraints
-    using Set = std::set<BindingConstraint*, CompareBindingConstraintName>;
+    using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
 
     class EnvForSaving final
     {
@@ -527,7 +528,7 @@ private:
 
 struct CompareBindingConstraintName final
 {
-    bool operator()(const BindingConstraint* s1, const BindingConstraint* s2) const
+    bool operator()(std::shared_ptr<BindingConstraint> s1, std::shared_ptr<BindingConstraint> s2) const
     {
         return ((s1->name()) < (s2->name()));
     }
@@ -539,7 +540,7 @@ public:
     explicit WhoseNameContains(const AnyString& filter) : pFilter(filter)
     {
     }
-    bool operator()(const BindingConstraint* s) const
+    bool operator()(std::shared_ptr<BindingConstraint> s) const
     {
         return (s->name()).contains(pFilter);
     }
