@@ -115,12 +115,12 @@ public:
     BindingConstraint* constraint(uint i)
     {
         assert(i < pConstraint.size());
-        return pConstraint[i];
+        return pConstraint[i].get();
     }
     const BindingConstraint* constraint(uint i) const
     {
         assert(i < pConstraint.size());
-        return pConstraint[i];
+        return pConstraint[i].get();
     }
     uint constraintCount() const
     {

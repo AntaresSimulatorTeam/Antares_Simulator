@@ -114,7 +114,7 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 	return pArea;
 }
 
-BindingConstraint *addBindingConstraints(Study::Ptr study, std::string name, std::string group, int nbTS) {
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group, int nbTS) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
     bc->type();

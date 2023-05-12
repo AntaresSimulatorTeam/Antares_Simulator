@@ -4,42 +4,43 @@
 
 #include "BindingConstraintsList.h"
 #include <iterator>
+#include <memory>
 #include <vector>
 #include "BindingConstraint.h"
 #include "antares/study.h"
 #include "BindingConstraintLoader.h"
 
 namespace Antares::Data {
-    BindingConstraint *BindingConstraintsList::find(const AnyString &id) {
+    std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) {
         for (uint i = 0; i != (uint) pList.size(); ++i) {
             if (pList[i]->id() == id)
                 return pList[i];
         }
-        return NULL;
+        return nullptr;
     }
 
-    const BindingConstraint *BindingConstraintsList::find(const AnyString &id) const {
+    std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) const {
         for (uint i = 0; i != (uint) pList.size(); ++i) {
             if (pList[i]->id() == id)
                 return pList[i];
         }
-        return NULL;
+        return nullptr;
     }
 
     BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
         for (uint i = 0; i != (uint) pList.size(); ++i) {
             if (pList[i]->name() == name)
-                return pList[i];
+                return pList[i].get();
         }
-        return NULL;
+        return nullptr;
     }
 
     const BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) const {
         for (uint i = 0; i != (uint) pList.size(); ++i) {
             if (pList[i]->name() == name)
-                return pList[i];
+                return pList[i].get();
         }
-        return NULL;
+        return nullptr;
     }
 
     void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString &filter) {
@@ -47,12 +48,12 @@ namespace Antares::Data {
         pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
     }
 
-    bool compareConstraints(const BindingConstraint *s1, const BindingConstraint *s2) {
+    bool compareConstraints(std::shared_ptr<BindingConstraint> s1, std::shared_ptr<BindingConstraint> s2) {
         return ((s1->name()) < (s2->name()));
     }
 
-    BindingConstraint *BindingConstraintsList::add(const AnyString &name) {
-        auto *bc = new BindingConstraint();
+    std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &name) {
+        auto bc = std::make_shared<BindingConstraint>();
         bc->name(name);
         pList.push_back(bc);
         std::sort(pList.begin(), pList.end(), compareConstraints);
@@ -68,7 +69,7 @@ namespace Antares::Data {
 
     void BindingConstraintsList::fixTSNumbersWhenWidthIsOne(Study &study) {
         std::map<std::string, bool> groupOfOneTS;
-        std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](const BindingConstraint *bc) {
+        std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](auto bc) {
             auto hasOneTs = bc->TimeSeries().width == 1;
             if (groupOfOneTS[bc->group()] && !hasOneTs) {
                 assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
@@ -86,7 +87,7 @@ namespace Antares::Data {
 
     unsigned int BindingConstraintsList::NumberOfTimeseries(std::string group_name) const {
         //Assume all BC in a group have the same width
-        const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](BindingConstraint *bc) {
+        const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](auto bc) {
             return bc->group() == group_name;
         });
         if (binding_constraint == pList.end())
@@ -94,7 +95,7 @@ namespace Antares::Data {
         return (*binding_constraint)->TimeSeries().width;
     }
 
-    std::vector<BindingConstraint *>
+    std::vector<std::shared_ptr<BindingConstraint>>
     BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
         const BindingConstraintLoader bc_loader;
         return bc_loader.load(env, years);
@@ -116,7 +117,7 @@ namespace Antares::Data {
             return true;
         ConstraintName id;
         Antares::TransformNameIntoID(name, id);
-        if (NULL != find(id))
+        if (nullptr != find(id))
             return false;
         bc->name(name);
         //TODO
@@ -126,9 +127,7 @@ namespace Antares::Data {
 
 
     BindingConstraintsList::~BindingConstraintsList() {
-        // see clear()
-        for (uint i = 0; i != pList.size(); ++i)
-            delete pList[i];
+
     }
 
     bool BindingConstraintsList::loadFromFolder(Study &study,
@@ -165,7 +164,7 @@ namespace Antares::Data {
         if (ini.firstSection) {
             for (env.section = ini.firstSection; env.section; env.section = env.section->next) {
                 if (env.section->firstProperty) {
-                    std::vector<BindingConstraint *> new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
+                   auto new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
                     std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(pList));
             }
         }
@@ -273,13 +272,12 @@ namespace // anonymous
         {
         }
 
-        bool operator()(const BindingConstraint* bc) const
+        bool operator()(std::shared_ptr<BindingConstraint> bc) const
         {
             assert(bc);
             if (bc->contains(pItem))
             {
                 logs.info() << "destroying the binding constraint " << bc->name();
-                delete bc;
                 return true;
             }
             return false;
