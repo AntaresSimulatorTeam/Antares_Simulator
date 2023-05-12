@@ -46,17 +46,17 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
     time_t rawtime = ::time(nullptr);
 #endif
 
-    struct tm timeinfo;
 
 #if defined(YUNI_OS_MSVC)
+    struct tm timeinfo;
     // Microsoft Visual Studio
     _localtime64_s(&timeinfo, &rawtime);
     // MSDN specifies that the buffer length value must be >= 26 for validity.
-    asctime_s(buffer, 32, &timeinfo);
+    strftime(buffer, 32, "%F", &timeinfo);
+
 #else
     // Unixes
-    ::localtime_r(&rawtime, &timeinfo);
-    ::asctime_r(&timeinfo, buffer);
+    ::strftime(buffer, 32, "%F",  ::localtime(&rawtime));
 #endif
 }
 

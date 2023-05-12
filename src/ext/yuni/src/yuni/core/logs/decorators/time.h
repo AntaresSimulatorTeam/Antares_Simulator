@@ -46,7 +46,7 @@ public:
         Private::LogsDecorator::WriteCurrentTimestampToBuffer(asc);
         out.write(asc, 24);
 #else
-        out.write(Private::LogsDecorator::WriteCurrentTimestampToBufferMinGW(), 24);
+        /* out.write(Private::LogsDecorator::WriteCurrentTimestampToBufferMinGW(), 24); */
 #endif
 
         out.put(']');
