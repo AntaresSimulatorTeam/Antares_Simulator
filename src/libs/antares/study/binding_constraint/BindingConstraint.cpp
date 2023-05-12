@@ -1029,7 +1029,7 @@ bool BindingConstraint::loadTimeSeriesBefore860(EnvForLoading &env)
     return false;
 }
 
-void BindingConstraint::matrix(const double onevalue)
+void BindingConstraint::matrix(const double one_value)
 {
     //TODO (only type?)
     //pValues.fill(onevalue);

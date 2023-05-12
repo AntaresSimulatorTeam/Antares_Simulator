@@ -24,8 +24,7 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__
-#define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__
+#pragma once
 
 #include <yuni/yuni.h>
 #include <yuni/core/string.h>
@@ -41,12 +40,11 @@
 #include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
 #include <memory>
+#include <utility>
 #include <vector>
 #include <set>
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 // Forward declaration
 struct CompareBindingConstraintName;
@@ -122,23 +120,20 @@ public:
     class EnvForSaving final
     {
     public:
-        EnvForSaving()
-        {
-        }
+        EnvForSaving() = default;
 
         //! Current section
-        IniFile::Section* section;
+        IniFile::Section* section = nullptr;
 
         Yuni::Clob folder;
         Yuni::Clob matrixFilename;
         Yuni::CString<2 * (ant_k_area_name_max_length + 8), false> key;
     };
 
-public:
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
     */
-    static const char* TypeToCString(const Type t);
+    static const char* TypeToCString(Type t);
 
     /*!
     ** \brief Convert a string into its corresponding type
@@ -164,7 +159,6 @@ public:
     */
     static Operator StringToOperator(const AnyString& text);
 
-public:
     //! \name Constructor & Destructor
     //@{
     /*!
@@ -479,7 +473,7 @@ public:
     /*!
     ** \brief Fill the second member matrix with all member to the same value
     */
-    void matrix(const double onevalue);
+    void matrix(double one_value);
 
     bool loadTimeSeries(EnvForLoading &env);
     bool loadTimeSeriesBefore860(EnvForLoading &env);
@@ -528,19 +522,19 @@ private:
 
 struct CompareBindingConstraintName final
 {
-    bool operator()(std::shared_ptr<BindingConstraint> s1, std::shared_ptr<BindingConstraint> s2) const
+    bool operator()(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) const
     {
-        return ((s1->name()) < (s2->name()));
+        return s1->name() < s2->name();
     }
 };
 
 struct WhoseNameContains final
 {
 public:
-    explicit WhoseNameContains(const AnyString& filter) : pFilter(filter)
+    explicit WhoseNameContains(AnyString  filter) : pFilter(std::move(filter))
     {
     }
-    bool operator()(std::shared_ptr<BindingConstraint> s) const
+    bool operator()(const std::shared_ptr<BindingConstraint>& s) const
     {
         return (s->name()).contains(pFilter);
     }
@@ -549,9 +543,6 @@ private:
     AnyString pFilter;
 };
 
-} // namespace Data
-} // namespace Antares
+} // namespace Antares::Data
 
 #include "BindingConstraint.hxx"
-
-#endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_H__

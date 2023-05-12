@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <functional>
 #include <memory>
 #include "BindingConstraint.h"
 
@@ -14,7 +15,6 @@ public:
     using iterator = Data::BindingConstraint::Vector::iterator;
     using const_iterator = Data::BindingConstraint::Vector::const_iterator;
 
-public:
     //! \name Constructor && Destructor
     //@{
     /*!
@@ -24,7 +24,7 @@ public:
     /*!
     ** \brief Destructor
     */
-    ~BindingConstraintsList();
+    ~BindingConstraintsList() = default;
     //@}
 
     /*!
@@ -52,12 +52,12 @@ public:
     void eachEnabled(const PredicateT& predicate) const;
 
     iterator begin();
-    const_iterator begin() const;
+    [[nodiscard]] const_iterator begin() const;
 
     iterator end();
-    const_iterator end() const;
+    [[nodiscard]] const_iterator end() const;
 
-    bool empty() const;
+    [[nodiscard]] bool empty() const;
     //@}
 
     /*!
@@ -73,27 +73,17 @@ public:
     /*!
     ** \brief Try to find a constraint from its id (const)
     */
-    std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
-
-    /*!
-    ** \brief Try to find a constraint from its name
-    */
-    Data::BindingConstraint* findByName(const AnyString& name);
-
-    /*!
-    ** \brief Try to find a constraint from its name (const)
-    */
-    const Data::BindingConstraint* findByName(const AnyString& name) const;
+    [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
 
     /*!
     ** \brief Load all binding constraints from a folder
     */
-    bool loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);
+    [[nodiscard]] bool loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);
 
     /*!
     ** \brief Save all binding constraints into a folder
     */
-    bool saveToFolder(const AnyString& folder) const;
+    [[nodiscard]] bool saveToFolder(const AnyString& folder) const;
 
     /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
@@ -102,10 +92,8 @@ public:
     */
     void reverseWeightSign(const Data::AreaLink* lnk);
 
-    void reverseWeightSign(const Data::ThermalCluster* clstr);
-
     //! Get the number of binding constraints
-    uint size() const;
+    [[nodiscard]] uint size() const;
 
     /*!
     ** \brief Remove a binding constraint
@@ -138,7 +126,7 @@ public:
     /*!
     ** \brief Get the memory usage
     */
-    yuint64 memoryUsage() const;
+    [[nodiscard]] yuint64 memoryUsage() const;
 
     /*!
     ** \brief Estimate
@@ -148,33 +136,31 @@ public:
     /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
-    bool forceReload(bool reload = false) const;
+    [[nodiscard]] bool forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified
     */
     void markAsModified() const;
 
-    [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers>& TimeSeriesNumbers() const {
+    [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>>& TimeSeriesNumbers() const {
         return time_series_numbers;
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
+    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> time_series_numbers;
+
+    void fixTSNumbersWhenWidthIsOne();
+
+    [[nodiscard]] unsigned int NumberOfTimeseries(const std::string& group_name) const;
+
+    static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env, uint years);
+
 private:
     bool internalSaveToFolder(Data::BindingConstraint::EnvForSaving& env) const;
 
-private:
     //! All constraints
     Data::BindingConstraint::Vector pList;
-
-public:
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers> time_series_numbers;
-
-    void fixTSNumbersWhenWidthIsOne(Data::Study &study);
-
-    unsigned int NumberOfTimeseries(std::string group_name) const;
-
-    std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env, uint years);
 };
 
 }
