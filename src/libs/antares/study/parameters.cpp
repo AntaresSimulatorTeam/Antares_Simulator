@@ -1158,7 +1158,8 @@ void Parameters::fixBadValues()
 
 Yuni::uint64 Parameters::memoryUsage() const
 {
-    return 0;
+    return sizeof(Parameters) + yearsWeight.size() * sizeof(double)
+           + yearsFilter.size(); // vector of bools, 1 bit per coefficient
 }
 
 void Parameters::resetYearsWeigth()
