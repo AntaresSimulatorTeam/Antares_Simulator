@@ -135,7 +135,7 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
         lt << "0.2\t0.4\t0.6\n";
     }
     lt.close();
-    std::ofstream gt(working_tmp_dir / "dummy_name_lt.txt");
+    std::ofstream gt(working_tmp_dir / "dummy_name_gt.txt");
     for (int i = 0; i < 8784; ++i) {
         gt << "0.4\t0.6\t0.8\n";
     }
@@ -146,12 +146,12 @@ BOOST_AUTO_TEST_CASE(BC_load_range_type) {
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 2);
 
-    BindingConstraint* bc_lt = (*bindingConstraints.begin());
+    auto bc_lt = (*bindingConstraints.begin());
     BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[0][0], 0.2, 0.0001);
     BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[1][30], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(bc_lt->TimeSeries()[2][8783], 0.6, 0.0001);
 
-    BindingConstraint* bc_gt = (*bindingConstraints.begin()+1);
+    BindingConstraint* bc_gt = *(++bindingConstraints.begin());
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[0][0], 0.4, 0.0001);
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[1][30], 0.6, 0.0001);
     BOOST_CHECK_CLOSE(bc_gt->TimeSeries()[2][8783], 0.8, 0.0001);

@@ -50,6 +50,7 @@
 #include "../date.h"
 #include "layerdata.h"
 #include "antares/array/correlation.h"
+#include "antares/study/binding_constraint/BindingConstraintsList.h"
 
 #include <memory>
 
