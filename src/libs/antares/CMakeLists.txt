@@ -279,7 +279,6 @@ source_group(study\\UI FILES ${SRC_STUDY_UI})
 
 set(SRC_STUDY_PARAMETERS
 	study/parameters.h
-	study/parameters.hxx
 	study/parameters.cpp
 	study/parameters/adq-patch-params.h
 	study/parameters/adq-patch-params.cpp
