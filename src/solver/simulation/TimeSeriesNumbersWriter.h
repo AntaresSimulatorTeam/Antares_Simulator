@@ -7,7 +7,7 @@
 #include <memory>
 #include "ITimeSeriesNumbersWriter.h"
 #include "i_writer.h"
-#include "antares/study/binding_constraint/BindingConstraint.h"
+#include "antares/study/binding_constraint/BindingConstraintsList.h"
 
 namespace Antares::Solver::Simulation {
 class TimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {

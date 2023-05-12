@@ -94,82 +94,28 @@ inline void BindingConstraint::mutateTypeWithoutCheck(Type t)
         pType = t;
 }
 
-inline BindingConstraint::iterator BindingConstraint::begin()
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::iterator BindingConstraint::end()
-{
-    return pLinkWeights.end();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::begin() const
-{
-    return pLinkWeights.begin();
-}
-
-inline BindingConstraint::const_iterator BindingConstraint::end() const
-{
-    return pLinkWeights.end();
-}
-
-inline bool BindingConstraint::skipped() const
+        inline bool BindingConstraint::skipped() const
 {
     return linkCount() == 0 && enabledClusterCount() == 0;
 }
 
-inline uint BindingConstraintsList::size() const
-{
-    return (uint)pList.size();
+inline BindingConstraint::iterator BindingConstraint::begin() {
+    return pLinkWeights.begin();
 }
 
-inline bool BindingConstraintsList::empty() const
-{
-    return pList.empty();
+inline BindingConstraint::iterator BindingConstraint::end() {
+    return pLinkWeights.end();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::each(const PredicateT& predicate)
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+inline BindingConstraint::const_iterator BindingConstraint::begin() const {
+    return pLinkWeights.begin();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::each(const PredicateT& predicate) const
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+inline BindingConstraint::const_iterator BindingConstraint::end() const {
+    return pLinkWeights.end();
 }
 
-template<class PredicateT>
-inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate)
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-    {
-        auto& constraint = *(pList[i]);
-        if (constraint.enabled() && !constraint.skipped())
-            predicate(constraint);
-    }
-}
-
-template<class PredicateT>
-inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate) const
-{
-    uint count = (uint)pList.size();
-    for (uint i = 0; i != count; ++i)
-    {
-        auto& constraint = *(pList[i]);
-        if (constraint.enabled() && !constraint.skipped())
-            predicate(constraint);
-    }
-}
-
-} // namespace Data
+    } // namespace Data
 } // namespace Antares
 
 #endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
