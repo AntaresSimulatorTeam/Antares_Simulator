@@ -855,7 +855,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                             link->timeseriesNumbers, link->directCapacities.width, years);
                       });
     });
-    study.bindingConstraints.fixTSNumbersWhenWidthIsOne(study);
+    study.bindingConstraints.fixTSNumbersWhenWidthIsOne();
 }
 
 bool TimeSeriesNumbers::checkAllElementsIdenticalOrOne(const std::vector<uint>& w)

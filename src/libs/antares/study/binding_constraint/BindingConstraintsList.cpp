@@ -3,169 +3,150 @@
 //
 
 #include "BindingConstraintsList.h"
-#include <iterator>
+#include <algorithm>
 #include <memory>
+#include <utility>
 #include <vector>
 #include "BindingConstraint.h"
 #include "antares/study.h"
 #include "BindingConstraintLoader.h"
 
 namespace Antares::Data {
-    std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) {
-        for (uint i = 0; i != (uint) pList.size(); ++i) {
-            if (pList[i]->id() == id)
-                return pList[i];
+std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) {
+    for (auto const &i: pList) {
+        if (i->id() == id)
+            return i;
+    }
+    return nullptr;
+}
+
+std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) const {
+    for (const auto & i : pList) {
+        if (i->id() == id)
+            return i;
+    }
+    return nullptr;
+}
+
+void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString &filter) {
+    WhoseNameContains pred(filter);
+    pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
+}
+
+bool compareConstraints(const std::shared_ptr<BindingConstraint>& s1, const std::shared_ptr<BindingConstraint>& s2) {
+    return s1->name() < s2->name();
+}
+
+std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &name) {
+    auto bc = std::make_shared<BindingConstraint>();
+    bc->name(name);
+    pList.push_back(bc);
+    std::sort(pList.begin(), pList.end(), compareConstraints);
+    return bc;
+}
+
+void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
+    std::for_each(time_series_numbers.begin(), time_series_numbers.end(), [&](auto &kvp) {
+        time_series_numbers[kvp.first].timeseriesNumbers.clear();
+        time_series_numbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
+    });
+}
+
+void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
+    std::map<std::string, bool, std::less<>> groupOfOneTS;
+    std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](auto bc) {
+        auto hasOneTs = bc->TimeSeries().width == 1;
+        if (groupOfOneTS[bc->group()] && !hasOneTs) {
+            assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
         }
-        return nullptr;
-    }
+        groupOfOneTS[bc->group()] |= hasOneTs;
+    });
+    std::for_each(time_series_numbers.begin(), time_series_numbers.end(),
+                  [&groupOfOneTS](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it) {
+                      if (groupOfOneTS[it.first]) {
+                          it.second.timeseriesNumbers.fillColumn(0, 0);
+                      }
+                  });
+}
 
-    std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) const {
-        for (uint i = 0; i != (uint) pList.size(); ++i) {
-            if (pList[i]->id() == id)
-                return pList[i];
-        }
-        return nullptr;
-    }
+unsigned int BindingConstraintsList::NumberOfTimeseries(const std::string& group_name) const {
+    //Assume all BC in a group have the same width
+    const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](auto bc) {
+        return bc->group() == group_name;
+    });
+    if (binding_constraint == pList.end())
+        return 0;
+    return (*binding_constraint)->TimeSeries().width;
+}
 
-    BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
-        for (uint i = 0; i != (uint) pList.size(); ++i) {
-            if (pList[i]->name() == name)
-                return pList[i].get();
-        }
-        return nullptr;
-    }
+std::vector<std::shared_ptr<BindingConstraint>>
+BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
+    const BindingConstraintLoader bc_loader;
+    return bc_loader.load(std::move(env));
+}
 
-    const BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) const {
-        for (uint i = 0; i != (uint) pList.size(); ++i) {
-            if (pList[i]->name() == name)
-                return pList[i].get();
-        }
-        return nullptr;
-    }
+bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
+    BindingConstraint::EnvForSaving env;
+    env.folder = folder;
+    return internalSaveToFolder(env);
+}
 
-    void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString &filter) {
-        WhoseNameContains pred(filter);
-        pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
-    }
-
-    bool compareConstraints(std::shared_ptr<BindingConstraint> s1, std::shared_ptr<BindingConstraint> s2) {
-        return ((s1->name()) < (s2->name()));
-    }
-
-    std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &name) {
-        auto bc = std::make_shared<BindingConstraint>();
-        bc->name(name);
-        pList.push_back(bc);
-        std::sort(pList.begin(), pList.end(), compareConstraints);
-        return bc;
-    }
-
-    void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-        std::for_each(time_series_numbers.begin(), time_series_numbers.end(), [&](auto &kvp) {
-            time_series_numbers[kvp.first].timeseriesNumbers.clear();
-            time_series_numbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
-        });
-    }
-
-    void BindingConstraintsList::fixTSNumbersWhenWidthIsOne(Study &study) {
-        std::map<std::string, bool> groupOfOneTS;
-        std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](auto bc) {
-            auto hasOneTs = bc->TimeSeries().width == 1;
-            if (groupOfOneTS[bc->group()] && !hasOneTs) {
-                assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
-            }
-            groupOfOneTS[bc->group()] |= hasOneTs;
-        });
-        const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
-        std::for_each(time_series_numbers.begin(), time_series_numbers.end(),
-                      [&groupOfOneTS, years](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it) {
-                          if (groupOfOneTS[it.first]) {
-                              it.second.timeseriesNumbers.fillColumn(0, 0);
-                          }
-                      });
-    }
-
-    unsigned int BindingConstraintsList::NumberOfTimeseries(std::string group_name) const {
-        //Assume all BC in a group have the same width
-        const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](auto bc) {
-            return bc->group() == group_name;
-        });
-        if (binding_constraint == pList.end())
-            return 0;
-        return (*binding_constraint)->TimeSeries().width;
-    }
-
-    std::vector<std::shared_ptr<BindingConstraint>>
-    BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
-        const BindingConstraintLoader bc_loader;
-        return bc_loader.load(env, years);
-    }
-
-    bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
-        auto *env = new BindingConstraint::EnvForSaving();
-        env->folder = folder;
-        bool r = internalSaveToFolder(*env);
-        delete env;
-        return r;
-    }
-
-    bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newname) {
-        // Copy of the name
-        ConstraintName name;
-        name = newname;
-        if (name == bc->name())
-            return true;
-        ConstraintName id;
-        Antares::TransformNameIntoID(name, id);
-        if (nullptr != find(id))
-            return false;
-        bc->name(name);
-        //TODO
-        //JIT::Invalidate(bc->matrix().jit);
+bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newname) {
+    // Copy of the name
+    ConstraintName name;
+    name = newname;
+    if (name == bc->name())
         return true;
+    ConstraintName id;
+    Antares::TransformNameIntoID(name, id);
+    if (std::any_of(pList.begin(), pList.end(), [&id](auto constraint) {
+            return constraint->id() == id;
+        }))
+    {
+        return false;
+    }
+    bc->name(name);
+    //TODO
+    //JIT::Invalidate(bc->matrix().jit);
+    return true;
+}
+
+bool BindingConstraintsList::loadFromFolder(Study &study,
+                                            const StudyLoadOptions &options,
+                                            const AnyString &folder) {
+    // Log entries
+    logs.info(); // space for beauty
+    logs.info() << "Loading constraints...";
+
+    // Cleaning
+    clear();
+
+    if (study.usedByTheSolver) {
+        if (options.ignoreConstraints) {
+            logs.info() << "  The constraints have been disabled by the user";
+            return true;
+        }
+        if (!study.parameters.include.constraints) {
+            logs.info() << "  The constraints shall be ignored due to the optimization preferences";
+            return true;
+        }
     }
 
+    EnvForLoading env(study.areas, study.header.version);
+    env.folder = folder;
 
-    BindingConstraintsList::~BindingConstraintsList() {
-
+    env.iniFilename << env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
+    IniFile ini;
+    if (!ini.open(env.iniFilename)) {
+        return false;
     }
 
-    bool BindingConstraintsList::loadFromFolder(Study &study,
-                                                const StudyLoadOptions &options,
-                                                const AnyString &folder) {
-        // Log entries
-        logs.info(); // space for beauty
-        logs.info() << "Loading constraints...";
-
-        // Cleaning
-        clear();
-
-        if (study.usedByTheSolver) {
-            if (options.ignoreConstraints) {
-                logs.info() << "  The constraints have been disabled by the user";
-                return true;
-            }
-            if (!study.parameters.include.constraints) {
-                logs.info() << "  The constraints shall be ignored due to the optimization preferences";
-                return true;
-            }
-        }
-
-        EnvForLoading env(study.areas, study.header.version);
-        env.folder = folder;
-
-        env.iniFilename << env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-        IniFile ini;
-        if (not ini.open(env.iniFilename)) {
-            return false;
-        }
-
-        // For each section
-        if (ini.firstSection) {
-            for (env.section = ini.firstSection; env.section; env.section = env.section->next) {
-                if (env.section->firstProperty) {
-                   auto new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
-                    std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(pList));
+    // For each section
+    if (ini.firstSection) {
+        for (env.section = ini.firstSection; env.section; env.section = env.section->next) {
+            if (env.section->firstProperty) {
+               auto new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
+                std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(pList));
             }
         }
     }
@@ -185,10 +166,8 @@ namespace Antares::Data {
 
     // When ran from the solver and if the simplex is in `weekly` mode,
     // all weekly constraints will become daily ones.
-    if (study.usedByTheSolver)
-    {
-        if (sorDay == study.parameters.simplexOptimizationRange)
-            mutateWeeklyConstraintsIntoDailyOnes();
+    if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange) {
+        mutateWeeklyConstraintsIntoDailyOnes();
     }
     //TODO load time series numbers
     return true;
@@ -196,7 +175,7 @@ namespace Antares::Data {
 
 void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
 {
-    each([&](BindingConstraint &constraint) {
+    each([](BindingConstraint &constraint) {
         if (constraint.type() == BindingConstraint::typeWeekly)
         {
             logs.info() << "  The type of the constraint '" << constraint.name()
@@ -211,7 +190,7 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSavin
     if (pList.empty())
     {
         logs.info() << "No binding constraint to export.";
-        if (not IO::Directory::Create(env.folder))
+        if (!IO::Directory::Create(env.folder))
             return false;
         // stripping the file
         env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
@@ -223,7 +202,7 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSavin
     else
         logs.info() << "Exporting " << pList.size() << " binding constraints...";
 
-    if (not IO::Directory::Create(env.folder))
+    if (!IO::Directory::Create(env.folder))
         return false;
 
     IniFile ini;
@@ -236,28 +215,23 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSavin
     {
         text = index;
         env.section = ini.addSection(text);
-        ret = (*i)->saveToEnv(env) and ret;
+        ret = (*i)->saveToEnv(env) && ret;
     }
 
     env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
-    return ini.save(env.folder) and ret;
+    return ini.save(env.folder) && ret;
 }
 
 void BindingConstraintsList::reverseWeightSign(const AreaLink* lnk)
 {
-    each([&](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
-}
-
-void BindingConstraintsList::reverseWeightSign(const ThermalCluster* clstr)
-{
-    each([&](BindingConstraint &constraint) { constraint.reverseWeightSign(clstr); });
+    each([&lnk](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
 }
 
 uint64 BindingConstraintsList::memoryUsage() const
 {
     uint64 m = sizeof(BindingConstraintsList);
-    for (uint i = 0; i != pList.size(); ++i)
-        m += pList[i]->memoryUsage();
+    for (const auto & i : pList)
+        m += i->memoryUsage();
     return m;
 }
 
@@ -268,11 +242,11 @@ namespace // anonymous
     class RemovePredicate final
     {
     public:
-        RemovePredicate(const T* u) : pItem(u)
+        explicit RemovePredicate(const T* u) : pItem(u)
         {
         }
 
-        bool operator()(std::shared_ptr<BindingConstraint> bc) const
+        bool operator()(const std::shared_ptr<BindingConstraint>& bc) const
         {
             assert(bc);
             if (bc->contains(pItem))
@@ -339,16 +313,15 @@ void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
         return;
 
     // each constraint...
-    for (uint i = 0; i != pList.size(); ++i)
+    for (const auto & constraint : pList)
     {
-        auto &bc = *(pList[i]);
         u.requiredMemoryForInput += sizeof(void *) * 2;
-        uint count = (bc.operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint i = 0; i != count; ++i)
+        uint count = (constraint->operatorType() == BindingConstraint::opBoth) ? 2 : 1;
+        for (uint constraints_counter = 0; constraints_counter != count; ++constraints_counter)
         {
             u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.linkCount();
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.clusterCount();
+            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->linkCount();
+            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * constraint->clusterCount();
             Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
         }
     }
@@ -356,10 +329,7 @@ void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
 
 void BindingConstraintsList::markAsModified() const
 {
-    if (not pList.empty())
-    {
-        for (uint i = 0; i != pList.size(); ++i)
-            pList[i]->markAsModified();
-    }
+    for (const auto & i : pList)
+        i->markAsModified();
 }
 }
