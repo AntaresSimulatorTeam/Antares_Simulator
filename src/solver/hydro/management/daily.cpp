@@ -67,7 +67,7 @@ struct DebugData
     using ReservoirLevelType = Matrix<double>::ColumnType;
 
     std::array<double, 366> OPP;
-    std::array<double, 366> DailyTargetGen;
+    std::array<double, 366> DailyTargetGen = {0};
 
     std::array<double, 365> OVF;
     std::array<double, 365> DEV;
