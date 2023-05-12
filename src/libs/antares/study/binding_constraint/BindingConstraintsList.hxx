@@ -28,14 +28,14 @@ template<class PredicateT>
 inline void BindingConstraintsList::each(const PredicateT &predicate) const {
     uint count = (uint) pList.size();
     for (uint i = 0; i != count; ++i)
-        predicate(*(pList[i]));
+        predicate(*(pList[i].get()));
 }
 
 template<class PredicateT>
 inline void BindingConstraintsList::eachEnabled(const PredicateT &predicate) const {
     uint count = (uint) pList.size();
     for (uint i = 0; i != count; ++i) {
-        auto &constraint = *(pList[i]);
+        auto &constraint = *(pList[i].get());
         if (constraint.enabled() && !constraint.skipped())
             predicate(constraint);
     }

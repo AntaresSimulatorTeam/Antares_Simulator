@@ -588,12 +588,7 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
 
 void BindingConstraintsList::clear()
 {
-    if (not pList.empty())
-    {
-        for (uint i = 0; i != pList.size(); ++i)
-            delete pList[i];
-        pList.clear();
-    }
+    pList.clear();
 }
 
 
