@@ -462,10 +462,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k].ValeursHorairesDeDefaillancePositive
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        /* problem.ResultatsHoraires[k].ValeursHorairesDENS */
-        /*   = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); // adq patch */
-        problem.ResultatsHoraires[k].ValeursHorairesDENS = (double*)calloc(NombreDePasDeTemps, sizeof(double));
-
+        problem.ResultatsHoraires[k].ValeursHorairesDENS
+          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double)); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesLmrViolations
           = (int*)MemAllocMemset(NombreDePasDeTemps * sizeof(int)); // adq patch
         problem.ResultatsHoraires[k].ValeursHorairesSpilledEnergyAfterCSR
@@ -498,9 +496,8 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k].CoutsMarginauxHoraires
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
-        /* problem.ResultatsHoraires[k].niveauxHoraires */
-        /*   = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double)); */
-        problem.ResultatsHoraires[k].niveauxHoraires = (double*)calloc(NombreDePasDeTemps, sizeof(double));
+        problem.ResultatsHoraires[k].niveauxHoraires
+          = (double*)MemAllocMemset(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k].valeurH2oHoraire
           = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         problem.ResultatsHoraires[k].debordementsHoraires
