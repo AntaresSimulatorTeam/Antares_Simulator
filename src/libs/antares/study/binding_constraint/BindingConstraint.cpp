@@ -36,6 +36,7 @@
 #include "../memory-usage.h"
 #include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
+#include "BindingConstraintLoader.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -49,9 +50,6 @@ using namespace Antares;
 #endif
 
 namespace Antares::Data {
-bool compareConstraints(const BindingConstraint *s1, const BindingConstraint *s2) {
-    return ((s1->name()) < (s2->name()));
-}
 
 BindingConstraint::Operator BindingConstraint::StringToOperator(const AnyString& text)
 {
@@ -509,238 +507,9 @@ void BindingConstraint::copyOffsets(const Study &study,
     }
 }
 
-bool BindingConstraint::loadFromEnv(BindingConstraint::EnvForLoading& env, unsigned nb_years)
+bool BindingConstraint::loadFromEnv(EnvForLoading& env, unsigned nb_years)
 {
-    clear();
-
-    // Foreach property in the section...
-    for (const IniFile::Property* p = env.section->firstProperty; p; p = p->next)
-    {
-        if (p->key.empty())
-            continue;
-
-        if (p->key == "name")
-        {
-            pName = p->value;
-            continue;
-        }
-        if (p->key == "id")
-        {
-            pID = p->value;
-            pID.toLower(); // force the lowercase
-            continue;
-        }
-        if (p->key == "enabled")
-        {
-            pEnabled = p->value.to<bool>();
-            continue;
-        }
-        if (p->key == "type")
-        {
-            pType = BindingConstraint::StringToType(p->value);
-            continue;
-        }
-        if (p->key == "operator")
-        {
-            pOperator = BindingConstraint::StringToOperator(p->value);
-            continue;
-        }
-        if (p->key == "filter-year-by-year")
-        {
-            pFilterYearByYear = stringIntoDatePrecision(p->value);
-            continue;
-        }
-        if (p->key == "filter-synthesis")
-        {
-            pFilterSynthesis = stringIntoDatePrecision(p->value);
-            continue;
-        }
-        if (p->key == "comments")
-        {
-            pComments = p->value;
-            continue;
-        }
-        if (p->key == "group")
-        {
-            group_ = p->value.c_str();
-            continue;
-        }
-
-        // It may be a link
-        // Separate the key
-        String::Size setKey = p->key.find('%');
-
-        // initialize the values
-        double w = .0;
-        int o = 0;
-
-        // Separate the value
-        if (setKey != 0 && setKey != String::npos) // It is a link
-        {
-            CString<64> stringWO = p->value;
-            String::Size setVal = p->value.find('%');
-            uint occurence = 0;
-            bool ret = true;
-            stringWO.words("%", [&](const CString<64> &part) -> bool {
-                if (occurence == 0)
-                {
-                    if (setVal == 0) // weight is null
-                    {
-                        if (not part.to<int>(o))
-                        {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid offset";
-                            ret = false;
-                        }
-                    }
-                    else // weight is not null
-                    {
-                        if (not part.to<double>(w))
-                        {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid weight";
-                            ret = false;
-                        }
-                    }
-                }
-
-                if (occurence == 1 && setVal != 0)
-                {
-                    if (not part.to<int>(o))
-                    {
-                        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                     << p->key << "`: invalid offset";
-                        ret = false;
-                    }
-                }
-
-                ++occurence;
-                return ret; // continue to iterate
-            });
-
-            if (not ret)
-                continue;
-
-            const AreaLink *lnk = env.areaList.findLinkFromINIKey(p->key);
-            if (!lnk)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: link not found";
-                continue;
-            }
-            if (not Math::Zero(w))
-                this->weight(lnk, w);
-
-            if (not Math::Zero(o))
-                this->offset(lnk, o);
-
-            continue;
-        }
-        else // It must be a cluster
-        {
-            // Separate the key
-            String::Size setKey = p->key.find('.');
-            if (0 == setKey or setKey == String::npos)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: invalid key";
-                continue;
-            }
-
-            CString<64> stringWO = p->value;
-            String::Size setVal = p->value.find('%');
-            uint occurence = 0;
-            bool ret = true;
-            stringWO.words("%", [&](const CString<64> &part) -> bool {
-                if (occurence == 0)
-                {
-                    if (setVal == 0) // weight is null
-                    {
-                        if (not part.to<int>(o))
-                        {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid offset";
-                            ret = false;
-                        }
-                    }
-                    else // weight is not null
-                    {
-                        if (not part.to<double>(w))
-                        {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid weight";
-                            ret = false;
-                        }
-                    }
-                }
-
-                if (occurence == 1 && setVal != 0)
-                {
-                    if (not part.to<int>(o))
-                    {
-                        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                     << p->key << "`: invalid offset";
-                        ret = false;
-                    }
-                }
-
-                ++occurence;
-                return ret; // continue to iterate
-            });
-
-            if (not ret)
-                continue;
-
-            const ThermalCluster *clstr = env.areaList.findClusterFromINIKey(p->key);
-            if (!clstr)
-            {
-                logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
-                             << "`: cluster not found";
-                continue;
-            }
-            if (not Math::Zero(w))
-                this->weight(clstr, w);
-
-            if (not Math::Zero(o))
-                this->offset(clstr, o);
-
-            continue;
-        }
-    }
-
-    // Checking for validity
-    if (!pName or !pID or pOperator == opUnknown or pType == typeUnknown) {
-        // Reporting the error into the logs
-        if (!pName)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid binding constraint name";
-        if (!pID)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid binding constraint id";
-        if (pType == typeUnknown)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid type [hourly,daily,weekly]";
-        if (pOperator == opUnknown)
-            logs.error() << env.iniFilename << ": in [" << env.section->name
-                         << "]: Invalid operator [less,greater,equal,both]";
-        if (group_.empty()) {
-            if (env.version >= version860) {
-                logs.error() << env.iniFilename << ": in [" << env.section->name
-                             << "]: Missing binding constraint group";
-            } else {
-                group_ = std::string() + name().c_str() + "_" + id().c_str();
-            }
-        }
-
-        // Invalid binding constraint
-        return false;
-    }
-
-    // The binding constraint can not be enabled if there is no weight in the table
-    if (pLinkWeights.empty() && pClusterWeights.empty())
-        pEnabled = false;
-
-    return loadTimeSeries(env);
+    return true;
 }
 
 void BindingConstraint::clear() {
@@ -817,10 +586,6 @@ bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
     return time_series.saveToCSVFile(env.matrixFilename.c_str());
 }
 
-BindingConstraintsList::BindingConstraintsList()
-{
-}
-
 void BindingConstraintsList::clear()
 {
     if (not pList.empty())
@@ -831,143 +596,6 @@ void BindingConstraintsList::clear()
     }
 }
 
-BindingConstraintsList::~BindingConstraintsList()
-{
-    // see clear()
-    for (uint i = 0; i != pList.size(); ++i)
-        delete pList[i];
-}
-
-bool BindingConstraintsList::loadFromFolder(Study &study,
-                                            const StudyLoadOptions &options,
-                                            const AnyString& folder)
-{
-    // Log entries
-    logs.info(); // space for beauty
-    logs.info() << "Loading constraints...";
-
-    // Cleaning
-    clear();
-
-    if (study.usedByTheSolver)
-    {
-        if (options.ignoreConstraints)
-        {
-            logs.info() << "  The constraints have been disabled by the user";
-            return true;
-        }
-        if (!study.parameters.include.constraints)
-        {
-            logs.info() << "  The constraints shall be ignored due to the optimization preferences";
-            return true;
-        }
-    }
-
-    BindingConstraint::EnvForLoading env(study.areas, study.header.version);
-    env.folder = folder;
-
-    env.iniFilename << env.folder << SEP << "bindingconstraints.ini";
-    IniFile ini;
-    if (not ini.open(env.iniFilename))
-    {
-        return false;
-    }
-
-    // For each section
-    if (ini.firstSection)
-    {
-        for (env.section = ini.firstSection; env.section; env.section = env.section->next)
-        {
-            if (env.section->firstProperty)
-            {
-                std::vector<BindingConstraint*> new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
-                BindingConstraint *bc = new BindingConstraint();
-            }
-        }
-    }
-
-    // Logs
-    if (pList.empty())
-        logs.info() << "No binding constraint found";
-    else
-    {
-        std::sort(pList.begin(), pList.end(), compareConstraints);
-
-        if (pList.size() == 1)
-            logs.info() << "1 binding constraint found";
-        else
-            logs.info() << pList.size() << " binding constraints found";
-    }
-
-    // When ran from the solver and if the simplex is in `weekly` mode,
-    // all weekly constraints will become daily ones.
-    if (study.usedByTheSolver)
-    {
-        if (sorDay == study.parameters.simplexOptimizationRange)
-            mutateWeeklyConstraintsIntoDailyOnes();
-    }
-    //TODO load time series numbers
-    return true;
-}
-
-void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
-{
-    each([&](BindingConstraint &constraint) {
-        if (constraint.type() == BindingConstraint::typeWeekly)
-        {
-            logs.info() << "  The type of the constraint '" << constraint.name()
-                        << "' is now 'daily'";
-            constraint.mutateTypeWithoutCheck(BindingConstraint::typeDaily);
-        }
-    });
-}
-
-bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) const
-{
-    if (pList.empty())
-    {
-        logs.info() << "No binding constraint to export.";
-        if (not IO::Directory::Create(env.folder))
-            return false;
-        // stripping the file
-        env.folder << SEP << "bindingconstraints.ini";
-        return IO::File::CreateEmptyFile(env.folder);
-    }
-
-    if (pList.size() == 1)
-        logs.info() << "Exporting 1 binding constraint...";
-    else
-        logs.info() << "Exporting " << pList.size() << " binding constraints...";
-
-    if (not IO::Directory::Create(env.folder))
-        return false;
-
-    IniFile ini;
-    bool ret = true;
-    uint index = 0;
-    auto end = pList.end();
-    ShortString64 text;
-
-    for (auto i = pList.begin(); i != end; ++i, ++index)
-    {
-        text = index;
-        env.section = ini.addSection(text);
-        ret = (*i)->saveToEnv(env) and ret;
-    }
-
-    env.folder << SEP << "bindingconstraints.ini";
-    return ini.save(env.folder) and ret;
-}
-
-void BindingConstraintsList::reverseWeightSign(const AreaLink* lnk)
-{
-    each([&](BindingConstraint &constraint) { constraint.reverseWeightSign(lnk); });
-}
-
-void BindingConstraintsList::reverseWeightSign(const ThermalCluster* clstr)
-{
-    each([&](BindingConstraint &constraint) { constraint.reverseWeightSign(clstr); });
-}
 
 void BindingConstraint::reverseWeightSign(const AreaLink* lnk)
 {
@@ -989,14 +617,6 @@ void BindingConstraint::reverseWeightSign(const ThermalCluster* clstr)
     }
 }
 
-uint64 BindingConstraintsList::memoryUsage() const
-{
-    uint64 m = sizeof(BindingConstraintsList);
-    for (uint i = 0; i != pList.size(); ++i)
-        m += pList[i]->memoryUsage();
-    return m;
-}
-
 bool BindingConstraint::contains(const Area* area) const
 {
     const linkWeightMap::const_iterator end = pLinkWeights.end();
@@ -1014,55 +634,6 @@ bool BindingConstraint::contains(const Area* area) const
     }
 
     return false;
-}
-
-namespace // anonymous
-{
-    template<class T>
-class RemovePredicate final
-{
-    public:
-    RemovePredicate(const T* u) : pItem(u)
-    {
-        }
-
-    bool operator()(const BindingConstraint* bc) const
-    {
-            assert(bc);
-        if (bc->contains(pItem))
-        {
-                logs.info() << "destroying the binding constraint " << bc->name();
-                delete bc;
-                return true;
-            }
-            return false;
-        }
-
-    private:
-        const T *pItem;
-    };
-
-} // anonymous namespace
-
-void BindingConstraintsList::remove(const Area* area)
-{
-    RemovePredicate<Area> predicate(area);
-    auto e = std::remove_if(pList.begin(), pList.end(), predicate);
-    pList.erase(e, pList.end());
-}
-
-void BindingConstraintsList::remove(const AreaLink* lnk)
-{
-    RemovePredicate<AreaLink> predicate(lnk);
-    auto e = std::remove_if(pList.begin(), pList.end(), predicate);
-    pList.erase(e, pList.end());
-}
-
-void BindingConstraintsList::remove(const BindingConstraint* bc)
-{
-    RemovePredicate<BindingConstraint> predicate(bc);
-    auto e = std::remove_if(pList.begin(), pList.end(), predicate);
-    pList.erase(e, pList.end());
 }
 
 void BindingConstraint::buildFormula(String& s) const
@@ -1152,26 +723,6 @@ void BindingConstraint::buildHTMLFormula(String& s) const
     }
 }
 
-BindingConstraintsList::iterator BindingConstraintsList::begin()
-{
-    return pList.begin();
-}
-
-BindingConstraintsList::const_iterator BindingConstraintsList::begin() const
-{
-    return pList.begin();
-}
-
-BindingConstraintsList::iterator BindingConstraintsList::end()
-{
-    return pList.end();
-}
-
-BindingConstraintsList::const_iterator BindingConstraintsList::end() const
-{
-    return pList.end();
-}
-
 Yuni::uint64 BindingConstraint::memoryUsage() const
 {
     return sizeof(BindingConstraint)
@@ -1187,28 +738,6 @@ Yuni::uint64 BindingConstraint::memoryUsage() const
            + pClusterWeights.size() * (sizeof(double) + 3 * sizeof(void *))
            // Estimation
            + pClusterOffsets.size() * (sizeof(int) + 3 * sizeof(void *));
-}
-
-void BindingConstraintsList::estimateMemoryUsage(StudyMemoryUsage& u) const
-{
-    // Disabled by the optimization preferences
-    if (!u.study.parameters.include.constraints)
-        return;
-
-    // each constraint...
-    for (uint i = 0; i != pList.size(); ++i)
-    {
-        auto &bc = *(pList[i]);
-        u.requiredMemoryForInput += sizeof(void *) * 2;
-        uint count = (bc.operatorType() == BindingConstraint::opBoth) ? 2 : 1;
-        for (uint i = 0; i != count; ++i)
-        {
-            u.requiredMemoryForInput += sizeof(BindingConstraintRTI);
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.linkCount();
-            u.requiredMemoryForInput += (sizeof(long) + sizeof(double)) * bc.clusterCount();
-            Matrix<>::EstimateMemoryUsage(u, 1, HOURS_PER_YEAR);
-        }
-    }
 }
 
 bool BindingConstraint::contains(const BindingConstraint* bc) const
@@ -1379,15 +908,6 @@ void BindingConstraint::markAsModified() const
     TimeSeries().markAsModified();
 }
 
-void BindingConstraintsList::markAsModified() const
-{
-    if (not pList.empty())
-    {
-        for (uint i = 0; i != pList.size(); ++i)
-            pList[i]->markAsModified();
-    }
-}
-
 void BindingConstraint::clearAndReset(const AnyString &name,
                                       BindingConstraint::Type newType,
                                       BindingConstraint::Operator op)
@@ -1443,134 +963,7 @@ void BindingConstraint::clearAndReset(const AnyString &name,
     time_series.markAsModified();
 }
 
-bool BindingConstraintsList::saveToFolder(const AnyString& folder) const
-{
-    auto *env = new BindingConstraint::EnvForSaving();
-    env->folder = folder;
-    bool r = internalSaveToFolder(*env);
-    delete env;
-    return r;
-}
-
-bool BindingConstraintsList::rename(BindingConstraint* bc, const AnyString& newname)
-{
-    // Copy of the name
-    ConstraintName name;
-    name = newname;
-    if (name == bc->name())
-        return true;
-    ConstraintName id;
-    Antares::TransformNameIntoID(name, id);
-    if (NULL != find(id))
-        return false;
-    bc->name(name);
-    //TODO
-    //JIT::Invalidate(bc->matrix().jit);
-    return true;
-}
-
-BindingConstraint* BindingConstraintsList::find(const AnyString& id)
-{
-    for (uint i = 0; i != (uint)pList.size(); ++i)
-    {
-        if (pList[i]->id() == id)
-            return pList[i];
-    }
-    return NULL;
-}
-
-const BindingConstraint* BindingConstraintsList::find(const AnyString& id) const
-{
-    for (uint i = 0; i != (uint)pList.size(); ++i)
-    {
-        if (pList[i]->id() == id)
-            return pList[i];
-    }
-    return NULL;
-}
-
-BindingConstraint* BindingConstraintsList::findByName(const AnyString& name)
-{
-    for (uint i = 0; i != (uint)pList.size(); ++i)
-    {
-        if (pList[i]->name() == name)
-            return pList[i];
-    }
-    return NULL;
-}
-
-const BindingConstraint* BindingConstraintsList::findByName(const AnyString& name) const
-{
-    for (uint i = 0; i != (uint)pList.size(); ++i)
-    {
-        if (pList[i]->name() == name)
-            return pList[i];
-    }
-    return NULL;
-}
-
-void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString& filter)
-{
-    WhoseNameContains pred(filter);
-    pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());
-}
-
-BindingConstraint* BindingConstraintsList::add(const AnyString& name)
-{
-    auto *bc = new BindingConstraint();
-    bc->name(name);
-    pList.push_back(bc);
-    std::sort(pList.begin(), pList.end(), compareConstraints);
-    return bc;
-}
-
-void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-    std::for_each(time_series_numbers.begin(), time_series_numbers.end(), [&](auto& kvp) {
-        time_series_numbers[kvp.first].timeseriesNumbers.clear();
-        time_series_numbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
-    });
-}
-
-void BindingConstraintsList::fixTSNumbersWhenWidthIsOne(Study &study) {
-    std::map<std::string, bool> groupOfOneTS;
-    std::for_each(pList.begin(), pList.end(), [&groupOfOneTS](const BindingConstraint *bc) {
-        auto hasOneTs = bc->TimeSeries().width == 1;
-        if (groupOfOneTS[bc->group()] && !hasOneTs) {
-            assert(false && ("Group of binding constraints mixing 1TS and N TS group:" + bc->group()).c_str());
-        }
-        groupOfOneTS[bc->group()] |= hasOneTs;
-    });
-    const uint years = 1 + study.runtime->rangeLimits.year[rangeEnd];
-    std::for_each(time_series_numbers.begin(), time_series_numbers.end(),
-                  [&groupOfOneTS, years](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it){
-        if (groupOfOneTS[it.first]) {
-            it.second.timeseriesNumbers.fillColumn(0, 0);
-        }
-    });
-}
-
-unsigned int BindingConstraintsList::NumberOfTimeseries(std::string group_name) const {
-    //Assume all BC in a group have the same width
-    const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](BindingConstraint* bc) {
-       return bc->group() == group_name;
-    });
-    if (binding_constraint == pList.end())
-        return 0;
-    return (*binding_constraint)->TimeSeries().width;
-}
-
-std::vector<BindingConstraint *>
-BindingConstraintsList::LoadBindingConstraint(BindingConstraint::EnvForLoading env, uint years) {
-
-    BindingConstraint *bc = new BindingConstraint();
-    if (bc->loadFromEnv(env, years))
-        pList.push_back(bc);
-    else
-        delete bc;
-    return {};
-}
-
-bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env)
+bool BindingConstraint::loadTimeSeries(EnvForLoading &env)
 {
     if (env.version >= version860)
         return loadBoundedTimeSeries(env, operatorType());
@@ -1579,7 +972,7 @@ bool BindingConstraint::loadTimeSeries(BindingConstraint::EnvForLoading &env)
 }
 
 bool
-BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, BindingConstraint::Operator operatorType) {
+BindingConstraint::loadBoundedTimeSeries(EnvForLoading &env, BindingConstraint::Operator operatorType) {
     bool load_ok = false;
 
     switch (operatorType) {
@@ -1610,7 +1003,7 @@ BindingConstraint::loadBoundedTimeSeries(BindingConstraint::EnvForLoading &env, 
     }
 }
 
-bool BindingConstraint::loadTimeSeriesBefore860(BindingConstraint::EnvForLoading &env)
+bool BindingConstraint::loadTimeSeriesBefore860(EnvForLoading &env)
 {
     env.buffer.clear() << env.folder << SEP << pID << ".txt";
     Matrix<> intermediate;
@@ -1663,6 +1056,20 @@ const Matrix<>& BindingConstraint::TimeSeries() const {
 
 Matrix<>& BindingConstraint::TimeSeries() {
     return time_series;
+}
+
+void BindingConstraint::copyFrom(BindingConstraint *original) {
+    clearAndReset(original->name(), original->type(), original->operatorType());
+    pLinkWeights = original->pLinkWeights;
+    pClusterWeights = original->pClusterWeights;
+    pLinkOffsets = original->pLinkOffsets;
+    pClusterOffsets = original->pClusterOffsets;
+    pFilterYearByYear = original->pFilterYearByYear;
+    pFilterSynthesis = original->pFilterSynthesis;
+    pEnabled = original->pEnabled;
+    pComments = original->pComments;
+    group_ = original->group_;
+    time_series.copyFrom(original->time_series);
 }
 
 } // namespace Antares
