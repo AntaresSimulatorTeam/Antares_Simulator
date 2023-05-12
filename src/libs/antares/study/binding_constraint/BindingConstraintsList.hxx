@@ -5,7 +5,6 @@
 #pragma once
 
 #include "../../utils.h"
-#include "BindingConstraintsList.h"
 
 namespace Antares::Data {
 
