@@ -78,7 +78,7 @@ bool OPT_OptimisationLineaire(PROBLEME_HEBDO* problemeHebdo, AdqPatchParams& adq
 
 OptimisationHebdo:
     int DernierPdtDeLIntervalle;
-    for (int pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
+    for (uint pdtHebdo = 0, numeroDeLIntervalle = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps;
          pdtHebdo = DernierPdtDeLIntervalle, numeroDeLIntervalle++)
     {
         int PremierPdtDeLIntervalle = pdtHebdo;

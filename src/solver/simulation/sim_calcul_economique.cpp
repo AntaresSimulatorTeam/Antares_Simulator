@@ -543,7 +543,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
         }
     }
 
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
+    for (uint j = 0; j < problem.NombreDePasDeTemps; ++j, ++indx)
     {
         VALEURS_DE_NTC_ET_RESISTANCES* ntc = problem.ValeursDeNTC[j];
         assert(NULL != ntc);
@@ -1000,7 +1000,7 @@ void SIM_RenseignementProblemeHebdo(PROBLEME_HEBDO& problem,
                (char*)problem.ReserveJMoins1[k]->ReserveHoraireJMoins1,
                pasDeTempsSizeDouble);
     }
-    for (int j = 0; j < problem.NombreDePasDeTemps; ++j)
+    for (unsigned int j = 0; j < problem.NombreDePasDeTemps; ++j)
     {
         memcpy((char*)problem.ConsommationsAbattuesRef[j]->ConsommationAbattueDuPays,
                (char*)problem.ConsommationsAbattues[j]->ConsommationAbattueDuPays,
