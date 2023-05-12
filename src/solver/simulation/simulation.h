@@ -37,7 +37,7 @@ void SIM_AllocationTableaux(void);
 /*!
 ** \brief Alloue toutes les donnees d'un probleme hebdo
 */
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps);
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemps);
 
 /*!
 ** \brief Alloue et initialise un probleme hebdo
