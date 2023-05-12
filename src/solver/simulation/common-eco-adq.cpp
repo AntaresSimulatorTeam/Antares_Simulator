@@ -182,14 +182,6 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                     adq[h] += column[h];
             }
         }
-
-        for (uint j = 0; j != area.thermal.clusterCount(); ++j)
-        {
-            Data::ThermalCluster* cluster = area.thermal.clusters[j];
-            cluster->unitCountLastHour[numSpace] = 0;
-            cluster->productionLastHour[numSpace] = 0.;
-            cluster->pminOfAGroup[numSpace] = 0.;
-        }
     }
 }
 

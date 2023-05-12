@@ -137,7 +137,7 @@ void Areas<NEXTTYPE>::hourForEachArea(State& state, uint numSpace)
         for (uint j = 0; j != area.thermal.clusterCount(); ++j)
         {
             // Intiializing the state for the current thermal cluster
-            state.initFromThermalClusterIndex(j, numSpace);
+            state.initFromThermalClusterIndex(j);
         }
 
         // Variables
@@ -210,7 +210,7 @@ void Areas<NEXTTYPE>::yearEndBuild(State& state, uint year, uint numSpace)
             variablesForArea.yearEndBuildPrepareDataForEachThermalCluster(state, year, numSpace);
 
             // Building the end of year
-            state.yearEndBuildFromThermalClusterIndex(j, numSpace);
+            state.yearEndBuildFromThermalClusterIndex(j);
 
             // Variables
             variablesForArea.yearEndBuildForEachThermalCluster(state, year, numSpace);
