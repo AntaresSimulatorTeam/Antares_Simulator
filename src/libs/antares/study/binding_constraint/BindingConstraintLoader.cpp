@@ -13,7 +13,7 @@ namespace Antares::Data {
 using namespace Yuni;
 
 std::vector<std::shared_ptr<BindingConstraint>>
-BindingConstraintLoader::load(EnvForLoading env, unsigned int years) const {
+BindingConstraintLoader::load(EnvForLoading env) {
     auto bc = std::make_shared<BindingConstraint>();
     bc->clear();
 
@@ -60,53 +60,15 @@ BindingConstraintLoader::load(EnvForLoading env, unsigned int years) const {
             continue;
         }
 
-        // It may be a link
-        // Separate the key
-        String::Size setKey = p->key.find('%');
-
         // initialize the values
         double w = .0;
         int o = 0;
 
         // Separate the value
-        if (setKey != 0 && setKey != String::npos) // It is a link
+        if (auto setKey = p->key.find('%'); setKey != 0 && setKey != String::npos) // It is a link
         {
-            CString<64> stringWO = p->value;
-            String::Size setVal = p->value.find('%');
-            uint occurence = 0;
-            bool ret = true;
-            stringWO.words("%", [&](const CString<64> &part) -> bool {
-                if (occurence == 0) {
-                    if (setVal == 0) // weight is null
-                    {
-                        if (not part.to<int>(o)) {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid offset";
-                            ret = false;
-                        }
-                    } else // weight is not null
-                    {
-                        if (not part.to<double>(w)) {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid weight";
-                            ret = false;
-                        }
-                    }
-                }
 
-                if (occurence == 1 && setVal != 0) {
-                    if (not part.to<int>(o)) {
-                        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                     << p->key << "`: invalid offset";
-                        ret = false;
-                    }
-                }
-
-                ++occurence;
-                return ret; // continue to iterate
-            });
-
-            if (not ret)
+            if (bool ret = SeparateValue(env, p, w, o); !ret)
                 continue;
 
             const AreaLink *lnk = env.areaList.findLinkFromINIKey(p->key);
@@ -115,59 +77,25 @@ BindingConstraintLoader::load(EnvForLoading env, unsigned int years) const {
                              << "`: link not found";
                 continue;
             }
-            if (not Math::Zero(w))
+            if (!Math::Zero(w))
                 bc->weight(lnk, w);
 
-            if (not Math::Zero(o))
+            if (!Math::Zero(o))
                 bc->offset(lnk, o);
 
             continue;
         } else // It must be a cluster
         {
             // Separate the key
-            String::Size setKey = p->key.find('.');
-            if (0 == setKey or setKey == String::npos) {
+            setKey = p->key.find('.');
+            if (0 == setKey || setKey == String::npos) {
                 logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `" << p->key
                              << "`: invalid key";
                 continue;
             }
 
-            CString<64> stringWO = p->value;
-            String::Size setVal = p->value.find('%');
-            uint occurence = 0;
-            bool ret = true;
-            stringWO.words("%", [&](const CString<64> &part) -> bool {
-                if (occurence == 0) {
-                    if (setVal == 0) // weight is null
-                    {
-                        if (not part.to<int>(o)) {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid offset";
-                            ret = false;
-                        }
-                    } else // weight is not null
-                    {
-                        if (not part.to<double>(w)) {
-                            logs.error() << env.iniFilename << ": in [" << env.section->name
-                                         << "]: `" << p->key << "`: invalid weight";
-                            ret = false;
-                        }
-                    }
-                }
 
-                if (occurence == 1 && setVal != 0) {
-                    if (not part.to<int>(o)) {
-                        logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
-                                     << p->key << "`: invalid offset";
-                        ret = false;
-                    }
-                }
-
-                ++occurence;
-                return ret; // continue to iterate
-            });
-
-            if (not ret)
+            if (bool ret = SeparateValue(env, p, w, o); !ret)
                 continue;
 
             const ThermalCluster *clstr = env.areaList.findClusterFromINIKey(p->key);
@@ -176,10 +104,10 @@ BindingConstraintLoader::load(EnvForLoading env, unsigned int years) const {
                              << "`: cluster not found";
                 continue;
             }
-            if (not Math::Zero(w))
+            if (!Math::Zero(w))
                 bc->weight(clstr, w);
 
-            if (not Math::Zero(o))
+            if (!Math::Zero(o))
                 bc->offset(clstr, o);
 
             continue;
@@ -230,9 +158,46 @@ BindingConstraintLoader::load(EnvForLoading env, unsigned int years) const {
     return {};
 }
 
-if (bc->loadTimeSeries(env)) {
-    return {bc};
+    if (bc->loadTimeSeries(env)) {
+        return {bc};
+    }
+    return {};
 }
-return {};
+
+bool
+BindingConstraintLoader::SeparateValue(const EnvForLoading &env, const IniFile::Property *p, double &w, int &o) {
+    bool ret = true;
+    CString<64> stringWO = p->value;
+    String::Size setVal = p->value.find('%');
+    uint occurrence = 0;
+    stringWO.words("%", [&](const CString<64> &part) {
+        if (occurrence == 0) {
+            if (setVal == 0) // weight is null
+            {
+                if (!part.to<int>(o)) {
+                    logs.error() << env.iniFilename << ": in [" << env.section->name
+                                 << "]: `" << p->key << "`: invalid offset";
+                    ret = false;
+                }
+            } else // weight is not null
+            {
+                if (!part.to<double>(w)) {
+                    logs.error() << env.iniFilename << ": in [" << env.section->name
+                                 << "]: `" << p->key << "`: invalid weight";
+                    ret = false;
+                }
+            }
+        }
+
+        if (occurrence == 1 && setVal != 0 && !part.to<int>(o)) {
+            logs.error() << env.iniFilename << ": in [" << env.section->name << "]: `"
+                         << p->key << "`: invalid offset";
+            ret = false;
+        }
+
+        ++occurrence;
+        return ret; // continue to iterate
+    });
+    return ret;
 }
 } // Data

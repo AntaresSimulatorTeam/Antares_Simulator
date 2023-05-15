@@ -12,7 +12,9 @@ namespace Antares::Data {
 class BindingConstraint;
 class BindingConstraintLoader {
 public:
-    std::vector<std::shared_ptr<BindingConstraint>> load(EnvForLoading env, unsigned int years) const;
+    static std::vector<std::shared_ptr<BindingConstraint>> load(EnvForLoading env);
+
+    static bool SeparateValue(const EnvForLoading &env, const IniFile::Property *p, double &w, int &o);
 };
 
 } // Data
