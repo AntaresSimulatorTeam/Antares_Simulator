@@ -31,6 +31,7 @@
 #include <wx/sizer.h>
 #include "../../application/main.h"
 #include <wx/aui/aui.h>
+#include <memory>
 
 #include "inspector.h"
 #include "frame.h"
@@ -312,20 +313,6 @@ const Data::AreaLink::Set& getLinks()
     return gData->links;
 }
 
-void AddBindingConstraint(const Data::BindingConstraint* constraint)
-{
-    if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
-
-    using ConstraintPtr = Data::BindingConstraint*;
-    if (gData->constraints.insert(const_cast<ConstraintPtr>(constraint)).second)
-    {
-        gData->empty = false;
-        if (gInspector)
-            gInspector->apply(gData);
-    }
-}
-
 void AddBindingConstraints(const Data::BindingConstraint::Set& list)
 {
     if (list.empty())
@@ -333,12 +320,11 @@ void AddBindingConstraints(const Data::BindingConstraint::Set& list)
     if (!gData)
         gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
 
-    using StudyConstraintType = Data::BindingConstraint;
     bool notEmpty = false;
-    StudyConstraintType::Set::const_iterator end = list.end();
-    for (StudyConstraintType::Set::const_iterator i = list.begin(); i != end; ++i)
+    auto end = list.end();
+    for (auto i = list.begin(); i != end; ++i)
         notEmpty
-          = gData->constraints.insert(const_cast<StudyConstraintType*>(*i)).second || notEmpty;
+          = gData->constraints.insert(*i).second || notEmpty;
 
     if (notEmpty)
     {
@@ -429,16 +415,6 @@ void RemoveArea(const Data::Area* area)
     }
 }
 
-void RemoveBindingConstraint(const Data::BindingConstraint* constraint)
-{
-    if (!(!gData) && gData->constraints.erase(const_cast<Data::BindingConstraint*>(constraint)))
-    {
-        gData->determineEmpty();
-        if (gInspector)
-            gInspector->apply(gData);
-    }
-}
-
 void RemoveLink(const Data::AreaLink* link)
 {
     if (!(!gData) && gData->links.erase(const_cast<Data::AreaLink*>(link)))
@@ -508,26 +484,6 @@ void SelectAreas(const Data::Area::Set& areas)
             if (area)
                 notEmpty = gData->areas.insert(area).second || notEmpty;
         }
-        if (notEmpty)
-            gData->empty = false;
-    }
-    if (gInspector)
-        gInspector->apply(gData);
-}
-
-void SelectBindingConstraints(const Data::BindingConstraint::Vector& list)
-{
-    if (!gData)
-        gData = std::make_shared<InspectorData>(Data::Study::Current::Get());
-
-    gData->clear();
-    if (!list.empty())
-    {
-        using ConstraintPtr = Data::BindingConstraint*;
-        bool notEmpty = false;
-        const Data::BindingConstraint::Vector::const_iterator end = list.end();
-        for (Data::BindingConstraint::Vector::const_iterator i = list.begin(); i != end; ++i)
-            notEmpty = gData->constraints.insert(const_cast<ConstraintPtr>(*i)).second || notEmpty;
         if (notEmpty)
             gData->empty = false;
     }
@@ -748,7 +704,7 @@ bool isConstraintSelected(const Yuni::String& constraintName)
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-        Data::BindingConstraint* constraint = *i;
+        auto constraint = *i;
         if (constraint->name() == constraintName)
         {
             return true;
@@ -764,7 +720,7 @@ bool ConstraintsSelected(const std::set<Yuni::String>& set)
     auto end = gData->constraints.end();
     for (auto i = gData->constraints.begin(); i != end; ++i)
     {
-        Data::BindingConstraint* constraint = *i;
+       auto constraint = *i;
         if (set.find(constraint->name()) == set.end())
         {
             return false;
