@@ -63,12 +63,7 @@ bool Data::performWL(Context& ctx)
 
         if (source && source != ctx.constraint)
         {
-            //TODO find matrix equivalent for BC
-            source->matrix().forceReload(true);
-            assert(source->matrix().width > 0);
-            assert(source->matrix().height > 0);
-            ctx.constraint->matrix() = source->matrix();
-            source->matrix().unloadFromMemory();
+            //Deleted some code. UI is deprecated but not yet removed
             return true;
         }
     }

@@ -224,14 +224,6 @@ public:
 
     bool skipped() const;
 
-    //! \name Values
-    //@{
-    //! Values for inequalities (const)
-    const Matrix<>& matrix() const;
-    //! Values for inequalities
-    Matrix<>& matrix();
-    //@}
-
     //Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& TimeSeries() const;
     Matrix<> &TimeSeries();

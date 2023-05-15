@@ -28,6 +28,22 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(cons
     return nullptr;
 }
 
+BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
+    for (uint i = 0; i != (uint) pList.size(); ++i) {
+        if (pList[i]->name() == name)
+            return pList[i].get();
+    }
+    return nullptr;
+}
+
+const BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) const {
+    for (uint i = 0; i != (uint) pList.size(); ++i) {
+        if (pList[i]->name() == name)
+            return pList[i].get();
+    }
+    return nullptr;
+}
+
 void BindingConstraintsList::removeConstraintsWhoseNameConstains(const AnyString &filter) {
     WhoseNameContains pred(filter);
     pList.erase(std::remove_if(pList.begin(), pList.end(), pred), pList.end());

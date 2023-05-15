@@ -673,13 +673,13 @@ void BindingConstraint::onDeleteAll(void*)
         logs.info() << "deleting the constraints ";
         WIP::Locker wip;
 
-        Antares::Data::BindingConstraintsList::iterator BC = study.bindingConstraints.begin();
+        auto BC = study.bindingConstraints.begin();
         int BCListSize = study.bindingConstraints.size();
         for (int i = 0; i < BCListSize; i++)
         {
             if ((*BC)->hasAllWeightedLinksOnLayer(study.activeLayerID)
                 && (*BC)->hasAllWeightedClustersOnLayer(study.activeLayerID))
-                study.bindingConstraints.remove(*BC);
+                study.bindingConstraints.remove(BC->get());
             else
                 ++BC;
         }
