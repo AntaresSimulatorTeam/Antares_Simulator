@@ -76,6 +76,16 @@ public:
     [[nodiscard]] std::shared_ptr<const Data::BindingConstraint> find(const AnyString& id) const;
 
     /*!
+** \brief Try to find a constraint from its name
+*/
+    [[nodiscard]] Data::BindingConstraint* findByName(const AnyString& name);
+
+    /*!
+    ** \brief Try to find a constraint from its name (const)
+    */
+    [[nodiscard]] const Data::BindingConstraint* findByName(const AnyString& name) const;
+
+    /*!
     ** \brief Load all binding constraints from a folder
     */
     [[nodiscard]] bool loadFromFolder(Data::Study& s, const Data::StudyLoadOptions& options, const AnyString& folder);

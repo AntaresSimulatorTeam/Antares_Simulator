@@ -470,20 +470,20 @@ void Manager::selectOnly(Item* item)
             if (mouseSelectionConstraints)
             {
                 // building list of selected links
-                Data::AreaLink::Set linklist = Window::Inspector::getLinks();
+                const Data::AreaLink::Set& linklist = Window::Inspector::getLinks();
 
                 Data::BindingConstraint::Set constraintlist;
 
-                const Data::BindingConstraintsList::iterator cEnd = pStudy->bindingConstraints.end();
-                for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin();
+                const auto cEnd = pStudy->bindingConstraints.end();
+                for (auto i = pStudy->bindingConstraints.begin();
                      i != cEnd;
                      ++i)
                 {
                     bool stop = false;
                     // alias to the current constraint
-                    Data::BindingConstraint* constraint = *i;
-                    const Data::BindingConstraint::const_iterator lend = constraint->end();
-                    for (Data::BindingConstraint::const_iterator ly = constraint->begin();
+                    auto constraint = *i;
+                    const auto lend = constraint->end();
+                    for (auto ly = constraint->begin();
                          ly != lend;
                          ++ly)
                     {
@@ -531,15 +531,15 @@ void Manager::changeItemSelectionState(Item* item)
 
             Data::BindingConstraint::Set constraintlist;
 
-            const Data::BindingConstraintsList::iterator cEnd = pStudy->bindingConstraints.end();
-            for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin(); i != cEnd;
+            const auto cEnd = pStudy->bindingConstraints.end();
+            for (auto i = pStudy->bindingConstraints.begin(); i != cEnd;
                  ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
-                Data::BindingConstraint* constraint = *i;
-                const Data::BindingConstraint::const_iterator lend = constraint->end();
-                for (Data::BindingConstraint::const_iterator ly = constraint->begin(); ly != lend;
+                auto constraint = *i;
+                const auto lend = constraint->end();
+                for (auto ly = constraint->begin(); ly != lend;
                      ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
@@ -802,15 +802,15 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
 
         if (mouseSelectionConstraints)
         {
-            const Data::BindingConstraintsList::iterator end = pStudy->bindingConstraints.end();
-            for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin(); i != end;
+            const auto end = pStudy->bindingConstraints.end();
+            for (auto i = pStudy->bindingConstraints.begin(); i != end;
                  ++i)
             {
                 bool stop = false;
                 // alias to the current constraint
-                Data::BindingConstraint* constraint = *i;
-                const Data::BindingConstraint::const_iterator lend = constraint->end();
-                for (Data::BindingConstraint::const_iterator ly = constraint->begin(); ly != lend;
+                auto constraint = *i;
+                const auto lend = constraint->end();
+                for (auto ly = constraint->begin(); ly != lend;
                      ++ly)
                 {
                     if (!linklist.count(const_cast<Data::AreaLink*>(ly->first)))
