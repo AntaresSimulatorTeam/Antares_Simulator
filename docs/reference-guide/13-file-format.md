@@ -1,6 +1,7 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v8.7.0
+### Input
 #### Scenarized RHS for binding constraints
 - For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
     - **input/bindingconstraints/&lt;id&gt;_lt.txt**
