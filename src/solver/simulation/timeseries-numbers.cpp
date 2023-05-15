@@ -961,7 +961,7 @@ bool TimeSeriesNumbers::Generate(Study& study)
     return true;
 }
 
-void TimeSeriesNumbers::StoreTimeseriesIntoOuput(Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
+void TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(Data::Study& study, Simulation::ITimeSeriesNumbersWriter& writer)
 {
     using namespace Antares::Data;
 
