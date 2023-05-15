@@ -59,7 +59,7 @@ void OPT_InitialiserNombreMinEtMaxDeGroupesCoutsDeDemarrage(PROBLEME_HEBDO* prob
             double TailleUnitaireDUnGroupeDuPalierThermique
               = PaliersThermiquesDuPays->TailleUnitaireDUnGroupeDuPalierThermique[index];
 
-            for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+            for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
             {
                 if (TailleUnitaireDUnGroupeDuPalierThermique != 0)
                 {

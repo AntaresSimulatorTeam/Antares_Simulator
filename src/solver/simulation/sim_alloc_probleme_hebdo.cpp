@@ -37,11 +37,8 @@
 
 using namespace Antares;
 
-void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps)
+void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, uint NombreDePasDeTemps)
 {
-    int k;
-    int j;
-
     auto& study = *Data::Study::Current::Get();
 
     uint nbPays = study.areas.size();
@@ -142,7 +139,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.IndexDebutIntercoExtremite[p] = -1;
     }
 
-    for (k = 0; k < NombreDePasDeTemps; k++)
+    for (uint k = 0; k < NombreDePasDeTemps; k++)
     {
         problem.ValeursDeNTC[k]
           = (VALEURS_DE_NTC_ET_RESISTANCES*)MemAlloc(sizeof(VALEURS_DE_NTC_ET_RESISTANCES));
@@ -278,7 +275,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
           = (double*)MemAlloc(linkCount * sizeof(double));
     }
 
-    for (k = 0; k < (int)linkCount; ++k)
+    for (uint k = 0; k < linkCount; ++k)
     {
         problem.CoutDeTransport[k] = (COUTS_DE_TRANSPORT*)MemAlloc(sizeof(COUTS_DE_TRANSPORT));
         problem.CoutDeTransport[k]->IntercoGereeAvecDesCouts = false;
@@ -295,7 +292,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     problem.CorrespondanceCntNativesCntOptimJournalieres
       = (CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES**)MemAlloc(7 * sizeof(void*));
-    for (k = 0; k < 7; k++)
+    for (uint k = 0; k < 7; k++)
     {
         problem.CorrespondanceCntNativesCntOptimJournalieres[k]
           = (CORRESPONDANCES_DES_CONTRAINTES_JOURNALIERES*)MemAlloc(
@@ -307,7 +304,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
 
     problem.CorrespondanceCntNativesCntOptimHebdomadaires
       = (CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES**)MemAlloc(1 * sizeof(void*));
-    for (k = 0; k < 1; k++)
+    for (uint k = 0; k < 1; k++)
     {
         problem.CorrespondanceCntNativesCntOptimHebdomadaires[k]
           = (CORRESPONDANCES_DES_CONTRAINTES_HEBDOMADAIRES*)MemAlloc(
@@ -321,12 +318,12 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
     problem.ResultatsContraintesCouplantes = (RESULTATS_CONTRAINTES_COUPLANTES*)MemAlloc(
       bindingConstraintCount * sizeof(RESULTATS_CONTRAINTES_COUPLANTES));
 
-    for (k = 0; k < (int)bindingConstraintCount; k++)
+    for (uint k = 0; k < bindingConstraintCount; k++)
     {
         problem.MatriceDesContraintesCouplantes[k]
           = (CONTRAINTES_COUPLANTES*)MemAlloc(sizeof(CONTRAINTES_COUPLANTES));
 
-        assert((uint)k < study.runtime->bindingConstraintCount);
+        assert(k < study.runtime->bindingConstraintCount);
         assert(study.runtime->bindingConstraint[k].linkCount < 50000000);
         assert(study.runtime->bindingConstraint[k].clusterCount < 50000000);
 
@@ -380,7 +377,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         }
     }
 
-    for (k = 0; k < (int)nbPays; k++)
+    for (uint k = 0; k < nbPays; k++)
     {
         const uint nbPaliers = study.areas.byIndex[k]->thermal.list.size();
 
@@ -507,7 +504,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         problem.ResultatsHoraires[k].ProductionThermique
           = (PRODUCTION_THERMIQUE_OPTIMALE**)MemAlloc(NombreDePasDeTemps * sizeof(void*));
 
-        for (j = 0; j < (int)nbPaliers; ++j)
+        for (uint j = 0; j < nbPaliers; ++j)
         {
             problem.PaliersThermiquesDuPays[k]->PuissanceDisponibleEtCout[j]
               = (PDISP_ET_COUTS_HORAIRES_PAR_PALIER*)MemAlloc(
@@ -559,7 +556,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
               ->CoutHoraireDuPalierThermiqueDown
               = (double*)MemAlloc(NombreDePasDeTemps * sizeof(double));
         }
-        for (j = 0; j < NombreDePasDeTemps; j++)
+        for (uint j = 0; j < NombreDePasDeTemps; j++)
         {
             problem.ResultatsHoraires[k].ProductionThermique[j]
               = (PRODUCTION_THERMIQUE_OPTIMALE*)MemAlloc(sizeof(PRODUCTION_THERMIQUE_OPTIMALE));
@@ -583,7 +580,7 @@ void SIM_AllocationProblemeHebdo(PROBLEME_HEBDO& problem, int NombreDePasDeTemps
         // Short term storage results
         const unsigned long nbShortTermStorage = study.areas.byIndex[k]->shortTermStorage.count();
         problem.ResultatsHoraires[k].ShortTermStorage.resize(NombreDePasDeTemps);
-        for (int pdt = 0; pdt < NombreDePasDeTemps; pdt++)
+        for (uint pdt = 0; pdt < NombreDePasDeTemps; pdt++)
         {
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].injection.resize(nbShortTermStorage);
             problem.ResultatsHoraires[k].ShortTermStorage[pdt].withdrawal.resize(
@@ -617,7 +614,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
     MemFree(problem.NbGrpCourbeGuide);
     MemFree(problem.NbGrpOpt);
 
-    for (int k = 0; k < problem.NombreDePasDeTemps; k++)
+    for (uint k = 0; k < problem.NombreDePasDeTemps; k++)
     {
         MemFree(problem.ValeursDeNTC[k]->ResistanceApparente);
         MemFree(problem.ValeursDeNTC[k]->ValeurDeNTCExtremiteVersOrigine);
@@ -868,7 +865,7 @@ void SIM_DesallocationProblemeHebdo(PROBLEME_HEBDO& problem)
         MemFree(problem.ResultatsHoraires[k].debordementsHoraires);
         MemFree(problem.ResultatsHoraires[k].CoutsMarginauxHoraires);
 
-        for (int j = 0; j < problem.NombreDePasDeTemps; j++)
+        for (uint j = 0; j < problem.NombreDePasDeTemps; j++)
         {
             MemFree(
               problem.ResultatsHoraires[k].ProductionThermique[j]->ProductionThermiqueDuPalier);

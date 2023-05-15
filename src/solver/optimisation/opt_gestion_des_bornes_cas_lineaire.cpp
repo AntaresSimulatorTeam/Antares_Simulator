@@ -61,7 +61,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
         const double* ContrainteDePmaxHydrauliqueHoraire
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->ContrainteDePmaxHydrauliqueHoraire;
         double pmaxHyd = -1;
-        for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+        for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
             if (ContrainteDePmaxHydrauliqueHoraire[pdtHebdo] > pmaxHyd)
                 pmaxHyd = ContrainteDePmaxHydrauliqueHoraire[pdtHebdo];
@@ -74,7 +74,7 @@ void OPT_MaxDesPmaxHydrauliques(PROBLEME_HEBDO* problemeHebdo)
     return;
 }
 
-double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, int pdtHebdo)
+double OPT_SommeDesPminThermiques(const PROBLEME_HEBDO* problemeHebdo, int Pays, uint pdtHebdo)
 {
     double sommeDesPminThermiques = 0.0;
     const PALIERS_THERMIQUES* PaliersThermiquesDuPays
