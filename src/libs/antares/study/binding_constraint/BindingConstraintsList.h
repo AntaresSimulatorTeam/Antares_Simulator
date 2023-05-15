@@ -171,6 +171,8 @@ private:
 
     //! All constraints
     Data::BindingConstraint::Vector pList;
+
+    void InitializeTSNumbers();
 };
 
 }
