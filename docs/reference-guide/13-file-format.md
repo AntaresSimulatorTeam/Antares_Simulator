@@ -20,7 +20,9 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
-
+### Output
+#### Scenarized RHS for binding constraints
+Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
 
 ## v8.6.0
 ### Input
@@ -52,10 +54,6 @@ In file **settings/generaldata.ini**, in section `adequacy patch` add property `
 
 #### Hydro Pmin
 For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
-
-### Output
-#### Scenarized RHS for binding constraints
-Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
 
 #### Short-term storage
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
