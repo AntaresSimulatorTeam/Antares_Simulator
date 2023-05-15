@@ -1,11 +1,6 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
-## v8.6.0
-### Input
-For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
-
-## v8.6.0
-### Input
+## v8.7.0
 #### Scenarized RHS for binding constraints
 - For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
     - **input/bindingconstraints/&lt;id&gt;_lt.txt**
@@ -25,6 +20,10 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
+
+
+## v8.6.0
+### Input
 #### Short-term storage
 * Add directories **input/st-storage/clusters** and **input/st-storage/series**
 * For each area, add directory **input/st-storage/clusters/&lt;area id&gt;/list.ini**
@@ -51,6 +50,8 @@ In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `p
 #### Adequacy patch
 In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
 
+#### Hydro Pmin
+For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
 
 ### Output
 #### Scenarized RHS for binding constraints
