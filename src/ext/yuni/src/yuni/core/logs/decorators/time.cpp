@@ -15,8 +15,6 @@
 #endif
 #include "time.h"
 
-#include <iostream>
-
 namespace Yuni
 {
 namespace Private
@@ -27,7 +25,7 @@ namespace LogsDecorator
 
 char* WriteCurrentTimestampToBufferMinGW()
 {
-    char[20] buff;
+    char[32] buff;
     time_t rawtime;
     ::time(&rawtime);
     ::strftime(buff, 32, "%F %T",  ::localtime(&rawtime));
