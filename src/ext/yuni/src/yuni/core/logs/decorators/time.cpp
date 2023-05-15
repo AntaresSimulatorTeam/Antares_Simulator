@@ -15,6 +15,8 @@
 #endif
 #include "time.h"
 
+#include <iostream>
+
 namespace Yuni
 {
 namespace Private
@@ -25,15 +27,18 @@ namespace LogsDecorator
 
 char* WriteCurrentTimestampToBufferMinGW()
 {
+    char[20] buff;
     time_t rawtime;
     ::time(&rawtime);
+    ::strftime(buff, 32, "%F %T",  ::localtime(&rawtime));
+
 
     /* MinGW */
     // Note that unlike on (all?) POSIX systems, in the Microsoft
     // C library locatime() and gmtime() are multi-thread-safe, as the
     // returned pointer points to a thread-local variable. So there is no
     // need for localtime_r() and gmtime_r().
-    return ::asctime(::localtime(&rawtime));
+    return ::buff);
 }
 
 #else
@@ -52,11 +57,11 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
     // Microsoft Visual Studio
     _localtime64_s(&timeinfo, &rawtime);
     // MSDN specifies that the buffer length value must be >= 26 for validity.
-    strftime(buffer, 32, "%F", &timeinfo);
+    strftime(buffer, 32, "%F %T", &timeinfo);
 
 #else
     // Unixes
-    ::strftime(buffer, 32, "%F",  ::localtime(&rawtime));
+    ::strftime(buffer, 32, "%F %T",  ::localtime(&rawtime));
 #endif
 }
 
