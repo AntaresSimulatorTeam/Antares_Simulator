@@ -139,6 +139,13 @@ jobs:
         name: MPS-diff
         path: ${{ github.workspace }}/src/tests/mps
 
+    - name: Upload solver on failure
+      if: ${{ failure() }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: solver
+        path: ${{ github.workspace }}/_build/solver/
+
     # simtest
     - name: Read simtest version
       id: simtest-version
