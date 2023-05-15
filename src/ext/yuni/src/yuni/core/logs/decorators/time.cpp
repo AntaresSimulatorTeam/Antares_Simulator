@@ -38,7 +38,7 @@ char* WriteCurrentTimestampToBufferMinGW()
     // C library locatime() and gmtime() are multi-thread-safe, as the
     // returned pointer points to a thread-local variable. So there is no
     // need for localtime_r() and gmtime_r().
-    return ::buff);
+    return buff;
 }
 
 #else
