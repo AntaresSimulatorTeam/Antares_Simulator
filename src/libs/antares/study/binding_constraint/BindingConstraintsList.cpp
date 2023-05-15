@@ -185,8 +185,20 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
     if (study.usedByTheSolver && sorDay == study.parameters.simplexOptimizationRange) {
         mutateWeeklyConstraintsIntoDailyOnes();
     }
-    //TODO load time series numbers
+
+    InitializeTSNumbers();
+
     return true;
+}
+
+void BindingConstraintsList::InitializeTSNumbers() {
+    std::set<std::string> groups;
+    std::for_each(this->pList.begin(), this->pList.end(), [&groups](auto bc) {
+        groups.insert(bc->group());
+    });
+    for (auto group: groups) {
+        this->time_series_numbers[group] = {};
+    }
 }
 
 void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
