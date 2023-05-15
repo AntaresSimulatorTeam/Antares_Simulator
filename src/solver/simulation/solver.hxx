@@ -381,7 +381,7 @@ void ISimulation<Impl>::run()
 
         // Export ts-numbers into output
         TimeSeriesNumbersWriter time_seris_writer(pResultWriter);
-        TimeSeriesNumbers::StoreTimeseriesIntoOuput(study, time_seris_writer);
+        TimeSeriesNumbers::StoreTimeSeriesNumbersIntoOuput(study, time_seris_writer);
 
         // Spatial clusters
         // Notifying all variables to perform the final spatial clusters.
