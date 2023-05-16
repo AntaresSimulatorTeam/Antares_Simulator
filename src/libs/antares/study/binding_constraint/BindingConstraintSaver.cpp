@@ -11,7 +11,7 @@
 namespace Antares::Data {
 
 using namespace Yuni;
-bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, BindingConstraint *const bindingConstraint) const
+bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, const BindingConstraint * bindingConstraint)
 {
     env.section->add("name", bindingConstraint->pName);
     env.section->add("id", bindingConstraint->pID);
@@ -21,10 +21,10 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, BindingConstraint *con
     env.section->add("filter-year-by-year", datePrecisionIntoString(bindingConstraint->pFilterYearByYear));
     env.section->add("filter-synthesis", datePrecisionIntoString(bindingConstraint->pFilterSynthesis));
 
-    if (not bindingConstraint->pComments.empty())
+    if (!bindingConstraint->pComments.empty())
         env.section->add("comments", bindingConstraint->pComments);
 
-    if (not bindingConstraint->pLinkWeights.empty())
+    if (!bindingConstraint->pLinkWeights.empty())
     {
         auto end = bindingConstraint->pLinkWeights.end();
         for (auto i = bindingConstraint->pLinkWeights.begin(); i != end; ++i)
@@ -39,13 +39,12 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, BindingConstraint *con
             String value;
             value << i->second;
             if (bindingConstraint->pLinkOffsets.find(i->first) != bindingConstraint->pLinkOffsets.end())
-                value << '%' << bindingConstraint->pLinkOffsets[i->first];
-            // env.section->add(env.key, i->second);
+                value << '%' << bindingConstraint->pLinkOffsets.at(i->first);
             env.section->add(env.key, value);
         }
     }
 
-    if (not bindingConstraint->pClusterWeights.empty())
+    if (!bindingConstraint->pClusterWeights.empty())
     {
         auto end = bindingConstraint->pClusterWeights.end();
         for (auto i = bindingConstraint->pClusterWeights.begin(); i != end; ++i)
@@ -58,8 +57,7 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, BindingConstraint *con
             String value;
             value << i->second;
             if (bindingConstraint->pClusterOffsets.find(i->first) != bindingConstraint->pClusterOffsets.end())
-                value << '%' << bindingConstraint->pClusterOffsets[i->first];
-            // env.section->add(env.key, i->second);
+                value << '%' << bindingConstraint->pClusterOffsets.at(i->first);
             env.section->add(env.key, value);
         }
     }

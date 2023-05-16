@@ -29,6 +29,6 @@ public:
     ** \param env All information needed to perform the task
     ** \return True if the operation succeeded, false otherwise
     */
-    bool saveToEnv(EnvForSaving& env, BindingConstraint *const bindingConstraint) const;
+    static bool saveToEnv(EnvForSaving& env, const BindingConstraint *bindingConstraint) ;
 };
 }
