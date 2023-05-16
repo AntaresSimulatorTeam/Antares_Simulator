@@ -434,11 +434,6 @@ public:
     */
     void matrix(double one_value);
 
-    //TODO move to loader
-    bool loadTimeSeries(EnvForLoading &env);
-    bool loadTimeSeriesBefore860(EnvForLoading &env);
-    bool loadBoundedTimeSeries(EnvForLoading &env, BindingConstraint::Operator);
-
 private:
     //! Raw name
     ConstraintName pName;
