@@ -37,6 +37,7 @@
 #include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
 #include "BindingConstraintLoader.h"
+#include "BindingConstraintSaver.h"
 
 using namespace Yuni;
 using namespace Antares;
@@ -469,65 +470,7 @@ void BindingConstraint::clear() {
     this->pEnabled = true;
 }
 
-bool BindingConstraint::saveToEnv(BindingConstraint::EnvForSaving& env)
-{
-    env.section->add("name", pName);
-    env.section->add("id", pID);
-    env.section->add("enabled", pEnabled);
-    env.section->add("type", TypeToCString(pType));
-    env.section->add("operator", OperatorToCString(pOperator));
-    env.section->add("filter-year-by-year", datePrecisionIntoString(pFilterYearByYear));
-    env.section->add("filter-synthesis", datePrecisionIntoString(pFilterSynthesis));
-
-    if (not pComments.empty())
-        env.section->add("comments", pComments);
-
-    if (not pLinkWeights.empty())
-    {
-        auto end = pLinkWeights.end();
-        for (auto i = pLinkWeights.begin(); i != end; ++i)
-        {
-            // asserts
-            assert(i->first and "Invalid link");
-            assert(i->first->from and "Invalid area name");
-            assert(i->first->with and "Invalid area name");
-
-            const AreaLink &lnk = *(i->first);
-            env.key.clear() << lnk.from->id << '%' << lnk.with->id;
-            String value;
-            value << i->second;
-            if (pLinkOffsets.find(i->first) != pLinkOffsets.end())
-                value << '%' << pLinkOffsets[i->first];
-            // env.section->add(env.key, i->second);
-            env.section->add(env.key, value);
-        }
-    }
-
-    if (not pClusterWeights.empty())
-    {
-        auto end = pClusterWeights.end();
-        for (auto i = pClusterWeights.begin(); i != end; ++i)
-        {
-            // asserts
-            assert(i->first and "Invalid thermal cluster");
-
-            const ThermalCluster &clstr = *(i->first);
-            env.key.clear() << clstr.getFullName();
-            String value;
-            value << i->second;
-            if (pClusterOffsets.find(i->first) != pClusterOffsets.end())
-                value << '%' << pClusterOffsets[i->first];
-            // env.section->add(env.key, i->second);
-            env.section->add(env.key, value);
-        }
-    }
-
-    // Exporting the matrix
-    env.matrixFilename.clear() << env.folder << SEP << pID << ".txt";
-    return time_series.saveToCSVFile(env.matrixFilename.c_str());
-}
-
-void BindingConstraintsList::clear()
+    void BindingConstraintsList::clear()
 {
     pList.clear();
 }

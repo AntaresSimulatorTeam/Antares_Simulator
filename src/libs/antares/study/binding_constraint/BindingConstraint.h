@@ -52,6 +52,7 @@ struct CompareBindingConstraintName;
 class BindingConstraint final : public Yuni::NonCopyable<BindingConstraint>
 {
     friend class BindingConstraintLoader;
+    friend class BindingConstraintSaver;
 public:
     enum Type
     {
@@ -116,19 +117,6 @@ public:
     using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
     //! Ordered Set of binding constraints
     using Set = std::set<std::shared_ptr<BindingConstraint>, CompareBindingConstraintName>;
-
-    class EnvForSaving final
-    {
-    public:
-        EnvForSaving() = default;
-
-        //! Current section
-        IniFile::Section* section = nullptr;
-
-        Yuni::Clob folder;
-        Yuni::Clob matrixFilename;
-        Yuni::CString<2 * (ant_k_area_name_max_length + 8), false> key;
-    };
 
     /*!
     ** \brief Convert a binding constraint type into a mere C-String
@@ -403,14 +391,6 @@ public:
     //@}
 
     /*!
-    ** \brief Save the binding constraint into a folder and an INI file
-    **
-    ** \param env All information needed to perform the task
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool saveToEnv(EnvForSaving& env);
-
-    /*!
     ** \brief Reverse the sign of the weight for a given interconnection or thermal cluster
     **
     ** This method is used when reverting an interconnection or thermal cluster
@@ -454,6 +434,7 @@ public:
     */
     void matrix(double one_value);
 
+    //TODO move to loader
     bool loadTimeSeries(EnvForLoading &env);
     bool loadTimeSeriesBefore860(EnvForLoading &env);
     bool loadBoundedTimeSeries(EnvForLoading &env, BindingConstraint::Operator);

@@ -10,6 +10,7 @@
 #include "BindingConstraint.h"
 #include "antares/study.h"
 #include "BindingConstraintLoader.h"
+#include "BindingConstraintSaver.h"
 
 namespace Antares::Data {
 std::shared_ptr<Data::BindingConstraint> BindingConstraintsList::find(const AnyString &id) {
@@ -96,7 +97,7 @@ BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
 }
 
 bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
-    BindingConstraint::EnvForSaving env;
+    BindingConstraintSaver::EnvForSaving env;
     env.folder = folder;
     return internalSaveToFolder(env);
 }
@@ -207,7 +208,7 @@ void BindingConstraintsList::mutateWeeklyConstraintsIntoDailyOnes()
     });
 }
 
-bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSaving& env) const
+bool BindingConstraintsList::internalSaveToFolder(BindingConstraintSaver::EnvForSaving& env) const
 {
     if (pList.empty())
     {
@@ -233,11 +234,12 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraint::EnvForSavin
     auto end = pList.end();
     ShortString64 text;
 
+    BindingConstraintSaver saver;
     for (auto i = pList.begin(); i != end; ++i, ++index)
     {
         text = index;
         env.section = ini.addSection(text);
-        ret = (*i)->saveToEnv(env) && ret;
+        ret = saver.saveToEnv(env, i->get()) && ret;
     }
 
     env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
