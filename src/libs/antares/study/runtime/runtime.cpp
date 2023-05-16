@@ -42,9 +42,7 @@
 
 using namespace Yuni;
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 static void StudyRuntimeInfosInitializeAllAreas(Study& study, StudyRuntimeInfos& r)
 {
@@ -164,14 +162,14 @@ static void CopyBCData(BindingConstraintRTI& rti, const BindingConstraint& b)
     rti.time_series.resize(b.TimeSeries().width, b.TimeSeries().height);
     rti.time_series.copyFrom(b.TimeSeries());
 
-    rti.linkWeight = new double[rti.linkCount];
-    rti.linkOffset = new int[rti.linkCount];
-    rti.linkIndex = new long[rti.linkCount];
+    rti.linkWeight.reserve(rti.linkCount);
+    rti.linkOffset.reserve(rti.linkCount);
+    rti.linkIndex.reserve(rti.linkCount);
 
-    rti.clusterWeight = new double[rti.clusterCount];
-    rti.clusterOffset = new int[rti.clusterCount];
-    rti.clusterIndex = new long[rti.clusterCount];
-    rti.clustersAreaIndex = new long[rti.clusterCount];
+    rti.clusterWeight.reserve(rti.linkCount);
+    rti.clusterOffset.reserve(rti.linkCount);
+    rti.clusterIndex.reserve(rti.linkCount);
+    rti.clustersAreaIndex.reserve(rti.linkCount);
 
     b.initLinkArrays(rti.linkWeight,
                      rti.clusterWeight,
@@ -311,32 +309,12 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
     }
 }
 
-BindingConstraintRTI::BindingConstraintRTI() :
- linkWeight(nullptr),
- linkOffset(nullptr),
- linkIndex(nullptr),
- clusterWeight(nullptr),
- clusterOffset(nullptr),
- clusterIndex(nullptr)
-{
-}
-
-BindingConstraintRTI::~BindingConstraintRTI()
-{
-    delete[] linkWeight;
-    delete[] linkOffset;
-    delete[] linkIndex;
-    delete[] clusterWeight;
-    delete[] clusterOffset;
-    delete[] clusterIndex;
-}
-
 void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
 {
     // Calculating the total number of binding constraints
     auto bindingConstraintCount = 0;
 
-    list.eachEnabled([&](const BindingConstraint& constraint) {
+    list.eachEnabled([&bindingConstraintCount](const BindingConstraint& constraint) {
         bindingConstraintCount
           += ((constraint.operatorType() == BindingConstraint::opBoth) ? 2 : 1);
     });
@@ -690,5 +668,4 @@ void StudyRuntimeInfos::disableAllFilters(Study& study)
     });
 }
 
-} // namespace Data
 } // namespace Antares

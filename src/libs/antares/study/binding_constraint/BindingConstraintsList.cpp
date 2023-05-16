@@ -86,13 +86,7 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
 }
 
 unsigned int BindingConstraintsList::NumberOfTimeseries(const std::string& group_name) const {
-    //Assume all BC in a group have the same width
-    const auto binding_constraint = std::find_if(pList.begin(), pList.end(), [&group_name](auto bc) {
-        return bc->group() == group_name;
-    });
-    if (binding_constraint == pList.end())
-        return 0;
-    return (*binding_constraint)->TimeSeries().width;
+    return NumberOfTimeseries(pList, group_name);
 }
 
 std::vector<std::shared_ptr<BindingConstraint>>

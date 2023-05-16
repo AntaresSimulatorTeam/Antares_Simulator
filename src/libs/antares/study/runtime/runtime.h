@@ -67,29 +67,26 @@ public:
 class BindingConstraintRTI
 {
 public:
-    BindingConstraintRTI();
-    ~BindingConstraintRTI();
-
-public:
-    //Matrix<double> bounds;
     BindingConstraint::Type type;
     char operatorType;
     uint filterYearByYear_ = filterAll;
     uint filterSynthesis_ = filterAll;
 
-    uint linkCount;
-    double* linkWeight;
-    int* linkOffset;
-    long* linkIndex;
+    uint linkCount = 0;
+    std::vector<double> linkWeight;
+    std::vector<int> linkOffset;
+    std::vector<long> linkIndex;
 
-    uint clusterCount;
-    double* clusterWeight;
-    int* clusterOffset;
-    long* clusterIndex;
-    long* clustersAreaIndex;
+    uint clusterCount = 0;
+    std::vector<double> clusterWeight;
+    std::vector<int> clusterOffset;
+    std::vector<long> clusterIndex;
+    std::vector<long> clustersAreaIndex;
     std::string name;
     std::string group;
     Matrix<> time_series;
+
+    const Matrix<>& TimeSeries() const { return time_series; }
 };
 
 /*!
