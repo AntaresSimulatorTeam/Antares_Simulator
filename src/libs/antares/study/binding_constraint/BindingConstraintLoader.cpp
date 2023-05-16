@@ -214,19 +214,7 @@ BindingConstraintLoader::loadBoundedTimeSeries(EnvForLoading &env, BindingConstr
                                                BindingConstraint *bindingConstraint) {
     bool load_ok = false;
 
-    switch (operatorType) {
-        case BindingConstraint::opLess:
-            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_lt" << ".txt";
-            break;
-        case BindingConstraint::opGreater:
-            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_gt" << ".txt";
-            break;
-        case BindingConstraint::opEquality:
-            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_eq" << ".txt";
-            break;
-        default:
-            assert(false && "Cannot load time series of type other that eq/gt/lt");
-    }
+    env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
     load_ok = bindingConstraint->time_series.loadFromCSVFile(env.buffer,
                                           1,
                                           (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
