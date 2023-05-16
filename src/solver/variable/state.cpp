@@ -86,7 +86,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
     thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
-      = thermalCluster->series->time_series[serieIndex][hourInTheYear];
+      = thermalCluster->series->timeSeries[serieIndex][hourInTheYear];
 
     // Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup = 0.;
@@ -98,7 +98,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
         // it doen't exist from the solver perspective
         assert(thermalCluster->series);
         assert(timeseriesIndex != NULL);
-        assert(hourInTheYear < thermalCluster->series->time_series.height);
+        assert(hourInTheYear < thermalCluster->series->timeSeries.height);
 
         thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = thermalClusterAvailableProduction;
@@ -249,7 +249,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
-    assert(endHourForCurrentYear <= currentCluster->series->time_series.height);
+    assert(endHourForCurrentYear <= currentCluster->series->timeSeries.height);
     assert(currentCluster);
     assert(currentCluster->series);
     assert(timeseriesIndex != NULL);
@@ -272,7 +272,7 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
         ON_max[h] = 0u;
 
         // Getting available production from cluster data
-        double thermalClusterAvailableProduction = currentCluster->series->time_series[serieIndex][h];
+        double thermalClusterAvailableProduction = currentCluster->series->timeSeries[serieIndex][h];
         double thermalClusterProduction = 0.;
         if (currentCluster->mustrun)
         {

@@ -202,7 +202,7 @@ public:
             Data::ThermalCluster& cluster = *(i->second);
             unsigned int chro = NumeroChroniquesTireesParPays[numSpace][pArea->index]
                                   ->ThermiqueParPalier[cluster.areaWideIndex];
-            const MatrixType& matrix = cluster.series->time_series;
+            const MatrixType& matrix = cluster.series->timeSeries;
             assert(chro < matrix.width);
             const MatrixType::ColumnType& column = matrix.entry[chro];
 

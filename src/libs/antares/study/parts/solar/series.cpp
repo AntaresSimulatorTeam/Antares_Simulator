@@ -55,10 +55,10 @@ int DataSeriesSolarLoadFromFolder(Study& study,
     int ret = 1;
     /* Solar the matrix */
     buffer.clear() << folder << SEP << "solar_" << areaID << '.' << study.inputExtension;
-    ret = s->time_series.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
+    ret = s->timeSeries.loadFromCSVFile(buffer, 1, HOURS_PER_YEAR, &study.dataBuffer) && ret;
 
     if (study.usedByTheSolver && study.parameters.derated)
-        s->time_series.averageTimeseries();
+        s->timeSeries.averageTimeseries();
 
     s->timeseriesNumbers.clear();
 
@@ -80,7 +80,7 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
 
         String buffer;
         buffer.clear() << folder << SEP << "solar_" << areaID << ".txt";
-        res = s->time_series.saveToCSVFile(buffer, /*decimal*/ 0) && res;
+        res = s->timeSeries.saveToCSVFile(buffer, /*decimal*/ 0) && res;
 
         return res;
     }
@@ -89,19 +89,19 @@ int DataSeriesSolarSaveToFolder(DataSeriesSolar* s, const AreaName& areaID, cons
 
 bool DataSeriesSolar::forceReload(bool reload) const
 {
-    return time_series.forceReload(reload);
+    return timeSeries.forceReload(reload);
 }
 
 void DataSeriesSolar::markAsModified() const
 {
-    time_series.markAsModified();
+    timeSeries.markAsModified();
 }
 
 void DataSeriesSolar::estimateMemoryUsage(StudyMemoryUsage& u) const
 {
     u.requiredMemoryForInput += sizeof(DataSeriesSolar);
     timeseriesNumbers.estimateMemoryUsage(u, true, 1, u.years);
-    time_series.estimateMemoryUsage(u,
+    timeSeries.estimateMemoryUsage(u,
                                0 != (timeSeriesSolar & u.study.parameters.timeSeriesToGenerate),
                                     u.study.parameters.nbTimeSeriesSolar,
                                     HOURS_PER_YEAR);

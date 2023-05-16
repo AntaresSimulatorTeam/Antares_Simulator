@@ -76,7 +76,7 @@ Yuni::uint64 Container::memoryUsage() const
 void Container::resetToDefault()
 {
     if (series)
-        series->time_series.reset(1, HOURS_PER_YEAR);
+        series->timeSeries.reset(1, HOURS_PER_YEAR);
     if (prepro)
         prepro->resetToDefault();
 }

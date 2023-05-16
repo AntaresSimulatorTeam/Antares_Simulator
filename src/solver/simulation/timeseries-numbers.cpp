@@ -126,7 +126,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.load.series->time_series.width};
+        std::vector<uint> to_return = {area.load.series->timeSeries.width};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -160,7 +160,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.wind.series->time_series.width};
+        std::vector<uint> to_return = {area.wind.series->timeSeries.width};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -177,7 +177,7 @@ public:
     }
     std::vector<uint> getAreaTimeSeriesNumber(const Area& area)
     {
-        std::vector<uint> to_return = {area.solar.series->time_series.width};
+        std::vector<uint> to_return = {area.solar.series->timeSeries.width};
         return to_return;
     }
     uint getGeneratedTimeSeriesNumber()
@@ -199,7 +199,7 @@ public:
         for (uint i = 0; i != clusterCount; ++i)
         {
             auto& cluster = *(area.thermal.clusters[i]);
-            to_return.push_back(cluster.series->time_series.width);
+            to_return.push_back(cluster.series->timeSeries.width);
         }
         return to_return;
     }
@@ -222,7 +222,7 @@ public:
         for (uint i = 0; i != clusterCount; ++i)
         {
             auto& cluster = *(area.renewable.clusters[i]);
-            to_return.push_back(cluster.series->time_series.width);
+            to_return.push_back(cluster.series->timeSeries.width);
         }
         return to_return;
     }
@@ -388,7 +388,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->time_series.width;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesLoad : area.load.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -397,7 +397,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->time_series.width;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesSolar : area.solar.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -406,7 +406,7 @@ bool checkInterModalConsistencyForArea(Area& area,
     if (isTSintermodal[indexTS])
     {
         uint nbTimeSeries
-          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->time_series.width;
+          = isTSgenerated[indexTS] ? parameters.nbTimeSeriesWind : area.wind.series->timeSeries.width;
         listNumberTsOverArea.push_back(nbTimeSeries);
     }
 
@@ -428,7 +428,7 @@ bool checkInterModalConsistencyForArea(Area& area,
         {
             auto& cluster = *(area.thermal.clusters[j]);
             uint nbTimeSeries = isTSgenerated[indexTS] ? parameters.nbTimeSeriesThermal
-                                                       : cluster.series->time_series.width;
+                                                       : cluster.series->timeSeries.width;
             listNumberTsOverArea.push_back(nbTimeSeries);
         }
     }
@@ -441,7 +441,7 @@ bool checkInterModalConsistencyForArea(Area& area,
         for (uint j = 0; j != clusterCount; ++j)
         {
             auto& cluster = *(area.renewable.clusters[j]);
-            uint nbTimeSeries = cluster.series->time_series.width;
+            uint nbTimeSeries = cluster.series->timeSeries.width;
             listNumberTsOverArea.push_back(nbTimeSeries);
         }
     }
@@ -591,7 +591,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.load.series->time_series.width;
+                                                       : area.load.series->timeSeries.width;
             area.load.series->timeseriesNumbers[0][year]
               = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
@@ -604,7 +604,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.solar.series->time_series.width;
+                                                       : area.solar.series->timeSeries.width;
             area.solar.series->timeseriesNumbers[0][year]
               = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
@@ -617,7 +617,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         if (!isTSintramodal[indexTS])
         {
             uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                       : area.wind.series->time_series.width;
+                                                       : area.wind.series->timeSeries.width;
             area.wind.series->timeseriesNumbers[0][year]
               = (uint32)(floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
         }
@@ -651,7 +651,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 if (!isTSintramodal[indexTS])
                 {
                     uint nbTimeSeries = isTSgenerated[indexTS] ? nbTimeseriesByMode[indexTS]
-                                                               : cluster->series->time_series.width;
+                                                               : cluster->series->timeSeries.width;
                     cluster->series->timeseriesNumbers[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
@@ -674,7 +674,7 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
                 if (!isTSintramodal[indexTS])
                 {
                     // There is no TS generation for renewable clusters
-                    uint nbTimeSeries = cluster->series->time_series.width;
+                    uint nbTimeSeries = cluster->series->timeSeries.width;
                     cluster->series->timeseriesNumbers[0][year] = (uint32)(
                       floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
                 }
@@ -804,13 +804,13 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
     study.areas.each([&years](Area& area) {
         // Load
         fixTSNumbersSingleAreaSingleMode(
-                area.load.series->timeseriesNumbers, area.load.series->time_series.width, years);
+                area.load.series->timeseriesNumbers, area.load.series->timeSeries.width, years);
         // Solar
         fixTSNumbersSingleAreaSingleMode(
-                area.solar.series->timeseriesNumbers, area.solar.series->time_series.width, years);
+                area.solar.series->timeseriesNumbers, area.solar.series->timeSeries.width, years);
         // Wind
         fixTSNumbersSingleAreaSingleMode(
-                area.wind.series->timeseriesNumbers, area.wind.series->time_series.width, years);
+                area.wind.series->timeseriesNumbers, area.wind.series->timeSeries.width, years);
         // Hydro
         fixTSNumbersSingleAreaSingleMode(
           area.hydro.series->timeseriesNumbers, area.hydro.series->count, years);
@@ -820,7 +820,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
                       area.thermal.clusters.cend(),
                       [&years](const Data::ThermalCluster* cluster) {
                           fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->time_series.width,
+                                                           cluster->series->timeSeries.width,
                                                            years);
                       });
 
@@ -831,7 +831,7 @@ static void fixTSNumbersWhenWidthIsOne(Study& study)
 
                       {
                           fixTSNumbersSingleAreaSingleMode(cluster->series->timeseriesNumbers,
-                                                           cluster->series->time_series.width,
+                                                           cluster->series->timeSeries.width,
                                                            years);
                       });
 

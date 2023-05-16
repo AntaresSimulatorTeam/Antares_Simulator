@@ -140,7 +140,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
             for (auto i = area.thermal.mustrunList.begin(); i != end; ++i)
             {
                 auto& cluster = *(i->second);
-                auto& series = cluster.series->time_series;
+                auto& series = cluster.series->timeSeries;
                 uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
                 if (tsIndex >= series.width)
                     tsIndex = 0;
@@ -172,7 +172,7 @@ void PrepareDataFromClustersInMustrunMode(Data::Study& study, uint numSpace)
                 if (!cluster.mustrunOrigin)
                     continue;
 
-                auto& series = cluster.series->time_series;
+                auto& series = cluster.series->timeSeries;
                 uint tsIndex = static_cast<uint>(PtChro.ThermiqueParPalier[cluster.areaWideIndex]);
                 if (tsIndex >= series.width)
                     tsIndex = 0;

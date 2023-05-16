@@ -78,8 +78,8 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 	pArea->spreadUnsuppliedEnergyCost	= 0.01;
 
 	//Define default load
-	pArea->load.series->time_series.resize(nbTS, HOURS_PER_YEAR);
-	pArea->load.series->time_series.fill(0.0);
+	pArea->load.series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
+	pArea->load.series->timeSeries.fill(0.0);
 
 	return pArea;
 }
@@ -104,8 +104,8 @@ std::shared_ptr<ThermalCluster> addCluster(Area* pArea, const std::string& clust
 	pCluster->minStablePower = 0.0;
 
 	//Define power consumption
-	pCluster->series->time_series.resize(nbTS, HOURS_PER_YEAR);
-	pCluster->series->time_series.fill(0.0);
+	pCluster->series->timeSeries.resize(nbTS, HOURS_PER_YEAR);
+	pCluster->series->timeSeries.fill(0.0);
 
 	//No modulation on cost
 	pCluster->modulation.reset(thermalModulationMax, HOURS_PER_YEAR);
@@ -223,7 +223,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	Area*  pArea = addArea(pStudy,"Area 1", nbTS);	
 
 	//Initialize time series
-	pArea->load.series->time_series.fillColumn(0, load);
+	pArea->load.series->timeSeries.fillColumn(0, load);
 
 	//Add thermal  cluster
 	double availablePower	= 50.0;
@@ -232,7 +232,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts)
 	auto pCluster = addCluster(pArea,"Cluster 1", maximumPower,cost, nbTS);
 
 	//Initialize time series
-	pCluster->series->time_series.fillColumn(0, availablePower);
+	pCluster->series->timeSeries.fillColumn(0, availablePower);
 
 	//Launch simulation
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -267,7 +267,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
-	pArea->load.series->time_series.fillColumn(0, load);
+	pArea->load.series->timeSeries.fillColumn(0, load);
 
 	//Add thermal  cluster
 	double availablePower	= 10.0;
@@ -276,7 +276,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_one_ts)
 	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
-	pCluster->series->time_series.fillColumn(0, availablePower);
+	pCluster->series->timeSeries.fillColumn(0, availablePower);
 
 	//Launch simulation
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -312,8 +312,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
-	pArea->load.series->time_series.fillColumn(0, load);
-	pArea->load.series->time_series.fillColumn(1, load);
+	pArea->load.series->timeSeries.fillColumn(0, load);
+	pArea->load.series->timeSeries.fillColumn(1, load);
 
 	//Add thermal  cluster
 	double availablePower = 10.0;
@@ -322,8 +322,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_identical)
 	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
-	pCluster->series->time_series.fillColumn(0, availablePower);
-	pCluster->series->time_series.fillColumn(1, availablePower);
+	pCluster->series->timeSeries.fillColumn(0, availablePower);
+	pCluster->series->timeSeries.fillColumn(1, availablePower);
 
 	//Launch simulation
 	Solver::Simulation::ISimulation< Solver::Simulation::Economy >* simulation = runSimulation(pStudy);
@@ -360,8 +360,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	Area* pArea = addArea(pStudy, "Area 1", nbTS);
 
 	//Initialize time series
-	pArea->load.series->time_series.fillColumn(0, load);
-	pArea->load.series->time_series.fillColumn(1, load * 2);
+	pArea->load.series->timeSeries.fillColumn(0, load);
+	pArea->load.series->timeSeries.fillColumn(1, load * 2);
 
 	double averageLoad = load * 1.5;
 
@@ -372,8 +372,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts)
 	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
-	pCluster->series->time_series.fillColumn(0, availablePower);
-	pCluster->series->time_series.fillColumn(1, availablePower);
+	pCluster->series->timeSeries.fillColumn(0, availablePower);
+	pCluster->series->timeSeries.fillColumn(1, availablePower);
 
 	//Create scenario rules to force use of TS otherwise the TS used is random
 	std::vector<int> areaLoadTS;
@@ -434,7 +434,7 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 
 	for (int i = 0; i < nbTS; i++)
 	{
-		pArea->load.series->time_series.fillColumn(i, loadList[i]);
+		pArea->load.series->timeSeries.fillColumn(i, loadList[i]);
 	}	
 
 	//Add thermal  cluster
@@ -444,8 +444,8 @@ BOOST_AUTO_TEST_CASE(two_mc_year_two_ts_different_weight)
 	auto pCluster = addCluster(pArea, "Cluster 1", maximumPower, cost, nbTS);
 
 	//Initialize time series
-	pCluster->series->time_series.fillColumn(0, availablePower);
-	pCluster->series->time_series.fillColumn(1, availablePower);
+	pCluster->series->timeSeries.fillColumn(0, availablePower);
+	pCluster->series->timeSeries.fillColumn(1, availablePower);
 
 	//Create scenario rules to force use of TS otherwise the TS used is random
 	std::vector<int> areaLoadTS;

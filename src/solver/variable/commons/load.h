@@ -202,8 +202,8 @@ public:
         (void)::memcpy(
           pValuesForTheCurrentYear[numSpace].hour,
           pArea->load.series
-            ->time_series[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Consommation],
-          sizeof(double) * pArea->load.series->time_series.height);
+            ->timeSeries[NumeroChroniquesTireesParPays[numSpace][pArea->index]->Consommation],
+          sizeof(double) * pArea->load.series->timeSeries.height);
 
         // Next variable
         NextType::yearBegin(year, numSpace);

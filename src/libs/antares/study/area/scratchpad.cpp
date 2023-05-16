@@ -37,7 +37,7 @@ namespace Antares
 namespace Data
 {
 AreaScratchpad::TimeseriesData::TimeseriesData(Area& area) :
-        load(area.load.series->time_series), solar(area.solar.series->time_series), wind(area.wind.series->time_series)
+        load(area.load.series->timeSeries), solar(area.solar.series->timeSeries), wind(area.wind.series->timeSeries)
 {
 }
 

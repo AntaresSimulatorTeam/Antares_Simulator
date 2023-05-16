@@ -87,8 +87,8 @@ void Data::RenewableCluster::copyFrom(const RenewableCluster& cluster)
         series = new DataSeriesCommon();
 
     // timseries
-    series->time_series = cluster.series->time_series;
-    cluster.series->time_series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -256,9 +256,9 @@ double RenewableCluster::valueAtTimeStep(uint timeSeriesIndex, uint timeStepInde
     if (!enabled)
         return 0.;
 
-    assert(timeStepIndex < series->time_series.height);
-    assert(timeSeriesIndex < series->time_series.width);
-    const double tsValue = series->time_series[timeSeriesIndex][timeStepIndex];
+    assert(timeStepIndex < series->timeSeries.height);
+    assert(timeSeriesIndex < series->timeSeries.width);
+    const double tsValue = series->timeSeries[timeSeriesIndex][timeStepIndex];
     switch (tsMode)
     {
     case powerGeneration:

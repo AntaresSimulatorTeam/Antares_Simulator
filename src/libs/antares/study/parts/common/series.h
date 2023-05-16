@@ -52,7 +52,7 @@ public:
     **
     ** Merely a matrix of TimeSeriesCount * 8760 values
     */
-    Matrix<double> time_series;
+    Matrix<double> timeSeries;
 
     /*!
     ** \brief Monte-Carlo

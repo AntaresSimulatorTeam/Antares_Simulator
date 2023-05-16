@@ -24,8 +24,8 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
-#define __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
+#ifndef __ANTARES_SOLVER_timeSeries_GENERATOR_H__
+#define __ANTARES_SOLVER_timeSeries_GENERATOR_H__
 
 #include <yuni/yuni.h>
 #include <antares/study/fwd.h>
@@ -69,4 +69,4 @@ void Destroy(Data::Study& study, uint year);
 
 #include "generator.hxx"
 
-#endif // __ANTARES_SOLVER_TIME_SERIES_GENERATOR_H__
+#endif // __ANTARES_SOLVER_timeSeries_GENERATOR_H__

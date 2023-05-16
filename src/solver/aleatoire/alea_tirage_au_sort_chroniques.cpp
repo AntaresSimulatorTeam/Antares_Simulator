@@ -67,14 +67,14 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             const Data::DataSeriesLoad& data = *area.load.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Consommation
-              = (data.time_series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Solar
         {
             const Data::DataSeriesSolar& data = *area.solar.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Solar
-              = (data.time_series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Hydro
         {
@@ -90,7 +90,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
             const Data::DataSeriesWind& data = *area.wind.series;
             assert(year < data.timeseriesNumbers.height);
             ptchro.Eolien
-              = (data.time_series.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
+              = (data.timeSeries.width != 1) ? (long)data.timeseriesNumbers[0][year] : 0; // zero-based
         }
         // Renewable
         {
@@ -107,7 +107,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
                 assert(year < data.timeseriesNumbers.height);
                 unsigned int index = cluster->areaWideIndex;
 
-                ptchro.RenouvelableParPalier[index] = (data.time_series.width != 1)
+                ptchro.RenouvelableParPalier[index] = (data.timeSeries.width != 1)
                                                         ? (long)data.timeseriesNumbers[0][year]
                                                         : 0; // zero-based
             }
@@ -135,7 +135,7 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
 
                 // the matrix data.series should be properly initialized at this stage
                 // because the ts-generator has already been launched
-                ptchro.ThermiqueParPalier[index] = (data.time_series.width != 1)
+                ptchro.ThermiqueParPalier[index] = (data.timeSeries.width != 1)
                                                      ? (long)data.timeseriesNumbers[0][year]
                                                      : 0; // zero-based
 

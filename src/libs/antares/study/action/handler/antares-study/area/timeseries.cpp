@@ -137,20 +137,20 @@ bool DataTimeseries::performWL(Context& ctx)
                 {
                 case Data::timeSeriesLoad:
                 {
-                    ctx.area->load.series->time_series = source->load.series->time_series;
-                    source->load.series->time_series.unloadFromMemory();
+                    ctx.area->load.series->timeSeries = source->load.series->timeSeries;
+                    source->load.series->timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesSolar:
                 {
-                    ctx.area->solar.series->time_series = source->solar.series->time_series;
-                    source->solar.series->time_series.unloadFromMemory();
+                    ctx.area->solar.series->timeSeries = source->solar.series->timeSeries;
+                    source->solar.series->timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesWind:
                 {
-                    ctx.area->wind.series->time_series = source->wind.series->time_series;
-                    source->wind.series->time_series.unloadFromMemory();
+                    ctx.area->wind.series->timeSeries = source->wind.series->timeSeries;
+                    source->wind.series->timeSeries.unloadFromMemory();
                     break;
                 }
                 case Data::timeSeriesHydro:
@@ -171,8 +171,8 @@ bool DataTimeseries::performWL(Context& ctx)
                 {
                     if (ctx.cluster && ctx.originalPlant && ctx.cluster != ctx.originalPlant)
                     {
-                        ctx.cluster->series->time_series = ctx.originalPlant->series->time_series;
-                        ctx.originalPlant->series->time_series.unloadFromMemory();
+                        ctx.cluster->series->timeSeries = ctx.originalPlant->series->timeSeries;
+                        ctx.originalPlant->series->timeSeries.unloadFromMemory();
                     }
                     break;
                 }
