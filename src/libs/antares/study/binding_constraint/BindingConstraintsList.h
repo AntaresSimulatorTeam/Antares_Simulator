@@ -7,6 +7,7 @@
 #include <functional>
 #include <memory>
 #include "BindingConstraint.h"
+#include "BindingConstraintSaver.h"
 
 namespace Antares::Data {
 class BindingConstraintsList final : public Yuni::NonCopyable<BindingConstraintsList>
@@ -171,7 +172,7 @@ public:
 
 
 private:
-    bool internalSaveToFolder(Data::BindingConstraint::EnvForSaving& env) const;
+    bool internalSaveToFolder(Data::BindingConstraintSaver::EnvForSaving& env) const;
 
     //! All constraints
     Data::BindingConstraint::Vector pList;
