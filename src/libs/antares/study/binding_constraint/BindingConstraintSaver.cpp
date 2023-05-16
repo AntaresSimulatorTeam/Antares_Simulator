@@ -5,6 +5,7 @@
 #include "BindingConstraintTimeSeries.h"
 #include "BindingConstraint.h"
 #include <yuni/yuni.h>
+#include <string>
 #include "antares/study/area/area.h"
 #include "antares/study/fwd.h"
 
@@ -63,7 +64,7 @@ bool BindingConstraintSaver::saveToEnv(EnvForSaving& env, const BindingConstrain
     }
 
     // Exporting the matrix
-    env.matrixFilename.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
+    env.matrixFilename.clear() << bindingConstraint->timeSeriesFileName(env);
     return bindingConstraint->time_series.saveToCSVFile(env.matrixFilename.c_str());
 }
 }
