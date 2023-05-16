@@ -19,6 +19,16 @@ class StudyList(object):
         res = subprocess.run(["valgrind" , "--tool=massif", "--massif-out-file=" + massifOutFile, exe, self.path])
         assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
 
+    def run_time(self, exe):
+        massifOutFile = "time.txt"
+        res = subprocess.run(["/bin/time" , "-o", timeOutFile, "-v", exe, self.path])
+        assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
+
+    def run_all(self, exe):
+        self.run_valgrind_base(exe)
+        self.run_valgrind_massif(exe)
+        self.run_time(exe)
+
 
 study_list = []
 study_list.append(StudyList("../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
@@ -26,18 +36,17 @@ study_list.append(StudyList("../resources/Antares_Simulator_Tests/medium-tests/0
 study_list.append(StudyList("../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 def valgrind_short(solver_path):
-    study_list[0].run_valgrind_base(solver_path)
-    study_list[0].run_valgrind_massif(solver_path)
+    study_list[0].run_all(solver_path)
 
 def valgrind_medium(solver_path):
-    study_list[1].run_valgrind_base(solver_path)
-    study_list[1].run_valgrind_massif(solver_path)
+    study_list[1].run_all(solver_path)
 
 def valgrind_long(solver_path):
-    study_list[2].run_valgrind_base(solver_path)
-    study_list[2].run_valgrind_massif(solver_path)
+    study_list[2].run_all(solver_path)
 
+def performance(solver_path):
+    valgrind_short(solver_path)
+    valgrind_medium(solver_path)
+    valgrind_long(solver_path)
 
-valgrind_short("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
-valgrind_medium("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
-valgrind_long("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
+performance("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
