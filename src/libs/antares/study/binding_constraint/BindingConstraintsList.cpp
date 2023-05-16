@@ -30,17 +30,17 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(cons
 }
 
 BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
-    for (uint i = 0; i != (uint) pList.size(); ++i) {
-        if (pList[i]->name() == name)
-            return pList[i].get();
+    for (auto & i : pList) {
+        if (i->name() == name)
+            return i.get();
     }
     return nullptr;
 }
 
 const BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) const {
-    for (uint i = 0; i != (uint) pList.size(); ++i) {
-        if (pList[i]->name() == name)
-            return pList[i].get();
+    for (const auto & i : pList) {
+        if (i->name() == name)
+            return i.get();
     }
     return nullptr;
 }
@@ -86,14 +86,9 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
                   });
 }
 
-unsigned int BindingConstraintsList::NumberOfTimeseries(const std::string& group_name) const {
-    return NumberOfTimeseries(pList, group_name);
-}
-
 std::vector<std::shared_ptr<BindingConstraint>>
 BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
-    const BindingConstraintLoader bc_loader;
-    return bc_loader.load(std::move(env));
+    return BindingConstraintLoader::load(std::move(env));
 }
 
 bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
@@ -191,7 +186,7 @@ void BindingConstraintsList::InitializeTSNumbers() {
     std::for_each(this->pList.begin(), this->pList.end(), [&groups](auto bc) {
         groups.insert(bc->group());
     });
-    for (auto group: groups) {
+    for (const auto& group: groups) {
         this->time_series_numbers[group] = {};
     }
 }
@@ -234,12 +229,11 @@ bool BindingConstraintsList::internalSaveToFolder(BindingConstraintSaver::EnvFor
     auto end = pList.end();
     ShortString64 text;
 
-    BindingConstraintSaver saver;
     for (auto i = pList.begin(); i != end; ++i, ++index)
     {
         text = index;
         env.section = ini.addSection(text);
-        ret = saver.saveToEnv(env, i->get()) && ret;
+        ret = Antares::Data::BindingConstraintSaver::saveToEnv(env, i->get()) && ret;
     }
 
     env.folder << Yuni::IO::Separator << "bindingconstraints.ini";
