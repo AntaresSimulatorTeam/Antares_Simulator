@@ -152,13 +152,13 @@ BindingConstraintLoader::load(EnvForLoading env) {
         greater_bc->copyFrom(bc.get());
         bc->operatorType(BindingConstraint::opLess);
         greater_bc->operatorType(BindingConstraint::opGreater);
-        if (bc->loadTimeSeries(env) && greater_bc->loadTimeSeries(env)) {
+        if (loadTimeSeries(env, bc.get()) && loadTimeSeries(env, greater_bc.get())) {
             return {bc, greater_bc};
     }
     return {};
 }
 
-    if (bc->loadTimeSeries(env)) {
+    if (loadTimeSeries(env, bc.get())) {
         return {bc};
     }
     return {};
@@ -199,5 +199,79 @@ BindingConstraintLoader::SeparateValue(const EnvForLoading &env, const IniFile::
         return ret; // continue to iterate
     });
     return ret;
+}
+
+bool BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstraint *bindingConstraint)
+{
+    if (env.version >= version860)
+        return loadBoundedTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
+
+    return loadTimeSeriesBefore860(env, nullptr);
+}
+
+bool
+BindingConstraintLoader::loadBoundedTimeSeries(EnvForLoading &env, BindingConstraint::Operator operatorType,
+                                               BindingConstraint *bindingConstraint) {
+    bool load_ok = false;
+
+    switch (operatorType) {
+        case BindingConstraint::opLess:
+            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_lt" << ".txt";
+            break;
+        case BindingConstraint::opGreater:
+            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_gt" << ".txt";
+            break;
+        case BindingConstraint::opEquality:
+            env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->name() << "_eq" << ".txt";
+            break;
+        default:
+            assert(false && "Cannot load time series of type other that eq/gt/lt");
+    }
+    load_ok = bindingConstraint->time_series.loadFromCSVFile(env.buffer,
+                                          1,
+                                          (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
+                                          Matrix<>::optImmediate,
+                                          &env.matrixBuffer);
+    if (load_ok)
+    {
+        logs.info() << " loaded time series for `" << bindingConstraint->name() << "` (" << BindingConstraint::TypeToCString(bindingConstraint->type()) << ", "
+                    << BindingConstraint::OperatorToShortCString(operatorType) << ')';
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool BindingConstraintLoader::loadTimeSeriesBefore860(EnvForLoading &env, BindingConstraint *bindingConstraint)
+{
+    env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
+    Matrix<> intermediate;
+    if (intermediate.loadFromCSVFile(env.buffer,
+                                     BindingConstraint::columnMax,
+                                     (bindingConstraint->pType == BindingConstraint::typeHourly) ? 8784 : 366,
+                                     Matrix<>::optImmediate | Matrix<>::optFixedSize,
+                                     &env.matrixBuffer))
+    {
+        if (bindingConstraint->pComments.empty())
+            logs.info() << " added `" << bindingConstraint->pName << "` (" << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
+                        << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator) << ')';
+        else
+            logs.info() << " added `" << bindingConstraint->pName << "` (" << BindingConstraint::TypeToCString(bindingConstraint->pType) << ", "
+                        << BindingConstraint::OperatorToShortCString(bindingConstraint->pOperator) << ") " << bindingConstraint->pComments;
+
+        // 0 is BindingConstraint::opLess
+        int columnNumber = BindingConstraint::Column::columnInferior;
+        if (bindingConstraint->operatorType() == BindingConstraint::opGreater)
+            columnNumber = BindingConstraint::Column::columnSuperior;
+        else if (bindingConstraint->operatorType() == BindingConstraint::opEquality)
+            columnNumber = BindingConstraint::Column::columnEquality;
+        else
+            assert(false && "Cannot load time series of type other that eq/gt/lt");
+
+        bindingConstraint->time_series.pasteToColumn(0, intermediate[columnNumber]);
+        return true;
+    }
+
+    return false;
 }
 } // Data

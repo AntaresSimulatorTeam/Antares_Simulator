@@ -30,7 +30,7 @@ std::shared_ptr<const Data::BindingConstraint> BindingConstraintsList::find(cons
 }
 
 BindingConstraint *BindingConstraintsList::findByName(const AnyString &name) {
-    for (auto & i : pList) {
+    for (auto const & i : pList) {
         if (i->name() == name)
             return i.get();
     }
@@ -87,8 +87,9 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
 }
 
 std::vector<std::shared_ptr<BindingConstraint>>
-BindingConstraintsList::LoadBindingConstraint(EnvForLoading env, uint years) {
-    return BindingConstraintLoader::load(std::move(env));
+BindingConstraintsList::LoadBindingConstraint(EnvForLoading env) {
+    BindingConstraintLoader loader;
+    return loader.load(std::move(env));
 }
 
 bool BindingConstraintsList::saveToFolder(const AnyString &folder) const {
@@ -151,7 +152,7 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
     if (ini.firstSection) {
         for (env.section = ini.firstSection; env.section; env.section = env.section->next) {
             if (env.section->firstProperty) {
-               auto new_bc = LoadBindingConstraint(env, study.parameters.nbYears);
+               auto new_bc = LoadBindingConstraint(env);
                 std::copy(new_bc.begin(), new_bc.end(), std::back_inserter(pList));
             }
         }
