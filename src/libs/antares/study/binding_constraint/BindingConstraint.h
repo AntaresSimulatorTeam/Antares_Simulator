@@ -311,11 +311,6 @@ public:
     /*!
     ** \brief Copy all offsets from another constraint
     */
-    void copyOffsets(const Study& study, const BindingConstraint& rhs, bool emptyBefore = true);
-
-    /*!
-    ** \brief Copy all offsets from another constraint
-    */
     void copyOffsets(const Study& study,
                      const BindingConstraint& rhs,
                      bool emptyBefore,
@@ -406,14 +401,6 @@ public:
     */
     Yuni::uint64 memoryUsage() const;
     //@}
-
-    /*!
-    ** \brief Load the binding constraint from a folder and an INI file
-    **
-    ** \param env All information needed to perform the task
-    ** \return True if the operation succeeded, false otherwise
-    */
-    bool loadFromEnv(EnvForLoading& env, unsigned nb_years);
 
     /*!
     ** \brief Save the binding constraint into a folder and an INI file
