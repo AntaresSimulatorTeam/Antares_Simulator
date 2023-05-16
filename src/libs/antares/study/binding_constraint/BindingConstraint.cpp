@@ -838,16 +838,14 @@ int BindingConstraint::offset(const ThermalCluster* lnk) const
     return (i != pClusterOffsets.end()) ? i->second : 0;
 }
 
-void BindingConstraint::initLinkArrays(double *w,
-                                       double *cW,
-                                       int *o,
-                                       int *cO,
-                                       long *linkIndex,
-                                       long *clusterIndex,
-                                       long* clustersAreaIndex) const
+void BindingConstraint::initLinkArrays(std::vector<double>& w,
+                                       std::vector<double>& cW,
+                                       std::vector<int>& o,
+                                       std::vector<int>& cO,
+                                       std::vector<long>& linkIndex,
+                                       std::vector<long>& clusterIndex,
+                                       std::vector<long>& clustersAreaIndex) const
 {
-    assert(w and "Invalid weight pointer");
-
     uint off = 0;
     auto end = pLinkWeights.end();
     for (auto i = pLinkWeights.begin(); i != end; ++i, ++off)

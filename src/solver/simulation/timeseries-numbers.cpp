@@ -34,6 +34,7 @@
 #include <filesystem>
 #include <utility>
 
+#include "antares/study/fwd.h"
 #include "timeseries-numbers.h"
 #include "ITimeSeriesNumbersWriter.h"
 
@@ -711,13 +712,12 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
     });
     // Binding constraints
-    std::for_each(study.bindingConstraints.time_series_numbers.begin(),
-                  study.bindingConstraints.time_series_numbers.end(),
-                  [&study, &year](auto& group_and_tsNumbers){
-        const auto nb_time_series = study.bindingConstraints.NumberOfTimeseries(group_and_tsNumbers.first);
-        group_and_tsNumbers.second.timeseriesNumbers[0][year] = (uint32)(
+    for (auto& [group, time_series]: study.bindingConstraints.time_series_numbers) {
+        const auto nb_time_series = BindingConstraintsList::NumberOfTimeseries(study.runtime->bindingConstraint, group);
+        auto& value = time_series.timeseriesNumbers[0][year];
+        value = (uint32)(
                 floor(study.runtime->random[seedTimeseriesNumbers].next() * nb_time_series));
-    });
+    }
 }
 
 Matrix<uint32>* getFirstTSnumberInterModalMatrixFoundInArea(
