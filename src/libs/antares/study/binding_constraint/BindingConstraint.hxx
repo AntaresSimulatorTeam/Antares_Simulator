@@ -115,6 +115,20 @@ inline BindingConstraint::const_iterator BindingConstraint::end() const {
     return pLinkWeights.end();
 }
 
+template<class Env>
+inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
+    switch (operatorType()) {
+        case BindingConstraint::opLess:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_lt" + ".txt";
+        case BindingConstraint::opGreater:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_gt" + ".txt";
+        case BindingConstraint::opEquality:
+            return std::string() + env.folder.c_str() + Yuni::IO::Separator + name().c_str() + "_eq" + ".txt";
+        default:
+            assert(false && "Cannot load/save time series of type other that eq/gt/lt");
+    }
+}
+
     } // namespace Data
 } // namespace Antares
 

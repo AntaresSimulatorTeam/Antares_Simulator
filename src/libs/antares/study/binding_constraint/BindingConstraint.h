@@ -433,6 +433,9 @@ public:
     ** \brief Fill the second member matrix with all member to the same value
     */
     void matrix(double one_value);
+    template<class Env>
+    std::string timeSeriesFileName(const Env &env) const;
+
 
 private:
     //! Raw name
