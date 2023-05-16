@@ -115,8 +115,8 @@ void UIRuntimeInfo::reloadBindingConstraints()
     byOperator.clear();
 
     {
-        const BindConstList::iterator end = pStudy.bindingConstraints.end();
-        BindConstList::iterator i = pStudy.bindingConstraints.begin();
+        const BindingConstraintsList::iterator end = pStudy.bindingConstraints.end();
+        BindingConstraintsList::iterator i = pStudy.bindingConstraints.begin();
         for (; i != end; ++i)
             orderedConstraint.insert(*i);
     }

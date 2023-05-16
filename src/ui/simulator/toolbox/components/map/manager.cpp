@@ -473,8 +473,8 @@ void Manager::selectOnly(Item* item)
 
                 Data::BindingConstraint::Set constraintlist;
 
-                const Data::BindConstList::iterator cEnd = pStudy->bindingConstraints.end();
-                for (Data::BindConstList::iterator i = pStudy->bindingConstraints.begin();
+                const Data::BindingConstraintsList::iterator cEnd = pStudy->bindingConstraints.end();
+                for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin();
                      i != cEnd;
                      ++i)
                 {
@@ -530,8 +530,8 @@ void Manager::changeItemSelectionState(Item* item)
 
             Data::BindingConstraint::Set constraintlist;
 
-            const Data::BindConstList::iterator cEnd = pStudy->bindingConstraints.end();
-            for (Data::BindConstList::iterator i = pStudy->bindingConstraints.begin(); i != cEnd;
+            const Data::BindingConstraintsList::iterator cEnd = pStudy->bindingConstraints.end();
+            for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin(); i != cEnd;
                  ++i)
             {
                 bool stop = false;
@@ -801,8 +801,8 @@ void Manager::selectFromBoundingBox(const wxPoint& a, const wxPoint& b, const si
 
         if (mouseSelectionConstraints)
         {
-            const Data::BindConstList::iterator end = pStudy->bindingConstraints.end();
-            for (Data::BindConstList::iterator i = pStudy->bindingConstraints.begin(); i != end;
+            const Data::BindingConstraintsList::iterator end = pStudy->bindingConstraints.end();
+            for (Data::BindingConstraintsList::iterator i = pStudy->bindingConstraints.begin(); i != end;
                  ++i)
             {
                 bool stop = false;

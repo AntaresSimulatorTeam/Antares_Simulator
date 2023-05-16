@@ -220,8 +220,8 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     prepro->copyFrom(*cluster.prepro);
     // timseries
 
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -355,7 +355,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -379,7 +379,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -689,16 +689,16 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->series.height; ++y)
+    for (uint y = 0; y != series->timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->series.width; ++x)
+        for (uint x = 0; x != series->timeSeries.width; ++x)
         {
             auto rightpart = PminDUnGroupeDuPalierThermique
-                             * ceil(series->series.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->series.entry[x][y];
+                             * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->timeSeries.entry[x][y];
             if (condition)
             {
-                series->series.entry[x][y] = rightpart;
+                series->timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }

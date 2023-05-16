@@ -328,7 +328,7 @@ BindingConstraintRTI::~BindingConstraintRTI()
     delete[] clusterIndex;
 }
 
-void StudyRuntimeInfos::initializeBindingConstraints(BindConstList& list)
+void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
 {
     // Calculating the total number of binding constraints
     bindingConstraintCount = 0;

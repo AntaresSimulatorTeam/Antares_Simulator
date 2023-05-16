@@ -376,7 +376,7 @@ void HydroManagement::prepareNetDemand(uint numSpace)
                                                              : scratchpad.originalMustrunSum[hour]);
 
                 area.renewable.list.each([&](const Antares::Data::RenewableCluster& cluster) {
-                    assert(cluster.series->series.jit == NULL && "No JIT data from the solver");
+                    assert(cluster.series->timeSeries.jit == NULL && "No JIT data from the solver");
                     netdemand -= cluster.valueAtTimeStep(
                       ptchro.RenouvelableParPalier[cluster.areaWideIndex], hour);
                 });
