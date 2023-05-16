@@ -394,60 +394,6 @@ void BindingConstraint::copyWeights(const Study &study,
 
 void BindingConstraint::copyOffsets(const Study &study,
                                     const BindingConstraint &rhs,
-                                    bool emptyBefore)
-{
-    if (emptyBefore)
-    {
-        pLinkOffsets.clear();
-        pClusterOffsets.clear();
-    }
-
-    if (not rhs.pLinkOffsets.empty())
-    {
-        auto end = rhs.pLinkOffsets.end();
-        for (auto i = rhs.pLinkOffsets.begin(); i != end; ++i)
-        {
-            // Alias to the current link
-            const AreaLink *sourceLink = i->first;
-            // offset
-            const int offset = i->second;
-
-            assert(sourceLink and "Invalid link in binding constraint");
-            assert(sourceLink->from and "Invalid area pointer 'from' within link");
-            assert(sourceLink->with and "Invalid area pointer 'with' within link");
-            const AreaLink *localLink
-                    = study.areas.findLink(sourceLink->from->id, sourceLink->with->id);
-            if (localLink)
-                pLinkOffsets[localLink] = offset;
-        }
-    }
-
-    if (not rhs.pClusterOffsets.empty())
-    {
-        auto end = rhs.pClusterOffsets.end();
-        for (auto i = rhs.pClusterOffsets.begin(); i != end; ++i)
-        {
-            // Alias to the current thermalCluster
-            const ThermalCluster *thermalCluster = i->first;
-            // weight
-            const int offset = i->second;
-
-            assert(thermalCluster and "Invalid thermal cluster in binding constraint");
-
-            const Area *localParent = study.areas.findFromName(thermalCluster->parentArea->name);
-            if (localParent)
-            {
-                const ThermalCluster *localTC
-                        = localParent->thermal.list.find(thermalCluster->id());
-                if (localTC)
-                    pClusterOffsets[localTC] = offset;
-            }
-        }
-    }
-}
-
-void BindingConstraint::copyOffsets(const Study &study,
-                                    const BindingConstraint &rhs,
                                     bool emptyBefore,
                                     Yuni::Bind<void(AreaName&, const AreaName&)>& translate)
 {
@@ -505,11 +451,6 @@ void BindingConstraint::copyOffsets(const Study &study,
             }
         }
     }
-}
-
-bool BindingConstraint::loadFromEnv(EnvForLoading& env, unsigned nb_years)
-{
-    return true;
 }
 
 void BindingConstraint::clear() {
