@@ -1019,6 +1019,8 @@ bool BindingConstraint::loadTimeSeriesBefore860(EnvForLoading &env)
             columnNumber = Column::columnSuperior;
         else if (operatorType() == BindingConstraint::opEquality)
             columnNumber = Column::columnEquality;
+        else
+            assert(false);
 
         time_series.pasteToColumn(0, intermediate[columnNumber]);
         return true;
