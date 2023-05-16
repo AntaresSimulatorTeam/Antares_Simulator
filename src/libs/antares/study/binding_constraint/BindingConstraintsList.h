@@ -163,8 +163,6 @@ public:
 
     void fixTSNumbersWhenWidthIsOne();
 
-    [[nodiscard]] unsigned int NumberOfTimeseries(const std::string& group_name) const;
-
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env, uint years);
 
     template<class ListBindingConstraints>
