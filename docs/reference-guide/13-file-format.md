@@ -53,8 +53,9 @@ In files **input/thermal/cluster/area/list.ini** add properties `nh3`, `nox`, `p
 In file **settings/generaldata.ini**, in section `adequacy patch` add property `enable-first-step` [bool]. Default value = `true` Enable or disable DENS column
 
 #### Hydro Pmin
-For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
+For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**. This file has one or more columns, and 8760 rows. The number of columns may be 1, or identical to the number of columns in existing file **mod.txt**.
 
+### Output
 #### Short-term storage
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
     * `ST-<group id>-withdrawal`
