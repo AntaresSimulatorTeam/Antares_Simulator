@@ -166,6 +166,10 @@ public:
 
     static std::vector<std::shared_ptr<BindingConstraint>> LoadBindingConstraint(EnvForLoading env, uint years);
 
+    template<class ListBindingConstraints>
+    [[nodiscard]] static unsigned int NumberOfTimeseries(const ListBindingConstraints &list, const std::string &group_name);
+
+
 private:
     bool internalSaveToFolder(Data::BindingConstraint::EnvForSaving& env) const;
 

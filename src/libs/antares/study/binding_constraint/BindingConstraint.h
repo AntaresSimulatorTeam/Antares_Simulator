@@ -454,13 +454,13 @@ public:
     void buildFormula(YString& s) const;
     void buildHTMLFormula(YString& s) const;
 
-    void initLinkArrays(double* weigth,
-                        double* cWeigth,
-                        int* o,
-                        int* cO,
-                        long* linkIndex,
-                        long* clusterIndex,
-                        long* clustersAreaIndex) const;
+    void initLinkArrays(std::vector<double>& weigth,
+                        std::vector<double>& cWeigth,
+                        std::vector<int>& o,
+                        std::vector<int>& cO,
+                        std::vector<long>& linkIndex,
+                        std::vector<long>& clusterIndex,
+                        std::vector<long>& clustersAreaIndex) const;
 
     /*!
     ** \brief Fill the second member matrix with all member to the same value
