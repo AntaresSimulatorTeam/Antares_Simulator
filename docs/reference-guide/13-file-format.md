@@ -1,6 +1,7 @@
 # Study format changes
 This is a list of all recent changes that came with new Antares Simulator features. The main goal of this document is to lower the costs of changing existing interfaces, both GUI and scripts.
 ## v8.7.0
+### Input
 #### Scenarized RHS for binding constraints
 - For each binding constraint, file **input/bindingconstraints/&lt;id&gt;.txt** is split into 3 files:
     - **input/bindingconstraints/&lt;id&gt;_lt.txt**
@@ -20,7 +21,9 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
 - 0 &lt;= MC Year &lt; generaldata.ini/general.nbyears
 - 1 &lt;=TS number &lt;= number of columns for the group
 
-
+### Output
+#### Scenarized RHS for binding constraints
+Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
 
 ## v8.6.0
 ### Input
@@ -33,9 +36,8 @@ This line is not mandatory for every group & MC year. If absent, the TS number w
     * `efficiency` [double] in range 0-1
     * `reservoircapacity` [double] &gt; 0
     * `initiallevel` [double] in range 0-1
-    * `withdrawalnominalcapacity` [double] in range 0-1
-    * `injectionnominalcapacity` [double] in range 0-1
-    * `storagecycle` [int] in range 24-168
+    * `withdrawalnominalcapacity` [double] &gt; 0
+    * `injectionnominalcapacity` [double] &gt; 0
 
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt** All entries must be in range 0-1
@@ -52,10 +54,6 @@ In file **settings/generaldata.ini**, in section `adequacy patch` add property `
 
 #### Hydro Pmin
 For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**.
-
-### Output
-#### Scenarized RHS for binding constraints
-Add directory **bindingconstraints** to output directory **ts-numbers**. For every binding constraint group, add a file **ts-numbers/bindingconstraints/&lt;group&gt;.txt** containing the TS numbers used for that group.
 
 #### Short-term storage
 * For every short-term storage group, add 3 columns in files **values-&lt;period&gt;.txt** (mc-all & mc-ind)
