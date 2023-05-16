@@ -689,16 +689,16 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->series.height; ++y)
+    for (uint y = 0; y != series->timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->series.width; ++x)
+        for (uint x = 0; x != series->timeSeries.width; ++x)
         {
             auto rightpart = PminDUnGroupeDuPalierThermique
-                             * ceil(series->series.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->series.entry[x][y];
+                             * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->timeSeries.entry[x][y];
             if (condition)
             {
-                series->series.entry[x][y] = rightpart;
+                series->timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }
