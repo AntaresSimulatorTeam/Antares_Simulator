@@ -124,17 +124,14 @@ OptimisationHebdo:
 
     if (optimizationNumber == PREMIERE_OPTIMISATION)
     {
-        if (!problemeHebdo->OptimisationAvecCoutsDeDemarrage)
-        {
-            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
-        }
-        else if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
+        if (problemeHebdo->OptimisationAvecCoutsDeDemarrage)
         {
             OPT_AjusterLeNombreMinDeGroupesDemarresCoutsDeDemarrage(problemeHebdo);
         }
         else
-            printf("BUG: l'indicateur problemeHebdo->OptimisationAvecCoutsDeDemarrage doit etre "
-                   "initialise a true ou false\n");
+        {
+            OPT_CalculerLesPminThermiquesEnFonctionDeMUTetMDT(problemeHebdo);
+        }
 
         optimizationNumber = DEUXIEME_OPTIMISATION;
 
