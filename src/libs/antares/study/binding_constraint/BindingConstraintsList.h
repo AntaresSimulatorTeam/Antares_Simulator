@@ -178,5 +178,19 @@ private:
     void InitializeTSNumbers();
 };
 
+struct WhoseNameContains final
+{
+public:
+    explicit WhoseNameContains(AnyString  filter) : pFilter(std::move(filter))
+    {
+    }
+    bool operator()(const std::shared_ptr<BindingConstraint>& s) const
+    {
+        return (s->name()).contains(pFilter);
+    }
+
+private:
+    AnyString pFilter;
+};
 }
 #include "BindingConstraintsList.hxx"
