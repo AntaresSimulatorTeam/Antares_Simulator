@@ -176,6 +176,8 @@ private:
     Data::BindingConstraint::Vector pList;
 
     void InitializeTSNumbers();
+
+    [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 };
 
 struct WhoseNameContains final
