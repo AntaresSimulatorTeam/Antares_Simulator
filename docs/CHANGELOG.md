@@ -4,7 +4,7 @@ Antares Changelog
 v8.6.0-rc6 (05/2023)
 --------------------
 ## Format improvement
- * Add bool for initial level optimization (#1312)
+ * Add bool for initial level optimization in short-term storage (#1312)
 
 ## Fixes
  * Fix memory errors detected by valfgrind (#1302)
