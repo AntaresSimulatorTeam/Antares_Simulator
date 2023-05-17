@@ -1,6 +1,20 @@
 Antares Changelog
 =================
 
+v8.6.0-rc6 (05/2023)
+--------------------
+## Format improvement
+ * Add bool for initial level optimization (#1312)
+
+## Fixes
+ * Fix memory errors detected by valfgrind (#1302)
+ * Hydro min power : correction on checks (#1308)
+
+## Code quality
+ * Simplify if/else (#1309)
+ * Fix a few compilation warnings (int -> uint) (#1301)
+ * Remove parameters.hxx, fix Parameters::memoryUsage (#1299)
+
 v8.6.0-rc5 (05/2023)
 --------------------
 ## New features
