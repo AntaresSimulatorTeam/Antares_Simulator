@@ -113,8 +113,7 @@ bool BindingConstraintsList::rename(BindingConstraint *bc, const AnyString &newn
         return false;
     }
     bc->name(name);
-    //TODO
-    //JIT::Invalidate(bc->matrix().jit);
+    JIT::Invalidate(bc->TimeSeries().jit);
     return true;
 }
 
