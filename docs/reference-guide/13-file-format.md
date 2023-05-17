@@ -61,7 +61,7 @@ For each area, new file added **input/hydro/series/&lt;area&gt;/mingen.txt**. Th
     * `ST-<group id>-withdrawal`
     * `ST-<group id>-injection`
     * `ST-<group id>-level`
-* For every area, add file **ST-details-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
+* For every area, add file **details-STstorage-&lt;period&gt;.txt** (mc-all & mc-ind) containing the same columns, but this time for every short-term storage object.
 
 #### Pollutant emission factors
 In files **economy/mc-all/areas/** add column: CO2 EMIS. One colum for every pollutant: CO2, NH3, NOX, PM2\_5, PM5, PM10, NMVOC, OP1, OP2, OP3, OP4, OP5
