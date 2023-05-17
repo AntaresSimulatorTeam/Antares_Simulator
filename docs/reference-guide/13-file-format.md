@@ -38,6 +38,7 @@ Add directory **bindingconstraints** to output directory **ts-numbers**. For eve
     * `initiallevel` [double] in range 0-1
     * `withdrawalnominalcapacity` [double] &gt; 0
     * `injectionnominalcapacity` [double] &gt; 0
+    * `initialleveloptim` [bool]
 
 * For each short-term-storage object, add the corresponding time-series in directory **input/st-storage/series/&lt;area id&gt;/&lt;STS id&gt;**. All of these files contain 8760 rows and 1 column.
     * **PMAX-injection.txt** All entries must be in range 0-1
