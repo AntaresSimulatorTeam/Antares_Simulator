@@ -219,8 +219,6 @@ void BindingConstraint::resetToDefaultValues()
     pComments.clear();
     time_series.reset();
     markAsModified();
-    //pValues.zero();
-    //pValues.markAsModified();
 }
 
 void BindingConstraint::copyWeights(const Study &study,

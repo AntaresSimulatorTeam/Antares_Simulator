@@ -251,6 +251,7 @@ uint64 BindingConstraintsList::memoryUsage() const
     uint64 m = sizeof(BindingConstraintsList);
     for (const auto & i : pList)
         m += i->memoryUsage();
+    m += timeSeriesNumberMemoryUsage();
     return m;
 }
 
@@ -350,5 +351,14 @@ void BindingConstraintsList::markAsModified() const
 {
     for (const auto & i : pList)
         i->markAsModified();
+}
+
+uint64 BindingConstraintsList::timeSeriesNumberMemoryUsage() const {
+    uint64 m = sizeof(time_series_numbers);
+    for (const auto& [key, value]: time_series_numbers) {
+        m += sizeof(key);
+        m += value.memoryUsage();
+    }
+    return m;
 }
 }
