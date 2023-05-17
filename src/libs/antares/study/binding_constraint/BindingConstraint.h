@@ -37,7 +37,6 @@
 #include "../../inifile/inifile.h"
 #include "EnvForLoading.h"
 #include "antares/study/filter.h"
-#include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintTimeSeriesNumbers.h"
 #include <memory>
 #include <utility>

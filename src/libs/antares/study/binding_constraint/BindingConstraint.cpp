@@ -30,7 +30,6 @@
 #include <vector>
 #include "BindingConstraint.h"
 #include "../study.h"
-#include "BindingConstraintTimeSeries.h"
 #include "BindingConstraintLoader.h"
 #include "BindingConstraintSaver.h"
 
