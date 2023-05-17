@@ -100,12 +100,10 @@ bool Properties::loadKey(const IniFile::Property* p)
         return p->value.to<unsigned int>(this->cycleDuration);
 
     if (p->key == "initiallevel")
-    {
-        if (p->value == "optim")
-            return true;
-
         return valueForOptional(this->initialLevel);
-    }
+
+    if (p->key == "initialleveloptim")
+        return p->value.to<bool>(this->initialLevelOptim);
 
     if (p->key == "group")
     {
@@ -174,6 +172,16 @@ bool Properties::validate()
                        << "for short term storage " << name;
         efficiencyFactor = 1;
     }
+
+    // reset initialLevel value to show we're optimising it
+    if (initialLevelOptim)
+    {
+        logs.info() << "Optimizing initial level";
+        initialLevel.reset();
+    }
+
+    if (!initialLevelOptim && !initialLevel.has_value())
+        logs.error() << "Initial level not optimized and no value provided, aborting";
 
     if (initialLevel.has_value())
     {

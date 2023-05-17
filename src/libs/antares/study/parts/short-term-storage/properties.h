@@ -60,8 +60,10 @@ public:
     std::optional<double> withdrawalNominalCapacity;
     // Not optional   Reservoir capacity in MWh, >= 0
     std::optional<double> reservoirCapacity;
-    // Initial level, <= reservoirCapacity
+    // Initial level, <= 1
     std::optional<double> initialLevel;
+    // Bool to optimise or not initial level
+    bool initialLevelOptim = false;
     // Efficiency factor between 0 and 1
     double efficiencyFactor = 1;
     // Cycle duration, 1 <= cycleDuration <= 168
