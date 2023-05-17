@@ -109,9 +109,7 @@ public:
     //! Map of offset (for links)
     using clusterOffsetMap = std::map<const ThermalCluster*, int>;
     //! Iterator
-    using thermalOffsetIterator = clusterOffsetMap::iterator;
     //! Const iterator
-    using thermalOffsetConst_iterator = clusterOffsetMap::const_iterator;
 
     //! Vector of binding constraints
     using Vector = std::vector<std::shared_ptr<BindingConstraint>>;
@@ -149,10 +147,6 @@ public:
 
     //! \name Constructor & Destructor
     //@{
-    /*!
-    ** \brief Default Constructor
-    */
-    BindingConstraint();
     /*!
     ** \brief Destructor
     */
@@ -257,11 +251,6 @@ public:
     /*!
     ** \brief Copy all weights from another constraint
     */
-    void copyWeights(const Study& study, const BindingConstraint& rhs, bool emptyBefore = true);
-
-    /*!
-    ** \brief Copy all weights from another constraint
-    */
     void copyWeights(const Study& study,
                      const BindingConstraint& rhs,
                      bool emptyBefore,
@@ -292,11 +281,6 @@ public:
     void offset(const ThermalCluster* clstr, int o);
 
     /*!
-    ** \brief Remove all offsets
-    */
-    void removeAllOffsets();
-
-    /*!
     ** \brief Copy all offsets from another constraint
     */
     void copyOffsets(const Study& study,
@@ -319,16 +303,8 @@ public:
     */
     uint enabledClusterCount() const;
 
-    /*!
-    ** \brief Remove an interconnection
-    */
-    bool removeLink(const AreaLink* lnk);
     //@}
 
-    /*!
-    ** \brief Remove a thermalcluster
-    */
-    bool removeCluster(const ThermalCluster* clstr);
     //@}
 
     //! \name Type of the binding constraint
@@ -397,8 +373,6 @@ public:
     */
     void reverseWeightSign(const AreaLink* lnk);
 
-    void reverseWeightSign(const ThermalCluster* clstr);
-
     /*!
     ** \brief Get if the given binding constraint is identical
     */
@@ -419,7 +393,6 @@ public:
     ** \brief Build a human readable formula for the binding constraint
     */
     void buildFormula(YString& s) const;
-    void buildHTMLFormula(YString& s) const;
 
     void initLinkArrays(std::vector<double>& weigth,
                         std::vector<double>& cWeigth,
@@ -429,10 +402,6 @@ public:
                         std::vector<long>& clusterIndex,
                         std::vector<long>& clustersAreaIndex) const;
 
-    /*!
-    ** \brief Fill the second member matrix with all member to the same value
-    */
-    void matrix(double one_value);
     template<class Env>
     std::string timeSeriesFileName(const Env &env) const;
 
@@ -442,8 +411,6 @@ private:
     ConstraintName pName;
     //! Raw ID
     ConstraintName pID;
-    //! Matrix<> where values for inequalities could be found
-    //Matrix<> pValues;
     //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
     Matrix<> time_series;
     //! Weights for links
@@ -465,7 +432,7 @@ private:
     // By default, print nothing
     uint pFilterSynthesis = filterNone;
     //! Enabled / Disabled
-    bool pEnabled;
+    bool pEnabled = false;
     //! Comments
     YString pComments;
     //! Group
@@ -473,8 +440,8 @@ private:
 
     void clear();
 
-    void copyFrom(BindingConstraint *original);
-}; // class BindingConstraint
+    void copyFrom(BindingConstraint const *original);
+};;; // class BindingConstraint
 
 // class BindConstList
 
@@ -484,21 +451,6 @@ struct CompareBindingConstraintName final
     {
         return s1->name() < s2->name();
     }
-};
-
-struct WhoseNameContains final
-{
-public:
-    explicit WhoseNameContains(AnyString  filter) : pFilter(std::move(filter))
-    {
-    }
-    bool operator()(const std::shared_ptr<BindingConstraint>& s) const
-    {
-        return (s->name()).contains(pFilter);
-    }
-
-private:
-    AnyString pFilter;
 };
 
 } // namespace Antares::Data

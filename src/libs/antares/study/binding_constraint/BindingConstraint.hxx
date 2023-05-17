@@ -24,14 +24,11 @@
 **
 ** SPDX-License-Identifier: licenceRef-GPL3_WITH_RTE-Exceptions
 */
-#ifndef __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
-#define __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
+#pragma once
 
 #include "../../utils.h"
 
-namespace Antares
-{
-namespace Data
+namespace Antares::Data
 {
 inline const ConstraintName& BindingConstraint::name() const
 {
@@ -52,16 +49,6 @@ inline void BindingConstraint::comments(const AnyString& newcomments)
 {
     pComments = newcomments;
 }
-
-//inline const Matrix<>& BindingConstraint::matrix() const
-//{
-//    return pValues;
-//}
-//
-//inline Matrix<>& BindingConstraint::matrix()
-//{
-//    return pValues;
-//}
 
 inline uint BindingConstraint::linkCount() const
 {
@@ -129,7 +116,4 @@ inline std::string BindingConstraint::timeSeriesFileName(const Env &env) const {
     }
 }
 
-    } // namespace Data
 } // namespace Antares
-
-#endif // __ANTARES_LIBS_STUDY_CONSTRAINT_CONSTRAINT_HXX__
