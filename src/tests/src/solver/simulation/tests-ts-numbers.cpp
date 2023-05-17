@@ -683,7 +683,6 @@ BOOST_AUTO_TEST_CASE(check_all_drawn_ts_numbers_are_bounded_between_0_and_nb_of_
 	study->parameters.nbTimeSeriesSolar = solarNumberOfTs;
 	study->parameters.nbTimeSeriesHydro = hydroNumberOfTs;
 	study->parameters.nbTimeSeriesThermal = thermalNumberOfTs;
-	study->parameters.nbTimeSeriesBindingConstraints = binding_constraints_number_of_TS;
 
 	Area* area = addAreaToStudy(study, "Area");
 
