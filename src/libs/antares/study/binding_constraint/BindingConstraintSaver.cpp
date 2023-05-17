@@ -2,7 +2,6 @@
 // Created by marechaljas on 16/05/23.
 //
 #include "BindingConstraintSaver.h"
-#include "BindingConstraintTimeSeries.h"
 #include "BindingConstraint.h"
 #include <yuni/yuni.h>
 #include <string>
