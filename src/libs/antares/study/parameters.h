@@ -271,7 +271,6 @@ public:
     uint nbTimeSeriesThermal;
     //! Nb of timeSeries : Solar
     uint nbTimeSeriesSolar;
-    uint nbTimeSeriesBindingConstraints;
     //@}
 
     //! \name Time-series refresh
@@ -294,7 +293,6 @@ public:
     uint refreshIntervalThermal;
     //! Refresh interval (in years) for timeSeries : Solar
     uint refreshIntervalSolar;
-    //TODO BC ?
     //@}
 
     //! \name Archives

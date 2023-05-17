@@ -306,7 +306,6 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
 
     //Prepare study
     prepareStudy(pStudy, nbYears);
-    pStudy->parameters.nbTimeSeriesBindingConstraints = nbTS;
 
     Area *area1 = addArea(pStudy, "Area 1", nbTS);
     Area *area2 = addArea(pStudy, "Area 2", nbTS);
@@ -603,7 +602,6 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
     area1= addArea(pStudy, "Area 1", nbTS);
     link= AreaAddLinkBetweenAreas(area1, area2);//Prepare study
     prepareStudy(pStudy, nbYears);
-    pStudy->parameters.nbTimeSeriesBindingConstraints = nbTS;
     auto* area3 = addArea(pStudy, "Area 3", nbTS);
     link->directCapacities.resize(1, 8760);
     link->indirectCapacities.resize(1, 8760);
