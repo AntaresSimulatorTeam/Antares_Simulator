@@ -219,8 +219,9 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
     {
         uint realmonth = study.calendar.months[month].realmonth;
         // Monthly minimum generation <= Monthly inflows for each month
-        if (area.hydro.followLoadModulations && !area.hydro.reservoirManagement
-            && (data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth]))
+        if (area.hydro.followLoadModulations && 
+            !area.hydro.reservoirManagement && 
+            data.totalMonthMingen[realmonth] > data.totalMonthInflows[realmonth])
         {
             logs.error() << "In Area " << area.name << " the minimum generation of "
                          << data.totalMonthMingen[realmonth] << " MW in month " << month + 1
@@ -233,8 +234,9 @@ void HydroManagement::checkMonthlyMinGeneration(uint numSpace, uint tsIndex, con
 void HydroManagement::checkYearlyMinGeneration(uint numSpace, uint tsIndex, const Data::Area& area) const
 {
     const auto& data = pAreas[numSpace][area.index];
-    if (area.hydro.followLoadModulations && area.hydro.reservoirManagement
-        && (data.totalYearMingen > data.totalYearInflows))
+    if (area.hydro.followLoadModulations && 
+        area.hydro.reservoirManagement && 
+        data.totalYearMingen > data.totalYearInflows)
     {
         // Yearly minimum generation <= Yearly inflows
         logs.error() << "In Area " << area.name << " the minimum generation of "
@@ -321,18 +323,21 @@ void HydroManagement::checkHourlyMinGeneration(uint tsIndex, Data::Area& area) c
 
 void HydroManagement::checkMinGeneration(uint numSpace)
 {
-    study.areas.each(
-      [this, &numSpace](Data::Area& area)
-      {
-          uint z = area.index;
-          const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
-          auto tsIndex = (uint)ptchro.Hydraulique;
+    study.areas.each([this, &numSpace](Data::Area& area)
+    {
+        uint z = area.index;
+        const auto& ptchro = *NumeroChroniquesTireesParPays[numSpace][z];
+        auto tsIndex = (uint)ptchro.Hydraulique;
 
-          checkMonthlyMinGeneration(numSpace, tsIndex, area);
-          checkYearlyMinGeneration(numSpace, tsIndex, area);
-          checkWeeklyMinGeneration(tsIndex, area);
-          checkHourlyMinGeneration(tsIndex, area);
-      });
+        if (area.hydro.useHeuristicTarget)
+        {
+            checkMonthlyMinGeneration(numSpace, tsIndex, area);
+            checkYearlyMinGeneration(numSpace, tsIndex, area);
+            checkWeeklyMinGeneration(tsIndex, area);
+        }
+          
+        checkHourlyMinGeneration(tsIndex, area);
+    });
 }
 
 template<enum Data::StudyMode ModeT>
