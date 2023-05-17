@@ -5,7 +5,8 @@
 #include "BindingConstraintTimeSeriesNumbers.h"
 
 namespace Antares::Data {
-    unsigned BindingConstraintTimeSeriesNumbers:: SeriesWidth() const {
-        return 0;
+
+    Yuni::uint64 BindingConstraintTimeSeriesNumbers::memoryUsage() const {
+        return timeseriesNumbers.memoryUsage();
     }
 } // Data
