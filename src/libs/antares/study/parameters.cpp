@@ -269,7 +269,6 @@ void Parameters::reset()
     nbTimeSeriesHydro = 1;
     nbTimeSeriesWind = 1;
     nbTimeSeriesThermal = 1;
-    nbTimeSeriesBindingConstraints = 1;
     // Time-series refresh
     timeSeriesToRefresh = 0; // None
     refreshIntervalLoad = 100;
@@ -479,8 +478,6 @@ static bool SGDIntLoadFamily_General(Parameters& d,
         return value.to<uint>(d.nbTimeSeriesThermal);
     if (key == "nbtimeseriessolar")
         return value.to<uint>(d.nbTimeSeriesSolar);
-    if (key == "nbtimeseriesbindingconstraints")
-        return value.to<uint>(d.nbTimeSeriesBindingConstraints);
     // Interval values
     if (key == "refreshintervalload")
         return value.to<uint>(d.refreshIntervalLoad);
@@ -1165,8 +1162,6 @@ void Parameters::fixBadValues()
         nbTimeSeriesWind = 1;
     if (!nbTimeSeriesSolar)
         nbTimeSeriesSolar = 1;
-    if (!nbTimeSeriesBindingConstraints)
-        nbTimeSeriesBindingConstraints = 1;
 }
 
 Yuni::uint64 Parameters::memoryUsage() const
@@ -1533,7 +1528,6 @@ void Parameters::saveToINI(IniFile& ini) const
         section->add("nbTimeSeriesWind    ", nbTimeSeriesWind);
         section->add("nbTimeSeriesThermal ", nbTimeSeriesThermal);
         section->add("nbTimeSeriesSolar   ", nbTimeSeriesSolar);
-        section->add("nbTimeSeriesBindingConstraints   ", nbTimeSeriesBindingConstraints);
 
         // Refresh
         ParametersSaveTimeSeries(section, "refreshTimeSeries", timeSeriesToRefresh);
