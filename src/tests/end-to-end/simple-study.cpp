@@ -332,10 +332,10 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     //Add thermal  cluster
     double availablePower = 50000.0;
     double maximumPower = 100000.0;
-    auto pCluster = addCluster(pStudy, area1, "Cluster 1", maximumPower, 1, nbTS);
+    auto pCluster = addCluster(area1, "Cluster 1", maximumPower, 1, nbTS);
 
     //Initialize time series
-    pCluster->series->time_series.fillColumn(0, availablePower);
+    pCluster->series->timeSeries.fillColumn(0, availablePower);
 
     //Add BC
     auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
@@ -343,7 +343,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
     BC->operatorType(BindingConstraint::opEquality);
-    auto& ts_numbers = pStudy->bindingConstraints.time_series[BC->group()];
+    auto& ts_numbers = pStudy->bindingConstraints.time_series_numbers[BC->group()];
     BC->TimeSeries().resize(1, 8760);
     BC->TimeSeries().fill(rhs);
     pStudy->bindingConstraints.resizeAllTimeseriesNumbers(1);
@@ -621,10 +621,10 @@ void prepareStudy(int nbYears, int nbTS, Study::Ptr &pStudy, Area *&area1,
     //Add thermal  cluster
     double availablePower = 50000.0;
     double maximumPower = 100000.0;
-    auto pCluster = addCluster(pStudy, area1, "Cluster 1", maximumPower, 1, nbTS);
+    auto pCluster = addCluster(area1, "Cluster 1", maximumPower, 1, nbTS);
 
     //Initialize time series
-    pCluster->series->time_series.fillColumn(0, availablePower);
+    pCluster->series->timeSeries.fillColumn(0, availablePower);
 }
 
 BOOST_AUTO_TEST_SUITE(test_bc)
