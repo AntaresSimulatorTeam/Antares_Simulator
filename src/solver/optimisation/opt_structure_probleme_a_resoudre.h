@@ -108,7 +108,8 @@ typedef struct
     int* Colonne;
 
     /* Nommage des variables & contraintes */
-    std::vector<std::string> NomDesVariables;
+    // std::vector<std::string> NomDesVariables;
+    char** NomDesVariables;
     std::vector<std::string> NomDesContraintes;
 
 public:

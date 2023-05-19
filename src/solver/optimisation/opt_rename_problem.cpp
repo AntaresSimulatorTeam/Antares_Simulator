@@ -21,6 +21,6 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         buffer << ts;
         // std::cout << "*************** RENAME " << problem->NomDesVariables[var] << " to "
         //           << buffer.str() << "***************\n";
-        problem->NomDesVariables[var] = buffer.str();
+        strcpy(problem->NomDesVariables[var], buffer.str().c_str());
     }
 }

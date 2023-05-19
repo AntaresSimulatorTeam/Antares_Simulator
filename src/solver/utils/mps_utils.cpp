@@ -84,6 +84,7 @@ public:
         dest->NbTerm = src->NombreDeTermesDesLignes;
         dest->B = src->SecondMembre;
         dest->SensDeLaContrainte = src->Sens;
+        dest->LabelDeLaVariable = src->NomDesVariables;
     }
 
 private:

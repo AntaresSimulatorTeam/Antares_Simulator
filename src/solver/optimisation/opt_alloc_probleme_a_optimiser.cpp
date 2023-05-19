@@ -51,6 +51,8 @@ using namespace Antares;
 #else
 #define SNPRINTF snprintf
 #endif
+//#TODO check mps var max size
+#define MAX_VAR_NAME 1000
 
 void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre,
                                                  int NbTermes)
@@ -101,7 +103,13 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
       = (double*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(double));
     ProblemeAResoudre->Colonne = (int*)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(int));
 
-    ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    // ProblemeAResoudre->NomDesVariables.resize(ProblemeAResoudre->NombreDeVariables);
+    ProblemeAResoudre->NomDesVariables
+      = (char**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(char*));
+    for (int i(0); i < ProblemeAResoudre->NombreDeVariables; i++)
+    {
+        ProblemeAResoudre->NomDesVariables[i] = (char*)MemAlloc(MAX_VAR_NAME * sizeof(char));
+    }
     ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
 }
 
@@ -130,7 +138,12 @@ void OPT_FreeOptimizationData(PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre)
     MemFree(ProblemeAResoudre->Pi);
     MemFree(ProblemeAResoudre->Colonne);
 
-    ProblemeAResoudre->NomDesVariables.clear();
+    // ProblemeAResoudre->NomDesVariables.clear();
+    for (int i(0); i < ProblemeAResoudre->NombreDeVariables; i++)
+    {
+        MemFree(ProblemeAResoudre->NomDesVariables[i]);
+    }
+    MemFree(ProblemeAResoudre->NomDesVariables);
     ProblemeAResoudre->NomDesContraintes.clear();
 }
 

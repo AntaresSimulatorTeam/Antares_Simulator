@@ -14,12 +14,12 @@ struct PROBLEME_SIMPLEXE_NOMME : public PROBLEME_SIMPLEXE
 {
 private:
 public:
-    PROBLEME_SIMPLEXE_NOMME(const std::vector<std::string>& NomDesVariables,
+    PROBLEME_SIMPLEXE_NOMME(char** NomDesVariables,
                             const std::vector<std::string>& NomDesContraintes,
                             std::vector<int>& StatutDesVariables,
                             std::vector<int>& StatutDesContraintes);
 
-    const std::vector<std::string>& NomDesVariables;
+    char** NomDesVariables;
     const std::vector<std::string>& NomDesContraintes;
     std::vector<int>& StatutDesVariables;
     std::vector<int>& StatutDesContraintes;

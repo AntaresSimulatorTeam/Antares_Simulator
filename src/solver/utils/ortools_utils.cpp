@@ -16,7 +16,7 @@ static void transferVariables(MPSolver* solver,
                               const double* bMax,
                               const double* costs,
                               int nbVar,
-                              const std::vector<std::string>& NomDesVariables)
+                              char** NomDesVariables)
 {
     MPObjective* const objective = solver->MutableObjective();
     for (int idxVar = 0; idxVar < nbVar; ++idxVar)
@@ -28,7 +28,7 @@ static void transferVariables(MPSolver* solver,
         }
         double max_l = bMax[idxVar];
         std::string varName;
-        if (NomDesVariables[idxVar].empty())
+        if (NomDesVariables[idxVar] != NULL && NomDesVariables[idxVar][0] == '\0')
         {
             varName = "x" + std::to_string(idxVar);
         }
