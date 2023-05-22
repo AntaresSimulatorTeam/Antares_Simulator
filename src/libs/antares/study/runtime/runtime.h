@@ -196,8 +196,6 @@ private:
 ** \brief Get the size (bytes) occupied in memory by a StudyRuntimeInfos structure
 ** \ingroup runtimedata
 */
-Yuni::uint64 StudyRuntimeInfosMemoryUsage(StudyRuntimeInfos* r);
-
 void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& study);
 
 } // namespace Antares::Data
