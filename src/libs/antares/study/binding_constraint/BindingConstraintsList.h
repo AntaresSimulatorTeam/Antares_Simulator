@@ -155,11 +155,11 @@ public:
     void markAsModified() const;
 
     [[nodiscard]] const std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>>& TimeSeriesNumbers() const {
-        return time_series_numbers;
+        return timeSeriesNumbers;
     }
     void resizeAllTimeseriesNumbers(unsigned nb_years);
 
-    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> time_series_numbers;
+    std::map<std::string, Data::BindingConstraintTimeSeriesNumbers, std::less<>> timeSeriesNumbers;
 
     void fixTSNumbersWhenWidthIsOne();
 

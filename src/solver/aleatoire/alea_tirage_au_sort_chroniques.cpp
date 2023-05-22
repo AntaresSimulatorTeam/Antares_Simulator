@@ -190,10 +190,10 @@ static void InitializeTimeSeriesNumbers_And_ThermalClusterProductionCost(
     //Binding constraints
     //Setting 0 for time_series of width 0 is done when using the value.
     //To do this here we would have to check every BC for its width
-    for (const auto& [group_name, _] : study.bindingConstraints.time_series_numbers) {
-        auto number_of_ts_numbers = study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers.height;
+    for (const auto& [group_name, _] : study.bindingConstraints.timeSeriesNumbers) {
+        auto number_of_ts_numbers = study.bindingConstraints.timeSeriesNumbers[group_name].timeseriesNumbers.height;
         assert(year < number_of_ts_numbers); //If only 1 ts_number we suppose only one TS. Any "year" will be converted to "0" later
-        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.time_series_numbers[group_name].timeseriesNumbers[0][year];
+        NumeroChroniquesTireesParGroup[numSpace][group_name] = study.bindingConstraints.timeSeriesNumbers[group_name].timeseriesNumbers[0][year];
     }
 }
 

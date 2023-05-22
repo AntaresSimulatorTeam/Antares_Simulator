@@ -411,7 +411,7 @@ private:
     //! Raw ID
     ConstraintName pID;
     //! Time series of the binding constraint. Width = number of series. Height = nbTimeSteps. Only store series for operatorType
-    Matrix<> time_series;
+    Matrix<> timeSeries;
     //! Weights for links
     linkWeightMap pLinkWeights;
     //! Weights for thermal clusters

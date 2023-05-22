@@ -63,9 +63,9 @@ std::shared_ptr<BindingConstraint> BindingConstraintsList::add(const AnyString &
 }
 
 void BindingConstraintsList::resizeAllTimeseriesNumbers(unsigned int nb_years) {
-    std::for_each(time_series_numbers.begin(), time_series_numbers.end(), [&](auto &kvp) {
-        time_series_numbers[kvp.first].timeseriesNumbers.clear();
-        time_series_numbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
+    std::for_each(timeSeriesNumbers.begin(), timeSeriesNumbers.end(), [&](auto &kvp) {
+        timeSeriesNumbers[kvp.first].timeseriesNumbers.clear();
+        timeSeriesNumbers[kvp.first].timeseriesNumbers.resize(1, nb_years);
     });
 }
 
@@ -78,7 +78,7 @@ void BindingConstraintsList::fixTSNumbersWhenWidthIsOne() {
         }
         groupOfOneTS[bc->group()] |= hasOneTs;
     });
-    std::for_each(time_series_numbers.begin(), time_series_numbers.end(),
+    std::for_each(timeSeriesNumbers.begin(), timeSeriesNumbers.end(),
                   [&groupOfOneTS](std::pair<std::string, BindingConstraintTimeSeriesNumbers> it) {
                       if (groupOfOneTS[it.first]) {
                           it.second.timeseriesNumbers.fillColumn(0, 0);
@@ -187,7 +187,7 @@ void BindingConstraintsList::InitializeTSNumbers() {
         groups.insert(bc->group());
     });
     for (const auto& group: groups) {
-        this->time_series_numbers[group] = {};
+        this->timeSeriesNumbers[group] = {};
     }
 }
 
@@ -353,8 +353,8 @@ void BindingConstraintsList::markAsModified() const
 }
 
 uint64 BindingConstraintsList::timeSeriesNumberMemoryUsage() const {
-    uint64 m = sizeof(time_series_numbers);
-    for (const auto& [key, value]: time_series_numbers) {
+    uint64 m = sizeof(timeSeriesNumbers);
+    for (const auto& [key, value]: timeSeriesNumbers) {
         m += sizeof(key);
         m += value.memoryUsage();
     }

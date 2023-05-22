@@ -712,11 +712,11 @@ void drawAndStoreTSnumbersForNOTintraModal(const array<bool, timeSeriesCount>& i
         }
     });
     // Binding constraints
-    for (auto& [group, time_series]: study.bindingConstraints.time_series_numbers) {
-        const auto nb_time_series = BindingConstraintsList::NumberOfTimeseries(study.runtime->bindingConstraint, group);
-        auto& value = time_series.timeseriesNumbers[0][year];
+    for (auto& [group, timeSeries]: study.bindingConstraints.timeSeriesNumbers) {
+        const auto nbTimeSeries = BindingConstraintsList::NumberOfTimeseries(study.runtime->bindingConstraint, group);
+        auto& value = timeSeries.timeseriesNumbers[0][year];
         value = (uint32)(
-                floor(study.runtime->random[seedTimeseriesNumbers].next() * nb_time_series));
+                floor(study.runtime->random[seedTimeseriesNumbers].next() * nbTimeSeries));
     }
 }
 
