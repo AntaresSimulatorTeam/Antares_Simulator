@@ -129,11 +129,46 @@ BOOST_AUTO_TEST_CASE(load_binding_constraints_timeseries) {
     CheckEqual(bindingConstraints.find("dummy_id")->TimeSeries(), expected_upper_bound_series);
 }
 
-BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series) {
-    //TODO
+BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_error_case) {
+        {
+            std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini", std::ios_base::app);
+            constraints << "[2]\n"
+                        << "name = dummy_name_2\n"
+                        << "id = dummy_id_2\n"
+                        << "enabled = false\n"
+                        << "type = hourly\n"
+                        << "operator = equal\n"
+                        << "group = dummy_group\n";
+            constraints.close();
+        }
+        Matrix values;
+        values.resize(5, 8784);
+        values.fill(0.42);
+        values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").c_str());
+        auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+        BOOST_CHECK_EQUAL(loading_ok, false);
 }
 
-//TODO
+BOOST_AUTO_TEST_CASE(verify_all_constraints_in_a_group_have_the_same_number_of_time_series_good_case) {
+    {
+        std::ofstream constraints(working_tmp_dir / "bindingconstraints.ini", std::ios_base::app);
+        constraints << "[2]\n"
+                    << "name = dummy_name_2\n"
+                    << "id = dummy_id_2\n"
+                    << "enabled = false\n"
+                    << "type = hourly\n"
+                    << "operator = equal\n"
+                    << "group = dummy_group\n";
+        constraints.close();
+    }
+    Matrix values;
+    values.resize(3, 8784);
+    values.fill(0.42);
+    values.saveToCSVFile((working_tmp_dir / "dummy_name_2_eq.txt").c_str());
+    auto loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    BOOST_CHECK_EQUAL(loading_ok, true);
+}
+
 BOOST_AUTO_TEST_CASE(Check_empty_file_interpreted_as_all_zeroes) {
     std::vector file_names = {working_tmp_dir / "dummy_name_lt.txt",
                               working_tmp_dir / "dummy_name_gt.txt",
