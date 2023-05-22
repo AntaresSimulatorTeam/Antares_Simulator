@@ -25,19 +25,35 @@ class StudyList(object):
         ps2 = subprocess.run(["sed -n -e 's/^.*System time.*: //p' " + self.outFile], shell=True, capture_output=True)
         return float(ps.stdout) + float(ps2.stdout)
 
+    def create_json(self):
+        memory = self.get_memory() / 1024 # from Kb to Mb
+        time = self.get_time()
+
+        data_memory = {}
+        data_memory['name'] = "Memory " + self.name + " study"
+        data_memory['value'] = memory
+        data_memory['unit'] = "Mb"
+
+        data_time = {}
+        data_time['name'] = "Execution time " + self.name + " study"
+        data_time['value'] = time
+        data_time['unit'] = "seconds"
+        data = [data_time, data_memory]
+        json_data = json.dumps(data)
+
+        print(json_data)
 
 
 
 study_list = []
 study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
-study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
-study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
+# study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
+# study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 
 def performance(solver_path):
     for studies in study_list:
         studies.run_metrics(solver_path)
+        studies.create_json()
 
 performance("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
-print(study_list[0].get_memory())
-print(study_list[0].get_time())
