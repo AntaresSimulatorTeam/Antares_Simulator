@@ -633,10 +633,6 @@ void StudyRuntimeInfosEstimateMemoryUsage(StudyMemoryUsage& u)
     u.study.areas.each([&](const Data::Area& area) {
         u.requiredMemoryForInput += sizeof(AreaLink*) * area.links.size();
     });
-
-    //TODO ?
-    // Binding constraints
-    // see BindConstList::estimateMemoryUsage
 }
 
 #ifndef NDEBUG
