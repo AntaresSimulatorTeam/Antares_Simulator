@@ -1,7 +1,7 @@
 //
 // Created by marechaljas on 07/04/23.
 //
-#define BOOST_TEST_MODULE time_series
+#define BOOST_TEST_MODULE timeSeries
 
 #include <boost/test/included/unit_test.hpp>
 #include "antares/study.h"
