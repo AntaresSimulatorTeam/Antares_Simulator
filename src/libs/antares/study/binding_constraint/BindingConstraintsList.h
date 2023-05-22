@@ -178,6 +178,8 @@ private:
     void InitializeTSNumbers();
 
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
+
+    bool checkTimeSeriesWidthConsistency() const;
 };
 
 struct WhoseNameContains final
