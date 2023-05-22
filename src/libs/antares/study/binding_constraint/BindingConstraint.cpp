@@ -614,16 +614,13 @@ bool BindingConstraint::forceReload(bool reload) const
     return TimeSeries().forceReload(reload);
 }
 
-bool BindingConstraintsList::forceReload(bool reload) const
+void BindingConstraintsList::forceReload(bool reload) const
 {
     if (!pList.empty())
     {
-        bool ret = true;
         for (const auto & i : pList)
-            ret = i->forceReload(reload) && ret;
-        return ret;
+            i->forceReload(reload);
     }
-    return true;
 }
 
 void BindingConstraint::markAsModified() const

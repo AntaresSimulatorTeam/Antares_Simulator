@@ -1274,14 +1274,12 @@ bool Study::forceReload(bool reload) const
     // Invalidate all areas
     ret = areas.forceReload(reload) and ret;
     // Binding constraints
-    ret = bindingConstraints.forceReload(reload) and ret;
+    bindingConstraints.forceReload(reload);
 
     ret = preproLoadCorrelation.forceReload(reload) and ret;
     ret = preproSolarCorrelation.forceReload(reload) and ret;
     ret = preproWindCorrelation.forceReload(reload) and ret;
     ret = preproHydroCorrelation.forceReload(reload) and ret;
-
-    ret = bindingConstraints.forceReload(reload) and ret;
 
     ret = setsOfAreas.forceReload(reload) and ret;
     ret = setsOfLinks.forceReload(reload) and ret;
