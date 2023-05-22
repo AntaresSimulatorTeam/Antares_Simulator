@@ -1137,11 +1137,10 @@ void Study::destroyAllThermalTSGeneratorData()
 
 void Study::ensureDataAreLoadedForAllBindingConstraints()
 {
-    foreach (auto constraint, bindingConstraints)
+    for(const auto& constraint: bindingConstraints)
     {
-        //TODO
-//        if (not JIT::IsReady(constraint->matrix().jit))
-//            constraint->matrix().forceReload(true);
+        if (not JIT::IsReady(constraint->TimeSeries().jit))
+            constraint->forceReload(true);
     }
 }
 
