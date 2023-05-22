@@ -39,7 +39,7 @@ public:
 
         char asc[32]; // MSDN specifies that the buffer length value must be >= 26 for validity
         Private::LogsDecorator::WriteCurrentTimestampToBuffer(asc);
-        out.write(asc, 20);
+        out.write(asc, 19);
 
         out.put(']');
 
