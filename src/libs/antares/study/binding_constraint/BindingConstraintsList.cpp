@@ -157,6 +157,8 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
         }
     }
 
+    bool hasError = checkTimeSeriesWidthConsistency();
+
     // Logs
     if (pList.empty())
         logs.info() << "No binding constraint found";
@@ -178,10 +180,32 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
 
     InitializeTSNumbers();
 
-    return true;
+    return !hasError;
 }
 
-void BindingConstraintsList::InitializeTSNumbers() {
+    bool BindingConstraintsList::checkTimeSeriesWidthConsistency() const {
+        bool hasError = false;
+        std::map<std::string, unsigned, std::less<>> timeSeriesCountByGroup;
+        for(const auto& bc: this->pList) {
+            auto count = timeSeriesCountByGroup[bc->group()];
+            auto width = bc->TimeSeries().width;
+            if (count == 0) {
+                timeSeriesCountByGroup[bc->group()] = width;
+                continue;
+            }
+            if (count != width) {
+                logs.error() << "Inconsistent time series width for constraint of the same group. Group at fault: "
+                             << bc->group()
+                             << " .Previous width was " << count
+                             << " new constraint " << bc->name()
+                             << " found with width of " << width;
+                hasError = true;
+            }
+        }
+        return hasError;
+    }
+
+    void BindingConstraintsList::InitializeTSNumbers() {
     std::set<std::string> groups;
     std::for_each(this->pList.begin(), this->pList.end(), [&groups](auto bc) {
         groups.insert(bc->group());
