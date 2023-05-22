@@ -216,7 +216,7 @@ void BindingConstraint::resetToDefaultValues()
 {
     pEnabled = true;
     pComments.clear();
-    time_series.reset();
+    timeSeries.reset();
     markAsModified();
 }
 
@@ -656,34 +656,34 @@ void BindingConstraint::clearAndReset(const AnyString &name,
     {
     case typeUnknown:
     {
-            time_series.reset();
+            timeSeries.reset();
             logs.error() << "invalid type for " << name << " (got 'unknown')";
             assert(false);
             break;
         }
     case typeHourly:
     {
-            time_series.reset(columnMax, 8784, true);
+            timeSeries.reset(columnMax, 8784, true);
             break;
         }
     case typeDaily:
     {
-            time_series.reset(columnMax, 366, true);
+            timeSeries.reset(columnMax, 366, true);
             break;
         }
     case typeWeekly:
     {
-            time_series.reset(columnMax, 366);
+            timeSeries.reset(columnMax, 366);
             break;
         }
     case typeMax:
     {
-            time_series.reset(0, 0);
+            timeSeries.reset(0, 0);
             logs.error() << "invalid type for " << name;
             break;
         }
     }
-    time_series.markAsModified();
+    timeSeries.markAsModified();
 }
 
 std::string BindingConstraint::group() const {
@@ -696,11 +696,11 @@ void BindingConstraint::group(std::string group_name) {
 }
 
 const Matrix<>& BindingConstraint::TimeSeries() const {
-    return time_series;
+    return timeSeries;
 }
 
 Matrix<>& BindingConstraint::TimeSeries() {
-    return time_series;
+    return timeSeries;
 }
 
 void BindingConstraint::copyFrom(BindingConstraint const* original) {
@@ -714,7 +714,7 @@ void BindingConstraint::copyFrom(BindingConstraint const* original) {
     pEnabled = original->pEnabled;
     pComments = original->pComments;
     group_ = original->group_;
-    time_series.copyFrom(original->time_series);
+    timeSeries.copyFrom(original->timeSeries);
 }
 
 } // namespace Antares

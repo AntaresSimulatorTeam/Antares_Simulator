@@ -333,10 +333,10 @@ void preparerBindingConstraint(const PROBLEME_HEBDO &problem, uint numSpace, int
     for (uint k = 0; k != constraintCount; ++k)
     {
         auto& bc = studyruntime.bindingConstraint[k];
-        assert(bc.time_series.width && "Invalid constraint data width");
+        assert(bc.timeSeries.width && "Invalid constraint data width");
         //If there is only one TS, always select it.
-        const auto ts_number = bc.time_series.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
-        auto& timeSeries = bc.time_series;
+        const auto ts_number = bc.timeSeries.width == 1 ? 0 : NumeroChroniquesTireesParGroup[numSpace][bc.group];
+        auto& timeSeries = bc.timeSeries;
         switch (bc.type)
         {
             case BindingConstraint::typeHourly:

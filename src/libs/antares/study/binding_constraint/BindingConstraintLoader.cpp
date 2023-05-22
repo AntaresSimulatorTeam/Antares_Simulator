@@ -215,11 +215,11 @@ BindingConstraintLoader::loadBoundedTimeSeries(EnvForLoading &env, BindingConstr
     bool load_ok = false;
 
     env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
-    load_ok = bindingConstraint->time_series.loadFromCSVFile(env.buffer,
-                                          1,
+    load_ok = bindingConstraint->timeSeries.loadFromCSVFile(env.buffer,
+                                                            1,
                                           (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
-                                          Matrix<>::optImmediate,
-                                          &env.matrixBuffer);
+                                                            Matrix<>::optImmediate,
+                                                            &env.matrixBuffer);
     if (load_ok)
     {
         logs.info() << " loaded time series for `" << bindingConstraint->name() << "` (" << BindingConstraint::TypeToCString(bindingConstraint->type()) << ", "
@@ -256,7 +256,7 @@ bool BindingConstraintLoader::loadTimeSeriesBefore860(EnvForLoading &env, Bindin
         else
             assert(false && "Cannot load time series of type other that eq/gt/lt");
 
-        bindingConstraint->time_series.pasteToColumn(0, intermediate[columnNumber]);
+        bindingConstraint->timeSeries.pasteToColumn(0, intermediate[columnNumber]);
         return true;
     }
 
