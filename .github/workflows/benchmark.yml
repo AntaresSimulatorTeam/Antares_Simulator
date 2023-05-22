@@ -2,7 +2,7 @@ name: Benchmark
 on:
   push:
     branches:
-      - feature/json-performance-tests
+      - feature/performance
 
 jobs:
   benchmark:
