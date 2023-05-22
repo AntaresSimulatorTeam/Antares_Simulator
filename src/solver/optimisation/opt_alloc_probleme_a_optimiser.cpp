@@ -108,7 +108,7 @@ void OPT_AllocateFromNumberOfVariableConstraints(PROBLEME_ANTARES_A_RESOUDRE* Pr
       = (char**)MemAlloc(ProblemeAResoudre->NombreDeVariables * sizeof(char*));
     for (int i(0); i < ProblemeAResoudre->NombreDeVariables; i++)
     {
-        ProblemeAResoudre->NomDesVariables[i] = (char*)MemAlloc(MAX_VAR_NAME * sizeof(char));
+        ProblemeAResoudre->NomDesVariables[i] = (char*)MemAllocMemset(MAX_VAR_NAME * sizeof(char));
     }
     ProblemeAResoudre->NomDesContraintes.resize(ProblemeAResoudre->NombreDeContraintes);
 }
