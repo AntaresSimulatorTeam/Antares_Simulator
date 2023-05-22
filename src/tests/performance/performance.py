@@ -1,4 +1,5 @@
 import subprocess
+import json
 import sys
 import os
 
@@ -38,7 +39,7 @@ study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-t
 
 
 def performance(solver_path):
-    for i in range(study_list.length()
-        study_list[i].run_all(solver_path)
+    for studies in study_list:
+        studies.run_all(solver_path)
 
 performance("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
