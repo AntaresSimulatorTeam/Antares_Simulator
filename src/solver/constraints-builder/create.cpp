@@ -162,10 +162,9 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   state->WeightMap,
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
-                //TODO
-                //state->secondMember.resizeWithoutDataLost(
-                //  constraint->matrix().width, constraint->matrix().height, 0);
-                //constraint->matrix() = state->secondMember;
+                state->secondMember.resizeWithoutDataLost(
+                  constraint->TimeSeries().width, constraint->TimeSeries().height, 0);
+                constraint->TimeSeries() = state->secondMember;
 
                 // iterate the counter
                 ++nSubCount;
@@ -179,10 +178,9 @@ bool CBuilder::createConstraints(const std::vector<Vector>& mesh)
                                   state->WeightMap,
                                   0); // vocabulary is not so obvious here (less or greater)
                 ret = constraint != nullptr;
-                //TODO
-                //state->secondMember.resizeWithoutDataLost(
-                //  constraint->matrix().width, constraint->matrix().height, 0);
-                //constraint->matrix() = state->secondMember;
+                state->secondMember.resizeWithoutDataLost(
+                        constraint->TimeSeries().width, constraint->TimeSeries().height, 0);
+                constraint->TimeSeries() = state->secondMember;
             }
         }
         ++nCount;
