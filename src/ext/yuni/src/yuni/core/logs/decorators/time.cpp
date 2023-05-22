@@ -21,25 +21,6 @@ namespace Private
 {
 namespace LogsDecorator
 {
-#ifdef YUNI_OS_MINGW
-
-char* WriteCurrentTimestampToBufferMinGW()
-{
-    char[32] buff;
-    time_t rawtime;
-    ::time(&rawtime);
-    ::strftime(buff, 32, "%F %T",  ::localtime(&rawtime));
-
-
-    /* MinGW */
-    // Note that unlike on (all?) POSIX systems, in the Microsoft
-    // C library locatime() and gmtime() are multi-thread-safe, as the
-    // returned pointer points to a thread-local variable. So there is no
-    // need for localtime_r() and gmtime_r().
-    return buff;
-}
-
-#else
 
 void WriteCurrentTimestampToBuffer(char buffer[32])
 {
@@ -62,8 +43,6 @@ void WriteCurrentTimestampToBuffer(char buffer[32])
     ::strftime(buffer, 32, "%F %T",  ::localtime(&rawtime));
 #endif
 }
-
-#endif
 
 } // namespace LogsDecorator
 } // namespace Private

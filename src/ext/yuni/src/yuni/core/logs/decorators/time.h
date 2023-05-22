@@ -18,11 +18,7 @@ namespace Private
 namespace LogsDecorator
 {
 // Forward declarations
-#if defined(YUNI_OS_MINGW)
-YUNI_DECL char* WriteCurrentTimestampToBufferMinGW(void);
-#else
 YUNI_DECL void WriteCurrentTimestampToBuffer(char buffer[32]);
-#endif
 
 } // namespace LogsDecorator
 } // namespace Private
@@ -41,13 +37,9 @@ public:
     {
         out.put('[');
 
-#ifndef YUNI_OS_MINGW
         char asc[32]; // MSDN specifies that the buffer length value must be >= 26 for validity
         Private::LogsDecorator::WriteCurrentTimestampToBuffer(asc);
         out.write(asc, 20);
-#else
-        out.write(Private::LogsDecorator::WriteCurrentTimestampToBufferMinGW(), 20);
-#endif
 
         out.put(']');
 
