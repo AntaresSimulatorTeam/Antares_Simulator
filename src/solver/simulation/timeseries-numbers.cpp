@@ -469,7 +469,7 @@ void drawTSnumbersForIntraModal(array<uint32, timeSeriesCount>& intramodal_draws
                                 array<uint, timeSeriesCount>& nbTimeseriesByMode,
                                 MersenneTwister* mersenneTwisterTable)
 {
-    for (int tsKind = 0; tsKind < timeSeriesCount; ++tsKind)
+    for (unsigned tsKind = 0; tsKind < timeSeriesCount; ++tsKind)
     {
         if (isTSintramodal[tsKind])
         {

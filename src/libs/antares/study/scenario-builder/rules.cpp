@@ -334,7 +334,7 @@ bool Rules::readLine(const AreaName::Vector& splitKey, String value, bool update
     else if (kind_of_scenario == "ntc")
         return readLink(splitKey, value, updaterMode);
     else if (kind_of_scenario == "bc")
-        return readBindingConstraints(splitKey, value, updaterMode);
+        return readBindingConstraints(splitKey, value);
     return false;
 }
 
@@ -390,7 +390,7 @@ void Rules::sendWarningsForDisabledClusters()
     }
 }
 
-bool Rules::readBindingConstraints(const AreaName::Vector& splitKey, String value, bool updaterMode) {
+bool Rules::readBindingConstraints(const AreaName::Vector &splitKey, String value) {
     std::string group_name = splitKey[1].c_str();
     auto year = std::stoi(splitKey[2].c_str());
     auto tsNumber = fromStringToTSnumber(value);

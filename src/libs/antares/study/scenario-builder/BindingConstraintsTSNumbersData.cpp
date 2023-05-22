@@ -51,7 +51,7 @@ bool BindingConstraintsTSNumberData::reset(const Study& study)
     return true;
 }
 
-void BindingConstraintsTSNumberData::saveToINIFile(const Study& study, Yuni::IO::File::Stream& file) const
+void BindingConstraintsTSNumberData::saveToINIFile(const Study&, Yuni::IO::File::Stream& file) const
 {
     // Turning values into strings (precision 4)
     std::ostringstream value_into_string;
