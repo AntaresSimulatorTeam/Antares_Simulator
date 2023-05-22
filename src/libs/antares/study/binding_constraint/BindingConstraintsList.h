@@ -147,7 +147,7 @@ public:
     /*!
     ** \brief Invalidate all matrices of all binding constraints
     */
-    [[nodiscard]] bool forceReload(bool reload = false) const;
+    void forceReload(bool reload = false) const;
 
     /*!
     ** \brief Mark the constraint as modified
