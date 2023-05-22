@@ -18,3 +18,10 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     Antares::Data::Enum::ExportStructDict structDict,
                     int ts,
                     const std::string& zone);
+
+void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                    int var,
+                    Antares::Data::Enum::ExportStructDict structDict,
+                    int ts,
+                    const std::string& zone,
+                    int palier);

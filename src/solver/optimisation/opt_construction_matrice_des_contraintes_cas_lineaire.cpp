@@ -69,6 +69,13 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         timeStepInYear, // TODO[FOM] remove
                                         pays,
                                         palier);
+                const auto zone = Study::Current::Get()->areas[pays]->name.c_str();
+                RenameVariable(problemeHebdo.ProblemeAResoudre,
+                               var,
+                               Enum::ExportStructDict::PalierThermique,
+                               timeStepInYear,
+                               zone,
+                               palier);
             }
         }
     }
@@ -253,6 +260,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             timeStepInYear, // TODO[FOM] remove
                                             pays);
+                    const auto zone = study->areas[pays]->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::DefaillanceNegative,
+                                   timeStepInYear,
+                                   zone);
                 }
             }
 
@@ -301,6 +314,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             timeStepInYear, // TODO[FOM] remove
                                             pays);
+                    const auto zone = study->areas[pays]->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::DefaillanceNegative,
+                                   timeStepInYear,
+                                   zone);
                 }
             }
 

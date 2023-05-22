@@ -23,7 +23,7 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
 }
 void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     int var,
-                    Antares::Data::Enum::ExportStructDict structDict,
+                    const std::string& varname,
                     int ts,
                     const std::string& zone)
 {
@@ -31,10 +31,29 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     if (nvars > var)
     {
         std::stringstream buffer;
-        buffer << Antares::Data::Enum::toString(structDict) << SEPARATOR;
+        buffer << varname << SEPARATOR;
         buffer << zone << SEPARATOR;
 
         buffer << ts;
         strcpy(problem->NomDesVariables[var], buffer.str().c_str());
     }
+}
+void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                    int var,
+                    Antares::Data::Enum::ExportStructDict structDict,
+                    int ts,
+                    const std::string& zone)
+{
+    RenameVariable(problem, var, Antares::Data::Enum::toString(structDict), ts, zone);
+}
+void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
+                    int var,
+                    Antares::Data::Enum::ExportStructDict structDict,
+                    int ts,
+                    const std::string& zone,
+                    int palier)
+{
+    const auto palier_name
+      = Antares::Data::Enum::toString(structDict) + "<" + std::to_string(palier) + ">";
+    RenameVariable(problem, var, palier_name, ts, zone);
 }
