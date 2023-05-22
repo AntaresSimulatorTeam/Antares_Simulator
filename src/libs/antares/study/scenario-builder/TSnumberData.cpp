@@ -113,9 +113,9 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 template<>
 inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint value, const Data::BindingConstraintTimeSeriesNumbers& data, uint tsGenMax)
 {
-    // When the TS-Generators are not used
-    //TODO : check width of series ? How to access series width at this point ?
-    return (!tsGenMax) ? /*(value < data.SeriesWidth())*/ true : (value < tsGenMax);
+    //TS-Generator never used
+    //Should check for time-series width, but we are missing information at this point
+    return true;
 }
 
 template<class StringT, class D>
