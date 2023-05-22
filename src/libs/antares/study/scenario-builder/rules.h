@@ -135,7 +135,7 @@ private:
     bool readSolar(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readHydroLevels(const AreaName::Vector& instrs, String value, bool updaterMode);
     bool readLink(const AreaName::Vector& instrs, String value, bool updaterMode);
-    bool readBindingConstraints(const AreaName::Vector& splitKey, String value, bool updaterMode);
+    bool readBindingConstraints(const AreaName::Vector &splitKey, String value);
 
 
     Data::Area* getArea(const AreaName& areaname, bool updaterMode);

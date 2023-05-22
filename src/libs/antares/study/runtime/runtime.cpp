@@ -312,7 +312,7 @@ void StudyRuntimeInfos::initializeRangeLimits(const Study& study, StudyRangeLimi
 void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& list)
 {
     // Calculating the total number of binding constraints
-    auto bindingConstraintCount = 0;
+    unsigned bindingConstraintCount = 0;
 
     list.eachEnabled([&bindingConstraintCount](const BindingConstraint& constraint) {
         bindingConstraintCount
@@ -334,8 +334,8 @@ void StudyRuntimeInfos::initializeBindingConstraints(BindingConstraintsList& lis
     bindingConstraint.clear();
     bindingConstraint.resize(bindingConstraintCount);
 
-    uint index = 0;
-    list.eachEnabled([&](const BindingConstraint& constraint) {
+    unsigned index = 0;
+    list.eachEnabled([this, &index, &bindingConstraintCount](const BindingConstraint& constraint) {
         assert(index < bindingConstraintCount and "Not enough slots for binding constraints");
 
         auto& rti = bindingConstraint[index];
