@@ -31,15 +31,15 @@ using namespace Yuni;
 using namespace Antares::Data;
 
 class NoOPResultWriter: public Solver::IResultWriter {
-    void addEntryFromBuffer(const std::string &entryPath, Clob &entryContent) override {
+    void addEntryFromBuffer(const std::string &, Clob &) override {
 
     }
 
-    void addEntryFromBuffer(const std::string &entryPath, std::string &entryContent) override {
+    void addEntryFromBuffer(const std::string &, std::string &) override {
 
     }
 
-    void addEntryFromFile(const std::string &entryPath, const std::string &filePath) override {
+    void addEntryFromFile(const std::string &, const std::string &) override {
 
     }
 
@@ -47,7 +47,7 @@ class NoOPResultWriter: public Solver::IResultWriter {
         return false;
     }
 
-    void finalize(bool verbose) override {
+    void finalize(bool ) override {
 
     }
 };
@@ -114,14 +114,11 @@ Area* addArea(Study::Ptr pStudy, const std::string& areaName, int nbTS)
 	return pArea;
 }
 
-std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group, int nbTS) {
+std::shared_ptr<BindingConstraint> addBindingConstraints(Study::Ptr study, std::string name, std::string group) {
     auto bc = study->bindingConstraints.add(name);
     bc->group(group);
     bc->type();
-    auto ts = study->bindingConstraints.timeSeriesNumbers[group];
-    //TODO ? A verifier
-    //ts.resize(nbTS, HOURS_PER_YEAR);
-    //ts.fill(0.0);
+    auto ts = study->bindingConstraints.timeSeriesNumbers[group]; //Create the tsNumbers
     return bc;
 }
 
@@ -212,7 +209,7 @@ Solver::Simulation::ISimulation< Solver::Simulation::Economy >* runSimulation(St
 	BOOST_CHECK(pStudy->initializeRuntimeInfos());
 
     for(auto [_, area]: pStudy->areas) {
-        for (int i = 0; i<pStudy->maxNbYearsInParallel ;++i) {
+        for (unsigned int i = 0; i<pStudy->maxNbYearsInParallel ;++i) {
             area->scratchpad.push_back(AreaScratchpad(*pStudy->runtime, *area));
         }
     }
@@ -338,7 +335,7 @@ BOOST_AUTO_TEST_CASE(one_mc_year_one_ts__Binding_Constraints) {
     pCluster->series->timeSeries.fillColumn(0, availablePower);
 
     //Add BC
-    auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
+    auto BC = addBindingConstraints(pStudy, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(BindingConstraint::typeHourly);
@@ -640,7 +637,7 @@ auto prepare(Study::Ptr pStudy, double rhs, BindingConstraint::Type type, Bindin
     prepareStudy(nbYears, nbTS, pStudy, area1, link);
 
     //Add BC
-    auto BC = addBindingConstraints(pStudy, "BC1", "Group1", nbTS);
+    auto BC = addBindingConstraints(pStudy, "BC1", "Group1");
     BC->weight(link, 1);
     BC->enabled(true);
     BC->mutateTypeWithoutCheck(type);

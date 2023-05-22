@@ -111,7 +111,7 @@ inline bool CheckValidity<Data::AreaLink>(uint value,
 }
 
 template<>
-inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint value, const Data::BindingConstraintTimeSeriesNumbers& data, uint tsGenMax)
+inline bool CheckValidity<Data::BindingConstraintTimeSeriesNumbers>(uint, const Data::BindingConstraintTimeSeriesNumbers&, uint)
 {
     //TS-Generator never used
     //Should check for time-series width, but we are missing information at this point
