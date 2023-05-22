@@ -101,13 +101,15 @@ bool OPT_AppelDuSimplexe(PROBLEME_HEBDO* problemeHebdo,
                          std::shared_ptr<OptPeriodStringGenerator> optPeriodStringGenerator)
 {
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
+
     Optimization::PROBLEME_SIMPLEXE_NOMME Probleme(ProblemeAResoudre->NomDesVariables,
                                                    ProblemeAResoudre->NomDesContraintes,
                                                    ProblemeAResoudre->StatutDesVariables,
                                                    ProblemeAResoudre->StatutDesContraintes);
     bool PremierPassage = true;
 
-    auto ProbSpx = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
+    auto ProbSpx
+      = (PROBLEME_SPX*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
     auto solver = (MPSolver*)(ProblemeAResoudre->ProblemesSpx->ProblemeSpx[(int)NumIntervalle]);
 
     auto study = Data::Study::Current::Get();
@@ -200,7 +202,7 @@ RESOLUTION:
 
     Probleme.TypeDePricing = PRICING_STEEPEST_EDGE;
 
-    Probleme.FaireDuScaling = ( PremierPassage ? OUI_SPX : NON_SPX );
+    Probleme.FaireDuScaling = (PremierPassage ? OUI_SPX : NON_SPX);
 
     Probleme.StrategieAntiDegenerescence = AGRESSIF;
 
@@ -217,7 +219,7 @@ RESOLUTION:
     Probleme.CoutsReduits = ProblemeAResoudre->CoutsReduits;
 
 #ifndef NDEBUG
-    Probleme.AffichageDesTraces = ( PremierPassage ? OUI_SPX : NON_SPX );
+    Probleme.AffichageDesTraces = (PremierPassage ? OUI_SPX : NON_SPX);
 #else
     Probleme.AffichageDesTraces = NON_SPX;
 #endif

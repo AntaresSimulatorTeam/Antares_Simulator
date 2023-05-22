@@ -231,6 +231,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                             Enum::ExportStructDict::DefaillancePositive,
                                             timeStepInYear, // TODO[FOM] remove
                                             pays);
+                    const auto zone = study->areas[pays]->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::DefaillancePositive,
+                                   timeStepInYear,
+                                   zone);
                 }
             }
             var = CorrespondanceVarNativesVarOptim->NumeroDeVariableDefaillanceNegative[pays];
