@@ -6,7 +6,7 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     int ts,
                     const std::string& origin,
                     const std::string& extremite,
-                    int secondVal)
+                    std::optional<int> secondVal)
 {
     auto nvars = problem->NombreDeVariables;
     if (nvars > var)
@@ -14,7 +14,10 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         std::stringstream buffer;
         buffer << Antares::Data::Enum::toString(structDict) << SEPARATOR;
         buffer << origin << ZONE_SEPARATOR << extremite << SEPARATOR;
-        buffer << secondVal << SEPARATOR;
+        if (secondVal.has_value())
+        {
+            buffer << secondVal.value() << SEPARATOR;
+        }
         buffer << ts;
         // std::cout << "*************** RENAME " << problem->NomDesVariables[var] << " to "
         //           << buffer.str() << "***************\n";

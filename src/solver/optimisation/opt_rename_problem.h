@@ -11,7 +11,7 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem_hebdo,
                     int ts,
                     const std::string& origin,
                     const std::string& extremite,
-                    int secondVal);
+                    std::optional<int> seconval);
 
 void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     int var,

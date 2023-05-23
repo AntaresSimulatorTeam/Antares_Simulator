@@ -297,6 +297,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 {
                     OPT_Export_add_variable(
                       varname, var, Enum::ExportStructDict::ProdHyd, timeStepInYear, pays);
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::ProdHyd,
+                                   timeStepInYear,
+                                   study->areas[pays]->name.c_str());
                 }
             }
 
@@ -359,6 +364,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                                 Enum::ExportStructDict::DefaillanceNegative,
                                                 timeStepInYear, // TODO[FOM] remove
                                                 pays);
+                        RenameVariable(ProblemeAResoudre,
+                                       var,
+                                       Enum::ExportStructDict::DefaillanceNegative,
+                                       timeStepInYear,
+                                       study->areas[pays]->name.c_str());
                     }
                 }
                 var = CorrespondanceVarNativesVarOptim
@@ -377,6 +387,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
                           timeStepInYear, // TODO[FOM] remove
                           interco);
+                        const std::string origin
+                          = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
+                              ->name.c_str();
+                        const std::string extremite
+                          = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
+                              ->name.c_str();
+                        RenameVariable(
+                          ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
+                          timeStepInYear,
+                          origin,
+                          extremite,
+                          std::nullopt);
                     }
                 }
                 var = CorrespondanceVarNativesVarOptim
@@ -395,6 +419,20 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
                           timeStepInYear, // TODO[FOM] remove
                           interco);
+                        const std::string origin
+                          = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
+                              ->name.c_str();
+                        const std::string extremite
+                          = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
+                              ->name.c_str();
+                        RenameVariable(
+                          ProblemeAResoudre,
+                          var,
+                          Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
+                          timeStepInYear,
+                          origin,
+                          extremite,
+                          std::nullopt);
                     }
                 }
 
