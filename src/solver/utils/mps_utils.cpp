@@ -85,6 +85,7 @@ public:
         dest->B = src->SecondMembre;
         dest->SensDeLaContrainte = src->Sens;
         dest->LabelDeLaVariable = src->NomDesVariables;
+        dest->LabelDeLaContrainte = src->NomDesContraintes;
     }
 
 private:

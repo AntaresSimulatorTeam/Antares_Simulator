@@ -45,7 +45,7 @@ static void transferRows(MPSolver* solver,
                          const double* rhs,
                          const char* sens,
                          int nbRow,
-                         const std::vector<std::string>& NomDesContraintes)
+                         char** NomDesContraintes)
 {
     for (int idxRow = 0; idxRow < nbRow; ++idxRow)
     {
@@ -64,7 +64,7 @@ static void transferRows(MPSolver* solver,
         }
 
         std::string constraintName;
-        if (NomDesContraintes[idxRow].empty())
+        if (NomDesContraintes[idxRow] != NULL && NomDesContraintes[idxRow][0] == '\0')
         {
             constraintName = "c" + std::to_string(idxRow);
         }
