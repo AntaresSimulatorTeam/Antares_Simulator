@@ -213,6 +213,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 {
                     OPT_Export_add_variable(
                       varname, var, Enum::ExportStructDict::ProdHyd, timeStepInYear, pays);
+
+                    const auto zone = study->areas[pays]->name.c_str();
+                    RenameVariable(ProblemeAResoudre,
+                                   var,
+                                   Enum::ExportStructDict::ProdHyd,
+                                   timeStepInYear,
+                                   zone);
                 }
             }
 
@@ -364,11 +371,6 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                                 Enum::ExportStructDict::DefaillanceNegative,
                                                 timeStepInYear, // TODO[FOM] remove
                                                 pays);
-                        RenameVariable(ProblemeAResoudre,
-                                       var,
-                                       Enum::ExportStructDict::DefaillanceNegative,
-                                       timeStepInYear,
-                                       study->areas[pays]->name.c_str());
                     }
                 }
                 var = CorrespondanceVarNativesVarOptim
