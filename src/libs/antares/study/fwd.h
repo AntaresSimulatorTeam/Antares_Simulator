@@ -225,7 +225,7 @@ enum TimeSeries : unsigned int
     timeSeriesBindingConstraints = 128,
 
     //! The maximum number of time-series that we can encounter
-    timeSeriesCount = 8,
+    timeSeriesCount = 7,
 
 }; // enum TimeSeries
 
