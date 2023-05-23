@@ -13,8 +13,8 @@ namespace Antares::Solver::Simulation {
 class TimeSeriesNumbersWriter: public ITimeSeriesNumbersWriter {
 
 public:
-    TimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> sharedPtr);
-
+    explicit TimeSeriesNumbersWriter(std::shared_ptr<Antares::Solver::IResultWriter> resultWriter);
+    ~TimeSeriesNumbersWriter() override = default;
     void write(const Data::BindingConstraintsList &list) override;
 
 private:

@@ -9,6 +9,7 @@ namespace Antares::Solver::Simulation {
 class ITimeSeriesNumbersWriter {
 
 public:
+    virtual ~ITimeSeriesNumbersWriter() = default;
     virtual void write(const Data::BindingConstraintsList& list) = 0;
 };
 }
