@@ -207,7 +207,7 @@ public:
 
     //Ref to prevent copy. const ref to prevent modification.
     const Matrix<>& TimeSeries() const;
-    Matrix<> &TimeSeries();
+    Matrix<>& TimeSeries();
 
 
     bool hasAllWeightedLinksOnLayer(size_t layerID);
