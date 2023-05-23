@@ -214,6 +214,13 @@ std::shared_ptr<Antares::Data::BindingConstraint> CBuilder::addConstraint(const 
             constraint->weight(j->first->ptr, j->second);
     }
 
+    // second members
+    if (!Math::Zero(secondMember))
+    {
+        constraint->TimeSeries().fill(secondMember);
+        constraint->TimeSeries().markAsModified();
+    }
+
     // mark all values as modified
     constraint->markAsModified();
 
