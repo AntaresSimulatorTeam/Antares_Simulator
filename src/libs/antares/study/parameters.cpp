@@ -76,8 +76,6 @@ static bool ConvertCStrToListTimeSeries(const String& value, uint& v)
             v |= timeSeriesRenewable;
         else if (word == "ntc")
             v |= timeSeriesTransmissionCapacities;
-        else if (word == "bindingconstraints")
-            v |= timeSeriesBindingConstraints;
         return true;
     });
     return true;
@@ -394,12 +392,6 @@ static void ParametersSaveTimeSeries(IniFile::Section* s, const char* name, uint
         if (!v.empty())
             v += ", ";
         v += "ntc";
-    }
-    if (value & timeSeriesBindingConstraints)
-    {
-        if (!v.empty())
-            v += ", ";
-        v += "bindingconstraints";
     }
     s->add(name, v);
 }

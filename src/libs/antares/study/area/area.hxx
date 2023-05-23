@@ -73,7 +73,6 @@ inline void Area::storeTimeseriesNumbers(Solver::IResultWriter::Ptr writer) cons
     case timeSeriesTransmissionCapacities:
         storeTimeseriesNumbersForTransmissionCapacities(writer);
         break;
-    case timeSeriesBindingConstraints:
     case timeSeriesCount:
         break;
     }
