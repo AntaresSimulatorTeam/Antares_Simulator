@@ -204,18 +204,16 @@ BindingConstraintLoader::SeparateValue(const EnvForLoading &env, const IniFile::
 bool BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstraint *bindingConstraint)
 {
     if (env.version >= version860)
-        return loadBoundedTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
+        return loadTimeSeries(env, bindingConstraint->operatorType(), bindingConstraint);
 
     return loadTimeSeriesBefore860(env, nullptr);
 }
 
 bool
-BindingConstraintLoader::loadBoundedTimeSeries(EnvForLoading &env, BindingConstraint::Operator operatorType,
-                                               BindingConstraint *bindingConstraint) {
-    bool load_ok = false;
-
+BindingConstraintLoader::loadTimeSeries(EnvForLoading &env, BindingConstraint::Operator operatorType,
+                                        BindingConstraint *bindingConstraint) const {
     env.buffer.clear() << bindingConstraint->timeSeriesFileName(env);
-    load_ok = bindingConstraint->timeSeries.loadFromCSVFile(env.buffer,
+    bool load_ok = bindingConstraint->timeSeries.loadFromCSVFile(env.buffer,
                                                             1,
                                           (bindingConstraint->type() == BindingConstraint::typeHourly) ? 8784 : 366,
                                                             Matrix<>::optImmediate,
@@ -226,12 +224,13 @@ BindingConstraintLoader::loadBoundedTimeSeries(EnvForLoading &env, BindingConstr
                     << BindingConstraint::OperatorToShortCString(operatorType) << ')';
         return true;
     } else {
+        logs.error() << " unable to load time series for `" << bindingConstraint->name() << "` (" << BindingConstraint::TypeToCString(bindingConstraint->type()) << ", "
+                     << BindingConstraint::OperatorToShortCString(operatorType) << ')';
         return false;
     }
 }
 
-bool BindingConstraintLoader::loadTimeSeriesBefore860(EnvForLoading &env, BindingConstraint *bindingConstraint)
-{
+bool BindingConstraintLoader::loadTimeSeriesBefore860(EnvForLoading &env, BindingConstraint *bindingConstraint) const {
     env.buffer.clear() << env.folder << IO::Separator << bindingConstraint->pID << ".txt";
     Matrix<> intermediate;
     if (intermediate.loadFromCSVFile(env.buffer,
