@@ -1,3 +1,0 @@
-
-YMESSAGE_MODULE("Documentation")
-
