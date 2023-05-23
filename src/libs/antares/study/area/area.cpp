@@ -150,8 +150,7 @@ AreaLink* Area::findExistingLinkWith(Area& with)
     }
     if (!with.links.empty())
     {
-        const auto end = with.links.end();
-        for (auto i = with.links.begin(); i != end; ++i)
+        for (auto i = with.links.begin(); i != with.links.end(); ++i)
         {
             if (i->second->from == this or i->second->with == this)
                 return i->second;
