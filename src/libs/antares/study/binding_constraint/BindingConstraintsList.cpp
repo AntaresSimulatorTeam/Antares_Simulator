@@ -178,7 +178,7 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
         mutateWeeklyConstraintsIntoDailyOnes();
     }
 
-    InitializeTSNumbers();
+    initializeTsNumbers();
 
     return !hasError;
 }
@@ -205,13 +205,9 @@ bool BindingConstraintsList::loadFromFolder(Study &study,
         return hasError;
     }
 
-    void BindingConstraintsList::InitializeTSNumbers() {
-    std::set<std::string> groups;
-    std::for_each(this->pList.begin(), this->pList.end(), [&groups](auto bc) {
-        groups.insert(bc->group());
-    });
-    for (const auto& group: groups) {
-        this->timeSeriesNumbers[group] = {};
+    void BindingConstraintsList::initializeTsNumbers() {
+    for (const auto& bc: pList) {
+        timeSeriesNumbers[bc->group()] = {};
     }
 }
 
