@@ -175,7 +175,7 @@ private:
     //! All constraints
     Data::BindingConstraint::Vector pList;
 
-    void InitializeTSNumbers();
+    void initializeTsNumbers();
 
     [[nodiscard]] Yuni::uint64 timeSeriesNumberMemoryUsage() const;
 
