@@ -1,9 +1,13 @@
 import subprocess
+import datetime
 import json
 import sys
 import os
 
 from pathlib import Path
+
+def get_git_revision_short_hash() -> str:
+    return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
 
 class StudyList(object):
 
@@ -29,31 +33,33 @@ class StudyList(object):
         memory = self.get_memory() / 1024 # from Kb to Mb
         time = self.get_time()
 
-        data_memory = {}
-        data_memory['name'] = "Memory " + self.name + " study"
-        data_memory['value'] = memory
-        data_memory['unit'] = "Mb"
+        data = {}
+        data['peak_memory_mb'] = memory
+        data['time_s'] = time
 
-        data_time = {}
-        data_time['name'] = "Execution time " + self.name + " study"
-        data_time['value'] = time
-        data_time['unit'] = "seconds"
-        data = [data_time, data_memory]
-        json_data = json.dumps(data)
-
-        print(json_data)
+        return data
 
 
 
 study_list = []
 study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
-# study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
+study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
 # study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 
 def performance(solver_path):
+    results = {}
+    results["commit-id"] = get_git_revision_short_hash()
+
+    date = datetime.datetime.now()
+    results["date"] = date.strftime("%x %X")
+
     for studies in study_list:
         studies.run_metrics(solver_path)
-        studies.create_json()
+        results[studies.name] = studies.create_json()
+
+    f = open("results.json", "w")
+    f.write(json.dumps(results))
+    f.close()
 
 performance("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
