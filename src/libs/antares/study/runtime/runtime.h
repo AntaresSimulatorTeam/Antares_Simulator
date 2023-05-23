@@ -113,8 +113,6 @@ public:
     */
     bool loadFromStudy(Study& study);
 
-    // Inequality binding constraints
-    uint getNumberOfInequalityBindingConstraints() const;
     std::vector<uint> getIndicesForInequalityBindingConstraints() const;
 
 public:

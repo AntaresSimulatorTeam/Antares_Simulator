@@ -505,13 +505,6 @@ static bool isBindingConstraintTypeInequality(const Data::BindingConstraintRTI& 
     return bc.operatorType == '<' || bc.operatorType == '>';
 }
 
-uint StudyRuntimeInfos::getNumberOfInequalityBindingConstraints() const
-{
-    const auto firstBC = bindingConstraint.begin();
-    const auto lastBC = bindingConstraint.end();
-    return static_cast<uint>(std::count_if(firstBC, lastBC, isBindingConstraintTypeInequality));
-}
-
 std::vector<uint> StudyRuntimeInfos::getIndicesForInequalityBindingConstraints() const
 {
     const auto firstBC = bindingConstraint.begin();
