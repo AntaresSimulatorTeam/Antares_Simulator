@@ -56,6 +56,10 @@ enum class ExportStructDict : unsigned char
     CoutExtremiteVersOrigineDeLInterconnexion,
     CorrespondanceVarNativesVarOptim
 };
+enum class ExportStructConstraintsDict : unsigned char
+{
+    DissociationDeFlux
+};
 } // namespace Enum
 
 class Study;

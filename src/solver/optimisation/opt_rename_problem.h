@@ -11,7 +11,7 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem_hebdo,
                     int ts,
                     const std::string& origin,
                     const std::string& extremite,
-                    std::optional<int> seconval);
+                    std::optional<int> seconval = std::nullopt);
 
 void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     int var,
@@ -25,3 +25,7 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
                     int ts,
                     const std::string& zone,
                     int palier);
+
+std::string BuildName(const std::string& name,
+                      const std::string& location,
+                      const std::string& time_identifier);

@@ -11,17 +11,22 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     auto nvars = problem->NombreDeVariables;
     if (nvars > var)
     {
+        // if (problem->NomDesVariables[var][0] != '\0')
+        // {
+        //     std::cout << "already named variable " << var << " " << problem->NomDesVariables[var]
+        //               << "\n";
+        // }
         std::stringstream buffer;
-        buffer << Antares::Data::Enum::toString(structDict) << SEPARATOR;
         buffer << origin << ZONE_SEPARATOR << extremite << SEPARATOR;
         if (secondVal.has_value())
         {
             buffer << secondVal.value() << SEPARATOR;
         }
-        buffer << ts;
+        auto full_name
+          = BuildName(Antares::Data::Enum::toString(structDict), buffer.str(), std::to_string(ts));
         // std::cout << "*************** RENAME " << problem->NomDesVariables[var] << " to "
         //           << buffer.str() << "***************\n";
-        strcpy(problem->NomDesVariables[var], buffer.str().c_str());
+        strcpy(problem->NomDesVariables[var], full_name.c_str());
     }
 }
 void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
@@ -33,12 +38,8 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     auto nvars = problem->NombreDeVariables;
     if (nvars > var)
     {
-        std::stringstream buffer;
-        buffer << varname << SEPARATOR;
-        buffer << zone << SEPARATOR;
-
-        buffer << ts;
-        strcpy(problem->NomDesVariables[var], buffer.str().c_str());
+        auto full_name = BuildName(varname, zone, std::to_string(ts));
+        strcpy(problem->NomDesVariables[var], full_name.c_str());
     }
 }
 void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
@@ -59,4 +60,13 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
     const auto palier_name
       = Antares::Data::Enum::toString(structDict) + "<" + std::to_string(palier) + ">";
     RenameVariable(problem, var, palier_name, ts, zone);
+}
+
+std::string BuildName(const std::string& name,
+                      const std::string& location,
+                      const std::string& time_identifier)
+{
+    std::stringstream buffer;
+    buffer << name << SEPARATOR << location << SEPARATOR << time_identifier;
+    return buffer.str();
 }

@@ -55,6 +55,12 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
       "CorrespondanceVarNativesVarOptim"};
     return s_exportStructDictNames;
 }
+template<>
+const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>()
+{
+    static std::initializer_list<std::string> s_exportStructConstraintsNames{"DissociationDeFlux"};
+    return s_exportStructConstraintsNames;
+}
 } // namespace Enum
 } // namespace Data
 } // namespace Antares

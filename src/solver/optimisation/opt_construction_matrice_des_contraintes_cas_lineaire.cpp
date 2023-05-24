@@ -347,6 +347,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
+            const std::string origin
+              = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]->name.c_str();
+            const std::string extremite
+              = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]->name.c_str();
+
             const COUTS_DE_TRANSPORT* CoutDeTransport = problemeHebdo->CoutDeTransport[interco];
             if (CoutDeTransport->IntercoGereeAvecDesCouts)
             {
@@ -389,20 +394,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
                           timeStepInYear, // TODO[FOM] remove
                           interco);
-                        const std::string origin
-                          = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
-                              ->name.c_str();
-                        const std::string extremite
-                          = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
-                              ->name.c_str();
+
                         RenameVariable(
                           ProblemeAResoudre,
                           var,
                           Enum::ExportStructDict::CoutOrigineVersExtremiteDeLInterconnexion,
                           timeStepInYear,
                           origin,
-                          extremite,
-                          std::nullopt);
+                          extremite);
                     }
                 }
                 var = CorrespondanceVarNativesVarOptim
@@ -421,28 +420,28 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                           Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
                           timeStepInYear, // TODO[FOM] remove
                           interco);
-                        const std::string origin
-                          = study->areas[problemeHebdo->PaysOrigineDeLInterconnexion[interco]]
-                              ->name.c_str();
-                        const std::string extremite
-                          = study->areas[problemeHebdo->PaysExtremiteDeLInterconnexion[interco]]
-                              ->name.c_str();
+
                         RenameVariable(
                           ProblemeAResoudre,
                           var,
                           Enum::ExportStructDict::CoutExtremiteVersOrigineDeLInterconnexion,
                           timeStepInYear,
                           origin,
-                          extremite,
-                          std::nullopt);
+                          extremite);
                     }
                 }
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDeDissociationDeFlux[interco]
                   = ProblemeAResoudre->NombreDeContraintes;
 
+                std::string constraint_time = "hour<" + std::to_string(timeStepInYear) + ">";
+                auto constraint_full_name
+                  = BuildName(Antares::Data::Enum::toString(
+                                Enum::ExportStructConstraintsDict::DissociationDeFlux),
+                              origin + ZONE_SEPARATOR + extremite,
+                              constraint_time);
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
             }
         }
 
