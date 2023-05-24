@@ -54,14 +54,13 @@ class StudyList(object):
 
         config = configparser.ConfigParser()
         config.read(ini_path)
-        section_time = dict(config.items('durations_ms'))
-        print(section_time)
+        return dict(config.items('durations_ms'))
 
 
 # list for studies to run, needs a unique name and path
 study_list = []
 study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
-# study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
+study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
 # study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 
@@ -78,6 +77,7 @@ def performance(solver_path):
         # studies.run_metrics(solver_path)
         studies.read_execution_ini()
         results[studies.name] = studies.create_json()
+        results[studies.name]['execution_info.ini'] = studies.read_execution_ini()
 
     # Writing the JSON
     f = open("results.json", "w")
