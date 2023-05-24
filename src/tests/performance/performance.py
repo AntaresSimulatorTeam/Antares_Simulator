@@ -1,10 +1,19 @@
+import configparser
 import subprocess
 import datetime
 import json
+import glob
 import sys
 import os
 
 from pathlib import Path
+
+# needed to find the execution_info.ini
+def get_latest_output_folder(path):
+    output_path_study = os.path.join(path, "output")
+    files = os.listdir(output_path_study)
+    paths = [os.path.join(output_path_study, basename) for basename in files]
+    return max(paths, key=os.path.getctime)
 
 def get_git_revision_short_hash() -> str:
     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
@@ -39,25 +48,38 @@ class StudyList(object):
 
         return data
 
+    def read_execution_ini(self):
+        output_folder = get_latest_output_folder(self.path)
+        ini_path = os.path.join(output_folder, "execution_info.ini")
+
+        config = configparser.ConfigParser()
+        config.read(ini_path)
+        section_time = dict(config.items('durations_ms'))
+        print(section_time)
 
 
+# list for studies to run, needs a unique name and path
 study_list = []
 study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
-study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
+# study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
 # study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 
 def performance(solver_path):
+    # init and general data for the JSON
     results = {}
     results["commit-id"] = get_git_revision_short_hash()
 
     date = datetime.datetime.now()
     results["date"] = date.strftime("%x %X")
 
+    # Execution and results for each studies
     for studies in study_list:
-        studies.run_metrics(solver_path)
+        # studies.run_metrics(solver_path)
+        studies.read_execution_ini()
         results[studies.name] = studies.create_json()
 
+    # Writing the JSON
     f = open("results.json", "w")
     f.write(json.dumps(results))
     f.close()
