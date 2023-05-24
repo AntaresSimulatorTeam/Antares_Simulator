@@ -347,11 +347,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             CorrespondanceCntNativesCntOptim->NumeroDeContraintePourEviterLesChargesFictives[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
-                                            + "::" + problemeHebdo->NomsDesPays[pays];
-
+            // TODO check  why +1 was added to timeStepInYear
+            //  std::string NomDeLaContrainte = "fict_load::" + std::to_string(timeStepInYear + 1)
+            //                                  + "::" + problemeHebdo->NomsDesPays[pays];
+            constraint_full_name.clear();
+            constraint_full_name = BuildName(
+              Enum::toString(Enum::ExportStructConstraintsDict::ChargesFictives),
+              location_identifier(zone, Enum::ExportStructLocationDict::area),
+              time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', NomDeLaContrainte);
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
         }
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
@@ -548,9 +553,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte
-              = "bc::hourly::" + std::to_string(timeStepInYear + 1)
-                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            // std::string NomDeLaContrainte
+            //   = "bc::hourly::" + std::to_string(timeStepInYear + 1)
+            //     + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string constraint_full_name = BuildName(
+              MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
+              Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
+              time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -558,7 +567,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               Colonne,
               nombreDeTermes,
               MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
-              NomDeLaContrainte);
+              constraint_full_name);
         }
     }
 
@@ -654,9 +663,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
 
-            std::string NomDeLaContrainte
-              = "bc::daily::" + std::to_string(jour + 1)
-                + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            // std::string NomDeLaContrainte
+            //   = "bc::daily::" + std::to_string(jour + 1)
+            //     + "::" + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string constraint_full_name
+              = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
+                          Enum::toString(Enum::ExportStructBindingConstraintType::daily),
+                          time_identifier(jour + 1, Enum::ExportStructTimeStepDict::day));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -664,7 +677,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               Colonne,
               nombreDeTermes,
               MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
-              NomDeLaContrainte);
+              constraint_full_name);
             pdtDebut += nombreDePasDeTempsDUneJournee;
         }
     }
@@ -755,10 +768,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             CorrespondanceCntNativesCntOptimHebdomadaires
               ->NumeroDeContrainteDesContraintesCouplantes[cntCouplante]
               = ProblemeAResoudre->NombreDeContraintes;
-
-            std::string NomDeLaContrainte
-              = std::string("bc::weekly::")
-                + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            // TODO check semaine value
+            // std::string NomDeLaContrainte
+            //   = std::string("bc::weekly::")
+            //     + MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante;
+            std::string constraint_full_name
+              = BuildName(MatriceDesContraintesCouplantes->NomDeLaContrainteCouplante,
+                          Enum::toString(Enum::ExportStructBindingConstraintType::weekly),
+                          time_identifier(semaine, Enum::ExportStructTimeStepDict::week));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre,
@@ -766,12 +783,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               Colonne,
               nombreDeTermes,
               MatriceDesContraintesCouplantes->SensDeLaContrainteCouplante,
-              NomDeLaContrainte);
+              constraint_full_name);
         }
     }
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
+        auto zone = study->areas[pays]->name.c_str();
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -821,11 +839,16 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 }
             }
 
+            // TODO no timestep, temp value -1
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::EnergieHydraulique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          time_identifier(-1, Enum::ExportStructTimeStepDict::hour));
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
         }
         else
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays] = -1;
@@ -837,7 +860,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
-
+            const auto zone = study->areas[pays]->name.c_str();
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -880,9 +903,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var3;
                     nombreDeTermes++;
                 }
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
 
+                std::string constraint_full_name = BuildName(
+                  Enum::toString(
+                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurSommeDesVariations),
+                  location_identifier(zone, Enum::ExportStructLocationDict::area),
+                  time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
+                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
             }
         }
     }
@@ -893,6 +922,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
+            const auto zone = study->areas[pays]->name.c_str();
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -913,9 +943,14 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
                 }
-
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
+                std::string constraint_full_name = BuildName(
+                  Enum::toString(
+                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurVariationMaxALaBaisse),
+                  location_identifier(zone, Enum::ExportStructLocationDict::area),
+                  time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
 
                 nombreDeTermes = 0;
                 if (var >= 0)
@@ -932,9 +967,15 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                     Colonne[nombreDeTermes] = var1;
                     nombreDeTermes++;
                 }
+                constraint_full_name.clear();
+                constraint_full_name = BuildName(
+                  Enum::toString(
+                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurVariationMaxALaHausse),
+                  location_identifier(zone, Enum::ExportStructLocationDict::area),
+                  time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>', constraint_full_name);
             }
         }
     }

@@ -58,21 +58,34 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 template<>
 const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>()
 {
-    static std::initializer_list<std::string> s_exportStructConstraintsNames{"DissociationDeFlux",
-                                                                             "BilansPays"};
+    static std::initializer_list<std::string> s_exportStructConstraintsNames{
+      "DissociationDeFlux",
+      "BilansPays",
+      "ChargesFictives",
+      "EnergieHydraulique",
+      "LissageHydrauliqueSurSommeDesVariations",
+      "LissageHydrauliqueSurVariationMaxALaBaisse",
+      "LissageHydrauliqueSurVariationMaxALaHausse"};
     return s_exportStructConstraintsNames;
+}
+template<>
+const std::initializer_list<std::string>& getNames<ExportStructBindingConstraintType>()
+{
+    static std::initializer_list<std::string> s_exportStructBindingConstraintType{
+      "hourly", "daily", "weekly"};
+    return s_exportStructBindingConstraintType;
 }
 template<>
 const std::initializer_list<std::string>& getNames<ExportStructTimeStepDict>()
 {
-    static std::initializer_list<std::string> s_exportStructConstraintsNames{"hour", "week"};
-    return s_exportStructConstraintsNames;
+    static std::initializer_list<std::string> s_exportStructTimeStepDict{"hour", "day", "week"};
+    return s_exportStructTimeStepDict;
 }
 template<>
 const std::initializer_list<std::string>& getNames<ExportStructLocationDict>()
 {
-    static std::initializer_list<std::string> s_exportStructConstraintsNames{"area", "link"};
-    return s_exportStructConstraintsNames;
+    static std::initializer_list<std::string> s_exportStructLocationDict{"area", "link"};
+    return s_exportStructLocationDict;
 }
 } // namespace Enum
 } // namespace Data

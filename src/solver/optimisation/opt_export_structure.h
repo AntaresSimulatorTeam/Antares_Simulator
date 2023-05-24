@@ -59,17 +59,29 @@ enum class ExportStructDict : unsigned char
 enum class ExportStructConstraintsDict : unsigned char
 {
     DissociationDeFlux,
-    BilansPays
+    BilansPays,
+    ChargesFictives,
+    EnergieHydraulique,
+    LissageHydrauliqueSurSommeDesVariations,
+    LissageHydrauliqueSurVariationMaxALaBaisse,
+    LissageHydrauliqueSurVariationMaxALaHausse
 };
 enum class ExportStructTimeStepDict : unsigned char
 {
     hour,
+    day,
     week
 };
 enum class ExportStructLocationDict : unsigned char
 {
     area,
     link
+};
+enum class ExportStructBindingConstraintType : unsigned char
+{
+    hourly,
+    daily,
+    weekly
 };
 } // namespace Enum
 
