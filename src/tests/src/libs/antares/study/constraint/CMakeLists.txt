@@ -9,6 +9,7 @@ target_link_libraries(test_constraint
         ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY}
         )
 target_compile_definitions(test_constraint PRIVATE "BOOST_TEST_DYN_LINK=1")
+target_include_directories(test_constraint PRIVATE ${Boost_INCLUDE_DIRS})
 
 if(UNIX AND NOT APPLE)
     target_link_libraries(test_constraint PRIVATE stdc++fs)

@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE( load_basic_attributes ) {
     std::ofstream rhs(working_tmp_dir / "dummy_name_eq.txt");
     rhs.close();
 
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
@@ -90,7 +90,7 @@ BOOST_AUTO_TEST_CASE(BC_load_RHS) {
     }
     rhs.close();
 
-    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.c_str());
+    const bool loading_ok = bindingConstraints.loadFromFolder(study, options, working_tmp_dir.string());
 
     BOOST_CHECK_EQUAL(loading_ok, true);
     BOOST_CHECK_EQUAL(bindingConstraints.size(), 1);
