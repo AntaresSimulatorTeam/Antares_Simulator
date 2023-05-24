@@ -17,10 +17,10 @@ void RenameVariable(PROBLEME_ANTARES_A_RESOUDRE* problem,
         //               << "\n";
         // }
         std::stringstream buffer;
-        buffer << origin << ZONE_SEPARATOR << extremite << SEPARATOR;
+        buffer << origin << ZONE_SEPARATOR << extremite;
         if (secondVal.has_value())
         {
-            buffer << secondVal.value() << SEPARATOR;
+            buffer << SEPARATOR << secondVal.value();
         }
         auto full_name
           = BuildName(Antares::Data::Enum::toString(structDict), buffer.str(), std::to_string(ts));
