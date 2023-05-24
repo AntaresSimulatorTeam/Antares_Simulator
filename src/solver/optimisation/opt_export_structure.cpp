@@ -58,7 +58,20 @@ const std::initializer_list<std::string>& getNames<ExportStructDict>()
 template<>
 const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>()
 {
-    static std::initializer_list<std::string> s_exportStructConstraintsNames{"DissociationDeFlux"};
+    static std::initializer_list<std::string> s_exportStructConstraintsNames{"DissociationDeFlux",
+                                                                             "BilansPays"};
+    return s_exportStructConstraintsNames;
+}
+template<>
+const std::initializer_list<std::string>& getNames<ExportStructTimeStepDict>()
+{
+    static std::initializer_list<std::string> s_exportStructConstraintsNames{"hour", "week"};
+    return s_exportStructConstraintsNames;
+}
+template<>
+const std::initializer_list<std::string>& getNames<ExportStructLocationDict>()
+{
+    static std::initializer_list<std::string> s_exportStructConstraintsNames{"area", "link"};
     return s_exportStructConstraintsNames;
 }
 } // namespace Enum

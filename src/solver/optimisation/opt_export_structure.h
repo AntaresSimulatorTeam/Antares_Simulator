@@ -58,7 +58,18 @@ enum class ExportStructDict : unsigned char
 };
 enum class ExportStructConstraintsDict : unsigned char
 {
-    DissociationDeFlux
+    DissociationDeFlux,
+    BilansPays
+};
+enum class ExportStructTimeStepDict : unsigned char
+{
+    hour,
+    week
+};
+enum class ExportStructLocationDict : unsigned char
+{
+    area,
+    link
 };
 } // namespace Enum
 
