@@ -166,9 +166,11 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
     double* Xmax = problemeHebdo->ProblemeAResoudre->Xmax;
     double** AddressForVars
       = problemeHebdo->ProblemeAResoudre->AdresseOuPlacerLaValeurDesVariablesOptimisees;
+    int weekFirstHour = problemeHebdo->weekInTheYear * 168;
     for (int pdtHebdo = PremierPdtDeLIntervalle, pdtJour = 0; pdtHebdo < DernierPdtDeLIntervalle;
          pdtHebdo++, pdtJour++)
     {
+        int hourInTheYear = weekFirstHour + pdtHebdo;
         const CORRESPONDANCES_DES_VARIABLES* CorrespondanceVarNativesVarOptim
           = problemeHebdo->CorrespondanceVarNativesVarOptim[pdtJour];
         for (int areaIndex = 0; areaIndex < problemeHebdo->NombreDePays; areaIndex++)
@@ -184,7 +186,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                      .InjectionVariable[clusterGlobalIndex];
                 Xmin[varInjection] = 0.;
                 Xmax[varInjection]
-                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[pdtHebdo];
+                  = storage.injectionNominalCapacity * storage.series->maxInjectionModulation[hourInTheYear];
                 AddressForVars[varInjection] = &STSResult.injection[storageIndex];
 
                 // 2. Withdrwal
@@ -192,7 +194,7 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                                       .WithdrawalVariable[clusterGlobalIndex];
                 Xmin[varWithdrawal] = 0.;
                 Xmax[varWithdrawal]
-                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[pdtHebdo];
+                  = storage.withdrawalNominalCapacity * storage.series->maxWithdrawalModulation[hourInTheYear];
                 AddressForVars[varWithdrawal] = &STSResult.withdrawal[storageIndex];
 
                 // 3. Levels
@@ -204,8 +206,8 @@ static void setBoundsForShortTermStorage(PROBLEME_HEBDO* problemeHebdo,
                 }
                 else
                 {
-                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[pdtHebdo];
-                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[pdtHebdo];
+                    Xmin[varLevel] = storage.reservoirCapacity * storage.series->lowerRuleCurve[hourInTheYear];
+                    Xmax[varLevel] = storage.reservoirCapacity * storage.series->upperRuleCurve[hourInTheYear];
                 }
                 AddressForVars[varLevel] = &STSResult.level[storageIndex];
 
