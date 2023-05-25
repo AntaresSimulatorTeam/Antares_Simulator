@@ -15,6 +15,7 @@ def get_latest_output_folder(path):
     paths = [os.path.join(output_path_study, basename) for basename in files]
     return max(paths, key=os.path.getctime)
 
+# used to get the memory and time from the /bin/time -v file
 def search_patern_in_file(file_name, pattern):
     f = open(file_name)
     s = f.read()
@@ -32,9 +33,9 @@ def get_git_revision_short_hash() -> str:
 class StudyList(object):
 
     def __init__(self, name, path):
-        self.name = name
-        self.path = Path(path).resolve()
-        self.out_file = name + "-metrics.txt"
+        self.name = name                        # study name, used in JSON and out_file
+        self.path = Path(path).resolve()        # study path
+        self.out_file = name + "-metrics.txt"   # name of the /bin/time -v file
 
     def run_metrics(self, exe):
         res = subprocess.run(["/bin/time" , "-o", self.out_file, "-v", exe, self.path])
@@ -58,6 +59,7 @@ class StudyList(object):
 
         return data
 
+    # read the [durations_ms] section from the execution_info.ini file in the study output
     def read_execution_ini(self):
         output_folder = get_latest_output_folder(self.path)
         ini_path = os.path.join(output_folder, "execution_info.ini")
@@ -67,14 +69,13 @@ class StudyList(object):
         return dict(config.items('durations_ms'))
 
 
-# list for studies to run, needs a unique name and path
+# list of studies to run, needs a unique name and a path to a valid study
 study_list = []
 study_list.append(StudyList("short", "../resources/Antares_Simulator_Tests/short-tests/001 One node - passive/"))
 study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medium-tests/043 Multistage study-8-Kirchhoff"))
-# study_list.append(StudyList("long", "../resources/Antares_Simulator_Tests/long-tests/079 Zero  Power Balance - Type 1"))
 
 
-def performance(solver_path):
+def main(solver_path):
     # init and general data for the JSON
     results = {}
     results["commit-id"] = get_git_revision_short_hash()
@@ -82,15 +83,15 @@ def performance(solver_path):
     date = datetime.datetime.now()
     results["date"] = date.strftime("%x %X")
 
-    # Execution and results for each studies
+    # Execution and results for each study
     for studies in study_list:
         studies.run_metrics(solver_path)
         results[studies.name] = studies.create_json()
-        results[studies.name]['execution_info.ini'] = studies.read_execution_ini()
+        results[studies.name]['execution_info.ini (time in ms)'] = studies.read_execution_ini()
 
     # Writing the JSON
     f = open("results.json", "w")
     f.write(json.dumps(results))
     f.close()
 
-performance("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
+main("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
