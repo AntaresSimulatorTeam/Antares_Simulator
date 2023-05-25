@@ -2,7 +2,6 @@ import configparser
 import subprocess
 import datetime
 import json
-import glob
 import sys
 import os
 import re
@@ -17,9 +16,9 @@ def get_latest_output_folder(path):
     return max(paths, key=os.path.getctime)
 
 def search_patern_in_file(file_name, pattern):
-    file = open(file_name)
-    s = file.read()
-    file.close
+    f = open(file_name)
+    s = f.read()
+    f.close()
     m = re.search(pattern, s)
     if m:
         return m.groups(1)[1]
@@ -35,18 +34,18 @@ class StudyList(object):
     def __init__(self, name, path):
         self.name = name
         self.path = Path(path).resolve()
-        self.outFile = name + "-metrics.txt"
+        self.out_file = name + "-metrics.txt"
 
     def run_metrics(self, exe):
-        res = subprocess.run(["/bin/time" , "-o", self.outFile, "-v", exe, self.path])
+        res = subprocess.run(["/bin/time" , "-o", self.out_file, "-v", exe, self.path])
         assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
 
     def get_memory(self):
-        return int(search_patern_in_file(self.outFile, "Maximum(.*): (.*)"))
+        return int(search_patern_in_file(self.out_file, "Maximum(.*): (.*)"))
 
     def get_time(self):
-        user_time = float(search_patern_in_file(self.outFile, "User time(.*): (.*)"))
-        syst_time = float(search_patern_in_file(self.outFile, "System time(.*): (.*)"))
+        user_time = float(search_patern_in_file(self.out_file, "User time(.*): (.*)"))
+        syst_time = float(search_patern_in_file(self.out_file, "System time(.*): (.*)"))
         return user_time + syst_time
 
     def create_json(self):
