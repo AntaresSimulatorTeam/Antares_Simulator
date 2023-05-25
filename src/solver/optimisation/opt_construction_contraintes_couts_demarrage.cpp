@@ -40,6 +40,9 @@
 #include <antares/study.h>
 #include <antares/study/area/scratchpad.h>
 #include "../simulation/sim_structure_donnees.h"
+#include "opt_rename_problem.h"
+#include "opt_export_structure.h"
+using namespace Antares::Data;
 
 void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
   PROBLEME_HEBDO* problemeHebdo,
@@ -58,11 +61,12 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
     int* Colonne = ProblemeAResoudre->Colonne;
 
     int nbTermesContraintesPourLesCoutsDeDemarrage = 0;
-
+    auto study = Study::Current::Get();
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
         const PALIERS_THERMIQUES* PaliersThermiquesDuPays
           = problemeHebdo->PaliersThermiquesDuPays[pays];
+        const auto& zone = study->areas[pays]->name.c_str();
 
         for (int index = 0; index < PaliersThermiquesDuPays->NombreDePaliersThermiques; index++)
         {
@@ -75,6 +79,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
 
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
+                int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 CorrespondanceVarNativesVarOptim
                   = problemeHebdo->CorrespondanceVarNativesVarOptim[pdt];
 
@@ -113,6 +118,10 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                 {
                     if (nombreDeTermes > 0)
                     {
+                        // std::string constraint_full_name = BuildName(
+                        //   Enum::toString(Enum::ExportStructConstraintsDict::BilansPays),
+                        //   location_identifier(zone, Enum::ExportStructLocationDict::area),
+                        //   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
                           ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
                     }

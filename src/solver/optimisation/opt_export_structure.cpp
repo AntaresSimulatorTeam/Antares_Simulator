@@ -65,7 +65,12 @@ const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>(
       "EnergieHydraulique",
       "LissageHydrauliqueSurSommeDesVariations",
       "LissageHydrauliqueSurVariationMaxALaBaisse",
-      "LissageHydrauliqueSurVariationMaxALaHausse"};
+      "LissageHydrauliqueSurVariationMaxALaHausse",
+      "MinEnergieHydraulique",
+      "MaxEnergieHydraulique",
+      "NiveauxPays",
+      "EquivalenceStockFinal",
+      "ExpressionStockFinal"};
     return s_exportStructConstraintsNames;
 }
 template<>

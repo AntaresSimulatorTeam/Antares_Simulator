@@ -64,7 +64,12 @@ enum class ExportStructConstraintsDict : unsigned char
     EnergieHydraulique,
     LissageHydrauliqueSurSommeDesVariations,
     LissageHydrauliqueSurVariationMaxALaBaisse,
-    LissageHydrauliqueSurVariationMaxALaHausse
+    LissageHydrauliqueSurVariationMaxALaHausse,
+    MinEnergieHydraulique,
+    MaxEnergieHydraulique,
+    NiveauxPays,
+    EquivalenceStockFinal,
+    ExpressionStockFinal
 };
 enum class ExportStructTimeStepDict : unsigned char
 {

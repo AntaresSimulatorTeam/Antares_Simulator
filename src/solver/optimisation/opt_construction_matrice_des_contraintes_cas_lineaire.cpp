@@ -69,7 +69,7 @@ void exportPaliers(const PROBLEME_HEBDO& problemeHebdo,
                                         timeStepInYear, // TODO[FOM] remove
                                         pays,
                                         palier);
-                const auto zone = Study::Current::Get()->areas[pays]->name.c_str();
+                const auto& zone = Study::Current::Get()->areas[pays]->name.c_str();
                 RenameZoneVariable(problemeHebdo.ProblemeAResoudre,
                                    var,
                                    Enum::ExportStructDict::PalierThermique,
@@ -122,7 +122,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             int nombreDeTermes = 0;
 
             int interco = problemeHebdo->IndexDebutIntercoOrigine[pays];
-            const auto zone = study->areas[pays]->name.c_str();
+            const auto& zone = study->areas[pays]->name.c_str();
 
             while (interco >= 0)
             {
@@ -334,7 +334,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                                             Enum::ExportStructDict::DefaillanceNegative,
                                             timeStepInYear, // TODO[FOM] remove
                                             pays);
-                    const auto zone = study->areas[pays]->name.c_str();
+                    const auto& zone = study->areas[pays]->name.c_str();
                     RenameZoneVariable(ProblemeAResoudre,
                                        var,
                                        Enum::ExportStructDict::DefaillanceNegative,
@@ -789,7 +789,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
-        auto zone = study->areas[pays]->name.c_str();
+        const auto& zone = study->areas[pays]->name.c_str();
         bool presenceHydro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable;
         bool TurbEntreBornes
@@ -860,7 +860,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
         {
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
-            const auto zone = study->areas[pays]->name.c_str();
+            const auto& zone = study->areas[pays]->name.c_str();
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -922,7 +922,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             if (!problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDHydrauliqueModulable)
                 continue;
 
-            const auto zone = study->areas[pays]->name.c_str();
+            const auto& zone = study->areas[pays]->name.c_str();
             for (int pdt = 0; pdt < nombreDePasDeTempsPourUneOptimisation; pdt++)
             {
                 CorrespondanceVarNativesVarOptim
@@ -988,6 +988,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable;
         const bool TurbEntreBornes
           = problemeHebdo->CaracteristiquesHydrauliques[pays]->TurbinageEntreBornes;
+        const auto& zone = study->areas[pays]->name.c_str();
+
         if (presenceHydro && (TurbEntreBornes || presencePompage))
         {
             int nombreDeTermes = 0;
@@ -1005,9 +1007,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          "weekly");
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '>', constraint_full_name);
         }
         else
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays] = -1;
@@ -1032,8 +1038,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MaxEnergieHydraulique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          "weekly");
+
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
         }
         else
             problemeHebdo->NumeroDeContrainteMaxEnergieHydraulique[pays] = -1;
@@ -1041,6 +1052,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
+        const auto& zone = study->areas[pays]->name.c_str();
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->PresenceDePompageModulable)
         {
             int nombreDeTermes = 0;
@@ -1059,8 +1071,13 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMaxPompage[pays]
               = ProblemeAResoudre->NombreDeContraintes;
 
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          "weekly");
+
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<');
+              ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '<', constraint_full_name);
         }
         else
             problemeHebdo->NumeroDeContrainteMaxPompage[pays] = -1;
@@ -1127,12 +1144,17 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays]
                   = ProblemeAResoudre->NombreDeContraintes;
+                std::string constraint_full_name = BuildName(
+                  Enum::toString(Enum::ExportStructConstraintsDict::NiveauxPays),
+                  Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
+                  time_identifier(timeStepInYear + 1, Enum::ExportStructTimeStepDict::hour));
 
-                std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear + 1)
-                                                + "::" + problemeHebdo->NomsDesPays[pays];
+                // std::string NomDeLaContrainte = "hydro_level::" + std::to_string(timeStepInYear +
+                // 1)
+                //                                 + "::" + problemeHebdo->NomsDesPays[pays];
 
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
-                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', NomDeLaContrainte);
+                  ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=', constraint_full_name);
             }
             else
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays] = -1;
@@ -1142,6 +1164,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
     /* For each area with ad hoc properties, two possible sets of two additional constraints */
     for (int pays = 0; pays < problemeHebdo->NombreDePays; pays++)
     {
+        const auto& zone = study->areas[pays]->name.c_str();
         if (problemeHebdo->CaracteristiquesHydrauliques[pays]->AccurateWaterValue
             && problemeHebdo->CaracteristiquesHydrauliques[pays]->DirectLevelAccess)
         /*  equivalence constraint : StockFinal- Niveau[T]= 0*/
@@ -1165,6 +1188,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             }
             problemeHebdo->NumeroDeContrainteEquivalenceStockFinal[pays]
               = ProblemeAResoudre->NombreDeContraintes;
+
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::EquivalenceStockFinal),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          "weekly");
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
@@ -1194,6 +1222,11 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
             problemeHebdo->NumeroDeContrainteExpressionStockFinal[pays]
               = ProblemeAResoudre->NombreDeContraintes;
+
+            std::string constraint_full_name
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ExpressionStockFinal),
+                          location_identifier(zone, Enum::ExportStructLocationDict::area),
+                          "weekly");
 
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
               ProblemeAResoudre, Pi, Colonne, nombreDeTermes, '=');
