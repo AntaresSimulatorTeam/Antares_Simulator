@@ -17,18 +17,16 @@ def get_latest_output_folder(path):
 
 # used to get the memory and time from the /bin/time -v file
 def search_patern_in_file(file_name, pattern):
-    f = open(file_name)
-    s = f.read()
-    f.close()
-    m = re.search(pattern, s)
-    if m:
-        return m.groups(1)[1]
-    else:
-        print("Pattern not found, aborting")
-        exit(1)
+    with open(file_name) as f:
+        s = f.read()
+        m = re.search(pattern, s)
+        if m:
+            return m.groups(1)[1]
+        else:
+            raise Exception("Sorry, no numbers below zero")
 
-def get_git_revision_short_hash() -> str:
-    return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
+def get_git_revision_hash() -> str:
+    return subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('ascii').strip()
 
 class StudyList(object):
 
@@ -52,12 +50,7 @@ class StudyList(object):
     def create_json(self):
         memory = self.get_memory() / 1024 # from Kb to Mb
         time = self.get_time()
-
-        data = {}
-        data['peak_memory_mb'] = memory
-        data['time_s'] = time
-
-        return data
+        return { 'peak_memory_mb' : memory, 'time_s' : time }
 
     # read the [durations_ms] section from the execution_info.ini file in the study output
     def read_execution_ini(self):
@@ -85,13 +78,13 @@ def main(solver_path):
 
     # Execution and results for each study
     for studies in study_list:
-        studies.run_metrics(solver_path)
+        # studies.run_metrics(solver_path)
         results[studies.name] = studies.create_json()
         results[studies.name]['execution_info.ini (time in ms)'] = studies.read_execution_ini()
 
     # Writing the JSON
-    f = open("results.json", "w")
-    f.write(json.dumps(results))
-    f.close()
+    with open("results.json", "w") as f:
+        f.write(json.dumps(results))
+        print(json.dumps(results))
 
 main("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
