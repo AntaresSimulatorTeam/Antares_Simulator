@@ -5,6 +5,7 @@ import json
 import glob
 import sys
 import os
+import re
 
 from pathlib import Path
 
@@ -14,6 +15,17 @@ def get_latest_output_folder(path):
     files = os.listdir(output_path_study)
     paths = [os.path.join(output_path_study, basename) for basename in files]
     return max(paths, key=os.path.getctime)
+
+def search_patern_in_file(file_name, pattern):
+    file = open(file_name)
+    s = file.read()
+    file.close
+    m = re.search(pattern, s)
+    if m:
+        return m.groups(1)[1]
+    else:
+        print("Pattern not found, aborting")
+        exit(1)
 
 def get_git_revision_short_hash() -> str:
     return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
@@ -30,13 +42,12 @@ class StudyList(object):
         assert (res.returncode == 0), "The exec failed for study: " + str(self.path)
 
     def get_memory(self):
-        ps = subprocess.run(["sed -n -e 's/^.*Maximum.*: //p' " + self.outFile], shell=True, capture_output=True)
-        return int(ps.stdout)
+        return int(search_patern_in_file(self.outFile, "Maximum(.*): (.*)"))
 
     def get_time(self):
-        ps = subprocess.run(["sed -n -e 's/^.*User time.*: //p' " + self.outFile], shell=True, capture_output=True)
-        ps2 = subprocess.run(["sed -n -e 's/^.*System time.*: //p' " + self.outFile], shell=True, capture_output=True)
-        return float(ps.stdout) + float(ps2.stdout)
+        user_time = float(search_patern_in_file(self.outFile, "User time(.*): (.*)"))
+        syst_time = float(search_patern_in_file(self.outFile, "System time(.*): (.*)"))
+        return user_time + syst_time
 
     def create_json(self):
         memory = self.get_memory() / 1024 # from Kb to Mb
@@ -74,8 +85,7 @@ def performance(solver_path):
 
     # Execution and results for each studies
     for studies in study_list:
-        # studies.run_metrics(solver_path)
-        studies.read_execution_ini()
+        studies.run_metrics(solver_path)
         results[studies.name] = studies.create_json()
         results[studies.name]['execution_info.ini'] = studies.read_execution_ini()
 
