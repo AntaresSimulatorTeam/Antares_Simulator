@@ -78,7 +78,7 @@ def main(solver_path):
 
     # Execution and results for each study
     for studies in study_list:
-        # studies.run_metrics(solver_path)
+        studies.run_metrics(solver_path)
         results[studies.name] = studies.create_json()
         results[studies.name]['execution_info.ini (time in ms)'] = studies.read_execution_ini()
 
