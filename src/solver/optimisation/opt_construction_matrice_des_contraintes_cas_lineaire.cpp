@@ -283,7 +283,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::BilansPays),
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::AreaBalance),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -352,7 +352,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             //                                  + "::" + problemeHebdo->NomsDesPays[pays];
             constraint_full_name.clear();
             constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::ChargesFictives),
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::FictiveLoads),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
             OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -456,7 +456,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                   origin + ZONE_SEPARATOR + extremite, Enum::ExportStructLocationDict::link);
                 auto constraint_full_name
                   = BuildName(Antares::Data::Enum::toString(
-                                Enum::ExportStructConstraintsDict::DissociationDeFlux),
+                                Enum::ExportStructConstraintsDict::FlowDissociation),
                               constraint_location,
                               constraint_time);
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -841,7 +841,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::EnergieHydraulique),
+              Enum::toString(Enum::ExportStructConstraintsDict::HydroPower),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
@@ -905,7 +905,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
 
                 std::string constraint_full_name = BuildName(
                   Enum::toString(
-                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurSommeDesVariations),
+                    Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationSum),
                   location_identifier(zone, Enum::ExportStructLocationDict::area),
                   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -944,7 +944,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                 std::string constraint_full_name = BuildName(
                   Enum::toString(
-                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurVariationMaxALaBaisse),
+                    Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxDown),
                   location_identifier(zone, Enum::ExportStructLocationDict::area),
                   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                 OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -968,7 +968,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 constraint_full_name.clear();
                 constraint_full_name = BuildName(
                   Enum::toString(
-                    Enum::ExportStructConstraintsDict::LissageHydrauliqueSurVariationMaxALaHausse),
+                    Enum::ExportStructConstraintsDict::HydroPowerSmoothingUsingVariationMaxUp),
                   location_identifier(zone, Enum::ExportStructLocationDict::area),
                   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
 
@@ -1006,7 +1006,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
             problemeHebdo->NumeroDeContrainteMinEnergieHydraulique[pays]
               = ProblemeAResoudre->NombreDeContraintes;
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
+              Enum::toString(Enum::ExportStructConstraintsDict::MinHydroPower),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
@@ -1037,7 +1037,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
             // TODO
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::MaxEnergieHydraulique),
+              Enum::toString(Enum::ExportStructConstraintsDict::MaxHydroPower),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
@@ -1070,7 +1070,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::MaxPompage),
+              Enum::toString(Enum::ExportStructConstraintsDict::MaxPumping),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
@@ -1143,7 +1143,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
                 CorrespondanceCntNativesCntOptim->NumeroDeContrainteDesNiveauxPays[pays]
                   = ProblemeAResoudre->NombreDeContraintes;
                 std::string constraint_full_name = BuildName(
-                  Enum::toString(Enum::ExportStructConstraintsDict::NiveauxPays),
+                  Enum::toString(Enum::ExportStructConstraintsDict::AreaHydroLevel),
                   Enum::toString(Enum::ExportStructBindingConstraintType::hourly),
                   time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
 
@@ -1188,7 +1188,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::EquivalenceStockFinal),
+              Enum::toString(Enum::ExportStructConstraintsDict::FinalStockEquivalent),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 
@@ -1222,7 +1222,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string constraint_full_name = BuildName(
-              Enum::toString(Enum::ExportStructConstraintsDict::ExpressionStockFinal),
+              Enum::toString(Enum::ExportStructConstraintsDict::FinalStockExpression),
               location_identifier(zone, Enum::ExportStructLocationDict::area),
               time_identifier(problemeHebdo->weekInTheYear, Enum::ExportStructTimeStepDict::week));
 

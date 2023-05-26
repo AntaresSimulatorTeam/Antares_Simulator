@@ -58,24 +58,24 @@ enum class ExportStructDict : unsigned char
 };
 enum class ExportStructConstraintsDict : unsigned char
 {
-    DissociationDeFlux,
-    BilansPays,
-    ChargesFictives,
-    EnergieHydraulique,
-    LissageHydrauliqueSurSommeDesVariations,
-    LissageHydrauliqueSurVariationMaxALaBaisse,
-    LissageHydrauliqueSurVariationMaxALaHausse,
-    MinEnergieHydraulique,
-    MaxEnergieHydraulique,
-    MaxPompage,
-    NiveauxPays,
-    EquivalenceStockFinal,
-    ExpressionStockFinal,
-    DureeMinDeMarche,
-    DureeMinDArret,
-    PMaxDesGroupesEnMarcheDuPalierThermique,
-    PMinDesGroupesEnMarcheDuPalierThermique,
-    GroupesQuiDemarrentEtQuiSArretentDuPalierThermique
+    FlowDissociation,
+    AreaBalance,
+    FictiveLoads,
+    HydroPower,
+    HydroPowerSmoothingUsingVariationSum,
+    HydroPowerSmoothingUsingVariationMaxDown,
+    HydroPowerSmoothingUsingVariationMaxUp,
+    MinHydroPower,
+    MaxHydroPower,
+    MaxPumping,
+    AreaHydroLevel,
+    FinalStockEquivalent,
+    FinalStockExpression,
+    MinRunTime,
+    MinStopTime,
+    PMaxOfRunningThermalClusterGroups,
+    PMinOfRunningThermalClusterGroups,
+    StartingAndStopingThermalClusterGroups
 };
 enum class ExportStructTimeStepDict : unsigned char
 {

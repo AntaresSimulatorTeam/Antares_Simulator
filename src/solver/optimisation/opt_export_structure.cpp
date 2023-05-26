@@ -59,24 +59,24 @@ template<>
 const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>()
 {
     static std::initializer_list<std::string> s_exportStructConstraintsNames{
-      "DissociationDeFlux",
-      "BilansPays",
-      "ChargesFictives",
-      "EnergieHydraulique",
-      "LissageHydrauliqueSurSommeDesVariations",
-      "LissageHydrauliqueSurVariationMaxALaBaisse",
-      "LissageHydrauliqueSurVariationMaxALaHausse",
-      "MinEnergieHydraulique",
-      "MaxEnergieHydraulique",
-      "MaxPompage",
-      "NiveauxPays",
-      "EquivalenceStockFinal",
-      "ExpressionStockFinal",
-      "DureeMinDeMarche",
-      "DureeMinDArret",
-      "PMaxDesGroupesEnMarcheDuPalierThermique",
-      "PMinDesGroupesEnMarcheDuPalierThermique",
-      "GroupesQuiDemarrentEtQuiSArretentDuPalierThermique"};
+      "FlowDissociation",
+      "AreaBalance",
+      "FictiveLoads",
+      "HydroPower",
+      "HydroPowerSmoothingUsingVariationSum",
+      "HydroPowerSmoothingUsingVariationMaxDown",
+      "HydroPowerSmoothingUsingVariationMaxUp",
+      "MinHydroPower",
+      "MaxHydroPower",
+      "MaxPumping",
+      "AreaHydroLevel",
+      "FinalStockEquivalent",
+      "FinalStockExpression",
+      "MinRunTime",
+      "MinStopTime",
+      "PMaxOfRunningThermalClusterGroups",
+      "PMinOfRunningThermalClusterGroups",
+      "StartingAndStopingThermalClusterGroups"};
     return s_exportStructConstraintsNames;
 }
 template<>

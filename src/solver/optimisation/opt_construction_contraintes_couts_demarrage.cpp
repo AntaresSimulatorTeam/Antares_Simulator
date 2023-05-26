@@ -119,8 +119,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         std::string constraint_full_name = BuildName(
-                          Enum::toString(Enum::ExportStructConstraintsDict::
-                                           PMaxDesGroupesEnMarcheDuPalierThermique),
+                          Enum::toString(
+                            Enum::ExportStructConstraintsDict::PMaxOfRunningThermalClusterGroups),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
@@ -170,8 +170,8 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                     if (nombreDeTermes > 0)
                     {
                         std::string constraint_full_name = BuildName(
-                          Enum::toString(Enum::ExportStructConstraintsDict::
-                                           PMinDesGroupesEnMarcheDuPalierThermique),
+                          Enum::toString(
+                            Enum::ExportStructConstraintsDict::PMinOfRunningThermalClusterGroups),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
@@ -278,7 +278,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         std::string constraint_full_name = BuildName(
                           Enum::toString(Enum::ExportStructConstraintsDict::
-                                           GroupesQuiDemarrentEtQuiSArretentDuPalierThermique),
+                                           StartingAndStopingThermalClusterGroups),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
@@ -348,7 +348,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraint_full_name = BuildName(
-                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDeMarche),
+                          Enum::toString(Enum::ExportStructConstraintsDict::MinRunTime),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
@@ -453,7 +453,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraint_full_name = BuildName(
-                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDeMarche),
+                          Enum::toString(Enum::ExportStructConstraintsDict::MinRunTime),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(ProblemeAResoudre,
@@ -550,7 +550,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaireCoutsDeDemarrage(
                         int timeStepInYear = problemeHebdo->weekInTheYear * 168 + pdt;
                         const auto& zone = problemeHebdo->NomsDesPays[pays];
                         std::string constraint_full_name = BuildName(
-                          Enum::toString(Enum::ExportStructConstraintsDict::DureeMinDArret),
+                          Enum::toString(Enum::ExportStructConstraintsDict::MinStopTime),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           time_identifier(timeStepInYear, Enum::ExportStructTimeStepDict::hour));
                         OPT_ChargerLaContrainteDansLaMatriceDesContraintes(
