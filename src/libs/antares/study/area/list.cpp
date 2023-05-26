@@ -1499,7 +1499,7 @@ void AreaList::resizeAllTimeseriesNumbers(uint n)
     each([&](Data::Area& area) { area.resizeAllTimeseriesNumbers(n); });
 }
 
-void AreaList::fixOrientationForAllInterconnections(BindConstList& bindingconstraints)
+void AreaList::fixOrientationForAllInterconnections(BindingConstraintsList& bindingconstraints)
 {
     each([&](Data::Area& area) {
         bool mustLoop;
@@ -1609,7 +1609,7 @@ void AreaList::updateNameIDSet() const
 
 void AreaList::removeLoadTimeseries()
 {
-    each([&](Data::Area& area) { area.load.series->series.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.load.series->timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeHydroTimeseries()
@@ -1624,19 +1624,19 @@ void AreaList::removeHydroTimeseries()
 
 void AreaList::removeSolarTimeseries()
 {
-    each([&](Data::Area& area) { area.solar.series->series.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.solar.series->timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeWindTimeseries()
 {
-    each([&](Data::Area& area) { area.wind.series->series.reset(1, HOURS_PER_YEAR); });
+    each([&](Data::Area& area) { area.wind.series->timeSeries.reset(1, HOURS_PER_YEAR); });
 }
 
 void AreaList::removeThermalTimeseries()
 {
     each([&](Data::Area& area) {
         area.thermal.list.each(
-          [&](Data::ThermalCluster& cluster) { cluster.series->series.reset(1, HOURS_PER_YEAR); });
+          [&](Data::ThermalCluster& cluster) { cluster.series->timeSeries.reset(1, HOURS_PER_YEAR); });
     });
 }
 

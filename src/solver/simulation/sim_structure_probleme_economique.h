@@ -515,8 +515,8 @@ struct PROBLEME_HEBDO
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTC = nullptr;
     VALEURS_DE_NTC_ET_RESISTANCES** ValeursDeNTCRef = nullptr;
 
-    int NombreDePasDeTemps = 0;
-    int NombreDePasDeTempsRef = 0;
+    unsigned int NombreDePasDeTemps = 0;
+    unsigned int NombreDePasDeTempsRef = 0;
     int* NumeroDeJourDuPasDeTemps = nullptr;
 
     int NombreDePasDeTempsPourUneOptimisation = 0;

@@ -88,8 +88,7 @@ public:
     // max x DAYS_PER_YEAR
     Matrix<double> fuelcost;
     Matrix<double> co2cost;
-    // Parent thermal cluster
-    std::weak_ptr<const ThermalCluster> itsThermalCluster;
+    
 }; // class PreproThermal
 
 } // namespace Antares::Data

@@ -87,7 +87,7 @@ bool ThermalClusterList::loadFromFolder(Study& study, const AnyString& folder, A
         if (section->name.empty())
             continue;
 
-        auto cluster = std::make_shared<ThermalCluster>(area, study.maxNbYearsInParallel);
+        auto cluster = std::make_shared<ThermalCluster>(area);
 
         // Load data of a thermal cluster from a ini file section
         if (not ThermalClusterLoadFromSection(study.buffer, *cluster, *section))
@@ -375,8 +375,6 @@ void ThermalClusterList::ensureDataPrepro()
         auto c = it->second;
         if (not c->prepro)
             c->prepro = new PreproThermal(c);
-
-        c->ecoInput.itsThermalCluster = c;
     }
 }
 

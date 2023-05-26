@@ -98,7 +98,7 @@ static bool Remix(const Data::AreaList& areas, PROBLEME_HEBDO& problem, uint num
             double top = 0;
 
             uint loadTS = NumeroChroniquesTireesParPays[numSpace][index]->Consommation;
-            auto& load = area.load.series->series;
+            auto& load = area.load.series->timeSeries;
             assert(load.width > 0);
 
             auto& L = (loadTS < load.width) ? load[loadTS] : load[0];

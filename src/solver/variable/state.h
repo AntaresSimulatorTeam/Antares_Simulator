@@ -28,6 +28,7 @@
 #define __SOLVER_VARIABLE_STATE_H__
 
 #include <vector>
+#include <array>
 #include <yuni/yuni.h>
 #include "constants.h"
 #include <antares/study/fwd.h>
@@ -60,6 +61,10 @@ public:
 
         //! Minimum power of all clusters for the current hour in the year
         std::vector<double> PMinOfClusters;
+
+        std::vector<unsigned int> unitCountLastHour;
+        std::vector<double> productionLastHour;
+        std::vector<double> pminOfAGroup;
     };
 
     StateForAnArea& operator[](size_t areaIndex);
@@ -88,7 +93,7 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void initFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+    void initFromThermalClusterIndex(const unsigned int areaWideIndex);
 
     /*!
     ** \brief End the year by smoothing the thermal units run
@@ -98,7 +103,29 @@ public:
     **
     ** \param areaWideIndex Index of the thermal cluster for the current area
     */
-    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex, uint numSpace);
+
+    void yearEndBuildFromThermalClusterIndex(const unsigned int areaWideIndex);
+
+private:
+    /*!
+    ** \brief Initialize some variable according a thermal cluster index
+    **
+    ** Called in initFromAreaIndex to split code
+    **
+    ** \param areaWideIndex Index of the thermal cluster for the current area
+    */
+    void initFromThermalClusterIndexProduction(const unsigned int areaWideIndex);
+
+    void yearEndBuildThermalClusterCalculateStartupCosts(
+      const uint& maxDurationON,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+      const Data::ThermalCluster* currentCluster);
+
+    std::array<uint, Variable::maxHoursInAYear> computeEconomicallyOptimalNbClustersONforEachHour(
+      const uint& maxDurationON,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+      const std::array<uint, Variable::maxHoursInAYear>& ON_max) const;
 
     /*!
     ** \brief Smooth the thermal units run after resolutions
@@ -108,30 +135,7 @@ public:
     */
     void yearEndSmoothDispatchedUnitsCount(const unsigned int areaWideIndex, uint numSpace);
 
-    /*!
-    ** \brief Computes the minimal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMinNumberOfUnitsOn(Data::ThermalCluster* cluster, int t, uint numSpace);
-
-    /*!
-    ** \brief Computes the maximal number of units on in the cluster
-    **
-    **
-    **
-    */
-    uint computeMaxNumberOfUnitsOn(Data::ThermalCluster* cluster);
-
-    /*!
-    ** \brief Computes the production, fixed and start-up costs, assuming
-    ** that thermalClusterDispatchedUnitsCountForYear has been built
-    **
-    ** \param areaWideIndex Index of the thermal cluster for the current area
-    */
-    void yearEndComputeThermalClusterCosts(const unsigned int areaWideIndex);
-
+public:
     /*!
     ** \brief Reset internal data
     */
@@ -142,7 +146,6 @@ public:
     */
     void yearEndResetThermal();
 
-public:
     //! Current year
     unsigned int year;
     //! Current week for current year (zero-based)

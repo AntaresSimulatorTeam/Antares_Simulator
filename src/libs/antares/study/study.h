@@ -41,7 +41,7 @@
 
 #include "simulation.h"
 #include "parameters.h"
-#include "constraint/constraint.h"
+#include "binding_constraint/BindingConstraint.h"
 #include "header.h"
 #include "version.h"
 #include "sets.h"
@@ -646,7 +646,7 @@ public:
     //! \name Binding constraints
     //@{
     //! Binding constraints
-    BindConstList bindingConstraints;
+    BindingConstraintsList bindingConstraints;
     //@}
 
     //! \name Correlation matrices used by the prepro

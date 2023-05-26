@@ -119,18 +119,18 @@ inline bool BindingConstraint::skipped() const
     return linkCount() == 0 && enabledClusterCount() == 0;
 }
 
-inline uint BindConstList::size() const
+inline uint BindingConstraintsList::size() const
 {
     return (uint)pList.size();
 }
 
-inline bool BindConstList::empty() const
+inline bool BindingConstraintsList::empty() const
 {
     return pList.empty();
 }
 
 template<class PredicateT>
-inline void BindConstList::each(const PredicateT& predicate)
+inline void BindingConstraintsList::each(const PredicateT& predicate)
 {
     uint count = (uint)pList.size();
     for (uint i = 0; i != count; ++i)
@@ -138,7 +138,7 @@ inline void BindConstList::each(const PredicateT& predicate)
 }
 
 template<class PredicateT>
-inline void BindConstList::each(const PredicateT& predicate) const
+inline void BindingConstraintsList::each(const PredicateT& predicate) const
 {
     uint count = (uint)pList.size();
     for (uint i = 0; i != count; ++i)
@@ -146,7 +146,7 @@ inline void BindConstList::each(const PredicateT& predicate) const
 }
 
 template<class PredicateT>
-inline void BindConstList::eachEnabled(const PredicateT& predicate)
+inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate)
 {
     uint count = (uint)pList.size();
     for (uint i = 0; i != count; ++i)
@@ -158,7 +158,7 @@ inline void BindConstList::eachEnabled(const PredicateT& predicate)
 }
 
 template<class PredicateT>
-inline void BindConstList::eachEnabled(const PredicateT& predicate) const
+inline void BindingConstraintsList::eachEnabled(const PredicateT& predicate) const
 {
     uint count = (uint)pList.size();
     for (uint i = 0; i != count; ++i)

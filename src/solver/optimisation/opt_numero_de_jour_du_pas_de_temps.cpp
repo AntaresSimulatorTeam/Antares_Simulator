@@ -37,7 +37,7 @@ void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
     problemeHebdo->NombreDeJours
       = problemeHebdo->NombreDePasDeTemps / problemeHebdo->NombreDePasDeTempsDUneJournee;
-    for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+    for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
     {
         double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsDUneJournee;
         problemeHebdo->NumeroDeJourDuPasDeTemps[pdtHebdo] = (int)floor(X);
@@ -47,7 +47,7 @@ void OPT_NumeroDeJourDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 
 void OPT_NumeroDIntervalleOptimiseDuPasDeTemps(PROBLEME_HEBDO* problemeHebdo)
 {
-    for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+    for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
     {
         double X = pdtHebdo / problemeHebdo->NombreDePasDeTempsPourUneOptimisation;
         problemeHebdo->NumeroDIntervalleOptimiseDuPasDeTemps[pdtHebdo] = (int)floor(X);

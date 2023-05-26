@@ -672,7 +672,7 @@ void BindingConstraint::onDeleteAll(void*)
         logs.info() << "deleting the constraints ";
         WIP::Locker wip;
 
-        Antares::Data::BindConstList::iterator BC = study.bindingConstraints.begin();
+        Antares::Data::BindingConstraintsList::iterator BC = study.bindingConstraints.begin();
         int BCListSize = study.bindingConstraints.size();
         for (int i = 0; i < BCListSize; i++)
         {

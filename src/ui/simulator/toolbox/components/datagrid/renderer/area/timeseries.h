@@ -148,7 +148,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->load.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->load.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -186,7 +186,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->solar.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->solar.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -224,7 +224,7 @@ public:
 protected:
     virtual void internalAreaChanged(Antares::Data::Area* area)
     {
-        matrix((area && Data::Study::Current::Valid()) ? &(area->wind.series->series) : NULL);
+        matrix((area && Data::Study::Current::Valid()) ? &(area->wind.series->timeSeries) : NULL);
         Renderer::ARendererArea::internalAreaChanged(area);
     }
 };
@@ -420,7 +420,7 @@ public:
 protected:
     void internalThermalClusterChanged(Antares::Data::ThermalCluster* cluster)
     {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->timeSeries) : NULL);
     }
 
     void onStudyClosed() override;
@@ -469,7 +469,7 @@ public:
 private:
     void internalRenewableClusterChanged(Antares::Data::RenewableCluster* cluster)
     {
-        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->series) : NULL);
+        matrix((Data::Study::Current::Valid() && cluster) ? &(cluster->series->timeSeries) : NULL);
     }
 
     void onStudyClosed() override;

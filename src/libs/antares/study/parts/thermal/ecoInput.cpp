@@ -41,14 +41,12 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster) :
- itsThermalCluster(cluster)
+EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster)
 {
 }
 
 void EconomicInputData::copyFrom(const EconomicInputData& rhs)
 {
-    itsThermalCluster = rhs.itsThermalCluster;
     fuelcost = rhs.fuelcost;
     rhs.fuelcost.unloadFromMemory();
     co2cost = rhs.co2cost;
@@ -74,10 +72,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 {
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
-
-    auto cluster = itsThermalCluster.lock();
-    if (!cluster)
-        return false;
 
     if (study.header.version >= 860)
     {
@@ -107,10 +101,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 
 bool EconomicInputData::forceReload(bool reload) const
 {
-    bool ret = true;
-    ret = fuelcost.forceReload(reload) && ret;
-    ret = co2cost.forceReload(reload) && ret;
-    return ret;
+    return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
 }
 
 void EconomicInputData::markAsModified() const

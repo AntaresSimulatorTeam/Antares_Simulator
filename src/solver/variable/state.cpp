@@ -55,6 +55,9 @@ void ThermalState::StateForAnArea::initializeFromArea(const Data::Area& area)
     numberOfUnitsONbyCluster.resize(count);
     thermalClustersOperatingCost.resize(count);
     PMinOfClusters.resize(count);
+    unitCountLastHour.resize(count, 0);
+    productionLastHour.resize(count, 0);
+    pminOfAGroup.resize(count, 0);
 }
 
 State::State(Data::Study& s) :
@@ -73,17 +76,17 @@ State::State(Data::Study& s) :
 {
 }
 
-void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
+void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex)
 {
     // asserts
     assert(area);
     assert(clusterAreaWideIndex < area->thermal.clusterCount());
 
     // alias to the current thermal cluster
-    Data::ThermalCluster* thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
+    thermalCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
     double thermalClusterAvailableProduction
-      = thermalCluster->series->series[serieIndex][hourInTheYear];
+      = thermalCluster->series->timeSeries[serieIndex][hourInTheYear];
 
     // Minimum power of a group of the cluster for the current hour in the year
     double thermalClusterPMinOfAGroup = 0.;
@@ -95,7 +98,7 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
         // it doen't exist from the solver perspective
         assert(thermalCluster->series);
         assert(timeseriesIndex != NULL);
-        assert(hourInTheYear < thermalCluster->series->series.height);
+        assert(hourInTheYear < thermalCluster->series->timeSeries.height);
 
         thermal[area->index].thermalClustersProductions[clusterAreaWideIndex]
           = thermalClusterAvailableProduction;
@@ -138,21 +141,39 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
             thermal[area->index].numberOfUnitsONbyCluster[clusterAreaWideIndex] = 0;
     }
 
+    initFromThermalClusterIndexProduction(clusterAreaWideIndex);
+
+    if (studyMode != Data::stdmAdequacy)
+    {
+        // Minimum power of a group of the cluster, one per year for each cluster - from the
+        // solver
+        thermal[area->index].pminOfAGroup[clusterAreaWideIndex] = thermalClusterPMinOfAGroup;
+    }
+
+    // Nombre min de groupes appelés
+    // en mode accurate : est pris depuis le solveur
+    // en mode fast : est pris depuis l'heuristique
+}
+
+void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideIndex)
+{
     // Reminder: the variable 'productionCost' is a vector only valid when used
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
+
+    uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
         double p = thermal[area->index].thermalClustersProductions[clusterAreaWideIndex];
         // alias to the previous number of started units
-        uint previousUnitCount = thermalCluster->unitCountLastHour[numSpace];
+        uint previousUnitCount = thermal[area->index].unitCountLastHour[clusterAreaWideIndex];
 
         // Looking for the new number of units which have been started
         uint newUnitCount;
 
-        if (p > thermalCluster->productionLastHour[numSpace])
+        if (p > thermal[area->index].productionLastHour[clusterAreaWideIndex])
         {
             newUnitCount
               = static_cast<uint>(Math::Ceil(p / thermalCluster->nominalCapacityWithSpinning));
@@ -194,87 +215,65 @@ void State::initFromThermalClusterIndex(const uint clusterAreaWideIndex, uint nu
           += thermalCluster->fixedCost * newUnitCount;
 
         // Storing the new unit count for the next hour
-        thermalCluster->unitCountLastHour[numSpace] = newUnitCount;
-        thermalCluster->productionLastHour[numSpace] = p;
+        thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = newUnitCount;
+        thermal[area->index].productionLastHour[clusterAreaWideIndex] = p;
     }
     else
     {
         thermal[area->index].thermalClustersOperatingCost[clusterAreaWideIndex] = 0.;
-        thermalCluster->unitCountLastHour[numSpace] = 0u;
-        thermalCluster->productionLastHour[numSpace] = 0.;
+        thermal[area->index].unitCountLastHour[clusterAreaWideIndex] = 0u;
+        thermal[area->index].productionLastHour[clusterAreaWideIndex] = 0.;
     }
-
-    if (studyMode != Data::stdmAdequacy)
-    {
-        // Minimum power of a group of the cluster, one per year for each cluster - from the
-        // solver
-        thermalCluster->pminOfAGroup[numSpace] = thermalClusterPMinOfAGroup;
-    }
-
-    // Nombre min de groupes appelés
-    // en mode accurate : est pris depuis le solveur
-    // en mode fast : est pris depuis l'heuristique
 }
 
-void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex, uint numSpace)
+void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex)
 {
-    uint dur;    // nombre d'heures de fonctionnement d'un groupe au delà duquel un
+    uint maxDurationON;    // nombre d'heures de fonctionnement d'un groupe au delà duquel un
     // arrêt/redémarrage est préférable
-    uint nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
-    uint nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
-    uint portee; // nombre de pas de temps sur lesquel la valeur de ON_opt[h] est maintenue
-    // identique
-    int delta;   // nombre de groupes démarrés à l'heure h
     uint maxUnitNeeded = 0;
-    uint k = 0;
-    uint h = 0;
-    uint i = 0;
-    uint optimalCount;
     uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
     uint endHourForCurrentYear
         = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
-    uint ON_min[Variable::maxHoursInAYear] = {}; // Nombre minimal de groupes en fonctionnement
-    // à l'heure h (determiné par Peff  et Pnom)
-    uint ON_max[Variable::maxHoursInAYear] = {}; // Nombre maximal de groupes en fonctionnement
-    // à l'heure h  (determine par Peff et Pmin)
-    uint ON_opt[Variable::maxHoursInAYear]
-        = {}; // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
 
-    double thermalClusterStartupCostForYear[Variable::maxHoursInAYear]
-        = {}; // Starup cost à l'heure h
-    double thermalClusterFixedCostForYear[Variable::maxHoursInAYear] = {};
+    // Nombre minimal de groupes en fonctionnement à l'heure h (determiné par Peff  et Pnom)
+    std::array<uint, Variable::maxHoursInAYear> ON_min;
+    // Nombre maximal de groupes en fonctionnement à l'heure h  (determine par Peff et Pmin)
+    std::array<uint, Variable::maxHoursInAYear> ON_max;
+    // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
+    std::array<uint, Variable::maxHoursInAYear> ON_opt {};
+
 
     // Get cluster properties
     Data::ThermalCluster* currentCluster = area->thermal.clusters[clusterAreaWideIndex];
     uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
 
     assert(endHourForCurrentYear <= Variable::maxHoursInAYear);
-    assert(endHourForCurrentYear <= currentCluster->series->series.height);
+    assert(endHourForCurrentYear <= currentCluster->series->timeSeries.height);
     assert(currentCluster);
     assert(currentCluster->series);
     assert(timeseriesIndex != NULL);
 
     if (currentCluster->fixedCost > 0.)
     {
-        dur = static_cast<uint>(
+        maxDurationON = static_cast<uint>(
                 Math::Floor(currentCluster->startupCost / currentCluster->fixedCost));
-        if (dur > endHourForCurrentYear)
-            dur = endHourForCurrentYear;
+        if (maxDurationON > endHourForCurrentYear)
+            maxDurationON = endHourForCurrentYear;
     }
     else
-        dur = endHourForCurrentYear;
+        maxDurationON = endHourForCurrentYear;
 
     // min, and max unit ON calculation
-    for (h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
+    for (uint h = startHourForCurrentYear; h < endHourForCurrentYear; ++h)
     {
         maxUnitNeeded = 0u;
         ON_min[h] = 0u;
         ON_max[h] = 0u;
 
         // Getting available production from cluster data
-        double thermalClusterAvailableProduction = currentCluster->series->series[serieIndex][h];
+        double thermalClusterAvailableProduction = currentCluster->series->timeSeries[serieIndex][h];
         double thermalClusterProduction = 0.;
         if (currentCluster->mustrun)
         {
@@ -303,12 +302,12 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
                     //	ON_min[h] = static_cast<uint>(Math::Ceil(thermalClusterProduction /
                     // currentCluster->nominalCapacityWithSpinning)); // code 5.0.3b<7
                     // 5.0.3b7
-                    if (currentCluster->pminOfAGroup[numSpace] > 0.)
+                    if (thermal[area->index].pminOfAGroup[clusterAreaWideIndex] > 0.)
                     {
                         ON_min[h] = Math::Max(
                                 Math::Min(static_cast<uint>(
                                         Math::Floor(thermalClusterPMinOfTheClusterForYear[h]
-                                            / currentCluster->pminOfAGroup[numSpace])),
+                                            / thermal[area->index].pminOfAGroup[clusterAreaWideIndex])),
                                     static_cast<uint>(
                                         Math::Ceil(thermalClusterAvailableProduction
                                             / currentCluster->nominalCapacityWithSpinning))),
@@ -351,118 +350,152 @@ void State::yearEndBuildFromThermalClusterIndex(const uint clusterAreaWideIndex,
             ON_max[h] = ON_min[h];
     }
 
-    if (dur > 0)
+    if (maxDurationON > 0)
+        ON_opt = computeEconomicallyOptimalNbClustersONforEachHour(maxDurationON, ON_min, ON_max);
+
+    // Calculation of non linear and startup costs
+    yearEndBuildThermalClusterCalculateStartupCosts(maxDurationON, ON_min, ON_opt, currentCluster);
+}
+
+void State::yearEndBuildThermalClusterCalculateStartupCosts(const uint& maxDurationON,
+                                                            const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+                                                            const std::array<uint, Variable::maxHoursInAYear>& ON_opt,
+                const Data::ThermalCluster* currentCluster)
+{
+    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint endHourForCurrentYear
+        = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+
+    for (uint hour = startHourForCurrentYear; hour < endHourForCurrentYear; ++hour)
     {
-        ON_opt[startHourForCurrentYear] = ON_min[startHourForCurrentYear];
-        h = startHourForCurrentYear + 1;
+        double thermalClusterStartupCostForYear = 0;
+        double thermalClusterFixedCostForYear = 0;
 
-        while (h < endHourForCurrentYear)
+        // based on duration, if maxDurationON==0 we choose the mininum of ON clusters, otherwise, the
+        // optimal number.
+        uint optimalCount = (maxDurationON == 0) ? ON_min[hour] : ON_opt[hour];
+
+        // NODU cannot be > unit count
+        if (optimalCount > currentCluster->unitCount)
+            optimalCount = currentCluster->unitCount;
+
+        thermalClusterFixedCostForYear = currentCluster->fixedCost * optimalCount;
+
+        if (hour >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
         {
-            if (ON_min[h] >= ON_opt[h - 1])
-            {
-                ON_opt[h] = ON_min[h]; // à la montée le nombre de groupe démarré est le plus
-                // petit possible
-                ++h; // à la montée on ne peut progresser que d'une heure
-            }
-            else // on amorce une descente : ON_opt[h] peut être supérieur à  ON_min[h]
-            {
-                portee = 0;
-                nivmin = ON_min[h];
+            // nombre de groupes démarrés à l'heure h
+            int delta = (maxDurationON == 0) ? ON_min[hour] - ON_min[hour - 1]
+                : ON_opt[hour] - ON_opt[hour - 1];
 
-                (ON_max[h] < ON_opt[h - 1]) ? nivmax = ON_max[h] : nivmax = ON_opt[h - 1];
+            (delta > 0)
+                ? (thermalClusterStartupCostForYear = currentCluster->startupCost * delta)
+                : (thermalClusterStartupCostForYear = 0.);
+        }
 
-                if (nivmax > nivmin)
+        // Aggregated variables for output
+        // NP Cost = SU + Fx
+        // Op. Cost = (P.lvl * P.Cost) + NP.Cost
+
+        thermalClusterNonProportionalCostForYear[hour]
+            = thermalClusterStartupCostForYear + thermalClusterFixedCostForYear;
+        thermalClusterOperatingCostForYear[hour] += thermalClusterNonProportionalCostForYear[hour];
+
+        // Other variables for output
+        //\todo get from the cluster
+        thermalClusterDispatchedUnitsCountForYear[hour] = optimalCount;
+    }
+}
+
+std::array<uint, Variable::maxHoursInAYear>
+State::computeEconomicallyOptimalNbClustersONforEachHour(const uint& maxDurationON,
+                  const std::array<uint, Variable::maxHoursInAYear>& ON_min,
+                  const std::array<uint, Variable::maxHoursInAYear>& ON_max) const
+{
+    uint startHourForCurrentYear = study.runtime->rangeLimits.hour[Data::rangeBegin];
+    uint endHourForCurrentYear
+        = startHourForCurrentYear + study.runtime->rangeLimits.hour[Data::rangeCount];
+
+    // Nombre de groupes économiquement optimal en fonctionnement à l'heure h
+    std::array<uint, Variable::maxHoursInAYear> ON_opt;
+
+    uint nivmax; // valeur maximale de ON_opt[h] , progressivement réactualisée à la baisse
+    uint nivmin; // valeur minimale de ON_opt[h] , progressivement réactualisée à la hausse
+
+    ON_opt[startHourForCurrentYear] = ON_min[startHourForCurrentYear];
+
+    uint h = startHourForCurrentYear + 1;
+    while (h < endHourForCurrentYear)
+    {
+        if (ON_min[h] >= ON_opt[h - 1])
+        {
+            ON_opt[h] = ON_min[h]; // à la montée le nombre de groupe démarré est le plus
+            // petit possible
+            ++h; // à la montée on ne peut progresser que d'une heure
+        }
+        else // on amorce une descente : ON_opt[h] peut être supérieur à  ON_min[h]
+        {
+            // nombre de pas de temps sur lesquel la valeur de ON_opt[h] est maintenue
+            uint portee = 0;
+            nivmin = ON_min[h];
+
+            (ON_max[h] < ON_opt[h - 1]) ? nivmax = ON_max[h] : nivmax = ON_opt[h - 1];
+
+            if (nivmax > nivmin)
+            {
+                for (uint k = 1; k <= maxDurationON; ++k)
                 {
-                    for (k = 1; k <= dur; ++k)
+                    if (h + k >= endHourForCurrentYear)
+                        break; // fin de l'année dépassée
+                    if (ON_max[h + k] <= ON_min[h])
                     {
-                        if (h + k >= endHourForCurrentYear)
-                            break; // fin de l'année dépassée
-                        if (ON_max[h + k] <= ON_min[h])
-                        {
-                            nivmax = ON_min[h];
+                        nivmax = ON_min[h];
+                        break;
+                    } // point très  bas rencontré sur ON_max : il vaut mieux arrêter les
+                    // groupes dès l'heure h
+                    if (ON_max[h + k]
+                            < nivmax) // point moins bas rencontré sur ON_max : la borne sup du
+                        // nombre optimal de groupes à conserver en h diminue
+                    {
+                        nivmax = ON_max[h + k];
+                        if (nivmax < nivmin)
                             break;
-                        } // point très  bas rencontré sur ON_max : il vaut mieux arrêter les
-                        // groupes dès l'heure h
-                        if (ON_max[h + k]
-                                < nivmax) // point moins bas rencontré sur ON_max : la borne sup du
-                            // nombre optimal de groupes à conserver en h diminue
-                        {
-                            nivmax = ON_max[h + k];
-                            if (nivmax < nivmin)
-                                break;
-                        }
-                        if (ON_min[h + k] > ON_min[h]) // on est sûr que ON_opt[h] > ON_min[h]
-                        {
-                            if (ON_min[h + k] >= nivmax)
-                            {
-                                nivmin = nivmax;
-                                portee = k;
-                                break;
-                                } // la remontée de ON_min justifie de conserver exactement
-                                  // nivmin=nivmax groupes de h à h+k-1 = h+portee-1
-                                else if (ON_min[h + k] >= nivmin)
-                                {
-                                    portee = k; // durée  provisoire qui pourra être allongée
-                                    nivmin
-                                      = ON_min[h + k]; // niveau provisoire qui pourra être augmenté
-                                }
-                            }
-                        }
                     }
-
-                    if (portee == 0)
+                    if (ON_min[h + k] > ON_min[h]) // on est sûr que ON_opt[h] > ON_min[h]
                     {
-                        ON_opt[h] = ON_min[h]; // la puissance appelée après h ne justifie pas de
-                                               // maintenir des groupes appelés au-delà du minimum
-                        ++h;                   // on progresse d'exactement une heure
-                    }
-                    else
-                    {
-                        for (k = 0; k < portee; ++k)
+                        if (ON_min[h + k] >= nivmax)
                         {
-                            ON_opt[h + k] = nivmin;
+                            nivmin = nivmax;
+                            portee = k;
+                            break;
+                        } // la remontée de ON_min justifie de conserver exactement
+                        // nivmin=nivmax groupes de h à h+k-1 = h+portee-1
+                        else if (ON_min[h + k] >= nivmin)
+                        {
+                            portee = k; // durée  provisoire qui pourra être allongée
+                            nivmin
+                                = ON_min[h + k]; // niveau provisoire qui pourra être augmenté
                         }
-                        h += portee; // on progresse d'au moins une heure
                     }
                 }
             }
-        }
 
-        // Calculation of non linear and startup costs
-        for (i = startHourForCurrentYear; i < endHourForCurrentYear; ++i)
-        {
-            // based on duration, if dur==0 we choose the mininum of ON clusters, otherwise, the
-            // optimal number.
-            (dur == 0) ? (optimalCount = ON_min[i]) : (optimalCount = ON_opt[i]);
-
-            // NODU cannot be > unit count
-            if (optimalCount > currentCluster->unitCount)
-                optimalCount = currentCluster->unitCount;
-
-            thermalClusterFixedCostForYear[i] = currentCluster->fixedCost * optimalCount;
-
-            if (i >= startHourForCurrentYear + 1) // starting hour +1 (fron start hour)
+            if (portee == 0)
             {
-                (dur == 0) ? (delta = ON_min[i] - ON_min[i - 1])
-                           : (delta = ON_opt[i] - ON_opt[i - 1]);
-
-                (delta > 0)
-                  ? (thermalClusterStartupCostForYear[i] = currentCluster->startupCost * delta)
-                  : (thermalClusterStartupCostForYear[i] = 0.);
+                ON_opt[h] = ON_min[h]; // la puissance appelée après h ne justifie pas de
+                // maintenir des groupes appelés au-delà du minimum
+                ++h;                   // on progresse d'exactement une heure
             }
-
-            // Aggregated variables for output
-            // NP Cost = SU + Fx
-            // Op. Cost = (P.lvl * P.Cost) + NP.Cost
-
-            thermalClusterNonProportionalCostForYear[i]
-              = thermalClusterStartupCostForYear[i] + thermalClusterFixedCostForYear[i];
-            thermalClusterOperatingCostForYear[i] += thermalClusterNonProportionalCostForYear[i];
-
-            // Other variables for output
-            //\todo get from the cluster
-            thermalClusterDispatchedUnitsCountForYear[i] = optimalCount;
+            else
+            {
+                for (uint k = 0; k < portee; ++k)
+                {
+                    ON_opt[h + k] = nivmin;
+                }
+                h += portee; // on progresse d'au moins une heure
+            }
         }
+    }
+    return ON_opt;
 }
 
 } // namespace Antares::Solver::Variable

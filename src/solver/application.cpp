@@ -106,7 +106,7 @@ void checkFuelAndCo2ColumnNumber(const Antares::Data::AreaList& areas)
                 continue;
             uint fuelCostWidth = cluster.ecoInput.fuelcost.width;
             uint co2CostWidth = cluster.ecoInput.co2cost.width;
-            uint tsWidth = cluster.series->series.width;
+            uint tsWidth = cluster.series->timeSeries.width;
             if (fuelCostWidth != 1 && fuelCostWidth != tsWidth)
             {
                 logs.warning() << "Area: " << area.name << ". Cluster name: " << cluster.name()

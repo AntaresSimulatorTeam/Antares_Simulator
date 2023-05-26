@@ -120,53 +120,6 @@ namespace Antares
 {
 namespace Data
 {
-Data::ThermalCluster::ThermalCluster(Area* parent, uint nbParallelYears) :
- Cluster(parent),
- groupID(thermalDispatchGrpOther1),
- mustrun(false),
- mustrunOrigin(false),
- nominalCapacityWithSpinning(0.),
- minStablePower(0.),
- minUpTime(1),
- minDownTime(1),
- spinning(0.),
- fuelEfficiency(100.0),
- forcedVolatility(0.),
- plannedVolatility(0.),
- forcedLaw(thermalLawUniform),
- plannedLaw(thermalLawUniform),
- marginalCost(0.),
- spreadCost(0.),
- fixedCost(0.),
- startupCost(0.),
- marketBidCost(0.),
- variableomcost(0.),
- groupMinCount(0),
- groupMaxCount(0),
- annuityInvestment(0),
- PthetaInf(HOURS_PER_YEAR, 0),
- prepro(nullptr),
- productionCost(nullptr),
- thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
- ecoInput(EconomicInputData(this->weak_from_this())),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
-{
-    // assert
-    assert(parent and "A parent for a thermal dispatchable cluster can not be null");
-
-    unitCountLastHour = new uint[nbParallelYears];
-    productionLastHour = new double[nbParallelYears];
-    pminOfAGroup = new double[nbParallelYears];
-    for (uint numSpace = 0; numSpace < nbParallelYears; ++numSpace)
-    {
-        unitCountLastHour[numSpace] = 0;
-        productionLastHour[numSpace] = 0.;
-        pminOfAGroup[numSpace] = 0.;
-    }
-}
-
 Data::ThermalCluster::ThermalCluster(Area* parent) :
  Cluster(parent),
  groupID(thermalDispatchGrpOther1),
@@ -193,12 +146,9 @@ Data::ThermalCluster::ThermalCluster(Area* parent) :
  annuityInvestment(0),
  PthetaInf(HOURS_PER_YEAR, 0),
  prepro(nullptr),
- productionCost(nullptr),
  thermalEconomicTimeSeries(1, ThermalEconomicTimeSeries()),
  ecoInput(EconomicInputData(this->weak_from_this())),
- unitCountLastHour(nullptr),
- productionLastHour(nullptr),
- pminOfAGroup(nullptr)
+ productionCost(nullptr)
 {
     // assert
     assert(parent and "A parent for a thermal dispatchable cluster can not be null");
@@ -209,13 +159,6 @@ Data::ThermalCluster::~ThermalCluster()
     delete[] productionCost;
     delete prepro;
     delete series;
-
-    if (unitCountLastHour)
-        delete[] unitCountLastHour;
-    if (productionLastHour)
-        delete[] productionLastHour;
-    if (pminOfAGroup)
-        delete[] pminOfAGroup;
 }
 
 uint ThermalCluster::groupId() const
@@ -263,7 +206,7 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
     // spinning
     spinning = cluster.spinning;
 
-    //emissions
+    // emissions
     emissions = cluster.emissions;
 
     // efficiency
@@ -304,14 +247,13 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
-    ecoInput.itsThermalCluster = this->weak_from_this();
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
     // timseries
 
-    series->series = cluster.series->series;
-    cluster.series->series.unloadFromMemory();
+    series->timeSeries = cluster.series->timeSeries;
+    cluster.series->timeSeries.unloadFromMemory();
     series->timeseriesNumbers.clear();
 
     // The parent must be invalidated to make sure that the clusters are really
@@ -447,7 +389,7 @@ void Data::ThermalCluster::calculationOfSpinning()
     {
         logs.debug() << "  Calculation of spinning... " << parentArea->name << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.; */
 
@@ -537,7 +479,7 @@ void Data::ThermalCluster::reverseCalculationOfSpinning()
         logs.debug() << "  Calculation of spinning (reverse)... " << parentArea->name
                      << "::" << pName;
 
-        auto& ts = series->series;
+        auto& ts = series->timeSeries;
         // The formula
         // const double s = 1. - cluster.spinning / 100.;
 
@@ -575,7 +517,7 @@ void Data::ThermalCluster::reset()
     // efficiency
     fuelEfficiency = 100.0;
 
-    //pollutant emissions array
+    // pollutant emissions array
     emissions.factors.fill(0);
     // volatility
     forcedVolatility = 0.;
@@ -610,8 +552,6 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-
-    ecoInput.itsThermalCluster = this->weak_from_this();
     ecoInput.reset();
 }
 
@@ -677,23 +617,21 @@ bool Data::ThermalCluster::integrityCheck()
         ret = false;
         nominalCapacityWithSpinning = nominalCapacity;
     }
-    //emissions
+    // emissions
     for (auto i = 0; i < Pollutant::POLLUTANT_MAX; i++)
     {
         if (emissions.factors[i] < 0)
         {
-            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                << ": The " << Pollutant::getPollutantName(i)
-                << " pollutant factor must be >= 0";
+            logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName << ": The "
+                         << Pollutant::getPollutantName(i) << " pollutant factor must be >= 0";
         }
-
     }
     if (fuelEfficiency <= 0. || fuelEfficiency > 100.)
     {
         fuelEfficiency = 100.;
         logs.error() << "Thermal cluster: " << parentArea->name << '/' << pName
-                     << ": The efficiency must be within the range (0,+100] (rounded to " << fuelEfficiency
-                     << ')';
+                     << ": The efficiency must be within the range (0,+100] (rounded to "
+                     << fuelEfficiency << ')';
         ret = false;
     }
     if (spreadCost < 0.)
@@ -909,16 +847,17 @@ void ThermalCluster::checkAndCorrectAvailability()
     bool condition = false;
     bool report = false;
 
-    for (uint y = 0; y != series->series.height; ++y)
+    for (uint y = 0; y != series->timeSeries.height; ++y)
     {
-        for (uint x = 0; x != series->series.width; ++x)
+        for (uint x = 0; x != series->timeSeries.width; ++x)
         {
-            auto rightpart = PminDUnGroupeDuPalierThermique
-                             * ceil(series->series.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
-            condition = rightpart > series->series.entry[x][y];
+            auto rightpart
+              = PminDUnGroupeDuPalierThermique
+                * ceil(series->timeSeries.entry[x][y] / PmaxDUnGroupeDuPalierThermique);
+            condition = rightpart > series->timeSeries.entry[x][y];
             if (condition)
             {
-                series->series.entry[x][y] = rightpart;
+                series->timeSeries.entry[x][y] = rightpart;
                 report = true;
             }
         }

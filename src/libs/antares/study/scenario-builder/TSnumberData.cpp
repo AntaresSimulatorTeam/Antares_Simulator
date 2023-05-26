@@ -91,7 +91,7 @@ template<class D>
 static inline bool CheckValidity(uint value, const D& data, uint tsGenMax)
 {
     // When the TS-Generators are not used
-    return (!tsGenMax) ? (value < data.series.width) : (value < tsGenMax);
+    return (!tsGenMax) ? (value < data.timeSeries.width) : (value < tsGenMax);
 }
 
 template<>

@@ -53,7 +53,7 @@ bool OPT_PilotageOptimisationQuadratique(PROBLEME_HEBDO* problemeHebdo)
     bool result = true;
     if (problemeHebdo->NombreDInterconnexions > 0)
     {
-        for (int pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
+        for (uint pdtHebdo = 0; pdtHebdo < problemeHebdo->NombreDePasDeTemps; pdtHebdo++)
         {
 #ifdef dbgInfos
             printf("*********** Optimisation quadratique du pas de temps %ld ***********\n",

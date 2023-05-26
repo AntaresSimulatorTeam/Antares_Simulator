@@ -44,11 +44,11 @@ using namespace Antares::Data;
 using namespace Yuni;
 
 static void shortTermStorageLevelsRHS(
-  const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
-  int numberOfAreas,
-  double* SecondMembre,
-  const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
-  int pdtJour)
+    const std::vector<::ShortTermStorage::AREA_INPUT>& shortTermStorageInput,
+    int numberOfAreas,
+    double* SecondMembre,
+    const CORRESPONDANCES_DES_CONTRAINTES* CorrespondanceCntNativesCntOptim,
+    int hourInTheYear)
 {
     for (int areaIndex = 0; areaIndex < numberOfAreas; areaIndex++)
     {
@@ -57,7 +57,7 @@ static void shortTermStorageLevelsRHS(
             const int clusterGlobalIndex = storage.clusterGlobalIndex;
             const int cnt
               = CorrespondanceCntNativesCntOptim->ShortTermStorageLevelConstraint[clusterGlobalIndex];
-            SecondMembre[cnt] = storage.series->inflows[pdtJour];
+            SecondMembre[cnt] = storage.series->inflows[hourInTheYear];
         }
     }
 }
@@ -68,6 +68,8 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
                                                      int NumeroDeLIntervalle,
                                                      const int optimizationNumber)
 {
+    int weekFirstHour = problemeHebdo->weekInTheYear * 168;
+
     PROBLEME_ANTARES_A_RESOUDRE* ProblemeAResoudre = problemeHebdo->ProblemeAResoudre;
 
     double* SecondMembre = ProblemeAResoudre->SecondMembre;
@@ -152,11 +154,12 @@ void OPT_InitialiserLeSecondMembreDuProblemeLineaire(PROBLEME_HEBDO* problemeHeb
             AdresseOuPlacerLaValeurDesCoutsMarginaux[cnt] = nullptr;
         }
 
+        int hourInTheYear = weekFirstHour + pdtHebdo;
         shortTermStorageLevelsRHS(problemeHebdo->ShortTermStorage,
                                   problemeHebdo->NombreDePays,
                                   ProblemeAResoudre->SecondMembre,
                                   CorrespondanceCntNativesCntOptim,
-                                  pdtJour);
+                                  hourInTheYear);
 
         for (int interco = 0; interco < problemeHebdo->NombreDInterconnexions; interco++)
         {
