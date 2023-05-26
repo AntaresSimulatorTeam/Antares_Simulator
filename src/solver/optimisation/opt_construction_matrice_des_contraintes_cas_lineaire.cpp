@@ -1072,7 +1072,7 @@ void OPT_ConstruireLaMatriceDesContraintesDuProblemeLineaire(PROBLEME_HEBDO* pro
               = ProblemeAResoudre->NombreDeContraintes;
 
             std::string constraint_full_name
-              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MinEnergieHydraulique),
+              = BuildName(Enum::toString(Enum::ExportStructConstraintsDict::MaxPompage),
                           location_identifier(zone, Enum::ExportStructLocationDict::area),
                           "weekly");
 
