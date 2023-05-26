@@ -247,7 +247,6 @@ void Data::ThermalCluster::copyFrom(const ThermalCluster& cluster)
         prepro = new PreproThermal(this->weak_from_this());
     if (not series)
         series = new DataSeriesCommon();
-    ecoInput.itsThermalCluster = this->weak_from_this();
 
     prepro->copyFrom(*cluster.prepro);
     ecoInput.copyFrom(cluster.ecoInput);
@@ -553,8 +552,6 @@ void Data::ThermalCluster::reset()
     if (not prepro)
         prepro = new PreproThermal(this->weak_from_this());
     prepro->reset();
-
-    ecoInput.itsThermalCluster = this->weak_from_this();
     ecoInput.reset();
 }
 

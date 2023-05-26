@@ -41,14 +41,12 @@ using namespace Yuni;
 
 namespace Antares::Data
 {
-EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster) :
- itsThermalCluster(cluster)
+EconomicInputData::EconomicInputData(std::weak_ptr<const ThermalCluster> cluster)
 {
 }
 
 void EconomicInputData::copyFrom(const EconomicInputData& rhs)
 {
-    itsThermalCluster = rhs.itsThermalCluster;
     fuelcost = rhs.fuelcost;
     rhs.fuelcost.unloadFromMemory();
     co2cost = rhs.co2cost;
