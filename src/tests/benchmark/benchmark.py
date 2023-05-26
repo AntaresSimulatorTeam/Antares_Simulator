@@ -71,7 +71,7 @@ study_list.append(StudyList("medium", "../resources/Antares_Simulator_Tests/medi
 def main(solver_path):
     # init and general data for the JSON
     results = {}
-    results["commit-id"] = get_git_revision_short_hash()
+    results["commit-id"] = get_git_revision_hash()
 
     date = datetime.datetime.now()
     results["date"] = date.strftime("%x %X")
@@ -87,4 +87,4 @@ def main(solver_path):
         f.write(json.dumps(results))
         print(json.dumps(results))
 
-main("/home/payetvin/Antares_Simulator/_build_debug/solver/antares-8.6-solver")
+main(sys.argv[1])
