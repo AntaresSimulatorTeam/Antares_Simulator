@@ -161,6 +161,8 @@ void State::initFromThermalClusterIndexProduction(const uint clusterAreaWideInde
     //   from the solver, which is, for each hour in the year, the product
     //   of the market bid price with the modulation vector
 
+    uint serieIndex = timeseriesIndex->ThermiqueParPalier[clusterAreaWideIndex];
+
     if (thermal[area->index].thermalClustersProductions[clusterAreaWideIndex] > 0.)
     {
         // alias to the production of the current thermal cluster
