@@ -68,6 +68,7 @@ const std::initializer_list<std::string>& getNames<ExportStructConstraintsDict>(
       "LissageHydrauliqueSurVariationMaxALaHausse",
       "MinEnergieHydraulique",
       "MaxEnergieHydraulique",
+      "MaxPompage",
       "NiveauxPays",
       "EquivalenceStockFinal",
       "ExpressionStockFinal"};

@@ -67,6 +67,7 @@ enum class ExportStructConstraintsDict : unsigned char
     LissageHydrauliqueSurVariationMaxALaHausse,
     MinEnergieHydraulique,
     MaxEnergieHydraulique,
+    MaxPompage,
     NiveauxPays,
     EquivalenceStockFinal,
     ExpressionStockFinal
