@@ -75,10 +75,6 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
     bool ret = true;
     auto& buffer = study.bufferLoadingTS;
 
-    auto cluster = itsThermalCluster.lock();
-    if (!cluster)
-        return false;
-
     if (study.header.version >= 860)
     {
         buffer.clear() << folder << SEP << "fuelCost.txt";
@@ -107,10 +103,7 @@ bool EconomicInputData::loadFromFolder(Study& study, const AnyString& folder)
 
 bool EconomicInputData::forceReload(bool reload) const
 {
-    bool ret = true;
-    ret = fuelcost.forceReload(reload) && ret;
-    ret = co2cost.forceReload(reload) && ret;
-    return ret;
+    return fuelcost.forceReload(reload) && co2cost.forceReload(reload);
 }
 
 void EconomicInputData::markAsModified() const
