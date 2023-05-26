@@ -42,26 +42,27 @@ class StudyList(object):
     def get_memory(self):
         return int(search_patern_in_file(self.out_file, "Maximum(.*): (.*)"))
 
-    def get_time(self):
-        user_time = float(search_patern_in_file(self.out_file, "User time(.*): (.*)"))
-        syst_time = float(search_patern_in_file(self.out_file, "System time(.*): (.*)"))
-        return user_time + syst_time
-
     def create_json(self):
-        memory = self.get_memory() / 1024 # from Kb to Mb
-        time = self.get_time()
-        return { 'peak_memory_mb' : memory, 'time_s' : time }
+        return { 'peak_memory_mb' : self.get_memory() / 1024 } # convert to Mb
 
-    # read the [durations_ms] section from the execution_info.ini file in the study output
-    def read_execution_ini(self):
+    # read the [sections] from the execution_info.ini file in the study output
+    def read_execution_ini(self, json_data):
         output_folder = get_latest_output_folder(self.path)
         ini_path = os.path.join(output_folder, "execution_info.ini")
 
         config = configparser.ConfigParser()
         config.read(ini_path)
-        return dict(config.items('durations_ms'))
+        json_data["durations_s"] = dict(config.items('durations_ms'))
+        json_data["optimization problem"] = dict(config.items('optimization problem'))
+        json_data["study"] = dict(config.items('study'))
+
+        # convert ms into seconds
+        durations = json_data['durations_s']
+        for i in durations:
+            durations[i] = float(durations[i]) / 1000
 
 
+# load the JSON list containing studies to benchmark
 def read_study_list():
     study_list = []
     with open("studiesToBenchmark.json", "r") as f:
@@ -79,17 +80,16 @@ def main(solver_path):
     date = datetime.datetime.now()
     results["date"] = date.strftime("%x %X")
 
-    study_list = read_study_list()
     # Execution and results for each study
-    for studies in study_list:
+    for studies in read_study_list():
         studies.run_metrics(solver_path)
         results[studies.name] = studies.create_json()
-        results[studies.name]['execution_info.ini (time in ms)'] = studies.read_execution_ini()
+        studies.read_execution_ini(results[studies.name])
 
     # Writing the JSON
     with open("results.json", "w") as f:
         f.write(json.dumps(results))
-        print(json.dumps(results))
+
 
 solver_path = sys.argv[1]
 if not os.path.isfile(solver_path):
